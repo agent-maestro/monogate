@@ -79,7 +79,7 @@ These functions have no known EML construction:
 - **sin x** — no construction found
 - **cos x** — no construction found
 - **π** — no construction as a closed EML expression
-- **i** (√−1) — requires extending the domain
+- **i** (√−1) — open under strict principal-branch grammar. Under the extended-reals convention (`ln(0) = −∞`), i is constructible from `{1}` alone in K=75 nodes ([pveierland/eml-eval](https://github.com/pveierland/eml-eval)). These are different grammars, not contradictory results.
 
 Pull requests welcome. If you crack one, open an issue — it's publishable.
 

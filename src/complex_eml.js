@@ -18,11 +18,17 @@
  *    S → 1 | 2 | eml_c(S,S) constructs i, π, and Euler's formula
  *    exp(ix) = cos(x) + i·sin(x) as a single EML expression.
  *
- *  OPEN PROBLEM:
- *    Does S → 1 | eml_c(S,S) generate i?
+ *  OPEN PROBLEM (strict principal-branch grammar):
+ *    Does S → 1 | eml_c(S,S) generate i, where ln_c(0) is undefined?
  *    Equivalently: is there a finite EML tree over terminal {1} that evaluates
- *    to 0 + 1·i under complex extension with principal-branch ln?
- *    This is an open question in transcendental number theory.
+ *    to 0 + 1·i without passing 0 through ln_c at any intermediate node?
+ *
+ *    Note: Under the extended-reals convention (ln(0) = −∞, as in the original
+ *    paper and pveierland/eml-eval), i IS constructible from {1} alone in
+ *    K=75 nodes, depth=19, via exp(ln(−1)/2) where 2 = add(1,1).
+ *    The two results are not contradictory — they characterize different grammars.
+ *    This library uses strict principal-branch ln; whether i is reachable under
+ *    that convention remains open.
  *
  *  SIN / COS LIMITATION:
  *    sin(x) = Im(eul_c(x)) and cos(x) = Re(eul_c(x)).
