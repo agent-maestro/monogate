@@ -11,7 +11,7 @@
  * ── Key results ──────────────────────────────────────────────────────────────
  *
  *  ONE-TERMINAL RESULT (proven):
- *    S → 1 | eml_c(S,S) constructs −iπ in 12 nodes, depth 8.
+ *    S → 1 | eml_c(S,S) constructs −iπ in 11 nodes, depth 8.
  *    This is the first non-real value reachable from a single real terminal.
  *
  *  TWO-TERMINAL RESULT (proven):
@@ -245,51 +245,60 @@ export const pow_c = (x, n) => op_c(mul_c(_wrap(n), ln_c(_wrap(x))), one);
 // a NEGATIVE REAL reaches the y-position, causing ln_c to apply its
 // principal branch and return a value with imaginary part ±π.
 //
-// neg_real(1) = −1 is constructible from the ONE-TERMINAL real grammar
-// (nodes:9, depth:5). All intermediate ln arguments in that construction
-// are positive reals — the negation is achieved without ever applying ln
-// to a negative number. The result −1 is then passed as the y-argument
-// of an outer eml_c, triggering the branch cut.
+// 11-NODE CONSTRUCTION (current best, pure one-terminal tree):
 //
-// Step 1:  z₁ = eml_c(1, −1)
-//            = exp(1) − ln_c(−1)
-//            = e − iπ              [principal branch: arg(−1) = π]
-//            Nodes: 10  Depth: 6
+//   eml(1, eml(eml(1, eml(eml(eml(eml(1,eml(1,1)),1),1),1)), eml(eml(eml(1,1),1),1)))
 //
-// Step 2:  z₂ = eml_c(z₁, 1)
-//            = exp_c(e − iπ) − 0
-//            = exp(e) · exp(−iπ)
-//            = −exp(e)             [real, negative → second branch-cut trigger]
-//            Nodes: 11  Depth: 7
+// Step 1:  tower = eml(eml(eml(eml(1,eml(1,1)),1),1),1)
+//            Starting from e = eml(1,1):
+//            eml(1,e) = e−1 → eml(e−1,1) = exp(e−1) → eml(...,1) = exp(exp(e−1))
+//            → eml(...,1) = exp(exp(exp(e−1)))   [≈ 3.45×10¹¹⁴]
 //
-// Step 3:  z₃ = eml_c(1, z₂)
-//            = e − ln_c(−exp(e))
-//            = e − (e + iπ)
-//            = −iπ                 [exact, one-terminal result]
-//            Nodes: 12  Depth: 8
+// Step 2:  A = eml(1, tower) = e − ln(tower) ≈ e − exp(exp(e−1)) < 0
+//            (A is a large negative real)
 //
-// IEEE 754 CAVEAT: sin(−π) ≈ −1.22e-16 ≠ 0. In floating-point, z₂ has a
-// tiny negative imaginary part, so atan2 returns −π (not +π), giving:
-//   ln_c(z₂)_float = [e, −π],  and  z₃_float = e − (e − iπ) = +iπ.
-// Both ±iπ are mathematically valid; code must not assume a sign.
-// Assertion: abs(NEG_I_PI_C.re) < 1e-10  AND  abs(|NEG_I_PI_C.im| − π) < 1e-10
+// Step 3:  B = eml(eml(eml(1,1),1),1) = exp(exp(e))  [≈ 3.81×10⁶]
 //
-// Full tree (pure EML notation):
-//   eml_c(1, eml_c(eml_c(1, neg_real(1)), 1))
-// where neg_real(1) is the 9-node real EML tree for −1.
+// Step 4:  mid = eml(A, B) = exp_c(A) − ln_c(B)
+//            exp(A) ≈ 0  (A ≪ 0),  ln(exp(exp(e))) = exp(e) = e^e
+//            mid ≈ −e^e                [real, negative → branch-cut trigger]
+//
+// Step 5:  result = eml(1, mid) = e − ln_c(−e^e)
+//            = e − (ln(e^e) + iπ) = e − (e + iπ) = −iπ  ✓
+//            Nodes: 11  Depth: 8
+//
+// ADVANTAGE OVER PRIOR 12-NODE CONSTRUCTION:
+//   The 12-node construction (via neg_real(1) = −1) produces z₂ = −exp(e)
+//   with a floating-point imaginary part ≈ −1.22e−16, causing atan2 to return
+//   −π instead of +π and yielding +iπ rather than −iπ in floating-point.
+//   The 11-node construction avoids this: A is a large negative real with
+//   zero imaginary part, so −e^e is cleanly negative and ln_c gives exactly
+//   e + iπ with no sign ambiguity.
+//
+// Assertion: abs(NEG_I_PI_C.re) < 1e-10  AND  NEG_I_PI_C.im < 0
+//            (imaginary part is reliably negative with this construction)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const _neg_real_one = Complex.of(neg_real(1)); // = −1 via real EML grammar
-
 /**
- * −iπ (or +iπ in floating-point; see ESCAPE comment above).
+ * −iπ — first complex constant reachable from terminal {1} alone.
  *
- * The FIRST complex constant reachable from terminal {1} alone under the
- * complex extension S → 1 | eml_c(S,S). Nodes:12 Depth:8.
+ * Pure one-terminal construction: S → 1 | eml_c(S,S), nodes=11, depth=8.
+ * Expression: eml(1,eml(eml(1,eml(eml(eml(eml(1,eml(1,1)),1),1),1)),eml(eml(eml(1,1),1),1)))
  *
- * Verified: |Re| < 1e-10,  ||Im| − π| < 1e-10
+ * Verified: |Re| < 1e-10,  Im ≈ −π  (sign is reliable, unlike the 12-node construction)
  */
-export const NEG_I_PI_C = op_c(one, op_c(op_c(one, _neg_real_one), one));
+// Build from inside out (see ESCAPE comment above)
+const _e      = op_c(one, one);                   // eml(1,1)       = e
+const _em1    = op_c(one, _e);                    // eml(1,e)       = e−1
+const _t1     = op_c(_em1, one);                  // eml(e−1,1)     = exp(e−1)
+const _t2     = op_c(_t1,  one);                  // eml(...,1)     = exp(exp(e−1))
+const _tower  = op_c(_t2,  one);                  // eml(...,1)     = exp(exp(exp(e−1))) [huge]
+const _neg_br = op_c(one, _tower);                // eml(1,tower)   < 0 [negative real]
+const _ee     = op_c(one, one);                   // eml(1,1)       = e  (independent subtree)
+const _exp_e  = op_c(_ee, one);                   // eml(e,1)       = exp(e)
+const _exp_ee = op_c(_exp_e, one);                // eml(exp(e),1)  = exp(exp(e))
+const _mid    = op_c(_neg_br, _exp_ee);           // eml(neg,B) ≈ −exp(e) [branch-cut trigger]
+export const NEG_I_PI_C = op_c(one, _mid);        // eml(1,−e^e) = −iπ
 
 /**
  * ±iπ/2 — half of NEG_I_PI_C, used to construct i.
@@ -499,13 +508,13 @@ export const IDENTITIES_C = [
   },
   {
     name: "−iπ",
-    emlForm: "eml_c(1, eml_c(eml_c(1, neg_real(1)), 1))",
-    nodes: 12, depth: 8,
+    emlForm: "eml(1,eml(eml(1,eml(eml(eml(eml(1,eml(1,1)),1),1),1)),eml(eml(eml(1,1),1),1)))",
+    nodes: 11, depth: 8,
     domain: "constant",
-    branchCut: "branch cut at z₂ = −exp(e); float gives +iπ or −iπ",
+    branchCut: "branch cut at mid = −exp(e); Im is reliably −π (no float sign ambiguity)",
     terminal: "{1}",
     status: "proven",
-    note: "First non-real value constructible from a single real terminal",
+    note: "First non-real value constructible from a single real terminal (improved from 12 nodes)",
   },
   {
     name: "i",

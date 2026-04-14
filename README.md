@@ -18,8 +18,15 @@ Live explorer: **https://monogate.dev** (or your deployed URL)
 
 ## Install
 
+**JavaScript / Node**
 ```bash
 npm install monogate
+```
+
+**Python**
+```bash
+pip install monogate            # core only (no dependencies)
+pip install "monogate[torch]"   # + PyTorch differentiable ops + EMLTree / EMLNetwork
 ```
 
 ## Usage
