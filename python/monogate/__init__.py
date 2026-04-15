@@ -92,6 +92,10 @@ __all__ = [
     "__version__",
 ]
 
+from .torch_ops import edl_op_safe, EDL_SAFE_CONSTANT  # noqa: F401
+
+__all__ += ["edl_op_safe", "EDL_SAFE_CONSTANT"]
+
 from .operators import (
     ALL_OPERATORS,
     COMPLETE_OPERATORS,
@@ -109,8 +113,8 @@ __all__ += [
 ]
 
 try:
-    from .network import EMLTree, EMLNetwork, fit  # noqa: F401
+    from .network import EMLTree, EMLNetwork, HybridNetwork, fit  # noqa: F401
 
-    __all__ += ["EMLTree", "EMLNetwork", "fit"]
+    __all__ += ["EMLTree", "EMLNetwork", "HybridNetwork", "fit"]
 except ImportError:
     pass  # torch not installed — network classes unavailable

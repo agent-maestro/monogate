@@ -43,9 +43,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 
-from .torch_ops import op
+from .torch_ops import op, exl_op as _exl_op
 
-__all__ = ["EMLTree", "EMLNetwork", "fit"]
+__all__ = ["EMLTree", "EMLNetwork", "HybridNetwork", "fit"]
 
 
 # ── Private tree node types ───────────────────────────────────────────────────
@@ -216,6 +216,59 @@ class EMLNetwork(nn.Module):
                            E.g. ["x"] for a 1-D input, ["x", "y"] for 2-D.
                            Defaults to ["x0", "x1", …].
         """
+        return self.root.formula(feature_names)
+
+
+# ── Hybrid model ─────────────────────────────────────────────────────────────
+
+class HybridNetwork(nn.Module):
+    """
+    EXL inner sub-trees with an EML root — exploiting each operator's strength.
+
+    Problem: EXL is numerically stable in deep trees (98% finite vs EML's 2%)
+    and produces the best sin(x) approximation, but it cannot represent
+    addition/subtraction (it is incomplete).  EML can represent everything but
+    explodes in depth (iterated exp(exp(...)) overflow).
+
+    Solution: use EXL for all inner nodes to get stable sub-expressions, then
+    connect them at the root with EML (or another outer operator) to recover
+    the additive step.  The root sees two bounded EXL outputs and combines
+    them via EML's subtraction-in-log-space.
+
+    Architecture (depth d):
+        root           EML node (or outer_op)
+        ├── left       complete (d-1)-depth EXL tree
+        └── right      complete (d-1)-depth EXL tree
+
+    Args:
+        in_features: number of input features.
+        depth:       total tree depth (>= 1).  depth=1 => one root node and
+                     two leaves; depth=d => 2^d-1 total nodes.
+        inner_op:    op_func for all non-root nodes.  Default: exl_op.
+        outer_op:    op_func for the root node.  Default: None (EML).
+    """
+
+    def __init__(
+        self,
+        in_features: int,
+        depth: int = 3,
+        inner_op: Callable[[Tensor, Tensor], Tensor] | None = None,
+        outer_op: Callable[[Tensor, Tensor], Tensor] | None = None,
+    ) -> None:
+        super().__init__()
+        if depth < 1:
+            raise ValueError("HybridNetwork requires depth >= 1")
+        _inner = inner_op if inner_op is not None else _exl_op
+        # Build two inner sub-trees
+        left  = _build_tree(depth - 1, lambda: _LinearLeaf(in_features), _inner)
+        right = _build_tree(depth - 1, lambda: _LinearLeaf(in_features), _inner)
+        # Root node uses the outer operator (default EML)
+        self.root = _Node(left, right, outer_op)
+
+    def forward(self, x: Tensor) -> Tensor:
+        return self.root(x)
+
+    def formula(self, feature_names: list[str] | None = None) -> str:
         return self.root.formula(feature_names)
 
 

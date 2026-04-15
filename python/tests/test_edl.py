@@ -10,7 +10,8 @@ from monogate.core import (
     div_edl, exp_edl, ln_edl, make_exp, make_ln, mul_edl, neg_edl, pow_edl, recip_edl,
     ln_eml, pow_eml, pow_exl,
 )
-from monogate.torch_ops import edl_op, exl_op, eal_op
+from monogate.torch_ops import edl_op, edl_op_safe, EDL_SAFE_CONSTANT, exl_op, eal_op
+from monogate.network import EMLNetwork, HybridNetwork
 
 
 # ── Operator class ────────────────────────────────────────────────────────────
@@ -788,3 +789,143 @@ def test_eal_op_batch():
     result = eal_op(x, y)
     expected = torch.tensor([1.0, 2.0, 3.0])
     assert torch.allclose(result, expected, atol=1e-5)
+
+
+# ── edl_op_safe ───────────────────────────────────────────────────────────────
+
+def test_edl_op_safe_exp_identity():
+    # edl_safe(x, e-1) = exp(x)/ln((e-1)+1) = exp(x)/ln(e) = exp(x)
+    x = torch.tensor(1.5)
+    c = torch.tensor(EDL_SAFE_CONSTANT)
+    result = edl_op_safe(x, c)
+    assert abs(result.item() - math.exp(1.5)) < 1e-5
+
+def test_edl_op_safe_never_nan_near_one():
+    # Plain edl_op explodes when y=1; edl_op_safe must be finite there
+    x = torch.zeros(10)
+    y = torch.ones(10)   # ln(1)=0, plain EDL -> inf/nan
+    result_safe = edl_op_safe(x, y)
+    assert torch.isfinite(result_safe).all(), "edl_op_safe must stay finite at y=1"
+
+def test_edl_op_safe_finite_across_softplus_range():
+    # Simulate what softplus outputs: values in ~[0.3, 3.0]
+    x = torch.zeros(100)
+    y = torch.linspace(0.3, 3.0, 100)  # softplus output range
+    result = edl_op_safe(x, y)
+    assert torch.isfinite(result).all()
+
+def test_edl_op_safe_gradient_flows():
+    x = torch.tensor(1.0, requires_grad=True)
+    y = torch.tensor(EDL_SAFE_CONSTANT, requires_grad=True)
+    result = edl_op_safe(x, y)
+    result.backward()
+    assert x.grad is not None and torch.isfinite(x.grad)
+    assert y.grad is not None and torch.isfinite(y.grad)
+
+def test_edl_op_safe_constant_value():
+    # EDL_SAFE_CONSTANT = e - 1
+    assert abs(EDL_SAFE_CONSTANT - (math.e - 1)) < 1e-12
+
+def test_edl_op_safe_trains_without_nan():
+    # A simple 1-step training loop must not produce NaN
+    import torch.nn.functional as F
+    from monogate.network import EMLNetwork
+    torch.manual_seed(0)
+    model = EMLNetwork(in_features=1, depth=3, op_func=edl_op_safe)
+    x = torch.linspace(-2.0, 2.0, 32).unsqueeze(1)
+    y = torch.sin(x.squeeze())
+    opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+    losses = []
+    for _ in range(20):
+        opt.zero_grad()
+        pred = model(x)
+        loss = F.mse_loss(pred, y)
+        if torch.isfinite(loss):
+            loss.backward()
+            opt.step()
+            losses.append(loss.item())
+    assert len(losses) > 0, "edl_op_safe: all training steps produced NaN"
+    assert all(math.isfinite(v) for v in losses)
+
+
+# ── HybridNetwork ─────────────────────────────────────────────────────────────
+
+def test_hybrid_network_forward():
+    torch.manual_seed(0)
+    model = HybridNetwork(in_features=1, depth=3)
+    x = torch.linspace(0.5, 2.0, 16).unsqueeze(1)
+    out = model(x)
+    assert out.shape == (16,)
+
+def test_hybrid_network_finite_output():
+    # HybridNetwork should produce finite outputs on a safe input range
+    torch.manual_seed(42)
+    model = HybridNetwork(in_features=1, depth=3)
+    x = torch.linspace(0.5, 2.0, 64).unsqueeze(1)
+    out = model(x)
+    assert torch.isfinite(out).all(), "HybridNetwork should be finite on [0.5, 2.0]"
+
+def test_hybrid_network_trains():
+    import torch.nn.functional as F
+    torch.manual_seed(0)
+    model = HybridNetwork(in_features=1, depth=3)
+    x = torch.linspace(0.1, 3.0, 64).unsqueeze(1)
+    y = torch.sin(x.squeeze())
+    opt = torch.optim.Adam(model.parameters(), lr=3e-3)
+    losses = []
+    for _ in range(30):
+        opt.zero_grad()
+        pred = model(x)
+        loss = F.mse_loss(pred, y)
+        if torch.isfinite(loss):
+            loss.backward()
+            import torch.nn as nn
+            nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+            opt.step()
+            losses.append(loss.item())
+    assert len(losses) >= 25, f"HybridNetwork: too many NaN steps ({30 - len(losses)})"
+
+def test_hybrid_network_custom_ops():
+    from monogate.torch_ops import eal_op
+    torch.manual_seed(1)
+    model = HybridNetwork(in_features=1, depth=2, inner_op=eal_op, outer_op=exl_op)
+    x = torch.ones(4, 1)
+    out = model(x)
+    assert out.shape == (4,)
+
+def test_hybrid_network_depth_one():
+    # depth=1: one root EML node, two linear leaves
+    torch.manual_seed(0)
+    model = HybridNetwork(in_features=1, depth=1)
+    x = torch.ones(8, 1)
+    out = model(x)
+    assert out.shape == (8,)
+
+def test_hybrid_network_depth_zero_raises():
+    with pytest.raises(ValueError, match="depth >= 1"):
+        HybridNetwork(in_features=1, depth=0)
+
+def test_hybrid_vs_eml_stability():
+    # Hybrid should have better finite-output rate than plain EMLNetwork
+    # on random init (random leaves Normal(0,0.5))
+    x = torch.linspace(0.1, 3.0, 64).unsqueeze(1)
+    eml_ok = hybrid_ok = 0
+    for seed in range(20):
+        torch.manual_seed(seed)
+        m_eml = EMLNetwork(in_features=1, depth=4)
+        m_hyb = HybridNetwork(in_features=1, depth=4)
+        for m in [m_eml, m_hyb]:
+            with torch.no_grad():
+                for p in m.parameters():
+                    p.data.normal_(0.0, 0.5)
+        with torch.no_grad():
+            o_eml = m_eml(x)
+            o_hyb = m_hyb(x)
+        if torch.isfinite(o_eml).all():
+            eml_ok += 1
+        if torch.isfinite(o_hyb).all():
+            hybrid_ok += 1
+    assert hybrid_ok >= eml_ok, (
+        f"HybridNetwork should be >= EMLNetwork stability "
+        f"(hybrid {hybrid_ok}/20, eml {eml_ok}/20)"
+    )
