@@ -20,13 +20,13 @@ Live explorer: **https://monogate.dev** (or your deployed URL)
 
 **JavaScript / Node**
 ```bash
-npm install monogate
+npm install monogate            # v0.2.0 — adds EDL, EXL, BEST, sin_best, cos_best
 ```
 
 **Python**
 ```bash
-pip install monogate            # core only (no dependencies)
-pip install "monogate[torch]"   # + PyTorch differentiable ops + EMLTree / EMLNetwork
+pip install monogate            # v0.3.0 — core only (no dependencies)
+pip install "monogate[torch]"   # + PyTorch differentiable ops + EMLTree / EMLNetwork / HybridNetwork
 ```
 
 ## Usage

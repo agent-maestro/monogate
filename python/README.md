@@ -17,9 +17,9 @@ Based on [arXiv:2603.21852](https://arxiv.org/abs/2603.21852) (Odrzywołek, 2026
 
 ```bash
 # Core only (no dependencies)
-pip install monogate
+pip install monogate            # v0.3.0
 
-# With PyTorch support
+# With PyTorch support (EMLNetwork, HybridNetwork, fit)
 pip install "monogate[torch]"
 
 # Development (pytest + torch)
