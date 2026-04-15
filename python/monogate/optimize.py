@@ -31,8 +31,12 @@ Public API::
 
 from __future__ import annotations
 
+import ast
+import inspect
 import re
-from dataclasses import dataclass, field
+import textwrap
+from dataclasses import dataclass
+from functools import wraps
 from typing import Any, Callable, Union
 
 from .core import _NODE_COSTS
@@ -156,6 +160,21 @@ class OptimizeResult:
     rewritten_code: str
     explanation: tuple[str, ...]
     message: str
+
+    # ── Dict-style access ──────────────────────────────────────────────────────
+    # Supports r["message"], r["savings_pct"], etc. alongside r.message
+    _FIELDS = frozenset({
+        "original", "ops", "total_best_nodes", "total_eml_nodes",
+        "savings_pct", "python_snippet", "rewritten_code", "explanation", "message",
+    })
+
+    def __getitem__(self, key: str) -> Any:
+        if key not in self._FIELDS:
+            raise KeyError(f"OptimizeResult has no field {key!r}. Available: {sorted(self._FIELDS)}")
+        return getattr(self, key)
+
+    def keys(self) -> list[str]:
+        return sorted(self._FIELDS)
 
     def __str__(self) -> str:
         lines = [self.message, ""]
@@ -294,43 +313,178 @@ def _build_explanation(ops: tuple[OpMatch, ...]) -> tuple[str, ...]:
     return tuple(lines)
 
 
+# ── AST-based decorator analysis ──────────────────────────────────────────────
+
+class _OpCounter(ast.NodeVisitor):
+    """Walk a function's AST and count math operations for node cost analysis."""
+
+    # Maps AST call names → canonical op names
+    _FN_MAP: dict[str, str] = {
+        "sin": "sin", "cos": "cos", "exp": "exp", "log": "ln",
+        "log2": "ln", "log10": "ln", "ln": "ln",
+        "pow": "pow", "power": "pow", "sqrt": "sqrt", "abs": "abs",
+        "mul": "mul", "multiply": "mul",
+        "div": "div", "divide": "div", "true_divide": "div",
+    }
+
+    def __init__(self) -> None:
+        self.counts: dict[str, int] = {}
+
+    def _inc(self, name: str) -> None:
+        canon = self._FN_MAP.get(name)
+        if canon:
+            self.counts[canon] = self.counts.get(canon, 0) + 1
+
+    def visit_Call(self, node: ast.Call) -> None:  # noqa: N802
+        # torch.sin(x) / math.sin(x) / np.sin(x) / sin(x)
+        if isinstance(node.func, ast.Attribute):
+            self._inc(node.func.attr)
+        elif isinstance(node.func, ast.Name):
+            self._inc(node.func.id)
+        self.generic_visit(node)
+
+    def visit_BinOp(self, node: ast.BinOp) -> None:  # noqa: N802
+        op_map = {
+            ast.Add: "add", ast.Sub: "sub",
+            ast.Mult: "mul", ast.Div: "div", ast.FloorDiv: "div",
+            ast.Pow: "pow",
+        }
+        name = op_map.get(type(node.op))
+        if name:
+            self.counts[name] = self.counts.get(name, 0) + 1
+        self.generic_visit(node)
+
+    def visit_UnaryOp(self, node: ast.UnaryOp) -> None:  # noqa: N802
+        if isinstance(node.op, ast.USub):
+            self.counts["neg"] = self.counts.get("neg", 0) + 1
+        self.generic_visit(node)
+
+
+def _analyze_fn(func: Callable[..., Any]) -> OptimizeResult:
+    """
+    Parse *func*'s source with ast, count operations, return an OptimizeResult.
+    Falls back to a minimal result if source is unavailable (e.g. built-ins).
+    """
+    try:
+        src = inspect.getsource(func)
+        src = textwrap.dedent(src)
+        tree = ast.parse(src)
+    except (OSError, IndentationError, SyntaxError):
+        # Source not inspectable (C extension, lambda in REPL, etc.)
+        return OptimizeResult(
+            original=f"<{func.__name__}>",
+            ops=(),
+            total_best_nodes=0,
+            total_eml_nodes=0,
+            savings_pct=0,
+            python_snippet="# source not available for static analysis",
+            rewritten_code="",
+            explanation=("Source could not be inspected — use best_optimize(string) instead.",),
+            message=f"@best_optimize on {func.__name__!r}: source unavailable",
+        )
+
+    counter = _OpCounter()
+    counter.visit(tree)
+    ops      = _build_ops(counter.counts)
+    total_best = sum(m.best_nodes for m in ops)
+    total_eml  = sum(m.eml_nodes  for m in ops)
+    savings_pct = (
+        max(0, round((1 - total_best / total_eml) * 100))
+        if total_eml > 0 else 0
+    )
+    explanation = _build_explanation(ops)
+    # Generate a rewritten snippet from the raw source
+    rewritten = _rewrite(src)
+    snippet = "from monogate import BEST\nimport math\n\n" + rewritten
+
+    message = (
+        f"BEST: {total_best} nodes vs {total_eml} pure EML — {savings_pct}% fewer exp/ln calls"
+        if total_eml > total_best
+        else f"No savings found ({total_best} nodes — already EML-optimal)"
+    )
+    return OptimizeResult(
+        original=src.strip(),
+        ops=ops,
+        total_best_nodes=total_best,
+        total_eml_nodes=total_eml,
+        savings_pct=savings_pct,
+        python_snippet=snippet,
+        rewritten_code=rewritten,
+        explanation=explanation,
+        message=message,
+    )
+
+
+def _decorate_function(func: Callable[..., Any]) -> Callable[..., Any]:
+    """
+    Wrap *func* with BEST analysis at decoration time.
+
+    - ``func.best_info`` → ``OptimizeResult`` (populated once, at decoration)
+    - The wrapped function behaves identically to the original at call time.
+    - Full AST rewriting (replacing math calls with BEST.*) is Phase 2.
+    """
+    analysis = _analyze_fn(func)
+
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        return func(*args, **kwargs)
+
+    wrapper.best_info = analysis              # type: ignore[attr-defined]
+    wrapper._best_optimize_stub = True        # type: ignore[attr-defined]
+    return wrapper
+
+
 # ── Public API ─────────────────────────────────────────────────────────────────
 
 def best_optimize(
-    target: Union[str, Callable[..., Any]],
+    target: Union[str, Callable[..., Any], None] = None,
 ) -> Union["OptimizeResult", Callable[..., Any]]:
     """
-    Optimize a math expression string or Python code snippet using BEST routing.
+    Optimize a math expression string or Python code snippet using BEST routing,
+    or use as a decorator to analyse a function's operations at definition time.
 
     Parameters
     ----------
-    target : str or callable
-        - **str**: a bare math expression (e.g. ``"sin(x)**2 + cos(x)*x**3"``)
+    target : str, callable, or None
+        - **str**: a bare math expression (``"sin(x)**2 + cos(x)*x**3"``)
           or a Python/NumPy/PyTorch code snippet.
-        - **callable**: returns the function unchanged (decorator stub for Phase 2).
+        - **callable**: wraps the function; attaches ``func.best_info``
+          (``OptimizeResult``) and leaves call behaviour unchanged.
+        - **None**: allows bare ``@best_optimize`` usage without parentheses.
 
     Returns
     -------
     OptimizeResult
-        When *target* is a string.  See :class:`OptimizeResult` for fields.
+        When *target* is a string.  Supports both ``r.message`` and
+        ``r["message"]`` access.
     callable
-        When *target* is callable — the original function, unmodified.
-        AST-based rewriting is planned for Phase 2.
+        When *target* is callable — original behaviour preserved, plus
+        ``.best_info`` attribute containing the analysis.
 
     Examples
     --------
     >>> from monogate import best_optimize
     >>> r = best_optimize("sin(x)**2 + cos(x)*x**3 + exp(-x)")
-    >>> print(r.savings_pct)
-    70
-    >>> print(r.python_snippet)  # doctest: +SKIP
-    from monogate import BEST ...
+    >>> r["message"]  # dict-style access
+    'BEST: ...'
+    >>> r.savings_pct  # attribute access
+    69
+
+    >>> @best_optimize
+    ... def model(x):
+    ...     import math
+    ...     return math.sin(x) + math.cos(x) * x**3
+    >>> model.best_info.savings_pct > 0
+    True
+    >>> model(1.0) == math.sin(1.0) + math.cos(1.0) * 1.0**3  # unchanged
+    True
     """
+    if target is None:
+        # @best_optimize() — called with no arguments
+        return _decorate_function  # type: ignore[return-value]
+
     if callable(target):
-        # Phase 2: AST rewriting via ast.parse / ast.NodeTransformer
-        # For now, mark and return unchanged.
-        target._best_optimize_stub = True  # type: ignore[attr-defined]
-        return target
+        return _decorate_function(target)
 
     if not isinstance(target, str):
         raise TypeError(
@@ -341,8 +495,8 @@ def best_optimize(
     if not source:
         raise ValueError("best_optimize: empty input")
 
-    counts   = _scan(source)
-    ops      = _build_ops(counts)
+    counts    = _scan(source)
+    ops       = _build_ops(counts)
     rewritten = _rewrite(source)
 
     total_best = sum(m.best_nodes for m in ops)
@@ -354,17 +508,11 @@ def best_optimize(
 
     is_code = _is_python_code(source)
     if is_code:
-        snippet = (
-            "from monogate import BEST\nimport math\n\n"
-            + rewritten
-        )
-        rewritten_code = rewritten
+        snippet = "from monogate import BEST\nimport math\n\n" + rewritten
     else:
         snippet = _build_python_snippet(source, rewritten, total_best, total_eml)
-        rewritten_code = rewritten
 
     explanation = _build_explanation(ops)
-
     message = (
         f"BEST: {total_best} nodes vs {total_eml} pure EML — {savings_pct}% fewer exp/ln calls"
         if total_eml > total_best
@@ -378,7 +526,7 @@ def best_optimize(
         total_eml_nodes=total_eml,
         savings_pct=savings_pct,
         python_snippet=snippet,
-        rewritten_code=rewritten_code,
+        rewritten_code=rewritten,
         explanation=explanation,
         message=message,
     )
