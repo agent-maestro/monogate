@@ -60,6 +60,27 @@ Interpretable AI via EML works — the network finds valid symbolic expressions 
 
 ---
 
+## Named Phenomena
+
+Five structural properties of EML symbolic regression identified through systematic experimentation:
+
+**1. Phantom Attractors**
+Locally stable non-minimal EML constructions that resist complexity penalties; the canonical example is `eml(eml(0.45, 1), eml(1, 1))` as an attractor for e, where escaping toward the minimal `eml(1,1)` carries a 10,518% MSE penalty.
+
+**2. Lambert W Fixed Point**
+The right-chain topology with all-ones leaves converges to W(eᵉ) ≈ 2.0168 — a fixed point of the iteration y → e − ln(y) — connecting EML tree iteration to Lambert W function theory.
+
+**3. Affine Leaf Necessity**
+Scalar leaves cannot represent periodic functions under EML; when leaves are constrained near 1, output converges to W(eᵉ) regardless of depth, with an MSE floor above 4.0 for sin(x).
+
+**4. Left-Right Information Asymmetry**
+In EML trees the left subtree encodes function behavior and the right subtree encodes domain scaling; fixing the right half of leaves costs 100× more MSE than fixing the left half.
+
+**5. Optimal Topology Bias**
+Mildly left-heavy trees (balance score 1) outperform both right-chain and perfectly balanced topologies for periodic function approximation; perfect balance scores worst in its depth class.
+
+---
+
 ## Open problems
 
 - Why does `eml(eml(0.45, 1), eml(1, 1))` form a stable attractor for e at depth=2?
