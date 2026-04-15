@@ -211,15 +211,16 @@ def fit(
     log_every: int = 200,
     loss_threshold: float = 1e-8,
     max_grad_norm: float = 1.0,
+    lam: float = 0.0,
 ) -> list[float]:
     """
     Train an EMLTree or EMLNetwork with Adam.
 
     For EMLTree  — supply ``target`` (scalar):
-        Minimises (model() − target)².
+        Minimises (model() − target)² + lam · Σ|leaf − 1|.
 
     For EMLNetwork — supply ``x`` and ``y``:
-        Minimises MSE(model(x), y).
+        Minimises MSE(model(x), y) + lam · Σ|weight|.
 
     Args:
         model:           EMLTree or EMLNetwork instance.
@@ -229,12 +230,15 @@ def fit(
         steps:           Number of Adam optimisation steps.
         lr:              Adam learning rate.
         log_every:       Print loss every this many steps (0 = silent).
-        loss_threshold:  Stop early if loss drops below this value.
+        loss_threshold:  Stop early if *raw* loss drops below this value.
         max_grad_norm:   Gradient clipping threshold (default 1.0).
-                         Prevents exploding gradients through deep EML trees.
+        lam:             Complexity penalty weight (default 0 = no penalty).
+                         EMLTree: penalises Σ|leaf − 1| (pull leaves toward 1).
+                         EMLNetwork: penalises Σ|weight| (L1 on linear weights,
+                         pushing leaves toward constant functions).
 
     Returns:
-        List of loss values recorded at each valid step, for plotting.
+        List of *raw* loss values (without penalty) recorded at each valid step.
     """
     if isinstance(model, EMLTree):
         if target is None:
@@ -244,13 +248,13 @@ def fit(
             else torch.tensor(float(target))
         )
         return _fit_constant(model, target_t, steps, lr, log_every,
-                             loss_threshold, max_grad_norm)
+                             loss_threshold, max_grad_norm, lam)
 
     if isinstance(model, EMLNetwork):
         if x is None or y is None:
             raise ValueError("EMLNetwork training requires `x` and `y`")
         return _fit_function(model, x, y, steps, lr, log_every,
-                             loss_threshold, max_grad_norm)
+                             loss_threshold, max_grad_norm, lam)
 
     raise TypeError(f"fit: unsupported model type {type(model)!r}")
 
@@ -263,6 +267,7 @@ def _fit_constant(
     log_every: int,
     threshold: float,
     max_grad_norm: float,
+    lam: float = 0.0,
 ) -> list[float]:
     opt    = torch.optim.Adam(model.parameters(), lr=lr)
     losses: list[float] = []
@@ -270,32 +275,37 @@ def _fit_constant(
     for step in range(1, steps + 1):
         opt.zero_grad()
         try:
-            pred = model()
-            loss = (pred - target) ** 2
+            pred     = model()
+            raw_loss = (pred - target) ** 2
         except (ValueError, RuntimeError):
             if log_every and step % log_every == 0:
                 print(f"step {step:>6} | domain error")
             continue
 
-        if not torch.isfinite(loss):
+        if not torch.isfinite(raw_loss):
             if log_every and step % log_every == 0:
                 print(f"step {step:>6} | non-finite loss")
             continue
+
+        loss = raw_loss
+        if lam > 0:
+            penalty = sum((p - 1.0).abs().sum() for p in model.parameters())
+            loss    = raw_loss + lam * penalty
 
         loss.backward()
         if max_grad_norm > 0:
             nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
         opt.step()
 
-        loss_val = loss.item()
-        losses.append(loss_val)
+        raw_val = raw_loss.item()
+        losses.append(raw_val)
 
         if log_every and step % log_every == 0:
-            print(f"step {step:>6} | loss = {loss_val:.4e} | value = {pred.item():.8f}")
+            print(f"step {step:>6} | loss = {raw_val:.4e} | value = {pred.item():.8f}")
 
-        if loss_val < threshold:
+        if raw_val < threshold:
             if log_every:
-                print(f"Converged at step {step} — loss = {loss_val:.4e}")
+                print(f"Converged at step {step} — loss = {raw_val:.4e}")
             break
 
     return losses
@@ -310,6 +320,7 @@ def _fit_function(
     log_every: int,
     threshold: float,
     max_grad_norm: float,
+    lam: float = 0.0,
 ) -> list[float]:
     opt    = torch.optim.Adam(model.parameters(), lr=lr)
     losses: list[float] = []
@@ -317,32 +328,41 @@ def _fit_function(
     for step in range(1, steps + 1):
         opt.zero_grad()
         try:
-            pred = model(x)
-            loss = F.mse_loss(pred, y)
+            pred     = model(x)
+            raw_loss = F.mse_loss(pred, y)
         except (ValueError, RuntimeError):
             if log_every and step % log_every == 0:
                 print(f"step {step:>6} | domain error")
             continue
 
-        if not torch.isfinite(loss):
+        if not torch.isfinite(raw_loss):
             if log_every and step % log_every == 0:
                 print(f"step {step:>6} | non-finite loss")
             continue
+
+        loss = raw_loss
+        if lam > 0:
+            penalty = sum(
+                p.abs().sum()
+                for name, p in model.named_parameters()
+                if "weight" in name
+            )
+            loss = raw_loss + lam * penalty
 
         loss.backward()
         if max_grad_norm > 0:
             nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
         opt.step()
 
-        loss_val = loss.item()
-        losses.append(loss_val)
+        raw_val = raw_loss.item()
+        losses.append(raw_val)
 
         if log_every and step % log_every == 0:
-            print(f"step {step:>6} | mse = {loss_val:.4e}")
+            print(f"step {step:>6} | mse = {raw_val:.4e}")
 
-        if loss_val < threshold:
+        if raw_val < threshold:
             if log_every:
-                print(f"Converged at step {step} — mse = {loss_val:.4e}")
+                print(f"Converged at step {step} — mse = {raw_val:.4e}")
             break
 
     return losses
