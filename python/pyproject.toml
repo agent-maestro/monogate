@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "monogate"
+version = "0.2.0"
+description = "EML arithmetic — all elementary functions from eml(x,y) = exp(x) − ln(y)"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+torch = ["torch>=2.0"]
+dev   = ["pytest>=7", "torch>=2.0"]
+
+[project.urls]
+Homepage   = "https://monogate.dev"
+Repository = "https://github.com/almaguer1986/monogate"
+Paper      = "https://arxiv.org/abs/2603.21852"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
