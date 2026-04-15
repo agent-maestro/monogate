@@ -37,6 +37,8 @@ from .core import (
     EML,
     EDL,
     EMN,
+    EXL,
+    EAL,
     make_exp,
     make_ln,
     exp_edl,
@@ -83,6 +85,9 @@ __all__ = [
     "pow_edl",
     "EDL_ONE",
     "EDL_NEG_ONE",
+    "EXL",
+    "EAL",
+    "pow_exl",
     "compare_op",
     "__version__",
 ]

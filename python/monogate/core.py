@@ -31,6 +31,8 @@ __all__ = [
     "EML",
     "EDL",
     "EMN",
+    "EXL",
+    "EAL",
     "make_exp",
     "make_ln",
     "exp_edl",
@@ -42,6 +44,7 @@ __all__ = [
     "pow_edl",
     "EDL_ONE",
     "EDL_NEG_ONE",
+    "pow_exl",
     "compare_op",
 ]
 
@@ -411,6 +414,38 @@ def _emn_func(x: complex, y: complex) -> complex:
 EMN = Operator("EMN", _emn_func, 1.0 + 0j)  # emn(x, 1) = −exp(x)
 
 
+def _exl_func(x: complex, y: complex) -> complex:
+    """exl(x, y) = exp(x) · ln(y).
+
+    The "product of exp and log" gate.  Domain: y > 0, y ≠ 1.
+    Two remarkable 1-node identities:
+        exl(x, e) = exp(x)   [right-neutral e]
+        exl(0, y) = ln(y)    [left-neutral 0]
+    Three-node power:  exl(exl(exl(0, n), x), e) = x^n.
+    Cannot build addition or general multiplication (EXL is complete
+    only over the power-of-positive-reals sub-group, not over ℝ).
+    """
+    return cmath.exp(x) * cmath.log(y)
+
+
+EXL = Operator("EXL", _exl_func, cmath.e)   # exl(x, e) = exp(x)
+
+
+def _eal_func(x: complex, y: complex) -> complex:
+    """eal(x, y) = exp(x) + ln(y).
+
+    Domain: y > 0.
+    Natural 1-node output: eal(x, 1) = exp(x).
+    No finite real formula for ln(x): eal(c, y) = exp(c)+ln(y);
+    the additive exp(c) offset cannot be cancelled by any composition
+    of real constants.
+    """
+    return cmath.exp(x) + cmath.log(y)
+
+
+EAL = Operator("EAL", _eal_func, 1.0 + 0j)  # eal(x, 1) = exp(x)
+
+
 # ── Derived helpers (operator-agnostic) ───────────────────────────────────────
 #
 # Both EML and EDL share the same *structure* for exp and ln, but the constants
@@ -472,6 +507,17 @@ def make_ln(operator: Operator) -> Callable[[complex], complex]:
         # EML's ln_eml has no such overflow — it only fails at x ≤ 0.
         zero = 0j
         return lambda x: f(zero, f(f(zero, x), c))
+    if operator is EXL:
+        # 1-node formula: exl(0, x) = exp(0)·ln(x) = 1·ln(x) = ln(x)
+        # Uniquely efficient: beats EML and EDL (both 3 nodes).
+        # No dead zone — ln(x) is computed directly via cmath.log.
+        return lambda x: operator.func(0j, x)
+    if operator is EAL:
+        raise NotImplementedError(
+            "make_ln: EAL has no finite real formula for ln(x). "
+            "eal(c, y) = exp(c)+ln(y); the additive exp(c) term cannot be "
+            "cancelled by any finite composition of real constants."
+        )
     if operator is EMN:
         raise NotImplementedError(
             "make_ln: no finite real EMN derivation for ln(x). "
@@ -616,6 +662,34 @@ def pow_edl(x: complex, n: float) -> complex:
     return exp_edl(mul_edl(complex(n), ln_edl(x)))
 
 
+# ── EXL arithmetic ────────────────────────────────────────────────────────────
+#
+# EXL's primitive is power: x^n = exl(exl(exl(0, n), x), e).
+#
+# Derivation:
+#   step 1: exl(0, n)         = exp(0)·ln(n)   = ln(n)
+#   step 2: exl(ln(n), x)     = exp(ln(n))·ln(x) = n·ln(x)
+#   step 3: exl(n·ln(x), e)   = exp(n·ln(x))   = x^n  ✓
+#
+# Node count: 3  (vs EML 15, EDL ~11) — the most efficient power formula found.
+#
+# EXL completeness:
+#   Reachable:   exp (1 node), ln (1 node), x^n (3 nodes), identity (2 nodes)
+#   Unreachable: addition, subtraction, general multiplication of two variables
+#   The algebraic closure of {exp(·)·ln(·), constants} does not include x+y
+#   over the reals — EXL is complete only over the power-of-positives sub-group.
+
+def pow_exl(x: complex, n: complex) -> complex:
+    """x^n in 3 EXL nodes: exl(exl(exl(0, n), x), e).
+
+    Proof (see derivation above).
+    Domain: x > 0 (ln step), x ≠ 1; n ∈ ℂ.
+    Nodes: 3  (EML requires 15, EDL ~11 for the same formula).
+    """
+    e = EXL.constant
+    return EXL.func(EXL.func(EXL.func(0j, n), x), e)
+
+
 # ── Comparison utility ────────────────────────────────────────────────────────
 
 def compare_op(
@@ -667,3 +741,9 @@ EDL.register('add',   add_edl)   # raises NotImplementedError — documented
 # from its 1-node and 2-node trees.
 EMN.register('neg_exp',  lambda x: _emn_func(x, 1.0 + 0j))    # −exp(x)
 EMN.register('ln_shift', lambda x: _emn_func(0j, x))           # ln(x) − 1
+
+# EXL: exp-times-ln gate.  1-node exp, 1-node ln, 3-node power.
+EXL.register('pow', pow_exl)
+
+# EAL: exp-plus-ln gate.  1-node exp, no finite ln.
+# No arithmetic operations can be built purely from EAL over the reals.

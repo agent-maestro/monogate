@@ -6,9 +6,9 @@ import pytest
 import torch
 
 from monogate.core import (
-    EDL, EML, EMN, EDL_NEG_ONE, EDL_ONE, Operator,
+    EDL, EML, EMN, EXL, EAL, EDL_NEG_ONE, EDL_ONE, Operator,
     div_edl, exp_edl, ln_edl, make_exp, make_ln, mul_edl, neg_edl, pow_edl, recip_edl,
-    ln_eml, pow_eml,
+    ln_eml, pow_eml, pow_exl,
 )
 from monogate.torch_ops import edl_op
 
@@ -479,3 +479,95 @@ def test_emn_repr():
 def test_emn_ops_list():
     assert 'neg_exp' in EMN.ops()
     assert 'ln_shift' in EMN.ops()
+
+
+# ── EXL operator: exp(x)*ln(y) ────────────────────────────────────────────────
+
+def test_exl_exp_is_1_node():
+    # exl(x, e) = exp(x)*ln(e) = exp(x)*1 = exp(x)
+    assert abs(EXL.exp(1 + 0j).real - math.e) < 1e-14
+    assert abs(EXL.exp(0 + 0j).real - 1.0) < 1e-14
+
+def test_exl_ln_is_1_node():
+    # exl(0, x) = exp(0)*ln(x) = ln(x)  — 1-node formula, no dead zone
+    assert abs(EXL.ln(math.e + 0j).real - 1.0) < 1e-14
+    assert abs(EXL.ln(2.0 + 0j).real - math.log(2)) < 1e-14
+    assert abs(EXL.ln(0.5 + 0j).real - math.log(0.5)) < 1e-14
+
+def test_exl_ln_no_dead_zone_near_one():
+    # EXL ln has NO dead zone (direct cmath.log) — contrast with EDL
+    for x in [1.0001, 0.9999, 1.001, 0.999]:
+        got = EXL.ln(x + 0j).real
+        ref = math.log(x)
+        assert abs(got - ref) < 1e-12, f"EXL.ln({x}) err={abs(got-ref):.2e}"
+
+def test_exl_ln_vs_edl_dead_zone():
+    # EDL ln overflows near x=1; EXL ln does not
+    import pytest
+    with pytest.raises((OverflowError, ValueError)):
+        ln_edl(1.001 + 0j)
+    # EXL handles the same value fine
+    assert abs(EXL.ln(1.001 + 0j).real - math.log(1.001)) < 1e-12
+
+def test_exl_make_exp():
+    fn = make_exp(EXL)
+    assert abs(fn(1 + 0j).real - math.e) < 1e-14
+
+def test_exl_make_ln():
+    fn = make_ln(EXL)
+    assert abs(fn(math.e + 0j).real - 1.0) < 1e-14
+    assert abs(fn(2.0 + 0j).real - math.log(2)) < 1e-14
+
+def test_pow_exl_integer():
+    assert abs(pow_exl(2 + 0j, 10 + 0j).real - 1024.0) < 1e-9
+    assert abs(pow_exl(3 + 0j, 3 + 0j).real - 27.0) < 1e-9
+
+def test_pow_exl_fractional():
+    assert abs(pow_exl(4 + 0j, 0.5 + 0j).real - 2.0) < 1e-10
+
+def test_pow_exl_x_less_than_1():
+    # EXL can handle x<1 (complex arithmetic)
+    result = pow_exl(0.5 + 0j, 2 + 0j).real
+    assert abs(result - 0.25) < 1e-12
+
+def test_exl_pow_registered():
+    result = EXL.pow(2 + 0j, 8 + 0j).real
+    assert abs(result - 256.0) < 1e-9
+
+def test_exl_ops_list():
+    assert 'pow' in EXL.ops()
+
+def test_exl_repr():
+    assert "EXL" in repr(EXL)
+
+
+# ── EAL operator: exp(x)+ln(y) ────────────────────────────────────────────────
+
+def test_eal_exp_is_1_node():
+    # eal(x, 1) = exp(x) + ln(1) = exp(x) + 0 = exp(x)
+    assert abs(EAL.exp(1 + 0j).real - math.e) < 1e-14
+    assert abs(EAL.exp(0 + 0j).real - 1.0) < 1e-14
+
+def test_eal_shifted_ln():
+    # eal(0, x) = 1 + ln(x) — NOT bare ln, shifted by 1
+    assert abs(EAL.func(0j, math.e + 0j).real - 2.0) < 1e-14   # 1 + ln(e) = 2
+    assert abs(EAL.func(0j, 1.0 + 0j).real - 1.0) < 1e-14     # 1 + ln(1) = 1
+
+def test_eal_make_exp():
+    fn = make_exp(EAL)
+    assert abs(fn(0 + 0j).real - 1.0) < 1e-14
+
+def test_eal_make_ln_raises():
+    with pytest.raises(NotImplementedError, match="EAL"):
+        make_ln(EAL)
+
+def test_eal_ln_method_raises():
+    with pytest.raises(NotImplementedError):
+        EAL.ln(math.e + 0j)
+
+def test_eal_ops_list_empty():
+    # No arithmetic operations registered for EAL
+    assert EAL.ops() == []
+
+def test_eal_repr():
+    assert "EAL" in repr(EAL)
