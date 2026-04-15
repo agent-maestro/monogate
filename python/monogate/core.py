@@ -924,6 +924,271 @@ class HybridOperator:
         """Return sorted list of routed operation names."""
         return sorted(self._routing.keys())
 
+    def benchmark(
+        self,
+        targets: list[str] | None = None,
+        restarts: int = 3,
+        steps: int = 800,
+        depth: int = 3,
+    ) -> dict:
+        """
+        Print a benchmark table for this HybridOperator.
+
+        Reports:
+        - Node-count table for all routed operations vs EML-only baseline.
+        - Numerical accuracy spot-checks for exp, ln, pow, mul, div.
+        - Optional neural regression on named targets (requires torch).
+
+        Parameters
+        ----------
+        targets : list of str, optional
+            Named regression targets to benchmark. Supported values:
+            ``"sin"``, ``"cos"``, ``"x**3"``, ``"x**2-x"``, ``"exp"``,
+            ``"poly4"``, ``"sqrt"``. Pass ``[]`` to skip regression.
+            Defaults to ``["sin", "cos", "x**3", "poly4"]``.
+        restarts : int
+            Number of random restarts per target. Default 3.
+        steps : int
+            Training steps per restart. Default 800.
+        depth : int
+            EMLNetwork depth. Default 3.
+
+        Returns
+        -------
+        dict
+            ``{"nodes": {...}, "accuracy": {...}, "regression": {...}}``
+        """
+        import math
+
+        if targets is None:
+            targets = ["sin", "cos", "x**3", "poly4"]
+
+        results: dict = {"nodes": {}, "accuracy": {}, "regression": {}}
+
+        # ── 1. Node count table ───────────────────────────────────────────────
+        print(f"\n{'='*60}")
+        print(f"  {self.name!r} benchmark")
+        print(f"{'='*60}")
+        print(f"\n  Node counts  (vs all-EML baseline)\n")
+        print(f"  {'Op':<10}  {'Routed to':<8}  {'Nodes':>6}  {'EML baseline':>14}  {'Saving':>8}")
+        print(f"  {'-'*10}  {'-'*8}  {'-'*6}  {'-'*14}  {'-'*8}")
+
+        total_hybrid = 0
+        total_eml    = 0
+        node_summary = {}
+        for op_name in sorted(self._routing.keys()):
+            base   = self._routing[op_name]
+            costs  = _NODE_COSTS.get(op_name, {})
+            hybrid_cost = costs.get(base.name)
+            eml_cost    = costs.get('EML')
+            node_summary[op_name] = {'operator': base.name, 'nodes': hybrid_cost, 'eml_nodes': eml_cost}
+            if isinstance(hybrid_cost, int):
+                total_hybrid += hybrid_cost
+            if isinstance(eml_cost, int):
+                total_eml += eml_cost
+            hc_str  = f"{hybrid_cost}n" if isinstance(hybrid_cost, int) else "?"
+            ec_str  = f"{eml_cost}n"    if isinstance(eml_cost,  int) else "N/A"
+            if isinstance(hybrid_cost, int) and isinstance(eml_cost, int):
+                saving = eml_cost - hybrid_cost
+                sv_str = f"-{saving}n" if saving > 0 else ("same" if saving == 0 else f"+{-saving}n")
+            else:
+                sv_str = "?"
+            print(f"  {op_name:<10}  {base.name:<8}  {hc_str:>6}  {ec_str:>14}  {sv_str:>8}")
+
+        if total_eml > 0:
+            total_saving = total_eml - total_hybrid
+            pct = 100.0 * total_saving / total_eml
+            print(f"\n  Total: {total_hybrid}n  vs  {total_eml}n EML-only  =>  saves {total_saving}n ({pct:.0f}%)")
+        results["nodes"] = node_summary
+
+        # ── 2. Numerical accuracy spot-checks ────────────────────────────────
+        print(f"\n  Numerical accuracy  (spot-check at representative values)\n")
+        print(f"  {'Check':<26}  {'Result':>14}  {'Expected':>14}  {'Err':>12}")
+        print(f"  {'-'*26}  {'-'*14}  {'-'*14}  {'-'*12}")
+
+        checks = []
+        routing = self._routing
+        # exp check
+        if 'exp' in routing:
+            try:
+                r = routing['exp'].exp(1.0)
+                e = math.e
+                err = abs(r - e)
+                checks.append(("exp(1)", r, e, err))
+            except Exception as exc:
+                checks.append(("exp(1)", f"ERROR: {exc}", math.e, float('inf')))
+        # ln check
+        if 'ln' in routing:
+            try:
+                r = routing['ln'].ln(math.e)
+                e = 1.0
+                err = abs(r - e)
+                checks.append(("ln(e)", r, e, err))
+            except Exception as exc:
+                checks.append(("ln(e)", f"ERROR: {exc}", 1.0, float('inf')))
+        # pow check
+        if 'pow' in routing:
+            try:
+                r = routing['pow'].pow(2.0, 10.0)
+                e = 1024.0
+                err = abs(r - e)
+                checks.append(("pow(2,10)", r, e, err))
+            except Exception as exc:
+                checks.append(("pow(2,10)", f"ERROR: {exc}", 1024.0, float('inf')))
+        # mul check
+        if 'mul' in routing:
+            try:
+                r = routing['mul'].mul(3.0, 5.0)
+                e = 15.0
+                err = abs(r - e)
+                checks.append(("mul(3,5)", r, e, err))
+            except Exception as exc:
+                checks.append(("mul(3,5)", f"ERROR: {exc}", 15.0, float('inf')))
+        # div check
+        if 'div' in routing:
+            try:
+                r = routing['div'].div(10.0, 2.0)
+                e = 5.0
+                err = abs(r - e)
+                checks.append(("div(10,2)", r, e, err))
+            except Exception as exc:
+                checks.append(("div(10,2)", f"ERROR: {exc}", 5.0, float('inf')))
+        # add check
+        if 'add' in routing:
+            try:
+                r = routing['add'].add(3.0, 4.0)
+                e = 7.0
+                err = abs(r - e)
+                checks.append(("add(3,4)", r, e, err))
+            except Exception as exc:
+                checks.append(("add(3,4)", f"ERROR: {exc}", 7.0, float('inf')))
+        # sub check
+        if 'sub' in routing:
+            try:
+                r = routing['sub'].sub(10.0, 3.0)
+                e = 7.0
+                err = abs(r - e)
+                checks.append(("sub(10,3)", r, e, err))
+            except Exception as exc:
+                checks.append(("sub(10,3)", f"ERROR: {exc}", 7.0, float('inf')))
+
+        accuracy_summary = {}
+        for name_check, r, e, err in checks:
+            # Strip imaginary part if negligible (ops work over complex internally)
+            r_disp = r.real if isinstance(r, complex) else r
+            r_str  = f"{r_disp:.8f}" if isinstance(r_disp, float) else str(r_disp)
+            e_str  = f"{e:.8f}"
+            err_str = f"{err:.2e}" if math.isfinite(err) else "FAIL"
+            ok     = "OK" if (math.isfinite(err) and err < 1e-8) else ("~OK" if (math.isfinite(err) and err < 1e-5) else "FAIL")
+            print(f"  {name_check:<26}  {r_str:>14}  {e_str:>14}  {err_str:>10}  {ok}")
+            accuracy_summary[name_check] = {'result': r_disp, 'expected': e, 'error': err}
+        results["accuracy"] = accuracy_summary
+
+        # ── 3. Neural regression (optional) ──────────────────────────────────
+        if targets:
+            try:
+                import statistics
+                import torch
+                import torch.nn.functional as F
+                from .network import EMLNetwork
+
+                _TARGET_DEFS = {
+                    "sin":    (math.sin,                     -math.pi,  math.pi),
+                    "cos":    (math.cos,                     -math.pi,  math.pi),
+                    "x**3":   (lambda x: x**3,               -2.0,      2.0),
+                    "x**2-x": (lambda x: x**2 - x,          -2.0,      2.0),
+                    "exp":    (math.exp,                     -2.0,      2.0),
+                    "poly4":  (lambda x: x**4 - 2*x**2 + 1, -2.0,      2.0),
+                    "sqrt":   (math.sqrt,                     0.1,      4.0),
+                }
+
+                # Determine op_func from the routing (use mul/div operator for inner nodes)
+                _op_func = None
+                if hasattr(self, '_routing'):
+                    routing_inner = self._routing
+                    # Prefer to use the "dominant" inner op — if all inner ops are the same, use it
+                    inner_ops = {v for k, v in routing_inner.items() if k not in ('add', 'sub')}
+                    if len(inner_ops) == 1:
+                        inner_op = next(iter(inner_ops))
+                        # Get the torch op function from torch_ops
+                        try:
+                            from . import torch_ops as _to
+                            op_map = {
+                                'EML': None,
+                                'EDL': getattr(_to, 'edl_op', None),
+                                'EXL': getattr(_to, 'exl_op', None),
+                                'EAL': getattr(_to, 'eal_op', None),
+                            }
+                            _op_func = op_map.get(inner_op.name)
+                        except Exception:
+                            _op_func = None
+
+                print(f"\n  Neural regression  (depth={depth}, restarts={restarts}, steps={steps})\n")
+                print(f"  {'Target':<12}  {'med MSE':>10}  {'min MSE':>10}  {'conv%':>7}")
+                print(f"  {'-'*12}  {'-'*10}  {'-'*10}  {'-'*7}")
+
+                reg_summary = {}
+                for tgt_name in targets:
+                    if tgt_name not in _TARGET_DEFS:
+                        print(f"  {tgt_name:<12}  (unknown target — skip)")
+                        continue
+                    fn, lo, hi = _TARGET_DEFS[tgt_name]
+                    x_data = torch.linspace(lo, hi, 256).unsqueeze(1)
+                    y_data = torch.tensor([fn(xi.item()) for xi in x_data.squeeze(1)])
+
+                    finals = []
+                    converged = 0
+                    threshold = 5e-4
+                    for restart in range(restarts):
+                        torch.manual_seed(42 + restart * 17)
+                        model = EMLNetwork(in_features=1, depth=depth, op_func=_op_func)
+                        opt   = torch.optim.Adam(model.parameters(), lr=3e-3)
+                        best_mse = float('inf')
+                        for _ in range(steps):
+                            opt.zero_grad()
+                            try:
+                                pred = model(x_data)
+                                loss = F.mse_loss(pred, y_data)
+                            except Exception:
+                                continue
+                            if not torch.isfinite(loss):
+                                continue
+                            loss.backward()
+                            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                            opt.step()
+                            mse = loss.item()
+                            if mse < best_mse:
+                                best_mse = mse
+                        try:
+                            final = F.mse_loss(model(x_data), y_data).item()
+                            if not math.isfinite(final):
+                                final = float('inf')
+                        except Exception:
+                            final = float('inf')
+                        finals.append(final)
+                        if final < threshold:
+                            converged += 1
+
+                    med = statistics.median(finals)
+                    mn  = min(finals)
+                    cv  = converged / restarts
+
+                    def _fmt(v):
+                        if v == float('inf'): return "inf"
+                        if v < 1e-10: return f"{v:.1e}"
+                        return f"{v:.3e}"
+
+                    print(f"  {tgt_name:<12}  {_fmt(med):>10}  {_fmt(mn):>10}  {cv:.0%}".rstrip())
+                    reg_summary[tgt_name] = {'med_mse': med, 'min_mse': mn, 'conv_rate': cv}
+
+                results["regression"] = reg_summary
+
+            except ImportError:
+                print("\n  [regression skipped: torch not installed]")
+
+        print(f"\n{'='*60}\n")
+        return results
+
     def info(self) -> None:
         """Print routing table with operator names and node counts."""
         print(repr(self))
