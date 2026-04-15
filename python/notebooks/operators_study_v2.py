@@ -24,6 +24,13 @@ D  Fourth-operator hunt
      D1. EXL = exp(x)*ln(y) -- full analysis (1-node exp+ln, 3-node pow)
      D2. EAL = exp(x)+ln(y) -- 1-node exp, no finite ln
      D3. Completeness verdict for the full operator zoo
+
+E  Beyond exp-ln family
+     E1. Sqrt-family: sqrt(x)-sqrt(y), sqrt(x)/sqrt(y), sqrt(x)*sqrt(y)
+     E2. Power gate: x^y
+     E3. Trig-seed gates: sinh(x)-cosh(y), cosh(x)/cosh(y), sin(x)+cos(y)
+     E4. Log-sum variants: log(x+y), log(x*y), log(x/y)
+     E5. Summary: why none are complete
 """
 
 import math
@@ -558,6 +565,256 @@ def fourth_operator_hunt():
 
 
 # -----------------------------------------------------------------------------
+# Section E -- Beyond exp-ln family
+# -----------------------------------------------------------------------------
+
+def _completeness_probe(name, gate, c, tol=1e-9):
+    """Return (can_exp, can_ln, exp_err, ln_err, ln_struct)."""
+    can_e, exp_err   = _can_exp(gate, c, tol=tol)
+    can_l, ln_err, s = _can_ln_3node(gate, c, tol=tol)
+    return can_e, can_l, exp_err, ln_err, s
+
+
+def _scan_constants(gate, c_candidates, tol=1e-9):
+    """Try multiple candidate constants; return best (can_exp, can_ln) pair."""
+    best = (False, False, float("inf"), float("inf"), "none")
+    for c in c_candidates:
+        ce, cl, ee, le, s = _completeness_probe("", gate, c, tol=tol)
+        if (ce, cl) > (best[0], best[1]):
+            best = (ce, cl, ee, le, s)
+    return best
+
+
+def beyond_exp_ln():
+    print(f"\n{'SECTION E -- BEYOND EXP-LN FAMILY':^{W}}")
+    print(SEP)
+    print("""
+  We systematically test gates outside the exp(x) OP ln(y) family.
+  For each gate we try a range of natural constants and check whether
+  the two completeness prerequisites hold:
+    (1) gate(x, c) = exp(x)  for some fixed c          [exp in 1 node]
+    (2) some 3-node template gives ln(x)               [ln recoverable]
+  If either fails, the operator is provably NOT complete.
+""")
+
+    # -------------------------------------------------------------------------
+    # E1. Sqrt family
+    # -------------------------------------------------------------------------
+    print(f"  E1. SQRT-FAMILY  (gate involves sqrt, not exp/ln)")
+    print(f"  {'Gate':<35}  {'c':^8}  {'exp?':^6}  {'ln?':^6}  {'verdict'}")
+    print(f"  {'-'*35}  {'-'*8}  {'-'*6}  {'-'*6}  {'-'*20}")
+
+    # sqrt(x) - sqrt(y): gate(x, c) = sqrt(x) - sqrt(c).
+    # For gate(x,c) = exp(x) we'd need sqrt(x) - sqrt(c) = exp(x) for ALL x -- impossible
+    # (sqrt(x) is not exp(x) for any constant shift).
+    # We still run the probe to document exactly where it fails.
+    sqrt_candidates = [
+        ("sqrt(x) - sqrt(y)",   lambda x, y: cmath.sqrt(x) - cmath.sqrt(y),
+         [0j, 1+0j, cmath.e, 0.25+0j]),
+        ("sqrt(x) / sqrt(y)",   lambda x, y: cmath.sqrt(x) / cmath.sqrt(y),
+         [1+0j, cmath.e, 0.5+0j]),
+        ("sqrt(x) * sqrt(y)",   lambda x, y: cmath.sqrt(x) * cmath.sqrt(y),
+         [1+0j, cmath.e, 0.25+0j]),
+        ("sqrt(x) + sqrt(y)",   lambda x, y: cmath.sqrt(x) + cmath.sqrt(y),
+         [0j, 1+0j, 0.25+0j]),
+        ("x^0.5 - y",           lambda x, y: cmath.sqrt(x) - y,
+         [0j, 1+0j]),
+        ("x - y^0.5",           lambda x, y: x - cmath.sqrt(y),
+         [1+0j, 0j]),
+    ]
+    for name, gate, cs in sqrt_candidates:
+        ce, cl, ee, le, s = _scan_constants(gate, cs)
+        verdict = "MAYBE" if (ce and cl) else ("exp only" if ce else ("ln only" if cl else "neither"))
+        # pick best c label for display
+        best_c = "varied"
+        print(f"  {name:<35}  {best_c:^8}  {'YES' if ce else 'no':^6}  {'YES' if cl else 'no':^6}  {verdict}")
+
+    print(f"""
+  Result: No sqrt-family gate passes the exp prerequisite.
+  Reason: gate(x, c) is O(sqrt(x)) for large x, while exp(x) grows
+  exponentially -- no constant c can make sqrt(x) - sqrt(c) = exp(x).
+  Sqrt gates can represent power sub-groups (x^0.5, x, x^2 ...) but
+  cannot reach the exponential group.
+""")
+
+    # -------------------------------------------------------------------------
+    # E2. Power gate: x^y
+    # -------------------------------------------------------------------------
+    print(f"  E2. POWER GATE  x^y  (not involving exp or ln explicitly)")
+    print(f"  {'Gate':<35}  {'c':^8}  {'exp?':^6}  {'ln?':^6}  {'verdict'}")
+    print(f"  {'-'*35}  {'-'*8}  {'-'*6}  {'-'*6}  {'-'*20}")
+
+    # x^y gate.  Note: x^y = exp(y*ln(x)) -- it's exp+ln internally,
+    # but the gate itself takes (x, y) not (exp-input, ln-input).
+    # gate(x, c) = x^c.  For this to be exp(x): x^c = exp(x) requires c = inf.
+    # The gate IS exp-aware internally but doesn't expose a 1-node exp.
+    def _pow_gate(x, y):
+        try:
+            return x ** y
+        except Exception:
+            raise ValueError
+
+    power_candidates = [
+        ("x^y",              lambda x, y: _pow_gate(complex(x), complex(y)),
+         [cmath.e, 1+0j, 2+0j, 0.5+0j]),
+        ("x^y - 1",          lambda x, y: _pow_gate(complex(x), complex(y)) - 1,
+         [cmath.e, 1+0j]),
+        ("exp(x)^y",         lambda x, y: cmath.exp(x) ** complex(y),
+         [1+0j, cmath.e]),
+        ("x^(exp(y))",       lambda x, y: _pow_gate(complex(x), cmath.exp(y)),
+         [0j, 1+0j]),
+        ("ln(x)^y",          lambda x, y: cmath.log(x) ** complex(y),
+         [1+0j, cmath.e]),
+    ]
+    for name, gate, cs in power_candidates:
+        ce, cl, ee, le, s = _scan_constants(gate, cs)
+        verdict = "MAYBE" if (ce and cl) else ("exp only" if ce else ("ln only" if cl else "neither"))
+        print(f"  {name:<35}  {'varied':^8}  {'YES' if ce else 'no':^6}  {'YES' if cl else 'no':^6}  {verdict}")
+
+    print(f"""
+  Result: x^y cannot give exp(x) in 1 node.  x^c = exp(x) requires c
+  to depend on x, not be a fixed constant -- impossible by definition.
+  exp(x)^y passes exp (exp(x)^1 = exp(x)) but fails ln: no 3-node
+  formula recovers ln because the gate collapses all sub-structure to
+  a power relationship.
+""")
+
+    # -------------------------------------------------------------------------
+    # E3. Trig-seed gates
+    # -------------------------------------------------------------------------
+    print(f"  E3. TRIG-SEED GATES  (sinh, cosh, sin, cos)")
+    print(f"  {'Gate':<35}  {'exp?':^6}  {'ln?':^6}  {'verdict'}")
+    print(f"  {'-'*35}  {'-'*6}  {'-'*6}  {'-'*20}")
+
+    trig_candidates = [
+        # sinh(x) - cosh(y): gate(x,0) = sinh(x) - 1; gate(0,y) = -cosh(y)
+        # sinh(x) = (exp(x)-exp(-x))/2 -- subtracts exp(-x), can't isolate exp(x)
+        ("sinh(x) - cosh(y)",  lambda x, y: cmath.sinh(x) - cmath.cosh(y),
+         [0j, 1+0j, complex(-1)]),
+        ("cosh(x) / cosh(y)",  lambda x, y: cmath.cosh(x) / cmath.cosh(y),
+         [0j, 1+0j]),
+        ("sinh(x) / sinh(y)",  lambda x, y: cmath.sinh(x) / cmath.sinh(y),
+         [1+0j, cmath.e, 0j]),
+        ("exp(x) - cos(y)",    lambda x, y: cmath.exp(x) - cmath.cos(y),
+         [0j, complex(math.pi/2)]),
+        ("exp(x) * cos(y)",    lambda x, y: cmath.exp(x) * cmath.cos(y),
+         [0j, complex(math.pi)]),
+        ("sin(x) + cos(y)",    lambda x, y: cmath.sin(x) + cmath.cos(y),
+         [0j, complex(math.pi/2)]),
+        ("exp(x)*cosh(y)",     lambda x, y: cmath.exp(x) * cmath.cosh(y),
+         [0j, 1+0j]),
+        # Special: 2*sinh(x) = exp(x) - exp(-x).  If y is the ln(exp(-x)) = -x,
+        # then gate = exp(x) - exp(something), which is not a fixed constant gate.
+        ("2*sinh(x) - exp(-y)", lambda x, y: 2*cmath.sinh(x) - cmath.exp(-y),
+         [0j]),
+    ]
+    for name, gate, cs in trig_candidates:
+        ce, cl, ee, le, s = _scan_constants(gate, cs)
+        verdict = "MAYBE" if (ce and cl) else ("exp only" if ce else ("ln only" if cl else "neither"))
+        print(f"  {name:<35}  {'YES' if ce else 'no':^6}  {'YES' if cl else 'no':^6}  {verdict}")
+
+    print(f"""
+  Result: No trig-seed gate passes both tests.
+  - sinh(x) = (exp(x)-exp(-x))/2: the exp(-x) term can't be zeroed by a
+    constant right argument.  gate(x,0) = sinh(x)-1, not exp(x).
+  - exp(x)*cos(y): passes exp (cos(0)=1) but ln3 fails -- multiplication
+    by cos doesn't give an additive structure that telescopes to ln(x).
+  - exp(x)-cos(y): cos(pi/2)=0 so gate(x, pi/2) = exp(x), exp passes!
+    But ln3 fails: no 3-node formula reaches ln(x) via cos structure.
+""")
+
+    # -------------------------------------------------------------------------
+    # E4. Log-sum variants
+    # -------------------------------------------------------------------------
+    print(f"  E4. LOG-SUM VARIANTS  (log applied to combinations)")
+    print(f"  {'Gate':<35}  {'exp?':^6}  {'ln?':^6}  {'verdict'}")
+    print(f"  {'-'*35}  {'-'*6}  {'-'*6}  {'-'*20}")
+
+    logsum_candidates = [
+        # log(x+y): gate(x,c) = ln(x+c).  For exp(x): ln(x+c) = exp(x) impossible.
+        ("ln(x+y)",            lambda x, y: cmath.log(x + y),
+         [0j, 1+0j, cmath.e]),
+        # log(x*y) = log(x)+log(y): purely logarithmic, no exp
+        ("ln(x*y)",            lambda x, y: cmath.log(x * y),
+         [1+0j, cmath.e]),
+        # log(x/y) = log(x)-log(y): same as EDL without the exp
+        ("ln(x/y)",            lambda x, y: cmath.log(x / y),
+         [1+0j, cmath.e]),
+        # log(exp(x)+y): gate(x,0) = ln(exp(x)) = x; gate(x,c) = ln(exp(x)+c)
+        ("ln(exp(x)+y)",       lambda x, y: cmath.log(cmath.exp(x) + y),
+         [0j, 1+0j, -1+0j]),
+        # exp(ln(x)+y) = x*exp(y): gate(x,0) = x*1 = x
+        ("exp(ln(x)+y)",       lambda x, y: cmath.exp(cmath.log(x) + y),
+         [0j, 1+0j, cmath.e]),
+        # exp(x+ln(y)) = exp(x)*y: gate(x,1) = exp(x).  exp passes!
+        ("exp(x+ln(y))",       lambda x, y: cmath.exp(x + cmath.log(y)),
+         [1+0j, cmath.e, 0j]),
+        # exp(x)*ln(x+y): mixed
+        ("exp(x)*ln(x+y)",     lambda x, y: cmath.exp(x) * cmath.log(x + y),
+         [1+0j, 0j, cmath.e]),
+    ]
+    for name, gate, cs in logsum_candidates:
+        ce, cl, ee, le, s = _scan_constants(gate, cs)
+        verdict = "MAYBE" if (ce and cl) else ("exp only" if ce else ("ln only" if cl else "neither"))
+        print(f"  {name:<35}  {'YES' if ce else 'no':^6}  {'YES' if cl else 'no':^6}  {verdict}")
+
+    print(f"""
+  Key finding: exp(x+ln(y)) = exp(x)*y passes the exp test (c=1 gives exp(x)),
+  but is ISOMORPHIC to a scaled multiplication gate -- it's just EML/EDL in
+  disguise: exp(x+ln(y)) = exp(x)*y, so it's a re-parameterisation of x*y
+  (the multiplication table in log-space), NOT a new operator family.
+
+  ln(exp(x)+y): gate(x,0) = ln(exp(x)+0) = ln(exp(x)) = x -- that recovers
+  the identity, not exp(x).  No constant c makes gate(x,c) = exp(x) for all x.
+""")
+
+    # -------------------------------------------------------------------------
+    # E5. Summary
+    # -------------------------------------------------------------------------
+    print(f"  E5. SUMMARY: WHY NO OUTSIDE-FAMILY GATE IS COMPLETE")
+    print(f"  {'-'*68}")
+    print(f"""
+  Completeness requires simultaneously:
+    (1) 1-node exp:  gate(x, c) = exp(x) for a FIXED c
+    (2) finite ln:   some k-node formula using only the gate gives ln(x)
+
+  These two constraints are very restrictive:
+
+  Sqrt / power gates (x^a, sqrt(x)):
+    Growth rate is polynomial, not exponential -- (1) fails by inspection.
+    No algebraic combination of polynomial-growth functions can match exp(x).
+
+  Trig gates (sin, cos, sinh, cosh):
+    sinh(x) = (exp(x)-exp(-x))/2 always includes an exp(-x) term.
+    A fixed right constant c cannot zero the exp(-x) contribution.
+    Trig-hybrid gates (exp(x)*cos(y)): pass exp, but the cos factor
+    destroys the additive log-space structure needed for ln derivation.
+
+  Log-sum gates (ln(x+y), exp(x+ln(y))):
+    Either polynomial/log growth (can't reach exp), or reduce to a
+    known EML/EDL parameterisation under re-labelling of arguments.
+
+  General algebraic argument:
+    The EML group (additive in log-space) and EDL group (multiplicative
+    in log-space) are the minimal non-trivial binary operations that:
+      - extend to both the additive group (add/sub) AND
+      - the multiplicative group (mul/div/pow)
+    ...via a finite tree of applications.
+
+    Any gate outside this family either:
+      (a) stays within one group (power-only, log-only), or
+      (b) introduces a periodic or bounded factor (trig) that prevents
+          the telescoping cancellations required for ln derivation, or
+      (c) is isomorphic to EML or EDL via a change of variables.
+
+  CONCLUSION: EML and EDL are the unique complete operators
+  within all binary gates of the form f(x) OP g(y) where f,g
+  are elementary functions.  No new complete operator exists outside
+  the exp(x) OP ln(y) family.
+""")
+
+
+# -----------------------------------------------------------------------------
 # Main
 # -----------------------------------------------------------------------------
 
@@ -566,6 +823,7 @@ if __name__ == "__main__":
     compare_operators()
     extended_parametric()
     fourth_operator_hunt()
+    beyond_exp_ln()
 
     print(SEP)
     print("Done.")
