@@ -204,15 +204,43 @@ class TestOptimizeResult:
         assert m.savings == round((1 - 63 / 245) * 100)
 
 
-# ── Callable passthrough (decorator stub) ────────────────────────────────────
+# ── Dict-style access on OptimizeResult ──────────────────────────────────────
 
-class TestDecoratorStub:
-    def test_callable_returned_unchanged(self):
+class TestDictAccess:
+    def test_message_dict_style(self):
+        r = best_optimize("sin(x)")
+        assert r["message"] == r.message
+
+    def test_savings_pct_dict_style(self):
+        r = best_optimize("sin(x)")
+        assert r["savings_pct"] == r.savings_pct
+
+    def test_python_snippet_dict_style(self):
+        r = best_optimize("sin(x)")
+        assert r["python_snippet"] == r.python_snippet
+
+    def test_unknown_key_raises(self):
+        r = best_optimize("sin(x)")
+        with pytest.raises(KeyError):
+            _ = r["nonexistent_field"]
+
+    def test_keys_returns_sorted_list(self):
+        r = best_optimize("sin(x)")
+        assert isinstance(r.keys(), list)
+        assert "message" in r.keys()
+        assert "savings_pct" in r.keys()
+
+
+# ── Decorator — AST analysis ──────────────────────────────────────────────────
+
+class TestDecoratorAst:
+    def test_callable_returned(self):
         def my_fn(x):
-            return x * 2
+            import math
+            return math.sin(x)
 
         result = best_optimize(my_fn)
-        assert result is my_fn
+        assert callable(result)
 
     def test_decorated_fn_still_callable(self):
         @best_optimize
@@ -221,12 +249,66 @@ class TestDecoratorStub:
 
         assert my_fn(3) == 4
 
+    def test_best_info_attached(self):
+        @best_optimize
+        def my_fn(x):
+            import math
+            return math.sin(x) + math.cos(x)
+
+        assert hasattr(my_fn, "best_info")
+        assert isinstance(my_fn.best_info, OptimizeResult)
+
+    def test_best_info_detects_sin(self):
+        @best_optimize
+        def my_fn(x):
+            import math
+            return math.sin(x)
+
+        m = op_by_name(my_fn.best_info, "sin")
+        assert m is not None
+        assert m.best_nodes == 63
+
+    def test_best_info_savings_positive(self):
+        @best_optimize
+        def my_fn(x):
+            import math
+            return math.sin(x) * math.cos(x)
+
+        assert my_fn.best_info.savings_pct > 0
+
     def test_stub_marker_set(self):
+        @best_optimize
         def my_fn(x):
             return x
 
-        result = best_optimize(my_fn)
-        assert getattr(result, "_best_optimize_stub", False) is True
+        assert getattr(my_fn, "_best_optimize_stub", False) is True
+
+    def test_bare_decorator_no_parens(self):
+        # @best_optimize  (no parentheses)
+        @best_optimize
+        def f(x):
+            import math
+            return math.exp(x)
+
+        assert callable(f)
+        assert hasattr(f, "best_info")
+
+    def test_with_parens_decorator(self):
+        # @best_optimize()  (with empty parentheses)
+        @best_optimize()
+        def g(x):
+            import math
+            return math.sin(x)
+
+        assert callable(g)
+        assert hasattr(g, "best_info")
+
+    def test_wraps_preserves_name(self):
+        @best_optimize
+        def my_named_fn(x):
+            return x
+
+        assert my_named_fn.__name__ == "my_named_fn"
 
     def test_optimize_alias(self):
         r = optimize("sin(x)")
