@@ -35,6 +35,7 @@ from .core import E as _E, NEG_ONE as _NEG_ONE, ZERO as _ZERO  # noqa: F401
 
 __all__ = [
     "op",
+    "edl_op",
     "exp_eml",
     "ln_eml",
     "sub_eml",
@@ -54,6 +55,11 @@ _EPS = 1e-38  # clamp floor for log-domain inputs
 def op(x: Tensor, y: Tensor) -> Tensor:
     """eml(x, y) = exp(x) − ln(y).  Domain: y > 0 element-wise."""
     return torch.exp(x) - torch.log(y)
+
+
+def edl_op(x: Tensor, y: Tensor) -> Tensor:
+    """edl(x, y) = exp(x) / ln(y).  Domain: y > 0, y ≠ 1 element-wise."""
+    return torch.exp(x) / torch.log(y)
 
 
 # ── Elementary functions ──────────────────────────────────────────────────────

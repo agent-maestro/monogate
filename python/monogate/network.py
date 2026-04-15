@@ -96,29 +96,40 @@ class _LinearLeaf(nn.Module):
 
 
 class _Node(nn.Module):
-    """Internal tree node: eml(left, right) = exp(left) − ln(right)."""
+    """Internal tree node: op_func(left, softplus(right))."""
 
-    def __init__(self, left: nn.Module, right: nn.Module) -> None:
+    def __init__(
+        self,
+        left: nn.Module,
+        right: nn.Module,
+        op_func: Callable[[Tensor, Tensor], Tensor] | None = None,
+    ) -> None:
         super().__init__()
-        self.left  = left
-        self.right = right
+        self.left   = left
+        self.right  = right
+        self._op    = op_func if op_func is not None else op
 
     def forward(self, x: Tensor | None = None) -> Tensor:
         lv = self.left(x)
         rv = F.softplus(self.right(x))  # enforce ln domain: rv > 0 throughout training
-        return op(lv, rv)
+        return self._op(lv, rv)
 
     def formula(self, names: list[str] | None = None) -> str:
         return f"eml({self.left.formula(names)}, {self.right.formula(names)})"
 
 
-def _build_tree(depth: int, leaf_factory: Callable[[], nn.Module]) -> nn.Module:
-    """Recursively build a complete binary EML tree of the given depth."""
+def _build_tree(
+    depth: int,
+    leaf_factory: Callable[[], nn.Module],
+    op_func: Callable[[Tensor, Tensor], Tensor] | None = None,
+) -> nn.Module:
+    """Recursively build a complete binary tree of the given depth."""
     if depth == 0:
         return leaf_factory()
     return _Node(
-        _build_tree(depth - 1, leaf_factory),
-        _build_tree(depth - 1, leaf_factory),
+        _build_tree(depth - 1, leaf_factory, op_func),
+        _build_tree(depth - 1, leaf_factory, op_func),
+        op_func,
     )
 
 
@@ -142,9 +153,14 @@ class EMLTree(nn.Module):
         init:  initial value for every leaf parameter (default 1.0).
     """
 
-    def __init__(self, depth: int = 3, init: float = 1.0) -> None:
+    def __init__(
+        self,
+        depth: int = 3,
+        init: float = 1.0,
+        op_func: Callable[[Tensor, Tensor], Tensor] | None = None,
+    ) -> None:
         super().__init__()
-        self.root = _build_tree(depth, lambda: _Leaf(init))
+        self.root = _build_tree(depth, lambda: _Leaf(init), op_func)
 
     def forward(self) -> Tensor:
         return self.root(None)
@@ -172,10 +188,15 @@ class EMLNetwork(nn.Module):
                      depth=2 → 3 internal nodes, depth=3 → 7 internal nodes.
     """
 
-    def __init__(self, in_features: int, depth: int = 3) -> None:
+    def __init__(
+        self,
+        in_features: int,
+        depth: int = 3,
+        op_func: Callable[[Tensor, Tensor], Tensor] | None = None,
+    ) -> None:
         super().__init__()
         self.in_features = in_features
-        self.root = _build_tree(depth, lambda: _LinearLeaf(in_features))
+        self.root = _build_tree(depth, lambda: _LinearLeaf(in_features), op_func)
 
     def forward(self, x: Tensor) -> Tensor:
         """

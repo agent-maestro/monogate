@@ -297,3 +297,37 @@ IDENTITIES: list[dict] = [
         "status":   "verified",
     },
 ]
+
+
+# ── Operator abstraction ──────────────────────────────────────────────────────
+
+import cmath
+from typing import Callable
+
+
+class Operator:
+    """Container for a universal operator and its natural constant."""
+
+    def __init__(self, name: str, func: Callable, constant: complex) -> None:
+        self.name = name
+        self.func = func
+        self.constant = constant
+
+    def __repr__(self) -> str:
+        return f"Operator({self.name!r}, constant={self.constant})"
+
+
+def _eml_func(x: complex, y: complex) -> complex:
+    return cmath.exp(x) - cmath.log(y)
+
+
+EML = Operator("EML", _eml_func, 1.0 + 0j)
+
+
+def _edl_func(x: complex, y: complex) -> complex:
+    if y == 0 or y == 1:
+        raise ValueError(f"EDL domain error: y={y}")
+    return cmath.exp(x) / cmath.log(y)
+
+
+EDL = Operator("EDL", _edl_func, cmath.e)

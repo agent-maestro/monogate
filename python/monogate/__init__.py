@@ -33,6 +33,9 @@ from .core import (
     pow_eml,
     recip_eml,
     IDENTITIES,
+    Operator,
+    EML,
+    EDL,
 )
 
 __version__ = "0.2.0"
@@ -52,6 +55,9 @@ __all__ = [
     "pow_eml",
     "recip_eml",
     "IDENTITIES",
+    "Operator",
+    "EML",
+    "EDL",
     "__version__",
 ]
 
