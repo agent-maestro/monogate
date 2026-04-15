@@ -40,6 +40,11 @@ from .core import (
     make_ln,
     exp_edl,
     ln_edl,
+    recip_edl,
+    neg_edl,
+    div_edl,
+    EDL_ONE,
+    EDL_NEG_ONE,
 )
 
 __version__ = "0.2.0"
@@ -66,6 +71,11 @@ __all__ = [
     "make_ln",
     "exp_edl",
     "ln_edl",
+    "recip_edl",
+    "neg_edl",
+    "div_edl",
+    "EDL_ONE",
+    "EDL_NEG_ONE",
     "__version__",
 ]
 

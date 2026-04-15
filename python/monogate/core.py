@@ -34,7 +34,11 @@ __all__ = [
     "make_ln",
     "exp_edl",
     "ln_edl",
+    "recip_edl",
+    "neg_edl",
     "div_edl",
+    "EDL_ONE",
+    "EDL_NEG_ONE",
 ]
 
 
@@ -419,6 +423,52 @@ def div_edl(x: complex, y: complex) -> complex:
     Domain: x > 0, y ∈ ℝ, y ≠ 0
     """
     return EDL.func(ln_edl(x), exp_edl(y))
+
+
+def recip_edl(x: complex) -> complex:
+    """1/x expressed as a 2-node EDL tree: edl(0, edl(x, e)).
+
+    Proof:
+        edl(x, e) = exp(x) / ln(e) = exp(x)        [ln(e) = 1]
+        edl(0, exp(x)) = exp(0) / ln(exp(x)) = 1/x  ∎
+    Domain: x ∈ ℝ, x ≠ 0.
+    Note: bypass div_edl(1, x) — that path hits ln_edl(1) which passes
+    through edl(0, 1), EDL's singularity.
+
+    Nodes: 2  (vs EML's recip_eml: 5 nodes)
+    """
+    e = EDL.constant
+    return EDL.func(0j, EDL.func(x, e))
+
+
+def neg_edl(x: complex) -> complex:
+    """−x expressed as a 6-node EDL tree.
+
+    Key: we need a right argument b such that ln(b) = −1, i.e. b = 1/e.
+         1/e = edl(0, edl(e, e))  [2 nodes]
+         Then: edl(ln(x), 1/e) = exp(ln(x)) / ln(1/e) = x / (−1) = −x  ∎
+
+    Proof of 1/e:
+        edl(e, e) = exp(e) / ln(e) = exp(e)         [ln(e) = 1]
+        edl(0, exp(e)) = 1 / ln(exp(e)) = 1/e  ∎
+
+    Domain: x > 0, x ≠ 1  (ln_edl domain)
+    Nodes: 6  (vs EML's neg_eml: 9 nodes)
+    """
+    e = EDL.constant
+    one_over_e = EDL.func(0j, EDL.func(e, e))
+    return EDL.func(ln_edl(x), one_over_e)
+
+
+# ── EDL constants ─────────────────────────────────────────────────────────────
+#
+# Analogous to EML's E / ZERO / NEG_ONE, expressed using only e and 0.
+#
+#   EDL_ONE     = edl(0, e)               = 1   [exp(0)/ln(e) = 1/1 = 1]
+#   EDL_NEG_ONE = edl(0, edl(0, edl(e,e))) = -1  [see neg_edl derivation]
+
+EDL_ONE:     complex = EDL.func(0j, EDL.constant)
+EDL_NEG_ONE: complex = EDL.func(0j, EDL.func(0j, EDL.func(EDL.constant, EDL.constant)))
 
 
 def pow_edl(x: complex, n: complex) -> complex:

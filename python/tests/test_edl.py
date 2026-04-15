@@ -5,7 +5,10 @@ import math
 import pytest
 import torch
 
-from monogate.core import EDL, EML, Operator, div_edl, exp_edl, ln_edl, make_exp, make_ln
+from monogate.core import (
+    EDL, EML, EDL_NEG_ONE, EDL_ONE, Operator,
+    div_edl, exp_edl, ln_edl, make_exp, make_ln, neg_edl, recip_edl,
+)
 from monogate.torch_ops import edl_op
 
 
@@ -203,3 +206,62 @@ def test_div_edl_is_not_subtraction():
     result = div_edl(5 + 0j, 2 + 0j)
     assert abs(result - 2.5) < 1e-12   # = 5/2
     assert abs(result - 3.0) > 0.1     # NOT 5-2
+
+
+# ── recip_edl ─────────────────────────────────────────────────────────────────
+
+def test_recip_edl_basic():
+    assert abs(recip_edl(2 + 0j) - 0.5) < 1e-12
+    assert abs(recip_edl(4 + 0j) - 0.25) < 1e-12
+    assert abs(recip_edl(10 + 0j) - 0.1) < 1e-12
+
+
+def test_recip_edl_self_inverse():
+    for x in (2.0, 5.0, 0.3, 7.5):
+        assert abs(recip_edl(recip_edl(complex(x))) - x) < 1e-10
+
+
+def test_recip_edl_consistent_with_div():
+    # 1/x = div_edl(1, x) is NOT available via the ln_edl path (hits singularity),
+    # but recip_edl bypasses that by using edl(0, edl(x, e)) directly.
+    # Confirm recip_edl agrees with plain Python division.
+    for x in (2.5, 3.0, 0.7):
+        assert abs(recip_edl(complex(x)) - 1/x) < 1e-12
+
+
+# ── neg_edl ───────────────────────────────────────────────────────────────────
+
+def test_neg_edl_basic():
+    assert abs(neg_edl(2 + 0j) - (-2)) < 1e-12
+    assert abs(neg_edl(5 + 0j) - (-5)) < 1e-12
+    assert abs(neg_edl(0.5 + 0j) - (-0.5)) < 1e-12
+
+
+def test_neg_edl_double_negation():
+    for x in (2.0, 3.7, 0.4):
+        # neg_edl(-x) requires x<0 which hits domain issues; test x>1 roundtrip
+        # via neg_edl(neg_edl(x)) — but neg_edl(x)<0 so ln_edl fails on that.
+        # Instead confirm neg_edl(-neg_edl(x)) = x using recip and a workaround.
+        neg_x = neg_edl(complex(x))
+        # -(-x) = x: use div_edl(neg_x, EDL_NEG_ONE)
+        # div_edl(-x, -1) = -x / -1 = x
+        back = div_edl(neg_x, EDL_NEG_ONE)
+        assert abs(back - x) < 1e-10, f"round-trip failed for x={x}: got {back}"
+
+
+# ── EDL constants ─────────────────────────────────────────────────────────────
+
+def test_edl_one():
+    assert abs(EDL_ONE - 1.0) < 1e-14
+
+
+def test_edl_neg_one():
+    assert abs(EDL_NEG_ONE - (-1.0)) < 1e-14
+
+
+def test_edl_neg_one_via_neg_edl():
+    # neg_edl applied to EDL_ONE should give EDL_NEG_ONE
+    # but EDL_ONE = 1 and ln_edl(1) hits the singularity — confirms the dead zone
+    import pytest
+    with pytest.raises(ValueError, match="EDL domain error"):
+        neg_edl(EDL_ONE)
