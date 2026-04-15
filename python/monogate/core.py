@@ -34,6 +34,7 @@ __all__ = [
     "make_ln",
     "exp_edl",
     "ln_edl",
+    "div_edl",
 ]
 
 
@@ -395,3 +396,36 @@ def make_ln(operator: Operator) -> Callable[[complex], complex]:
 # Convenience singletons — mirrors the existing exp_eml / ln_eml names
 exp_edl: Callable[[complex], complex] = make_exp(EDL)
 ln_edl:  Callable[[complex], complex] = make_ln(EDL)
+
+
+# ── EDL arithmetic ────────────────────────────────────────────────────────────
+#
+# The "direct parallel" to EML's sub reveals EDL's natural operation:
+#
+#   EML: eml(ln(x), exp(y)) = exp(ln(x)) − ln(exp(y)) = x − y   ← subtraction
+#   EDL: edl(ln(x), exp(y)) = exp(ln(x)) / ln(exp(y)) = x / y   ← division
+#
+# Same structural form ("plug ln into left, exp into right"), different result
+# because EML subtracts in the lifted space while EDL divides.
+#
+# EDL's natural arithmetic is multiplicative — division is its primitive operation
+# the way subtraction is EML's.  Addition/subtraction have no known finite pure-EDL
+# expression (open question).
+
+def div_edl(x: complex, y: complex) -> complex:
+    """x / y expressed as a 1-node EDL tree: edl(ln(x), exp(y)).
+
+    Proof: edl(ln(x), exp(y)) = exp(ln(x)) / ln(exp(y)) = x / y  ∎
+    Domain: x > 0, y ∈ ℝ, y ≠ 0
+    """
+    return EDL.func(ln_edl(x), exp_edl(y))
+
+
+def pow_edl(x: complex, n: complex) -> complex:
+    """xⁿ via pure EDL — open problem.
+
+    EML uses: eml(mul_eml(n, ln_eml(x)), 1) = exp(n·ln(x)) = xⁿ.
+    EDL would need n·ln(x) as the left argument, but mul_edl requires
+    addition which has no known finite pure-EDL derivation.
+    """
+    raise NotImplementedError("pow_edl: requires mul_edl which has no known finite pure-EDL form")

@@ -5,7 +5,7 @@ import math
 import pytest
 import torch
 
-from monogate.core import EDL, EML, Operator, exp_edl, ln_edl, make_exp, make_ln
+from monogate.core import EDL, EML, Operator, div_edl, exp_edl, ln_edl, make_exp, make_ln
 from monogate.torch_ops import edl_op
 
 
@@ -180,3 +180,26 @@ def test_make_ln_unknown_operator_raises():
     other = Operator("OTHER", lambda x, y: x + y, 0j)
     with pytest.raises(NotImplementedError):
         make_ln(other)
+
+
+# ── div_edl ───────────────────────────────────────────────────────────────────
+
+def test_div_edl_basic():
+    # edl(ln(x), exp(y)) = x / y
+    assert abs(div_edl(6 + 0j, 3 + 0j) - 2.0) < 1e-12
+    assert abs(div_edl(5 + 0j, 2 + 0j) - 2.5) < 1e-12
+
+
+def test_div_edl_matches_true_division():
+    # Note: x=1 excluded — ln_edl(1) hits the EDL singularity in the intermediate
+    # step edl(0, 1).  Mathematically ln(1)=0 but the 3-node formula can't reach it.
+    for x, y in [(10, 4), (7, 3), (2, 5), (2.5, 0.5)]:
+        result = div_edl(complex(x), complex(y))
+        assert abs(result - x / y) < 1e-10, f"div_edl({x},{y}) = {result}, expected {x/y}"
+
+
+def test_div_edl_is_not_subtraction():
+    # Direct proof that the "sub" parallel does NOT give subtraction for EDL
+    result = div_edl(5 + 0j, 2 + 0j)
+    assert abs(result - 2.5) < 1e-12   # = 5/2
+    assert abs(result - 3.0) > 0.1     # NOT 5-2
