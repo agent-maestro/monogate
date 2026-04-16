@@ -308,14 +308,15 @@ class _MCTSNode:
 
 
 def mcts_search(
-    target_fn:     Callable[[float], float],
-    probe_points:  list[float] | None = None,
-    depth:         int = 5,
-    n_simulations: int = 10_000,
-    seed:          int = 42,
-    log_every:     int = 0,
-    n_rollouts:    int = 1,
-    objective:     str = "mse",
+    target_fn:       Callable[[float], float],
+    probe_points:    list[float] | None = None,
+    depth:           int = 5,
+    n_simulations:   int = 10_000,
+    seed:            int = 42,
+    log_every:       int = 0,
+    n_rollouts:      int = 1,
+    objective:       str = "mse",
+    external_scorer: "Callable[[dict], float] | None" = None,
 ) -> MCTSResult:
     """Monte-Carlo Tree Search over the EML grammar.
 
@@ -335,9 +336,14 @@ def mcts_search(
                        score among the batch is used for backpropagation.
                        Values > 1 improve exploration at the cost of speed.
                        Uses ThreadPoolExecutor when n_rollouts > 1.
-        objective:     Scoring objective.  ``'mse'`` (default) minimises
-                       mean-squared error.  ``'minimax'`` minimises the max
-                       absolute error (Chebyshev / uniform approximation).
+        objective:       Scoring objective.  ``'mse'`` (default) minimises
+                         mean-squared error.  ``'minimax'`` minimises the max
+                         absolute error (Chebyshev / uniform approximation).
+        external_scorer: Optional callable ``(tree_dict) -> float`` in [0, 1].
+                         When provided, blends 80 % MSE reward + 20 % neural
+                         bonus.  Falls back to pure MSE when ``None``.  The
+                         callable must not raise; any exception silently
+                         disables the bonus for that simulation.
 
     Returns:
         MCTSResult with best_tree, best_mse, best_formula, objective, history.
@@ -415,7 +421,16 @@ def mcts_search(
                 results = [f.result() for f in futures]
             completed, mse = min(results, key=lambda r: r[1])
 
-        reward = 1.0 / (1.0 + mse)  # bounded in (0, 1]
+        base_reward = 1.0 / (1.0 + mse)  # bounded in (0, 1]
+        if external_scorer is not None and mse < 1.0 and completed is not None:
+            try:
+                neural_bonus = float(external_scorer(completed))
+                neural_bonus = max(0.0, min(1.0, neural_bonus))
+                reward = 0.8 * base_reward + 0.2 * neural_bonus
+            except Exception:
+                reward = base_reward
+        else:
+            reward = base_reward
 
         if mse < best_mse:
             best_mse  = mse
