@@ -384,6 +384,20 @@ __all__ += ["EMLProver", "EMLProverV2", "ProofResult", "BenchmarkReport",
     "EXPONENTIAL_IDENTITIES", "SPECIAL_IDENTITIES", "PHYSICS_IDENTITIES",
     "get_by_difficulty", "get_by_category"]
 
+from .neural_scorer import (  # noqa: F401
+    extract_tree_features,
+    FeatureBasedEMLScorer,
+    ExperienceBuffer,
+    N_FEATURES,
+)
+
+__all__ += [
+    "extract_tree_features",
+    "FeatureBasedEMLScorer",
+    "ExperienceBuffer",
+    "N_FEATURES",
+]
+
 from .nas import NASResult, EMLActivationSearch, regression_fitness, complexity_penalized_fitness  # noqa: F401
 
 __all__ += [

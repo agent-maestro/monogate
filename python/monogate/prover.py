@@ -33,6 +33,7 @@ EMLProver        — main prover class
 from __future__ import annotations
 
 import math
+import os
 import time
 from dataclasses import dataclass, field
 from typing import Any, Callable, List, Optional, Tuple
@@ -391,6 +392,7 @@ def _mcts_witness_search(
     n_simulations: int,
     seed: int,
     timeout: float,
+    external_scorer: "Optional[Callable[[dict], float]]" = None,
 ) -> Tuple[Optional[dict], Optional[str], bool]:
     """
     Run MCTS to find an EML tree T ≈ lhs_fn, then verify T == rhs symbolically.
@@ -412,6 +414,7 @@ def _mcts_witness_search(
             seed=seed,
             log_every=0,
             objective="mse",
+            external_scorer=external_scorer,
         )
     except Exception:
         return None, None, False
@@ -509,9 +512,15 @@ class EMLProver:
         print(result.status)  # 'proved_exact'
     """
 
-    def __init__(self, verbose: bool = False, n_probe: int = 500) -> None:
+    def __init__(
+        self,
+        verbose: bool = False,
+        n_probe: int = 500,
+        scorer: "Optional[Any]" = None,
+    ) -> None:
         self.verbose = verbose
         self.n_probe = n_probe
+        self.scorer = scorer  # Optional FeatureBasedEMLScorer
 
     def _log(self, msg: str) -> None:
         if self.verbose:
@@ -703,6 +712,11 @@ class EMLProver:
             self._log(f"Running MCTS witness search (n_sim={n_simulations})...")
             # Use finite probe points for MCTS
             mcts_probes = probe_points if len(probe_points) <= 200 else probe_points[::3]
+            _ext_scorer = (
+                self.scorer.score
+                if self.scorer is not None and self.scorer.is_trained()
+                else None
+            )
             witness_tree, lhs_formula, witness_proved = _mcts_witness_search(
                 lhs_fn=lhs_fn,
                 probe_points=mcts_probes,
@@ -711,6 +725,7 @@ class EMLProver:
                 n_simulations=n_simulations,
                 seed=seed,
                 timeout=remaining,
+                external_scorer=_ext_scorer,
             )
             if witness_proved:
                 notes.append(f"MCTS found EML witness: {lhs_formula!r} → verified with SymPy")
@@ -723,6 +738,10 @@ class EMLProver:
 
         if witness_proved and witness_tree is not None:
             node_cnt = _count_nodes(witness_tree)
+            # Online learning: feed successful witness to the scorer
+            if self.scorer is not None:
+                reward = 1.0 / (1.0 + node_cnt)
+                self.scorer.update(witness_tree, reward)
             latex_str = _build_latex_proof(
                 identity, lhs_expr, rhs_expr,
                 "proved_witness", "eml_witness", simplified_str
@@ -907,23 +926,46 @@ class EMLProver:
 # ── EMLProverV2 ───────────────────────────────────────────────────────────────
 
 class EMLProverV2(EMLProver):
-    """Extended prover with conjecture generation, proof compression, and visualization.
+    """Extended prover with conjecture generation, proof compression, visualization,
+    and optional online neural scoring.
 
     Inherits all four-tier proof logic from :class:`EMLProver` and adds:
 
     - :meth:`generate_conjectures` — propose new identities via grammar mutation.
     - :meth:`compress_proof` — shorten an EML witness tree while preserving correctness.
     - :meth:`visualize_proof` — publication-quality tree diagram (matplotlib).
+    - :meth:`visualize_proof_interactive` — interactive Plotly tree (HTML output).
     - :meth:`batch_prove` — prove a list of identities with progress reporting.
+
+    Args:
+        verbose:         Print proof progress.
+        n_probe:         Probe points for numerical checks.
+        enable_learning: If True, attach a FeatureBasedEMLScorer that learns
+                         online from successful witness proofs.
+        scorer_path:     Path to a previously saved scorer JSON file to restore.
 
     Example::
 
-        prover = EMLProverV2(verbose=True)
-        conjectures = prover.generate_conjectures(category="trig", n=10)
-        result = prover.prove(conjectures[0].expression)
-        compressed = prover.compress_proof(result)
-        prover.visualize_proof(compressed, style="tree")
+        prover = EMLProverV2(enable_learning=True)
+        result = prover.prove("sin(x)**2 + cos(x)**2 == 1")
+        prover.visualize_proof_interactive(result, output_path="proof.html")
+        prover.scorer.save("scorer_checkpoint.json")
     """
+
+    def __init__(
+        self,
+        verbose: bool = False,
+        n_probe: int = 500,
+        enable_learning: bool = False,
+        scorer_path: Optional[str] = None,
+    ) -> None:
+        scorer = None
+        if enable_learning:
+            from .neural_scorer import FeatureBasedEMLScorer
+            scorer = FeatureBasedEMLScorer()
+            if scorer_path and os.path.exists(scorer_path):
+                scorer.load(scorer_path)
+        super().__init__(verbose=verbose, n_probe=n_probe, scorer=scorer)
 
     # ── Conjecture generation ────────────────────────────────────────────────
 
@@ -1152,6 +1194,163 @@ class EMLProverV2(EMLProver):
             radial = (style == "radial")
             self._visualize_single_tree(tree, result, radial=radial,
                                         output_path=output_path)
+
+    # ── Interactive Plotly visualization ─────────────────────────────────────
+
+    def visualize_proof_interactive(
+        self,
+        result: ProofResult,
+        output_path: Optional[str] = None,
+    ) -> "Any":
+        """Render an interactive Plotly graph of the EML proof tree.
+
+        Requires ``plotly`` (``pip install plotly``).
+
+        Node colors:
+          - ``#6495ED`` (cornflower blue) — EML internal nodes
+          - ``#90EE90`` (light green) — constant leaves
+          - ``#FA8072`` (salmon) — variable leaf (x)
+
+        Hover text shows the full sub-formula at each node.
+
+        Args:
+            result:      ProofResult from :meth:`prove`.
+            output_path: If given (must end in ``.html``), write the figure
+                         to that file.  If ``None``, return the figure object
+                         for display in Jupyter or Streamlit.
+
+        Returns:
+            ``plotly.graph_objects.Figure``.
+
+        Raises:
+            ImportError: If plotly is not installed.
+        """
+        try:
+            import plotly.graph_objects as go  # type: ignore
+        except ImportError as exc:
+            raise ImportError(
+                "plotly is required for interactive visualization. "
+                "Install with: pip install plotly"
+            ) from exc
+
+        from .search.mcts import _formula
+
+        tree = result.witness_tree
+        if tree is None:
+            # Fall back to a single-node placeholder
+            tree = {"op": "leaf", "val": "?"}
+
+        # ── Build positions via BFS layout ────────────────────────────────
+        positions: dict = {}
+        labels: dict = {}
+        colors: dict = {}
+        hover: dict = {}
+        edges: list = []
+
+        _COLOR_EML   = "#6495ED"
+        _COLOR_CONST = "#90EE90"
+        _COLOR_X     = "#FA8072"
+
+        node_id = [0]
+
+        def _assign(t, parent_id, x_pos, y_pos, x_spread):
+            nid = node_id[0]
+            node_id[0] += 1
+            positions[nid] = (x_pos, y_pos)
+
+            try:
+                sub_formula = _formula(t)[:30]
+            except Exception:
+                sub_formula = str(t.get("val", "?"))
+
+            if t["op"] == "eml":
+                labels[nid] = "eml"
+                colors[nid] = _COLOR_EML
+                hover[nid] = f"eml node<br>{sub_formula}"
+                if parent_id is not None:
+                    edges.append((parent_id, nid))
+                half = x_spread / 2.0
+                _assign(t["left"],  nid, x_pos - half, y_pos - 1, half)
+                _assign(t["right"], nid, x_pos + half, y_pos - 1, half)
+            else:
+                val = t["val"]
+                if val == "x":
+                    labels[nid] = "x"
+                    colors[nid] = _COLOR_X
+                    hover[nid] = "variable x"
+                else:
+                    labels[nid] = str(round(float(val), 3))
+                    colors[nid] = _COLOR_CONST
+                    hover[nid] = f"const {val}"
+                if parent_id is not None:
+                    edges.append((parent_id, nid))
+
+        _assign(tree, None, 0.0, 0.0, 4.0)
+
+        # ── Edge traces ───────────────────────────────────────────────────
+        edge_x, edge_y = [], []
+        for src, dst in edges:
+            x0, y0 = positions[src]
+            x1, y1 = positions[dst]
+            edge_x += [x0, x1, None]
+            edge_y += [y0, y1, None]
+
+        edge_trace = go.Scatter(
+            x=edge_x, y=edge_y,
+            mode="lines",
+            line=dict(width=1.5, color="#888"),
+            hoverinfo="none",
+        )
+
+        # ── Node traces ───────────────────────────────────────────────────
+        node_x = [positions[n][0] for n in sorted(positions)]
+        node_y = [positions[n][1] for n in sorted(positions)]
+        node_colors = [colors[n] for n in sorted(positions)]
+        node_labels = [labels[n] for n in sorted(positions)]
+        node_hover  = [hover[n]  for n in sorted(positions)]
+
+        node_trace = go.Scatter(
+            x=node_x, y=node_y,
+            mode="markers+text",
+            marker=dict(size=28, color=node_colors, line=dict(width=1.5, color="#333")),
+            text=node_labels,
+            textposition="middle center",
+            hovertext=node_hover,
+            hoverinfo="text",
+        )
+
+        title = (
+            f"{result.identity_str[:60]}<br>"
+            f"<sup>status: {result.status} | confidence: {result.confidence:.2f}"
+            f" | nodes: {result.node_count}</sup>"
+        )
+
+        fig = go.Figure(
+            data=[edge_trace, node_trace],
+            layout=go.Layout(
+                title=dict(text=title, x=0.5, font=dict(size=13)),
+                showlegend=False,
+                hovermode="closest",
+                margin=dict(b=20, l=5, r=5, t=60),
+                xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                plot_bgcolor="white",
+                annotations=[
+                    dict(
+                        text="<b>●</b> EML  <b>●</b> const  <b>●</b> x",
+                        xref="paper", yref="paper",
+                        x=0.01, y=-0.02,
+                        showarrow=False,
+                        font=dict(size=10, color="#555"),
+                    )
+                ],
+            ),
+        )
+
+        if output_path is not None:
+            fig.write_html(output_path)
+
+        return fig
 
     # ── Batch prove with progress ────────────────────────────────────────────
 
