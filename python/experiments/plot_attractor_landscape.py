@@ -4,6 +4,9 @@ experiments/plot_attractor_landscape.py
 Generate Figure: 2D MSE loss slice for a depth-3 EMLTree, with phantom
 attractor and pi basin marked, and L1-penalised contours overlaid.
 
+# Approximate 2D slice — exact attractor location depends on full 8D
+# optimization dynamics. This visualization illustrates basin geometry.
+
 Run from python/:
     python experiments/plot_attractor_landscape.py
 
@@ -12,17 +15,23 @@ Output: paper/figures/attractor_landscape.pdf  (+ .png for preview)
 from __future__ import annotations
 
 import math
+import sys
 import warnings
 from pathlib import Path
 
 import numpy as np
-import matplotlib
 
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
-from matplotlib.colors import LogNorm
-from matplotlib.lines import Line2D
+try:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as mticker
+    from matplotlib.colors import LogNorm
+    from matplotlib.lines import Line2D
+except ImportError:
+    sys.exit(
+        "matplotlib is required: pip install matplotlib"
+    )
 
 
 # ── EMLTree forward pass (pure NumPy, no torch dependency) ────────────────────
@@ -65,10 +74,11 @@ def depth3_eml_tree(w: np.ndarray) -> np.ndarray:
 
 # ── Grid setup ────────────────────────────────────────────────────────────────
 
-TARGET = math.pi
-GRID_N = 400                                    # resolution per axis
-W1_RANGE = np.linspace(-1.5, 4.0, GRID_N)      # varied leaf w0
-W2_RANGE = np.linspace(-1.5, 4.0, GRID_N)      # varied leaf w1
+TARGET  = math.pi
+GRID_N  = 400                                        # resolution per axis
+DPI     = 150                                        # output DPI (increase for camera-ready)
+W1_RANGE = np.linspace(-1.5, 4.0, GRID_N)           # varied leaf w0
+W2_RANGE = np.linspace(-1.5, 4.0, GRID_N)           # varied leaf w1
 W1_GRID, W2_GRID = np.meshgrid(W1_RANGE, W2_RANGE)  # (GRID_N, GRID_N)
 
 # Fixed leaves: all other 6 leaves held at 1.0
@@ -82,7 +92,7 @@ with warnings.catch_warnings():
     pred = depth3_eml_tree(FIXED)   # (GRID_N, GRID_N)
 
 mse_raw = (pred - TARGET) ** 2
-mse = np.clip(mse_raw, 1e-12, None)    # avoid log(0)
+mse     = np.clip(mse_raw, 1e-12, None)    # avoid log(0)
 
 
 # ── L1-penalised combined losses ──────────────────────────────────────────────
@@ -108,28 +118,31 @@ loss_005 = penalised_loss(mse, W1_GRID, W2_GRID, lam=0.005)
 
 
 # ── Locate attractor and pi basin in this 2D slice ───────────────────────────
+# Note: these are 2D-slice minima. The true 8D attractor sits at
+# approximately pred ≈ 3.1696; the exact coordinates depend on the full
+# 8-dimensional gradient dynamics observed experimentally.
 
 # Phantom attractor: global MSE minimum on the grid.
 attractor_idx = np.unravel_index(np.argmin(mse), mse.shape)
-a_w2 = W2_RANGE[attractor_idx[0]]
-a_w1 = W1_RANGE[attractor_idx[1]]
+a_w2  = float(W2_RANGE[attractor_idx[0]])
+a_w1  = float(W1_RANGE[attractor_idx[1]])
 a_val = float(pred[attractor_idx])
 
-# Pi basin: point on the grid whose predicted value is closest to pi.
+# Pi basin: point whose predicted value is closest to pi.
 pi_dist = np.abs(pred - math.pi)
 pi_idx  = np.unravel_index(np.argmin(pi_dist), pi_dist.shape)
-p_w2 = W2_RANGE[pi_idx[0]]
-p_w1 = W1_RANGE[pi_idx[1]]
+p_w2 = float(W2_RANGE[pi_idx[0]])
+p_w1 = float(W1_RANGE[pi_idx[1]])
 
 
 # ── Plot ──────────────────────────────────────────────────────────────────────
 
-fig, ax = plt.subplots(figsize=(7, 5.6), dpi=150)
+fig, ax = plt.subplots(figsize=(7, 5.6), dpi=DPI)
 
 # Heatmap: log-scale MSE
 im = ax.pcolormesh(
     W1_RANGE, W2_RANGE, mse,
-    norm=LogNorm(vmin=1e-3, vmax=mse.max()),
+    norm=LogNorm(vmin=1e-3, vmax=float(mse.max())),
     cmap="inferno",
     shading="auto",
     rasterized=True,
@@ -140,15 +153,15 @@ cbar.ax.yaxis.set_minor_locator(mticker.NullLocator())
 
 # Contour lines for penalised losses
 CONTOUR_LEVELS = 8
-cs0   = ax.contour(W1_RANGE, W2_RANGE, loss_0,
-                   levels=CONTOUR_LEVELS, colors="white",
-                   linewidths=0.7, linestyles="solid",  alpha=0.55)
-cs001 = ax.contour(W1_RANGE, W2_RANGE, loss_001,
-                   levels=CONTOUR_LEVELS, colors="cyan",
-                   linewidths=0.8, linestyles="dashed", alpha=0.65)
-cs005 = ax.contour(W1_RANGE, W2_RANGE, loss_005,
-                   levels=CONTOUR_LEVELS, colors="lime",
-                   linewidths=0.9, linestyles="dotted", alpha=0.75)
+ax.contour(W1_RANGE, W2_RANGE, loss_0,
+           levels=CONTOUR_LEVELS, colors="white",
+           linewidths=0.7, linestyles="solid",  alpha=0.55)
+ax.contour(W1_RANGE, W2_RANGE, loss_001,
+           levels=CONTOUR_LEVELS, colors="cyan",
+           linewidths=0.8, linestyles="dashed", alpha=0.65)
+ax.contour(W1_RANGE, W2_RANGE, loss_005,
+           levels=CONTOUR_LEVELS, colors="lime",
+           linewidths=0.9, linestyles="dotted", alpha=0.75)
 
 # Markers
 ax.plot(a_w1, a_w2, marker="x", color="orange", ms=12, mew=2.5,
@@ -180,11 +193,21 @@ ax.set_ylim(W2_RANGE[0], W2_RANGE[-1])
 
 plt.tight_layout()
 
+# ── Save ──────────────────────────────────────────────────────────────────────
+
 out_dir = Path(__file__).parent.parent / "paper" / "figures"
 out_dir.mkdir(parents=True, exist_ok=True)
+
+saved: list[Path] = []
 for ext in ("pdf", "png"):
     p = out_dir / f"attractor_landscape.{ext}"
-    fig.savefig(p, dpi=150, bbox_inches="tight")
-    print(f"Saved: {p}")
+    fig.savefig(p, dpi=DPI, bbox_inches="tight")
+    saved.append(p)
 
 plt.close(fig)
+
+print("attractor_landscape: figure generation complete.")
+print(f"  Approximate 2D-slice attractor value : {a_val:.6f}  (full-8D experimental: ~3.1696)")
+print(f"  Grid minimum at (w1={a_w1:.3f}, w2={a_w2:.3f})")
+for p in saved:
+    print(f"  Saved: {p}")
