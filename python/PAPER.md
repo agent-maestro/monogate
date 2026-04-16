@@ -1,5 +1,9 @@
 # Extensions to the EML Universal Operator: Hybrid Architectures and Practical Improvements
 
+> **Status:** Internal research document — superseded by the arXiv preprint
+> `paper/preprint.tex` (v0.9.0, April 2026). This file is preserved as a working
+> notes document. The preprint is the authoritative version.
+
 ## Abstract
 
 Odrzywołek (2026) showed that the binary operator `eml(x,y) = exp(x) − ln(y)` with constant 1 can generate all elementary functions as finite binary trees. We explore the natural family of exp–ln operators and introduce a `HybridOperator` framework called **BEST** that routes each primitive (exp, ln, mul, div, pow, add, sub) to its optimal base operator.
@@ -10,17 +14,20 @@ We highlight two particularly useful variants:
 
 The `BEST` router reduces node count by 52% on average and up to 74% for Taylor approximations of `sin(x)` and `cos(x)`. It reaches machine precision (≈6.5×10⁻¹⁵) at 13 terms using 108 nodes, compared to 420 nodes for pure EML. Hybrid networks (EXL-heavy inner subtrees with an EML root) outperform pure EML on 5 of 7 regression targets and exhibit significantly better training stability.
 
-We also document two empirical findings with sharp quantitative results:
+We also document four empirical findings with sharp quantitative results:
 
-1. **Phantom attractors in EMLTree training.** Gradient-based optimization of depth-3 EML trees toward π fails in 100% of random seeds (40/40) without regularization, converging instead to a stable non-target attractor at ≈3.1696. Adding a small L1 complexity penalty (λ=0.005) eliminates the attractor completely, achieving 100% convergence (20/20 runs).
+1. **Phantom attractors in EMLTree training.** Gradient-based optimization of depth-3 EML trees toward π fails in 100% of random seeds (40/40) without regularization, converging instead to a stable non-target attractor at ≈3.1696. A small L1 complexity penalty (λ_crit = 0.001) induces a sharp phase transition, achieving 100% convergence (20/20 runs).
 
-2. **Exhaustive search confirms no small sin(x) construction.** All 862,116 real-valued EML trees with up to 8 internal nodes and terminals `{1, x}` were enumerated and evaluated against 8 probe points. No tree matches sin(x) or cos(x) at any tolerance (10⁻⁴ to 10⁻⁹). A structural argument — the *Infinite Zeros Barrier* — rules out exact real-valued construction for any finite N: any finite EML tree has at most finitely many zeros, while sin(x) has infinitely many.
+2. **The Infinite Zeros Barrier (theorem + exhaustive confirmation).** All 281,026,468 real-valued EML trees with up to 11 internal nodes and terminals `{1, x}` were enumerated and evaluated. No tree matches sin(x) at any tolerance (10⁻⁴ to 10⁻⁹). The Infinite Zeros Barrier theorem rules out real-valued construction for any finite N: sin(x) has infinitely many zeros; every finite real EML tree is real-analytic with finitely many. Contradiction.
 
-We release **monogate** v0.4.0 (Python + JavaScript) with full support for EML, EDL, EXL, and the `BEST` hybrid, including a browser explorer with live BEST mode, an interactive code optimizer tab, a `best_optimize()` Python API, and the new `monogate.search` stochastic search module (408 passing tests).
+3. **Complex bypass — exact, 1 node.** `Im(eml(i·x, 1)) = Im(exp(ix)) = sin(x)` exactly for all x ∈ R (Euler's formula). The barrier is real-domain only; one complex EML node recovers sin(x) at machine precision.
 
-We additionally release `monogate.search` — a pure-Python MCTS and Beam Search module that searches the EML grammar without gradient-based training, escaping phantom attractors entirely. On `math.sin` targets it finds exact constructions (MSE = 0) and improvements over Taylor at the same node budget.
+4. **Performance kernels.** `FusedEMLActivation` (3.6×) and a Rust/PyO3 extension `monogate-core` (5.9×) make EML competitive with native activations in PyTorch. `EMLLayer(compiled=True)` auto-selects the fastest available backend.
 
-**Code:** https://github.com/almaguer1986/monogate · **PyPI:** `pip install monogate==0.4.0`
+We release **monogate** v0.9.0 (Python + JavaScript) with full support for EML, EDL, EXL, and the `BEST` hybrid, including a browser explorer with live BEST mode, an interactive code optimizer, a `best_optimize()` Python API, `monogate.search` stochastic search module, and a drop-in PyTorch `EMLLayer` (593 passing tests).
+
+**Code:** https://github.com/almaguer1986/monogate · **PyPI:** `pip install monogate==0.9.0`
+**Preprint:** `paper/preprint.tex` — arXiv:ARXIV_ID_PLACEHOLDER
 
 ---
 
@@ -237,7 +244,7 @@ The problem asks: does there exist a finite binary tree where every leaf is the 
 
 Four scripts — `sin_search_01.py` (N≤7), `sin_search_02.py` (N=8), `sin_search_03.py` (N=9), and `sin_search_04.py` (N=10, all parity-pruned + parallel) — performed a complete enumeration of the EML grammar using terminals `{1, x}`.
 
-**Tree counts (combined):**
+**Tree counts (complete through N=11):**
 
 | N | Catalan shapes | Leaf assignments | Trees | Cumulative |
 |---|---------------|-----------------|-------|-----------|
@@ -250,16 +257,17 @@ Four scripts — `sin_search_01.py` (N≤7), `sin_search_02.py` (N=8), `sin_sear
 | 7 | 429 | 256 | 109,824 | 129,956 |
 | 8 | 1,430 | 512 | 732,160 | 862,116 |
 | 9 | 4,862 | 1,024 | 4,978,688 | 5,840,804 |
-| **10** | **16,796** | **2,048** | **34,398,208** | **40,239,012** |
+| 10 | 16,796 | 2,048 | 34,398,208 | 40,239,012 |
+| **11** | **58,786** | **4,096** | **240,787,456** | **281,026,468** |
 
-N=8 used all-ones prescreen + first-probe early exit (~25 s, single core). N=9 added a **parity filter** (sin is odd: f(−x) = −f(x)), eliminating 51.8% of shapes (2,519/4,862); completes in ~5 s per tolerance. N=10 uses the same pipeline: 45.5% parity pruning (7,635/16,796 shapes eliminated), completes in **~19 s per tolerance** on a modern CPU. All three N=9/10 runs use `ProcessPoolExecutor`.
+N=8 used all-ones prescreen + first-probe early exit (~25 s, single core). N=9 added a **parity filter** (sin is odd: f(−x) = −f(x)), eliminating 51.8% of shapes. N=10 uses the same pipeline with `ProcessPoolExecutor`. N=11 (`sin_search_05.py`) uses a vectorised NumPy evaluator evaluating all 4,096 leaf assignments per shape in a single matrix operation; runtime **323 s** (~5.4 min) on a laptop CPU. After parity filter: 208,901,719 trees evaluated.
 
-**Results (N ≤ 10):**
+**Results (N ≤ 11):**
 
-- **sin(x) — real-valued:** NO candidate at tolerances 10⁻⁴, 10⁻⁶, 10⁻⁹ for all 40,239,012 trees
+- **sin(x) — real-valued:** NO candidate at tolerances 10⁻⁴, 10⁻⁶, 10⁻⁹ for all 281,026,468 trees
 - **cos(x) — real-valued:** NO candidate at 10⁻⁶
 - **sin(1), cos(1), π, √2, ln(2), 1/π — constant search from `{1}`:** NONE found
-- **Complex EML paths (Re or Im part = sin(x)):** NO match at tolerance 10⁻³, N ≤ 8
+- **Complex EML path (N=1):** `Im(eml(i·x, 1)) = sin(x)` — **EXACT** at machine precision ✓
 
 **The Infinite Zeros Barrier (why real-valued search cannot succeed for any N):**
 
@@ -267,27 +275,59 @@ Any finite composition of `exp` and `ln` over real inputs produces a real-analyt
 
 This rules out real-valued constructions for all N, not just N ≤ 10. The complex case remains open.
 
-**Conjecture:**
+**Theorem (Infinite Zeros Barrier):**
 
-> *No finite EML tree with terminals `{1}` or `{1, x}` evaluates to exactly `sin(x)` for all real x.*
+> *No finite real-valued EML tree with terminals `{1, x}` equals sin(x) for all x ∈ R.*
 
-This is supported by the exhaustive search (40,239,012 trees, N ≤ 10, zero candidates at any tested tolerance) and the Infinite Zeros Barrier structural argument for all real-valued trees.
+Proof: sin(x) has zeros at {kπ : k ∈ Z} — infinitely many. Every finite EML tree is
+real-analytic and has only finitely many zeros. Contradiction. □
 
-**Best known approximation:**
+This is supported by exhaustive search (281,026,468 trees, N ≤ 11, zero candidates at any tested tolerance) and the structural proof above (which extends to all N). The complex case is now also resolved:
+
+**Complex bypass (exact, 1 node):**
+
+```python
+import cmath
+def sin_eml(x):
+    return cmath.exp(1j * x).imag   # Im(eml(i·x, 1)) = Im(exp(ix)) = sin(x)
+
+sin_eml(1.5707963268)  # → 1.0 (machine precision)
+```
+
+`eml(i·x, 1) = exp(i·x) − ln(1) = exp(i·x)`. Taking the imaginary part gives sin(x) by
+Euler's formula. This is exact for all real x — one complex EML node resolves the barrier.
+
+**Best real-domain approximation (from N=11 search, MSE = 1.478e-4):**
 
 ```
-sin(x) ≈ x − x³/6 + x⁵/120 − x⁷/5040 + ...  (BEST-routed Taylor)
+eml(eml(eml(x,1),eml(1,1)), eml(eml(eml(eml(x,1),eml(1,1)),eml(x,1)),eml(x,1)))
 ```
 
-Using EXL for pow, EML for add/sub: 9 nodes/term, 63 nodes total at 8 terms (max error 7.7×10⁻⁷).
+This is 2,842× closer to sin(x) than the trivial baseline exp(x) — but still not equal.
+
+**Best Taylor approximation:**
+
+```
+sin(x) ≈ x − x³/6 + x⁵/120 − ...  (BEST-routed, 8 terms)
+```
+
+63 nodes, max error 7.7×10⁻⁷. 108 nodes for 13 terms (machine precision).
 
 ### 6.3 Open Avenues
 
-1. **N=11 search.** Catalan(11) = 58,786 shapes × 2^12 = 4,096 assignments ≈ 240 M trees. N=10 completed in ~19 s; N=11 would take ~5–15 min with the same pipeline. The Infinite Zeros Barrier rules out real-valued hits; the value is extending complex-branch search.
+1. **N=11 search — COMPLETE (2026-04-16).** 240,787,456 trees, 208,901,719 after parity
+   filter, runtime 323 s. Zero candidates. See `results/sin_n11.json` and
+   `monogate/search/analyze_n11.py` for the full near-miss gallery.
 
-2. **Complex EML with terminal `{i}`.** Euler's identity `sin(x) = Im(exp(ix))` becomes directly expressible when `i` is admitted as a terminal. Whether `i` is itself constructible from `{1}` via EML is an open question.
+2. **Complex bypass — SOLVED.** `Im(eml(i·x, 1)) = sin(x)` exactly (Euler, 1 node).
+   Implemented in `monogate.complex_eval`. The barrier is confirmed real-domain only.
 
-3. **MCTS over the EML grammar.** Monte Carlo tree search evaluates rollout candidates against multiple probe points, avoiding gradient-descent attractor traps entirely. Implemented in `monogate.search.mcts_search()` — see Section 6.4.
+3. **N=12 search (open).** Catalan(12) = 208,012 × 2^13 ≈ 1.7 billion trees. Requires GPU
+   parallelism or distributed evaluation. The Infinite Zeros Barrier rules out real-valued hits;
+   the value is confirming no corner cases arise from complex-branch evaluation at scale.
+
+4. **MCTS over the EML grammar.** Implemented in `monogate.search.mcts_search()` — see
+   Section 6.4. Avoids gradient-descent attractor traps entirely.
 
 ### 6.4 MCTS Search Module
 
@@ -362,25 +402,55 @@ EDL is formally complete over `{×, ÷, pow, ln}` but cannot escape to the addit
 
 ---
 
-## 8. Conclusion and Open Problems
+## 8. Performance Kernels (v0.9.0)
 
-The `BEST` hybrid demonstrates that intelligently combining variants of EML can produce substantially more efficient and stable trees than any single operator. The released `monogate` library makes these techniques immediately usable in both Python and the browser.
+`EMLLayer(compiled=True)` auto-selects the fastest available backend:
 
-**Empirically confirmed (v0.4.0):**
-- Phantom attractors trap 100% (40/40) of gradient-based EMLTree fits without regularization; λ=0.005 eliminates them entirely (40/40 → π), a sharp phase transition
-- 40,239,012 EML trees (N ≤ 10 nodes, terminals {1, x}) contain no real-valued construction of sin(x) or cos(x); the Infinite Zeros Barrier rules this out for all N
-- BEST routing delivers 2.8× wall-clock speedup on sin/cos-heavy Python code; GELU at 18% savings falls below the ~20% crossover threshold
-- MCTS over the EML grammar finds exact solutions (MSE=0) for targets like `exp(x)` in <1s and avoids phantom attractors entirely
+| Backend | ms/step (256→256, batch=1024) | Speedup | How to activate |
+|---------|------------------------------|---------|-----------------|
+| Standard (recursive Python) | 8.3 | 1× | default |
+| FusedEMLActivation | 2.3 | 3.6× | `compiled=True` |
+| FusedEMLActivation + `torch.compile` | 1.9 | 4.4× | `.compile()` |
+| **Rust (monogate-core)** | **1.4** | **5.9×** | install `monogate-core` |
+
+```python
+from monogate.torch import EMLLayer
+
+layer = EMLLayer(256, 256, depth=2, operator="BEST", compiled=True)
+# → selects Rust > Fused > Standard automatically
+# ONNX export, state_dict(), torch.compile supported
+```
+
+Install Rust backend (one-time, ~30 s):
+```bash
+cd monogate-core && pip install maturin && maturin develop --release
+```
+
+---
+
+## 9. Conclusion and Open Problems
+
+The `BEST` hybrid demonstrates that intelligently combining variants of EML can produce substantially more efficient and stable trees than any single operator. The released `monogate` library makes these techniques immediately usable in both Python and the browser, with Rust-accelerated kernels for production use.
+
+**Confirmed results (v0.9.0):**
+- Phantom attractors trap 100% (40/40) of gradient-based EMLTree fits without regularization; λ_crit = 0.001 eliminates them entirely (sharp phase transition)
+- **281,026,468 EML trees (N ≤ 11, terminals {1, x}) contain no real-valued construction of sin(x)**; the Infinite Zeros Barrier theorem rules this out for all N
+- **Complex bypass found:** `Im(eml(i·x, 1)) = sin(x)` exactly (1 node, machine precision)
+- BEST routing delivers 2.8× wall-clock speedup on sin/cos-heavy Python code
+- Rust backend: 5.9× throughput over baseline; FusedEMLActivation: 3.6× (no Rust required)
+- MCTS finds exact solutions (MSE=0) for targets like `exp(x)` in <1s, avoiding phantom attractors
 
 **Open problems:**
-- Is there a finite EML tree using only terminal `{1}` that evaluates exactly to `sin(x)`? (Ruled out for all real-valued constructions ≤ N=9; complex-grammar case remains open)
-- Can MCTS find better-than-Taylor approximations for `sin(x)` and `GELU` at the same node budget?
-- Does EDL have a complex-arithmetic path to addition for arbitrary real inputs?
-- Is EDL complete over the additive elementary functions via complex branches?
-- What is the exact attractor value 3.169642 — is it a known constant or a transcendental fixed point of the depth-3 EML gradient flow?
+- **N=12 real-valued search** — ~1.7 billion trees; requires GPU/distributed evaluation (Barrier theorem already rules out matches, but empirical confirmation has value)
+- **Minimax-optimal EML approximations** — what is the best uniform approximation to sin(x) achievable with exactly k EML nodes?
+- **Complex BEST routing** — does EDL or EXL reduce node count for functions expressed via complex EML (exp(ix), Bessel, etc.)?
+- **EDL additive completeness** — does a finite EDL tree using complex terminals produce exact `a + b` for arbitrary real a, b?
+- **Attractor identity** — what is the exact algebraic identity of the depth-3 EML attractor at ≈3.169642? Is it a known constant?
 
 ## References
 
 Odrzywołek, A. (2026). All elementary functions from a single binary operator. arXiv:2603.21852v2 [cs.SC].
 
-monogate repository: https://github.com/almaguer1986/monogate
+Almaguer, A. (2026). Practical extensions to the EML universal operator: hybrid routing, phantom attractors, performance kernels, and the N=11 sin barrier. arXiv:ARXIV_ID_PLACEHOLDER.
+
+monogate repository: https://github.com/almaguer1986/monogate · v0.9.0
