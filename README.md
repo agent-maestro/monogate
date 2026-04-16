@@ -12,7 +12,15 @@ From this one operator and the constant `1`, every elementary arithmetic functio
 > Andrzej Odrzywołek, Jagiellonian University
 > [arXiv:2603.21852v2](https://arxiv.org/abs/2603.21852) · CC BY 4.0
 
-Live explorer: **https://monogate.dev** (or your deployed URL)
+Live explorer: **https://monogate.dev**
+
+| Tab | What it shows |
+|-----|---------------|
+| ✦ viz | Expression tree for any math expression, nodes colored by EML / EDL / EXL routing. Click to highlight subtrees. |
+| sin↗ | sin(x) Taylor accuracy chart (2–20 terms): BEST holds a 74% node reduction at every precision level. |
+| ⚡ demo | Live JS activation timing + Python FFN benchmark. 3.26× speedup where node savings exceed call overhead. |
+| ✦ calc | Interactive calculator — evaluate any expression in BEST / EML / EXL / EDL mode with node breakdown. |
+| ⚙ opt | Paste PyTorch / NumPy code and get a BEST-rewritten version with node savings estimate. |
 
 ---
 
