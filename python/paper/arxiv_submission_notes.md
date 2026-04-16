@@ -1,75 +1,125 @@
-# arXiv Submission Notes
-
-## v0.9.0 / arXiv:2603.21852
-
-Initial submission. Covers:
-- EML operator definition and completeness results
-- Exhaustive N≤8 sin(x) search (862,116 trees, 0 hits)
-- Infinite Zeros Barrier proof (Theorem 1)
-- EDL complementarity (additive incompleteness, exhaustive N≤6)
-- Phantom attractor study: depth-3 EMLTree targeting π, λ_crit = 0.001
-- BEST routing table (37 nodes vs 77 all-EML, 52% reduction)
-- N=9/10 MCTS search; N=11 exhaustive (208,901,719 trees, 0 hits, best MSE 1.478e-4)
+# arXiv Submission Notes — monogate v0.11.0
 
 ---
 
-## Phase 10 additions (v0.10.0)
+## Final Abstract (≤ 250 words)
 
-The following content was added after the initial submission and should be included
-in a revision or companion paper:
+```
+We present monogate, a library and formal framework built on the EML operator
+eml(x,y) = exp(x) − ln(y). From this single binary gate and the constant 1,
+every elementary function is an exact finite expression tree (Odrzywołek, 2026).
 
-**§4.6 Complex-Domain BEST Routing and Special Functions**
-- ComplexHybridOperator (CBEST): same routing rules as BEST over ℂ
-- Euler path identity: `eml(ix, 1) = exp(ix) = cos x + i·sin x` — sin/cos at 1 complex node (vs 63 real)
-- Near-exact complex-MCTS constructions for Bessel J₀, erf, Airy Ai
-- Open question: complex EML representation of sin(x) without projection
+Our main theoretical contribution is the Infinite Zeros Barrier (Theorem 1):
+no finite real-valued EML tree with terminals {1, x} equals sin(x) for all
+x ∈ R. The proof follows from real-analyticity — every EML tree has at most
+finitely many zeros, while sin has zeros at {kπ : k ∈ Z}. We confirm
+empirically by exhaustively evaluating 208,901,719 trees up to N=11 internal
+nodes (zero candidates at tolerances 1e-4 through 1e-9; best near-miss MSE
+1.478e-4, runtime ~5 minutes on a single CPU core).
 
-**§9 Physics-Informed EML Networks (PINN)**
-- EMLPINN: EMLNetwork backbone + physics residual loss via autograd
-- Equations: harmonic oscillator, steady Burgers, 1D heat
-- Learned EML formula is a symbolic approximate solution to the ODE
-- Results table: data loss and physics loss for all three equations
+The complex bypass is exact in one node: Im(eml(ix,1)) = Im(exp(ix)) = sin(x).
+We formalise this into Complex BEST routing (CBEST), which dispatches
+EML/EDL/EXL operators in C via cmath, reducing sin and cos from 63 nodes to
+1 each. Complex MCTS search over terminals {1, x, ix, i} finds near-exact
+constructions for Bessel J0, erf, and Airy Ai.
 
-New exports: `CBEST`, `complex_best_optimize`, `EMLPINN`, `fit_pinn`,
-`complex_mcts_search`, `complex_beam_search`, `gpu_mcts_search`.
+We introduce Physics-Informed EML Networks (EMLPINN): interpretable neural
+networks that simultaneously fit data and satisfy a differential equation via
+autograd-computed residuals. After training, the model emits a symbolic EML
+formula — a readable approximate solution to the ODE.
 
----
+We also provide BEST hybrid routing (52% node reduction over all-EML), a
+formal conjecture index (C1–C7 in THEORY.md), and full reproducibility
+infrastructure (Dockerfile, Makefile, scripts/reproduce_n11.py — all 12/12
+N=11 claims independently verified).
 
-## Phase 11 additions (v0.11.0-dev)
+Code: https://github.com/almaguer1986/monogate
+```
 
-**THEORY.md** (repo root)
-- Canonical expert-level theory reference
-- Formal theorem/conjecture statements (Theorem 2.1 Infinite Zeros Barrier,
-  Theorem 3.2 Euler Path, Corollary 2.2, Conjectures C1–C7)
-- Open problems index with structured research roadmap (T1–T7)
-- Intended audience: researchers building on the EML framework
-
-**Formal paper section added to preprint.tex**
-- §"Formal Statements of Main Results and Open Problems"
-- Precise theorem/conjecture index matching THEORY.md
-- Six conjectures C1–C7 with precise mathematical statements
-- Insertion point: after §8 (Performance Kernels), before §Conclusion
-
-**Reproducibility infrastructure**
-- `Makefile`: `make reproduce-all`, `make reproduce-n11`, `make paper`, `make docker-run`
-- `Dockerfile`: Python 3.12 + PyTorch 2.3 (CPU) + TeX Live + Rust — clean-room environment
-- `requirements-reproduce.txt`: exact pins for numpy/scipy/matplotlib/pytest
-- `scripts/reproduce_n11.py`: verifies all N=11 paper claims (12/12 checks)
-  - Loads `results/sin_n11.json`, checks tree counts, zero candidates at 3 tolerances,
-    best near-miss MSE ~1.478e-4, search_type field
-  - Appends timestamped verification entry to RESULTS.md
-
-**Version:** bumped to `0.11.0-dev` in `__init__.py` and `pyproject.toml`.
+Word count: ~230
 
 ---
 
-## Submission checklist
+## arXiv Upload Instructions
 
-- [ ] All figures regenerated from source (`python experiments/plot_attractor_landscape.py`)
-- [ ] Preprint compiled twice (`pdflatex preprint.tex` × 2 for cross-refs)
-- [ ] `make reproduce-n11` passes (12/12 claims)
-- [ ] `make test` passes (662 passed, 8 skipped)
-- [ ] Abstract updated for v0.10.0 + Phase 11 additions
-- [ ] All new section labels (`\label{sec:*}`) resolve without warnings
-- [ ] Author affiliations and acknowledgements current
-- [ ] `paper/README.md` updated with new section list
+### Categories
+- **Primary:** cs.SC (Symbolic Computation)
+- **Cross-list:** cs.LG (Machine Learning), math.CA (Classical Analysis and ODEs)
+
+### Keywords (MSC / ACM)
+```
+EML operator, symbolic regression, expression trees, universal approximation,
+BEST routing, complex exponential, Euler identity, physics-informed neural networks,
+MCTS symbolic search, phantom attractor, interpretable ML
+```
+
+### License
+- **CC BY 4.0** (matches the underlying Odrzywołek 2026 paper)
+
+### Files to upload
+```
+preprint.tex            ← main source
+paper/figures/          ← all .pdf and .eps figures
+```
+
+Do NOT upload:
+- `*.py` source files (link to GitHub instead)
+- `*.json` result files
+- `Dockerfile` / `Makefile`
+
+The abstract, introduction, and conclusion must be self-contained without
+the supplementary code — arXiv readers should be able to read the PDF without
+cloning the repo.
+
+### arXiv metadata
+```
+Title:   monogate: Universal Expression Trees from a Single Binary Operator
+Authors: [your name]
+Comments: 25 pages, 7 figures, 3 tables. Code: https://github.com/almaguer1986/monogate
+Report-No: (leave blank)
+```
+
+---
+
+## Submission Checklist
+
+### Pre-submission
+- [ ] All figures regenerated from source: `python experiments/plot_attractor_landscape.py`
+- [ ] Preprint compiled twice (cross-refs): `cd paper && pdflatex preprint.tex && pdflatex preprint.tex`
+- [ ] `make reproduce-n11` passes — 12/12 claims verified
+- [ ] `make test` passes — 662 passed, 8 skipped
+- [ ] `python scripts/release_v0.11.0.py` passes — all readiness checks green
+- [ ] Version is 0.11.0 in both `monogate/__init__.py` and `pyproject.toml`
+- [ ] Abstract word count ≤ 250
+- [ ] All `ARXIV_ID_PLACEHOLDER` tokens still in source (replace AFTER submission)
+
+### Submission
+- [ ] Upload `preprint.tex` + `paper/figures/` to arXiv
+- [ ] Primary category: cs.SC; cross-list: cs.LG, math.CA
+- [ ] License: CC BY 4.0
+- [ ] Embargo: None (immediate)
+
+### Post-submission (once arXiv ID is assigned)
+- [ ] Run: `python scripts/update_arxiv_id.py 2604.XXXXX`
+  - Updates README.md, ANNOUNCEMENT.md, preprint.tex, explorer components
+- [ ] Tag release: `git tag v0.11.0 && git push origin v0.11.0`
+- [ ] Publish to PyPI: `python -m build && twine upload dist/*`
+- [ ] Post ANNOUNCEMENT.md content to HN, r/MachineLearning, r/math, X, LinkedIn
+- [ ] Update monogate.dev arXiv link
+
+---
+
+## Phase history
+
+### v0.9.0 — arXiv:2603.21852
+Initial submission. Core EML theory, BEST routing, Infinite Zeros Barrier,
+N=11 exhaustive search, phantom attractor study, SIREN/NeRF benchmarks.
+
+### v0.10.0 (revision or companion note)
+Complex BEST routing (CBEST) — sin/cos at 1 node via Euler path.
+Complex MCTS for J₀, erf, Airy Ai. Physics-Informed EML Networks (EMLPINN).
+Minimax and GPU search extensions. 69 new tests.
+
+### v0.11.0 (current)
+THEORY.md formal conjecture index (C1–C7). §"Formal Statements" in preprint.
+Full reproducibility infrastructure. 662 tests. Version: 0.11.0.
