@@ -15,13 +15,53 @@ Live explorer: **[monogate.dev](https://monogate.dev)**
 
 ---
 
+## What's new in v0.6.0
+
+- **`monogate.compile`** — `FusedEMLLayer` and `FusedEMLActivation`: manually fused EML kernels. 1.5–3.6× faster than `EMLLayer` on CPU. One-line `torch.compile` wrapper included.
+- **`EMLLayer(..., compiled=True)`** — one-liner speedup: auto-selects the fused kernel. Call `.compile()` on the result for an additional `torch.compile` pass.
+- **`monogate.llm`** — `suggest_and_optimize(prompt)`: describe a function in plain English, get a BEST-optimized EML expression + copy-paste code. Supports mock (no key), OpenAI, Groq, Anthropic.
+- **`monogate-optimize` CLI** — `monogate-optimize "sigmoid function"` from the terminal.
+- New benchmarks: `benchmarks/kernel_benchmarks.py`, notebooks: `performance_kernels.py`, `llm_optimizer_demo.py`
+- 593 tests passing.
+
+### One-liner speedup
+
+```python
+from monogate.torch import EMLLayer
+
+# Before — standard recursive Python tree (~8 ms/step on 256→256, batch=128)
+layer = EMLLayer(256, 256, depth=2, operator="EML")
+
+# After — fused vectorized kernel, same API (~2 ms/step = 4× faster)
+layer = EMLLayer(256, 256, depth=2, operator="EML", compiled=True)
+
+# Maximum speed — also apply torch.compile (Linux/Mac with Inductor: ~1.4 ms)
+fast  = EMLLayer(256, 256, depth=2, operator="EML", compiled=True).compile()
+
+# Everything else is unchanged:
+y = layer(x)      # same shape, same gradient graph, same state_dict format
+```
+
+Run `python benchmarks/kernel_benchmarks.py` to see the three-way comparison on your hardware.
+
+## What's new in v0.5.0
+
+- **`monogate.torch`** — `EMLLayer` and `EMLActivation`: differentiable PyTorch layers with learnable EML activation. Drop-in replacement for sin/GELU in SIREN/NeRF models. ONNX-exportable (opset 14).
+- **`monogate.search`** — MCTS and Beam Search over the EML grammar. Gradient-free symbolic regression that avoids phantom attractors. Parallel rollouts via `ThreadPoolExecutor`.
+- **`monogate.complex_eval`** — Complex-domain EML: `Im(eml(ix, 1)) = sin(x)` exactly (one node, machine precision). Euler path bypass for the Infinite Zeros Barrier.
+- **N=10 exhaustive search** — 40,239,012 EML trees searched, zero real-valued sin candidates.
+- **Phase transition refined** — λ_crit = 0.001 for depth=3 phantom attractor escape.
+- **MkDocs site** — full documentation at `docs/` (run `mkdocs serve` to browse locally).
+
+---
+
 ## Install
 
 ```bash
 # Core only (pure Python, no dependencies)
-pip install monogate                # v0.3.1
+pip install monogate                # v0.5.0
 
-# With PyTorch (EMLNetwork, HybridNetwork, fit, autograd)
+# With PyTorch (EMLNetwork, HybridNetwork, fit, EMLLayer, autograd)
 pip install "monogate[torch]"
 
 # Development (pytest + torch)
@@ -395,7 +435,7 @@ pytest tests/test_core.py -v
 pytest tests/ -v
 ```
 
-406 passing. 2 pre-existing failures in `test_torch.py` (EMLTree/EMLNetwork parameter assertions, unrelated to core or BEST).
+593 passing, 8 skipped (ONNX + torch.compile tests skip when deps absent).
 
 ---
 
@@ -405,26 +445,37 @@ pytest tests/ -v
 python/
 ├── pyproject.toml
 ├── README.md
+├── mkdocs.yml           # documentation site config
+├── CHANGELOG.md
 └── monogate/
     ├── __init__.py      # public API, lazy torch import
     ├── core.py          # op, EML/EDL/EXL/EAL/EMN, HybridOperator, BEST
     ├── operators.py     # registry: ALL_OPERATORS, compare_all, markdown_table
     ├── optimize.py      # best_optimize(), OptimizeResult, BestRewriter
     ├── torch_ops.py     # differentiable tensor ops (requires torch)
-    └── network.py       # EMLTree, EMLNetwork, HybridNetwork, fit
+    ├── network.py       # EMLTree, EMLNetwork, HybridNetwork, fit
+    ├── complex_eval.py  # complex EML, Euler path, sin/cos_via_euler
+    ├── torch/
+    │   ├── __init__.py
+    │   └── eml_layer.py  # EMLActivation, EMLLayer (nn.Module, ONNX-ready)
+    └── search/
+        ├── __init__.py
+        └── mcts.py      # mcts_search, beam_search, MCTSResult, BeamResult
+docs/                    # MkDocs source (mkdocs serve to browse)
 examples/
 └── symbolic_regression.py   # EML vs BEST on x² — canonical getting-started demo
 tests/
 ├── test_core.py
 ├── test_torch.py
 ├── test_edl.py          # 154 tests — operator family, HybridOperator, BEST
-└── test_optimize.py     # 80 tests — best_optimize, OptimizeResult, BestRewriter
+├── test_optimize.py     # 80 tests — best_optimize, OptimizeResult, BestRewriter
+├── test_eml_layer.py    # 68 tests — EMLLayer, EMLActivation, ONNX
+└── test_complex.py      # 36 tests — complex EML, Euler path, Barrier bypass
 notebooks/
-├── experiment_09_mlp_demo.py     # TinyMLP + sin: 2.8× speedup
+├── eml_layer_siren_example.py   # EMLLayer vs sin in SIREN (98.8% node savings)
+├── mcts_sin_approximation.py    # MCTS search for sin, attractor avoidance
+├── experiment_09_mlp_demo.py    # TinyMLP + sin: 2.8x speedup
 ├── experiment_10_transformer_ffn.py  # FFN + GELU: below crossover
-├── experiment_11.py              # poly benchmark, linear fit, crossover
-├── experiment_12_siren.py        # SIREN + sin: 3.4× speedup
-├── sin_best.py                   # 20-term sin(x) analysis, node Pareto
-├── operator_zoo.py               # 5-operator × 7-target leaderboard
-└── operators_study_v2.py         # algebraic derivations for all 5 operators
+├── experiment_11.py             # poly benchmark, linear fit, crossover
+└── sin_best.py                  # 20-term sin(x) analysis, node Pareto
 ```
