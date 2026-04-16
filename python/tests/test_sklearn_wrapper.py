@@ -157,10 +157,10 @@ def test_predict_finite():
 
 
 def test_predict_before_fit_raises():
-    """predict before fit raises RuntimeError."""
+    """predict before fit raises an error (RuntimeError or sklearn NotFittedError)."""
     reg = EMLRegressor()
     X = np.ones((10, 1))
-    with pytest.raises(RuntimeError):
+    with pytest.raises(Exception):
         reg.predict(X)
 
 

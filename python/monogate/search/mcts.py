@@ -119,14 +119,20 @@ def _eval_tree(node: Node, x: float) -> float:
     return math.exp(a) - math.log(b)
 
 
-def _score(node: Node, probe_x: list[float], probe_y: list[float]) -> float:
+def _score(
+    node:    Node,
+    probe_x: list[float],
+    probe_y: list[float],
+    eval_fn: "Callable[[Node, float], float] | None" = None,
+) -> float:
     """MSE against probe points.  Returns INF on any error."""
+    _ef = eval_fn if eval_fn is not None else _eval_tree
     if not _is_complete(node):
         return INF
     total = 0.0
     try:
         for xi, yi in zip(probe_x, probe_y):
-            diff  = _eval_tree(node, xi) - yi
+            diff  = _ef(node, xi) - yi
             total += diff * diff
     except (ValueError, OverflowError, ZeroDivisionError):
         return INF
@@ -135,19 +141,25 @@ def _score(node: Node, probe_x: list[float], probe_y: list[float]) -> float:
     return total / len(probe_x)
 
 
-def _score_minimax(node: Node, probe_x: list[float], probe_y: list[float]) -> float:
+def _score_minimax(
+    node:    Node,
+    probe_x: list[float],
+    probe_y: list[float],
+    eval_fn: "Callable[[Node, float], float] | None" = None,
+) -> float:
     """Max absolute error against probe points (minimax / Chebyshev objective).
 
     Returns INF on any domain error.  Using this as the search objective
     produces trees with *uniform* error bounds rather than minimising the
     average — a Chebyshev-style approximation.
     """
+    _ef = eval_fn if eval_fn is not None else _eval_tree
     if not _is_complete(node):
         return INF
     max_err = 0.0
     try:
         for xi, yi in zip(probe_x, probe_y):
-            err = abs(_eval_tree(node, xi) - yi)
+            err = abs(_ef(node, xi) - yi)
             if err > max_err:
                 max_err = err
     except (ValueError, OverflowError, ZeroDivisionError):
@@ -317,6 +329,7 @@ def mcts_search(
     n_rollouts:      int = 1,
     objective:       str = "mse",
     external_scorer: "Callable[[dict], float] | None" = None,
+    eval_tree_fn:    "Callable[[dict, float], float] | None" = None,
 ) -> MCTSResult:
     """Monte-Carlo Tree Search over the EML grammar.
 
@@ -344,6 +357,10 @@ def mcts_search(
                          bonus.  Falls back to pure MSE when ``None``.  The
                          callable must not raise; any exception silently
                          disables the bonus for that simulation.
+        eval_tree_fn:    Optional callable ``(node_dict, x) -> float`` that
+                         evaluates a complete tree at x.  Defaults to the EML
+                         operator ``exp(a) − ln(b)``.  Pass an operator-specific
+                         function to run MCTS over EDL, EXL, EAL, etc.
 
     Returns:
         MCTSResult with best_tree, best_mse, best_formula, objective, history.
@@ -367,7 +384,13 @@ def mcts_search(
     if objective not in ("mse", "minimax"):
         raise ValueError(f"objective must be 'mse' or 'minimax', got {objective!r}")
 
-    _score_fn = _score if objective == "mse" else _score_minimax
+    # Build a score function that captures the (possibly custom) eval function.
+    _base_score = _score if objective == "mse" else _score_minimax
+    if eval_tree_fn is not None:
+        def _score_fn(node, px, py):
+            return _base_score(node, px, py, eval_fn=eval_tree_fn)
+    else:
+        _score_fn = _base_score
 
     if probe_points is None:
         probe_points = [-3.0 + 6.0 * i / 49 for i in range(50)]

@@ -1,0 +1,142 @@
+{
+  "params": {
+    "n_data": 30,
+    "noise": 0.05,
+    "n_simulations": 500
+  },
+  "summary": {
+    "n_laws": 8,
+    "eml_native": 1,
+    "improved_by_distillation": 0
+  },
+  "results": [
+    {
+      "name": "Boltzmann weight",
+      "domain": [
+        0.0,
+        2.5
+      ],
+      "n_data": 30,
+      "noise": 0.05,
+      "direct_r2": 1.0,
+      "direct_formula": "eml(x, 1.0)",
+      "distilled_r2": 1.0,
+      "distilled_formula": "eml(x, 1.0)",
+      "nn_r2": 0.9951,
+      "gain": 0.0,
+      "elapsed_s": 0.46
+    },
+    {
+      "name": "Radioactive decay",
+      "domain": [
+        0.0,
+        3.0
+      ],
+      "n_data": 30,
+      "noise": 0.05,
+      "direct_r2": -6.9513,
+      "direct_formula": "1.0",
+      "distilled_r2": -6.9513,
+      "distilled_formula": "1.0",
+      "nn_r2": 0.9981,
+      "gain": 0.0,
+      "elapsed_s": 0.08
+    },
+    {
+      "name": "Arrhenius (simplified)",
+      "domain": [
+        0.5,
+        4.0
+      ],
+      "n_data": 30,
+      "noise": 0.05,
+      "direct_r2": -5.8137,
+      "direct_formula": "1.0",
+      "distilled_r2": -5.8137,
+      "distilled_formula": "1.0",
+      "nn_r2": 0.9946,
+      "gain": 0.0,
+      "elapsed_s": 0.07
+    },
+    {
+      "name": "Planck distribution",
+      "domain": [
+        0.5,
+        3.0
+      ],
+      "n_data": 30,
+      "noise": 0.05,
+      "direct_r2": -3.785,
+      "direct_formula": "eml(1.0, eml(x, 1.0))",
+      "distilled_r2": -3.785,
+      "distilled_formula": "eml(1.0, eml(x, 1.0))",
+      "nn_r2": 0.9976,
+      "gain": 0.0,
+      "elapsed_s": 0.11
+    },
+    {
+      "name": "Wien's law",
+      "domain": [
+        0.5,
+        4.0
+      ],
+      "n_data": 30,
+      "noise": 0.05,
+      "direct_r2": -1.0724,
+      "direct_formula": "1.0",
+      "distilled_r2": -1.0724,
+      "distilled_formula": "1.0",
+      "nn_r2": 0.9963,
+      "gain": 0.0,
+      "elapsed_s": 0.12
+    },
+    {
+      "name": "Kepler's 3rd law",
+      "domain": [
+        0.5,
+        3.0
+      ],
+      "n_data": 30,
+      "noise": 0.05,
+      "direct_r2": 0.5007,
+      "direct_formula": "x",
+      "distilled_r2": 0.5007,
+      "distilled_formula": "x",
+      "nn_r2": 0.997,
+      "gain": 0.0,
+      "elapsed_s": 0.29
+    },
+    {
+      "name": "Stefan-Boltzmann",
+      "domain": [
+        0.5,
+        2.0
+      ],
+      "n_data": 30,
+      "noise": 0.05,
+      "direct_r2": 0.5727,
+      "direct_formula": "eml(x, 1.0)",
+      "distilled_r2": 0.5727,
+      "distilled_formula": "eml(x, 1.0)",
+      "nn_r2": 0.9963,
+      "gain": 0.0,
+      "elapsed_s": 0.74
+    },
+    {
+      "name": "Gaussian (ground state)",
+      "domain": [
+        -2.0,
+        2.0
+      ],
+      "n_data": 30,
+      "noise": 0.05,
+      "direct_r2": -2.6435,
+      "direct_formula": "1.0",
+      "distilled_r2": -2.6435,
+      "distilled_formula": "1.0",
+      "nn_r2": 0.9986,
+      "gain": 0.0,
+      "elapsed_s": 0.08
+    }
+  ]
+}

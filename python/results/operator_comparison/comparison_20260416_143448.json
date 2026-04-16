@@ -1,0 +1,967 @@
+{
+  "timestamp": "20260416_143448",
+  "operators": [
+    "EML",
+    "EDL",
+    "EXL"
+  ],
+  "barrier": {
+    "EML": {
+      "best_mse": 0.5494535143580943,
+      "best_formula": "1.0",
+      "blocked": true
+    },
+    "EDL": {
+      "best_mse": 0.5494535143580943,
+      "best_formula": "1.0",
+      "blocked": true
+    },
+    "EXL": {
+      "best_mse": 0.1453423933109808,
+      "best_formula": "eml(1.0, 1.0)",
+      "blocked": true
+    }
+  },
+  "node_counts": {
+    "exp(x)": {
+      "EML": 1,
+      "EDL": 1,
+      "EXL": 1,
+      "EAL": 1,
+      "EMN": null
+    },
+    "exp(-x)": {
+      "EML": null,
+      "EDL": null,
+      "EXL": null,
+      "EAL": null,
+      "EMN": null
+    },
+    "ln(x)": {
+      "EML": 3,
+      "EDL": 3,
+      "EXL": 1,
+      "EAL": null,
+      "EMN": null
+    },
+    "1/x": {
+      "EML": 5,
+      "EDL": 2,
+      "EXL": null,
+      "EAL": null,
+      "EMN": null
+    },
+    "x^1.5": {
+      "EML": 15,
+      "EDL": 11,
+      "EXL": 3,
+      "EAL": null,
+      "EMN": null
+    },
+    "x^4": {
+      "EML": 15,
+      "EDL": 11,
+      "EXL": 3,
+      "EAL": null,
+      "EMN": null
+    },
+    "x^2": {
+      "EML": 15,
+      "EDL": 11,
+      "EXL": 3,
+      "EAL": null,
+      "EMN": null
+    },
+    "1/(exp(x)-1)": {
+      "EML": 20,
+      "EDL": 16,
+      "EXL": null,
+      "EAL": null,
+      "EMN": null
+    },
+    "1/(exp(x)+1)": {
+      "EML": 20,
+      "EDL": 16,
+      "EXL": null,
+      "EAL": null,
+      "EMN": null
+    },
+    "exp(-x^2)": {
+      "EML": null,
+      "EDL": null,
+      "EXL": null,
+      "EAL": null,
+      "EMN": null
+    },
+    "x*exp(-x)": {
+      "EML": null,
+      "EDL": null,
+      "EXL": null,
+      "EAL": null,
+      "EMN": null
+    }
+  },
+  "census": {
+    "EML": [
+      {
+        "name": "Boltzmann weight",
+        "category": "thermodynamics",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.0,
+          "formula": "eml(x, 1.0)"
+        },
+        "depth_4": {
+          "mse": 0.0,
+          "formula": "eml(x, 1.0)"
+        },
+        "depth_6": {
+          "mse": 0.0,
+          "formula": "eml(x, 1.0)"
+        },
+        "eml_native": true,
+        "min_effective_depth": 2
+      },
+      {
+        "name": "Exponential decay",
+        "category": "statistical",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.5494535143580943,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.5494535143580943,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.5494535143580943,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Arrhenius rate",
+        "category": "chemistry",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.16847386270821701,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.16847386270821701,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.16847386270821701,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "RC discharge",
+        "category": "electromagnetism",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.1313997646527639,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.1313997646527639,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.1313997646527639,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Planck / Bose-Einstein",
+        "category": "quantum",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.6514008300686531,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.6363885571894748,
+          "formula": "eml(1.0, eml(x, 1.0))"
+        },
+        "depth_6": {
+          "mse": 0.6332386243448151,
+          "formula": "eml(1.0, eml(x, x))"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Fermi-Dirac",
+        "category": "quantum",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.3509148644817221,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.3509148644817221,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.3509148644817221,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Maxwell-Boltzmann speed",
+        "category": "statistical",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.5477974099086198,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.5477974099086198,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.5477974099086198,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Entropy (information)",
+        "category": "information",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.19236590108993346,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 0.0735769618787189,
+          "formula": "eml(x, eml(eml(x, 1.0), 1.0))"
+        },
+        "depth_6": {
+          "mse": 0.12513308408482243,
+          "formula": "eml(eml(x, eml(eml(1.0, 1.0), x)), 1.0)"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Kepler 3rd law",
+        "category": "mechanics",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 1.0320427989404548,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 1.0320427989404548,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 1.0320427989404548,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Newtonian gravity",
+        "category": "mechanics",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.8034728693561358,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.35458614901569036,
+          "formula": "eml(1.0, eml(x, 1.0))"
+        },
+        "depth_6": {
+          "mse": 0.4558983455557259,
+          "formula": "eml(1.0, eml(x, x))"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Kinetic energy",
+        "category": "mechanics",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.31417367403678076,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 0.31417367403678076,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 0.31417367403678076,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Wien's law",
+        "category": "thermodynamics",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.38486679374730315,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.38486679374730315,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.38486679374730315,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Stefan-Boltzmann",
+        "category": "thermodynamics",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 8.92859675051508,
+          "formula": "eml(x, 1.0)"
+        },
+        "depth_4": {
+          "mse": 7.696349466946887,
+          "formula": "eml(x, eml(1.0, eml(x, 1.0)))"
+        },
+        "depth_6": {
+          "mse": 3.114871434523535,
+          "formula": "eml(x, eml(eml(1.0, eml(eml(x, x), 1.0)), 1.0))"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Lorentz factor",
+        "category": "relativity",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.15951687455534502,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.15951687455534502,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.15951687455534502,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Gaussian wavefunction",
+        "category": "quantum",
+        "operator": "EML",
+        "depth_2": {
+          "mse": 0.4401289810075211,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.4401289810075211,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.4401289810075211,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      }
+    ],
+    "EDL": [
+      {
+        "name": "Boltzmann weight",
+        "category": "thermodynamics",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 44.400693090053664,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 44.400693090053664,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 44.400693090053664,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Exponential decay",
+        "category": "statistical",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.5494535143580943,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.5494535143580943,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.5494535143580943,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Arrhenius rate",
+        "category": "chemistry",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.16847386270821701,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.16847386270821701,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.16847386270821701,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "RC discharge",
+        "category": "electromagnetism",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.1313997646527639,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.1313997646527639,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.1313997646527639,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Planck / Bose-Einstein",
+        "category": "quantum",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.6514008300686531,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.6514008300686531,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.6514008300686531,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Fermi-Dirac",
+        "category": "quantum",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.3509148644817221,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.3509148644817221,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.3509148644817221,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Maxwell-Boltzmann speed",
+        "category": "statistical",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.5477974099086198,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.5477974099086198,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.5477974099086198,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Entropy (information)",
+        "category": "information",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.19236590108993346,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 0.19236590108993346,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 0.19236590108993346,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Kepler 3rd law",
+        "category": "mechanics",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 1.0320427989404548,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 1.0320427989404548,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 1.0320427989404548,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Newtonian gravity",
+        "category": "mechanics",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.8034728693561358,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.8034728693561358,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.8034728693561358,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Kinetic energy",
+        "category": "mechanics",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.31417367403678076,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 0.31417367403678076,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 0.31417367403678076,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Wien's law",
+        "category": "thermodynamics",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.38486679374730315,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.38486679374730315,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.38486679374730315,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Stefan-Boltzmann",
+        "category": "thermodynamics",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 26.698306135799704,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 26.698306135799704,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 26.698306135799704,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Lorentz factor",
+        "category": "relativity",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.15951687455534502,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.15951687455534502,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.15951687455534502,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Gaussian wavefunction",
+        "category": "quantum",
+        "operator": "EDL",
+        "depth_2": {
+          "mse": 0.4401289810075211,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.4401289810075211,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.4401289810075211,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      }
+    ],
+    "EXL": [
+      {
+        "name": "Boltzmann weight",
+        "category": "thermodynamics",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 44.400693090053664,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 44.400693090053664,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 44.400693090053664,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Exponential decay",
+        "category": "statistical",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.1453423933109808,
+          "formula": "eml(1.0, 1.0)"
+        },
+        "depth_4": {
+          "mse": 0.1453423933109808,
+          "formula": "eml(x, 1.0)"
+        },
+        "depth_6": {
+          "mse": 0.1453423933109808,
+          "formula": "eml(x, 1.0)"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Arrhenius rate",
+        "category": "chemistry",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.16847386270821701,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.16847386270821701,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.16847386270821701,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "RC discharge",
+        "category": "electromagnetism",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.1313997646527639,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.1313997646527639,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.1313997646527639,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Planck / Bose-Einstein",
+        "category": "quantum",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.19177567516918403,
+          "formula": "eml(1.0, 1.0)"
+        },
+        "depth_4": {
+          "mse": 0.19177567516918403,
+          "formula": "eml(x, 1.0)"
+        },
+        "depth_6": {
+          "mse": 0.19177567516918403,
+          "formula": "eml(x, 1.0)"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Fermi-Dirac",
+        "category": "quantum",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.35091486448172204,
+          "formula": "eml(1.0, 1.0)"
+        },
+        "depth_4": {
+          "mse": 0.35091486448172204,
+          "formula": "eml(x, 1.0)"
+        },
+        "depth_6": {
+          "mse": 0.35091486448172204,
+          "formula": "eml(x, 1.0)"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Maxwell-Boltzmann speed",
+        "category": "statistical",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.16339733973707304,
+          "formula": "eml(1.0, 1.0)"
+        },
+        "depth_4": {
+          "mse": 0.16339733973707304,
+          "formula": "eml(x, 1.0)"
+        },
+        "depth_6": {
+          "mse": 0.16339733973707304,
+          "formula": "eml(x, 1.0)"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Entropy (information)",
+        "category": "information",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.0735769618787189,
+          "formula": "eml(1.0, 1.0)"
+        },
+        "depth_4": {
+          "mse": 0.0735769618787189,
+          "formula": "eml(x, 1.0)"
+        },
+        "depth_6": {
+          "mse": 0.0735769618787189,
+          "formula": "eml(x, 1.0)"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Kepler 3rd law",
+        "category": "mechanics",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 1.0320427989404548,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 1.0320427989404548,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 1.0320427989404548,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Newtonian gravity",
+        "category": "mechanics",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.8034728693561358,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.8034728693561358,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.8034728693561358,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Kinetic energy",
+        "category": "mechanics",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.31417367403678076,
+          "formula": "x"
+        },
+        "depth_4": {
+          "mse": 0.31417367403678076,
+          "formula": "x"
+        },
+        "depth_6": {
+          "mse": 0.31417367403678076,
+          "formula": "x"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Wien's law",
+        "category": "thermodynamics",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.38486679374730315,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.38486679374730315,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.38486679374730315,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Stefan-Boltzmann",
+        "category": "thermodynamics",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 17.817013968874278,
+          "formula": "eml(x, x)"
+        },
+        "depth_4": {
+          "mse": 17.817013968874278,
+          "formula": "eml(x, x)"
+        },
+        "depth_6": {
+          "mse": 17.817013968874278,
+          "formula": "eml(x, x)"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Lorentz factor",
+        "category": "relativity",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.15951687455534502,
+          "formula": "1.0"
+        },
+        "depth_4": {
+          "mse": 0.15951687455534502,
+          "formula": "1.0"
+        },
+        "depth_6": {
+          "mse": 0.15951687455534502,
+          "formula": "1.0"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      },
+      {
+        "name": "Gaussian wavefunction",
+        "category": "quantum",
+        "operator": "EXL",
+        "depth_2": {
+          "mse": 0.30809196351044155,
+          "formula": "eml(1.0, 1.0)"
+        },
+        "depth_4": {
+          "mse": 0.30809196351044155,
+          "formula": "eml(x, 1.0)"
+        },
+        "depth_6": {
+          "mse": 0.30809196351044155,
+          "formula": "eml(x, 1.0)"
+        },
+        "eml_native": false,
+        "min_effective_depth": null
+      }
+    ]
+  }
+}
