@@ -69,6 +69,34 @@ Hybrid networks (EXL-heavy inner structure with EML root) outperformed pure EML 
 
 Gradient-based searches also revealed a rugged optimization landscape containing many locally optimal but non-minimal constructions ("phantom attractors").
 
+### 4.1 GELU activation
+
+The GELU activation function (Hendrycks & Gimpel, 2016) used in GPT/BERT can be expressed via the tanh approximation `0.5·x·(1 + tanh(√(2/π)·(x + 0.044715·x³)))`. In EML arithmetic this requires `exp` (1 node) + `add` (11 nodes) + `recip` (5 nodes) = **17 nodes**. BEST routing replaces `recip_eml` with `recip_edl` (2 nodes), reducing to **14 nodes** — an 18% saving with identical accuracy (max error < 1.4×10⁻¹²).
+
+### 4.2 Wall-clock impact: savings must exceed call overhead
+
+Node-count reductions translate to wall-clock speedup only when the saving is large enough to amortise Python function-call overhead. We measured two regimes:
+
+**experiment_09 — TinyMLP with sin activation** (2-layer MLP, input 1 → hidden 16 → output 1, batch 64):
+
+| Configuration     | ms / forward | Speedup |
+|-------------------|-------------|---------|
+| EML-sin (245 nodes) | 39.3      | 1×      |
+| BEST-sin (63 nodes) | 14.1      | **2.8×** |
+| torch.sin (native)  | 0.09      | 440×    |
+
+The 74% node reduction in `sin` yields a **2.8× end-to-end speedup** in EML-arithmetic mode.
+
+**experiment_10 — Transformer FFN with GELU** (4× FFN block, d=16, hidden=64, batch 8, Python 3.14 CPU):
+
+| Configuration   | ms / forward | Relative speedup |
+|-----------------|-------------|-----------------|
+| native math     | 1.771       | —               |
+| EML-GELU (17n)  | 4.736       | 1× (baseline)   |
+| BEST-GELU (14n) | 5.115       | ~0.93×          |
+
+The 18% node reduction in GELU is insufficient to overcome Python call overhead. The comparison across the two experiments confirms the node-count model: **savings / overhead ratio** determines whether routing improvements yield measurable wall-clock gains. Activations with ≥74% node reductions (sin, cos) benefit substantially; those with ≤20% reductions (GELU) do not at typical batch sizes.
+
 ## 5. Conclusion and Open Problems
 
 The `BEST` hybrid shows that intelligently combining variants of EML can produce substantially more efficient and stable trees than any single operator. The released `monogate` library makes these techniques immediately usable in both Python and the browser.
