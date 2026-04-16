@@ -6,6 +6,33 @@ All notable changes to `monogate` are documented here.
 
 ## [0.12.0-dev] — 2026-04-16
 
+### Session 5: Advanced Theoretical Extensions
+
+**New module `monogate.interval`** — certified interval arithmetic for EML trees.
+
+- `Interval(lo, hi)` — frozen dataclass with width, midpoint, contains methods
+- `eml_interval(a, b)` — tight certified bounds: `[exp(a.lo)-ln(b.hi), exp(a.hi)-ln(b.lo)]`
+- `eval_interval(tree, x_interval)` — propagate bounds through EML tree
+- `bound_expression(expr_str, x_lo, x_hi)` — parse and bound a formula string
+
+**New module `monogate.sympy_bridge`** — SymPy interoperability (optional dep).
+
+- `to_sympy(tree)` — EML tree → SymPy expression
+- `from_sympy(expr)` — SymPy → EML tree (exp/log only, best-effort)
+- `simplify_eml(tree)` — convert + `sympy.simplify()`
+- `latex_eml(tree)` — LaTeX rendering via `sympy.latex()`
+- `verify_identity(tree1, tree2)` — symbolic equality check
+
+New `[sympy]` optional dependency group in `pyproject.toml`.
+
+**New notebook** `notebooks/attractor_generalization.py` — exploratory comparison
+of phantom attractor behavior across Taylor, continued fraction, and Padé bases.
+Conclusion: the false basin at ~3.1696 is EML tree topology-specific.
+
+37 + 26 new tests; full suite 913 passed, 0 failed.
+
+---
+
 ### Session 4: Physics & New Identities
 
 **Extended `monogate/pinn.py`** with 4 new equations:
