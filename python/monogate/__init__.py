@@ -55,7 +55,7 @@ from .core import (
     compare_op,
 )
 
-__version__ = "0.3.3"
+__version__ = "0.7.0"
 
 __all__ = [
     "op",
@@ -152,3 +152,54 @@ try:
     __all__ += ["EMLTree", "EMLNetwork", "HybridNetwork", "fit"]
 except ImportError:
     pass  # torch not installed — network classes unavailable
+
+try:
+    from .torch import EMLActivation, EMLLayer  # noqa: F401
+
+    __all__ += ["EMLActivation", "EMLLayer"]
+except ImportError:
+    pass  # torch not installed
+
+from .complex_eval import (  # noqa: F401
+    eml_complex,
+    eval_complex,
+    euler_path_node,
+    sin_via_euler,
+    cos_via_euler,
+    score_complex_projection,
+    formula_complex,
+    COMPLEX_TERMINALS,
+)
+
+__all__ += [
+    "eml_complex",
+    "eval_complex",
+    "euler_path_node",
+    "sin_via_euler",
+    "cos_via_euler",
+    "score_complex_projection",
+    "formula_complex",
+    "COMPLEX_TERMINALS",
+]
+
+try:
+    from .compile import (  # noqa: F401
+        FusedEMLActivation, FusedEMLLayer,
+        compile_eml_layer, to_torchscript,
+        benchmark_layer, BenchmarkTable,
+    )
+    __all__ += [
+        "FusedEMLActivation", "FusedEMLLayer",
+        "compile_eml_layer", "to_torchscript",
+        "benchmark_layer", "BenchmarkTable",
+    ]
+except ImportError:
+    pass  # torch not installed
+
+from .llm import suggest_and_optimize, LLMOptimizeResult  # noqa: F401
+
+__all__ += ["suggest_and_optimize", "LLMOptimizeResult"]
+
+from .validate import validate_submission, ValidationResult, load_problems, list_problems  # noqa: F401
+
+__all__ += ["validate_submission", "ValidationResult", "load_problems", "list_problems"]
