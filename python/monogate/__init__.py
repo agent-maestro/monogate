@@ -282,6 +282,38 @@ __all__ += [
     "catalog_summary", "save_catalog",
 ]
 
+from .interval import (  # noqa: F401
+    Interval,
+    eml_interval,
+    eval_interval,
+    bound_expression,
+)
+
+__all__ += [
+    "Interval",
+    "eml_interval",
+    "eval_interval",
+    "bound_expression",
+]
+
+try:
+    from .sympy_bridge import (  # noqa: F401
+        to_sympy,
+        from_sympy,
+        simplify_eml,
+        latex_eml,
+        verify_identity,
+    )
+    __all__ += [
+        "to_sympy",
+        "from_sympy",
+        "simplify_eml",
+        "latex_eml",
+        "verify_identity",
+    ]
+except ImportError:
+    pass  # sympy not installed — bridge unavailable
+
 from .leaderboard import (  # noqa: F401
     BenchmarkProblem,
     LeaderboardEntry,
