@@ -544,3 +544,22 @@ class FeatureBasedEMLScorer:
                     delta = dz @ W
 
                 self._weights = new_weights
+
+    # ── Weight export / import ────────────────────────────────────────────────
+
+    def get_weights(self) -> list:
+        """Export weights as nested lists (JSON-serializable).
+
+        Returns a list of ``[W, b]`` pairs (one per layer), where each W and b
+        is a plain Python list.  Use :meth:`set_weights` to restore.
+        """
+        return [(W.tolist(), b.tolist()) for W, b in self._weights]
+
+    def set_weights(self, weights: list) -> None:
+        """Load weights from nested lists (output of :meth:`get_weights`).
+
+        Also marks the scorer as trained so that :meth:`score` returns a
+        meaningful value immediately.
+        """
+        self._weights = [(np.array(W), np.array(b)) for W, b in weights]
+        self._trained = True

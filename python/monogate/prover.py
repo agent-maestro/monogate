@@ -98,6 +98,8 @@ class ProofResult:
         rhs_tree:             EML tree dict for RHS (if found by MCTS), or None.
         witness_tree:         EML witness tree T with T ≈ LHS symbolically, or None.
         node_count:           Number of nodes in witness or LHS tree (0 if none).
+        mcts_simulations:     MCTS simulations run during witness-tier search
+                              (0 for all other proof tiers).
         lhs_formula:          Human-readable EML formula for LHS (if found).
         latex_proof:          LaTeX proof string (if generated).
         sympy_simplification: What SymPy computed (string), or None.
@@ -119,6 +121,7 @@ class ProofResult:
     latex_proof: Optional[str]
     sympy_simplification: Optional[str]
     notes: List[str]
+    mcts_simulations: int = 0
 
     def proved(self) -> bool:
         """Return True if the proof succeeded (any method)."""
@@ -393,14 +396,16 @@ def _mcts_witness_search(
     seed: int,
     timeout: float,
     external_scorer: "Optional[Callable[[dict], float]]" = None,
-) -> Tuple[Optional[dict], Optional[str], bool]:
+) -> Tuple[Optional[dict], Optional[str], bool, int]:
     """
     Run MCTS to find an EML tree T ≈ lhs_fn, then verify T == rhs symbolically.
 
-    Returns (witness_tree, formula_str, proved_witness).
+    Returns (witness_tree, formula_str, proved_witness, n_simulations_run).
+    The fourth element is the actual number of MCTS simulations executed
+    (0 if MCTS could not run).
     """
     if not _MCTS_OK or not _SYMPY_OK or not _BRIDGE_OK:
-        return None, None, False
+        return None, None, False, 0
 
     # depth for MCTS (n_nodes ≈ 2*depth - 1 for full binary tree)
     depth = max(2, (max_nodes + 1) // 2)
@@ -417,22 +422,23 @@ def _mcts_witness_search(
             external_scorer=external_scorer,
         )
     except Exception:
-        return None, None, False
+        return None, None, False, 0
 
     best_tree = result.best_tree
     formula_str = result.best_formula
+    n_sims = result.n_simulations
 
     if best_tree is None or result.best_mse > 1.0:
-        return best_tree, formula_str, False
+        return best_tree, formula_str, False, n_sims
 
     # Try symbolic verification: T == rhs?
     try:
         tree_sym = _tree_to_sympy(best_tree)
         diff = sympy.simplify(tree_sym - rhs_expr)
         proved = diff == 0
-        return best_tree, formula_str, proved
+        return best_tree, formula_str, proved, n_sims
     except Exception:
-        return best_tree, formula_str, False
+        return best_tree, formula_str, False, n_sims
 
 
 def _build_latex_proof(
@@ -624,6 +630,7 @@ class EMLProver:
                 rhs_tree=None,
                 witness_tree=None,
                 node_count=0,
+                mcts_simulations=0,
                 lhs_formula=None,
                 latex_proof=latex_str,
                 sympy_simplification=simplified_str,
@@ -664,6 +671,7 @@ class EMLProver:
                 rhs_tree=None,
                 witness_tree=None,
                 node_count=0,
+                mcts_simulations=0,
                 lhs_formula=None,
                 latex_proof=latex_str,
                 sympy_simplification=simplified_str,
@@ -689,6 +697,7 @@ class EMLProver:
                 rhs_tree=None,
                 witness_tree=None,
                 node_count=0,
+                mcts_simulations=0,
                 lhs_formula=None,
                 latex_proof=latex_str,
                 sympy_simplification=simplified_str,
@@ -701,6 +710,7 @@ class EMLProver:
         witness_tree: Optional[dict] = None
         lhs_formula: Optional[str] = None
         witness_proved = False
+        n_mcts: int = 0
 
         if (
             _MCTS_OK
@@ -717,7 +727,7 @@ class EMLProver:
                 if self.scorer is not None and self.scorer.is_trained()
                 else None
             )
-            witness_tree, lhs_formula, witness_proved = _mcts_witness_search(
+            witness_tree, lhs_formula, witness_proved, n_mcts = _mcts_witness_search(
                 lhs_fn=lhs_fn,
                 probe_points=mcts_probes,
                 rhs_expr=rhs_expr,
@@ -758,6 +768,7 @@ class EMLProver:
                 rhs_tree=None,
                 witness_tree=witness_tree,
                 node_count=node_cnt,
+                mcts_simulations=n_mcts,
                 lhs_formula=lhs_formula,
                 latex_proof=latex_str,
                 sympy_simplification=simplified_str,
@@ -794,6 +805,7 @@ class EMLProver:
             rhs_tree=None,
             witness_tree=None,
             node_count=node_cnt,
+            mcts_simulations=n_mcts,
             lhs_formula=lhs_formula,
             latex_proof=latex_str,
             sympy_simplification=simplified_str,
@@ -821,6 +833,7 @@ class EMLProver:
             rhs_tree=None,
             witness_tree=None,
             node_count=0,
+            mcts_simulations=0,
             lhs_formula=None,
             latex_proof=None,
             sympy_simplification=None,
@@ -958,13 +971,26 @@ class EMLProverV2(EMLProver):
         n_probe: int = 500,
         enable_learning: bool = False,
         scorer_path: Optional[str] = None,
+        use_pretrained: bool = False,
     ) -> None:
         scorer = None
-        if enable_learning:
+        if enable_learning or use_pretrained:
             from .neural_scorer import FeatureBasedEMLScorer
             scorer = FeatureBasedEMLScorer()
-            if scorer_path and os.path.exists(scorer_path):
-                scorer.load(scorer_path)
+            # Explicit scorer_path takes priority; pretrained default as fallback
+            load_path = scorer_path
+            if load_path is None and use_pretrained:
+                try:
+                    import importlib.resources as _pkg_res
+                    _ref = _pkg_res.files("monogate.data") / "pretrained_scorer.json"
+                    load_path = str(_ref)
+                except Exception:
+                    pass
+            if load_path and os.path.exists(load_path):
+                try:
+                    scorer.load(load_path)
+                except Exception:
+                    pass
         super().__init__(verbose=verbose, n_probe=n_probe, scorer=scorer)
 
     # ── Conjecture generation ────────────────────────────────────────────────
@@ -1139,6 +1165,7 @@ class EMLProverV2(EMLProver):
             rhs_tree=result.rhs_tree,
             witness_tree=best_tree,
             node_count=best_nodes,
+            mcts_simulations=result.mcts_simulations,
             lhs_formula=_formula_str(best_tree),
             latex_proof=result.latex_proof,
             sympy_simplification=result.sympy_simplification,
