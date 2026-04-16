@@ -1,3 +1,154 @@
+# monogate v0.10.0 — Complex BEST and PINN Extension
+
+Release announcement blurb — suitable for Hacker News, r/MachineLearning, and X/Twitter.
+
+---
+
+## Hacker News
+
+**Title:**
+```
+monogate v0.10.0: sin(x) in 1 node via complex EML; physics-informed EML networks
+```
+
+**Body:**
+```
+monogate v0.10.0 ships two major extensions to the EML operator framework
+(eml(x,y) = exp(x) − ln(y)) from the monogate v0.9.0 arXiv paper.
+
+** Complex BEST routing (CBEST) **
+
+The v0.9.0 result was: no finite real-valued EML tree can equal sin(x) for all
+x (Infinite Zeros Barrier). The complex bypass has been there from the start —
+Im(eml(ix,1)) = sin(x) exactly — but v0.10.0 formalises it into a full
+Complex BEST operator:
+
+    from monogate import CBEST, im
+    im(CBEST.sin(1.0))   # 0.8414709848…  (= math.sin(1.0), exact)
+
+sin and cos now cost 1 complex EML node each instead of 63 nodes in the
+8-term EXL Taylor series.
+
+The complex MCTS/Beam search (terminals {1, x, ix, i}) finds near-exact
+symbolic constructions for Bessel J₀, erf, and Airy Ai — functions that
+resist real-domain EML search.
+
+** Physics-Informed EML Networks (EMLPINN) **
+
+EMLPINN wraps an EMLNetwork backbone with a physics residual loss:
+
+    L = MSE(pred, data) + λ · mean(residual²)
+
+where residual is the ODE/PDE error at collocation points, computed via
+torch.autograd.grad with create_graph=True.
+
+Supported equations: harmonic oscillator (u'' + ω²u = 0), steady Burgers
+(u·u' − ν·u'' = 0), steady heat (u'' = 0).
+
+The key interpretability win: after training, model.formula(["x"]) prints the
+symbolic EML expression learned as the approximate solution — not a black box.
+
+** Also new **
+- mcts_search(..., objective='minimax') for Chebyshev-style uniform error bounds
+- gpu_mcts_search(device='cuda', batch_size=512) with graceful CPU fallback
+- 69 new tests (662 total), 3 new notebooks, paper §4.6 + §9 + abstract update
+
+GitHub: https://github.com/almaguer1986/monogate
+PyPI: pip install monogate
+Paper: https://arxiv.org/abs/ARXIV_ID_PLACEHOLDER
+```
+
+---
+
+## X / Twitter thread
+
+```
+1/ monogate v0.10.0 is out.
+
+v0.9.0 proved sin(x) can't be represented by any finite real EML tree.
+v0.10.0 takes the complex bypass seriously:
+
+  Im(eml(ix, 1)) = sin(x)     ← 1 node, exact
+
+New: Complex BEST operator (CBEST) routes all ops through cmath with the
+same routing rules. sin and cos go from 63 nodes → 1 node each.
+
+2/ CBEST has a `complex_best_optimize()` function:
+
+  result = complex_best_optimize("sin(x) + cos(x)")
+  # sin: 1 CBEST node vs 63 real-BEST → 98% saving
+  # cos: same
+  # Total: 2 vs 126 nodes
+
+3/ Complex MCTS (terminals {1, x, ix, i}) recovers sin(x) in < 1 second:
+
+  result = complex_mcts_search(math.sin, projection='imag', n_simulations=200)
+  print(result.complex_formula)   # eml(ix, 1.0)  ← MSE = 0
+
+4/ Also ships: EMLPINN — physics-informed EML networks.
+
+The learned model is an EML expression tree that simultaneously:
+ - fits observed data
+ - satisfies a differential equation (harmonic, Burgers, heat)
+
+After training: model.formula(["x"]) prints the symbolic approximate solution.
+
+5/ Two more additions:
+ - objective='minimax' in mcts_search/beam_search (Chebyshev-style)
+ - gpu_mcts_search(device='cuda', batch_size=512) with CPU fallback
+
+662 tests passing. 3 new notebooks. Paper updated.
+pip install monogate
+```
+
+---
+
+## r/MachineLearning
+
+**Title:**
+```
+[P] monogate v0.10.0: complex EML routing (sin in 1 node) and physics-informed
+EML networks with interpretable symbolic solutions
+```
+
+**Body:**
+```
+Following up on the v0.9.0 post (EML operator, Infinite Zeros Barrier,
+281M-tree exhaustive search): v0.10.0 ships two extensions.
+
+**Complex BEST routing (CBEST)**
+
+The Infinite Zeros Barrier theorem says no finite real-valued EML tree
+equals sin(x) for all x. The complex bypass Im(eml(ix,1)) = sin(x) gives
+it in 1 node. v0.10.0 formalises this into a `ComplexHybridOperator` (CBEST)
+that routes all operations through cmath with the same EML/EDL/EXL rules.
+Node counts: sin and cos drop from 63 → 1 each.
+
+Complex MCTS with terminal set {1, x, ix, i} finds near-exact symbolic
+constructions for Bessel J₀, erf, and Airy Ai — functions that resist
+real-domain symbolic search.
+
+**Physics-Informed EML Networks (EMLPINN)**
+
+EMLPINN is a torch.nn.Module that wraps an EMLNetwork backbone (a differentiable
+EML expression tree) with a physics residual loss. The total loss is:
+
+  L = data_MSE + λ · mean(ODE_residual²)
+
+Supported equations: harmonic oscillator, steady Burgers, steady heat.
+The physics residual is computed via torch.autograd.grad with create_graph=True,
+so it backprops through the EML tree.
+
+The interpretability benefit: model.formula(["x"]) prints the symbolic EML
+expression that is the learned approximate solution. You get both a fitted
+model and a readable formula.
+
+GitHub + paper: https://arxiv.org/abs/ARXIV_ID_PLACEHOLDER
+pip install monogate
+```
+
+---
+
 # monogate v0.9.0 — Launch Announcements
 
 Ready-to-post text for each platform. Replace `ARXIV_ID_PLACEHOLDER` with the real arXiv ID
