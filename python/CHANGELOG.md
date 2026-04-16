@@ -4,6 +4,74 @@ All notable changes to `monogate` are documented here.
 
 ---
 
+## [1.0.0] — 2026-04-16
+
+### Major release: monogate reaches v1.0.0
+
+This release completes the roadmap from v0.12.0 with five new capabilities,
+a formal theory document, and a comprehensive documentation overhaul.
+983 tests passing.
+
+### Phase 1 — Phantom Attractor Identity Investigation
+- `experiments/research_07_attractor_identity.py`: high-precision value search
+  via mpmath, PSLQ integer relation search, candidate constant testing
+- `experiments/research_07b_basin_geometry.py`: 2D loss landscape sweep,
+  gradient magnitude comparison between attractor and π basins
+- `docs/research/phantom_attractors.md`: extended with Phase 1 findings
+- Classification: **novel constant** — no known closed form found
+
+### Phase 2 — EDL Additive Incompleteness (Resolved)
+- `docs/research/edl_completeness_proof.md`: formal proof via structural
+  induction showing EDL cannot produce addition for arbitrary real values
+- Empirically confirmed by exhaustive N≤6 search (196 trees, zero additive matches)
+- THEORY.md R4: **Resolved**
+
+### Phase 3 — Minimax (L∞) Approximation Framework
+- `monogate/minimax.py`: new module with `MinimaxResult`, `minimax_eml()`,
+  `minimax_survey()` — thin wrapper around mcts_search(objective='minimax')
+- `tests/test_minimax.py`: 27 tests
+- `docs/research/minimax_approximation.md`: guide with survey results
+
+### Phase 4 — CBEST Physics Survey
+- `monogate/physics.py`: new module with 7 PDE/ODE callables:
+  `schrodinger_free_cb`, `potential_well_cb`, `nls_soliton_amplitude_cb`,
+  `heat_kernel_cb`, `kdv_soliton_cb`, `wave_cos_cb`, `wave_sin_cb`
+  + `PHYSICS_CATALOG` metadata dict
+- `experiments/research_08_physics_survey.py`: verification runner
+- `results/physics_identities_catalog.json`: 7 equations, 6 exact solutions,
+  4 with 1-node CBEST representation via Euler path
+- `notebooks/physics_identities_discovery.py`: interactive exploration
+
+### Phase 5 — EMLRegressor (sklearn-compatible symbolic regression)
+- `monogate/sklearn_wrapper.py`: `EMLRegressor(BaseEstimator, RegressorMixin)`
+  with MCTS/beam search backend, `fit/predict/score/get_formula/get_tree`
+  Full `get_params`/`set_params` sklearn protocol (with no-sklearn fallback)
+- `experiments/srbench_runner.py`: Nguyen-1..12, Keijzer-1..15 runner
+- `SRBENCH.md`: leaderboard template
+- `tests/test_sklearn_wrapper.py`: 24 tests
+- `docs/guide/symbolic_regression.md`: user guide and tutorial
+
+### Phase 6 — Documentation Overhaul
+- `docs/concepts/`: 3 new concept pages (EML universal operator, BEST routing,
+  complex bypass)
+- `docs/special_functions.md`: comprehensive 15-function catalog page
+- `docs/outreach/blog_post.md`: 1500-word accessible introduction
+- `docs/outreach/twitter_thread.md`: 12-tweet launch thread
+- `notebooks/`: 5 tutorial notebooks (01_eml_basics through 05_symbolic_regression)
+  + physics_identities_discovery.py
+- `mkdocs.yml`: expanded navigation with Core Concepts, Research & Theory,
+  Special Functions, Symbolic Regression sections
+- `THEORY.md`: new master theory document — resolved results R1-R4,
+  open conjectures C3-C7, node count records
+
+### Exports added to `monogate/__init__.py`
+`MinimaxResult`, `minimax_eml`, `minimax_survey`, `schrodinger_free_cb`,
+`potential_well_cb`, `nls_soliton_amplitude_cb`, `heat_kernel_cb`,
+`kdv_soliton_cb`, `wave_cos_cb`, `wave_sin_cb`, `PHYSICS_CATALOG`,
+`EMLRegressor`
+
+---
+
 ## [0.12.0] — 2026-04-16
 
 ### Session 3: Streamlit Web Demo
