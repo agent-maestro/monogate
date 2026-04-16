@@ -43,6 +43,9 @@ __all__ = [
     "BenchmarkReport",
     "EMLProver",
     "EMLProverV2",
+    "elegance_score",
+    "novelty_score",
+    "interestingness_score",
 ]
 
 # ── Optional imports (gracefully degraded) ────────────────────────────────────
@@ -213,6 +216,82 @@ class BenchmarkReport:
                 for r in self.results
             ],
         }
+
+
+# ── Public metric helpers ─────────────────────────────────────────────────────
+
+def elegance_score(node_count: int, symmetry_penalty: float = 0.0) -> float:
+    """Elegance of a proof: shorter + more symmetric = more elegant.
+
+    Returns 1 / (node_count * (1 + symmetry_penalty)), in (0, 1].
+
+    Args:
+        node_count:        Number of EML nodes in the witness tree (≥ 1).
+        symmetry_penalty:  Non-negative penalty for asymmetric trees (default 0).
+    """
+    return 1.0 / (max(1, node_count) * (1.0 + max(0.0, symmetry_penalty)))
+
+
+def novelty_score(identity_str: str, catalog: "List[Any]") -> float:
+    """Novelty of an identity relative to a catalog: 1 − max token-overlap.
+
+    Uses Jaccard similarity on the set of identifier tokens (function names,
+    variable names) to measure how different *identity_str* is from every
+    expression already in *catalog*.
+
+    Args:
+        identity_str: The candidate identity expression (``"lhs == rhs"``).
+        catalog:      List of :class:`~monogate.identities.Identity` objects
+                      (or any objects with an ``expression`` attribute / str).
+
+    Returns:
+        Float in [0, 1].  1.0 = completely new tokens, 0.0 = identical to
+        something in catalog.
+    """
+    import re as _re
+
+    def _tokens(s: str) -> "set[str]":
+        return set(_re.findall(r"[a-zA-Z_]\w*", s.lower()))
+
+    toks = _tokens(identity_str)
+    if not toks or not catalog:
+        return 1.0
+    sims: "List[float]" = []
+    for item in catalog:
+        expr = item.expression if hasattr(item, "expression") else str(item)
+        other = _tokens(expr)
+        if not other:
+            continue
+        union = len(toks | other)
+        sims.append(len(toks & other) / union if union else 0.0)
+    return 1.0 - max(sims) if sims else 1.0
+
+
+def interestingness_score(
+    confidence: float,
+    node_count: int,
+    identity_str: str,
+    catalog: "List[Any]",
+    symmetry_penalty: float = 0.0,
+) -> float:
+    """Overall interestingness = confidence × elegance × novelty.
+
+    All three factors are in [0, 1], so the product is also in [0, 1].
+    A high score means: the proof is confident, the witness is short and
+    symmetric, *and* the identity uses tokens not seen in the existing catalog.
+
+    Args:
+        confidence:        Proof confidence (from :attr:`ProofResult.confidence`).
+        node_count:        EML witness node count.
+        identity_str:      The identity expression string.
+        catalog:           Existing identity catalog.
+        symmetry_penalty:  Passed to :func:`elegance_score`.
+    """
+    return (
+        float(confidence)
+        * elegance_score(node_count, symmetry_penalty)
+        * novelty_score(identity_str, catalog)
+    )
 
 
 # ── Internal helpers ──────────────────────────────────────────────────────────
@@ -1082,30 +1161,25 @@ class EMLProverV2(EMLProver):
                     ))
                     existing_exprs.add(expr)
 
-        # ── Ranking ────────────────────────────────────────────────────────────
-        scorer_trained = (
-            self.scorer is not None and self.scorer.is_trained()
-        )
-        if scorer_trained:
-            # Neural hint: prefer candidates whose expression length suggests
-            # a short EML witness (proxy for what the scorer has learned).
-            # weight = 0.6 * novelty + 0.2 * simplicity + 0.2 * neural_hint
-            # neural_hint is the simplicity score amplified by scorer confidence.
-            def _score(c):
-                novelty, simplicity, *_ = c
-                neural_hint = simplicity * 1.5  # amplify compact expressions
-                neural_hint = min(neural_hint, 1.0)
-                return 0.6 * novelty + 0.2 * simplicity + 0.2 * neural_hint
-        else:
-            def _score(c):
-                novelty, simplicity, *_ = c
-                return 0.7 * novelty + 0.3 * simplicity
+        # ── Ranking via interestingness_score ────────────────────────────────
+        # Combine discovered catalog + static catalog for novelty computation.
+        _discovered = list(getattr(self, "_discovered_catalog", []))
+        all_known = list(ALL_IDENTITIES) + _discovered
+
+        def _score(c: tuple) -> float:
+            _nov, _simp, _name, _expr, _icat, _dom = c
+            node_count_proxy = max(1, len(_expr) // 10)
+            return interestingness_score(1.0, node_count_proxy, _expr, all_known)
 
         candidates.sort(key=_score, reverse=True)
 
         results = []
         for row in candidates[:n]:
             novelty, simplicity, name, expr, icat, domain = row
+            node_count_proxy = max(1, len(expr) // 10)
+            elg = elegance_score(node_count_proxy)
+            nov = novelty_score(expr, all_known)
+            ist = elg * nov  # confidence=1.0 (numerically verified)
             results.append(Identity(
                 name=name,
                 expression=expr,
@@ -1114,8 +1188,8 @@ class EMLProverV2(EMLProver):
                 domain=domain,
                 difficulty=difficulty,
                 notes=(
-                    f"Auto-generated conjecture (novelty={novelty:.4f}, "
-                    f"temperature={temperature:.2f}). Numerically verified."
+                    f"auto (interestingness={ist:.4f}, elg={elg:.4f}, "
+                    f"nov={nov:.4f}, t={temperature:.2f}). Numerically verified."
                 ),
                 expected_method="unknown",
             ))
@@ -1169,6 +1243,11 @@ class EMLProverV2(EMLProver):
             - ``n_total_discovered``: total number of proved conjectures.
         """
         import time as _time
+        from .identities import ALL_IDENTITIES as _ALL_IDS
+
+        # Initialize (or reset) the per-session discovered catalog used by
+        # generate_conjectures() for novelty computation.
+        self._discovered_catalog: "List[Any]" = []
 
         discovered: "List[tuple]" = []
         learning_curve: "List[dict]" = []
@@ -1186,6 +1265,8 @@ class EMLProverV2(EMLProver):
 
             n_proved_this_round = 0
             n_witness_this_round = 0
+            adversarial_confirmed = 0
+            round_best_ist = 0.0
 
             for conjecture in conjectures:
                 if conjecture.expression in seen_exprs:
@@ -1196,6 +1277,7 @@ class EMLProverV2(EMLProver):
 
                 if result.proved():
                     n_proved_this_round += 1
+
                     # Compress MCTS witness if one was found
                     if (compress_witnesses
                             and result.witness_tree is not None
@@ -1205,6 +1287,41 @@ class EMLProverV2(EMLProver):
                             result = self.compress_proof(result)
                         except Exception:
                             pass
+
+                    # Feed proved identity back into the discovered catalog so
+                    # future rounds compute novelty against an updated pool.
+                    self._discovered_catalog.append(conjecture)
+
+                    # Adversarial testing: verify 2 structurally-equivalent
+                    # variants to confirm the identity isn't an artifact.
+                    try:
+                        from monogate.frontiers.adversarial_identities import (
+                            AdversarialGenerator as _AdvGen,
+                        )
+                        _adv = _AdvGen()
+                        for _method in _adv.methods[:2]:
+                            try:
+                                _adv_expr = _adv.generate(
+                                    conjecture.expression, _method
+                                )
+                                _adv_res = self.prove(_adv_expr)
+                                adversarial_confirmed += int(_adv_res.proved())
+                            except Exception:
+                                pass
+                    except Exception:
+                        pass
+
+                    # Track per-round best interestingness
+                    _all_known = list(_ALL_IDS) + self._discovered_catalog
+                    _ist = interestingness_score(
+                        result.confidence,
+                        result.node_count or max(1, len(conjecture.expression) // 10),
+                        conjecture.expression,
+                        _all_known,
+                    )
+                    if _ist > round_best_ist:
+                        round_best_ist = _ist
+
                     discovered.append((conjecture, result))
 
             elapsed = _time.perf_counter() - t0
@@ -1214,14 +1331,16 @@ class EMLProverV2(EMLProver):
             scorer_buf = len(self.scorer._buffer) if self.scorer else 0
 
             round_stats = {
-                "round":             round_idx + 1,
-                "n_conjectures":     len(conjectures),
-                "n_proved":          n_proved_this_round,
-                "n_witness":         n_witness_this_round,
-                "n_discovered_total": len(discovered),
-                "scorer_trained":    scorer_trained,
-                "scorer_buffer":     scorer_buf,
-                "elapsed_s":         elapsed,
+                "round":                round_idx + 1,
+                "n_conjectures":        len(conjectures),
+                "n_proved":             n_proved_this_round,
+                "n_witness":            n_witness_this_round,
+                "n_discovered_total":   len(discovered),
+                "scorer_trained":       scorer_trained,
+                "scorer_buffer":        scorer_buf,
+                "elapsed_s":            elapsed,
+                "best_interestingness": round(round_best_ist, 4),
+                "adversarial_confirmed": adversarial_confirmed,
             }
             learning_curve.append(round_stats)
 
@@ -1232,6 +1351,7 @@ class EMLProverV2(EMLProver):
                     f"generated={len(conjectures)}  "
                     f"proved={n_proved_this_round}  "
                     f"total={len(discovered)}  "
+                    f"adv_ok={adversarial_confirmed}  "
                     f"scorer={status}  "
                     f"({elapsed:.1f}s)"
                 )
@@ -1341,6 +1461,7 @@ class EMLProverV2(EMLProver):
         result: ProofResult,
         style: str = "tree",
         output_path: Optional[str] = None,
+        compressed_result: "Optional[ProofResult]" = None,
     ) -> None:
         """Render a publication-quality diagram of the EML proof tree.
 
@@ -1352,10 +1473,13 @@ class EMLProverV2(EMLProver):
         - **coral**: variable ``x`` leaf nodes
 
         Args:
-            result:      A :class:`ProofResult` to visualize.
-            style:       One of ``'tree'`` (hierarchical), ``'radial'``,
-                         or ``'step'`` (LHS | → | RHS side-by-side).
-            output_path: If given, save to this file path instead of showing.
+            result:            A :class:`ProofResult` to visualize.
+            style:             One of ``'tree'`` (hierarchical), ``'radial'``,
+                               or ``'step'`` (LHS | → | RHS side-by-side).
+            output_path:       If given, save to this file path instead of showing.
+            compressed_result: If provided, show a side-by-side comparison of
+                               the original tree (left) and the compressed tree
+                               (right).  Overrides *style*.
 
         Raises:
             ImportError: If matplotlib is not installed.
@@ -1366,6 +1490,34 @@ class EMLProverV2(EMLProver):
         except ImportError:
             raise ImportError("matplotlib is required for visualize_proof. "
                               "Install with: pip install matplotlib")
+
+        # ── Compression before/after comparison ─────────────────────────────
+        if compressed_result is not None:
+            tree_before = result.witness_tree or result.lhs_tree
+            tree_after  = compressed_result.witness_tree or compressed_result.lhs_tree
+            nc_before = result.node_count or _count_nodes(tree_before)
+            nc_after  = compressed_result.node_count or _count_nodes(tree_after)
+            savings   = nc_before - nc_after
+
+            fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+            fig.suptitle(
+                f"Compression: {nc_before} → {nc_after} nodes  "
+                f"(saved {savings}, {100*savings/max(1,nc_before):.0f}%)",
+                fontsize=12,
+            )
+            for ax, tree, label in [
+                (axes[0], tree_before, f"Before ({nc_before} nodes)"),
+                (axes[1], tree_after,  f"After  ({nc_after} nodes)"),
+            ]:
+                ax.set_title(label)
+                if tree is not None:
+                    _draw_tree_on_axis(tree, ax)
+                else:
+                    ax.axis("off")
+                    ax.text(0.5, 0.5, "(no tree)", ha="center", va="center")
+            plt.tight_layout()
+            _show_or_save(fig, output_path)
+            return
 
         tree = result.witness_tree or result.lhs_tree
         if tree is None:
@@ -1541,6 +1693,134 @@ class EMLProverV2(EMLProver):
 
         return fig
 
+    # ── Explorer session visualization ──────────────────────────────────────
+
+    def visualize_explorer_session(
+        self,
+        session: dict,
+        output_path: Optional[str] = None,
+    ) -> None:
+        """Three-panel visualization of a completed exploration session.
+
+        Panels:
+          1. **Discovery timeline** — cumulative proved conjectures (left axis)
+             overlaid with best per-round interestingness score (right axis).
+          2. **Per-round breakdown** — grouped bar chart of generated vs proved
+             conjectures per round.
+          3. **Scorer learning curve** — scorer buffer size and per-round success
+             rate (proved / generated) over rounds.
+
+        Args:
+            session:     dict returned by :meth:`explore`.
+            output_path: Save PNG to this path; display inline if None.
+
+        Raises:
+            ImportError: if matplotlib is not installed.
+        """
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError:
+            raise ImportError(
+                "matplotlib is required for visualize_explorer_session. "
+                "Install with: pip install matplotlib"
+            )
+
+        lc = session.get("learning_curve", [])
+        if not lc:
+            print("No learning_curve data in session — nothing to visualize.")
+            return
+
+        rounds    = [r["round"] for r in lc]
+        n_gen     = [r["n_conjectures"] for r in lc]
+        n_proved  = [r["n_proved"] for r in lc]
+        n_cum     = [r["n_discovered_total"] for r in lc]
+        ist_curve = [r.get("best_interestingness", 0.0) for r in lc]
+        buf_sizes = [r.get("scorer_buffer", 0) for r in lc]
+        success_r = [
+            r["n_proved"] / max(1, r["n_conjectures"]) for r in lc
+        ]
+
+        fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+        fig.suptitle("Mathematical Explorer — Session Summary", fontsize=13)
+
+        # ── Panel 1: discovery timeline + interestingness ───────────────────
+        ax1 = axes[0]
+        ax1r = ax1.twinx()
+        ax1.plot(rounds, n_cum, "o-", color="steelblue", linewidth=2,
+                 label="Cumulative discoveries")
+        ax1.set_xlabel("Round")
+        ax1.set_ylabel("Cumulative proved", color="steelblue")
+        ax1.tick_params(axis="y", labelcolor="steelblue")
+        ax1r.plot(rounds, ist_curve, "s--", color="coral", linewidth=1.5,
+                  label="Best interestingness")
+        ax1r.set_ylabel("Best interestingness", color="coral")
+        ax1r.tick_params(axis="y", labelcolor="coral")
+        ax1.set_title("Discovery timeline")
+        ax1.set_xticks(rounds)
+
+        # ── Panel 2: per-round breakdown ────────────────────────────────────
+        ax2 = axes[1]
+        x = range(len(rounds))
+        w = 0.35
+        ax2.bar([i - w/2 for i in x], n_gen, width=w, label="Generated",
+                color="lightgrey", edgecolor="black")
+        ax2.bar([i + w/2 for i in x], n_proved, width=w, label="Proved",
+                color="coral", edgecolor="black")
+        ax2.set_xticks(list(x))
+        ax2.set_xticklabels([f"R{r}" for r in rounds], fontsize=8)
+        ax2.set_ylabel("Count")
+        ax2.set_title("Generated vs proved per round")
+        ax2.legend(fontsize=8)
+
+        # ── Panel 3: scorer learning curve ──────────────────────────────────
+        ax3 = axes[2]
+        ax3r = ax3.twinx()
+        ax3.bar(rounds, buf_sizes, color="mediumseagreen", alpha=0.6,
+                label="Scorer buffer")
+        ax3.set_ylabel("Scorer buffer size", color="mediumseagreen")
+        ax3.tick_params(axis="y", labelcolor="mediumseagreen")
+        ax3r.plot(rounds, success_r, "D-", color="navy", linewidth=1.5,
+                  label="Success rate")
+        ax3r.set_ylabel("Success rate", color="navy")
+        ax3r.tick_params(axis="y", labelcolor="navy")
+        ax3r.set_ylim(0, 1.05)
+        ax3.set_xlabel("Round")
+        ax3.set_title("Scorer learning curve")
+        ax3.set_xticks(rounds)
+
+        plt.tight_layout()
+        _show_or_save(fig, output_path)
+
+    # ── Proof sketch ─────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _proof_sketch(result: "ProofResult") -> str:
+        """One-sentence proof strategy description for a ProofResult.
+
+        Args:
+            result: A :class:`ProofResult` instance.
+
+        Returns:
+            Human-readable string summarising how the identity was proved.
+        """
+        m = result.verification_method
+        if m == "exact_sympy":
+            return "Verified by symbolic simplification (SymPy exact)"
+        if m == "numerical":
+            res = result.max_residual
+            n   = result.n_test_points
+            return (
+                f"Numerically verified on {n} points "
+                f"(max residual {res:.2e})"
+            )
+        if m == "certified_interval":
+            return "Certified via interval arithmetic (20 sub-intervals)"
+        if m in ("eml_witness", "proved_witness"):
+            nc = result.node_count or "?"
+            f  = result.lhs_formula or "?"
+            return f"EML witness found: {f} ({nc} nodes)"
+        return "No proof found"
+
     # ── Batch prove with progress ────────────────────────────────────────────
 
     def batch_prove(
@@ -1653,6 +1933,37 @@ class EMLProverV2(EMLProver):
             # Argument: x → x + random small shift
             shift = rng.choice([0.1, 0.25, -0.1, -0.25])
             mutations.append((lhs.replace("x", f"(x+{shift})"), rhs.replace("x", f"(x+{shift})"), "rand_shift"))
+
+        # ── Tier 5: analogy mutations (temperature ≥ 0.5) ───────────────────
+        # Port identities across algebraically related families.
+        if temperature >= 0.5:
+            # Trig → Hyperbolic: sin→sinh, cos→cosh, tan→tanh
+            for orig, repl in [("sin(", "sinh("), ("cos(", "cosh("), ("tan(", "tanh(")]:
+                if orig in lhs or orig in rhs:
+                    new_lhs = lhs.replace(orig, repl)
+                    new_rhs = rhs.replace(orig, repl)
+                    if new_lhs != lhs or new_rhs != rhs:
+                        tag = f"analogy_hyp_{repl[:4].rstrip('(')}"
+                        mutations.append((new_lhs, new_rhs, tag))
+                    break  # only first matching trig function
+
+            # Hyperbolic → Trig: sinh→sin, cosh→cos, tanh→tan
+            for orig, repl in [("sinh(", "sin("), ("cosh(", "cos("), ("tanh(", "tan(")]:
+                if orig in lhs or orig in rhs:
+                    new_lhs = lhs.replace(orig, repl)
+                    new_rhs = rhs.replace(orig, repl)
+                    if new_lhs != lhs or new_rhs != rhs:
+                        tag = f"analogy_trig_{repl[:3].rstrip('(')}"
+                        mutations.append((new_lhs, new_rhs, tag))
+                    break
+
+            # exp(x) → exp(2*x) scaling of the exponent argument
+            if "exp(x)" in lhs or "exp(x)" in rhs:
+                mutations.append((
+                    lhs.replace("exp(x)", "exp(2*x)"),
+                    rhs.replace("exp(x)", "exp(2*x)"),
+                    "analogy_exp2x",
+                ))
 
         return mutations
 
