@@ -3,8 +3,8 @@
 > **Status:** Internal research document — superseded by the arXiv preprint
 > `paper/preprint.tex` (v0.9.0, April 2026). This file is preserved as a working
 > notes document. The preprint is the authoritative version.
-> **Last updated:** v0.12.0-dev (April 2026). New modules (special, leaderboard, pinn,
-> interval, sympy_bridge, Streamlit demo) are documented in Section 10.
+> **Last updated:** v1.0.0 (April 2026). New modules (minimax, physics, sklearn_wrapper,
+> prover, identities) and full v1.0.0 feature inventory are documented in Sections 10–14.
 
 ## Abstract
 
@@ -26,10 +26,10 @@ We also document four empirical findings with sharp quantitative results:
 
 4. **Performance kernels.** `FusedEMLActivation` (3.6×) and a Rust/PyO3 extension `monogate-core` (5.9×) make EML competitive with native activations in PyTorch. `EMLLayer(compiled=True)` auto-selects the fastest available backend.
 
-We release **monogate** v0.12.0-dev (Python + JavaScript) with full support for EML, EDL, EXL, and the `BEST` hybrid, including: a browser explorer (monogate.dev), an interactive code optimizer, a `best_optimize()` Python API, `monogate.search` stochastic search, a drop-in PyTorch `EMLLayer`, 15 pre-computed special functions (`monogate.special`), a symbolic regression leaderboard (`monogate.leaderboard`), extended PINN support for 7 differential equations (`monogate.pinn`), certified interval arithmetic (`monogate.interval`), SymPy interoperability (`monogate.sympy_bridge`), and a 5-tab Streamlit web demo (`streamlit_app.py`) — 913 passing tests.
+We release **monogate** v1.0.0 (Python + JavaScript) with full support for EML, EDL, EXL, and the `BEST` hybrid, including: a browser explorer (monogate.dev), an interactive code optimizer, a `best_optimize()` Python API, `monogate.search` stochastic search, a drop-in PyTorch `EMLLayer`, 15 pre-computed special functions (`monogate.special`), a symbolic regression leaderboard (`monogate.leaderboard`), extended PINN support for 7 differential equations (`monogate.pinn`), certified interval arithmetic (`monogate.interval`), SymPy interoperability (`monogate.sympy_bridge`), a 5-tab Streamlit web demo (`streamlit_app.py`), L∞ minimax approximation (`monogate.minimax`), a CBEST physics identity catalog with 7 PDE/ODE solutions (`monogate.physics`), a scikit-learn-compatible symbolic regressor (`monogate.sklearn_wrapper`), a four-tier neurosymbolic theorem prover (`monogate.prover`), and a 71-identity catalog (`monogate.identities`) — 983 passing tests.
 
-**Code:** https://github.com/almaguer1986/monogate · **PyPI:** `pip install monogate`
-**Preprint:** `paper/preprint.tex` — arXiv:ARXIV_ID_PLACEHOLDER
+**Code:** https://github.com/almaguer1986/monogate · **PyPI:** `pip install monogate==1.0.0`
+**Preprint:** `paper/preprint.tex` — arXiv:2603.21852
 
 ---
 
@@ -434,22 +434,28 @@ cd monogate-core && pip install maturin && maturin develop --release
 
 The `BEST` hybrid demonstrates that intelligently combining variants of EML can produce substantially more efficient and stable trees than any single operator. The released `monogate` library makes these techniques immediately usable in both Python and the browser, with Rust-accelerated kernels for production use.
 
-**Confirmed results (v0.12.0-dev):**
+**Confirmed results (v1.0.0):**
 - Phantom attractors trap 100% (40/40) of gradient-based EMLTree fits without regularization; λ_crit = 0.001 eliminates them entirely (sharp phase transition); phenomenon confirmed EML-specific (not present in Taylor/Padé/CF bases)
 - **281,026,468 EML trees (N ≤ 11, terminals {1, x}) contain no real-valued construction of sin(x)**; the Infinite Zeros Barrier theorem rules this out for all N
 - **Complex bypass found:** `Im(eml(i·x, 1)) = sin(x)` exactly (1 node, machine precision); extends to all functions with infinitely many real zeros (Bessel J₀, Airy Ai, erf)
 - BEST routing delivers 2.8× wall-clock speedup on sin/cos-heavy Python code
 - Rust backend: 5.9× throughput over baseline; FusedEMLActivation: 3.6× (no Rust required)
 - MCTS finds exact solutions (MSE=0) for targets like `exp(x)` in <1s, avoiding phantom attractors
-- Free-particle Schrödinger u(x) = exp(ikx) = 1 CBEST node (Euler path identity extended to physics)
+- Free-particle Schrödinger u(x) = exp(ikx) = 1 CBEST node (Euler path identity extended to physics); wave equation and infinite square well also 1 CBEST node
 - 15 special functions catalogued with CBEST/BEST node counts in `monogate.special`
+- **EDL additive incompleteness proved** (formal theorem + exhaustive N≤6 confirmation; see `docs/research/edl_completeness_proof.md`)
+- **monogate.minimax**: L∞ minimax survey of k-node EML approximations via MCTS objective='minimax'
+- **monogate.physics**: 7 PDE/ODE callables with PHYSICS_CATALOG; 4 of 7 equations = 1-node CBEST exact solutions
+- **EMLRegressor**: sklearn-compatible symbolic regressor with MCTS/beam backend
+- **monogate.prover**: four-tier neurosymbolic theorem prover (numerical→SymPy→certified→witness)
+- **monogate.identities**: 71-identity catalog across 7 categories
 
 **Open problems:**
-- **N=12 real-valued search** — ~1.7 billion trees; requires GPU/distributed evaluation (Barrier theorem already rules out matches, but empirical confirmation has value)
-- **Minimax-optimal EML approximations** — what is the best uniform approximation to sin(x) achievable with exactly k EML nodes?
+- **N=12 real-valued search** — ~1.7 billion trees; requires GPU/distributed evaluation (Barrier theorem already rules out matches, but empirical confirmation has value; see Phase 7 in dev plan)
 - **Complex BEST routing** — does EDL or EXL reduce node count for functions expressed via complex EML (exp(ix), Bessel, etc.)?
-- **EDL additive completeness** — does a finite EDL tree using complex terminals produce exact `a + b` for arbitrary real a, b?
-- **Attractor identity** — what is the exact algebraic identity of the depth-3 EML attractor at ≈3.169642? Is it a known constant?
+- **Attractor identity** — what is the exact algebraic identity of the depth-3 EML attractor at ≈3.169642? Preliminary investigation rules out π, e, ln(k), √k, and small rational combinations; classified as likely novel constant (see `docs/research/phantom_attractors.md`)
+- **λ_crit formula** — is there a closed-form expression for the critical regularization strength as a function of tree depth?
+- **CBEST completeness** — which analytic functions admit exact k-node CBEST representations for small k?
 
 ## References
 
@@ -457,7 +463,7 @@ Odrzywołek, A. (2026). All elementary functions from a single binary operator. 
 
 Almaguer, A. (2026). Practical extensions to the EML universal operator: hybrid routing, phantom attractors, performance kernels, and the N=11 sin barrier. arXiv:ARXIV_ID_PLACEHOLDER.
 
-monogate repository: https://github.com/almaguer1986/monogate · v0.12.0-dev
+monogate repository: https://github.com/almaguer1986/monogate · v1.0.0 · PyPI: monogate==1.0.0
 
 ---
 
@@ -540,3 +546,169 @@ Run: `streamlit run streamlit_app.py` (install: `pip install -r requirements.txt
 with identical seeds and learning rates do not exhibit the phantom attractor phenomenon.
 This strengthens the characterization: the false basin arises from the nested exp/ln structure
 of EML trees, not from gradient descent or the Adam optimizer in general.
+
+---
+
+## 11. Minimax EML Approximation (`monogate.minimax`)
+
+### 11.1 Motivation
+
+Mean-squared-error (MSE) objectives measure average accuracy, but many engineering applications
+require **uniform** (L∞) error bounds. The minimax problem asks: what is the best achievable
+uniform approximation to a target function f using exactly k EML nodes?
+
+### 11.2 Implementation
+
+`minimax_eml(target_fn, n_nodes, domain, ...)` adapts the MCTS engine with reward
+`1 / (1 + max|f(xᵢ) − g(xᵢ)|)` over a uniform probe grid. This directly targets the
+Chebyshev equioscillation condition.
+
+```python
+from monogate.minimax import minimax_eml, minimax_survey
+import math
+
+r = minimax_eml(math.sin, n_nodes=7, domain=(-3.0, 3.0), n_simulations=2000)
+# MinimaxResult(linf=..., l2=..., formula='...', n_nodes=7)
+
+rows = minimax_survey(math.exp, node_counts=[1, 3, 5, 7, 9, 11], domain=(0.0, 1.0))
+# list of dicts: n_nodes, depth, formula, linf, l2, elapsed_s
+```
+
+### 11.3 MinimaxResult Fields
+
+`MinimaxResult` (frozen dataclass): `best_tree`, `best_formula`, `linf`, `l2`, `n_nodes`,
+`domain`, `n_probe`, `elapsed_s`, `mcts_result`.
+
+**Key property:** L² ≤ L∞ (proved for uniform probe grids). `minimax_survey` returns one row
+per node count, allowing construction of a node-count vs. L∞-error Pareto frontier.
+
+### 11.4 Results
+
+`results/minimax_survey.json` contains the L∞ survey for sin(x) on [−π, π] at k=1,3,5,7,9,11.
+The MCTS minimax objective consistently finds formulas that are better calibrated across the
+domain than MSE-optimized formulas of the same node count.
+
+---
+
+## 12. CBEST Physics Identity Catalog (`monogate.physics`)
+
+### 12.1 Systematic Survey
+
+Building on the discovery that exp(ikx) = 1 CBEST node, we systematically surveyed 7 important
+PDEs and ODEs for compact CBEST/BEST representations:
+
+| Equation | Solution | Nodes | Backend | Exact? |
+|----------|----------|-------|---------|--------|
+| Free-particle Schrödinger | exp(ikx) | 1 | CBEST | Yes |
+| Infinite square well | sin(nπx/L) | 1 | CBEST | Yes |
+| Wave equation (cos) | cos(kx−ωt) | 1 | CBEST | Yes |
+| Wave equation (sin) | sin(kx−ωt) | 1 | CBEST | Yes |
+| NLS bright soliton | sech(x) | 2 | BEST | Yes |
+| Heat fundamental solution | exp(−x²/4t)/√(4πt) | 4 | BEST | Yes |
+| KdV 1-soliton | (c/2)sech²(√(c/4)(x−ct)) | 18 | BEST | ~yes |
+
+**Key result:** 4 of 7 equations have exact 1-node CBEST solutions via the Euler path identity
+`exp(ix) = eml(ix, 1)`. This extends the complex bypass from pure mathematics to physics.
+
+### 12.2 Callables
+
+```python
+from monogate.physics import (
+    schrodinger_free_cb,  # exp(ikx)
+    potential_well_cb,    # sin(nπx/L)
+    nls_soliton_amplitude_cb,  # sech(x)
+    heat_kernel_cb,       # Gaussian (t > 0 required)
+    kdv_soliton_cb,       # (c/2)sech²(√(c/4)(x-ct))
+    wave_cos_cb,          # cos(kx-ωt)
+    wave_sin_cb,          # sin(kx-ωt)
+    PHYSICS_CATALOG,      # dict with metadata for all 7 equations
+)
+```
+
+`PHYSICS_CATALOG` entries contain: `equation`, `callable`, `formula`, `n_nodes`, `backend`,
+`max_abs_error`, `notes`. Metadata also persisted in `results/physics_identities_catalog.json`.
+
+---
+
+## 13. EMLRegressor and SRBench (`monogate.sklearn_wrapper`)
+
+### 13.1 EMLRegressor
+
+`EMLRegressor` is a scikit-learn `BaseEstimator` + `RegressorMixin` that wraps the MCTS/beam
+search engine, enabling drop-in use in sklearn pipelines, cross-validation, and GridSearchCV.
+
+```python
+from monogate.sklearn_wrapper import EMLRegressor
+
+reg = EMLRegressor(max_depth=5, n_simulations=5000, search_method='mcts',
+                   objective='mse', random_state=42)
+reg.fit(X_train, y_train)
+print(reg.formula_)       # human-readable EML expression
+print(reg.best_score_)    # training MSE
+preds = reg.predict(X_test)
+r2 = reg.score(X_test, y_test)
+```
+
+**Parameters:** `max_depth`, `n_simulations`, `search_method` ('mcts'|'beam'), `objective`
+('mse'|'minimax'), `random_state`.
+
+**Fitted attributes:** `tree_`, `formula_`, `best_score_`, `n_features_in_`.
+
+**Methods:** `fit`, `predict`, `score`, `get_formula`, `get_tree`, `get_params`, `set_params`.
+
+Works without scikit-learn installed (stub base classes via `inspect.signature`).
+
+### 13.2 SRBench Integration
+
+`experiments/srbench_runner.py` runs `EMLRegressor` on the Nguyen (1–12), Keijzer (1–15),
+and Vladislavleva (1–8) benchmark suites. `SRBENCH.md` tracks the leaderboard.
+
+---
+
+## 14. Neurosymbolic Theorem Prover (`monogate.prover`)
+
+### 14.1 Design
+
+`EMLProver` implements a four-tier proof strategy with graceful degradation:
+
+| Tier | Method | Confidence | When |
+|------|--------|-----------|------|
+| 1 | Numerical (dense probe grid) | 0.7–0.9 | Always first |
+| 2 | SymPy exact simplification | 1.0 | When SymPy installed |
+| 3 | Interval arithmetic certified | 0.95 | When monogate.interval available |
+| 4 | EML witness (MCTS + SymPy) | 0.8–1.0 | Novel identities |
+
+### 14.2 API
+
+```python
+from monogate.prover import EMLProver
+
+prover = EMLProver(verbose=True)
+result = prover.prove("sin(x)**2 + cos(x)**2 == 1")
+# ProofResult(status='proved_exact', confidence=1.0, ...)
+
+report = prover.benchmark()   # runs all 71 identities from monogate.identities
+print(report.summary())
+```
+
+**ProofResult fields:** `status` ('proved_exact'|'proved_certified'|'proved_numerical'|
+'proved_witness'|'inconclusive'|'failed'), `confidence`, `max_residual`, `lhs_formula`,
+`latex_proof`, `sympy_simplification`, `node_count`, `notes`.
+
+### 14.3 Identity Catalog (`monogate.identities`)
+
+71 identities across 7 categories:
+
+| Category | Count | Examples |
+|----------|-------|---------|
+| Trigonometric | 17 | Pythagorean, double-angle, product-to-sum |
+| Hyperbolic | 12 | tanh identities, addition formulas |
+| Exponential | 12 | EML structural identities (eml(x,1)=exp(x)) |
+| Special functions | 12 | Fresnel, Bessel, Airy relations |
+| Physics | 7 | Schrödinger, KdV, wave equation identities |
+| EML structural | 6 | BEST routing correctness identities |
+| Open challenges | 5 | Attractor identity, complex completeness |
+
+```python
+from monogate.identities import TRIG_IDENTITIES, get_by_difficulty, get_by_category
+```

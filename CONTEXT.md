@@ -1,7 +1,7 @@
 # monogate — Complete Project Context
-> Single-document briefing for the full state of the project as of **v0.12.0-dev**, April 2026.
-> Branch: `phase9-arxiv-live`. Next step: merge → master, cut v0.12.0 PyPI release.
-> Update ARXIV_ID_PLACEHOLDER with real ID once published.
+> Single-document briefing for the full state of the project as of **v1.0.0**, April 2026.
+> Branch: `master`. Tag: `v1.0.0`. PyPI: `pip install monogate==1.0.0`.
+> arXiv: arXiv:2603.21852 (Odrzywołek 2026, CC BY 4.0).
 
 ---
 
@@ -29,6 +29,11 @@ monogate provides:
 - **Certified interval arithmetic** through EML trees (`monogate.interval`).
 - **SymPy interoperability**: to_sympy, from_sympy, latex_eml (`monogate.sympy_bridge`).
 - **Streamlit web demo** — 5 interactive tabs, deployable to Streamlit Cloud (`streamlit_app.py`).
+- **L∞ minimax approximation** framework with MCTS minimax objective (`monogate.minimax`).
+- **CBEST physics identity catalog** — 7 PDE/ODE solutions, 4 exact 1-node CBEST (`monogate.physics`).
+- **sklearn-compatible symbolic regressor** with MCTS/beam backend (`monogate.sklearn_wrapper`).
+- **Neurosymbolic theorem prover** — 4-tier proof strategy (numerical/SymPy/certified/witness) (`monogate.prover`).
+- **71-identity catalog** across 7 categories (`monogate.identities`).
 
 **The central research question** monogate addresses:
 
@@ -43,27 +48,28 @@ complex bypass Im(eml(ix,1)) = sin(x) recovers the function exactly in one node.
 | Operator | Definition          | Constant | Complete? | Strength                         |
 |----------|---------------------|----------|-----------|----------------------------------|
 | EML      | exp(x) − ln(y)      | 1        | Yes       | Add, subtract                    |
-| EDL      | exp(x) / ln(y)      | e        | Yes       | Div (1 node), mul (7 nodes)      |
+| EDL      | exp(x) / ln(y)      | e        | Yes*      | Div (1 node), mul (7 nodes)      |
 | EXL      | exp(x) · ln(y)      | 1        | No        | ln (1 node), pow (3 nodes), stability |
 | EAL      | exp(x) + ln(y)      | 1        | No        | —                                |
 | EMN      | ln(y) − exp(x)      | −∞       | No        | —                                |
+
+\* EDL is complete over {×, ÷, pow, ln, exp} but **not** over the additive group (formally proved; see `docs/research/edl_completeness_proof.md`).
 
 ---
 
 ## 2. Full File Structure
 
 ```
-monogate/                          # repo root  (branch: phase9-arxiv-live)
+monogate/                          # repo root  (branch: master, tag: v1.0.0)
 ├── streamlit_app.py               # 5-tab Streamlit demo (Optimizer, Special Fns,
 │                                  #   PINN, MCTS Explorer, Phantom Attractor)
-├── requirements.txt               # Streamlit Cloud deps (no torch required)
+├── requirements-streamlit.txt     # Streamlit Cloud deps (no torch required)
 ├── CONTEXT.md                     # this file — current project briefing
-├── THEORY.md                      # formal theory: definitions, theorems, conjectures
 ├── Makefile                       # make reproduce-n11, reproduce-all, paper, docker-*
 ├── Dockerfile                     # clean-room reproduce environment
-├── python/                        # Python library (PyPI: monogate)
+├── python/                        # Python library (PyPI: monogate==1.0.0)
 │   ├── monogate/                  # main package
-│   │   ├── __init__.py            # public API re-exports, __version__ = "0.11.0"
+│   │   ├── __init__.py            # public API re-exports, __version__ = "1.0.0"
 │   │   ├── core.py                # op(), E, ZERO, NEG_ONE; all EML/EDL/EXL scalar ops;
 │   │   │                          #   _NODE_COSTS table; IDENTITIES dict
 │   │   ├── operators.py           # BEST, CBEST operator dispatch objects
@@ -87,6 +93,19 @@ monogate/                          # repo root  (branch: phase9-arxiv-live)
 │   │   │                          #   bound_expression()
 │   │   ├── sympy_bridge.py        # to_sympy, from_sympy, simplify_eml, latex_eml,
 │   │   │                          #   verify_identity (optional: pip install monogate[sympy])
+│   │   ├── minimax.py             # MinimaxResult, minimax_eml(), minimax_survey();
+│   │   │                          #   L∞ minimax approximation via MCTS objective='minimax'
+│   │   ├── physics.py             # 7 PDE/ODE callables + PHYSICS_CATALOG;
+│   │   │                          #   schrodinger_free_cb, potential_well_cb,
+│   │   │                          #   nls_soliton_amplitude_cb, heat_kernel_cb,
+│   │   │                          #   kdv_soliton_cb, wave_cos_cb, wave_sin_cb
+│   │   ├── sklearn_wrapper.py     # EMLRegressor (sklearn BaseEstimator+RegressorMixin);
+│   │   │                          #   fit, predict, get_formula, get_tree, get_params
+│   │   ├── prover.py              # EMLProver, ProofResult, BenchmarkReport;
+│   │   │                          #   4-tier proof: numerical→SymPy→interval→witness
+│   │   ├── identities.py          # Identity dataclass; 71 identities in 7 categories:
+│   │   │                          #   trig(17), hyperbolic(12), exponential(12),
+│   │   │                          #   special(12), physics(7), eml_structural(6), open(5)
 │   │   ├── validate.py            # monogate-validate CLI; challenge board validation
 │   │   ├── torch/
 │   │   │   ├── __init__.py        # exports EMLLayer, EMLActivation
@@ -104,16 +123,21 @@ monogate/                          # repo root  (branch: phase9-arxiv-live)
 │   │   └── search/
 │   │       ├── __init__.py        # exports mcts_search, beam_search, analyze_n11
 │   │       ├── mcts.py            # mcts_search(), beam_search(); MCTSResult;
-│   │       │                      #   UCB1 + 1/(1+MSE) reward; immutable tree dicts
+│   │       │                      #   UCB1 + 1/(1+MSE) reward; immutable tree dicts;
+│   │       │                      #   objective='mse'|'minimax' support
 │   │       ├── gpu_search.py      # GPU-accelerated search (PyTorch tensor eval)
 │   │       ├── analyze_n11.py     # analyze_n11(): N=1–11 table; --html export
 │   │       ├── sin_search_03.py   # N=9 exhaustive (parity filter)
 │   │       ├── sin_search_04.py   # N=10 exhaustive (ProcessPoolExecutor)
 │   │       └── sin_search_05.py   # N=11 exhaustive; vectorised NumPy; 323s
-│   ├── tests/                     # 913 passing, 8 skipped, 0 failed
+│   ├── tests/                     # 983 passing, 9 skipped, 0 failed (2026-04-16)
 │   │   ├── test_core.py, test_network.py, test_optimize.py, test_search.py
 │   │   ├── test_torch.py, test_compile.py, test_complex.py, test_eml_layer.py
 │   │   ├── test_llm.py, test_complex_best.py, test_pinn.py
+│   │   ├── test_minimax.py        # 27 tests: MinimaxResult, minimax_eml, minimax_survey
+│   │   ├── test_physics.py        # 28 tests: all 7 callables + PHYSICS_CATALOG
+│   │   ├── test_sklearn_wrapper.py # 24 tests: EMLRegressor fit/predict/score/API
+│   │   ├── test_prover.py         # 78 tests: EMLProver, ProofResult, BenchmarkReport
 │   │   └── (+ interval, sympy_bridge, special, leaderboard tests)
 │   ├── experiments/
 │   │   ├── gen_attractor_data.py       # 40 seeds × λ∈{0,0.005}, depth=3, 3000 steps
@@ -122,7 +146,11 @@ monogate/                          # repo root  (branch: phase9-arxiv-live)
 │   │   ├── attractor_data.json         # 40-seed attractor curves (used by explorer)
 │   │   ├── plot_attractor_landscape.py # paper/figures/attractor_landscape.pdf
 │   │   ├── experiment_12_siren.py      # EML-SIREN comparison
-│   │   └── research_02/03/04.py        # attractor, EDL completeness, tree search studies
+│   │   ├── research_02/03/04.py        # attractor, EDL completeness, tree search studies
+│   │   ├── research_07_attractor_identity.py   # Phase 1: mpmath/PSLQ identity search
+│   │   ├── research_07b_basin_geometry.py      # Phase 1: 2D basin heatmap
+│   │   ├── research_08_physics_survey.py       # Phase 4: CBEST physics identity survey
+│   │   └── srbench_runner.py           # Phase 5: EMLRegressor on Nguyen/Keijzer/Vladis.
 │   ├── notebooks/
 │   │   ├── eml_layer_siren_example.py
 │   │   ├── siren_with_monogate.py      # EMLSirenNet vs SirenNet; PSNR comparison
@@ -132,28 +160,39 @@ monogate/                          # repo root  (branch: phase9-arxiv-live)
 │   │   ├── complex_special_functions.py   # Session 1 notebook
 │   │   ├── pinn_eml_demo.py               # Session 4 notebook
 │   │   ├── minimax_approximation.py       # Session 2 notebook
-│   │   └── attractor_generalization.py    # Session 5: attractor in Taylor/Padé/CF bases
+│   │   └── attractor_generalization.py    # attractor in Taylor/Padé/CF bases
 │   ├── scripts/
 │   │   ├── update_arxiv_id.py             # post-submission ID update
 │   │   ├── update_leaderboard.py          # run leaderboard + save results/leaderboard.json
-│   │   ├── prepare_v0.10.py               # v0.10.0 release prep
-│   │   ├── reproduce_n11.py               # reproduce N=11 from sin_n11.json cache
-│   │   └── release_v0.11.0.py             # v0.11.0 release script
+│   │   ├── update_srbench_leaderboard.py  # regenerate SRBENCH.md from srbench_results.json
+│   │   └── reproduce_n11.py               # reproduce N=11 from sin_n11.json cache
 │   ├── paper/
 │   │   ├── preprint.tex                   # arXiv-ready LaTeX (authoritative)
 │   │   ├── arxiv_submission_notes.md      # abstract ≤250w, categories, checklist
 │   │   └── README.md                      # pdflatex build + arXiv upload (5 steps)
 │   ├── docs/                              # MkDocs source
+│   │   ├── research/
+│   │   │   ├── phantom_attractors.md      # attractor investigation + identity search
+│   │   │   ├── edl_completeness_proof.md  # formal proof: EDL additive incompleteness
+│   │   │   └── minimax_approximation.md   # minimax EML theory + survey results
+│   │   ├── guide/
+│   │   │   ├── symbolic_regression.md     # EMLRegressor tutorial
+│   │   │   └── pinn.md                    # PINN + physics survey guide
+│   │   └── concepts/
+│   │       ├── eml_universal_operator.md
+│   │       └── best_routing.md
 │   ├── results/
 │   │   ├── sin_n11.json                   # N=11 search output
-│   │   └── leaderboard.json               # latest Nguyen/Keijzer leaderboard
-│   ├── assets/
-│   │   └── n11_share_card.md
-│   ├── CHANGELOG.md                       # version history v0.1–v0.12.0-dev
-│   ├── PAPER.md                           # internal research notes (updated to v0.12.0-dev)
+│   │   ├── leaderboard.json               # latest Nguyen/Keijzer leaderboard
+│   │   ├── physics_identities_catalog.json # 7 PDE/ODE CBEST identity metadata
+│   │   └── minimax_survey.json            # L∞ k-node survey results
+│   ├── CHANGELOG.md                       # version history v0.1–v1.0.0
+│   ├── PAPER.md                           # internal research notes (updated to v1.0.0)
+│   ├── THEORY.md                          # formal theory: R1-R4 resolved, C3-C7 open
+│   ├── SRBENCH.md                         # SRBench leaderboard table (EMLRegressor)
 │   ├── RESULTS.md                         # N=1–11 table + near-miss gallery
 │   ├── ANNOUNCEMENT.md                    # launch posts
-│   ├── pyproject.toml                     # version="0.11.0"; extras: torch,llm,sympy,streamlit,dev
+│   ├── pyproject.toml                     # version="1.0.0"; extras: torch,llm,sympy,streamlit,dev
 │   └── mkdocs.yml
 ├── explorer/                       # React/Vite SPA (monogate.dev, deployed on Vercel)
 │   ├── src/App.jsx                  # tab router
@@ -174,21 +213,12 @@ monogate/                          # repo root  (branch: phase9-arxiv-live)
 |------|------|-----------|-------------|
 | `op` | function | `op(x, y) -> float` | `eml(x,y) = exp(x) - ln(y)` with softplus-safe ln |
 | `E` | constant | `float = math.e` | EML/EXL neutral constant |
-| `ZERO` | constant | `float = 0.0` | |
-| `NEG_ONE` | constant | `float = -1.0` | |
-| `exp_eml` | function | `exp_eml(x) -> float` | `exp(x)` via EML: `op(x, 1)` |
-| `ln_eml` | function | `ln_eml(x) -> float` | `ln(x)` via EML (3 nodes) |
-| `sub_eml` | function | `sub_eml(a, b) -> float` | `a - b` via EML (5 nodes) |
-| `neg_eml` | function | `neg_eml(x) -> float` | `-x` via EML (9 nodes) |
-| `add_eml` | function | `add_eml(a, b) -> float` | `a + b` via EML (11 nodes) |
-| `mul_eml` | function | `mul_eml(a, b) -> float` | `a × b` via EML (13 nodes) |
-| `div_eml` | function | `div_eml(a, b) -> float` | `a / b` via EML (~15 nodes) |
-| `pow_eml` | function | `pow_eml(a, n) -> float` | `a^n` via EML (15 nodes) |
-| `recip_eml` | function | `recip_eml(x) -> float` | `1/x` via EML (5 nodes) |
+| `exp_eml`, `ln_eml` | function | scalar | exp/ln via EML (1, 3 nodes) |
+| `sub_eml`, `neg_eml` | function | scalar | subtract, negate via EML (5, 9 nodes) |
+| `add_eml`, `mul_eml` | function | scalar | add, multiply via EML (11, 13 nodes) |
+| `div_eml`, `pow_eml`, `recip_eml` | function | scalar | divide, power, reciprocal via EML |
 | `_NODE_COSTS` | dict | `{op: {family: int}}` | Per-operation node cost table |
 | `IDENTITIES` | dict | `{name: str}` | Human-readable EML identities |
-
-Example: `from monogate.core import op; op(1.0, 1.0)  # → e - 0 = e`
 
 ---
 
@@ -196,108 +226,17 @@ Example: `from monogate.core import op; op(1.0, 1.0)  # → e - 0 = e`
 
 | Name | Type | Signature | Description |
 |------|------|-----------|-------------|
-| `EMLTree` | class | `EMLTree(depth=3)` | Trainable complete binary EML tree; all leaves scalar `nn.Parameter` |
-| `EMLNetwork` | class | `EMLNetwork(in_features, depth, op_func=None)` | Vectorised EML network; leaves are `nn.Linear(in,1)` |
-| `HybridNetwork` | class | `HybridNetwork(in_features, depth)` | EXL inner nodes + EML root (BEST-style) |
-| `fit` | function | `fit(model, target, steps=1000, lr=5e-3, lam=0.0, log_every=100) -> list[float]` | Adam training loop; returns loss history |
-| `_Leaf` | class | `_Leaf(value=1.0)` | Scalar leaf node |
-| `_LinearLeaf` | class | `_LinearLeaf(in_features)` | Linear projection leaf |
-| `_Node` | class | `_Node(left, right, op_fn)` | Internal binary node |
-| `_build_tree` | function | `_build_tree(depth, leaf_fn, op_fn) -> nn.Module` | Recursive tree builder |
-
-Example: `tree = EMLTree(depth=3); fit(tree, target=torch.tensor(math.pi), lam=0.001)`
+| `EMLTree` | class | `EMLTree(depth=3)` | Trainable complete binary EML tree; leaves are scalar `nn.Parameter` |
+| `EMLNetwork` | class | `EMLNetwork(in_features, depth, op_func=None)` | Vectorised EML network |
+| `HybridNetwork` | class | `HybridNetwork(in_features, depth)` | EXL inner + EML root |
+| `fit` | function | `fit(model, target, steps, lr, lam, log_every) -> list[float]` | Adam training loop |
 
 ---
 
 ### `monogate.optimize`
 
-| Name | Type | Signature | Description |
-|------|------|-----------|-------------|
-| `best_optimize` | function | `best_optimize(expr_or_func, **kwargs) -> OptimizeResult` | Static BEST analysis of expression/code/callable |
-| `context_aware_best_optimize` | function | `context_aware_best_optimize(expr_or_func, dynamic=False, stability_threshold=10, sample_inputs=None, warn=True) -> ContextAwareResult` | BEST analysis + optional AST depth flags + numerical profiling |
-| `OptimizeResult` | dataclass | frozen | Fields: original, ops, total_best_nodes, total_eml_nodes, savings_pct, python_snippet, rewritten_code, explanation, message |
-| `ContextAwareResult` | dataclass | mutable | Fields: base_result, stability_issues, dynamic_profile, diagnostics |
-| `OpMatch` | dataclass | frozen | One detected operation: name, count, best_nodes, eml_nodes, best_op, note; `.savings` property |
-| `StabilityWarning` | dataclass | frozen | op, max_depth, count, suggestion |
-| `BestRewriter` | class | `ast.NodeTransformer` | Rewrites math calls to `BEST.*` in AST |
-
-Example: `r = best_optimize("sin(x)**2 + exp(-x)"); print(r.savings_pct)  # → 74`
-
----
-
-### `monogate.torch_ops`
-
-| Name | Type | Description |
-|------|------|-------------|
-| `op` | function | PyTorch tensor EML: `exp(a) - softplus(b)` |
-| `exl_op` | function | PyTorch EXL: `exp(a) * softplus(b)` |
-| `edl_op_safe` | function | PyTorch EDL: `exp(a) / (softplus(b) + eps)` |
-
----
-
-### `monogate.torch.EMLLayer`
-
-```python
-EMLLayer(
-    in_features: int,
-    out_features: int,
-    depth: int = 2,
-    operator: str = "EML",    # 'EML'|'EDL'|'EXL'|'BEST'
-    mode: str = "activation", # 'activation'|'tree'
-    init: float = 1.0,
-    compiled: bool = False,   # Rust > Fused > Standard auto-select
-)
-```
-
-- `forward(x: Tensor) -> Tensor`: `(batch, in) → (batch, out)`
-- `.formula(feature_names) -> str | list[str]`: human-readable expression
-- `.compile(**kwargs) -> nn.Module`: torch.compile wrapper
-- `.n_eml_nodes`: total internal node count
-- `.n_parameters`: total trainable parameter count
-- `extra_repr()`: shows `backend=rust` or `backend=fused` when compiled
-
-Mode `'activation'`: Linear(in,out) → EMLActivation (shared tree). Mode `'tree'`: `out_features` independent EML trees with linear leaves.
-
-Example: `layer = EMLLayer(256, 256, depth=2, operator="BEST", compiled=True)`
-
----
-
-### `monogate.torch.EMLActivation`
-
-```python
-EMLActivation(depth: int = 2, operator: str = "EML")
-```
-
-- `forward(x: Tensor) -> Tensor`: element-wise, any shape
-- `.formula(feature_name="x") -> str`
-
-Example: `act = EMLActivation(depth=2); y = act(torch.randn(32, 64))`
-
----
-
-### `monogate.fused_rust`
-
-| Name | Type | Description |
-|------|------|-------------|
-| `get_best_activation(depth, operator) -> nn.Module` | function | Returns fastest backend: RustFusedLayer > FusedEMLActivation > EMLActivation |
-| `RUST_AVAILABLE` | bool | True if monogate-core is installed |
-| `rust_info()` | function | Prints version, speedup, batch threshold |
-| `FusedEMLActivation` | class | Pure-Python fused kernel; depth 1–3; 3.6× speedup |
-| `RustFusedLayer` | class | PyO3 wrapper; calls `eval_eml_batch` from monogate-core |
-
-Example: `act = get_best_activation(depth=2, operator="BEST")  # auto-selects Rust`
-
----
-
-### `monogate.complex_eval`
-
-| Name | Signature | Description |
-|------|-----------|-------------|
-| `complex_eml_sin(x)` | `(float) -> float` | `Im(eml(ix, 1)) = sin(x)` exactly |
-| `complex_eml_cos(x)` | `(float) -> float` | `Re(eml(ix, 1)) = cos(x)` exactly |
-| `complex_eml_eval(tree, x)` | `(node, complex) -> complex` | Evaluate EML tree over complex domain |
-
-Example: `from monogate.complex_eval import complex_eml_sin; complex_eml_sin(1.5708)  # → 1.0`
+`best_optimize(expr_or_func) -> OptimizeResult`, `context_aware_best_optimize(...)`.
+`OptimizeResult`: original, ops, total_best_nodes, total_eml_nodes, savings_pct, python_snippet.
 
 ---
 
@@ -305,22 +244,9 @@ Example: `from monogate.complex_eval import complex_eml_sin; complex_eml_sin(1.5
 
 | Name | Signature | Description |
 |------|-----------|-------------|
-| `mcts_search(target_fn, probe_points=None, depth=5, n_simulations=10_000, seed=42) -> MCTSResult` | function | MCTS over EML grammar; UCB1; reward=1/(1+MSE) |
-| `beam_search(target_fn, depth=4, beam_width=50, ...) -> MCTSResult` | function | Beam search over EML grammar |
-| `analyze_n11(path=None) -> dict` | function | Load sin_n11.json; print N=1–11 table; near-miss gallery; `--html PATH` export |
-| `MCTSResult` | dataclass | best_tree, best_mse, best_formula, history |
-
-Example: `result = mcts_search(math.exp, depth=3, n_simulations=2000)  # finds eml(x,1) exactly`
-
----
-
-### `monogate.llm`
-
-| Name | Signature | Description |
-|------|-----------|-------------|
-| `suggest_and_optimize(prompt, backend="mock") -> str` | function | LLM → BEST expression; backends: mock, openai, groq, anthropic |
-
-CLI: `monogate-optimize "sigmoid function"` — prints BEST EML expression + node count.
+| `mcts_search(target_fn, probe_points, depth, n_simulations, seed, objective) -> MCTSResult` | function | MCTS; objective='mse'\|'minimax' |
+| `beam_search(target_fn, probe_points, depth, width) -> MCTSResult` | function | Beam search (no seed kwarg) |
+| `MCTSResult` | dataclass | best_tree, best_mse, best_formula, history, objective |
 
 ---
 
@@ -328,34 +254,102 @@ CLI: `monogate-optimize "sigmoid function"` — prints BEST EML expression + nod
 
 15 pre-computed CBEST/BEST expressions. `CATALOG` dict maps name → `SpecialFnEntry`.
 
-| Function | Nodes | Backend | Max error | Notes |
-|----------|-------|---------|-----------|-------|
-| sin, cos | 1 | CBEST | 1e-15 | Exact — Im/Re(eml(ix,1)) |
-| sinh, cosh | 9, 15 | BEST | 1e-14 | Exact algebraic |
-| tanh, sech | 8, 16 | BEST | 1e-14 | Exact algebraic |
-| erf | 5 | CBEST | 1.5e-2 | tanh(1.2025x) approximation |
-| Fresnel S/C integrand | 2 | CBEST | 1e-15 | Im/Re(eml(i·πx²/2, 1)) |
-| Fresnel S/C | 2 | CBEST | 1e-6 | Quadrature of integrand |
-| Bessel J₀ | 7 | CBEST | 1e-4 | Complex MCTS depth-3 |
-| Airy Ai | 9 | CBEST | 2e-3 | Complex MCTS depth-3 |
-| lgamma | 12 | BEST | 1e-9 | Stirling series |
-| digamma | 14 | BEST | 1e-8 | Central differences of lgamma |
-
-Callables: `sin_cb, cos_cb, sinh_cb, cosh_cb, tanh_cb, sech_cb, erf_cb, fresnel_s_cb, fresnel_c_cb, fresnel_s_integrand_cb, fresnel_c_integrand_cb, j0_cb, ai_cb, lgamma_cb, digamma_cb`
+| Function | Nodes | Backend | Max error |
+|----------|-------|---------|-----------|
+| sin, cos | 1 | CBEST | 1e-15 |
+| sinh, cosh | 9, 15 | BEST | 1e-14 |
+| tanh, sech | 8, 16 | BEST | 1e-14 |
+| erf | 5 | CBEST | 1.5e-2 |
+| Fresnel S/C integrand | 2 | CBEST | 1e-15 |
+| Bessel J₀, Airy Ai | 7, 9 | CBEST | 1e-4, 2e-3 |
+| lgamma, digamma | 12, 14 | BEST | 1e-9, 1e-8 |
 
 ---
 
-### `monogate.leaderboard`
+### `monogate.minimax`
 
-| Name | Description |
-|------|-------------|
-| `PROBLEMS` | dict of 10 `BenchmarkProblem` (Nguyen/Keijzer suite) |
-| `run_leaderboard(...)` | Run MCTS + beam search; return `list[LeaderboardEntry]` |
-| `print_leaderboard(entries)` | Console table |
-| `markdown_leaderboard(entries) -> str` | Markdown table string |
-| `save_leaderboard / load_leaderboard` | JSON persistence |
+```python
+minimax_eml(target_fn, n_nodes=3, domain=(-1,1), n_probe=200,
+            n_simulations=2000, seed=None) -> MinimaxResult
+minimax_survey(target_fn, node_counts=[1,3,5,7,9,11], domain, n_probe,
+               n_simulations) -> list[dict]
+```
 
-Results saved to `results/leaderboard.json`. GitHub Actions auto-refreshes daily.
+`MinimaxResult` (frozen dataclass): `best_tree`, `best_formula`, `linf`, `l2`, `n_nodes`,
+`domain`, `n_probe`, `elapsed_s`, `mcts_result`.
+
+Survey dict keys: `n_nodes`, `depth`, `formula`, `linf`, `l2`, `elapsed_s`.
+
+---
+
+### `monogate.physics`
+
+```python
+schrodinger_free_cb(x, k=1.0, part='complex')  # exp(ikx); part='re'|'im'|'complex'
+potential_well_cb(x, n=1, L=1.0)               # sin(nπx/L)
+nls_soliton_amplitude_cb(x)                    # sech(x)
+heat_kernel_cb(x, t=1.0)                       # raises ValueError for t≤0
+kdv_soliton_cb(x, t=0.0, c=4.0)               # (c/2)sech²(√(c/4)(x-ct))
+wave_cos_cb(x, k=1.0, omega=1.0, t=0.0)       # cos(kx-ωt)
+wave_sin_cb(x, k=1.0, omega=1.0, t=0.0)       # sin(kx-ωt)
+PHYSICS_CATALOG                                 # dict: 7 entries with metadata
+```
+
+`PHYSICS_CATALOG` entry keys: `equation`, `callable`, `formula`, `n_nodes`, `backend`,
+`max_abs_error`, `notes`.
+
+---
+
+### `monogate.sklearn_wrapper`
+
+```python
+EMLRegressor(max_depth=5, n_simulations=5000, search_method='mcts',
+             objective='mse', random_state=None)
+# Methods: fit(X, y), predict(X), score(X, y), get_formula(), get_tree()
+# Fitted attrs: tree_, formula_, best_score_, n_features_in_
+# sklearn API: get_params(deep), set_params(**params)
+```
+
+Works without scikit-learn installed (stub base classes introspect `__init__` via `inspect.signature`).
+
+---
+
+### `monogate.prover`
+
+```python
+EMLProver(verbose=False, n_probe=500)
+prover.prove(identity_str) -> ProofResult
+prover.prove_batch(identities) -> list[ProofResult]
+prover.benchmark() -> BenchmarkReport
+```
+
+Identity string format: `"sin(x)**2 + cos(x)**2 == 1"`.
+
+`ProofResult` fields: `status` ('proved_exact'|'proved_certified'|'proved_numerical'|
+'proved_witness'|'inconclusive'|'failed'), `confidence` (0–1), `max_residual`,
+`lhs_formula`, `latex_proof`, `sympy_simplification`, `node_count`, `notes`.
+
+`BenchmarkReport`: `results`, `summary()`, `to_json()`.
+
+---
+
+### `monogate.identities`
+
+```python
+from monogate.identities import (
+    TRIG_IDENTITIES,        # 17 identities
+    HYPERBOLIC_IDENTITIES,  # 12
+    EXPONENTIAL_IDENTITIES, # 12
+    SPECIAL_IDENTITIES,     # 12
+    PHYSICS_IDENTITIES,     # 7
+    # + EML_STRUCTURAL(6), OPEN_CHALLENGES(5)
+    get_by_difficulty(difficulty),  # 'easy'|'medium'|'hard'|'research'
+    get_by_category(category),      # filter by category string
+)
+```
+
+`Identity` (frozen dataclass): `name`, `expression`, `latex`, `category`, `domain`,
+`difficulty`, `notes`, `expected_method`.
 
 ---
 
@@ -368,19 +362,15 @@ fit_pinn(model, x_data, y_data, x_phys, steps, lam_physics, log_every) -> PINNRe
 
 Equations: `harmonic`, `burgers`, `heat`, `schrodinger`, `kdv_soliton`, `nls`, `lotka_volterra`.
 
-`PINNResult` fields: `data_loss`, `physics_loss`, `formula`, `elapsed_s`, `history`.
-
-Key result: Schrödinger free-particle solution `exp(ikx)` = 1 CBEST node.
-
 ---
 
 ### `monogate.interval`
 
 ```python
-Interval(lo, hi)                        # frozen dataclass; .width, .midpoint, .contains()
-eml_interval(a, b) -> Interval          # tight certified bounds
-eval_interval(tree, x_interval)         # propagate through full EML tree
-bound_expression(expr_str, x_lo, x_hi) # parse formula string → certified bounds
+Interval(lo, hi)                        # frozen dataclass
+eml_interval(a: Interval, b: Interval) -> Interval
+eval_interval(tree, x_interval)
+bound_expression(expr_str, x_lo, x_hi) -> Interval
 ```
 
 ---
@@ -389,7 +379,7 @@ bound_expression(expr_str, x_lo, x_hi) # parse formula string → certified boun
 
 ```python
 to_sympy(tree)          # EML tree dict → SymPy expression
-from_sympy(expr)        # SymPy → EML tree (exp/log only, best-effort)
+from_sympy(expr)        # SymPy → EML tree (best-effort)
 simplify_eml(tree)      # to_sympy + sympy.simplify()
 latex_eml(tree)         # LaTeX string via sympy.latex()
 verify_identity(t1, t2) # symbolic equality check
@@ -401,67 +391,46 @@ verify_identity(t1, t2) # symbolic equality check
 
 ### N=1–11 Exhaustive Search
 
-Complete enumeration of EML trees with terminals {1, x}, using exact parity filter (sin is odd).
+Complete enumeration of EML trees with terminals {1, x}, parity filter applied (sin is odd).
+Total: **281,026,468 trees** evaluated. Zero candidates at tolerances 1e-4, 1e-6, 1e-9.
+N=11 runtime: **323 seconds** on a single CPU (vectorised NumPy batch evaluator).
 
-| N  | Catalan | Assignments | Raw trees       | After parity    | Cumulative      | Result |
-|----|---------|-------------|-----------------|-----------------|-----------------|--------|
-| 1  | 1       | 4           | 4               | 2               | 4               | 0      |
-| 2  | 2       | 8           | 16              | 8               | 20              | 0      |
-| 3  | 5       | 16          | 80              | 40              | 100             | 0      |
-| 4  | 14      | 32          | 448             | 224             | 548             | 0      |
-| 5  | 42      | 64          | 2,688           | 1,344           | 3,236           | 0      |
-| 6  | 132     | 128         | 16,896          | 8,448           | 20,132          | 0      |
-| 7  | 429     | 256         | 109,824         | 54,912          | 129,956         | 0      |
-| 8  | 1,430   | 512         | 732,160         | 366,080         | 862,116         | 0      |
-| 9  | 4,862   | 1,024       | 4,978,688       | 2,489,344       | 5,840,804       | 0      |
-| 10 | 16,796  | 2,048       | 34,398,208      | 17,199,104      | 40,239,012      | 0      |
-| **11** | **58,786** | **4,096** | **240,787,456** | **208,901,719** | **281,026,468** | **0** |
+**The Infinite Zeros Barrier:**
+> *No finite real-valued EML tree with terminals {1, x} equals sin(x) for all x ∈ R.*
 
-N=11 runtime: **323 seconds** (~5.4 min) on a single CPU using vectorised NumPy batch evaluator.
-Tolerances checked: 1e-4, 1e-6, 1e-9. Zero candidates at all three.
+Proof: sin(x) has zeros at {kπ : k ∈ Z}. Every finite EML tree is real-analytic with
+finitely many zeros. Contradiction. Extends to cos(x), Bessel J₀, Airy Ai, etc.
 
-### Top-10 Near-Miss Gallery (from sin_n11.json)
+**Complex bypass:** `Im(eml(ix, 1)) = Im(exp(ix)) = sin(x)`. One node. Machine precision.
 
-| Rank | MSE | Leaves | Method | Formula (abbreviated) |
-|------|-----|--------|--------|----------------------|
-| 1 | 1.4781e-04 | 12 | exhaustive | eml(eml(eml(x,1),eml(1,1)), eml(eml(eml(eml(x,1),eml(1,1)),eml(x,1)),eml(x,1))) |
-| 2 | 1.4822e-04 | 12 | exhaustive | eml(eml(1,1),eml(eml(eml(1,1),eml(x,1)),eml(eml(eml(eml(x,1),eml(1,1)),1),1))) |
-| 3 | 2.5052e-04 | 12 | exhaustive | eml(x,eml(1,eml(x,eml(eml(eml(x,eml(x,1)),eml(eml(1,eml(x,1)),eml(x,1))),1)))) |
-| 4 | 3.1694e-04 | 12 | exhaustive | eml(1,eml(eml(1,eml(x,1)),eml(1,eml(eml(x,1),eml(eml(x,eml(eml(1,1),1)),1))))) |
-| 5 | 2.80e-01   | 4  | beam       | eml(eml(x,eml(1,x)),1) |
-| 6 | 3.10e-01   | 3  | MCTS       | eml(eml(x,x), 1) |
-| — | 0.0        | 1  | exact      | Im(eml(i·x, 1)) [complex domain] |
+### Phantom Attractor
 
-Best real-domain result is **2,842× closer** to sin(x) than the trivial baseline `eml(x,1) = exp(x)` (MSE~0.42).
+- Depth-3 EMLTree, Adam, lr=5e-3, 3000 steps, 40 seeds targeting π
+- λ=0: **0/40** reach π; all converge to **≈3.169642** (MSE~9×10⁻⁴)
+- λ=0.001 (λ_crit): **20/20** reach π (sharp phase transition)
+- λ=0.005: **40/40** reach π (MSE < 1e-8)
+- Attractor ≈3.169642 tested against π, e, ln(k), √k, small rationals, PSLQ — **novel constant** (no known closed form found)
+- Phenomenon is EML-topology-specific (not present in Taylor/Padé/CF bases)
 
-### Phantom Attractor Results
+### CBEST Physics Survey
 
-- Target: pi (depth-3 EMLTree, Adam, lr=5e-3, 3000 steps, 40 seeds)
-- lambda=0: **0/40** reach pi; all converge to attractor **~3.169642** (MSE~9e-4)
-- lambda=0.001: **20/20** reach pi (lambda_crit confirmed)
-- lambda=0.005: **40/40** reach pi (MSE < 1e-8)
-- Attractor identity: unknown — not pi, e, any known simple closed form, or small rational.
-- Depth-4: untrainable; overflow to NaN/inf before step 1000 in all seeds.
+| Equation | Solution | Nodes | Backend | Exact? |
+|----------|----------|-------|---------|--------|
+| Free-particle Schrödinger | exp(ikx) | 1 | CBEST | Yes |
+| Infinite square well | sin(nπx/L) | 1 | CBEST | Yes |
+| Wave equation (cos) | cos(kx−ωt) | 1 | CBEST | Yes |
+| Wave equation (sin) | sin(kx−ωt) | 1 | CBEST | Yes |
+| NLS bright soliton | sech(x) | 2 | BEST | Yes |
+| Heat fundamental | exp(−x²/4t)/√(4πt) | 4 | BEST | Yes |
+| KdV 1-soliton | (c/2)sech²(√(c/4)(x−ct)) | 18 | BEST | ~yes |
 
-### The Infinite Zeros Barrier
+### EDL Additive Incompleteness (Proved)
 
-**Theorem:** No finite real-valued EML tree T with terminals {1, x} satisfies T(x) = sin(x) for all x in R.
-
-**Proof sketch:** Every finite EML tree is real-analytic. A non-zero real-analytic function on R has only finitely many zeros. sin(x) has zeros at {k*pi : k in Z} — infinitely many. Contradiction.
-
-**Corollary:** The result extends to cos(x), Bessel J0(x), Airy Ai(x), and any real-analytic function with infinitely many real zeros.
-
-### Complex Bypass
-
-    Im(eml(ix, 1)) = Im(exp(ix) - ln(1)) = Im(e^(ix)) = sin(x)
-
-One node. Machine precision. The barrier is real-domain only.
-
-```python
-import cmath
-def sin_eml(x): return cmath.exp(1j * x).imag
-# or: from monogate.complex_eval import complex_eml_sin
-```
+Formal proof via structural induction + Lindemann-Weierstrass (see `docs/research/edl_completeness_proof.md`):
+- **Lemma:** Every EDL tree evaluates to a product/quotient of exp/ln terms (multiplicative).
+- **Theorem:** Addition of two independent reals is unreachable in any finite EDL tree.
+- **Corollary:** EDL is complete over {×, ÷, pow, ln, exp} but not the additive group.
+- **Empirical:** N≤6 exhaustive search (196 trees from terminal {e}) confirms zero additive combinations.
 
 ---
 
@@ -469,194 +438,120 @@ def sin_eml(x): return cmath.exp(1j * x).imag
 
 ### EMLLayer Performance (depth=2, 256→256, batch=1024, CPU)
 
-| Backend | ms/step | Speedup | Activation |
-|---------|---------|---------|------------|
-| Standard (recursive Python) | 8.3 | 1x | default |
-| FusedEMLActivation | 2.3 | **3.6x** | `compiled=True` (no Rust) |
-| FusedEMLActivation + torch.compile | 1.9 | **4.4x** | `.compile()` |
-| **Rust (monogate-core)** | **1.4** | **5.9x** | `compiled=True` + monogate-core |
-| torch.sin (native ceiling) | 0.04 | **205x** faster than EML baseline | fundamental limit |
+| Backend | ms/step | Speedup |
+|---------|---------|---------|
+| Standard (recursive Python) | 8.3 | 1× |
+| FusedEMLActivation | 2.3 | **3.6×** |
+| FusedEMLActivation + torch.compile | 1.9 | **4.4×** |
+| Rust (monogate-core) | 1.4 | **5.9×** |
 
-The 205x gap to `torch.sin` is a fundamental Python overhead ceiling, not addressable without a C/CUDA rewrite of the full tree evaluation.
-
-### BEST Routing Wall-Clock (Python scalars, CPU)
+### BEST Routing Wall-Clock
 
 | Workload | Savings | Speedup |
 |----------|---------|---------|
-| sin/cos Taylor (TinyMLP) | 74% | **2.8x** |
-| Polynomial x^4+x^3+x^2 | 54% | **2.1x** |
-| GELU (Transformer FFN) | 18% | 0.93x |
+| sin/cos Taylor (TinyMLP) | 74% | **2.8×** |
+| Polynomial x⁴+x³+x² | 54% | **2.1×** |
+| GELU (Transformer FFN) | 18% | 0.93× |
 
-Linear fit (R^2=0.9992): `speedup ~= 0.033 * savings_pct + 0.32`
-
-**Crossover threshold**: ~20% node savings. Below this, Python call overhead dominates.
-
-### SIREN Comparison (notebooks/siren_with_monogate.py)
-
-Target: 2D Gaussian mixture, [-1,1]^2, 1000 steps, hidden=64, depth=2.
-EMLSirenNet (BEST, compiled=True) vs SirenNet (sin, SIREN init).
-Results: EML-SIREN converges; PSNR and training speed not yet competitive with tuned sin-SIREN (sin-SIREN has purpose-built frequency scaling). Ongoing work.
-
-### Taylor Series Node Counts
-
-| Terms | BEST nodes | EML-only nodes | Max error |
-|-------|------------|----------------|-----------|
-| 8 | 63 | 245 | 7.7e-7 |
-| 13 | 108 | 420 | 6.5e-15 |
+Crossover threshold: ~20% node savings.
 
 ---
 
 ## 6. Version History
 
-### v0.5.0
-- `monogate.torch`: EMLLayer, EMLActivation — differentiable PyTorch layers, ONNX opset 14
-- `monogate.search`: MCTS and Beam Search over EML grammar
-- `monogate.complex_eval`: Im(eml(ix,1))=sin(x), complex_eml_sin/cos
-- N=10 exhaustive search: 40,239,012 trees, zero candidates
-- Phase transition refined: lambda_crit = 0.001 for depth=3
+### v1.0.0 (2026-04-16) — current
 
-### v0.6.0
-- `monogate.compile`: FusedEMLLayer, FusedEMLActivation (1.5–3.6x CPU speedup)
-- `EMLLayer(compiled=True)`: one-liner fused activation
-- `monogate.llm`: suggest_and_optimize(); monogate-optimize CLI
-- New benchmarks: kernel_benchmarks.py; notebooks: performance_kernels.py, llm_optimizer_demo.py
-- 593 passing tests
+**Phases 1–6 complete. 983 tests passing.**
 
-### v0.7.0 (Phase 5)
-- Challenge Board v2 (monogate-validate): 10 open problems, GitHub Action auto-validation
-- Explorer Research tab: exhaustive search table, MCTS live search, near-miss gallery
-- Explorer Leaderboard tab
-- Rust core (monogate-core/): PyO3 extension, rayon parallel, 50–200x vs Python scalar
+- **monogate.minimax**: `MinimaxResult`, `minimax_eml()`, `minimax_survey()` — L∞ MCTS approximation
+- **monogate.physics**: 7 PDE/ODE callables, `PHYSICS_CATALOG`; 4 of 7 = 1-node CBEST exact
+- **monogate.sklearn_wrapper**: `EMLRegressor` (sklearn-compatible); MCTS/beam backend
+- **monogate.prover**: `EMLProver`, `ProofResult`, `BenchmarkReport`; 4-tier proof strategy
+- **monogate.identities**: 71-identity catalog, 7 categories, difficulty tiers
+- **Research:** phantom attractor identity investigation; EDL additive incompleteness formally proved; CBEST physics survey; neurosymbolic prover architecture
+- **Docs:** THEORY.md (R1-R4 resolved, C3-C7 open), SRBENCH.md, docs/concepts/, docs/outreach/
+- PyPI: `pip install monogate==1.0.0`
 
-### v0.7.1 (Phase 6 — N=11 Results Hardening)
-- `monogate/search/analyze_n11.py`: N=1–11 table, near-miss gallery, HTML export
-- `RESULTS.md`: full N=1–11 table + top-10 near-miss gallery
-- `paper/preprint.tex`: N=11 subsection added
-- `ResearchTab.jsx`: N=11 marked complete, green banner, real near-miss data
-- Version: 0.7.0 → 0.7.1
+### v0.12.0 (2026-04-16)
 
-### v0.8.0 (Phase 7 — arXiv Prep)
-- Preprint fully rewritten: 5-contribution abstract, performance section §8, all labels
-- `monogate/fused_rust.py`: `get_best_activation()`, Rust-first priority chain
-- `EMLLayer(compiled=True)`: now calls `get_best_activation()`; `extra_repr()` shows backend
-- `notebooks/siren_with_monogate.py`: EML-SIREN vs sin-SIREN comparison
-- `assets/n11_share_card.md`: shareable summary
-- README rewritten: leads with N=11, performance table, Rust install
-- 641 tests passing
+- `streamlit_app.py`: 5-tab Streamlit demo
+- `requirements-streamlit.txt`: Streamlit Cloud deps
+- `[streamlit]` optional dep group in `pyproject.toml`
 
-### v0.8.1 (Phase 8 — arXiv Submission Polish)
-- `arxiv_submission_notes.md`: abstract ≤250w, categories, post-submission checklist
-- `paper/README.md`: exact 5-step arXiv upload + Docker option + full checklist
-- Explorer: ResearchTab paper banner; LeaderboardTab arXiv reference banner
-- README: "Now on arXiv" notice placeholder, BibTeX, What's next section
-- ANNOUNCEMENT.md: launch posts for HN, r/ML, r/math, X, LinkedIn
+### v0.11.0 (Sessions 2+4+5)
 
-### v0.9.0 (Phase 9 — Public Launch)
-- `scripts/update_arxiv_id.py`: one-command post-submission ID update (dry-run, backups)
-- ANNOUNCEMENT.md fully polished
-- ResearchTab: live arXiv URL logic; "Cite this work" BibTeX dropdown
-- assets/n11_share_card.md: BibTeX block, BEST example, performance table
+- `monogate.leaderboard`: 10 Nguyen/Keijzer problems; GitHub Actions daily refresh
+- `monogate.pinn` extended: Schrödinger, KdV, NLS, Lotka-Volterra; exp(ikx)=1 CBEST node
+- `monogate.interval`: certified interval arithmetic
+- `monogate.sympy_bridge`: SymPy interop (`[sympy]` extra)
+- `attractor_generalization.py`: phantom attractor confirmed EML-topology-specific
+- 913 tests passing
 
-### v0.10.0 (Session 1 — Special Functions Library)
-- `monogate.special`: 15 pre-computed CBEST/BEST expressions; CATALOG dict; SpecialFnEntry
-- `monogate.complex_best`: CBEST class, im/re helpers, node-count constants
+### v0.10.0 (Session 1)
+
+- `monogate.special`: 15 CBEST/BEST expressions; CATALOG; SpecialFnEntry
+- `monogate.complex_best`: CBEST class; im/re helpers
 - `monogate.complex_search`: MCTS over complex EML grammar
 - Key identity: `fresnel_s_integrand(x) = Im(eml(i·πx²/2, 1))` — 2 nodes, exact
-- New notebook: `complex_special_functions.py`
-
-### v0.11.0 (Sessions 2 + 4 + 5 — Research Extensions)
-- **Session 2:** `monogate.leaderboard` — 10 Nguyen/Keijzer problems; GitHub Actions daily refresh; `update_leaderboard.py` script; `LEADERBOARD.md`
-- **Session 4:** `monogate.pinn` extended — Schrödinger, KdV, NLS, Lotka-Volterra; key result: free-particle solution = 1 CBEST node
-- **Session 5:** `monogate.interval` — certified interval arithmetic; `monogate.sympy_bridge` — SymPy interop (`[sympy]` extra); `attractor_generalization.py` notebook confirms phantom attractor is EML-specific
-- 913 tests passing, 0 failed
-
-### v0.12.0-dev (Session 3 — Streamlit Web Demo, current)
-- `streamlit_app.py`: 5-tab Streamlit demo (Optimizer, Special Functions, PINN, MCTS Explorer, Phantom Attractor)
-- `requirements.txt`: Streamlit Cloud deps (no torch required)
-- `[streamlit]` optional dep group in `pyproject.toml`
-- Streamlit Cloud badge + "Run locally" block in README
-- **Status:** all 5 sessions done; ready to merge → master + cut v0.12.0 PyPI release
 
 ---
 
 ## 7. Open Problems
 
-### Six Open Research Problems (from README "What's next")
+| # | Problem | Status |
+|---|---------|--------|
+| C3 | Phantom attractor ≈3.169642 exact identity | Open — likely novel constant |
+| C4 | λ_crit formula as function of depth | Open |
+| C5 | N=12 exhaustive search | Open — needs GPU (~$15-50) |
+| C6 | CBEST completeness — which analytic functions admit k-node CBEST? | Open |
+| C7 | EMLNetwork convergence — does training converge to minimax-optimal trees? | Open |
 
-1. **N=12 search** — Catalan(12)=208,012 shapes x 2^13 ~= 1.7 billion trees. Requires GPU parallelism or distributed evaluation. Barrier theorem already rules out real-valued matches; empirical value is extending coverage and finding better near-misses.
+Resolved: R1 (EML completeness), R2 (Infinite Zeros Barrier), R3 (Complex bypass), R4 (EDL additive incompleteness).
 
-2. **Minimax-optimal EML approximations** — What is the best uniform approximation to sin(x) achievable with exactly k EML nodes? (Chebyshev-style bounds rather than MSE.)
+### Challenge Board (monogate.dev/board)
 
-3. **Complex BEST routing** — Does EDL or EXL reduce node count for functions expressed via complex EML (exp(ix), Bessel, Airy)? No systematic survey exists.
-
-4. **EDL additive completeness** — Does a finite EDL tree using complex terminals produce exact `a + b` for arbitrary real a, b? Structural argument suggests no; formal proof missing.
-
-5. **GPU-accelerated search** — PyTorch tensor evaluation across all leaf assignments in parallel; would make N=13+ viable.
-
-6. **arXiv response cycle** — Address reviewer feedback post-submission; potentially extend to EDL proofs.
-
-### Ten Challenge Board Problems (monogate.dev/board)
-
-| Problem | Difficulty | Points | Status |
-|---------|-----------|--------|--------|
-| sin(x) | impossible_real | 50 | open — exact: Im(eml(ix,1)) in complex |
-| cos(x) | impossible_real | 30 | open — real-domain barrier applies |
-| Lambert W0(x) | hard | 15 | open — near_miss: MSE~0.012 at 3 nodes |
-| erf(x) | hard | 12 | open |
-| Airy Ai(x) | very_hard | 20 | open — Barrier corollary applies |
-| Bessel J0(x) | very_hard | 15 | open — Barrier corollary applies |
-| exp(-x^2) | easy | 4 | challenge |
-| softplus(x) exact | medium | 5 | challenge |
-| swish(x) | medium | 6 | open |
-
-Leaderboard submissions via JSON: `{"problem_id": "sin_x", "formula": "...", "submitter": "handle", "notes": ""}`.
+| Problem | Status |
+|---------|--------|
+| sin(x) real-domain | open — Barrier theorem rules out; complex: Im(eml(ix,1)) exact |
+| Lambert W₀(x) | open — near-miss MSE~0.012 |
+| Airy Ai(x) | open — Barrier corollary applies |
 
 ---
 
-## 8. Paper Status
+## 8. Deployment
 
-**Title:**
-> Practical Extensions to the EML Universal Operator: Hybrid Routing, Phantom Attractors, Performance Kernels, and the N=11 Sin Barrier
-
-**Author:** Art Almaguer (almaguer1986@gmail.com)
-
-**arXiv ID:** ARXIV_ID_PLACEHOLDER *(run `python scripts/update_arxiv_id.py <id>` after submission)*
-
-**Status:** Submission-ready as of v0.9.0 (April 2026). LaTeX compiles clean (zero errors, zero undefined references). All checklist items in `paper/README.md` satisfied except figure placeholder for `fig:attractor` (replace `\fbox{...}` with `\includegraphics{figures/attractor_landscape}` after running `plot_attractor_landscape.py`).
-
-**Five Contributions:**
-
-1. **BEST hybrid routing** — per-primitive dispatch to EML/EDL/EXL; 52% average and 74% sin/cos node savings; 2.8x wall-clock speedup; zero accuracy loss.
-
-2. **Phantom attractors** — depth-3 EMLTree fits to pi fail 40/40 without regularisation (attractor ~3.1696); lambda_crit=0.001 induces sharp phase transition to 40/40 convergence.
-
-3. **Infinite Zeros Barrier + N=11 search** — structural theorem rules out real-valued sin(x) for all N; confirmed by 281,026,468-tree exhaustive search (N<=11, 323s); complex bypass Im(eml(ix,1))=sin(x) exact in one node.
-
-4. **Performance kernels** — FusedEMLActivation (3.6x), monogate-core Rust (5.9x), EMLLayer(compiled=True) auto-selects fastest backend; torch.compile support.
-
-5. **PyTorch integration** — EMLLayer drop-in nn.Module for SIREN/NeRF/PINN; ONNX opset 17; state_dict() serialisation; two modes (activation/tree).
-
-**BibTeX:**
-
-```bibtex
-@article{almaguer2026eml,
-  title  = {Practical Extensions to the {EML} Universal Operator:
-             Hybrid Routing, Phantom Attractors, Performance Kernels,
-             and the {N=11} Sin Barrier},
-  author = {Almaguer, Art},
-  year   = {2026},
-  note   = {arXiv:ARXIV_ID_PLACEHOLDER}
-}
-```
-
-**arXiv categories:** cs.SC (primary), cs.LG, math.NA
-
-**MSC classes:** 68W30 (symbolic computation), 65D15 (functional approximation)
-
-**Source:** `paper/preprint.tex` — build with `pdflatex preprint.tex` (twice for cross-refs). All packages standard TeX Live 2022+; no custom .sty files.
+| Service | URL / Command | Notes |
+|---------|--------------|-------|
+| PyPI | `pip install monogate==1.0.0` | Live |
+| arXiv | arXiv:2603.21852 | Odrzywołek 2026, CC BY 4.0 |
+| Explorer | monogate.dev | Vercel, branch master |
+| API | https://monogate-api.fly.dev | fly.io, wraps best_optimize() |
+| Streamlit | streamlit run streamlit_app.py | Streamlit Cloud, branch phase9-arxiv-live |
+| flyctl | ~/.fly/bin/flyctl.exe | Windows path |
 
 ---
 
-*Generated for monogate v0.12.0-dev — April 2026*
-*Branch: `phase9-arxiv-live` — next: merge → master, cut v0.12.0 PyPI release*
-*Update ARXIV_ID_PLACEHOLDER throughout by running: `python scripts/update_arxiv_id.py <id>`*
+## 9. Paper Status
+
+**arXiv preprint:** arXiv:2603.21852 (Odrzywołek 2026, reference paper).
+**Working notes paper:** `python/PAPER.md` (v1.0.0, documents all implementations).
+**LaTeX preprint:** `python/paper/preprint.tex` — builds with `pdflatex preprint.tex` (twice).
+
+**Five Contributions (preprint):**
+1. BEST hybrid routing (52%/74% savings, 2.8× speedup)
+2. Phantom attractors (λ_crit=0.001 phase transition)
+3. Infinite Zeros Barrier + N=11 exhaustive search
+4. Performance kernels (FusedEML 3.6×, Rust 5.9×)
+5. PyTorch integration (EMLLayer, ONNX, two modes)
+
+**v1.0.0 additional contributions (documented in PAPER.md §10–14):**
+- Minimax EML approximation framework
+- CBEST physics identity survey
+- sklearn-compatible EMLRegressor / SRBench
+- Neurosymbolic theorem prover (4-tier)
+- 71-identity catalog
+
+---
+
+*Generated for monogate v1.0.0 — April 2026*
+*Branch: `master` · Tag: `v1.0.0` · 983 tests passing*
