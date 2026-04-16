@@ -41,6 +41,7 @@ __all__ = [
     "ProofResult",
     "BenchmarkReport",
     "EMLProver",
+    "EMLProverV2",
 ]
 
 # ── Optional imports (gracefully degraded) ────────────────────────────────────
@@ -901,3 +902,544 @@ class EMLProver:
             mean_elapsed_s=mean_elapsed,
             mean_nodes=mean_nodes,
         )
+
+
+# ── EMLProverV2 ───────────────────────────────────────────────────────────────
+
+class EMLProverV2(EMLProver):
+    """Extended prover with conjecture generation, proof compression, and visualization.
+
+    Inherits all four-tier proof logic from :class:`EMLProver` and adds:
+
+    - :meth:`generate_conjectures` — propose new identities via grammar mutation.
+    - :meth:`compress_proof` — shorten an EML witness tree while preserving correctness.
+    - :meth:`visualize_proof` — publication-quality tree diagram (matplotlib).
+    - :meth:`batch_prove` — prove a list of identities with progress reporting.
+
+    Example::
+
+        prover = EMLProverV2(verbose=True)
+        conjectures = prover.generate_conjectures(category="trig", n=10)
+        result = prover.prove(conjectures[0].expression)
+        compressed = prover.compress_proof(result)
+        prover.visualize_proof(compressed, style="tree")
+    """
+
+    # ── Conjecture generation ────────────────────────────────────────────────
+
+    def generate_conjectures(
+        self,
+        category: str = "trig",
+        n: int = 20,
+        difficulty: str = "medium",
+        seed: int = 42,
+    ) -> "List[Any]":
+        """Generate plausible new mathematical identities via grammar mutation.
+
+        Strategy:
+        1. Pull all identities in *category* from the existing catalog.
+        2. Apply 5 mutation types (substitution, negation, scaling, doubling, halving).
+        3. Numerically check each candidate (500 points, threshold 1e-6).
+        4. Deduplicate against existing catalog.
+        5. Return the top *n* candidates as :class:`~monogate.identities.Identity` objects.
+
+        Args:
+            category:   One of 'trig', 'trigonometric', 'hyperbolic', 'exponential',
+                        'special', 'physics', 'eml', 'open'.  Short aliases accepted.
+            n:          Maximum number of conjectures to return.
+            difficulty: Difficulty label to stamp on returned identities.
+            seed:       Random seed for reproducibility.
+
+        Returns:
+            List of :class:`~monogate.identities.Identity` objects with
+            ``expected_method='unknown'``.
+        """
+        import random as _random
+        from .identities import ALL_IDENTITIES, Identity
+
+        # Normalise category alias
+        _alias = {
+            "trig": "trigonometric",
+            "hyp": "hyperbolic",
+            "exp": "exponential",
+        }
+        cat = _alias.get(category, category)
+
+        seeds = [i for i in ALL_IDENTITIES if i.category == cat]
+        if not seeds:
+            seeds = ALL_IDENTITIES[:]
+
+        existing_exprs = {i.expression for i in ALL_IDENTITIES}
+        rng = _random.Random(seed)
+
+        candidates: "List[tuple[float, str, str]]" = []  # (novelty, name, expr)
+
+        for identity in seeds:
+            lhs, rhs = self._split_identity(identity.expression)
+            if lhs is None:
+                continue
+            mutations = self._mutate_identity(lhs, rhs, rng)
+            for (new_lhs, new_rhs, mutation_name) in mutations:
+                expr = f"{new_lhs} == {new_rhs}"
+                if expr in existing_exprs:
+                    continue
+                # Quick numerical check
+                lhs_fn = _make_math_fn(new_lhs)
+                rhs_fn = _make_math_fn(new_rhs)
+                if lhs_fn is None or rhs_fn is None:
+                    continue
+                lo, hi = identity.domain
+                probe = _linspace(lo, hi, 500)
+                ok, residual = _numerical_check(lhs_fn, rhs_fn, probe, threshold=1e-6)
+                if ok:
+                    novelty = 1.0 / (1.0 + residual * 1e6 + 0.1)
+                    candidates.append((novelty, f"auto_{mutation_name}_{identity.name[:20]}", expr, cat, identity.domain))
+                    existing_exprs.add(expr)
+
+        # Sort by novelty (highest first), take top-n
+        candidates.sort(key=lambda t: -t[0])
+        results = []
+        for novelty, name, expr, icat, domain in candidates[:n]:
+            results.append(Identity(
+                name=name,
+                expression=expr,
+                latex=self._expr_to_latex(expr),
+                category=icat,
+                domain=domain,
+                difficulty=difficulty,
+                notes=f"Auto-generated conjecture (novelty={novelty:.4f}). Numerically verified.",
+                expected_method="unknown",
+            ))
+        return results
+
+    # ── Proof compression ────────────────────────────────────────────────────
+
+    def compress_proof(
+        self,
+        result: ProofResult,
+        n_simulations: int = 2000,
+        seed: int = 42,
+    ) -> ProofResult:
+        """Find a shorter EML witness tree for an existing ProofResult.
+
+        Uses :func:`~monogate.minimax.minimax_eml` to search for an equivalent
+        tree with fewer internal nodes.  If no shorter tree is found, returns
+        the original result unchanged.
+
+        Args:
+            result:       A :class:`ProofResult` that has a ``witness_tree``.
+            n_simulations: MCTS budget for the compression search.
+            seed:         Random seed.
+
+        Returns:
+            :class:`ProofResult` with updated ``witness_tree`` and ``node_count``,
+            or the original if already minimal.
+        """
+        if result.witness_tree is None:
+            return result
+
+        try:
+            from .minimax import minimax_eml
+        except ImportError:
+            return result
+
+        original_nodes = _count_nodes(result.witness_tree)
+        if original_nodes <= 1:
+            return result
+
+        # Build target function from witness tree
+        def target_fn(x: float) -> float:
+            try:
+                return _eval_tree(result.witness_tree, x)
+            except Exception:
+                return float("nan")
+
+        # Attempt progressively smaller trees
+        best_tree = result.witness_tree
+        best_nodes = original_nodes
+
+        for n_nodes in range(original_nodes - 1, 0, -1):
+            try:
+                mm = minimax_eml(
+                    target_fn,
+                    n_nodes=n_nodes,
+                    domain=(-math.pi, math.pi),
+                    n_probe=100,
+                    n_simulations=n_simulations,
+                    seed=seed,
+                )
+                if mm.linf < 1e-10:
+                    best_tree = mm.best_tree
+                    best_nodes = _count_nodes(mm.best_tree)
+                    n_simulations = max(500, n_simulations // 2)  # budget halving
+                else:
+                    break  # can't compress further
+            except Exception:
+                break
+
+        if best_nodes >= original_nodes:
+            return result
+
+        new_notes = list(result.notes) + [
+            f"Proof compressed: {original_nodes} nodes → {best_nodes} nodes "
+            f"(minimax_eml, L∞ < 1e-10)"
+        ]
+        # ProofResult is frozen — rebuild with updated fields
+        return ProofResult(
+            identity_str=result.identity_str,
+            status=result.status,
+            verification_method=result.verification_method,
+            confidence=result.confidence,
+            max_residual=result.max_residual,
+            n_test_points=result.n_test_points,
+            elapsed_s=result.elapsed_s,
+            lhs_tree=result.lhs_tree,
+            rhs_tree=result.rhs_tree,
+            witness_tree=best_tree,
+            node_count=best_nodes,
+            lhs_formula=_formula_str(best_tree),
+            latex_proof=result.latex_proof,
+            sympy_simplification=result.sympy_simplification,
+            notes=new_notes,
+        )
+
+    # ── Visualization ────────────────────────────────────────────────────────
+
+    def visualize_proof(
+        self,
+        result: ProofResult,
+        style: str = "tree",
+        output_path: Optional[str] = None,
+    ) -> None:
+        """Render a publication-quality diagram of the EML proof tree.
+
+        Builds a directed graph from the witness (or LHS) tree and draws it
+        using matplotlib, with color-coded nodes:
+
+        - **cornflowerblue**: internal EML operation nodes
+        - **lightgreen**: constant leaf nodes
+        - **coral**: variable ``x`` leaf nodes
+
+        Args:
+            result:      A :class:`ProofResult` to visualize.
+            style:       One of ``'tree'`` (hierarchical), ``'radial'``,
+                         or ``'step'`` (LHS | → | RHS side-by-side).
+            output_path: If given, save to this file path instead of showing.
+
+        Raises:
+            ImportError: If matplotlib is not installed.
+        """
+        try:
+            import matplotlib.pyplot as plt
+            import matplotlib.patches as mpatches
+        except ImportError:
+            raise ImportError("matplotlib is required for visualize_proof. "
+                              "Install with: pip install matplotlib")
+
+        tree = result.witness_tree or result.lhs_tree
+        if tree is None:
+            # Nothing to draw — just show text
+            fig, ax = plt.subplots(figsize=(8, 2))
+            ax.axis("off")
+            ax.text(0.5, 0.5, f"{result.identity_str}\n{result}\n(no EML witness tree)",
+                    ha="center", va="center", fontsize=12, wrap=True)
+            _show_or_save(fig, output_path)
+            return
+
+        if style == "step":
+            self._visualize_step(result, output_path)
+        else:
+            radial = (style == "radial")
+            self._visualize_single_tree(tree, result, radial=radial,
+                                        output_path=output_path)
+
+    # ── Batch prove with progress ────────────────────────────────────────────
+
+    def batch_prove(
+        self,
+        catalog_slice: "List[Any]",
+        show_progress: bool = True,
+        **kwargs: Any,
+    ) -> BenchmarkReport:
+        """Prove a list of identities with optional progress reporting.
+
+        Args:
+            catalog_slice: List of :class:`~monogate.identities.Identity` objects
+                           or identity strings.
+            show_progress: If True, print a one-line status for each identity.
+            **kwargs:      Forwarded to :meth:`EMLProver.prove`.
+
+        Returns:
+            :class:`BenchmarkReport` summary.
+        """
+        from .identities import Identity as _Identity
+        identity_strs = []
+        for item in catalog_slice:
+            if isinstance(item, _Identity):
+                identity_strs.append(item.expression)
+            else:
+                identity_strs.append(str(item))
+
+        results: List[ProofResult] = []
+        n = len(identity_strs)
+        for idx, expr in enumerate(identity_strs):
+            r = self.prove(expr, **kwargs)
+            results.append(r)
+            if show_progress:
+                symbol = "✓" if r.proved() else "✗"
+                print(f"  [{idx+1}/{n}] {symbol} {r.status:20s}  {expr[:60]}")
+
+        n_total = len(results)
+        n_proved = sum(1 for r in results if r.proved())
+        n_exact = sum(1 for r in results if r.status == "proved_exact")
+        n_numerical = sum(1 for r in results if r.status in (
+            "proved_numerical", "proved_certified"))
+        n_failed = n_total - n_proved
+        success_rate = n_proved / n_total if n_total > 0 else 0.0
+        mean_elapsed = sum(r.elapsed_s for r in results) / max(n_total, 1)
+        mean_nodes = sum(r.node_count for r in results) / max(n_total, 1)
+        return BenchmarkReport(
+            results=results, n_total=n_total, n_proved=n_proved,
+            n_exact=n_exact, n_numerical=n_numerical, n_failed=n_failed,
+            success_rate=success_rate, mean_elapsed_s=mean_elapsed,
+            mean_nodes=mean_nodes,
+        )
+
+    # ── Private helpers ──────────────────────────────────────────────────────
+
+    @staticmethod
+    def _split_identity(expression: str) -> Tuple[Optional[str], Optional[str]]:
+        """Split 'lhs == rhs' into (lhs, rhs), or (None, None) if malformed."""
+        parts = expression.split("==")
+        if len(parts) != 2:
+            return None, None
+        return parts[0].strip(), parts[1].strip()
+
+    @staticmethod
+    def _mutate_identity(
+        lhs: str,
+        rhs: str,
+        rng: "Any",
+    ) -> "List[Tuple[str, str, str]]":
+        """Return list of (new_lhs, new_rhs, mutation_name) tuples."""
+        mutations = []
+        # Substitution: x → 2*x
+        mutations.append((
+            lhs.replace("x", "(2*x)"),
+            rhs.replace("x", "(2*x)"),
+            "double_arg",
+        ))
+        # Substitution: x → x/2
+        mutations.append((
+            lhs.replace("x", "(x/2)"),
+            rhs.replace("x", "(x/2)"),
+            "half_arg",
+        ))
+        # Negation: negate both sides
+        mutations.append((f"(-({lhs}))", f"(-({rhs}))", "negate"))
+        # Scale by 2
+        mutations.append((f"(2*({lhs}))", f"(2*({rhs}))", "scale2"))
+        # Scale by 1/2
+        mutations.append((f"(({lhs})/2)", f"(({rhs})/2)", "scale_half"))
+        return mutations
+
+    @staticmethod
+    def _expr_to_latex(expr: str) -> str:
+        """Naive LaTeX conversion for auto-generated expressions."""
+        if _SYMPY_OK:
+            try:
+                parts = expr.split("==")
+                lhs_s = _sympy_parse(parts[0].strip())
+                rhs_s = _sympy_parse(parts[1].strip())
+                if lhs_s is not None and rhs_s is not None:
+                    import sympy
+                    return sympy.latex(lhs_s) + " = " + sympy.latex(rhs_s)
+            except Exception:
+                pass
+        return expr.replace("**", "^").replace("*", r"\cdot ")
+
+    def _visualize_single_tree(
+        self,
+        tree: dict,
+        result: ProofResult,
+        radial: bool = False,
+        output_path: Optional[str] = None,
+    ) -> None:
+        """Draw a single EML tree with hierarchical or radial layout."""
+        import matplotlib.pyplot as plt
+
+        nodes: List[tuple] = []
+        edges: List[tuple] = []
+        colors: List[str] = []
+        labels: List[str] = []
+
+        def _collect(node: dict, parent_id: Optional[int], depth: int, pos: float) -> int:
+            node_id = len(nodes)
+            if node["op"] == "leaf":
+                val = node["val"]
+                lbl = "x" if val == "x" else str(round(float(val), 3))
+                color = "coral" if val == "x" else "lightgreen"
+            elif node["op"] == "eml":
+                lbl = "eml"
+                color = "cornflowerblue"
+            else:
+                lbl = "?"
+                color = "lightyellow"
+            nodes.append((node_id, depth, pos))
+            colors.append(color)
+            labels.append(lbl)
+            if parent_id is not None:
+                edges.append((parent_id, node_id))
+            if node["op"] == "eml":
+                _collect(node["left"], node_id, depth + 1, pos - 1.0 / (depth + 1))
+                _collect(node["right"], node_id, depth + 1, pos + 1.0 / (depth + 1))
+            return node_id
+
+        _collect(tree, None, 0, 0.0)
+
+        # Build position dict
+        max_depth = max(d for _, d, _ in nodes) if nodes else 0
+        pos_dict = {}
+        for nid, depth, hpos in nodes:
+            if radial and max_depth > 0:
+                angle = hpos * math.pi
+                r = depth / (max_depth + 1)
+                pos_dict[nid] = (r * math.cos(angle), r * math.sin(angle))
+            else:
+                pos_dict[nid] = (hpos, -depth)
+
+        fig, ax = plt.subplots(figsize=(max(6, len(nodes) * 0.7), max(4, max_depth * 1.5 + 2)))
+        ax.set_aspect("equal" if radial else "auto")
+        ax.axis("off")
+
+        # Draw edges
+        for (u, v) in edges:
+            x0, y0 = pos_dict[u]
+            x1, y1 = pos_dict[v]
+            ax.plot([x0, x1], [y0, y1], "k-", lw=1.2, zorder=1)
+
+        # Draw nodes
+        for nid, color, label in zip(range(len(nodes)), colors, labels):
+            x, y = pos_dict[nid]
+            circle = plt.Circle((x, y), 0.18, color=color, ec="black", lw=1.0, zorder=2)
+            ax.add_patch(circle)
+            ax.text(x, y, label, ha="center", va="center", fontsize=8, fontweight="bold", zorder=3)
+
+        # Legend
+        legend_handles = [
+            mpatches.Patch(color="cornflowerblue", label="EML node"),
+            mpatches.Patch(color="lightgreen", label="Constant leaf"),
+            mpatches.Patch(color="coral", label="Variable x"),
+        ]
+        ax.legend(handles=legend_handles, loc="upper right", fontsize=8)
+
+        title = (f"{result.identity_str}\n"
+                 f"Status: {result.status}  |  Confidence: {result.confidence:.2f}"
+                 f"  |  Nodes: {result.node_count}")
+        ax.set_title(title, fontsize=9, pad=10)
+
+        _show_or_save(fig, output_path)
+
+    def _visualize_step(
+        self,
+        result: ProofResult,
+        output_path: Optional[str] = None,
+    ) -> None:
+        """Draw LHS and RHS trees side-by-side with proof arrow."""
+        import matplotlib.pyplot as plt
+
+        fig, axes = plt.subplots(1, 3, figsize=(14, 5),
+                                 gridspec_kw={"width_ratios": [5, 1, 5]})
+
+        for ax in axes:
+            ax.axis("off")
+
+        # LHS tree
+        lhs_tree = result.lhs_tree or result.witness_tree
+        if lhs_tree:
+            axes[0].set_title("LHS", fontsize=10, fontweight="bold")
+            _draw_tree_on_axis(lhs_tree, axes[0])
+        else:
+            axes[0].text(0.5, 0.5, "LHS\n(no tree)", ha="center", va="center")
+
+        # Centre: proof method arrow
+        axes[1].text(0.5, 0.5,
+                     f"  →\n{result.verification_method}\n"
+                     f"conf={result.confidence:.2f}",
+                     ha="center", va="center", fontsize=9, style="italic")
+
+        # RHS tree
+        rhs_tree = result.rhs_tree
+        if rhs_tree:
+            axes[2].set_title("RHS", fontsize=10, fontweight="bold")
+            _draw_tree_on_axis(rhs_tree, axes[2])
+        else:
+            axes[2].text(0.5, 0.5, "RHS\n(no tree)", ha="center", va="center")
+
+        fig.suptitle(result.identity_str, fontsize=11, fontweight="bold")
+        _show_or_save(fig, output_path)
+
+
+# ── Visualization helpers ─────────────────────────────────────────────────────
+
+def _draw_tree_on_axis(tree: dict, ax: "Any") -> None:
+    """Draw an EML tree dict onto a matplotlib Axes object."""
+    try:
+        import matplotlib.pyplot as plt
+        import matplotlib.patches as mpatches
+    except ImportError:
+        return
+
+    nodes: List[tuple] = []
+    edges: List[tuple] = []
+    colors: List[str] = []
+    labels: List[str] = []
+
+    def _collect(node: dict, parent_id: Optional[int], depth: int, pos: float) -> None:
+        nid = len(nodes)
+        if node["op"] == "leaf":
+            val = node["val"]
+            lbl = "x" if val == "x" else str(round(float(val), 3))
+            color = "coral" if val == "x" else "lightgreen"
+        elif node["op"] == "eml":
+            lbl = "eml"
+            color = "cornflowerblue"
+        else:
+            lbl = "?"
+            color = "lightyellow"
+        nodes.append((nid, depth, pos))
+        colors.append(color)
+        labels.append(lbl)
+        if parent_id is not None:
+            edges.append((parent_id, nid))
+        if node["op"] == "eml":
+            _collect(node["left"], nid, depth + 1, pos - 0.5 / (depth + 1))
+            _collect(node["right"], nid, depth + 1, pos + 0.5 / (depth + 1))
+
+    _collect(tree, None, 0, 0.0)
+    max_depth = max(d for _, d, _ in nodes) if nodes else 0
+    pos_dict = {nid: (hpos, -depth) for nid, depth, hpos in nodes}
+
+    for (u, v) in edges:
+        x0, y0 = pos_dict[u]
+        x1, y1 = pos_dict[v]
+        ax.plot([x0, x1], [y0, y1], "k-", lw=1.0, zorder=1)
+
+    for nid, color, label in zip(range(len(nodes)), colors, labels):
+        x, y = pos_dict[nid]
+        circle = plt.Circle((x, y), 0.12, color=color, ec="black", lw=0.8, zorder=2)
+        ax.add_patch(circle)
+        ax.text(x, y, label, ha="center", va="center", fontsize=7, zorder=3)
+
+    ax.set_aspect("auto")
+
+
+def _show_or_save(fig: "Any", output_path: Optional[str]) -> None:
+    """Show the figure inline, or save to path if given."""
+    import matplotlib.pyplot as plt
+    if output_path:
+        fig.savefig(output_path, dpi=150, bbox_inches="tight")
+        plt.close(fig)
+    else:
+        plt.tight_layout()
+        plt.show()

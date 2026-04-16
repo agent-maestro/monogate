@@ -374,12 +374,63 @@ from .sklearn_wrapper import EMLRegressor  # noqa: F401
 
 __all__ += ["EMLRegressor"]
 
-from .prover import EMLProver, ProofResult, BenchmarkReport  # noqa: F401
+from .prover import EMLProver, EMLProverV2, ProofResult, BenchmarkReport  # noqa: F401
 from .identities import (Identity, ALL_IDENTITIES, TRIG_IDENTITIES,  # noqa: F401
     HYPERBOLIC_IDENTITIES, EXPONENTIAL_IDENTITIES, SPECIAL_IDENTITIES,
     PHYSICS_IDENTITIES, get_by_difficulty, get_by_category)
 
-__all__ += ["EMLProver", "ProofResult", "BenchmarkReport",
+__all__ += ["EMLProver", "EMLProverV2", "ProofResult", "BenchmarkReport",
     "Identity", "ALL_IDENTITIES", "TRIG_IDENTITIES", "HYPERBOLIC_IDENTITIES",
     "EXPONENTIAL_IDENTITIES", "SPECIAL_IDENTITIES", "PHYSICS_IDENTITIES",
     "get_by_difficulty", "get_by_category"]
+
+from .nas import NASResult, EMLActivationSearch, regression_fitness, complexity_penalized_fitness  # noqa: F401
+
+__all__ += [
+    "NASResult", "EMLActivationSearch",
+    "regression_fitness", "complexity_penalized_fitness",
+]
+
+from .padic import (  # noqa: F401
+    PAdicNumber,
+    padic_exp,
+    padic_log,
+    padic_eml,
+    padic_fixed_points,
+    valuation,
+)
+
+__all__ += [
+    "PAdicNumber",
+    "padic_exp",
+    "padic_log",
+    "padic_eml",
+    "padic_fixed_points",
+    "valuation",
+]
+
+from .chemistry import (  # noqa: F401
+    REACTION_CATALOG,
+    fit_reaction_law,
+    arrhenius_fit,
+    ReactionLaw,
+)
+
+__all__ += [
+    "REACTION_CATALOG",
+    "fit_reaction_law",
+    "arrhenius_fit",
+    "ReactionLaw",
+]
+
+from .causal import (  # noqa: F401
+    CausalResult,
+    EMLCausalModel,
+    verify_causal_identity,
+)
+
+__all__ += [
+    "CausalResult",
+    "EMLCausalModel",
+    "verify_causal_identity",
+]

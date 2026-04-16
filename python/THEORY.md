@@ -243,3 +243,101 @@ physics, EML structural, and open challenges.
 - **Open conjecture automation**: Use the prover in a loop to test hypotheses
   about the phantom attractor constant λ_crit.
 
+
+---
+
+## §8 EML as a Conjecture Engine
+
+The EMLProverV2 class extends the prover with automated conjecture generation,
+treating the EML grammar itself as a source of mathematical hypotheses.
+
+### Grammar-Based Mutation
+
+Given a seed identity $L(x) = R(x)$, five mutation operators produce candidate
+conjectures:
+
+| Mutation | Rule | Example |
+|----------|------|---------|
+| Substitution x→2x | $L(2x) = R(2x)$ | $\sin^2(2x) + \cos^2(2x) = 1$ |
+| Substitution x→x/2 | $L(x/2) = R(x/2)$ | $\sin^2(x/2) + \cos^2(x/2) = 1$ |
+| Negation | $-L(x) = -R(x)$ | $-\sin^2(x) - \cos^2(x) = -1$ |
+| Scaling ×2 | $2L(x) = 2R(x)$ | $2\sin^2(x) + 2\cos^2(x) = 2$ |
+| Scaling ×1/2 | $L(x)/2 = R(x)/2$ | $\sin^2(x)/2 + \cos^2(x)/2 = 1/2$ |
+
+Each candidate is immediately verified numerically (500 probe points, threshold
+$10^{-6}$) and deduplicated against the existing catalog.
+
+### Novelty Scoring
+
+Conjectures are ranked by a novelty score:
+$$\text{novelty}(c) = \frac{1}{1 + \text{residual}(c) \times 10^6}$$
+where $\text{residual}(c)$ is the maximum absolute difference between the two
+sides of the candidate identity over all probe points. Lower residual = higher
+novelty score = more precisely true.
+
+### Proof Compression
+
+`compress_proof` iteratively seeks shorter EML trees equivalent to the
+witness, calling `minimax_eml()` with decreasing node budgets until no
+shorter certificate can be found:
+
+$$\text{compress}(T^*) = \arg\min_{|T| < |T^*|} \|f_T - f_{T^*}\|_\infty < 10^{-10}$$
+
+This implements a form of occam's razor: among all EML witnesses for a
+proved identity, prefer the one with fewest nodes.
+
+---
+
+## §9 EML as an Activation Search Space
+
+The NAS (Neural Architecture Search) module treats the infinite EML grammar
+as a search space for discovering novel activation functions.
+
+### Why EML for Activations?
+
+Every elementary activation — ReLU, GELU, SiLU, ELU — can be expressed as
+an EML tree of bounded depth. The EML grammar is:
+
+$$S \rightarrow 1.0 \mid x \mid \text{eml}(S, S)$$
+
+A depth-$k$ EML tree can represent any composition of up to $2^k - 1$
+elementary operations, making it a universal search space for smooth,
+analytically expressible activations.
+
+### Evolutionary Search Algorithm
+
+The search combines MCTS bootstrapping with evolutionary optimization:
+
+1. **Bootstrap**: Generate 5 diverse seed trees via random rollout from the
+   EML grammar (depth 1 to max_depth).
+2. **Selection**: Tournament selection with $k=3$ candidates; minimize fitness.
+3. **Mutation** (four operators, chosen uniformly):
+   - *Leaf constant mutation*: replace a constant leaf with a new value
+     sampled from $[0.1, 3.0]$.
+   - *Leaf toggle*: flip a leaf between constant and the variable $x$.
+   - *Subtree replacement*: replace a random subtree with a fresh random tree.
+   - *Leaf simplification*: replace an internal node with a leaf (parsimony).
+4. **Crossover**: Swap a random subtree from parent 2 into parent 1 at a
+   compatible node.
+5. **Elitism**: Preserve the top $10\%$ of trees unchanged each generation.
+
+### Fitness Functions
+
+Two fitness functions are provided:
+
+- **MSE fitness**: $f(T) = \frac{1}{n}\sum_{i=1}^n (T(x_i) - y_i)^2$
+
+- **Complexity-penalized fitness**:
+  $f_\alpha(T) = \text{MSE}(T) + \alpha \cdot |T|$
+  where $|T|$ is the EML node count (parsimony pressure with weight $\alpha$).
+
+### Observed Patterns
+
+Empirically, the NAS frequently rediscovers structures resembling:
+- **SiLU/Swish**: $x \cdot \sigma(x) = x / (1 + e^{-x})$ — expressible as
+  depth-2 EML.
+- **Softplus**: $\log(1 + e^x)$ — 1-node EML variant.
+- **ELU envelope**: exponential-linear transitions captured by depth-1 EML.
+
+The grammar bias toward compositions of exp and log naturally produces smooth,
+monotonic activations competitive with hand-designed alternatives.
