@@ -145,3 +145,38 @@ def test_grammar_extension_imports():
     assert callable(census_extended)
     assert callable(barrier_closed)
     assert callable(run_grammar_extension)
+
+
+def test_mutation_bandit_tracking():
+    """EMLProverV2 tracks mutation tries/hits and mutation_stats() returns sorted results."""
+    from monogate.prover import EMLProverV2
+
+    prover = EMLProverV2(verbose=False)
+
+    # Counters start empty
+    assert prover._mutation_tries == {}
+    assert prover._mutation_hits == {}
+
+    # Run one round of conjecture generation to populate counters
+    _ = prover.generate_conjectures(category="trig", n=5, seed=42, temperature=0.5)
+
+    # After generation, at least some mutations should have been tried
+    assert len(prover._mutation_tries) > 0, "Expected at least one mutation to be tried"
+    assert all(v >= 0 for v in prover._mutation_tries.values())
+    assert all(v >= 0 for v in prover._mutation_hits.values())
+
+    # mutation_stats() returns a sorted list
+    stats = prover.mutation_stats()
+    assert isinstance(stats, list)
+    if len(stats) >= 2:
+        assert stats[0]["hit_rate"] >= stats[-1]["hit_rate"], (
+            "mutation_stats() should be sorted by hit_rate descending"
+        )
+
+    # Each row has expected keys
+    for row in stats:
+        assert "mutation" in row
+        assert "tried" in row
+        assert "proved" in row
+        assert "hit_rate" in row
+        assert row["tried"] >= row["proved"]

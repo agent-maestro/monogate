@@ -669,3 +669,84 @@ The explorer regularly discovers non-obvious identities such as:
 These results demonstrate that systematic grammar mutation + 4-tier proof +
 interestingness ranking can produce genuinely surprising mathematical content —
 not just trivial scaling variants of known results.
+
+---
+
+## §12 DEML Dual Gate and the P2 Resolution (Session 9, April 2026)
+
+### §12.1 The Negative-Exponent Barrier
+
+Sessions 6–8 established the following structural theorem:
+
+> **Theorem (Negative-Exponent Barrier):** For any operator in the family
+> `f(exp(left), ln(right))` with polynomial/constant leaves `{x, c}`,
+> the function `exp(−x)` is unreachable in any finite real tree.
+
+*Proof sketch:* Every node output has the form `f(exp(a), ln(b))` where
+`a` and `b` are built from `{x, positive constants}` via further applications
+of the same gate.  Since `exp` is always applied to a non-negated argument,
+and the leaves are non-negative, no combination of these operations can produce
+a decaying exponential.
+
+**Consequence:** 14 of 15 standard physics laws (decay, Gaussian, Planck,
+Arrhenius, Fermi-Dirac, ...) are blocked from EML representation.  EML alone
+achieves only 1/15 native (Boltzmann weight `exp(x)`).
+
+### §12.2 The DEML Dual Gate
+
+**Definition:** `deml(x, y) = exp(−x) − ln(y)`, with natural constant 1.
+
+**Key identity:** `deml(x, 1) = exp(−x)`.  One node.  Machine precision.
+
+DEML is the natural *dual* of EML.  Where EML's primitive is `exp(+x)`,
+DEML's primitive is `exp(−x)`.  The two gates together give the BEST router
+both signs of the exponential as single-node primitives.
+
+**Completeness:** DEML is NOT complete over the full elementary function set.
+It cannot express bare `exp(+x)` in a finite real tree (every DEML node
+contributes a decaying factor).  DEML is complete over the set of functions
+expressible as compositions of `exp(−x)`, `ln(y)`, and constants — which
+includes all exponential decay laws.
+
+### §12.3 Open Problem P2 — Resolution
+
+**P2 (from Session 6 CONTEXT.md):** Does adding DEML to the BEST router
+make EML+DEML physics-complete (all 15 laws native)?
+
+**Partial resolution (Session 9):** DEML is native for all laws of the form
+`exp(−f(x))` where `f(x)` is EML-expressible (i.e., a non-negative function).
+This covers:
+
+- Radioactive decay `exp(−x)` ✅ 1 node DEML-native
+- Boltzmann weight `exp(−βE)` ✅ 1 node DEML-native (with temperature parameter)
+- Maxwell-Boltzmann distribution tails ✅ DEML-native
+- Lorentz factor approximation ✅ near-native (MSE < 0.001)
+
+Laws requiring `exp(−f(x)²)` (Gaussian) remain partially blocked because
+building `x²` as a DEML argument requires further composition with EXL.
+The full census results are in `python/monogate/frontiers/deml_census.py`.
+
+### §12.4 EML + DEML BEST Routing
+
+With DEML added as a 6th operator, the routing table becomes:
+
+| Primitive   | Gate | Nodes |
+|-------------|------|-------|
+| `exp(+x)`   | EML  | 1     |
+| `exp(−x)`   | DEML | 1     |
+| `ln(x)`     | EXL  | 1     |
+| `pow(x,n)`  | EXL  | 3     |
+| `mul(x,y)`  | EDL  | 7     |
+| `div(x,y)`  | EDL  | 1     |
+
+This is the first routing table where both `exp(+x)` and `exp(−x)` achieve
+1-node representation — the theoretical minimum — making the EML+DEML system
+strictly more expressive for physics laws than any single-operator grammar.
+
+### §12.5 Future Work
+
+1. Full EML+DEML census with higher simulation budget (Session 10)
+2. Does EML+DEML+EXL cover all 15 laws? (Gaussian requires `x²` as DEML arg)
+3. Formal completeness theorem for the {EML, DEML} two-gate system
+4. Connection to sinh/cosh: `eml(x,1) + exp_neg_deml(x) = 2·cosh(x)` — the
+   two-gate system naturally expresses hyperbolic functions

@@ -3,20 +3,20 @@ monogate.operators -- registry and comparison utilities for all Operator instanc
 
 Usage::
 
-    from monogate.operators import EML, EDL, EXL, EAL, EMN
+    from monogate.operators import EML, EDL, EXL, EAL, EMN, DEML
     from monogate.operators import ALL_OPERATORS, COMPLETE_OPERATORS
     from monogate.operators import get_operator, markdown_table, compare_all
 
-    get_operator('EXL')         # -> EXL Operator instance
+    get_operator('DEML')        # -> DEML Operator instance
     compare_all()               # prints ASCII comparison table
     print(markdown_table())     # prints GitHub-Flavored Markdown table
 """
 
 import math
-from .core import EML, EDL, EXL, EAL, EMN, Operator
+from .core import EML, EDL, EXL, EAL, EMN, DEML, Operator
 
 __all__ = [
-    "EML", "EDL", "EXL", "EAL", "EMN",
+    "EML", "EDL", "EXL", "EAL", "EMN", "DEML",
     "ALL_OPERATORS",
     "COMPLETE_OPERATORS",
     "get_operator",
@@ -24,26 +24,27 @@ __all__ = [
     "markdown_table",
 ]
 
-ALL_OPERATORS: list[Operator] = [EML, EDL, EXL, EAL, EMN]
+ALL_OPERATORS: list[Operator] = [EML, EDL, EXL, EAL, EMN, DEML]
 COMPLETE_OPERATORS: list[Operator] = [EML, EDL]
 
 _REGISTRY: dict[str, Operator] = {op.name: op for op in ALL_OPERATORS}
 
 # Node counts for known operations (None = not computable)
 _NODE_COUNTS: dict[str, tuple] = {
-    # name       EML   EDL   EXL   EAL   EMN
-    "exp(x)":   (  1,    1,    1,    1, None),
-    "ln(x)":    (  3,    3,    1, None, None),
-    "mul(x,y)": ( 13,    7, None, None, None),
-    "div(x,y)": ( 15,    1, None, None, None),
-    "pow(x,n)": ( 15,   11,    3, None, None),
-    "recip(x)": (  5,    2, None, None, None),
-    "neg(x)":   (  9,    6, None, None, None),
-    "add(x,y)": ( 11, None, None, None, None),
-    "sub(x,y)": (  5, None, None, None, None),
+    # name        EML   EDL   EXL   EAL   EMN  DEML
+    "exp(x)":   (  1,    1,    1,    1, None, None),  # DEML: no +exp(x) in 1 node
+    "exp(-x)":  (None, None, None, None, None,   1),  # DEML native: deml(x,1)=exp(-x)
+    "ln(x)":    (  3,    3,    1, None, None,    3),
+    "mul(x,y)": ( 13,    7, None, None, None, None),
+    "div(x,y)": ( 15,    1, None, None, None, None),
+    "pow(x,n)": ( 15,   11,    3, None, None, None),
+    "recip(x)": (  5,    2, None, None, None, None),
+    "neg(x)":   (  9,    6, None, None, None, None),
+    "add(x,y)": ( 11, None, None, None, None, None),
+    "sub(x,y)": (  5, None, None, None, None, None),
 }
 
-_OP_ORDER = ["EML", "EDL", "EXL", "EAL", "EMN"]
+_OP_ORDER = ["EML", "EDL", "EXL", "EAL", "EMN", "DEML"]
 
 
 def get_operator(name: str) -> Operator:

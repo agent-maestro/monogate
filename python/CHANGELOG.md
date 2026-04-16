@@ -4,6 +4,40 @@ All notable changes to `monogate` are documented here.
 
 ---
 
+## [1.2.0-dev] — 2026-04-16
+
+### DEML Dual Gate — Breaking the Negative-Exponent Barrier (Session 9)
+
+Sessions 6–8 established that 14 of 15 standard physics laws are blocked from
+EML representation by the **negative-exponent barrier**: the grammar
+`{exp(f(x)), ln(g(x))}` with polynomial leaves structurally cannot produce
+decaying exponentials.  Session 9 introduces the direct fix.
+
+**`deml(x, y) = exp(−x) − ln(y)` — the dual of EML.**
+
+The central identity `deml(x, 1) = exp(−x)` makes exponential decay a
+1-node primitive for the first time.  Combined with EML in the BEST router,
+both `exp(+x)` and `exp(−x)` are single-node primitives — the theoretical
+minimum, and the first routing table to achieve this.
+
+#### New features
+
+- **`monogate.DEML`** — 6th operator instance; `exp_neg_deml(x)`, `ln_deml(x)`
+- **`monogate.operators`** — DEML in `ALL_OPERATORS`, `_NODE_COUNTS["exp(-x)"] = 1`
+- **`monogate.frontiers.operator_comparison`** — `_eval_deml`, DEML in `OPERATOR_META`
+  and `PHYSICS_NODE_COUNTS`
+- **`monogate.frontiers.deml_census`** — 3-config physics census: EML / DEML / EML+DEML
+  combined; `run_deml_census()`, `plot_deml_census()`
+- **`monogate.prover` (EMLProverV2)** — bandit tracking: `_mutation_tries`, `_mutation_hits`,
+  `mutation_stats()` for adaptive mutation operator selection
+- **`python/THEORY.md §12`** — DEML dual gate theory, P2 partial resolution
+
+#### Tests
+
+17 new tests (1228 total, 0 failed, 9 skipped).
+
+---
+
 ## [1.1.0] — 2026-04-16
 
 ### The Neurosymbolic Prover

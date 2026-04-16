@@ -1071,6 +1071,31 @@ class EMLProverV2(EMLProver):
                 except Exception:
                     pass
         super().__init__(verbose=verbose, n_probe=n_probe, scorer=scorer)
+        # Bandit counters — track mutation operator success rates across explore() sessions.
+        self._mutation_tries: dict[str, int] = {}
+        self._mutation_hits:  dict[str, int] = {}
+
+    # ── Mutation bandit ──────────────────────────────────────────────────────
+
+    def mutation_stats(self) -> list[dict]:
+        """Return mutation operator statistics sorted by hit rate (descending).
+
+        Each entry has keys: ``mutation``, ``tried``, ``proved``, ``hit_rate``.
+        Only operators that have been tried at least once are included.
+
+        Returns:
+            list of dicts, sorted by hit_rate descending.
+        """
+        rows = []
+        for name, tried in self._mutation_tries.items():
+            proved = self._mutation_hits.get(name, 0)
+            rows.append({
+                "mutation": name,
+                "tried":    tried,
+                "proved":   proved,
+                "hit_rate": proved / tried if tried > 0 else 0.0,
+            })
+        return sorted(rows, key=lambda r: r["hit_rate"], reverse=True)
 
     # ── Conjecture generation ────────────────────────────────────────────────
 
@@ -1148,8 +1173,16 @@ class EMLProverV2(EMLProver):
                     continue
                 lo, hi = identity.domain
                 probe = _linspace(lo, hi, 500)
+                # Track bandit tries before numerical check
+                self._mutation_tries[mutation_name] = (
+                    self._mutation_tries.get(mutation_name, 0) + 1
+                )
                 ok, residual = _numerical_check(lhs_fn, rhs_fn, probe, threshold=1e-6)
                 if ok:
+                    # Numerically valid — count as a bandit hit at generation time
+                    self._mutation_hits[mutation_name] = (
+                        self._mutation_hits.get(mutation_name, 0) + 1
+                    )
                     novelty = 1.0 / (1.0 + residual * 1e6 + 0.1)
                     # Simplicity bonus: shorter expressions tend to have shorter
                     # EML witnesses — important when scorer is untrained.
@@ -1158,6 +1191,7 @@ class EMLProverV2(EMLProver):
                         novelty, simplicity,
                         f"auto_{mutation_name}_{identity.name[:20]}",
                         expr, cat, identity.domain,
+                        mutation_name,
                     ))
                     existing_exprs.add(expr)
 
@@ -1167,7 +1201,7 @@ class EMLProverV2(EMLProver):
         all_known = list(ALL_IDENTITIES) + _discovered
 
         def _score(c: tuple) -> float:
-            _nov, _simp, _name, _expr, _icat, _dom = c
+            _nov, _simp, _name, _expr, _icat, _dom, *_ = c
             node_count_proxy = max(1, len(_expr) // 10)
             return interestingness_score(1.0, node_count_proxy, _expr, all_known)
 
@@ -1175,7 +1209,7 @@ class EMLProverV2(EMLProver):
 
         results = []
         for row in candidates[:n]:
-            novelty, simplicity, name, expr, icat, domain = row
+            novelty, simplicity, name, expr, icat, domain, *_ = row
             node_count_proxy = max(1, len(expr) // 10)
             elg = elegance_score(node_count_proxy)
             nov = novelty_score(expr, all_known)

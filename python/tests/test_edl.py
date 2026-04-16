@@ -715,7 +715,7 @@ def test_markdown_table_custom_operators():
 
 def test_operators_importable_from_top():
     from monogate import ALL_OPERATORS, COMPLETE_OPERATORS, get_operator, compare_all, markdown_table
-    assert len(ALL_OPERATORS) == 5
+    assert len(ALL_OPERATORS) == 6  # EML, EDL, EXL, EAL, EMN, DEML
     assert len(COMPLETE_OPERATORS) == 2
 
 

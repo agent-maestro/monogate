@@ -33,11 +33,12 @@ import numpy as np
 
 # (name, gate_formula, constant_terminal, can_express_expx_natively)
 OPERATOR_META: dict[str, dict] = {
-    "EML": {"gate": "exp(a) − ln(b)",  "constant": 1.0,        "complete": True},
-    "EDL": {"gate": "exp(a) / ln(b)",  "constant": math.e,     "complete": True},
-    "EMN": {"gate": "ln(b) − exp(a)",  "constant": 1.0,        "complete": False},
-    "EXL": {"gate": "exp(a) × ln(b)",  "constant": math.e,     "complete": False},
-    "EAL": {"gate": "exp(a) + ln(b)",  "constant": 1.0,        "complete": False},
+    "EML":  {"gate": "exp(a) − ln(b)",  "constant": 1.0,        "complete": True},
+    "EDL":  {"gate": "exp(a) / ln(b)",  "constant": math.e,     "complete": True},
+    "EMN":  {"gate": "ln(b) − exp(a)",  "constant": 1.0,        "complete": False},
+    "EXL":  {"gate": "exp(a) × ln(b)",  "constant": math.e,     "complete": False},
+    "EAL":  {"gate": "exp(a) + ln(b)",  "constant": 1.0,        "complete": False},
+    "DEML": {"gate": "exp(−a) − ln(b)", "constant": 1.0,        "complete": False},
 }
 
 
@@ -106,12 +107,25 @@ def _eval_eal(node: dict, x: float) -> float:
     return math.exp(a) + math.log(b)
 
 
+def _eval_deml(node: dict, x: float) -> float:
+    op = node["op"]
+    if op == "leaf":
+        val = node["val"]
+        return x if val == "x" else float(val)
+    a = _eval_deml(node["left"],  x)
+    b = _eval_deml(node["right"], x)
+    if b <= 0.0:
+        raise ValueError(f"DEML ln domain: b={b}")
+    return math.exp(-a) - math.log(b)
+
+
 _EVAL_FNS: dict[str, Callable[[dict, float], float]] = {
-    "EML": _eval_eml,
-    "EDL": _eval_edl,
-    "EMN": _eval_emn,
-    "EXL": _eval_exl,
-    "EAL": _eval_eal,
+    "EML":  _eval_eml,
+    "EDL":  _eval_edl,
+    "EMN":  _eval_emn,
+    "EXL":  _eval_exl,
+    "EAL":  _eval_eal,
+    "DEML": _eval_deml,
 }
 
 
@@ -150,24 +164,24 @@ def make_operator_eval(op_name: str) -> Callable[[dict, float], float]:
 #   EMN: emn(x,1)=-exp(x); cannot express exp(x) natively
 
 PHYSICS_NODE_COUNTS: dict[str, dict[str, int | None]] = {
-    # function        EML    EDL    EXL    EAL    EMN
-    "exp(x)":       {"EML":  1, "EDL":  1, "EXL":  1, "EAL":  1, "EMN": None},
-    "exp(-x)":      {"EML": None, "EDL": None, "EXL": None, "EAL": None, "EMN": None},
-    "ln(x)":        {"EML":  3, "EDL":  3, "EXL":  1, "EAL": None, "EMN": None},
-    "1/x":          {"EML":  5, "EDL":  2, "EXL": None, "EAL": None, "EMN": None},
-    "x^1.5":        {"EML": 15, "EDL": 11, "EXL":  3, "EAL": None, "EMN": None},
-    "x^4":          {"EML": 15, "EDL": 11, "EXL":  3, "EAL": None, "EMN": None},
-    "x^2":          {"EML": 15, "EDL": 11, "EXL":  3, "EAL": None, "EMN": None},
-    "1/(exp(x)-1)": {"EML": 20, "EDL": 16, "EXL": None, "EAL": None, "EMN": None},
-    "1/(exp(x)+1)": {"EML": 20, "EDL": 16, "EXL": None, "EAL": None, "EMN": None},
-    "exp(-x^2)":    {"EML": None, "EDL": None, "EXL": None, "EAL": None, "EMN": None},
-    "x*exp(-x)":    {"EML": None, "EDL": None, "EXL": None, "EAL": None, "EMN": None},
+    # function        EML    EDL    EXL    EAL    EMN   DEML
+    "exp(x)":       {"EML":  1, "EDL":  1, "EXL":  1, "EAL":  1, "EMN": None, "DEML": None},
+    "exp(-x)":      {"EML": None, "EDL": None, "EXL": None, "EAL": None, "EMN": None, "DEML": 1},
+    "ln(x)":        {"EML":  3, "EDL":  3, "EXL":  1, "EAL": None, "EMN": None, "DEML":  3},
+    "1/x":          {"EML":  5, "EDL":  2, "EXL": None, "EAL": None, "EMN": None, "DEML": None},
+    "x^1.5":        {"EML": 15, "EDL": 11, "EXL":  3, "EAL": None, "EMN": None, "DEML": None},
+    "x^4":          {"EML": 15, "EDL": 11, "EXL":  3, "EAL": None, "EMN": None, "DEML": None},
+    "x^2":          {"EML": 15, "EDL": 11, "EXL":  3, "EAL": None, "EMN": None, "DEML": None},
+    "1/(exp(x)-1)": {"EML": 20, "EDL": 16, "EXL": None, "EAL": None, "EMN": None, "DEML": None},
+    "1/(exp(x)+1)": {"EML": 20, "EDL": 16, "EXL": None, "EAL": None, "EMN": None, "DEML": None},
+    "exp(-x^2)":    {"EML": None, "EDL": None, "EXL": None, "EAL": None, "EMN": None, "DEML": None},
+    "x*exp(-x)":    {"EML": None, "EDL": None, "EXL": None, "EAL": None, "EMN": None, "DEML": None},
 }
 
 
 def node_count_table() -> str:
     """Return a GitHub-Flavored Markdown table of physics function node counts."""
-    operators = ["EML", "EDL", "EXL", "EAL", "EMN"]
+    operators = ["EML", "EDL", "EXL", "EAL", "EMN", "DEML"]
     header = "| Function | " + " | ".join(operators) + " |"
     sep    = "|----------|" + "|".join([":-----:"] * len(operators)) + "|"
     rows   = [header, sep]
