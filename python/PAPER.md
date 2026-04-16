@@ -3,6 +3,8 @@
 > **Status:** Internal research document — superseded by the arXiv preprint
 > `paper/preprint.tex` (v0.9.0, April 2026). This file is preserved as a working
 > notes document. The preprint is the authoritative version.
+> **Last updated:** v0.12.0-dev (April 2026). New modules (special, leaderboard, pinn,
+> interval, sympy_bridge, Streamlit demo) are documented in Section 10.
 
 ## Abstract
 
@@ -24,9 +26,9 @@ We also document four empirical findings with sharp quantitative results:
 
 4. **Performance kernels.** `FusedEMLActivation` (3.6×) and a Rust/PyO3 extension `monogate-core` (5.9×) make EML competitive with native activations in PyTorch. `EMLLayer(compiled=True)` auto-selects the fastest available backend.
 
-We release **monogate** v0.9.0 (Python + JavaScript) with full support for EML, EDL, EXL, and the `BEST` hybrid, including a browser explorer with live BEST mode, an interactive code optimizer, a `best_optimize()` Python API, `monogate.search` stochastic search module, and a drop-in PyTorch `EMLLayer` (593 passing tests).
+We release **monogate** v0.12.0-dev (Python + JavaScript) with full support for EML, EDL, EXL, and the `BEST` hybrid, including: a browser explorer (monogate.dev), an interactive code optimizer, a `best_optimize()` Python API, `monogate.search` stochastic search, a drop-in PyTorch `EMLLayer`, 15 pre-computed special functions (`monogate.special`), a symbolic regression leaderboard (`monogate.leaderboard`), extended PINN support for 7 differential equations (`monogate.pinn`), certified interval arithmetic (`monogate.interval`), SymPy interoperability (`monogate.sympy_bridge`), and a 5-tab Streamlit web demo (`streamlit_app.py`) — 913 passing tests.
 
-**Code:** https://github.com/almaguer1986/monogate · **PyPI:** `pip install monogate==0.9.0`
+**Code:** https://github.com/almaguer1986/monogate · **PyPI:** `pip install monogate`
 **Preprint:** `paper/preprint.tex` — arXiv:ARXIV_ID_PLACEHOLDER
 
 ---
@@ -432,13 +434,15 @@ cd monogate-core && pip install maturin && maturin develop --release
 
 The `BEST` hybrid demonstrates that intelligently combining variants of EML can produce substantially more efficient and stable trees than any single operator. The released `monogate` library makes these techniques immediately usable in both Python and the browser, with Rust-accelerated kernels for production use.
 
-**Confirmed results (v0.9.0):**
-- Phantom attractors trap 100% (40/40) of gradient-based EMLTree fits without regularization; λ_crit = 0.001 eliminates them entirely (sharp phase transition)
+**Confirmed results (v0.12.0-dev):**
+- Phantom attractors trap 100% (40/40) of gradient-based EMLTree fits without regularization; λ_crit = 0.001 eliminates them entirely (sharp phase transition); phenomenon confirmed EML-specific (not present in Taylor/Padé/CF bases)
 - **281,026,468 EML trees (N ≤ 11, terminals {1, x}) contain no real-valued construction of sin(x)**; the Infinite Zeros Barrier theorem rules this out for all N
-- **Complex bypass found:** `Im(eml(i·x, 1)) = sin(x)` exactly (1 node, machine precision)
+- **Complex bypass found:** `Im(eml(i·x, 1)) = sin(x)` exactly (1 node, machine precision); extends to all functions with infinitely many real zeros (Bessel J₀, Airy Ai, erf)
 - BEST routing delivers 2.8× wall-clock speedup on sin/cos-heavy Python code
 - Rust backend: 5.9× throughput over baseline; FusedEMLActivation: 3.6× (no Rust required)
 - MCTS finds exact solutions (MSE=0) for targets like `exp(x)` in <1s, avoiding phantom attractors
+- Free-particle Schrödinger u(x) = exp(ikx) = 1 CBEST node (Euler path identity extended to physics)
+- 15 special functions catalogued with CBEST/BEST node counts in `monogate.special`
 
 **Open problems:**
 - **N=12 real-valued search** — ~1.7 billion trees; requires GPU/distributed evaluation (Barrier theorem already rules out matches, but empirical confirmation has value)
@@ -453,4 +457,86 @@ Odrzywołek, A. (2026). All elementary functions from a single binary operator. 
 
 Almaguer, A. (2026). Practical extensions to the EML universal operator: hybrid routing, phantom attractors, performance kernels, and the N=11 sin barrier. arXiv:ARXIV_ID_PLACEHOLDER.
 
-monogate repository: https://github.com/almaguer1986/monogate · v0.9.0
+monogate repository: https://github.com/almaguer1986/monogate · v0.12.0-dev
+
+---
+
+## 10. Extensions (v0.10.0–v0.12.0-dev)
+
+### 10.1 `monogate.special` — Special Function Catalog
+
+15 pre-computed CBEST/BEST expressions for special functions:
+
+| Function | Nodes | Backend | Max error | Notes |
+|----------|-------|---------|-----------|-------|
+| sin, cos | 1 | CBEST | 1e-15 | Exact via Euler path Im/Re(eml(ix,1)) |
+| sinh, cosh | 9, 15 | BEST | 1e-14 | Algebraic via exp(x) and recip |
+| tanh, sech | 8, 16 | BEST | 1e-14 | Exact algebraic |
+| erf | 5 | CBEST | 1.5e-2 | tanh(1.2025x) approximation |
+| Fresnel S/C integrand | 2 | CBEST | 1e-15 | Im/Re(eml(i·πx²/2, 1)) |
+| Fresnel S/C | 2 | CBEST | 1e-6 | Quadrature of integrand |
+| Bessel J₀ | 7 | CBEST | 1e-4 | Complex MCTS depth-3 tree |
+| Airy Ai | 9 | CBEST | 2e-3 | Complex MCTS depth-3 tree |
+| lgamma | 12 | BEST | 1e-9 | Stirling series |
+| digamma | 14 | BEST | 1e-8 | Central differences of lgamma |
+
+**Key identity:** `fresnel_s_integrand(x) = Im(eml(i·πx²/2, 1))` — 2 CBEST nodes, exact.
+This extends the Euler-path construction from sin(x) to the entire Fresnel family.
+
+### 10.2 `monogate.leaderboard` — Symbolic Regression Benchmark
+
+10 Nguyen/Keijzer benchmark problems tracked against MCTS and beam search.
+`run_leaderboard()` produces a sortable table of formulas, node counts, and MSEs.
+GitHub Actions workflow (`.github/workflows/leaderboard.yml`) runs daily auto-refresh.
+
+### 10.3 `monogate.pinn` — Extended Physics-Informed Networks
+
+7 equations now supported (was 3):
+
+| Equation | Formula | Key result |
+|----------|---------|------------|
+| harmonic | u'' + ω²u = 0 | — |
+| burgers | u·u' − ν·u'' = 0 | — |
+| heat | u'' = 0 | — |
+| **schrodinger** | −u'' = k²u | exp(ikx) = **1 CBEST node** |
+| **kdv_soliton** | u' − 6u·u' − u''' = 0 | — |
+| **nls** | u'' + |u|²u = 0 | — |
+| **lotka_volterra** | u'' + α·u' + β·u·u' = 0 | — |
+
+The Schrödinger result `exp(ikx) = Im(eml(ix, 1))` extends the Euler-path identity
+from pure mathematics to a physics equation. One CBEST node solves the free-particle problem.
+
+### 10.4 `monogate.interval` — Certified Interval Arithmetic
+
+Tight certified bounds propagated through EML trees using monotonicity of exp/ln:
+
+```
+eml_interval([a_lo, a_hi], [b_lo, b_hi]) = [exp(a_lo) − ln(b_hi), exp(a_hi) − ln(b_lo)]
+```
+
+`bound_expression(expr_str, x_lo, x_hi)` parses a formula string and returns certified bounds.
+
+### 10.5 `monogate.sympy_bridge` — SymPy Interoperability
+
+`to_sympy(tree)`, `from_sympy(expr)`, `simplify_eml(tree)`, `latex_eml(tree)`, `verify_identity(t1, t2)`.
+Optional dep: `pip install monogate[sympy]`.
+
+### 10.6 Streamlit Web Demo (`streamlit_app.py`)
+
+5-tab interactive demo deployable to Streamlit Cloud (no torch required for base demo):
+
+1. **Optimizer** — BEST savings table + rewritten code snippet
+2. **Special Functions** — CATALOG browser; EML vs reference + log-error plot
+3. **PINN Demo** — run `fit_pinn()` interactively for all 7 equations; graceful fallback without torch
+4. **MCTS Explorer** — configure and run `mcts_search()`; convergence plot; session-cached results
+5. **Phantom Attractor** — pre-computed phase-transition chart from `attractor_phase_transition.json`
+
+Run: `streamlit run streamlit_app.py` (install: `pip install -r requirements.txt`).
+
+### 10.7 Attractor Generalization
+
+`experiments/attractor_generalization.py` confirms the phantom attractor at ~3.1696 is
+**EML tree topology-specific**: Taylor-series, Padé, and continued-fraction bases fitted to π
+with identical seeds and learning rates do not exhibit the phantom attractor phenomenon.
+This strengthens the characterization: the false basin arises from the nested exp/ln structure
+of EML trees, not from gradient descent or the Adam optimizer in general.
