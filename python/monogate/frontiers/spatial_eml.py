@@ -1,18 +1,15 @@
 """
-spatial_eml.py — Session 42: EML Symbolic Regression for Spatial Functions
+spatial_eml.py — Sessions 42-43: EML Symbolic Regression for Spatial Functions
 
-Bridges the gap between the (proven) EML density theorem and 2D coordinate-based
-tasks.  Strategy: reduce smooth 2D spatial functions to 1D via principled
-projections, then run existing MCTS/beam search to discover compact EML formulas.
+Session 42: Radial/axis reduction — project 2D targets to 1D and run existing
+           MCTS to discover compact formulas. EML-SIREN vs sin-SIREN benchmark.
 
-Supported reduction modes:
-  radial   — for rotationally symmetric functions f(x,y) = g(sqrt(x²+y²))
-  axis     — for separable or axis-aligned functions; projects onto dominant axis
-  diagonal — for functions varying primarily along x+y or x-y
+Session 43: Bivariate EML grammar — extend MCTS leaf set to {x, y, constants},
+           run true 2D symbolic regression without any dimensionality reduction.
+           Also: symbolic distillation of trained EML-SIREN models.
 
 Reference: EML Weierstrass Theorem guarantees density in C([a,b]^n) for all n,
-so any smooth 2D field has an EML approximation — we just need to find its
-most compact 1D reduction for tractable search.
+so any smooth 2D field has an EML approximation discoverable by bivariate MCTS.
 """
 
 from __future__ import annotations
@@ -24,8 +21,17 @@ from typing import Callable
 
 import numpy as np
 
+import random
+from dataclasses import dataclass as _dc_import  # avoid name clash
+
 from monogate.search.mcts import mcts_search, MCTSResult
 from monogate.search.mcts import beam_search, BeamResult, _eval_tree
+from monogate.search.mcts import (
+    _leaf, _eml, _placeholder, _copy,
+    _is_complete, _depth, _formula,
+    _first_placeholder_path, _set_at_path,
+    _MCTSNode, Node,
+)
 from monogate.frontiers.eml_complexity import classify_function
 
 
@@ -534,4 +540,628 @@ def print_results_table(results: list[SpatialSRResult]) -> None:
         formula_trunc = r.formula_1d[:38] + "..." if len(r.formula_1d) > 40 else r.formula_1d
         print(f"  {r.target_name:<20} {r.reduction_mode:<10} {mse_str:<12} {linf_str:<12} {r.eml_k_class:<12} {formula_trunc}")
     print("=" * 90)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Session 43 — Bivariate EML Grammar
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Leaf set extended with "y" — true 2D search, no projection needed.
+_TERMINALS_2D: list = [1.0, "x", "y", 2.0, -1.0, 0.5]
+
+
+def _eval_tree_2d(node: Node, x: float, y: float) -> float:
+    """Evaluate a bivariate EML tree at (x, y).
+
+    Extends the 1D evaluator: leaf "y" returns the y-coordinate.
+    All other ops are identical to the univariate case.
+    """
+    op = node["op"]
+    if op == "leaf":
+        val = node["val"]
+        if val == "x":
+            return x
+        if val == "y":
+            return y
+        return float(val)
+    if op == "?":
+        raise ValueError("Incomplete tree")
+    a = _eval_tree_2d(node["left"],  x, y)
+    b = _eval_tree_2d(node["right"], x, y)
+    if b <= 0.0:
+        raise ValueError(f"ln domain error: b={b}")
+    return math.exp(a) - math.log(b)
+
+
+def _score_2d(
+    node: Node,
+    probe_xy: list[tuple[float, float]],
+    probe_z:  list[float],
+) -> float:
+    """MSE of bivariate tree against probe points.  Returns inf on any error."""
+    if not _is_complete(node):
+        return float("inf")
+    sq_sum = 0.0
+    n_ok = 0
+    for (px, py), pz in zip(probe_xy, probe_z):
+        try:
+            pred = _eval_tree_2d(node, px, py)
+            if math.isfinite(pred):
+                sq_sum += (pred - pz) ** 2
+                n_ok += 1
+        except Exception:
+            pass
+    return sq_sum / n_ok if n_ok > 0 else float("inf")
+
+
+def _expand_options_2d(node: Node, max_depth: int) -> list[Node]:
+    """Bivariate grammar expansions — same as 1D but uses _TERMINALS_2D."""
+    path = _first_placeholder_path(node)
+    if path is None:
+        return []
+    options: list[Node] = []
+    for t in _TERMINALS_2D:
+        options.append(_set_at_path(node, path, _leaf(t)))
+    if _depth(node) + 1 < max_depth:
+        options.append(_set_at_path(node, path, _eml(_placeholder(), _placeholder())))
+    return options
+
+
+def _random_complete_2d(partial: Node, depth_budget: int, rng: random.Random) -> Node:
+    """Randomly complete a bivariate partial tree."""
+    node = _copy(partial)
+    for _ in range(300):
+        path = _first_placeholder_path(node)
+        if path is None:
+            break
+        if _depth(node) >= depth_budget - 1:
+            replacement = _leaf(rng.choice(_TERMINALS_2D))
+        else:
+            replacement = (
+                _leaf(rng.choice(_TERMINALS_2D))
+                if rng.random() < 0.6
+                else _eml(_placeholder(), _placeholder())
+            )
+        node = _set_at_path(node, path, replacement)
+    for _ in range(200):
+        path = _first_placeholder_path(node)
+        if path is None:
+            break
+        node = _set_at_path(node, path, _leaf(rng.choice(_TERMINALS_2D)))
+    return node
+
+
+@dataclass
+class BivariateMCTSResult:
+    """Result of bivariate EML MCTS search."""
+    best_tree:    Node
+    best_mse:     float
+    best_formula: str
+    n_simulations: int
+    elapsed_s:    float
+    history:      list[tuple[int, float]] = field(default_factory=list)
+
+    def eval(self, x: float, y: float) -> float:
+        try:
+            return _eval_tree_2d(self.best_tree, x, y)
+        except Exception:
+            return float("nan")
+
+
+def mcts_search_2d(
+    target_fn:    Callable[[float, float], float],
+    probe_points: list[tuple[float, float]] | None = None,
+    depth:        int = 5,
+    n_simulations: int = 5000,
+    seed:         int = 42,
+    log_every:    int = 0,
+    domain:       float = 2.0,
+) -> BivariateMCTSResult:
+    """Monte-Carlo Tree Search over the bivariate EML grammar.
+
+    Finds the compact EML expression tree in variables {x, y, constants} that
+    minimises MSE against target_fn on probe_points.  No dimensionality
+    reduction — true 2D symbolic regression.
+
+    The leaf set {x, y, 1.0, 2.0, -1.0, 0.5} enables the grammar to express:
+      circle_sdf    = sqrt(x²+y²) - 1  (via deep trees at depth>=5)
+      gaussian_2d   = exp(-(x²+y²)/c)  (via nested eml nodes)
+      inverse_sq    = 1/(x²+y²+eps)    (EML-≥1 in radius)
+
+    Args:
+        target_fn:     2D target: (x, y) -> z
+        probe_points:  List of (x, y) pairs. Default: 7x7 grid + boundary ring.
+        depth:         Max tree depth.
+        n_simulations: MCTS simulations.
+        seed:          Random seed.
+        log_every:     Print progress every N sims (0=silent).
+        domain:        If probe_points is None, sample on [-domain, domain]^2.
+
+    Returns:
+        BivariateMCTSResult with best_tree, best_formula, best_mse.
+    """
+    if probe_points is None:
+        probe_points = _default_probe_2d(domain)
+
+    probe_z = []
+    valid_pts: list[tuple[float, float]] = []
+    for px, py in probe_points:
+        try:
+            z = target_fn(float(px), float(py))
+            if math.isfinite(z):
+                probe_z.append(z)
+                valid_pts.append((px, py))
+        except Exception:
+            pass
+    probe_points = valid_pts
+
+    rng = random.Random(seed)
+    t0  = time.perf_counter()
+
+    # Bootstrap _MCTSNode with 2D expansions
+    class _MCTSNode2D:
+        __slots__ = ("partial", "parent", "children", "visits", "total_reward",
+                     "untried_expansions", "is_terminal")
+
+        def __init__(self, partial: Node, parent, max_depth: int) -> None:
+            self.partial = partial
+            self.parent  = parent
+            self.children: list[_MCTSNode2D] = []
+            self.visits: int = 0
+            self.total_reward: float = 0.0
+            self.is_terminal: bool = _is_complete(partial)
+            self.untried_expansions: list[Node] = (
+                [] if self.is_terminal else _expand_options_2d(partial, max_depth)
+            )
+
+        def ucb1(self) -> float:
+            if self.visits == 0:
+                return float("inf")
+            parent_v = self.parent.visits if self.parent else self.visits
+            return (self.total_reward / self.visits
+                    + math.sqrt(2.0) * math.sqrt(math.log(parent_v) / self.visits))
+
+        def is_fully_expanded(self) -> bool:
+            return len(self.untried_expansions) == 0
+
+        def best_child(self):
+            return max(self.children, key=lambda c: c.ucb1())
+
+    root = _MCTSNode2D(_placeholder(), parent=None, max_depth=depth)
+    best_node: Node  = _leaf(1.0)
+    best_mse:  float = float("inf")
+    history:   list[tuple[int, float]] = []
+
+    for sim in range(1, n_simulations + 1):
+        node = root
+        while node.is_fully_expanded() and node.children and not node.is_terminal:
+            node = node.best_child()
+
+        if not node.is_terminal and node.untried_expansions:
+            expansion = node.untried_expansions.pop(rng.randrange(len(node.untried_expansions)))
+            child = _MCTSNode2D(expansion, parent=node, max_depth=depth)
+            node.children.append(child)
+            node = child
+
+        if node.is_terminal:
+            completed = node.partial
+        else:
+            completed = _random_complete_2d(node.partial, depth, rng)
+
+        mse = _score_2d(completed, probe_points, probe_z)
+        reward = 1.0 / (1.0 + mse)
+
+        if mse < best_mse:
+            best_mse  = mse
+            best_node = completed
+
+        n = node
+        while n is not None:
+            n.visits       += 1
+            n.total_reward += reward
+            n = n.parent
+
+        if log_every and sim % log_every == 0:
+            print(f"  2D sim {sim:>6}/{n_simulations}  best_mse={best_mse:.4e}"
+                  f"  formula={_formula(best_node)}")
+        if sim % max(1, n_simulations // 20) == 0:
+            history.append((sim, best_mse))
+
+    return BivariateMCTSResult(
+        best_tree=best_node,
+        best_mse=best_mse,
+        best_formula=_formula(best_node),
+        n_simulations=n_simulations,
+        elapsed_s=time.perf_counter() - t0,
+        history=history,
+    )
+
+
+def _default_probe_2d(domain: float, n_grid: int = 7) -> list[tuple[float, float]]:
+    """Default 2D probe points: regular grid + boundary ring for SDF targets."""
+    pts: list[tuple[float, float]] = []
+    # 7x7 regular grid
+    vals = [-domain + 2 * domain * i / (n_grid - 1) for i in range(n_grid)]
+    for x in vals:
+        for y in vals:
+            pts.append((x, y))
+    # Boundary ring at r=1 (important for SDF targets)
+    for k in range(12):
+        angle = 2 * math.pi * k / 12
+        pts.append((math.cos(angle), math.sin(angle)))
+    return pts
+
+
+@dataclass
+class Bivariate2DResult:
+    """Result of bivariate fit_spatial_eml_2d()."""
+    target_name:  str
+    formula:      str              # EML formula in x, y
+    mse_2d:       float
+    l_inf_2d:     float
+    eml_k_class:  str
+    n_nodes:      int              # internal EML node count
+    n_simulations: int
+    elapsed_s:    float
+    grid_size:    int
+    domain:       float
+    raw_result:   BivariateMCTSResult | None = None
+    error:        str | None = None
+
+    def eval(self, x: float, y: float) -> float:
+        if self.raw_result is None:
+            return float("nan")
+        return self.raw_result.eval(x, y)
+
+
+def fit_spatial_eml_2d(
+    target: SpatialTarget,
+    n_simulations: int = 5000,
+    depth: int = 5,
+    grid_size: int = 64,
+    seed: int = 42,
+    verbose: bool = True,
+) -> Bivariate2DResult:
+    """Fit a bivariate EML formula to a 2D spatial target.
+
+    Uses the full {x, y, constants} leaf set — no radial reduction.
+    Proves or approximates the target directly in 2D.
+
+    Args:
+        target:        SpatialTarget to fit.
+        n_simulations: MCTS simulations.
+        depth:         Max EML tree depth (5-6 recommended for SDFs).
+        grid_size:     Test grid resolution for MSE/L∞ evaluation.
+        seed:          Random seed.
+        verbose:       Print progress.
+
+    Returns:
+        Bivariate2DResult with formula, errors, EML-k class, node count.
+    """
+    domain = float(target.domain)
+
+    if verbose:
+        print(f"[bivariate] Fitting: {target.name}  depth={depth}  n_sim={n_simulations}")
+
+    probe_pts = _default_probe_2d(domain)
+
+    t0 = time.perf_counter()
+    try:
+        raw = mcts_search_2d(
+            target_fn=target.fn,
+            probe_points=probe_pts,
+            depth=depth,
+            n_simulations=n_simulations,
+            seed=seed,
+            domain=domain,
+        )
+        formula = raw.best_formula
+        mse_raw = raw.best_mse
+    except Exception as e:
+        elapsed = time.perf_counter() - t0
+        return Bivariate2DResult(
+            target_name=target.name,
+            formula="(failed)",
+            mse_2d=float("inf"),
+            l_inf_2d=float("inf"),
+            eml_k_class="unknown",
+            n_nodes=0,
+            n_simulations=n_simulations,
+            elapsed_s=elapsed,
+            grid_size=grid_size,
+            domain=domain,
+            raw_result=None,
+            error=str(e),
+        )
+    elapsed = time.perf_counter() - t0
+
+    # Evaluate on dense 2D test grid
+    xs = np.linspace(-domain, domain, grid_size)
+    ys = np.linspace(-domain, domain, grid_size)
+    sq_errs: list[float] = []
+    for xi in xs:
+        for yi in ys:
+            try:
+                true_v = target.fn(float(xi), float(yi))
+                pred_v = raw.eval(float(xi), float(yi))
+                if math.isfinite(true_v) and math.isfinite(pred_v):
+                    sq_errs.append((pred_v - true_v) ** 2)
+            except Exception:
+                pass
+    mse_2d  = float(np.mean(sq_errs)) if sq_errs else float("inf")
+    l_inf_2d = float(np.sqrt(max(sq_errs))) if sq_errs else float("inf")
+
+    # EML-k classification via 1D slice along x-axis (y=0)
+    eml_k = "unknown"
+    try:
+        def _slice_x(x: float) -> float:
+            return raw.eval(x, 0.0)
+        cls = classify_function(_slice_x, domain=(0.05, domain - 0.05))
+        eml_k = cls.get("complexity_class", "unknown")
+    except Exception:
+        pass
+
+    # Node count from formula string
+    n_nodes = formula.count("eml(")
+
+    if verbose:
+        print(f"  formula: {formula[:60]}...")
+        print(f"  MSE-2D={mse_2d:.3e}  L-inf={l_inf_2d:.3e}  nodes={n_nodes}  [{eml_k}]")
+
+    return Bivariate2DResult(
+        target_name=target.name,
+        formula=formula,
+        mse_2d=mse_2d,
+        l_inf_2d=l_inf_2d,
+        eml_k_class=eml_k,
+        n_nodes=n_nodes,
+        n_simulations=n_simulations,
+        elapsed_s=elapsed,
+        grid_size=grid_size,
+        domain=domain,
+        raw_result=raw,
+        error=None,
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Session 43 — Symbolic Distillation of Coordinate Networks
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@dataclass
+class DistillationResult:
+    """Result of distilling a trained neural network into a bivariate EML formula."""
+    model_name:       str
+    target_name:      str
+    formula:          str          # discovered EML formula
+    distill_mse:      float        # MSE between formula and network output
+    network_mse:      float        # original network MSE vs ground truth
+    formula_vs_truth: float        # formula MSE vs ground truth (end-to-end)
+    fidelity:         float        # 1 - distill_mse / network_var (how well we captured the net)
+    n_nodes:          int
+    n_params:         int
+    compression_ratio: float       # n_params / n_nodes
+    eml_k_class:      str
+    n_simulations:    int
+    elapsed_s:        float
+    raw_result:       BivariateMCTSResult | None = None
+    error:            str | None = None
+
+
+def distill_network(
+    model,                              # trained PyTorch nn.Module
+    target: SpatialTarget,
+    model_name: str = "network",
+    n_simulations: int = 5000,
+    depth: int = 5,
+    grid_size: int = 48,
+    seed: int = 42,
+    verbose: bool = True,
+) -> DistillationResult:
+    """Distill a trained 2D coordinate network into a compact bivariate EML formula.
+
+    Pipeline:
+      1. Sample the network densely on a 2D grid -> Z_net
+      2. Create target_fn_net(x, y) via grid interpolation
+      3. Run mcts_search_2d to find best EML formula for Z_net
+      4. Evaluate: formula vs network (distillation fidelity)
+                   formula vs ground truth (end-to-end quality)
+      5. EML-k classify the distilled formula
+
+    Args:
+        model:         Trained PyTorch model: input (N, 2) -> output (N, 1)
+        target:        SpatialTarget for ground truth comparison
+        model_name:    Name for reporting
+        n_simulations: MCTS budget for distillation search
+        depth:         Max EML tree depth
+        grid_size:     Sampling grid for the network
+        seed:          Random seed
+        verbose:       Print progress
+
+    Returns:
+        DistillationResult with formula, fidelity scores, compression ratio.
+    """
+    try:
+        import torch
+    except ImportError:
+        return DistillationResult(
+            model_name=model_name, target_name=target.name,
+            formula="(torch not available)", distill_mse=float("inf"),
+            network_mse=float("inf"), formula_vs_truth=float("inf"),
+            fidelity=0.0, n_nodes=0, n_params=0, compression_ratio=0.0,
+            eml_k_class="unknown", n_simulations=n_simulations, elapsed_s=0.0,
+            error="torch not installed",
+        )
+
+    domain = float(target.domain)
+    if verbose:
+        print(f"[distill] {model_name} -> EML  target={target.name}  n_sim={n_simulations}")
+
+    # ── Sample the network on a 2D grid ──────────────────────────────────────
+    xs = np.linspace(-domain, domain, grid_size)
+    ys = np.linspace(-domain, domain, grid_size)
+    xy_list, z_net_list, z_true_list = [], [], []
+
+    with torch.no_grad():
+        for xi in xs:
+            for yi in ys:
+                try:
+                    z_true = target.fn(float(xi), float(yi))
+                    if not math.isfinite(z_true):
+                        continue
+                    xy_list.append([float(xi), float(yi)])
+                    z_true_list.append(z_true)
+                except Exception:
+                    pass
+
+        if not xy_list:
+            return DistillationResult(
+                model_name=model_name, target_name=target.name,
+                formula="(no valid grid points)", distill_mse=float("inf"),
+                network_mse=float("inf"), formula_vs_truth=float("inf"),
+                fidelity=0.0, n_nodes=0, n_params=0, compression_ratio=0.0,
+                eml_k_class="unknown", n_simulations=n_simulations, elapsed_s=0.0,
+                error="no valid grid points",
+            )
+
+        xy_t    = torch.tensor(xy_list, dtype=torch.float32)
+        z_pred  = model(xy_t).squeeze().numpy()
+        z_true  = np.array(z_true_list)
+
+    # Network MSE vs ground truth
+    network_mse = float(np.mean((z_pred - z_true) ** 2))
+
+    # ── Build interpolated target_fn for distillation ─────────────────────────
+    xy_arr = np.array(xy_list)
+    from scipy.interpolate import LinearNDInterpolator
+    try:
+        interp = LinearNDInterpolator(xy_arr, z_pred, fill_value=float("nan"))
+        def target_fn_net(x: float, y: float) -> float:
+            val = float(interp([[x, y]])[0])
+            if not math.isfinite(val):
+                raise ValueError("out of interpolation domain")
+            return val
+    except ImportError:
+        # Fallback: nearest-neighbor via numpy
+        def target_fn_net(x: float, y: float) -> float:
+            dists = (xy_arr[:, 0] - x)**2 + (xy_arr[:, 1] - y)**2
+            idx = int(np.argmin(dists))
+            return float(z_pred[idx])
+
+    # ── Run bivariate MCTS on network output ─────────────────────────────────
+    probe_pts = _default_probe_2d(domain)
+    t0 = time.perf_counter()
+    try:
+        raw = mcts_search_2d(
+            target_fn=target_fn_net,
+            probe_points=probe_pts,
+            depth=depth,
+            n_simulations=n_simulations,
+            seed=seed,
+            domain=domain,
+        )
+    except Exception as e:
+        elapsed = time.perf_counter() - t0
+        return DistillationResult(
+            model_name=model_name, target_name=target.name,
+            formula="(search failed)", distill_mse=float("inf"),
+            network_mse=network_mse, formula_vs_truth=float("inf"),
+            fidelity=0.0, n_nodes=0,
+            n_params=sum(p.numel() for p in model.parameters()),
+            compression_ratio=0.0, eml_k_class="unknown",
+            n_simulations=n_simulations, elapsed_s=elapsed, error=str(e),
+        )
+    elapsed = time.perf_counter() - t0
+
+    # ── Evaluate distillation quality ─────────────────────────────────────────
+    formula_vs_net: list[float] = []
+    formula_vs_truth_errs: list[float] = []
+    for (xi, yi), zn, zt in zip(xy_list, z_pred, z_true):
+        try:
+            pred = raw.eval(float(xi), float(yi))
+            if math.isfinite(pred):
+                formula_vs_net.append((pred - zn) ** 2)
+                formula_vs_truth_errs.append((pred - zt) ** 2)
+        except Exception:
+            pass
+
+    distill_mse       = float(np.mean(formula_vs_net)) if formula_vs_net else float("inf")
+    formula_vs_truth  = float(np.mean(formula_vs_truth_errs)) if formula_vs_truth_errs else float("inf")
+    net_var           = float(np.var(z_pred)) if len(z_pred) > 1 else 1.0
+    fidelity          = max(0.0, 1.0 - distill_mse / net_var) if net_var > 0 else 0.0
+
+    # EML-k classify
+    eml_k = "unknown"
+    try:
+        def _slice(x: float) -> float:
+            return raw.eval(x, 0.0)
+        cls = classify_function(_slice, domain=(0.05, domain - 0.05))
+        eml_k = cls.get("complexity_class", "unknown")
+    except Exception:
+        pass
+
+    n_nodes  = raw.best_formula.count("eml(")
+    n_params = sum(p.numel() for p in model.parameters())
+    compression = n_params / max(n_nodes, 1)
+
+    if verbose:
+        print(f"  formula:         {raw.best_formula[:60]}...")
+        print(f"  distill_mse:     {distill_mse:.3e}  (formula vs network)")
+        print(f"  formula_vs_truth:{formula_vs_truth:.3e}  (formula vs ground truth)")
+        print(f"  network_mse:     {network_mse:.3e}  (network vs ground truth)")
+        print(f"  fidelity:        {fidelity:.3f}  compression: {n_params}/{n_nodes} = {compression:.0f}x")
+        print(f"  EML-k:           {eml_k}")
+
+    return DistillationResult(
+        model_name=model_name,
+        target_name=target.name,
+        formula=raw.best_formula,
+        distill_mse=distill_mse,
+        network_mse=network_mse,
+        formula_vs_truth=formula_vs_truth,
+        fidelity=fidelity,
+        n_nodes=n_nodes,
+        n_params=n_params,
+        compression_ratio=compression,
+        eml_k_class=eml_k,
+        n_simulations=n_simulations,
+        elapsed_s=elapsed,
+        raw_result=raw,
+    )
+
+
+def print_bivariate_table(results: list[Bivariate2DResult]) -> None:
+    """Print Session 43 bivariate results table."""
+    print()
+    print("=" * 95)
+    print("  Session 43 — Bivariate EML Grammar: True 2D Symbolic Regression")
+    print("=" * 95)
+    header = f"  {'Target':<20} {'MSE-2D':<12} {'L-inf':<12} {'Nodes':<8} {'EML-k':<12} {'Formula'}"
+    print(header)
+    print("  " + "-" * 91)
+    for r in results:
+        mse_s  = f"{r.mse_2d:.3e}" if math.isfinite(r.mse_2d) else "FAILED"
+        linf_s = f"{r.l_inf_2d:.3e}" if math.isfinite(r.l_inf_2d) else "FAILED"
+        fml    = r.formula[:35] + "..." if len(r.formula) > 37 else r.formula
+        print(f"  {r.target_name:<20} {mse_s:<12} {linf_s:<12} {r.n_nodes:<8} {r.eml_k_class:<12} {fml}")
+    print("=" * 95)
+    print()
+
+
+def print_distillation_table(results: list[DistillationResult]) -> None:
+    """Print symbolic distillation comparison table."""
+    print()
+    print("=" * 100)
+    print("  Session 43 — Symbolic Distillation: EML-SIREN -> Compact Formula")
+    print("=" * 100)
+    print(f"  {'Target':<18} {'Model':<20} {'Net MSE':<10} {'Formula MSE':<13} {'Fidelity':<10} {'Nodes':<7} {'Compression'}")
+    print("  " + "-" * 95)
+    for r in results:
+        nm  = f"{r.network_mse:.2e}"
+        fm  = f"{r.formula_vs_truth:.2e}"
+        fid = f"{r.fidelity:.3f}"
+        cmp = f"{r.compression_ratio:.0f}x"
+        print(f"  {r.target_name:<18} {r.model_name:<20} {nm:<10} {fm:<13} {fid:<10} {r.n_nodes:<7} {cmp}")
+    print("=" * 100)
+    print()
     print()

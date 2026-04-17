@@ -11,11 +11,14 @@ from .eml_fourier import (
     build_eml_dictionary, eml_fourier_search, fourier_summary_table,
 )
 from .spatial_eml import (
-    SpatialTarget, SpatialSRResult,
+    SpatialTarget, SpatialSRResult, Bivariate2DResult, DistillationResult,
+    BivariateMCTSResult,
     CIRCLE_SDF, ELLIPSE_SDF, GAUSSIAN_2D, RING_SDF, INVERSE_SQ, AXIS_WAVE,
     ALL_TARGETS,
     fit_spatial_eml, eval_on_grid, formula_to_2d, print_results_table,
     radial_reduce, axis_reduce, reconstruct_radial, pareto_analysis,
+    mcts_search_2d, fit_spatial_eml_2d, distill_network,
+    print_bivariate_table, print_distillation_table,
 )
 
 __all__ = [
@@ -25,9 +28,12 @@ __all__ = [
     "zero_order_at", "classify_function", "complexity_table",
     "EMLBasisAtom", "EMLFourierResult",
     "build_eml_dictionary", "eml_fourier_search", "fourier_summary_table",
-    "SpatialTarget", "SpatialSRResult",
+    "SpatialTarget", "SpatialSRResult", "Bivariate2DResult", "DistillationResult",
+    "BivariateMCTSResult",
     "CIRCLE_SDF", "ELLIPSE_SDF", "GAUSSIAN_2D", "RING_SDF", "INVERSE_SQ", "AXIS_WAVE",
     "ALL_TARGETS",
     "fit_spatial_eml", "eval_on_grid", "formula_to_2d", "print_results_table",
     "radial_reduce", "axis_reduce", "reconstruct_radial", "pareto_analysis",
+    "mcts_search_2d", "fit_spatial_eml_2d", "distill_network",
+    "print_bivariate_table", "print_distillation_table",
 ]
