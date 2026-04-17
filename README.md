@@ -1,9 +1,9 @@
 # monogate
 
-**`eml(x, y) = exp(x) − ln(y)`** — one binary operator that generates every elementary function as a finite expression tree. In v1.1, that same substrate powers a **neurosymbolic theorem prover** that discovers and certifies new mathematical identities.
+**`eml(x, y) = exp(x) − ln(y)`** — one binary operator that generates every elementary function as a finite expression tree. EML Weierstrass Theorem proven. Infinite Zeros Barrier confirmed across 1.7B trees.
 
 Based on [arXiv:2603.21852](https://arxiv.org/abs/2603.21852) (Odrzywołek, 2026).  
-Paper: **[arXiv:ARXIV_ID_PLACEHOLDER](https://arxiv.org/abs/ARXIV_ID_PLACEHOLDER)** · Live explorer: **[monogate.dev](https://monogate.dev)** · [![PyPI](https://img.shields.io/pypi/v/monogate)](https://pypi.org/project/monogate/) · [![Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://monogate.streamlit.app)
+Live explorer: **[monogate.dev](https://monogate.dev)** · [![PyPI](https://img.shields.io/pypi/v/monogate)](https://pypi.org/project/monogate/) · [![Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://monogate.streamlit.app) · [![CapCard](https://img.shields.io/badge/capcard-0.94-10b981)](https://capcard.ai/registry.html)
 
 ```bash
 pip install monogate          # core — no dependencies
