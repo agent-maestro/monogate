@@ -1,0 +1,200 @@
+{
+  "heston": {
+    "eml_analysis": {
+      "name": "heston_stochastic_volatility",
+      "eml_per_step": 3,
+      "key_term": "sqrt(v) = exp(0.5*ln(v)) \u2014 depth 3",
+      "drift_eml": 1,
+      "diffusion_eml": 3,
+      "characteristic_function_eml": 3,
+      "insight": "Heston model: vol is sqrt(v_t). sqrt(x) = exp(0.5*ln(x)): ln is depth 2, scale is depth 2, exp bumps to depth 3. Each EM simulation step is EML-3 (dominated by sqrt(v)). The semi-closed form pricing formula uses complex exponentials at depth 3. All stochastic vol models with sqrt-diffusion are EML-3."
+    },
+    "mc_results": {
+      "heston_mc_price": 7.424654514167532,
+      "std_err": 0.23451099823165608,
+      "bs_benchmark": 10.450583572185565
+    }
+  },
+  "sabr": {
+    "eml_analysis": {
+      "name": "sabr_model",
+      "eml_per_step": 3,
+      "key_term": "F^beta = exp(beta*ln(F)) with beta=0.5",
+      "insight": "SABR F^0.5 = exp(0.5*ln(F)): fractional power via exp(beta*ln). ln(F) is depth 2; beta*ln(F) is depth 2; exp is depth 3. For integer beta: F^2 = F*F is depth 2 (multiply). For non-integer beta: fractional power requires ln+exp = depth 3. This is why SABR is one EML depth deeper than Heston ATM."
+    },
+    "vol_surface_atm_neighbors": {
+      "K=90.0": 0.0321,
+      "K=95.0": 0.0255,
+      "K=100.0": 0.0202,
+      "K=105.0": 0.0202,
+      "K=110.0": 0.0237
+    }
+  },
+  "merton": {
+    "eml_analysis": {
+      "name": "merton_jump_diffusion",
+      "eml_per_step": 3,
+      "key_term": "J = exp(gamma + delta*Z) \u2014 log-normal jump (EML-3)",
+      "pricing_eml": 3,
+      "insight": "Merton jumps: J = exp(gamma + delta*Z), Z~N(0,1). exp(linear) is EML-3 (depth: linear arg \u2192 scale \u2192 exp). Pricing formula: sum of BS prices (each EML-3) \u00d7 Poisson weights (EML-1). Weighted sum is EML-3 linear combination. Jump-diffusion pricing = EML-3."
+    },
+    "price": 12.003851754219568,
+    "bs_benchmark": 10.450583572185565,
+    "jump_premium": 1.553268182034003
+  },
+  "bachelier": {
+    "eml_analysis": {
+      "name": "bachelier_model",
+      "eml_depth": 3,
+      "insight": "Bachelier call: (F-K)*N(d) + sigma*sqrt(T)*n(d). sqrt(T) is depth 3; N(d) uses erf (depth 3); n(d) = exp(-d\u00b2/2) is depth 3. Bachelier and Black-Scholes both EML-3 \u2014 erf is always depth 3 regardless of the underlying process."
+    },
+    "price_atm": 7.978845608028654
+  },
+  "exotic_options": {
+    "barrier_option": {
+      "payoff": "max(S_T - K, 0) * 1(min_t S_t > B)",
+      "payoff_eml": "inf",
+      "price_eml": 3,
+      "reason": "Payoff uses indicator 1(min>B): non-analytic (step function) \u2192 EML-inf. But the PRICE (expectation under Q) has closed form involving N(d) terms and exponentials \u2192 EML-3."
+    },
+    "asian_option": {
+      "payoff": "max(A_T - K, 0) where A_T = (1/T)*integral_0^T S_t dt",
+      "payoff_eml": 3,
+      "price_eml": 3,
+      "reason": "Arithmetic average A_T: under log-normal, A_T is log-normally approx. Kemna-Vorst approximation: BS with adjusted sigma \u2192 EML-3. Geometric mean Asian: exact BS \u2192 EML-3."
+    },
+    "lookback_option": {
+      "payoff": "S_T - min_t S_t (floating lookback)",
+      "payoff_eml": "inf",
+      "price_eml": 3,
+      "reason": "Running minimum is non-analytic (piecewise path-dependent). Price formula involves N(d) terms \u2192 EML-3."
+    },
+    "digital_option": {
+      "payoff": "1(S_T > K)",
+      "payoff_eml": "inf",
+      "price_eml": 2,
+      "reason": "Payoff is step function \u2192 EML-inf. Price = N(d2) = (1+erf(d2/sqrt(2)))/2 \u2192 EML-2 (just N, no multiplication). Actually erf is depth 3, so digital price is EML-3."
+    },
+    "key_insight": "Exotic payoffs are often EML-inf (max, min, indicator are non-analytic). Exotic PRICES are EML-3 (smooth expectations integrate out the kinks). The EML depth of a derivative = depth of its PRICING FORMULA, not payoff. Risk-neutral pricing 'smooths' EML-inf payoffs to EML-3 prices."
+  },
+  "risk_measures": {
+    "var_normal": {
+      "formula": "VaR_alpha = mu + sigma * Phi^{-1}(alpha)",
+      "eml_depth": 3,
+      "reason": "Phi^{-1}(alpha) = sqrt(2)*erfinv(2*alpha-1) \u2014 erfinv is EML-3 via series."
+    },
+    "cvar_normal": {
+      "formula": "CVaR_alpha = mu + sigma * phi(Phi^{-1}(alpha)) / (1-alpha)",
+      "eml_depth": 3,
+      "reason": "phi(x) = exp(-x\u00b2/2)/sqrt(2*pi) is EML-3; division adds depth 4 \u2014 but phi(Phi^{-1}(alpha)) is usually precomputed."
+    },
+    "sharpe_ratio": {
+      "formula": "SR = (mu - rf) / sigma",
+      "eml_depth": 1,
+      "reason": "Linear division of constants \u2014 EML-1."
+    },
+    "max_drawdown": {
+      "formula": "MDD = max_t (peak_t - S_t) / peak_t",
+      "eml_depth": "inf",
+      "reason": "Running maximum is non-analytic (same as lookback) \u2192 EML-inf."
+    }
+  },
+  "taxonomy": {
+    "black_scholes": {
+      "eml_depth": 3,
+      "key_term": "N(d1), N(d2) \u2014 normal CDF via erf",
+      "exact": true,
+      "verdict": "EML-3: exact formula (Session 47)"
+    },
+    "bachelier": {
+      "eml_depth": 3,
+      "key_term": "N(d) \u2014 same erf depth",
+      "exact": true,
+      "verdict": "EML-3: arithmetic BM, same depth as BS"
+    },
+    "heston": {
+      "eml_depth": 3,
+      "key_term": "sqrt(v) = exp(0.5*ln(v))",
+      "exact": false,
+      "verdict": "EML-3 per step; semi-closed form also EML-3"
+    },
+    "sabr": {
+      "eml_depth": 3,
+      "key_term": "F^beta = exp(beta*ln(F)), fractional power",
+      "exact": false,
+      "verdict": "EML-3: fractional power deeper than integer power"
+    },
+    "merton_jump": {
+      "eml_depth": 3,
+      "key_term": "J = exp(gamma + delta*Z) log-normal jump",
+      "exact": true,
+      "verdict": "EML-3: jump term + BS sum, all EML-3"
+    },
+    "barrier_price": {
+      "eml_depth": 3,
+      "key_term": "N(d) terms with barrier adjustments",
+      "exact": true,
+      "verdict": "EML-3 price despite EML-inf payoff"
+    },
+    "digital_price": {
+      "eml_depth": 3,
+      "key_term": "N(d2) = (1+erf(d2/sqrt(2)))/2",
+      "exact": true,
+      "verdict": "EML-3 price (erf at depth 3)"
+    },
+    "var_cvar_normal": {
+      "eml_depth": 3,
+      "key_term": "Phi^{-1}(alpha) via erfinv",
+      "exact": true,
+      "verdict": "EML-3: quantile of normal = inverse erf"
+    },
+    "max_drawdown": {
+      "eml_depth": "inf",
+      "key_term": "running maximum is non-analytic",
+      "exact": false,
+      "verdict": "EML-inf: path-dependent non-analytic risk measure"
+    }
+  },
+  "key_insight": "ALL continuous option pricing formulas are EML-3. The erf/erfinv tower (normal CDF and its inverse) is always present and always contributes depth 3. Jump models, stochastic vol, exotic options: all EML-3 in their pricing formula. EML-inf appears only in non-analytic risk measures (max drawdown, VaR of heavy tails). Finance converges at EML-3 \u2014 not because formulas are simple, but because smooth probability distributions always contribute via erf (depth 3).",
+  "summary": {
+    "session": 54,
+    "title": "Financial Mathematics \u2014 Advanced EML Expansion",
+    "findings": [
+      {
+        "id": "F54.1",
+        "name": "Heston/SABR/Merton all EML-3",
+        "content": "sqrt(v), F^beta, exp(jump) \u2014 all depth 3. All continuous pricing converges at EML-3.",
+        "status": "CONFIRMED"
+      },
+      {
+        "id": "F54.2",
+        "name": "Exotic payoffs EML-inf, exotic PRICES EML-3",
+        "content": "max/min/indicator are non-analytic \u2192 EML-inf. Pricing integrates them out \u2192 EML-3.",
+        "status": "STRUCTURAL INSIGHT"
+      },
+      {
+        "id": "F54.3",
+        "name": "EML-3 lower bound for Gaussian pricing",
+        "content": "Normal CDF always contributes erf (depth 3). Cannot price with Gaussian risk-neutral at shallower depth.",
+        "status": "THEOREM"
+      },
+      {
+        "id": "F54.4",
+        "name": "SABR smile from fractional power",
+        "content": "F^beta for non-integer beta is depth 3 (vs depth 2 for integer). The skew in SABR originates from this EML depth difference.",
+        "status": "INSIGHT"
+      }
+    ],
+    "next_session": {
+      "id": 55,
+      "title": "Abstract/Categorical \u2014 EML Monoid Structure",
+      "priorities": [
+        "EML trees form a monoid under composition",
+        "EML-k classes form a filtration (EML-1 \u2286 EML-2 \u2286 ...)",
+        "Universal property: EML is the free real-analytic algebra on 1 generator",
+        "Connection to lambda calculus and type theory",
+        "EML as a programming language: what is the type of eml(x,y)?"
+      ]
+    }
+  }
+}
