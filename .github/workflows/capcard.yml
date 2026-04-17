@@ -26,7 +26,8 @@ jobs:
         run: capcard verify capability_card.json
 
       - name: Print report
-        run: capcard verify capability_card.json | python3 -c "
+        run: |
+          capcard verify capability_card.json | python3 -c "
 import json, sys
 r = json.load(sys.stdin)
 print(f'Card: {r[\"card_name\"]} v{r[\"version\"]}')
