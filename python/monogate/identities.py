@@ -644,6 +644,17 @@ EXPONENTIAL_IDENTITIES: List[Identity] = [
         expected_method="exact",
     ),
     Identity(
+        name="EML identity function",
+        expression="exp(1) - log(exp(exp(1) - log(exp(x))) ) == x",
+        latex=r"e - \ln\!\left(e^{e - \ln(e^x)}\right) = x",
+        category="exponential",
+        domain=(0.01, 10.0),
+        difficulty="hard",
+        notes="4-node EML tree that equals x exactly: eml(1,eml(eml(1,eml(x,1)),1))=x. "
+              "Discovered by EML Fourier recovery (Session 36).",
+        expected_method="exact",
+    ),
+    Identity(
         name="EML subtract via nesting",
         expression="exp(exp(a) - log(exp(b))) - log(1) == exp(a) - b",
         latex=r"e^{e^a - \ln(e^b)} - \ln(1) = e^a - b",
