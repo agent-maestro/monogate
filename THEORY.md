@@ -265,7 +265,18 @@ for EML-based PINNs.
 
 ---
 
-## 7. Research Roadmap for the Community
+## 7. Current Research Directions
+
+The monogate team is actively pursuing:
+- Scaling explicit bivariate and trivariate EML bases for spatial and volumetric modeling.
+- Deepening quantum EML (meml on larger matrices and quantum symbolic regression).
+- Tighter upper bounds on EML-k complexity measures.
+- Integration of certified interval arithmetic with spatial approximations.
+
+We welcome collaboration on foundational extensions of the EML framework.
+Serious inquiries may be directed to the repository maintainers.
+
+## 8. Research Roadmap for the Community
 
 The following items are ordered by suggested priority for community
 contributions:
@@ -306,9 +317,24 @@ with known integral representations (Poisson, Airy integral).
 
 **T7. EML in quantum computing.**  
 The EML operator identity $\operatorname{eml}(ix, 1) = e^{ix}$ is the basic
-rotation gate in quantum computing up to global phase.  Investigate whether
-EML trees can represent quantum circuit amplitudes and whether BEST routing
-has a quantum-circuit-complexity interpretation.
+rotation gate in quantum computing up to global phase.  The matrix EML gate
+$\mathrm{meml}(A, B) = e^A - \log B$ is provably positive semidefinite on
+quantum states (meml PSD Theorem, Session 45) and spans all $2 \times 2$
+density matrices at depth 1.  Open: prove the Quantum EML Weierstrass
+conjecture for $d \geq 3$, classify which meml trees are CPTP channels,
+and develop quantum symbolic regression via matrix MCTS.
+
+**T8. Bivariate EML-k census.**  
+Classify the 2D targets from the spatial benchmark by their EML-k complexity:
+minimum number of basis atoms needed to achieve MSE $< \varepsilon_0 = 10^{-10}$.
+Conjecture: `circle_sdf` and `gaussian_2d` are EML-3 in each variable; `dipole`
+and `inverse_sq` require radial atoms at depth 9–10 and are EML-9 bivariate.
+
+**T9. Formal interval certificate for bivariate basis.**  
+Replace the sampling-based 99th-pctile bound with a rigorous interval arithmetic
+certificate using `monogate.interval.eval_interval()` propagated through all
+34 basis atoms.  This would yield the first formally verified bivariate EML
+approximation bound.
 
 ---
 
