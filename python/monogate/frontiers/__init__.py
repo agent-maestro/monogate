@@ -10,6 +10,13 @@ from .eml_fourier import (
     EMLBasisAtom, EMLFourierResult,
     build_eml_dictionary, eml_fourier_search, fourier_summary_table,
 )
+from .spatial_eml import (
+    SpatialTarget, SpatialSRResult,
+    CIRCLE_SDF, ELLIPSE_SDF, GAUSSIAN_2D, RING_SDF, INVERSE_SQ, AXIS_WAVE,
+    ALL_TARGETS,
+    fit_spatial_eml, eval_on_grid, formula_to_2d, print_results_table,
+    radial_reduce, axis_reduce, reconstruct_radial, pareto_analysis,
+)
 
 __all__ = [
     "AnalogRenaissance", "CrossDomainAnalogy",
@@ -18,4 +25,9 @@ __all__ = [
     "zero_order_at", "classify_function", "complexity_table",
     "EMLBasisAtom", "EMLFourierResult",
     "build_eml_dictionary", "eml_fourier_search", "fourier_summary_table",
+    "SpatialTarget", "SpatialSRResult",
+    "CIRCLE_SDF", "ELLIPSE_SDF", "GAUSSIAN_2D", "RING_SDF", "INVERSE_SQ", "AXIS_WAVE",
+    "ALL_TARGETS",
+    "fit_spatial_eml", "eval_on_grid", "formula_to_2d", "print_results_table",
+    "radial_reduce", "axis_reduce", "reconstruct_radial", "pareto_analysis",
 ]
