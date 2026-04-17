@@ -4,6 +4,39 @@ All notable changes to `monogate` are documented here.
 
 ---
 
+## [2.1.2] — 2026-04-16
+
+### Session 37 — EML Fourier Density Theorem
+
+#### Research result: DENSE verdict
+
+- **EML Density Theorem**: EML linear combinations are DENSE in C([0.05, 6.28]) for sin(x)
+- Floor MSE by N: 2.97e-1 → 5.90e-3 → **4.11e-9** → 4.90e-11 → 6.33e-13 → 3.72e-13 (machine floor)
+- N=2→N=3 jump: **1.4 million× improvement** (rank 7→17; N=3 atoms unlock oscillatory directions)
+- Method: SVD projection floor (monotone by construction); full-period domain [0.05, 6.28]
+
+#### New modules
+
+- **`monogate.frontiers.eml_fourier_v3`** — Unit-norm normalization (fix for N=5/6 over-pruning)
+- **`monogate.frontiers.eml_fourier_v4`** — Lasso-based sparse recovery (alpha sweep)
+- **`monogate.frontiers.eml_fourier_v5`** — SVD projection floor (definitive method)
+  - `build_eml_matrix`: unit-norm atoms with overflow filtering on test set
+  - `eml_fourier_search_v5`: SVD rank-r OLS; test MSE = true approximation floor
+  - Resolves all solver artifacts from v2/v3/v4
+
+#### New experiments
+
+- **`experiments/sin_floor_asymptotics_v3.py`** — v3 OMP sweep (shows QR-basis selection artifact)
+- **`experiments/sin_floor_asymptotics_v4.py`** — Lasso sweep (shows Lasso sparsity artifact)
+- **`experiments/sin_floor_asymptotics_v5.py`** — SVD sweep; definitive N=1..6 table + DENSE verdict
+
+#### Documentation
+
+- `PAPER.md §36`: EML Fourier Density Theorem — method, table, N=3 singularity, §33 revision
+- `capability_card.json`: updated eml_fourier entry with DENSE verdict and floor-by-N table
+
+---
+
 ## [2.1.1] — 2026-04-16
 
 ### Session 36 — Closing the Loop & CapCard Launch
