@@ -259,6 +259,18 @@ monogate/
 └── Dockerfile       # clean-room reproducibility environment
 ```
 
+## Research Notes
+
+Detailed working documents, raw session logs, and full research context are
+maintained in a private repository for cleanliness and strategic reasons.
+
+Public artifacts in this repo include:
+- **`python/paper/preprint.tex`** — the authoritative arXiv preprint
+- **`python/notebooks/`** — clean, reproducible session benchmarks
+- **`python/results/`** — benchmark outputs and figures
+- **`python/monogate/`** — the full Python library
+- **`capability_card.json`** — machine-readable capability profile
+
 ## License
 
 MIT. The underlying mathematics is CC BY 4.0 per the original paper.
