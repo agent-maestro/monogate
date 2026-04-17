@@ -48,6 +48,15 @@ __all__ = [
     "kdv_soliton_cb",
     "wave_cos_cb",
     "wave_sin_cb",
+    # Electronics (Session 19)
+    "diode_iv_cb",
+    "rc_discharge_cb",
+    "rc_charge_cb",
+    # Astrophysics (Session 20)
+    "stellar_cooling_cb",
+    "plasma_soliton_nls_cb",
+    "gw_chirp_envelope_cb",
+    "stellar_boltzmann_cb",
     "PHYSICS_CATALOG",
 ]
 
@@ -197,6 +206,128 @@ def wave_sin_cb(x: float, k: float = 1.0, omega: float = 1.0, t: float = 0.0) ->
     return _cbest_euler(k * x - omega * t).imag
 
 
+# ── Electronics callables (Session 19) ───────────────────────────────────────
+
+def diode_iv_cb(v: float, v_t: float = 0.026) -> float:
+    """Shockley diode I-V characteristic: I = exp(V/V_T) - 1  [I_s = 1].
+
+    EML form: eml(V/V_T, 1) - 1.  2-node BEST.
+
+    Args:
+        v:   Forward voltage (V).
+        v_t: Thermal voltage (default 0.026 V at room temperature).
+
+    Returns:
+        Normalized current I/I_s = exp(V/V_T) - 1.
+    """
+    import math as _math
+    return _math.exp(v / v_t) - 1.0
+
+
+def rc_discharge_cb(t: float, tau: float = 1.0, v0: float = 1.0) -> float:
+    """RC discharge: V(t) = V0 * exp(-t/tau).
+
+    EML form: V0 * deml(t/tau, 1).  1-node DEML (native decay).
+
+    Args:
+        t:   Time.
+        tau: RC time constant.
+        v0:  Initial voltage.
+
+    Returns:
+        V(t) = V0 * exp(-t/tau).
+    """
+    import math as _math
+    return v0 * _math.exp(-t / tau)
+
+
+def rc_charge_cb(t: float, tau: float = 1.0, vs: float = 1.0) -> float:
+    """RC charging: V(t) = Vs * (1 - exp(-t/tau)).
+
+    EML form: Vs * (1 - deml(t/tau, 1)).  2-node DEML.
+
+    Args:
+        t:   Time.
+        tau: RC time constant.
+        vs:  Supply voltage.
+
+    Returns:
+        V(t) = Vs * (1 - exp(-t/tau)).
+    """
+    import math as _math
+    return vs * (1.0 - _math.exp(-t / tau))
+
+
+# ── Astrophysics callables (Session 20) ──────────────────────────────────────
+
+def stellar_cooling_cb(t: float, tau_cool: float = 1.0,
+                        t_env: float = 0.0, delta_t: float = 1.0) -> float:
+    """Newtonian stellar cooling: T(t) = T_env + DeltaT * exp(-t/tau_cool).
+
+    Decay component = deml(t/tau_cool, 1).
+
+    Args:
+        t:        Time.
+        tau_cool: Cooling time constant.
+        t_env:    Environmental temperature.
+        delta_t:  Initial temperature excess.
+
+    Returns:
+        T(t) = T_env + DeltaT * exp(-t/tau_cool).
+    """
+    import math as _math
+    return t_env + delta_t * _math.exp(-t / tau_cool)
+
+
+def plasma_soliton_nls_cb(x: float) -> float:
+    """NLS bright soliton amplitude: sech(x) = 1/cosh(x).
+
+    2-node BEST: recip(cosh(x)).  Cross-domain: optical waveguide mode.
+
+    Args:
+        x: Spatial coordinate (normalized by soliton width).
+
+    Returns:
+        sech(x).
+    """
+    import math as _math
+    return 1.0 / _math.cosh(x)
+
+
+def gw_chirp_envelope_cb(dt: float, alpha: float = -0.25) -> float:
+    """GW inspiral chirp amplitude envelope: (t_c - t)^alpha.
+
+    EXL form: exp(alpha * ln(dt)).  3-node EXL.
+
+    Args:
+        dt:    Time to coalescence t_c - t > 0.
+        alpha: Power law exponent (default -1/4 for leading-order PN).
+
+    Returns:
+        dt^alpha.
+    """
+    import math as _math
+    if dt <= 0:
+        return float("nan")
+    return _math.exp(alpha * _math.log(dt))
+
+
+def stellar_boltzmann_cb(delta_e: float, k_t: float = 1.0) -> float:
+    """Boltzmann population ratio: N_i/N_j = exp(-DeltaE/kT).
+
+    1-node DEML: deml(DeltaE/kT, 1).
+
+    Args:
+        delta_e: Energy difference E_i - E_j.
+        k_t:     Thermal energy kT.
+
+    Returns:
+        exp(-delta_e / k_t).
+    """
+    import math as _math
+    return _math.exp(-delta_e / k_t)
+
+
 # ── Catalog ───────────────────────────────────────────────────────────────────
 
 PHYSICS_CATALOG: dict[str, dict[str, Any]] = {
@@ -262,5 +393,79 @@ PHYSICS_CATALOG: dict[str, dict[str, Any]] = {
         "backend":    "CBEST",
         "max_abs_error": 0.0,
         "notes":      "Exact 1-node CBEST via Euler path imaginary part.",
+    },
+    # ── Electronics (Session 19) ──────────────────────────────────────────────
+    "diode_iv": {
+        "equation":   "I = I_s * (exp(V/V_T) - 1)  (Shockley diode equation)",
+        "callable":   "diode_iv_cb",
+        "formula":    "eml(V/V_T, 1) - 1  [I_s normalized to 1]",
+        "n_nodes":    2,
+        "backend":    "BEST",
+        "max_abs_error": 0.0,
+        "notes":      "Shockley diode I-V. exp(V/V_T) = eml(V/V_T, 1), "
+                      "so I = eml(V/V_T, 1) - 1 (2-node BEST). "
+                      "Cross-domain analogy: same structure as Boltzmann population ratio.",
+    },
+    "rc_discharge": {
+        "equation":   "V(t) = V0 * exp(-t/tau)  (RC discharging)",
+        "callable":   "rc_discharge_cb",
+        "formula":    "deml(t/tau, 1)  [V0 normalized to 1]",
+        "n_nodes":    1,
+        "backend":    "DEML",
+        "max_abs_error": 0.0,
+        "notes":      "RC discharge V(t)=V0*exp(-t/RC). Native 1-node DEML. "
+                      "Cross-domain: same tree as stellar cooling and bond discount factor.",
+    },
+    "rc_charge": {
+        "equation":   "V(t) = Vs * (1 - exp(-t/tau))  (RC charging)",
+        "callable":   "rc_charge_cb",
+        "formula":    "1 - deml(t/tau, 1)  [Vs normalized to 1]",
+        "n_nodes":    2,
+        "backend":    "DEML",
+        "max_abs_error": 0.0,
+        "notes":      "RC charging transient. 2-node DEML: 1 - deml(t/RC, 1). "
+                      "Cross-domain: same tree as stellar luminosity rise and option time-value.",
+    },
+    # ── Astrophysics (Session 20) ─────────────────────────────────────────────
+    "stellar_cooling": {
+        "equation":   "T(t) = T_env + DT * exp(-t/tau_cool)  (Newtonian cooling)",
+        "callable":   "stellar_cooling_cb",
+        "formula":    "T_env + DT * deml(t/tau_cool, 1)",
+        "n_nodes":    2,
+        "backend":    "DEML",
+        "max_abs_error": 0.0,
+        "notes":      "Newtonian stellar cooling law. Decay component = 1-node DEML. "
+                      "Cross-domain: same tree as RC discharge and bond discount.",
+    },
+    "plasma_soliton_nls": {
+        "equation":   "A(x) = sech(x)  (NLS bright soliton amplitude, formalized)",
+        "callable":   "plasma_soliton_nls_cb",
+        "formula":    "recip(cosh(x)) = 1/cosh(x)",
+        "n_nodes":    2,
+        "backend":    "BEST",
+        "max_abs_error": 0.0,
+        "notes":      "NLS bright soliton amplitude sech(x). 2-node BEST: recip(cosh(x)). "
+                      "Cross-domain analogy: optical waveguide mode profile and vol smile shape.",
+    },
+    "gw_chirp_envelope": {
+        "equation":   "A(t) ~ (t_c - t)^(-1/4)  (GW inspiral chirp amplitude envelope)",
+        "callable":   "gw_chirp_envelope_cb",
+        "formula":    "exp((-1/4) * ln(t_c - t))  [EXL: eml(alpha*ln(dt), 1)]",
+        "n_nodes":    3,
+        "backend":    "EXL",
+        "max_abs_error": 1e-12,
+        "notes":      "Gravitational-wave inspiral chirp amplitude ~ (t_c-t)^(-1/4). "
+                      "Power law via EXL: exp(alpha*ln(x)) = x^alpha. "
+                      "Cross-domain: same power-law EXL tree as Heston vol-of-vol envelope.",
+    },
+    "stellar_boltzmann_population": {
+        "equation":   "N_i/N_j = exp(-DeltaE / kT)  (Boltzmann population ratio)",
+        "callable":   "stellar_boltzmann_cb",
+        "formula":    "deml(DeltaE/kT, 1)  [normalized]",
+        "n_nodes":    1,
+        "backend":    "DEML",
+        "max_abs_error": 0.0,
+        "notes":      "Boltzmann level population ratio. Same 1-node DEML as RC discharge. "
+                      "Analogy: spectral line intensity ratios in stellar atmospheres.",
     },
 }

@@ -33,6 +33,7 @@ from monogate.identities import (
     PHYSICS_IDENTITIES,
     EML_IDENTITIES,
     OPEN_IDENTITIES,
+    ANALOG_IDENTITIES,
     ALL_IDENTITIES,
     get_by_difficulty,
     get_by_category,
@@ -520,6 +521,7 @@ class TestCatalogs:
             + len(PHYSICS_IDENTITIES)
             + len(EML_IDENTITIES)
             + len(OPEN_IDENTITIES)
+            + len(ANALOG_IDENTITIES)
         )
         assert len(ALL_IDENTITIES) == expected
 
@@ -534,7 +536,7 @@ class TestCatalogs:
             assert lo <= hi
 
     def test_all_have_valid_categories(self):
-        valid = {"trigonometric", "hyperbolic", "exponential", "special", "physics", "eml", "open"}
+        valid = {"trigonometric", "hyperbolic", "exponential", "special", "physics", "eml", "open", "analog"}
         for ident in ALL_IDENTITIES:
             assert ident.category in valid, f"{ident.name}: unknown category {ident.category}"
 

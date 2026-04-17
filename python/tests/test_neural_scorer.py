@@ -342,7 +342,11 @@ def test_catalog_at_least_150():
 
 
 def test_catalog_no_duplicates():
-    """No duplicate expressions in expanded catalog."""
+    """No duplicate expressions in non-analog catalog entries.
+
+    Analog-category identities intentionally share expression strings
+    (the cross-domain analogy IS the shared mathematical form).
+    """
     from monogate.identities import ALL_IDENTITIES
-    exprs = [i.expression for i in ALL_IDENTITIES]
+    exprs = [i.expression for i in ALL_IDENTITIES if i.category != "analog"]
     assert len(exprs) == len(set(exprs))

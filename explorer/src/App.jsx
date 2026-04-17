@@ -9,6 +9,7 @@ import LandingPage from "./components/LandingPage.jsx";
 import AttractorViz from "./components/AttractorViz.jsx";
 import ResearchTab from "./components/ResearchTab.jsx";
 import LeaderboardTab from "./components/LeaderboardTab.jsx";
+import AnalogRenaissanceTab from "./components/AnalogRenaissanceTab.jsx";
 import { op, exp, ln, E, ZERO, sub, neg, add, mul, div, pow, recip,
          BEST, sin_best, cos_best, pow_exl, div_edl, ln_exl } from "./eml.js";
 const deml = (x, y) => Math.exp(-x) - Math.log(y);
@@ -292,7 +293,7 @@ export default function App() {
               <span style={{ fontSize:10, color:C.muted }}>EML Explorer</span>
             </div>
             <div style={{ fontSize:10, color:C.muted, marginTop:3 }}>
-              eml(x,y) = exp(x) − ln(y) · Odrzywołek 2026 · arXiv:2603.21852 · v1.3.0
+              eml(x,y) = exp(x) − ln(y) · Odrzywołek 2026 · arXiv:2603.21852 · v1.4.0
             </div>
           </div>
           <div style={{ display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
@@ -311,19 +312,20 @@ export default function App() {
             >
               ⊞ Challenges ↗
             </a>
-            {["verify","table","sandbox","tree","best","calc","opt","viz","sinex","demo","nerf","attractor","research","leaderboard","deml","frontiers","explorer","quantum"].map(t => {
+            {["verify","table","sandbox","tree","best","calc","opt","viz","sinex","demo","nerf","attractor","research","leaderboard","deml","frontiers","explorer","quantum","analog"].map(t => {
               const isCalc  = t === "calc";
               const isOpt   = t === "opt";
               const isHighlit = isCalc || isOpt || t === "viz" || t === "sinex" || t === "demo"
                 || t === "nerf" || t === "attractor" || t === "research" || t === "leaderboard"
-                || t === "deml" || t === "frontiers" || t === "explorer" || t === "quantum";
+                || t === "deml" || t === "frontiers" || t === "explorer" || t === "quantum"
+                || t === "analog";
               const isActive = tab === t;
               const LABELS = {
                 calc: "✦ calc", opt: "⚙ opt",
                 viz: "✦ viz", sinex: "sin↗", demo: "⚡ demo", nerf: "⬡ nerf",
                 attractor: "⊛ attractor", research: "🔬 research", leaderboard: "🏆 board",
                 deml: "⊖ DEML", frontiers: "📊 frontiers", explorer: "🔭 explorer",
-                quantum: "⚛ quantum",
+                quantum: "⚛ quantum", analog: "⚡ analog",
               };
               return (
                 <button key={t} onClick={() => setTab(t)} style={{
@@ -929,6 +931,7 @@ export default function App() {
       {tab === "attractor"    && <AttractorViz />}
       {tab === "research"     && <ResearchTab />}
       {tab === "leaderboard"  && <LeaderboardTab />}
+      {tab === "analog"       && <AnalogRenaissanceTab />}
 
       {/* ── FEATURED DEMOS ── */}
       <div style={{ marginTop:28, borderTop:`1px solid ${C.border}`, paddingTop:20 }}>

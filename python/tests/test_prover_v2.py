@@ -50,8 +50,11 @@ def test_all_identities_count_at_least_120():
 
 
 def test_all_identities_no_duplicates():
-    """ALL_IDENTITIES has no duplicate expressions."""
-    exprs = [i.expression for i in ALL_IDENTITIES]
+    """ALL_IDENTITIES has no duplicate expressions (excluding analog category).
+
+    Analog identities intentionally share expression strings across domains.
+    """
+    exprs = [i.expression for i in ALL_IDENTITIES if i.category != "analog"]
     assert len(exprs) == len(set(exprs)), "Duplicate expressions found"
 
 
@@ -63,7 +66,7 @@ def test_trig_identities_at_least_27():
 def test_all_identities_have_valid_categories():
     """All identities have a valid category string."""
     valid = {"trigonometric", "hyperbolic", "exponential", "special",
-             "physics", "eml", "open"}
+             "physics", "eml", "open", "analog"}
     for i in ALL_IDENTITIES:
         assert i.category in valid, f"Invalid category: {i.category} for {i.name}"
 

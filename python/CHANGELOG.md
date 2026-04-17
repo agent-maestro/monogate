@@ -4,6 +4,53 @@ All notable changes to `monogate` are documented here.
 
 ---
 
+## [1.4.0] — 2026-04-16
+
+### Sessions 18–22 — Analog Renaissance, Finance Crack, Cross-Domain EML Unification
+
+#### New modules
+
+- **`monogate.frontiers.analog_renaissance`** — Cross-domain EML analogy registry
+  - `CrossDomainAnalogy` frozen dataclass + `AnalogRenaissance` registry class
+  - 15+ analogies across 5 tree shapes: `deml(x,1)`, `1-deml(x,1)`, `deml(x²,1)`,
+    `recip(cosh(x))`, `eml(α·ln(t_c−t),1)`
+  - `crack_electronics()`, `crack_astrophysics()`, `crack_finance()` domain filters
+  - `verify_analogy()` numerical cross-domain verification
+  - `summary_table()` markdown output
+
+- **`monogate.finance`** — Black-Scholes and EML finance formulas
+  - `black_scholes_call` / `black_scholes_put` — reference implementations
+  - `bs_discount_cb(r, T)` = exp(−rT) via `deml(rT, 1)` — **1-node DEML** (key result)
+  - `bs_log_moneyness_cb(S, K)` = ln(S/K) — 3-node EML
+  - `bs_call_eml()` — numerically identical to BS but routes through EML components
+  - `bs_components_eml()` — per-component EML breakdown dict
+  - `FINANCE_CATALOG` with 5 entries
+
+#### Extended modules
+
+- **`monogate.physics`** — 7 new catalog entries (was 8, now 15)
+  - New callables: `diode_iv_cb`, `rc_discharge_cb`, `rc_charge_cb`,
+    `stellar_cooling_cb`, `plasma_soliton_nls_cb`, `gw_chirp_envelope_cb`,
+    `stellar_boltzmann_cb`
+
+- **`monogate.identities`** — +20 analog-category identities
+
+#### Tests
+
+- `test_analog_renaissance.py` — 51 tests
+- `test_finance.py` — 45 tests
+
+#### UI
+
+- Explorer: new `⚡ analog` tab (`AnalogRenaissanceTab` component)
+- Streamlit: Tab 8 — Analog Renaissance with interactive filters
+
+#### Paper
+
+- §23: Analog Renaissance — cross-domain EML unification
+
+---
+
 ## [1.3.0] — 2026-04-16
 
 ### Sessions 10–16 — Attractor Precision, Grammar Hierarchy, Quantum EML, SRBench

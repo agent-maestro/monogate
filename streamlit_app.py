@@ -1,5 +1,5 @@
 """
-monogate Streamlit Web Demo — 7 interactive tabs.
+monogate Streamlit Web Demo — 8 interactive tabs.
 
 Run:
     streamlit run streamlit_app.py
@@ -12,6 +12,7 @@ Tabs:
     5  Phantom Attractor — Pre-computed phase-transition visualisation
     6  DEML Gate         — Dual gate operator; negative-exponent barrier demo
     7  Math Explorer     — EMLProverV2 identity discovery + mutation bandit stats
+    8  Analog Renaissance — Cross-domain EML analogies (electronics / astrophysics / finance)
 """
 
 from __future__ import annotations
@@ -67,7 +68,7 @@ st.caption(
     "[GitHub](https://github.com/almaguer1986/monogate)"
 )
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "⚡ Optimizer",
     "📐 Special Functions",
     "🧬 PINN Demo",
@@ -75,6 +76,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "🌀 Phantom Attractor",
     "⊖ DEML Gate",
     "🔭 Math Explorer",
+    "🔗 Analog Renaissance",
 ])
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -730,4 +732,108 @@ with tab7:
             "| `eml(add(ln(x),ln(y)),1)` | 13 | mul |\n"
             "| `eml(eml(x,1), eml(1,y))` | 3 | composition |\n"
             "\n**200+ identities** in full catalog. Run `EMLProverV2().explore()` to generate."
+        )
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Tab 8 — Analog Renaissance
+# ─────────────────────────────────────────────────────────────────────────────
+
+with tab8:
+    st.header("Analog Renaissance — Cross-Domain EML Analogies")
+    st.markdown(
+        "The same tiny EML trees appear across **electronics**, **astrophysics**, "
+        "**finance**, and **physics** — only the physical constants change. "
+        "RC discharge, stellar cooling, and bond discounting are all `deml(x, 1)` = exp(−x)."
+    )
+
+    try:
+        from monogate.frontiers.analog_renaissance import AnalogRenaissance
+        import pandas as pd
+
+        ar = AnalogRenaissance()
+
+        col_sel, col_main = st.columns([1, 3])
+
+        with col_sel:
+            domain_filter = st.selectbox(
+                "Filter by domain",
+                ["All", "electronics", "astrophysics", "finance", "physics", "thermodynamics"],
+                key="analog_domain",
+            )
+            tree_filter = st.selectbox(
+                "Filter by tree shape",
+                ["All"] + ar.all_tree_shapes(),
+                key="analog_tree",
+            )
+
+        with col_main:
+            rows = []
+            for a in ar.registry:
+                if domain_filter != "All" and domain_filter not in (a.source_domain, a.target_domain):
+                    continue
+                if tree_filter != "All" and a.shared_tree != tree_filter:
+                    continue
+                rows.append({
+                    "Tree": a.shared_tree,
+                    "Nodes": a.n_nodes,
+                    "Backend": a.backend,
+                    "Source Domain": a.source_domain,
+                    "Source Formula": a.source_formula[:50],
+                    "Target Domain": a.target_domain,
+                    "Target Formula": a.target_formula[:50],
+                    "Proof": a.proof_tier,
+                })
+
+            if rows:
+                st.dataframe(
+                    pd.DataFrame(rows),
+                    use_container_width=True,
+                    hide_index=True,
+                )
+                st.caption(f"{len(rows)} analogies shown · {len(ar.registry)} total · {len(ar.all_tree_shapes())} tree shapes")
+            else:
+                st.info("No analogies match the current filter.")
+
+        st.markdown("---")
+        st.markdown("### Key Result: Universal Decay Tree")
+        st.code(
+            "deml(x, 1) = exp(−x)\n\n"
+            "  x = t/τ       → RC discharge (electronics)\n"
+            "  x = t/τ_cool  → Newtonian stellar cooling (astrophysics)\n"
+            "  x = r·T       → Bond discount factor (finance)\n"
+            "  x = λ·t       → Radioactive decay (physics)\n\n"
+            "Same 1-node DEML tree. Different physical constants.",
+            language="text",
+        )
+
+        col_v1, col_v2 = st.columns(2)
+        with col_v1:
+            st.markdown("### Finance: Black-Scholes in EML")
+            try:
+                from monogate.finance import bs_components_eml
+                comp = bs_components_eml()
+                st.metric("Call price (ATM, 1Y, 20% vol)", f"{comp['call_price']:.4f}")
+                st.metric("Discount factor deml(rT,1)", f"{comp['discount']:.6f}")
+                st.metric("Log-moneyness (3-node EML)", f"{comp['log_moneyness']:.1f}")
+            except ImportError:
+                st.info("monogate.finance not available.")
+
+        with col_v2:
+            st.markdown("### Numerical Verification")
+            results = []
+            for a in ar.find_analogies("deml(x, 1)"):
+                r = ar.verify_analogy(a, n_probes=20)
+                results.append({
+                    "Analogy": f"{a.source_domain} → {a.target_domain}",
+                    "Verified": "✓" if r.get("verified") else ("—" if r.get("verified") is None else "✗"),
+                    "Max error": f"{r.get('max_source_error', 0):.2e}" if r.get("verified") is not None else "—",
+                })
+            if results:
+                st.dataframe(pd.DataFrame(results), use_container_width=True, hide_index=True)
+
+    except ImportError as exc:
+        st.error(f"AnalogRenaissance not available: {exc}")
+        st.markdown(
+            "Install monogate ≥ 1.4.0 or run from the repo root. "
+            "The Analog Renaissance module requires `monogate.frontiers.analog_renaissance`."
         )

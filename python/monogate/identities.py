@@ -35,6 +35,7 @@ __all__ = [
     "PHYSICS_IDENTITIES",
     "EML_IDENTITIES",
     "OPEN_IDENTITIES",
+    "ANALOG_IDENTITIES",
     "ALL_IDENTITIES",
     "get_by_difficulty",
     "get_by_category",
@@ -2105,6 +2106,223 @@ _OPEN_V11 = [
     ),
 ]
 
+# ── Analog / cross-domain identities ─────────────────────────────────────────
+# These formalize cross-domain analogies: RC = stellar cooling = discount factor, etc.
+
+ANALOG_IDENTITIES: List[Identity] = [
+    # ── deml(x, 1) = exp(-x): universal decay ────────────────────────────────
+    Identity(
+        name="RC discharge = exp(-x)",
+        expression="exp(-x) == exp(-x)",
+        latex=r"V(t) = V_0 e^{-t/\tau} \equiv \text{deml}(t/\tau,\,1)",
+        category="analog",
+        domain=(0.0, 5.0),
+        difficulty="trivial",
+        notes="RC discharge V(t)=V0*exp(-t/tau). deml(t/tau, 1) is native 1-node DEML.",
+        expected_method="exact",
+    ),
+    Identity(
+        name="Stellar Newtonian cooling = exp(-x)",
+        expression="exp(-x) == exp(-x)",
+        latex=r"T(t) = T_\infty + \Delta T\,e^{-t/\tau_c} \equiv \text{deml}(t/\tau_c,\,1)",
+        category="analog",
+        domain=(0.0, 5.0),
+        difficulty="trivial",
+        notes="Newtonian stellar cooling shares 1-node DEML tree with RC discharge.",
+        expected_method="exact",
+    ),
+    Identity(
+        name="Bond discount factor = exp(-r*T)",
+        expression="exp(-x) == exp(-x)",
+        latex=r"D(T) = e^{-rT} \equiv \text{deml}(rT,\,1)",
+        category="analog",
+        domain=(0.0, 5.0),
+        difficulty="trivial",
+        notes="Bond discount factor exp(-rT). Same 1-node DEML as RC discharge.",
+        expected_method="exact",
+    ),
+    Identity(
+        name="Radioactive decay = exp(-lambda*t)",
+        expression="exp(-x) == exp(-x)",
+        latex=r"N(t) = N_0 e^{-\lambda t} \equiv \text{deml}(\lambda t,\,1)",
+        category="analog",
+        domain=(0.0, 5.0),
+        difficulty="trivial",
+        notes="Radioactive decay. Same 1-node DEML tree shared across all exponential decays.",
+        expected_method="exact",
+    ),
+    Identity(
+        name="Boltzmann factor = exp(-E/kT)",
+        expression="exp(-x) == exp(-x)",
+        latex=r"w(E) = e^{-E/kT} \equiv \text{deml}(E/kT,\,1)",
+        category="analog",
+        domain=(0.0, 5.0),
+        difficulty="trivial",
+        notes="Boltzmann weight. Unnormalized; partition function Z = Tr(mdeml(beta*H, I)).",
+        expected_method="exact",
+    ),
+    # ── 1 - exp(-x): universal approach-to-limit ─────────────────────────────
+    Identity(
+        name="RC charging = 1 - exp(-x)",
+        expression="1 - exp(-x) == 1 - exp(-x)",
+        latex=r"V(t) = V_s(1 - e^{-t/\tau}) \equiv 1 - \text{deml}(t/\tau,\,1)",
+        category="analog",
+        domain=(0.0, 5.0),
+        difficulty="trivial",
+        notes="RC charging transient. 2-node DEML expression (1 - deml(x,1)).",
+        expected_method="exact",
+    ),
+    Identity(
+        name="Stellar luminosity rise = 1 - exp(-x)",
+        expression="1 - exp(-x) == 1 - exp(-x)",
+        latex=r"L(t) = L_{\max}(1 - e^{-t/\tau_r})",
+        category="analog",
+        domain=(0.0, 5.0),
+        difficulty="trivial",
+        notes="Star formation luminosity rise. Same 2-node DEML tree as RC charging.",
+        expected_method="exact",
+    ),
+    # ── exp(-x^2): Gaussian kernel ────────────────────────────────────────────
+    Identity(
+        name="Gaussian filter = exp(-x^2)",
+        expression="exp(-x**2) == exp(-x**2)",
+        latex=r"h(x) = e^{-x^2} \equiv \text{deml}(x^2,\,1)",
+        category="analog",
+        domain=(0.0, 3.0),
+        difficulty="easy",
+        notes="Gaussian filter impulse. deml(x^2, 1) — 2-node DEML.",
+        expected_method="exact",
+    ),
+    Identity(
+        name="Heat kernel core = exp(-x^2/4t)",
+        expression="exp(-x**2) == exp(-x**2)",
+        latex=r"G(x,t) \propto e^{-x^2/4t} \equiv \text{deml}((x/2\sqrt{t})^2,\,1)",
+        category="analog",
+        domain=(0.0, 3.0),
+        difficulty="easy",
+        notes="Heat equation kernel core. Same Gaussian DEML tree as filter.",
+        expected_method="exact",
+    ),
+    Identity(
+        name="Black-Scholes density core = exp(-d1^2/2)",
+        expression="exp(-x**2) == exp(-x**2)",
+        latex=r"n(d_1) = e^{-d_1^2/2} \equiv \text{deml}(d_1^2/2,\,1)",
+        category="analog",
+        domain=(0.0, 3.0),
+        difficulty="easy",
+        notes="Normal density core in Black-Scholes d1/d2. Same Gaussian DEML tree.",
+        expected_method="exact",
+    ),
+    # ── sech(x): soliton amplitude ────────────────────────────────────────────
+    Identity(
+        name="NLS soliton = sech(x) = recip(cosh(x))",
+        expression="1/math.cosh(x) == 1/math.cosh(x)",
+        latex=r"\text{sech}(x) = 1/\cosh(x) \equiv \text{recip}(\cosh(x))",
+        category="analog",
+        domain=(0.0, 4.0),
+        difficulty="easy",
+        notes="NLS bright soliton amplitude. 2-node BEST: recip(cosh(x)).",
+        expected_method="exact",
+    ),
+    Identity(
+        name="Optical waveguide mode = sech(x)",
+        expression="1/math.cosh(x) == 1/math.cosh(x)",
+        latex=r"\psi(x) = \text{sech}(x)",
+        category="analog",
+        domain=(0.0, 4.0),
+        difficulty="easy",
+        notes="Optical fiber soliton mode shape. Same 2-node BEST as plasma soliton.",
+        expected_method="exact",
+    ),
+    # ── Diode I-V ─────────────────────────────────────────────────────────────
+    Identity(
+        name="Diode I-V exponential term = exp(V/Vt) - 1",
+        expression="math.exp(x) - 1 == math.exp(x) - 1",
+        latex=r"I = I_s(e^{V/V_T} - 1) \approx I_s\,\text{eml}(V/V_T,\,1) - I_s",
+        category="analog",
+        domain=(0.0, 3.0),
+        difficulty="easy",
+        notes="Shockley diode equation exponential term. eml(V/V_T, 1) - 1.",
+        expected_method="exact",
+    ),
+    # ── Cross-domain power law ────────────────────────────────────────────────
+    Identity(
+        name="GW chirp envelope = (t_c - t)^alpha",
+        expression="x**(-0.25) == x**(-0.25)",
+        latex=r"A(t) \propto (t_c-t)^{-1/4}",
+        category="analog",
+        domain=(0.1, 5.0),
+        difficulty="medium",
+        notes="GW chirp amplitude power law. EXL territory: eml(alpha*ln(t_c-t), 1).",
+        expected_method="numerical",
+    ),
+    Identity(
+        name="RC-cooling-finance triple analogy",
+        expression="exp(-x) == exp(-x)",
+        latex=r"e^{-x} \text{ is RC discharge, stellar cooling, and bond discount}",
+        category="analog",
+        domain=(0.0, 5.0),
+        difficulty="trivial",
+        notes="Master analogy: all three domains share the deml(x,1) tree exactly.",
+        expected_method="exact",
+    ),
+    # ── Information theory bridging ───────────────────────────────────────────
+    Identity(
+        name="Log-partition function = ln(Z) = ln(Tr(mdeml(beta*H, I)))",
+        expression="math.log(math.exp(-x) + math.exp(x)) == math.log(2*math.cosh(x))",
+        latex=r"\ln Z = \ln\operatorname{Tr}(e^{-\beta H})",
+        category="analog",
+        domain=(0.0, 3.0),
+        difficulty="easy",
+        notes="Quantum partition function log is the EML log-sum-exp. Bridges thermodynamics "
+              "and information geometry.",
+        expected_method="numerical",
+    ),
+    Identity(
+        name="Free energy as EML: F = -kT*ln(Tr(mdeml(beta*H, I)))",
+        expression="-math.log(math.exp(-x) + math.exp(x)) == -math.log(2*math.cosh(x))",
+        latex=r"F = -kT\ln Z = -kT\ln\operatorname{Tr}(\text{mdeml}(\beta H,I))",
+        category="analog",
+        domain=(0.0, 3.0),
+        difficulty="easy",
+        notes="Free energy F = -kT*ln(Z) where Z is a 1-node matrix DEML expression.",
+        expected_method="numerical",
+    ),
+    Identity(
+        name="KL divergence as Bregman divergence of EML log-partition",
+        expression="x - math.log(x) - 1 == x - math.log(x) - 1",
+        latex=r"D_{KL}(p\|q) = A(q)-A(p)-\langle p-q,\nabla A(p)\rangle",
+        category="analog",
+        domain=(0.1, 5.0),
+        difficulty="medium",
+        notes="KL divergence = Bregman divergence of the EML log-partition function A(eta). "
+              "Connects information geometry to EML arithmetic.",
+        expected_method="numerical",
+    ),
+    Identity(
+        name="Von Neumann entropy as matrix EML: S = Tr(rho*meml(0,rho)) - 1",
+        expression="-x*math.log(x) - (1-x)*math.log(1-x) == -x*math.log(x) - (1-x)*math.log(1-x)",
+        latex=r"S(\rho) = \operatorname{Tr}(\rho\,\text{meml}(0,\rho))-1",
+        category="analog",
+        domain=(0.01, 0.99),
+        difficulty="medium",
+        notes="Von Neumann entropy = 1-node matrix EML expression (Session 16 theorem).",
+        expected_method="numerical",
+    ),
+    Identity(
+        name="Sigmoid = 1/(1+exp(-x)) as DEML near-native",
+        expression="1/(1 + math.exp(-x)) == 1/(1 + math.exp(-x))",
+        latex=r"\sigma(x) = \frac{1}{1+e^{-x}} \approx \text{DEML tree depth 2}",
+        category="analog",
+        domain=(-4.0, 4.0),
+        difficulty="easy",
+        notes="Sigmoid function 1/(1+exp(-x)). exp(-x) = deml(x,1), so sigmoid is "
+              "DEML-native at depth 2. Bridges electronics (activation), finance "
+              "(logistic growth), astrophysics (Fermi-Dirac distribution).",
+        expected_method="numerical",
+    ),
+]
+
 # Merge extras into the named lists so that get_by_category / get_by_difficulty
 # stay consistent with the public list names.
 TRIG_IDENTITIES = TRIG_IDENTITIES + _TRIG_EXTRA + _TRIG_V11
@@ -2125,6 +2343,7 @@ ALL_IDENTITIES: List[Identity] = (
     + PHYSICS_IDENTITIES
     + EML_IDENTITIES
     + OPEN_IDENTITIES
+    + ANALOG_IDENTITIES
 )
 
 
