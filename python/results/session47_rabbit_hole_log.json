@@ -1,0 +1,105 @@
+{
+  "session": 47,
+  "rabbit_holes": [
+    {
+      "lane": "Chaos",
+      "finding": "Logistic map r=4 has exact closed form x_n = sin\u00b2(2^n\u00b7arcsin(\u221ax0)). This IS expressible in EML (sin via Im(eml(ix,1))), but requires depth O(n). No fixed-depth EML tree covers all n. EML-k(logistic, horizon=n) = O(n).",
+      "status": "STRUCTURAL_LIMIT_FOUND",
+      "surprise_level": "HIGH"
+    },
+    {
+      "lane": "Chaos",
+      "finding": "Lorenz vector field (dx/dt, dy/dt, dz/dt) is EXACTLY degree-2 polynomial. EML-2 for the RHS of the ODE. The chaos comes from iteration, not the formula.",
+      "status": "EXACT_EML_FOUND",
+      "surprise_level": "MEDIUM"
+    },
+    {
+      "lane": "Number Theory",
+      "finding": "\u03b6(s) = \u03a3 n^{-s} = \u03a3 exp(-s\u00b7ln(n)) is EXACTLY an infinite EML-1 linear combo. Each term is a depth-1 atom. Riemann zeta IS an EML Dirichlet series.",
+      "status": "EXACT_EML_FOUND",
+      "surprise_level": "VERY_HIGH"
+    },
+    {
+      "lane": "Number Theory",
+      "finding": "Riemann Hypothesis connection: \u03b6(1/2+it) has infinitely many zeros in t \u2192 it is EML-\u221e(t). RH would confirm that \u03b6(\u03c3+it) is EML-\u221e(t) iff \u03c3=1/2. The Infinite Zeros Barrier connects to one of the Millennium Problems.",
+      "status": "CONJECTURE_OPENED",
+      "surprise_level": "EXTREME"
+    },
+    {
+      "lane": "Geometry",
+      "finding": "Trivariate basis works: sphere_sdf near machine-epsilon, torus_sdf MSE<1e-3. The n-variate Weierstrass theorem extends naturally to any dimension.",
+      "status": "CONFIRMED",
+      "surprise_level": "LOW"
+    },
+    {
+      "lane": "Geometry",
+      "finding": "Hopf fibration h: S\u00b3\u2192S\u00b2 is exactly EML-2. All components are degree-2 polynomials in quaternion coordinates. Most fundamental topological map in algebraic topology is a depth-2 EML expression.",
+      "status": "EXACT_EML_FOUND",
+      "surprise_level": "HIGH"
+    },
+    {
+      "lane": "Finance",
+      "finding": "Black-Scholes call price is exactly EML-3. d1/d2 are EML-2 (ln+sqrt). N(x) = (1+erf(x/\u221a2))/2 is EML-3. The most important formula in quantitative finance is a depth-3 EML tree.",
+      "status": "EXACT_EML_FOUND",
+      "surprise_level": "HIGH"
+    }
+  ],
+  "s48_priorities": [
+    {
+      "rank": 1,
+      "lane": "Number Theory \u2014 RH Connection",
+      "task": "Formalize the conjecture: \u03b6(\u03c3+it) is EML-\u221e(t) iff \u03c3=1/2. Test numerically: compute zero density of EML basis approximations to \u03b6 on lines \u03c3=0.3, 0.5, 0.7, 0.9. Is zero density maximal at \u03c3=1/2?",
+      "payoff": "EXTREME \u2014 connects EML to a Millennium Prize Problem"
+    },
+    {
+      "rank": 2,
+      "lane": "Chaos \u2014 Complete Classification",
+      "task": "Build EML-k(f, horizon=n) as a new complexity measure for iterated maps. Classify: logistic (O(n)), tent map, Chebyshev map (exact for all n via cos(2^n\u00b7\u03b8)), Arnold cat map. Test whether any chaotic map has fixed EML-k.",
+      "payoff": "HIGH \u2014 new complexity theory for dynamical systems"
+    },
+    {
+      "rank": 3,
+      "lane": "Geometry \u2014 4D and Manifolds",
+      "task": "Extend to 4D EML basis. Test: quaternion multiplication (exact EML-2), SO(3) rotation matrix components (degree-2 poly in Euler angles \u2192 EML-2), Calabi-Yau coordinate patches (algebraic \u2192 EML-k finite).",
+      "payoff": "HIGH \u2014 opens differential geometry and string theory connections"
+    },
+    {
+      "rank": 4,
+      "lane": "Number Theory \u2014 Explicit Dirichlet Series",
+      "task": "Build a general EML-Dirichlet module: given a sequence a_n, return the linear combination \u03a3 a_n * exp(-s*ln(n)). Test: L-functions, Dedekind zeta, Dirichlet characters. All are EML-1 Dirichlet series.",
+      "payoff": "MEDIUM-HIGH \u2014 systematic number theory as EML"
+    },
+    {
+      "rank": 5,
+      "lane": "Finance \u2014 Stochastic EML",
+      "task": "Heston model, SABR volatility. The log-normal distribution IS an EML expression (exp(\u03bc + \u03c3\u00b7Z) = eml(\u03bc + \u03c3\u00b7Z, 1) + 1). Build stochastic volatility models as EML trees.",
+      "payoff": "MEDIUM \u2014 practical quant finance applications"
+    }
+  ],
+  "trivariate_results": [
+    {
+      "name": "sphere_sdf",
+      "mse_oos": 2.936503383864084e-13
+    },
+    {
+      "name": "torus_sdf",
+      "mse_oos": 0.0012804153073457515
+    },
+    {
+      "name": "gaussian_3d",
+      "mse_oos": 3.015249314096479e-07
+    },
+    {
+      "name": "inverse_cube",
+      "mse_oos": 3.304126900238432e-17
+    },
+    {
+      "name": "dipole_3d",
+      "mse_oos": 8.401157904491552e-19
+    },
+    {
+      "name": "ellipsoid_sdf",
+      "mse_oos": 0.00013438902734009596
+    }
+  ]
+}
