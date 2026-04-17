@@ -4,6 +4,43 @@ All notable changes to `monogate` are documented here.
 
 ---
 
+## [2.1.0] — 2026-04-16
+
+### Sessions 31–35 — EML as Universal Primitive
+
+#### New modules
+
+- **`monogate.frontiers.eml_fourier`** — EML Fourier Experiment (Session 31)
+  - `build_eml_dictionary`: enumerate all valid EML trees up to N internal nodes
+  - `eml_fourier_search`: sparse recovery of target functions as EML linear combos
+  - `fourier_summary_table`: markdown table of results for standard targets
+  - Key result: sin(x) K=5 atoms MSE_test=2.3e-2; exp(x)/log(x) exact at K=1
+
+- **`monogate.frontiers.eml_vae`** — EML Normalizing Flows / VAE (Session 32)
+  - `EMLEncoder`: encoder outputting EML natural parameters (eta1<0, eta2)
+  - `EMLVariationalLoss`: KL loss as Bregman divergence of Gaussian log-partition
+  - `train_eml_vae`, `compare_eml_vs_standard_vae`
+
+- **`monogate.information_geometry.kl_divergence_gaussian`** (new function)
+  - Gaussian KL via Bregman divergence; KL(N(1,1)||N(0,1))=0.5 verified
+
+- **`monogate.cli.capability_card`** — CapCard generator/validator (Session 34)
+  - `python -m monogate capability-card --generate` writes `capability_card.json`
+  - `python -m monogate capability-card --validate` validates against JSON Schema
+
+#### Extended experiments
+
+- **`experiments/schanuel_probe.py`** depth-6 extension (Session 33)
+  - Added EL field arithmetic (+, -, x) between EL numbers
+  - Depth-6 result: phantom attractor 6.2675186 NOT in EL field (min dist 1.26e-4)
+  - Closest: `ln((2*ln(5))*(3*exp(4)))` = 6.26764446
+
+#### Tests: 30 + 17 = 47 new, total **1514 passing**
+
+#### Version bumps: pyproject.toml 2.0.0 -> 2.1.0, lib/package.json 1.0.0 -> 1.1.0
+
+---
+
 ## [2.0.0] — 2026-04-16
 
 ### Sessions 23–30 — Theoretical Foundations, Complexity Theory, Information Geometry

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "monogate"
-version = "2.0.0"
+version = "2.1.0"
 description = "EML arithmetic — all elementary functions from eml(x,y) = exp(x) − ln(y)"
 readme = "README.md"
 license = { text = "MIT" }
@@ -20,8 +20,9 @@ dev       = ["pytest>=7", "torch>=2.0", "mpmath>=1.3", "matplotlib>=3.8", "numpy
 docs      = ["mkdocs>=1.5", "mkdocs-material>=9.0", "mkdocstrings[python]>=0.20"]
 
 [project.scripts]
-monogate-optimize  = "monogate.llm.cli:main"
-monogate-validate  = "monogate.validate:main"
+monogate-optimize      = "monogate.llm.cli:main"
+monogate-validate      = "monogate.validate:main"
+monogate-capability-card = "monogate.cli.capability_card:main"
 
 [project.urls]
 Homepage   = "https://monogate.dev"

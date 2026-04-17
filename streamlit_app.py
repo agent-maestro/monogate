@@ -68,7 +68,7 @@ st.caption(
     "[GitHub](https://github.com/almaguer1986/monogate)"
 )
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
     "⚡ Optimizer",
     "📐 Special Functions",
     "🧬 PINN Demo",
@@ -77,6 +77,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "⊖ DEML Gate",
     "🔭 Math Explorer",
     "🔗 Analog Renaissance",
+    "🎵 EML Fourier",
 ])
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -837,3 +838,103 @@ with tab8:
             "Install monogate ≥ 1.4.0 or run from the repo root. "
             "The Analog Renaissance module requires `monogate.frontiers.analog_renaissance`."
         )
+
+# Tab 9 — EML Fourier
+with tab9:
+    st.markdown("## EML Fourier Decomposition")
+    st.markdown(
+        "Find a sparse linear combination of EML trees that approximates a target function. "
+        "This bridges the **Infinite Zeros Barrier** (no single EML tree = sin) with "
+        "classical Fourier analysis."
+    )
+
+    col_left, col_right = st.columns([1, 2])
+    with col_left:
+        target_name = st.selectbox(
+            "Target function",
+            ["sin", "cos", "exp", "log", "sinh", "cosh"],
+            index=0,
+        )
+        max_n = st.slider("Max internal nodes (dictionary depth)", 1, 4, 3)
+        max_K = st.slider("Max sparsity K", 1, 8, 6)
+        method = st.radio("Sparse recovery method", ["omp", "lasso"], horizontal=True)
+        run_btn = st.button("Run EML Fourier Search")
+
+    with col_right:
+        if run_btn:
+            import math as _math
+            _TARGET_MAP = {
+                "sin": _math.sin,
+                "cos": _math.cos,
+                "exp": _math.exp,
+                "log": lambda x: _math.log(x) if x > 0 else float("nan"),
+                "sinh": _math.sinh,
+                "cosh": _math.cosh,
+            }
+            try:
+                from monogate.frontiers.eml_fourier import eml_fourier_search
+                import numpy as _np
+
+                with st.spinner(f"Building N<={max_n} EML dictionary and running {method.upper()}..."):
+                    result = eml_fourier_search(
+                        _TARGET_MAP[target_name],
+                        target_name=target_name,
+                        max_internal_nodes=max_n,
+                        max_K=max_K,
+                        method=method,
+                    )
+
+                st.success(
+                    f"**K = {result.K}** atoms | "
+                    f"MSE train = {result.mse_train:.3e} | "
+                    f"MSE test = {result.mse_test:.3e} | "
+                    f"Dictionary size = {result.n_dict_atoms}"
+                )
+
+                # Atom table
+                st.markdown("### Selected atoms")
+                rows = []
+                for i, (c, a) in enumerate(zip(result.coefficients, result.atoms)):
+                    rows.append({"#": i + 1, "Coefficient": f"{c:.6g}", "Formula": a.formula})
+                st.table(rows)
+
+                # Reconstruction plot
+                xs_plot = _np.linspace(0.01, 2.2, 200)
+                from monogate.frontiers.eml_fourier import _eval_tree as _et
+                y_true = [_TARGET_MAP[target_name](float(x)) for x in xs_plot]
+                y_pred = []
+                for x in xs_plot:
+                    val = sum(
+                        c * (_et(a.ops, a.leaf_mask, float(x)) or 0.0)
+                        for c, a in zip(result.coefficients, result.atoms)
+                    )
+                    y_pred.append(val if _math.isfinite(val) else float("nan"))
+
+                import pandas as _pd
+                df_plot = _pd.DataFrame({
+                    "x": list(xs_plot) * 2,
+                    "y": y_true + y_pred,
+                    "series": [target_name] * len(xs_plot) + ["EML approx"] * len(xs_plot),
+                })
+                st.line_chart(df_plot.pivot(index="x", columns="series", values="y"))
+
+                st.markdown(f"**Formula:** `{result.formula_str}`")
+
+            except Exception as _exc:
+                st.error(f"EML Fourier search failed: {_exc}")
+        else:
+            st.info("Configure parameters on the left and click **Run EML Fourier Search**.")
+            st.markdown("""
+**EML Fourier Experiment (Session 31)**
+
+| Finding | Result |
+|---------|--------|
+| exp(x) | K=1, MSE≈1e-31 (exact — it's a native EML op) |
+| log(x) | K=1, MSE≈1e-32 (exact — it's a native EML op) |
+| sin(x) | K=5, MSE_test≈2.3e-2 (partial, not machine precision) |
+| cos(x) | K=5, MSE_test≈3.9e-3 |
+| cosh(x)| K=5, MSE_test≈1.2e-4 |
+
+The **Infinite Zeros Barrier** (no single tree = sin) and **EML Fourier partial
+decomposition** (sin ≈ K=5 linear combo) are both true simultaneously.
+            """)

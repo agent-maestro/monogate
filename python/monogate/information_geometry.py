@@ -227,6 +227,37 @@ def kl_divergence_exponential(eta_p: float, eta_q: float) -> float:
     return bregman_divergence(log_partition_exponential, grad_A, eta_p, eta_q)
 
 
+def kl_divergence_gaussian(
+    eta1_p: float, eta2_p: float,
+    eta1_q: float = -0.5, eta2_q: float = 0.0,
+) -> float:
+    """KL(p||q) between two 1-D Gaussians given in natural parameters.
+
+    Natural params: η₁ = -1/(2σ²), η₂ = μ/σ².
+    Default q = N(0,1): η₁_q=-0.5, η₂_q=0.
+
+    KL = A(η_q) - A(η_p) - ∇A(η_p)·(η_q - η_p)
+    where ∇A(η₁,η₂) = (∂A/∂η₁, ∂A/∂η₂)
+        = (-η₂²/(4η₁²) - 1/(2η₁), -η₂/(2η₁))
+        = (σ²/2 + μ²/2, μ)
+    """
+    if eta1_p >= 0 or eta1_q >= 0:
+        return float("inf")
+
+    def A(e1: float, e2: float) -> float:
+        return log_partition_gaussian_1d(e1, e2)
+
+    # ∂A/∂η₁ = -η₂²/(4η₁²) - 1/(2η₁)
+    dA_de1 = -eta2_p ** 2 / (4.0 * eta1_p ** 2) - 1.0 / (2.0 * eta1_p)
+    # ∂A/∂η₂ = -η₂/(2η₁)
+    dA_de2 = -eta2_p / (2.0 * eta1_p)
+
+    kl = (A(eta1_q, eta2_q) - A(eta1_p, eta2_p)
+          - dA_de1 * (eta1_q - eta1_p)
+          - dA_de2 * (eta2_q - eta2_p))
+    return max(0.0, kl)
+
+
 # ── Geodesics ─────────────────────────────────────────────────────────────────
 
 def geodesic_exponential_family(
