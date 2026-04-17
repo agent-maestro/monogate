@@ -546,8 +546,30 @@ def print_results_table(results: list[SpatialSRResult]) -> None:
 #  Session 43 — Bivariate EML Grammar
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Leaf set extended with "y" — true 2D search, no projection needed.
-_TERMINALS_2D: list = [1.0, "x", "y", 2.0, -1.0, 0.5]
+# Base terminals always included; adaptive constants added from probe values.
+_TERMINALS_2D_BASE: list = ["x", "y", 1.0, -1.0]
+
+
+def _build_terminals_2d(probe_z: list[float]) -> list:
+    """Adaptive leaf set: fixed vars + constants derived from probe output range.
+
+    Avoids the median trap where a hard-coded 0.5 sits at the center of every
+    target's output range and beats all tree expressions on sparse probes.
+    """
+    terminals: list = list(_TERMINALS_2D_BASE)
+    if probe_z:
+        arr = [z for z in probe_z if math.isfinite(z)]
+        if arr:
+            mn, mx = min(arr), max(arr)
+            rng = mx - mn
+            mean_z = sum(arr) / len(arr)
+            std_z  = math.sqrt(sum((z - mean_z) ** 2 for z in arr) / len(arr))
+            abs_max = max(abs(mn), abs(mx))
+            for c in [mean_z, std_z, abs_max, 0.5 * abs_max, 2.0, 0.5 * rng]:
+                c_r = round(c, 4)
+                if math.isfinite(c_r) and abs(c_r) < 1e4 and c_r not in terminals:
+                    terminals.append(c_r)
+    return terminals
 
 
 def _eval_tree_2d(node: Node, x: float, y: float) -> float:
@@ -577,12 +599,19 @@ def _score_2d(
     node: Node,
     probe_xy: list[tuple[float, float]],
     probe_z:  list[float],
+    min_valid_frac: float = 0.70,
 ) -> float:
-    """MSE of bivariate tree against probe points.  Returns inf on any error."""
+    """MSE of bivariate tree against probe points.
+
+    Fix 7: returns inf if fewer than min_valid_frac of probes evaluate
+    successfully, preventing domain-error-prone formulas from being rewarded
+    on a lucky handful of points.
+    """
     if not _is_complete(node):
         return float("inf")
     sq_sum = 0.0
     n_ok = 0
+    n_total = len(probe_xy)
     for (px, py), pz in zip(probe_xy, probe_z):
         try:
             pred = _eval_tree_2d(node, px, py)
@@ -591,35 +620,47 @@ def _score_2d(
                 n_ok += 1
         except Exception:
             pass
+    if n_ok < min_valid_frac * n_total:
+        return float("inf")
     return sq_sum / n_ok if n_ok > 0 else float("inf")
 
 
-def _expand_options_2d(node: Node, max_depth: int) -> list[Node]:
-    """Bivariate grammar expansions — same as 1D but uses _TERMINALS_2D."""
+def _expand_options_2d(node: Node, max_depth: int, terminals: list) -> list[Node]:
+    """Bivariate grammar expansions using the given terminal set."""
     path = _first_placeholder_path(node)
     if path is None:
         return []
     options: list[Node] = []
-    for t in _TERMINALS_2D:
+    for t in terminals:
         options.append(_set_at_path(node, path, _leaf(t)))
     if _depth(node) + 1 < max_depth:
         options.append(_set_at_path(node, path, _eml(_placeholder(), _placeholder())))
     return options
 
 
-def _random_complete_2d(partial: Node, depth_budget: int, rng: random.Random) -> Node:
-    """Randomly complete a bivariate partial tree."""
+def _random_complete_2d(
+    partial: Node,
+    depth_budget: int,
+    rng: random.Random,
+    terminals: list,
+    leaf_prob: float = 0.35,
+) -> Node:
+    """Randomly complete a bivariate partial tree.
+
+    Fix 3: leaf_prob reduced to 0.35 (was 0.60) so rollouts grow deeper trees
+    that can mix x and y rather than collapsing to constants.
+    """
     node = _copy(partial)
     for _ in range(300):
         path = _first_placeholder_path(node)
         if path is None:
             break
         if _depth(node) >= depth_budget - 1:
-            replacement = _leaf(rng.choice(_TERMINALS_2D))
+            replacement = _leaf(rng.choice(terminals))
         else:
             replacement = (
-                _leaf(rng.choice(_TERMINALS_2D))
-                if rng.random() < 0.6
+                _leaf(rng.choice(terminals))
+                if rng.random() < leaf_prob
                 else _eml(_placeholder(), _placeholder())
             )
         node = _set_at_path(node, path, replacement)
@@ -627,7 +668,7 @@ def _random_complete_2d(partial: Node, depth_budget: int, rng: random.Random) ->
         path = _first_placeholder_path(node)
         if path is None:
             break
-        node = _set_at_path(node, path, _leaf(rng.choice(_TERMINALS_2D)))
+        node = _set_at_path(node, path, _leaf(rng.choice(terminals)))
     return node
 
 
@@ -656,6 +697,7 @@ def mcts_search_2d(
     seed:         int = 42,
     log_every:    int = 0,
     domain:       float = 2.0,
+    ucb_c:        float = 3.0,
 ) -> BivariateMCTSResult:
     """Monte-Carlo Tree Search over the bivariate EML grammar.
 
@@ -695,10 +737,15 @@ def mcts_search_2d(
             pass
     probe_points = valid_pts
 
+    # Fix 2: adaptive terminal set derived from actual probe output range
+    terminals = _build_terminals_2d(probe_z)
+
     rng = random.Random(seed)
     t0  = time.perf_counter()
 
-    # Bootstrap _MCTSNode with 2D expansions
+    # Fix 4: ucb_c passed as parameter (default 3.0 for 2D branching factor)
+    _ucb_c = ucb_c
+
     class _MCTSNode2D:
         __slots__ = ("partial", "parent", "children", "visits", "total_reward",
                      "untried_expansions", "is_terminal")
@@ -711,7 +758,7 @@ def mcts_search_2d(
             self.total_reward: float = 0.0
             self.is_terminal: bool = _is_complete(partial)
             self.untried_expansions: list[Node] = (
-                [] if self.is_terminal else _expand_options_2d(partial, max_depth)
+                [] if self.is_terminal else _expand_options_2d(partial, max_depth, terminals)
             )
 
         def ucb1(self) -> float:
@@ -719,7 +766,7 @@ def mcts_search_2d(
                 return float("inf")
             parent_v = self.parent.visits if self.parent else self.visits
             return (self.total_reward / self.visits
-                    + math.sqrt(2.0) * math.sqrt(math.log(parent_v) / self.visits))
+                    + _ucb_c * math.sqrt(math.log(parent_v) / self.visits))
 
         def is_fully_expanded(self) -> bool:
             return len(self.untried_expansions) == 0
@@ -746,10 +793,12 @@ def mcts_search_2d(
         if node.is_terminal:
             completed = node.partial
         else:
-            completed = _random_complete_2d(node.partial, depth, rng)
+            completed = _random_complete_2d(node.partial, depth, rng, terminals)
 
         mse = _score_2d(completed, probe_points, probe_z)
-        reward = 1.0 / (1.0 + mse)
+        # Fix 6: depth bonus — small incentive to grow trees beyond depth 0
+        n_eml = _formula(completed).count("eml(")
+        reward = 1.0 / (1.0 + mse) * (1.0 + 0.02 * n_eml)
 
         if mse < best_mse:
             best_mse  = mse
@@ -777,17 +826,21 @@ def mcts_search_2d(
     )
 
 
-def _default_probe_2d(domain: float, n_grid: int = 7) -> list[tuple[float, float]]:
-    """Default 2D probe points: regular grid + boundary ring for SDF targets."""
+def _default_probe_2d(domain: float, n_grid: int = 15) -> list[tuple[float, float]]:
+    """Default 2D probe points: dense regular grid + boundary ring.
+
+    Fix 1: 15×15 grid (225 pts) + 24 boundary ring = 249 total.
+    Previous: 7×7 (49) + 12 = 61. 4× denser coverage prevents constants from
+    matching the function by accident on sparse samples.
+    """
     pts: list[tuple[float, float]] = []
-    # 7x7 regular grid
     vals = [-domain + 2 * domain * i / (n_grid - 1) for i in range(n_grid)]
     for x in vals:
         for y in vals:
             pts.append((x, y))
-    # Boundary ring at r=1 (important for SDF targets)
-    for k in range(12):
-        angle = 2 * math.pi * k / 12
+    # Boundary ring at r=1 (important for SDF zero-crossing)
+    for k in range(24):
+        angle = 2 * math.pi * k / 24
         pts.append((math.cos(angle), math.sin(angle)))
     return pts
 
@@ -1049,7 +1102,13 @@ def distill_network(
             return float(z_pred[idx])
 
     # ── Run bivariate MCTS on network output ─────────────────────────────────
-    probe_pts = _default_probe_2d(domain)
+    # Fix 5: subsample 200 stratified points from the dense network grid so
+    # MCTS sees the actual function surface (not the sparse 61-pt default grid).
+    rng_probe = random.Random(seed + 1)
+    n_probe = min(200, len(xy_list))
+    probe_idx = rng_probe.sample(range(len(xy_list)), n_probe)
+    probe_pts = [tuple(xy_list[i]) for i in probe_idx]
+
     t0 = time.perf_counter()
     try:
         raw = mcts_search_2d(
