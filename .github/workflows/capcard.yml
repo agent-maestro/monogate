@@ -27,13 +27,14 @@ jobs:
 
       - name: Print report
         run: |
-          capcard verify capability_card.json | python3 -c "
-import json, sys
-r = json.load(sys.stdin)
-print(f'Card: {r[\"card_name\"]} v{r[\"version\"]}')
-print(f'Capabilities: {r[\"capabilities_count\"]}')
-print(f'Benchmarks:   {r[\"benchmarks_count\"]}')
-print(f'Proofs:       {r[\"proofs_count\"]}')
-print(f'Trust score:  {r[\"trust_score\"]}')
-print(f'Valid:        {r[\"valid\"]}')
+          capcard verify capability_card.json > report.json
+          python3 -c "
+import json
+r = json.load(open('report.json'))
+print('Card:', r['card_name'], 'v' + r['version'])
+print('Capabilities:', r['capabilities_count'])
+print('Benchmarks:  ', r['benchmarks_count'])
+print('Proofs:      ', r['proofs_count'])
+print('Trust score: ', r['trust_score'])
+print('Valid:       ', r['valid'])
 "
