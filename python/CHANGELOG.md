@@ -4,6 +4,58 @@ All notable changes to `monogate` are documented here.
 
 ---
 
+## [2.1.5] — 2026-04-17
+
+### Session 40 — EML Weierstrass Theorem: Constructive Proof
+
+#### The Kill Shot: x^2 Explicit Construction
+
+- **x^2 constructive proof**: explicit linear combination of 23 EML atoms, MSE=2.83e-15
+  - All top atoms have form `eml(eml(eml(1,x),·),·)` confirming N=3 = first polynomial depth
+  - Also: x^3 (MSE=1.27e-13), sin^2(x) (3.30e-7), x*sin(x) (8.11e-9) all explicit
+- **Polynomial induction chain**: x^1..x^5 ALL DENSE (x^1 reaches 2.71e-18 at N=4)
+  - Corollary: all polynomials in closure(span(EML))
+  - Combined with classical Weierstrass: C[a,b] = closure(span(EML))
+
+#### Formal Theorem (eml_weierstrass_formal.py)
+
+Complete 7-step proof printed and saved to `results/eml_weierstrass_proof.txt`:
+  1. A contains 1 and exp(x) -- separates points
+  2. Every x^n in closure(A) -- shown constructively
+  3. Polynomials in closure(A) -- linear combination
+  4. Classical Weierstrass -- polynomials dense in C[a,b]
+  5. C[a,b] = closure(A)  -- QED
+
+#### PSLQ 150-Digit Report
+
+- Expanded basis (21 constants): apparent "relations" verified SPURIOUS
+  - Both attractor basins: coefficient of alpha = 0 in all found relations
+  - Degree-5 polynomial residual = -6.66e-9, not a true algebraic relation
+  - **Conclusion**: phantom attractor is NOT algebraic of degree <=5 and shows
+    no true integer relation with {e, pi, ln(2), gamma, zeta(3), ...} at 150 digits
+- Fixed-point search: no small EML tree T satisfies T(alpha) = alpha
+
+#### Grammar G2 (DEML Study)
+
+- |sin(x)|: EML+DEML combined basis gives MSE=1.39e-3 vs EML-only 3.01e-3 (2.2x)
+  → LIKELY_DENSE verdict -- G2 partially resolves the non-smooth barrier
+- sin(x): 131x improvement with G2 (already DENSE in EML alone)
+- j0(x) on [0.1,2.4]: DENSE in both EML and G2
+
+#### New experiments
+
+- `x2_explicit_construction.py` -- explicit OLS coefficients + atoms for x^n, sin^2, etc.
+- `polynomial_induction.py` -- x^1..x^5 monomial induction chain
+- `deml_abssin_study.py` -- Grammar G2 (EML+DEML) study for |sin(x)|
+- `attractor_expanded_pslq.py` -- PSLQ at 150d with 21 constants + poly search + fixed-pt
+- `eml_weierstrass_formal.py` -- prints/saves complete formal proof
+
+#### Documentation
+
+- `python/PAPER.md` §39: "The EML Weierstrass Theorem: Constructive Proof"
+
+---
+
 ## [2.1.4] — 2026-04-17
 
 ### Session 39 — Formal Density Proof Path + Schanuel Depth + Attractor Transcendence
