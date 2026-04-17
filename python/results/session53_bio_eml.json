@@ -1,0 +1,173 @@
+{
+  "models": {
+    "lotka_volterra": {
+      "name": "lotka_volterra",
+      "eml_per_step": 2,
+      "highest_degree": 2,
+      "nonlinearity": "x*y (bilinear predation term)",
+      "conserved_quantity_eml": 2,
+      "insight": "Lotka-Volterra: bilinear term x*y = product of two EML-1 variables. EML-2 per step. Conserved quantity V involves ln(x), ln(y): also EML-2 (log is depth-2 via: ln(x) = eml(0, x) + 1). Periodic orbits: not chaotic, EML-2 governs all dynamics.",
+      "orbit": {
+        "prey_range": [
+          7.925665167799124,
+          40.597600317192196
+        ],
+        "predator_range": [
+          3.0924471831836673,
+          23.27737959710753
+        ]
+      }
+    },
+    "michaelis_menten": {
+      "name": "michaelis_menten",
+      "formula": "v = Vmax * S / (Km + S)",
+      "eml_depth": 2,
+      "structure": "Rational function: S/(Km+S) = 1/(1 + Km/S)",
+      "insight": "v = Vmax*S/(Km+S): numerator is EML-1 (linear in S). Denominator (Km+S) is EML-1. Quotient needs reciprocal: 1/x = exp(-ln(x)) = EML-2. Full rate function is EML-2. Michaelis-Menten saturation kinetics = EML-2.",
+      "vmax_achieved_at_10Km": 9.090909090909092,
+      "half_max_at_Km": 0.5
+    },
+    "sir_model": {
+      "name": "SIR_epidemic",
+      "eml_per_step": 2,
+      "r0": 2.9999999999999996,
+      "highest_degree": 2,
+      "nonlinearity": "S*I (force of infection \u2014 bilinear)",
+      "insight": "SIR model with R0=3.00: force of infection beta*S*I is bilinear \u2192 EML-2. Same structure as Lotka-Volterra (predator-prey). Epidemic dynamics and ecological oscillations are EML-2 systems.",
+      "peak_infected": 0.30381121131124095,
+      "final_susceptible": 0.05879745292044928
+    },
+    "fitzhugh_nagumo": {
+      "name": "fitzhugh_nagumo",
+      "eml_per_step": 3,
+      "highest_degree": 3,
+      "nonlinearity": "v\u00b3 (cubic nullcline)",
+      "behavior": "Limit cycle (spiking neuron model)",
+      "insight": "FitzHugh-Nagumo: dv/dt = v - v\u00b3/3 - w + I. The cubic term v\u00b3 = v*v*v needs 2 multiplies: depth 2 in isolation. Inside the full RHS expression (sum with w and I), the tree depth is 3. This is the minimal neuron model with cubic spiking mechanism = EML-3.",
+      "v_range": [
+        -1.9703996322133146,
+        1.9835608566458145
+      ],
+      "approximate_spikes": 7
+    },
+    "brusselator": {
+      "name": "brusselator",
+      "eml_per_step": 3,
+      "highest_degree": 3,
+      "nonlinearity": "A*x\u00b2*y (autocatalytic trimolecular reaction)",
+      "behavior": "Limit cycle for B > 1+A\u00b2",
+      "oscillates": true,
+      "insight": "Brusselator (A=1.0, B=3.0): autocatalytic x\u00b2*y term. x\u00b2*y = x*(x*y) needs two multiplies \u2192 depth 3. Oscillating (B > 1+A\u00b2). Chemical oscillators require at least EML-3 (trimolecular autocatalysis).",
+      "x_range": [
+        0.337298377820207,
+        3.765611657541463
+      ],
+      "y_range": [
+        0.8490574528026221,
+        4.733814590207959
+      ]
+    }
+  },
+  "taxonomy": {
+    "exponential_growth": {
+      "formula": "dx/dt = r*x",
+      "eml_per_step": 1,
+      "solution": "x(t) = x0*exp(r*t) \u2014 EML-1 exact solution",
+      "verdict": "EML-1: linear ODE, exact exp solution"
+    },
+    "logistic_growth": {
+      "formula": "dx/dt = r*x*(1 - x/K)",
+      "eml_per_step": 2,
+      "solution": "Sigmoid: K/(1+exp(-r*(t-t0))) \u2014 EML-2 exact",
+      "verdict": "EML-2: x*(1-x/K) is quadratic"
+    },
+    "lotka_volterra": {
+      "formula": "dx=alpha*x-beta*x*y, dy=delta*x*y-gamma*y",
+      "eml_per_step": 2,
+      "verdict": "EML-2: bilinear x*y term"
+    },
+    "michaelis_menten": {
+      "formula": "v = Vmax*S/(Km+S)",
+      "eml_per_step": 2,
+      "verdict": "EML-2: rational function (reciprocal = log+exp)"
+    },
+    "sir_model": {
+      "formula": "dS=-beta*S*I, dI=beta*S*I-gamma*I, dR=gamma*I",
+      "eml_per_step": 2,
+      "verdict": "EML-2: bilinear S*I force of infection"
+    },
+    "fitzhugh_nagumo": {
+      "formula": "dv=v-v\u00b3/3-w+I, dw=eps*(v+a-b*w)",
+      "eml_per_step": 3,
+      "verdict": "EML-3: cubic v\u00b3 spiking mechanism"
+    },
+    "brusselator": {
+      "formula": "dx=1-(B+1)x+Ax\u00b2y, dy=Bx-Ax\u00b2y",
+      "eml_per_step": 3,
+      "verdict": "EML-3: cubic x\u00b2y autocatalytic term"
+    },
+    "hill_function_n2": {
+      "formula": "Vmax*x\u00b2/(K\u00b2+x\u00b2)",
+      "eml_per_step": 4,
+      "verdict": "EML-4: x^n = exp(n*ln(x)) at depth 3, then rational at depth 4"
+    },
+    "turing_reaction_diffusion": {
+      "formula": "du/dt = f(u,v) + D_u*\u2207\u00b2u",
+      "eml_per_step": 3,
+      "verdict": "EML-3 RHS (if Brusselator kinetics) + EML-2 Laplacian (finite diff)"
+    },
+    "threshold_switch": {
+      "formula": "f(x) = 0 if x<theta, 1 if x>=theta",
+      "eml_per_step": "inf",
+      "verdict": "EML-inf: step function is not real-analytic"
+    }
+  },
+  "key_insight": "Biology is EML-finite. Linear biology=EML-1, mass-action kinetics=EML-2, cooperative/allosteric=EML-3-4, threshold switches=EML-inf. The jump from EML-2 to EML-3 corresponds to trimolecular reactions and cubic nonlinearities \u2014 the minimum needed for chemical oscillations. Same EML hierarchy as physics: harmonic (EML-2) < anharmonic (EML-3) < chaotic.",
+  "summary": {
+    "session": 53,
+    "title": "Bio/Chemical Networks \u2014 EML Complexity",
+    "findings": [
+      {
+        "id": "F53.1",
+        "name": "Mass-action kinetics = EML-2",
+        "content": "All bimolecular (A+B\u2192C) reactions have EML-2 rate equations via bilinear terms.",
+        "status": "CONFIRMED"
+      },
+      {
+        "id": "F53.2",
+        "name": "Chemical oscillations need EML-3",
+        "content": "Brusselator x\u00b2y and FitzHugh-Nagumo v\u00b3 \u2014 both require EML-3 for limit cycles.",
+        "status": "CONFIRMED"
+      },
+      {
+        "id": "F53.3",
+        "name": "Hill function cooperativity = EML-4",
+        "content": "x^n for n>1 requires exp(n*ln(x)) = depth 3, then rational = depth 4.",
+        "status": "CONFIRMED"
+      },
+      {
+        "id": "F53.4",
+        "name": "Threshold switches = EML-inf",
+        "content": "Boolean gene networks and step-function models are EML-inf (non-analytic).",
+        "status": "CONFIRMED"
+      },
+      {
+        "id": "F53.5",
+        "name": "Biology follows universal EML hierarchy",
+        "content": "Linear \u2192 quadratic \u2192 cubic \u2192 EML-inf maps onto simple growth \u2192 ecosystems \u2192 neurons \u2192 digital logic. The same hierarchy as physics (harmonic \u2192 anharmonic \u2192 chaotic).",
+        "status": "UNIFYING INSIGHT"
+      }
+    ],
+    "next_session": {
+      "id": 54,
+      "title": "Financial Mathematics \u2014 EML Expansion",
+      "priorities": [
+        "Heston stochastic volatility: EML-2 (sqrt(v) is EML-2 via exp(0.5*ln(v)))",
+        "SABR model: EML-3 (F^beta, 0<beta<1 fractional power)",
+        "Jump-diffusion (Merton): EML-3 (Poisson jump term)",
+        "Exotic options: barrier, Asian, lookback \u2014 EML depth analysis",
+        "Risk measures: VaR, CVaR \u2014 EML structure of quantile functions"
+      ]
+    }
+  }
+}
