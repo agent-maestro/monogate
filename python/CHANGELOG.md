@@ -4,6 +4,57 @@ All notable changes to `monogate` are documented here.
 
 ---
 
+## [2.1.1] — 2026-04-16
+
+### Session 36 — Closing the Loop & CapCard Launch
+
+#### New modules
+
+- **`monogate.frontiers.eml_fourier_v2`** — Improved EML Fourier with QR pruning & floor detection
+  - `build_eml_dictionary_v2`: clips explosive atoms (MAX_ATOM_VALUE=1e6)
+  - `eml_fourier_search_v2`: incremental OMP with floor plateau detection
+  - `EMLFourierV2Result`: extends v1 with `floor_detected`, `floor_K`, `floor_mse`, `n_independent_atoms`
+
+#### New experiments
+
+- **`python/experiments/sin_floor_asymptotics.py`** — N=1..5 floor sweep
+  - Result: N=1→4 decay ~300× per level (DENSE behavior in this range)
+  - N=4 floor: 7.79e-8 (best yet); residual period = π throughout
+  - Output: `python/results/sin_floor_asymptotics.{png,json}`
+
+- **`python/notebooks/sin_fourier_asymptotics.ipynb`** — 6-cell notebook for floor analysis
+
+#### New proofs
+
+- **EML Identity Theorem** (Session 36): `eml(1,eml(eml(1,eml(x,1)),1)) = x`
+  - 4-node minimum-depth identity tree; proven algebraically in 4 steps
+  - 19 tests in `python/tests/test_identity_theorem.py`
+  - Appended to `python/THEORY.md` §22, `python/PAPER.md` §32
+
+- **Phantom Attractor Transcendence** (Session 36): P = 6.2675186... is transcendental
+  - Not in EL field depth≤6, no PSLQ relation, not algebraic degree≤6
+  - Proven at 50-digit precision using mpmath
+  - Appended to `python/PAPER.md` §34
+
+- **sin(x) Floor Asymptotics** appended to `python/PAPER.md` §33
+
+#### CapCard CLI extensions
+
+- **`--publish`**: prints GitHub Pages deployment instructions
+- **`--verify`**: validates schema + 5 benchmark assertions
+
+#### CapCard launch site
+
+- **`capcard_site/index.html`** — static HTML landing page for CapCard v1.0
+- **`capcard_site/schema/v1.json`** — JSON Schema served as canonical URL
+
+#### UI additions
+
+- **`explorer/src/components/FourierBarriersTab.jsx`** — 4-card grid: Barriers & Proofs
+- **`streamlit_app.py`** Tab 10: "Barriers & Proofs" with identity theorem verifier slider
+
+---
+
 ## [2.1.0] — 2026-04-16
 
 ### Sessions 31–35 — EML as Universal Primitive

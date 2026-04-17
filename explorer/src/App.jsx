@@ -11,6 +11,7 @@ import ResearchTab from "./components/ResearchTab.jsx";
 import LeaderboardTab from "./components/LeaderboardTab.jsx";
 import AnalogRenaissanceTab from "./components/AnalogRenaissanceTab.jsx";
 import EMLFourierTab from "./components/EMLFourierTab.jsx";
+import FourierBarriersTab from "./components/FourierBarriersTab.jsx";
 import { op, exp, ln, E, ZERO, sub, neg, add, mul, div, pow, recip,
          BEST, sin_best, cos_best, pow_exl, div_edl, ln_exl } from "./eml.js";
 const deml = (x, y) => Math.exp(-x) - Math.log(y);
@@ -313,13 +314,13 @@ export default function App() {
             >
               ⊞ Challenges ↗
             </a>
-            {["verify","table","sandbox","tree","best","calc","opt","viz","sinex","demo","nerf","attractor","research","leaderboard","deml","frontiers","explorer","quantum","analog","fourier"].map(t => {
+            {["verify","table","sandbox","tree","best","calc","opt","viz","sinex","demo","nerf","attractor","research","leaderboard","deml","frontiers","explorer","quantum","analog","fourier","barriers"].map(t => {
               const isCalc  = t === "calc";
               const isOpt   = t === "opt";
               const isHighlit = isCalc || isOpt || t === "viz" || t === "sinex" || t === "demo"
                 || t === "nerf" || t === "attractor" || t === "research" || t === "leaderboard"
                 || t === "deml" || t === "frontiers" || t === "explorer" || t === "quantum"
-                || t === "analog" || t === "fourier";
+                || t === "analog" || t === "fourier" || t === "barriers";
               const isActive = tab === t;
               const LABELS = {
                 calc: "✦ calc", opt: "⚙ opt",
@@ -327,6 +328,7 @@ export default function App() {
                 attractor: "⊛ attractor", research: "🔬 research", leaderboard: "🏆 board",
                 deml: "⊖ DEML", frontiers: "📊 frontiers", explorer: "🔭 explorer",
                 quantum: "⚛ quantum", analog: "⚡ analog", fourier: "🎵 fourier",
+                barriers: "🔒 barriers",
               };
               return (
                 <button key={t} onClick={() => setTab(t)} style={{
@@ -934,6 +936,7 @@ export default function App() {
       {tab === "leaderboard"  && <LeaderboardTab />}
       {tab === "analog"       && <AnalogRenaissanceTab />}
       {tab === "fourier"      && <EMLFourierTab />}
+      {tab === "barriers"     && <FourierBarriersTab />}
 
       {/* ── FEATURED DEMOS ── */}
       <div style={{ marginTop:28, borderTop:`1px solid ${C.border}`, paddingTop:20 }}>
