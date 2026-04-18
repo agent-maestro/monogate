@@ -1,0 +1,37 @@
+{
+  "session": 808,
+  "title": "NS Partial Regularity Analysis",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "NSPartialRegularityEML",
+    "analysis": {
+      "object": "T529: NS Partial Regularity Analysis depth analysis",
+      "domains": {
+        "ckn_theorem": {
+          "description": "Caffarelli-Kohn-Nirenberg: singular set has 1D Hausdorff measure zero",
+          "depth": "EML-2",
+          "reason": "Singular set is EML-2 measurable set of measure zero"
+        },
+        "singular_set": {
+          "description": "Singular set is EML-inf in character: EML-3 approach fails at singular points",
+          "depth": "EML-inf",
+          "reason": "Singularities are EML-inf events; partial regularity is their EML-2 shadow"
+        },
+        "measure_zero_shadow": {
+          "description": "Measure-zero singularity = shadow depth theorem: EML-inf events have measure-zero EML-2 shadow",
+          "depth": "EML-2",
+          "reason": "CKN is the EML-2 shadow of the EML-inf singular set"
+        }
+      }
+    },
+    "distribution": {
+      "EML-2": 2,
+      "EML-inf": 1
+    },
+    "theorem": "T529: NS Partial Regularity Analysis (S808)."
+  },
+  "key_theorem": "T529: NS Partial Regularity Analysis (S808).",
+  "rabbit_hole_log": [
+    "T529: ckn_theorem depth confirmed"
+  ]
+}
