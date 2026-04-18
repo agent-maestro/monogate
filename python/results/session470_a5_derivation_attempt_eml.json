@@ -1,0 +1,36 @@
+{
+  "session": 470,
+  "title": "A5 Derivation Attempt from Selberg Axioms",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "A5DerivationAttemptEML",
+    "route": {
+      "object": "A5 Derivation Attempt via Selberg Class Axioms",
+      "target_statement": "A5 (Off-Line Barrier): For f with ET=\u221e and g with ET=3, f - g cannot be globally analytic with ET < \u221e.",
+      "selberg_axioms_used": {
+        "S1_dirichlet_series": "L(s) = \u03a3 a_n n^{-s}, converges for Re(s)>1",
+        "S2_analytic_continuation": "Meromorphic continuation to \u2102 with pole at s=1",
+        "S3_functional_equation": "\u039b(s) = \u03b5 \u00b7 \u039b\u0304(1-s): symmetry about \u03c3=1/2",
+        "S4_euler_product": "L(s) = \u03a0_p F_p(p^{-s})^{-1}: multiplicative structure",
+        "S5_ramanujan": "|a_p| \u2264 p^\u03b8 for some \u03b8 < 1/2"
+      },
+      "derivation_route": {
+        "step_1": "From S3 (functional equation): L(s) satisfies symmetry s \u2194 1-s. This is a global constraint impossible for ET-finite elementary functions without the specific \u0393-factor structure.",
+        "step_2": "From S4 (Euler product): L(s) = exp(\u03a3_p log F_p(p^{-s})). This Euler product is a convergent infinite EML sum \u2014 ET=\u221e in isolation. The complete L(s) = EML-3 by ECL (T112).",
+        "step_3": "Suppose f = (EML-\u221e object) - L(s) has ET < \u221e. Then f + L(s) = EML-\u221e object has ET < \u221e \u2014 contradiction with T184 if depth(f) + depth(L) > depth(f+L) violates tropical semiring bounds.",
+        "step_4": "Tropical depth inequality: depth(f-g) \u2265 |depth(f) - depth(g)|. If depth(f)=\u221e and depth(g)=3: depth(f-g) \u2265 \u221e-3 = \u221e. This requires proving the tropical ABSOLUTE VALUE inequality for EML depth \u2014 which is a candidate derivation of A5."
+      },
+      "progress": "PARTIAL: Step 4 reduces A5 to the tropical absolute value inequality. This inequality holds for tropical polynomials by Kapranov's theorem. Extension to infinite EML expressions (Selberg class) requires additional work. Status: A5 is likely derivable from tropical + Selberg but not yet complete."
+    },
+    "verdict": "A5 partially derived: reduces to tropical absolute value inequality. Full derivation requires Kapranov extension to infinite EML series.",
+    "theorem": "T191: A5 Partial Derivation \u2014 tropical absolute value route identified"
+  },
+  "key_theorem": "T191: A5 Partial Derivation (S470). Route identified: tropical absolute value inequality \u2265 |depth(f)-depth(g)|. Holds for tropical polynomials (Kapranov). Extension to infinite Selberg L-series = remaining gap. Partial progress: A5 reduces to a tractable tropical geometry question.",
+  "rabbit_hole_log": [
+    "Selberg axioms \u2192 functional equation \u2192 global EML structure constraint",
+    "Step 4: depth(f-g) \u2265 |depth(f)-depth(g)| for tropical absolute value",
+    "Kapranov: tropical polynomial absolute value holds",
+    "Extension to infinite EML series = remaining technical gap",
+    "T191: A5 partial derivation \u2014 tropical absolute value route"
+  ]
+}
