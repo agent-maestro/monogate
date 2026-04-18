@@ -1,0 +1,280 @@
+{
+  "session": 125,
+  "title": "Cryptography Deep: One-Way Functions, Pseudorandomness & EML-Based Primitives",
+  "key_theorem": {
+    "theorem": "EML Cryptographic Asymmetry Theorem",
+    "statement": "Every computationally secure one-way function f exhibits EML depth asymmetry: d(f) < d(f\u207b\u00b9). RSA: d(M^e mod n) = 2 < d(factor n) = \u221e. DLP: d(g^x mod p) = 2 < d(log_g y) = \u221e. Hash: d(H) = 1 < d(H\u207b\u00b9) = \u221e. LWE: d(Ax+e) = 0 < d(recover x) = \u221e. ECDLP: d([k]P) = 2 < d(find k) = \u221e. Bilinear pairing e(P,Q) is EML-3. Schnorr commitment g^r is EML-2; soundness probability exp(-k) is EML-2. Cryptography is the engineering discipline of EML depth asymmetry."
+  },
+  "one_way_functions": {
+    "rsa": [
+      {
+        "M": 2,
+        "e": 65537,
+        "n": 3233,
+        "C": 1752,
+        "log_e": 11.0904,
+        "eml_forward": 2,
+        "eml_inverse": "\u221e",
+        "reason": "RSA forward M^e mod n: discrete exponentiation = EML-2. Inverse requires factoring n = EML-\u221e (classical hardness assumption)."
+      },
+      {
+        "M": 7,
+        "e": 65537,
+        "n": 3233,
+        "C": 2369,
+        "log_e": 11.0904,
+        "eml_forward": 2,
+        "eml_inverse": "\u221e",
+        "reason": "RSA forward M^e mod n: discrete exponentiation = EML-2. Inverse requires factoring n = EML-\u221e (classical hardness assumption)."
+      },
+      {
+        "M": 100,
+        "e": 65537,
+        "n": 3233,
+        "C": 1773,
+        "log_e": 11.0904,
+        "eml_forward": 2,
+        "eml_inverse": "\u221e",
+        "reason": "RSA forward M^e mod n: discrete exponentiation = EML-2. Inverse requires factoring n = EML-\u221e (classical hardness assumption)."
+      },
+      {
+        "M": 200,
+        "e": 65537,
+        "n": 3233,
+        "C": 2616,
+        "log_e": 11.0904,
+        "eml_forward": 2,
+        "eml_inverse": "\u221e",
+        "reason": "RSA forward M^e mod n: discrete exponentiation = EML-2. Inverse requires factoring n = EML-\u221e (classical hardness assumption)."
+      }
+    ],
+    "dlp_complexity": [
+      {
+        "p": 101,
+        "ln_p": 4.6151,
+        "subexponential_complexity_L": 14.25,
+        "eml_complexity_expression": 2,
+        "eml_hardness": "\u221e",
+        "reason": "L_p[1/2,1]=exp(\u221a(ln p\u00b7ln ln p)): double log inside exp = EML-2. DLP hardness = EML-\u221e."
+      },
+      {
+        "p": 1009,
+        "ln_p": 6.9167,
+        "subexponential_complexity_L": 38.76,
+        "eml_complexity_expression": 2,
+        "eml_hardness": "\u221e",
+        "reason": "L_p[1/2,1]=exp(\u221a(ln p\u00b7ln ln p)): double log inside exp = EML-2. DLP hardness = EML-\u221e."
+      },
+      {
+        "p": 10007,
+        "ln_p": 9.211,
+        "subexponential_complexity_L": 92.06,
+        "eml_complexity_expression": 2,
+        "eml_hardness": "\u221e",
+        "reason": "L_p[1/2,1]=exp(\u221a(ln p\u00b7ln ln p)): double log inside exp = EML-2. DLP hardness = EML-\u221e."
+      }
+    ],
+    "hash_eml": {
+      "forward_H": "EML-1 (compression = Merkle-Damg\u00e5rd chain = EML-1)",
+      "preimage_resistance": "EML-\u221e (no EML-finite formula inverts random oracle)",
+      "collision_resistance": "EML-\u221e (birthday bound 2^{n/2} = EML-2 bound on EML-\u221e search)",
+      "second_preimage": "EML-\u221e",
+      "commitment_binding": "EML-1 (computationally binding under EML-\u221e preimage hardness)"
+    },
+    "asymmetry_theorem": {
+      "theorem": "EML Cryptographic Asymmetry Theorem",
+      "statement": "A function f is one-way iff d(f) < d(f\u207b\u00b9) in the EML hierarchy. d(forward) = 2 (EML-2 computation); d(inverse) = \u221e (EML-\u221e search). The depth gap d(f\u207b\u00b9) - d(f) \u2265 \u221e - 2 is what makes cryptography possible.",
+      "instances": {
+        "RSA": "d(M^e mod n) = 2; d(factor n) = \u221e",
+        "DLP": "d(g^x mod p) = 2; d(log_g y) = \u221e",
+        "hash": "d(H(x)) = 1; d(H\u207b\u00b9(y)) = \u221e",
+        "lattice": "d(Ax+e) = 0 (linear); d(recover x) = \u221e (LWE hardness)"
+      },
+      "connection_to_s111": "EML Asymmetry Theorem (S111): d(exp)=1 < d(ln)=2 is the mathematical analog. Cryptography = applied EML asymmetry."
+    }
+  },
+  "elliptic_curve_crypto": {
+    "point_doubling": [
+      {
+        "P": [
+          1.0,
+          2.0
+        ],
+        "lambda": 0.5,
+        "2P": [
+          -1.75,
+          -0.625
+        ],
+        "eml": 2,
+        "reason": "\u03bb=(3x\u00b2+a)/(2y): rational of quadratic = EML-2 (chord-and-tangent formula)."
+      },
+      {
+        "P": [
+          2.0,
+          3.0
+        ],
+        "lambda": 1.8333,
+        "2P": [
+          -0.6389,
+          1.838
+        ],
+        "eml": 2,
+        "reason": "\u03bb=(3x\u00b2+a)/(2y): rational of quadratic = EML-2 (chord-and-tangent formula)."
+      }
+    ],
+    "hasse_bound": [
+      {
+        "p": 101,
+        "hasse_bound": 20.1,
+        "n_min": 82,
+        "n_max": 122,
+        "eml": 2,
+        "reason": "#E \u2208 [p+1-2\u221ap, p+1+2\u221ap]: \u221ap = EML-2 (square root of prime = EML-2)."
+      },
+      {
+        "p": 1009,
+        "hasse_bound": 63.53,
+        "n_min": 946,
+        "n_max": 1074,
+        "eml": 2,
+        "reason": "#E \u2208 [p+1-2\u221ap, p+1+2\u221ap]: \u221ap = EML-2 (square root of prime = EML-2)."
+      },
+      {
+        "p": 10007,
+        "hasse_bound": 200.07,
+        "n_min": 9808,
+        "n_max": 10208,
+        "eml": 2,
+        "reason": "#E \u2208 [p+1-2\u221ap, p+1+2\u221ap]: \u221ap = EML-2 (square root of prime = EML-2)."
+      }
+    ],
+    "ecdlp_complexity": [
+      {
+        "n_bits": 128,
+        "operations_sqrt_p": 1.8446744073709552e+19,
+        "log2_operations": 64.0,
+        "eml_expression": 2,
+        "eml_hardness": "\u221e",
+        "reason": "Complexity \u221ap=exp(n/2): EML-2 (half-exponent). ECDLP hardness = EML-\u221e."
+      },
+      {
+        "n_bits": 256,
+        "operations_sqrt_p": 3.402823669209385e+38,
+        "log2_operations": 128.0,
+        "eml_expression": 2,
+        "eml_hardness": "\u221e",
+        "reason": "Complexity \u221ap=exp(n/2): EML-2 (half-exponent). ECDLP hardness = EML-\u221e."
+      },
+      {
+        "n_bits": 384,
+        "operations_sqrt_p": 6.277101735386681e+57,
+        "log2_operations": 192.0,
+        "eml_expression": 2,
+        "eml_hardness": "\u221e",
+        "reason": "Complexity \u221ap=exp(n/2): EML-2 (half-exponent). ECDLP hardness = EML-\u221e."
+      },
+      {
+        "n_bits": 521,
+        "operations_sqrt_p": 2.6200758882388523e+78,
+        "log2_operations": 260.5,
+        "eml_expression": 2,
+        "eml_hardness": "\u221e",
+        "reason": "Complexity \u221ap=exp(n/2): EML-2 (half-exponent). ECDLP hardness = EML-\u221e."
+      }
+    ],
+    "pairing": {
+      "pairing_type": "Weil/Tate",
+      "eml": 3,
+      "reason": "Bilinear pairing e(P,Q) involves Miller's algorithm: evaluates a rational function f_P along a divisor, using trig-like oscillatory evaluation on the curve. The final exponentiation (Frobenius) gives EML-3 structure.",
+      "applications": {
+        "BLS_signature": "EML-3 signature scheme",
+        "IBE": "Identity-based encryption via pairings = EML-3",
+        "zk_SNARK_pairing": "Pairing check in Groth16 = EML-3"
+      }
+    },
+    "eml_point_arithmetic": 2,
+    "eml_ecdlp": "\u221e",
+    "eml_pairing": 3
+  },
+  "zero_knowledge_lattice": {
+    "schnorr": [
+      {
+        "secret_x": 3.0,
+        "random_r": 7.0,
+        "challenge_e": 2.0,
+        "response_s": 13.0,
+        "commit_eml": 2,
+        "challenge_eml": 0,
+        "response_eml": 0,
+        "soundness_eml": 2,
+        "reason": "Commit g^r=EML-2; challenge=EML-0; response=EML-0; soundness exp(-k)=EML-2."
+      },
+      {
+        "secret_x": 5.0,
+        "random_r": 11.0,
+        "challenge_e": 3.0,
+        "response_s": 26.0,
+        "commit_eml": 2,
+        "challenge_eml": 0,
+        "response_eml": 0,
+        "soundness_eml": 2,
+        "reason": "Commit g^r=EML-2; challenge=EML-0; response=EML-0; soundness exp(-k)=EML-2."
+      }
+    ],
+    "lwe": {
+      "keygen": {
+        "A_matrix": "EML-0 (uniform random \u2014 EML-\u221e as source of randomness)",
+        "s_secret": "EML-0 (small random vector)",
+        "e_error": "EML-\u221e (Gaussian noise drawn from D_{Z,\u03c3})",
+        "b_As_e": "EML-0 (linear = EML-0 arithmetic mod q)"
+      },
+      "encryption": {
+        "c1_As1_e1": "EML-0",
+        "c2_bTs_e2_msg": "EML-0 (linear with message encoding)"
+      },
+      "hardness": "EML-\u221e (finding s given (A,b=As+e) = hard lattice problem)",
+      "quantum_hardness": "EML-\u221e (Regev reduction: quantum = classical worst-case SVP = EML-\u221e)"
+    },
+    "ntru": {
+      "f": [
+        1,
+        1,
+        0
+      ],
+      "g": [
+        1,
+        -1,
+        0
+      ],
+      "f_star_g_mod_xn_minus_1": [
+        1.0,
+        0.0,
+        -1.0
+      ],
+      "eml": 2,
+      "reason": "Cyclic convolution = polynomial multiplication = EML-2 (quadratic in coefficients)."
+    },
+    "eml_schnorr_commit": 2,
+    "eml_lwe_arithmetic": 0,
+    "eml_lwe_hardness": "\u221e",
+    "eml_ntru_multiplication": 2,
+    "eml_ring_lwe_hardness": "\u221e"
+  },
+  "eml_depth_summary": {
+    "EML-0": "LWE arithmetic Ax+e mod q (linear); Schnorr challenge; hash input alphabet",
+    "EML-1": "Hash Merkle-Damg\u00e5rd chain (compression = EML-1); commitment binding",
+    "EML-2": "RSA/DLP forward M^e (EML-2 exp); Schnorr commit g^r; ECDLP complexity \u221ap; NTRU convolution; Hasse bound \u221ap",
+    "EML-3": "Bilinear pairing e(P,Q) (Weil/Tate via Miller = EML-3)",
+    "EML-\u221e": "Factoring n; DLP inverse; hash preimage; ECDLP; LWE hardness; Shor's algorithm barrier (quantum changes EML-2\u2192EML-\u221e)"
+  },
+  "rabbit_hole_log": [
+    "The EML Cryptographic Asymmetry Theorem is the engineering instantiation of the Mathematical Asymmetry Theorem (S111): d(exp)=1 < d(ln)=2. Cryptography exploits the same structural asymmetry \u2014 it is easy to exponentiate (EML-2) but hard to take discrete logarithms (EML-\u221e). The gap between EML-2 (forward) and EML-\u221e (inverse) IS the security of public-key cryptography. Every cryptographic hardness assumption is a claim that a particular EML depth gap is real.",
+    "Lattice cryptography (LWE) exhibits the LARGEST EML depth gap: encryption is EML-0 (linear arithmetic Ax+e mod q \u2014 the simplest possible EML depth!) but decryption without the key is EML-\u221e (SVP/CVP hardness). The gap is EML-\u221e - 0 = \u221e \u2014 larger than RSA (EML-\u221e - 2). This is why LWE is conjectured quantum-safe: even Shor's algorithm can't reduce LWE below EML-\u221e.",
+    "Bilinear pairings are EML-3: the Weil pairing e: G\u2081\u00d7G\u2082\u2192G\u209c uses Miller's algorithm which evaluates rational functions along curve divisors \u2014 the oscillatory structure of divisor theory on Riemann surfaces (S115) is EML-3. This makes pairing-based cryptography (IBE, BLS signatures, zk-SNARKs via Groth16) inherently EML-3. The pairing check in Groth16 is: e(A,B)=e(\u03b1,\u03b2)\u00b7e(L,\u03b3)\u00b7e(C,\u03b4) \u2014 three EML-3 operations confirming the proof."
+  ],
+  "connections": {
+    "to_session_105": "S105 covered RSA/GNFS/LWE at overview. S125 adds ECDLP, pairings (EML-3), Schnorr, EML Asymmetry Theorem application.",
+    "to_session_111": "EML Asymmetry Theorem (S111) d(exp)=1 < d(ln)=2 = mathematical basis for all cryptographic hardness.",
+    "to_session_115": "Bilinear pairings = elliptic curve EML-3 (divisor theory on curves = EML-3, as in S115 mirror symmetry)."
+  }
+}
