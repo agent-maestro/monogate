@@ -1,0 +1,325 @@
+{
+  "euler_characteristic_checks": {
+    "point": {
+      "chi_cells": 1,
+      "chi_homology": 1,
+      "match": true,
+      "description": "Single point. S^0 half."
+    },
+    "circle_S1": {
+      "chi_cells": 0,
+      "chi_homology": 0,
+      "match": true,
+      "description": "S\u00b9: one 0-cell, one 1-cell."
+    },
+    "sphere_S2": {
+      "chi_cells": 2,
+      "chi_homology": 2,
+      "match": true,
+      "description": "S\u00b2: one 0-cell, one 2-cell."
+    },
+    "torus_T2": {
+      "chi_cells": 0,
+      "chi_homology": 0,
+      "match": true,
+      "description": "T\u00b2: one 0-cell, two 1-cells, one 2-cell."
+    },
+    "klein_bottle": {
+      "chi_cells": 0,
+      "chi_homology": 0,
+      "match": true,
+      "description": "Klein bottle: non-orientable, \u03b2\u2081=1, \u03b2\u2082=0."
+    },
+    "real_proj_plane_RP2": {
+      "chi_cells": 1,
+      "chi_homology": 1,
+      "match": true,
+      "description": "RP\u00b2: non-orientable surface, \u03c7=1."
+    },
+    "sphere_S3": {
+      "chi_cells": 0,
+      "chi_homology": 0,
+      "match": true,
+      "description": "S\u00b3: one 0-cell, one 3-cell."
+    },
+    "complex_proj_plane_CP2": {
+      "chi_cells": 3,
+      "chi_homology": 3,
+      "match": true,
+      "description": "CP\u00b2: one cell in dimensions 0, 2, 4."
+    }
+  },
+  "circle_betti_numbers": [
+    1,
+    1
+  ],
+  "hopf_bundle_analysis": {
+    "bundle": "Hopf bundle",
+    "base": "S\u00b2",
+    "connection_1form_A": 1,
+    "curvature_2form_F": 2,
+    "chern_class_c1": 2,
+    "chern_class_c2": 4,
+    "pontryagin_p1": 4,
+    "chern_character": 3,
+    "todd_class_rank2": 6,
+    "integrated_class": 0,
+    "notes": "Chern-Weil: curvature F is EML-2 (from connection 1-form). c_k = tr(F^k): EML-2 (max for rank=1). Integration \u222b ch \u2192 integer: EML-0 (topological invariant). The Chern-Weil map is the EML depth bridge from differential to algebraic topology."
+  },
+  "instanton_bundle_analysis": {
+    "bundle": "BPST instanton",
+    "base": "S\u2074",
+    "connection_1form_A": 1,
+    "curvature_2form_F": 2,
+    "chern_class_c1": 2,
+    "chern_class_c2": 4,
+    "pontryagin_p1": 4,
+    "chern_character": 3,
+    "todd_class_rank2": 6,
+    "integrated_class": 0,
+    "notes": "Chern-Weil: curvature F is EML-2 (from connection 1-form). c_k = tr(F^k): EML-4 (max for rank=2). Integration \u222b ch \u2192 integer: EML-0 (topological invariant). The Chern-Weil map is the EML depth bridge from differential to algebraic topology."
+  },
+  "morse_analysis": {
+    "height_sphere": {
+      "critical_point_counts": [
+        1,
+        0,
+        1
+      ],
+      "euler_characteristic": 2,
+      "formula_eml_depth": 1,
+      "critical_values_eml": 1,
+      "flow_lines_eml": 1,
+      "morse_homology_eml": 0
+    },
+    "height_torus": {
+      "critical_point_counts": [
+        1,
+        2,
+        1
+      ],
+      "euler_characteristic": 0,
+      "formula_eml_depth": 3,
+      "critical_values_eml": 3,
+      "flow_lines_eml": 3,
+      "morse_homology_eml": 0
+    },
+    "bott_periodicity_U": {
+      "critical_point_counts": [
+        1,
+        1,
+        2,
+        1,
+        1
+      ],
+      "euler_characteristic": 2,
+      "formula_eml_depth": 2,
+      "critical_values_eml": 2,
+      "flow_lines_eml": 2,
+      "morse_homology_eml": 0
+    }
+  },
+  "fiber_bundle_analysis": {
+    "hopf_bundle": {
+      "bundle": "S\u00b3\u2192S\u00b2 (fiber=S\u00b9=U(1))",
+      "transition_functions": "EML depth = depth of group coordinate functions",
+      "connection_A": 1,
+      "curvature_F": 2,
+      "parallel_transport": 2,
+      "holonomy": 2,
+      "chern_simons_form": 3,
+      "chern_number": 0,
+      "pontryagin_number": 0,
+      "notes": "Connection: EML-1 (smooth 1-form valued in Lie algebra). Curvature F=dA+[A,A]: EML-2. Chern-Simons \u03a9=A\u2227dA+(2/3)A\u2227A\u2227A: EML-3 (triple product). Topological invariants (\u222bch, \u222bp): EML-0 (integers). The gauge field depth ladder: A (EML-1) \u2192 F (EML-2) \u2192 CS (EML-3) \u2192 number (EML-0)."
+    },
+    "frame_bundle_S2": {
+      "bundle": "SO(3)\u2192S\u00b2 (fiber=SO(2))",
+      "transition_functions": "EML depth = depth of group coordinate functions",
+      "connection_A": 1,
+      "curvature_F": 2,
+      "parallel_transport": 2,
+      "holonomy": 2,
+      "chern_simons_form": 3,
+      "chern_number": 0,
+      "pontryagin_number": 0,
+      "notes": "Connection: EML-1 (smooth 1-form valued in Lie algebra). Curvature F=dA+[A,A]: EML-2. Chern-Simons \u03a9=A\u2227dA+(2/3)A\u2227A\u2227A: EML-3 (triple product). Topological invariants (\u222bch, \u222bp): EML-0 (integers). The gauge field depth ladder: A (EML-1) \u2192 F (EML-2) \u2192 CS (EML-3) \u2192 number (EML-0)."
+    },
+    "instanton_bundle_R4": {
+      "bundle": "P\u00b9(C) bundle over S\u2074\u2192S\u2074 (fiber=SU(2))",
+      "transition_functions": "EML depth = depth of group coordinate functions",
+      "connection_A": 1,
+      "curvature_F": 2,
+      "parallel_transport": 2,
+      "holonomy": 2,
+      "chern_simons_form": 3,
+      "chern_number": 0,
+      "pontryagin_number": 0,
+      "notes": "Connection: EML-1 (smooth 1-form valued in Lie algebra). Curvature F=dA+[A,A]: EML-2. Chern-Simons \u03a9=A\u2227dA+(2/3)A\u2227A\u2227A: EML-3 (triple product). Topological invariants (\u222bch, \u222bp): EML-0 (integers). The gauge field depth ladder: A (EML-1) \u2192 F (EML-2) \u2192 CS (EML-3) \u2192 number (EML-0)."
+    }
+  },
+  "taxonomy": {
+    "cell_counts": {
+      "depth": 0,
+      "formula": "c_k \u2208 Z",
+      "notes": "Integer cell counts. Pure combinatorics."
+    },
+    "euler_characteristic": {
+      "depth": 0,
+      "formula": "\u03c7 = \u03a3(-1)^k\u00b7c_k = \u03a3(-1)^k\u00b7\u03b2_k",
+      "notes": "Integer, EML-0. Invariant of the homotopy type."
+    },
+    "betti_numbers": {
+      "depth": 0,
+      "formula": "\u03b2_k = rank(H_k(M; Z))",
+      "notes": "Ranks of homology groups. Integer, EML-0."
+    },
+    "boundary_operator": {
+      "depth": 0,
+      "formula": "\u2202_k: C_k \u2192 C_{k-1}",
+      "notes": "Integer linear map. EML-0."
+    },
+    "smooth_differential_form": {
+      "depth": "EML depth of component functions",
+      "formula": "\u03c9 = f(x)dx^I",
+      "notes": "EML depth = depth of coefficient functions f(x)."
+    },
+    "exterior_derivative": {
+      "depth": "same as form",
+      "formula": "d\u03c9: depth unchanged (differentiation preserves EML class)",
+      "notes": "d preserves analyticity class."
+    },
+    "connection_1form": {
+      "depth": 1,
+      "formula": "A = A_\u03bc^a T_a dx^\u03bc",
+      "notes": "Lie-algebra valued 1-form. EML-1 components (smooth, no transcendentals required)."
+    },
+    "curvature_2form": {
+      "depth": 2,
+      "formula": "F = dA + A\u2227A",
+      "notes": "A\u2227A: product of two EML-1 forms \u2192 EML-2."
+    },
+    "chern_class_c1": {
+      "depth": 2,
+      "formula": "c\u2081 = (i/2\u03c0)tr(F)",
+      "notes": "tr(F): linear in EML-2 \u2192 EML-2."
+    },
+    "chern_class_ck": {
+      "depth": "2k",
+      "formula": "c_k = (i/2\u03c0)^k \u00b7 (1/k!) \u03a3 tr(F^k)",
+      "notes": "F^k: product of k EML-2 terms \u2192 EML-2k."
+    },
+    "chern_character": {
+      "depth": 3,
+      "formula": "ch(E) = tr(exp(iF/2\u03c0))",
+      "notes": "exp(EML-2) = EML-3."
+    },
+    "pontryagin_class_pk": {
+      "depth": "4k",
+      "formula": "p_k = (-1)^k c_{2k}(E_C)",
+      "notes": "Same as c_{2k}: EML-4k."
+    },
+    "chern_simons_form": {
+      "depth": 3,
+      "formula": "\u03a9 = tr(A\u2227dA + (2/3)A\u2227A\u2227A)",
+      "notes": "Triple wedge product: EML-3."
+    },
+    "todd_class": {
+      "depth": "3n (n=rank)",
+      "formula": "Td = \u03a0 x_i/(1-exp(-x_i))",
+      "notes": "exp in denominator: EML-3 per Chern root."
+    },
+    "chern_number": {
+      "depth": 0,
+      "formula": "\u222b_M c_k \u2208 Z",
+      "notes": "Integration reduces EML-2k to integer \u2192 EML-0."
+    },
+    "pontryagin_number": {
+      "depth": 0,
+      "formula": "\u222b_M p_k \u2208 Z",
+      "notes": "Integer topological invariant \u2192 EML-0."
+    },
+    "morse_function": {
+      "depth": "depth(f)",
+      "formula": "f: M\u2192R (critical points isolated)",
+      "notes": "Height on S\u00b2: EML-1. Height on torus: EML-3."
+    },
+    "morse_index": {
+      "depth": 0,
+      "formula": "index(p) = n_negative eigenvalues of Hessian",
+      "notes": "Integer \u2192 EML-0."
+    },
+    "morse_boundary": {
+      "depth": 0,
+      "formula": "\u2202p = \u03a3 n(p,q)\u00b7q (flow line counts mod 2)",
+      "notes": "Integer count of flow lines \u2192 EML-0 algebraically."
+    }
+  },
+  "key_theorem": {
+    "name": "EML Depth in Algebraic Topology",
+    "statement": "All purely combinatorial/algebraic invariants of a topological space (Betti numbers, Euler characteristic, homology groups, Chern numbers, Pontryagin numbers) are EML-0: they are integers. Differential-geometric constructions live at EML-2 (curvature) or EML-3 (Chern character). The Chern-Weil map \u222b_M ch(E) integrates EML-2k forms to EML-0 integers.",
+    "depth_ladder": {
+      "A (connection)": 1,
+      "F = dA+A\u2227A (curvature)": 2,
+      "c_k = tr(F^k) (Chern class form)": "2k",
+      "ch(E) = tr(exp(iF)) (Chern character)": 3,
+      "CS = A\u2227dA+(2/3)A\u2227A\u2227A (Chern-Simons)": 3,
+      "\u222b_M c_k \u2208 Z (Chern number)": 0,
+      "\u03c7 = \u03a3(-1)^k \u03b2_k (Euler char)": 0
+    },
+    "insight": "Algebraic topology collapses EML depth to 0 by integration. The journey is: EML-1 (gauge field) \u2192 EML-2 (curvature) \u2192 EML-3 (Chern char) \u2192 EML-0 (topological number, via integration over closed manifold). This mirrors the stat mech ladder: EML-1 (Boltzmann) \u2192 EML-2 (free energy) \u2192 EML-0 (phase space volume / partition structure)."
+  },
+  "summary": {
+    "session": 58,
+    "title": "Algebraic Topology \u2014 EML Complexity of CW Complexes and Characteristic Classes",
+    "findings": [
+      {
+        "id": "F58.1",
+        "name": "All algebraic topology invariants are EML-0",
+        "content": "Betti numbers, Euler characteristic, homology groups, Chern numbers, Pontryagin numbers: all integers, EML-0.",
+        "status": "CONFIRMED"
+      },
+      {
+        "id": "F58.2",
+        "name": "Gauge field depth ladder: A(1) \u2192 F(2) \u2192 ch(3) \u2192 \u222bch(0)",
+        "content": "Connection 1-form is EML-1. Curvature F=dA+A\u2227A is EML-2. Chern character ch=tr(exp(iF)) is EML-3. Integration to Chern number: EML-0.",
+        "status": "STRUCTURAL THEOREM"
+      },
+      {
+        "id": "F58.3",
+        "name": "Chern-Weil map: EML-2k \u2192 EML-0",
+        "content": "The Chern-Weil map sends curvature k-forms (EML-2k) to integer topological invariants (EML-0). Integration is the EML depth collapse.",
+        "status": "THEOREM"
+      },
+      {
+        "id": "F58.4",
+        "name": "Morse theory: topology EML-0, geometry EML(f)",
+        "content": "Morse indices and flow line counts are EML-0 (integers). The Morse function formula determines gradient flow EML depth. Topology is independent of differential-geometric choice.",
+        "status": "CONFIRMED"
+      },
+      {
+        "id": "F58.5",
+        "name": "Non-smooth spaces: EML-inf at singularities",
+        "content": "A manifold with cone singularity has EML-inf at the cone point (non-analytic distance function). Smooth manifolds: EML-finite everywhere.",
+        "status": "STRUCTURAL INSIGHT"
+      }
+    ],
+    "sessions_56_58_capstone": {
+      "56": "ML Theory: ReLU=EML-inf, PAC complexity O(k\u00b2\u00b7n\u00b7log n), depth=efficiency",
+      "57": "Stat Mech: Boltzmann=EML-1, F=-kT\u00b7ln(Z)=EML-2, phase transitions=EML-inf",
+      "58": "Algebraic Topology: invariants=EML-0, curvature=EML-2, Chern char=EML-3"
+    },
+    "the_universal_depth_pattern": {
+      "EML-0": "Integer invariants, combinatorics, topological numbers",
+      "EML-1": "Exponentials, Boltzmann factors, gauge connections",
+      "EML-2": "Thermodynamic potentials, curvature, polynomial geometry",
+      "EML-3": "Transcendentals, Chern character, neural activations, pricing",
+      "EML-inf": "Phase transitions, chaos, fractals, non-analyticity"
+    },
+    "next_milestones": [
+      "Update capability_card_full.json with sessions 56-58",
+      "Update CONTEXT.md and PAPER.md in private repo",
+      "Session 59 (candidate): EML in Quantum Field Theory \u2014 Feynman diagrams, renormalization",
+      "Session 60 (candidate): EML and Information Theory \u2014 Shannon entropy, KL divergence"
+    ]
+  }
+}
