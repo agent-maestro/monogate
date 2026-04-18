@@ -1,0 +1,156 @@
+{
+  "session": 147,
+  "title": "Climate Deep III: Full Earth System Coupling & Long-Term Dynamics",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "carbon_cycle_feedbacks": {
+    "model": "CarbonCycleFeedbacks",
+    "co2_from_T_feedback_ppm": {
+      "0": 280.0,
+      "1": 300.7,
+      "2": 323.0,
+      "3": 346.9,
+      "4": 372.6,
+      "6": 429.8
+    },
+    "radiative_forcing_vs_CO2": {
+      "280": 0.0,
+      "350": 1.194,
+      "420": 2.169,
+      "560": 3.708,
+      "840": 5.878
+    },
+    "permafrost_carbon_release_GtC": {
+      "0": 50.0,
+      "1": 64.2,
+      "2": 82.4,
+      "3": 105.9,
+      "4": 135.9,
+      "6": 224.1
+    },
+    "ocean_flux_vs_CO2": {
+      "280": -2.33,
+      "420": 11.67,
+      "560": 25.67,
+      "840": 53.67
+    },
+    "eml_depth": {
+      "co2_feedback": 1,
+      "radiative_forcing": 2,
+      "permafrost": 1,
+      "abrupt_permafrost_thaw": "\u221e"
+    },
+    "key_insight": "Carbon cycle feedbacks = EML-1/2; abrupt permafrost thaw = EML-\u221e"
+  },
+  "tipping_domino": {
+    "model": "TippingDomino",
+    "cascade_probability": {
+      "1": {
+        "0.1": 0.0952,
+        "0.3": 0.2592,
+        "0.5": 0.3935
+      },
+      "2": {
+        "0.1": 0.3297,
+        "0.3": 0.6988,
+        "0.5": 0.8647
+      },
+      "3": {
+        "0.1": 0.5934,
+        "0.3": 0.9328,
+        "0.5": 0.9889
+      },
+      "4": {
+        "0.1": 0.7981,
+        "0.3": 0.9918,
+        "0.5": 0.9997
+      },
+      "5": {
+        "0.1": 0.9179,
+        "0.3": 0.9994,
+        "0.5": 1.0
+      },
+      "8": {
+        "0.1": 0.9983,
+        "0.3": 1.0,
+        "0.5": 1.0
+      }
+    },
+    "hothouse_earth_risk": {
+      "1.0": 0.1192,
+      "1.5": 0.2689,
+      "2.0": 0.5,
+      "2.5": 0.7311,
+      "3.0": 0.8808,
+      "4.0": 0.982
+    },
+    "cross_tipping_interaction": {
+      "(2, 3)": 0.7047,
+      "(4, 5)": 0.522,
+      "(6, 8)": 0.3679
+    },
+    "known_tipping_cascades": [
+      "Arctic ice \u2192 AMOC \u2192 Amazon (via jet stream) \u2014 EML-\u221e chain",
+      "AMOC collapse \u2192 monsoon shift \u2192 Sahel greening \u2014 EML-\u221e",
+      "Permafrost \u2192 CO2 \u2192 further warming \u2192 more permafrost \u2014 EML-\u221e loop"
+    ],
+    "eml_depth": {
+      "cascade_prob": 1,
+      "cross_tipping": 2,
+      "hothouse_transition": "\u221e",
+      "full_cascade": "\u221e"
+    },
+    "key_insight": "Individual tipping = EML-\u221e; domino cascades = EML-\u221e composed \u2014 still EML-\u221e"
+  },
+  "long_term_evolution": {
+    "model": "LongTermClimateEvolution",
+    "solar_luminosity_vs_Gyr": {
+      "0.5": 0.7377,
+      "1.0": 0.7627,
+      "2.0": 0.8182,
+      "3.0": 0.8824,
+      "4.0": 0.9574,
+      "4.5": 1.0
+    },
+    "weathering_thermostat": {
+      "280": 0.6703,
+      "285": 0.8607,
+      "288": 1.0,
+      "292": 1.2214,
+      "295": 1.4191
+    },
+    "snowball_vs_time": {
+      "0.5": "Snowball (EML-\u221e glaciation)",
+      "1.0": "Snowball (EML-\u221e glaciation)",
+      "2.0": "Snowball (EML-\u221e glaciation)",
+      "3.0": "Snowball (EML-\u221e glaciation)",
+      "4.0": "Habitable (EML-1 stabilized)",
+      "4.5": "Habitable (EML-1 stabilized)"
+    },
+    "eml_depth": {
+      "solar_luminosity": 2,
+      "weathering_feedback": 1,
+      "snowball_transition": "\u221e"
+    },
+    "key_insight": "Weathering thermostat = EML-1 stabilizer; snowball bifurcation = EML-\u221e"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Stoichiometric ratios, topological network of tipping connections",
+    "EML-1": "Carbon cycle feedbacks (Q10), weathering thermostat, permafrost",
+    "EML-2": "Radiative forcing ln(C/C\u2080), cross-tipping interaction products",
+    "EML-3": "Solar-driven oscillations (Milankovitch \u2014 from S137)",
+    "EML-\u221e": "All individual tipping, all cascades, snowball Earth, hothouse Earth"
+  },
+  "key_theorem": "The EML Earth System Theorem: Earth system feedbacks are EML-1 (exponential responses). Forcing functions are EML-2 (logarithmic CO\u2082, rational solar). All tipping transitions are EML-\u221e. Critically: cascading tipping (domino effects) are ALSO EML-\u221e \u2014 composition of EML-\u221e events does not increase the depth, but does increase the probability and decrease the threshold.",
+  "rabbit_hole_log": [
+    "CO\u2082 feedback C(T) = C_pre*exp(\u03b2*\u0394T) = EML-1 (same as BCS gap structure!)",
+    "Weathering thermostat = EML-1 negative feedback: stabilizes Gaia for 4 Gyr",
+    "Cascade probability = 1-exp(-\u03bbn\u00b2) = EML-1 with quadratic exponent",
+    "Cross-tipping product = exp(-0.1T_a)*exp(-0.05T_am) = EML-1 composed = EML-1",
+    "Hothouse sigmoid \u2192 EML-\u221e in sharp limit (same as all transition phenomena)"
+  ],
+  "connections": {
+    "S137_climate_v2": "Extends S137 with full carbon cycle + domino tipping + Gyr dynamics",
+    "S132_evolution_v2": "Major evolutionary transitions \u2194 tipping points: both EML-\u221e",
+    "S57_stat_mech": "Carbon cycle feedback = EML-1 (same as Boltzmann partition)"
+  }
+}
