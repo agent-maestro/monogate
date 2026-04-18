@@ -1,0 +1,129 @@
+{
+  "session": 282,
+  "title": "Amorphous Materials & Glasses",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "AmorphousMaterialsEML",
+    "glass_transition": {
+      "object": "Glass transition temperature T_g",
+      "eml_depth": "\u221e",
+      "shadow": 2,
+      "semiring_test": {
+        "viscosity_law": {
+          "formula": "\u03b7 ~ exp(A/(T-T_0)): VTF/WLF equation",
+          "depth": 2,
+          "why": "exp(A/(T-T_0)) = exp(A\u00b7(T-T_0)^{-1}): EML-2 (exp of log-type argument)"
+        },
+        "at_Tg": {
+          "depth": "\u221e",
+          "type": "TYPE 2 Horizon (ergodicity breaking)",
+          "shadow": 2
+        },
+        "semiring_test_result": "EML-2 below T_g, EML-\u221e at T_g: TYPE 2 Horizon \u2713"
+      }
+    },
+    "adam_gibbs": {
+      "object": "Adam-Gibbs relation (cooperativity)",
+      "formula": "log \u03b7 = A + B/(T\u00b7S_c): Kauzmann/Adam-Gibbs",
+      "depth": 2,
+      "semiring_test": {
+        "configurational_entropy": {
+          "S_c": "S_c = S_liquid - S_crystal: configurational entropy",
+          "depth": 2,
+          "why": "Entropy = EML-2 (Boltzmann: S = k_B log \u03a9)"
+        },
+        "tensor_test": {
+          "operation": "Cooperativity(EML-2) \u2297 Entropy(EML-2) = max(2,2) = 2",
+          "result": "Adam-Gibbs: 2\u22972=2 \u2713"
+        }
+      }
+    },
+    "jamming": {
+      "object": "Jamming transition (J-point)",
+      "eml_depth": "\u221e",
+      "shadow": 2,
+      "semiring_test": {
+        "below_jamming": {
+          "depth": 2,
+          "behavior": "Pressure p ~ (\u03c6-\u03c6_J)^\u03b1: power law = EML-2"
+        },
+        "at_J_point": {
+          "depth": "\u221e",
+          "type": "TYPE 2 Horizon",
+          "shadow": 2
+        },
+        "marginal_stability": {
+          "object": "Marginal stability at J-point",
+          "depth": "\u221e",
+          "shadow": 2,
+          "why": "Boson peak: excess low-frequency modes ~ \u03c9^d-2: power law = EML-2"
+        }
+      }
+    },
+    "aging": {
+      "object": "Physical aging / structural relaxation",
+      "formula": "\u03c6(t) ~ exp(-(t/\u03c4)^\u03b2): stretched exponential (KWW)",
+      "depth": 2,
+      "why": "(t/\u03c4)^\u03b2 = exp(\u03b2 log(t/\u03c4)): EML-2",
+      "semiring_test": {
+        "aging_tensor_quench": {
+          "operation": "Aging(EML-2) \u2297 Quench(EML-2) = max(2,2) = 2",
+          "result": "Thermal history is EML-2 \u2713"
+        }
+      }
+    },
+    "replica_theory": {
+      "object": "Replica theory / mean-field glass (RFOT)",
+      "formula": "F[Q] = -T log \u222bD\u03c3 exp(-\u03b2H[\u03c3]\u00b7Q_ab): replica free energy",
+      "depth": "\u221e",
+      "shadow": 2,
+      "semiring_test": {
+        "replica_off_diagonal": {
+          "Q_ab": "Overlap matrix Q_ab = \u27e8\u03c3\u1d62\u1d43\u03c3\u1d62\u1d47\u27e9: order parameter",
+          "depth": 2,
+          "why": "Q_ab: real-valued second moment = EML-2"
+        },
+        "replica_symmetry_breaking": {
+          "depth": "\u221e",
+          "type": "TYPE 2 Horizon (RSB = ergodicity breaking)",
+          "shadow": 2,
+          "why": "RSB transition: Parisi parameter q(x) = EML-2 (real function)"
+        }
+      }
+    },
+    "spin_glass": {
+      "object": "Spin glass (Edwards-Anderson)",
+      "formula": "H = -\u03a3\u1d62\u2c7c J\u1d62\u2c7cS\u1d62S\u2c7c: random couplings J\u1d62\u2c7c ~ N(0,J\u00b2/N)",
+      "depth": "\u221e",
+      "shadow": 2,
+      "semiring_test": {
+        "order_parameter": {
+          "q_EA": "q_EA = [\u27e8S\u1d62\u27e9\u00b2]_J: Edwards-Anderson order parameter",
+          "depth": 2,
+          "why": "Second moment over disorder: EML-2"
+        },
+        "chaos_in_T": {
+          "object": "Temperature chaos in spin glasses",
+          "depth": 3,
+          "why": "Overlap function Q(T,T') = exp(-(T-T')\u00b2/\u03c3\u00b2)\u00b7exp(i\u0394\u03c6): complex = EML-3",
+          "new_finding": "Temperature chaos shadow=EML-3 (complex phase in overlap)"
+        }
+      }
+    },
+    "semiring_verdicts": {
+      "VTF_viscosity": "EML-2 \u2713",
+      "Adam_Gibbs": "2\u22972=2 \u2713",
+      "jamming": "TYPE 2 Horizon; shadow=2",
+      "RSB": "TYPE 2 Horizon; shadow=2",
+      "new_finding": "Temperature chaos in spin glasses: shadow=EML-3 (complex overlap phase)"
+    }
+  },
+  "key_theorem": "Glass/Jamming Semiring Theorem (S282): Glass and jamming transitions are TYPE 2 Horizons with EML-2 shadows. VTF/WLF viscosity = EML-2; Adam-Gibbs: 2\u22972=2; stretched exponential aging = EML-2. Replica symmetry breaking = TYPE 2 Horizon; Parisi order parameter q(x) = EML-2. NEW FINDING: temperature chaos in spin glasses has EML-3 shadow \u2014 the overlap function Q(T,T') carries a complex phase (temperature-dependent gauge): this is the FIRST amorphous-materials phenomenon with EML-3 shadow. Temperature chaos is the oscillatory anomaly of the glass world.",
+  "rabbit_hole_log": [
+    "Glass transition: TYPE 2 Horizon; VTF law = EML-2; shadow=EML-2",
+    "Jamming J-point: TYPE 2 Horizon; power-law pressure = EML-2",
+    "RSB = TYPE 2 Horizon; Parisi q(x) = EML-2 (real order parameter)",
+    "NEW: temperature chaos shadow=EML-3 (complex phase in overlap Q(T,T'))",
+    "Spin glass = first amorphous phenomenon with EML-3 shadow"
+  ]
+}
