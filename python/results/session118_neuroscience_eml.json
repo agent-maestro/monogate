@@ -1,0 +1,401 @@
+{
+  "session": 118,
+  "title": "Neuroscience & Neural Criticality: EML of the Brain",
+  "key_theorem": {
+    "theorem": "EML Neural Criticality Theorem",
+    "statement": "LIF membrane voltage V(t)=exp(-t/\u03c4) decay is EML-1. Time-to-spike \u03c4\u00b7ln(IR/(IR-\u0394V)) is EML-2. STDP window exp(\u00b1\u0394t/\u03c4) is EML-1. Hebbian \u0394W=\u03b7\u00b7x\u00b7y is EML-2. Neural avalanche P(s)~s^{-3/2} is EML-2. LFP 1/f noise P(f)~f^{-\u03b1} is EML-2. Branching parameter \u03c3=1 (critical) is EML-\u221e (cascade diverges). The brain operates near EML-\u221e for maximal dynamic range and information capacity. Hodgkin-Huxley under strong drive is EML-\u221e (chaotic)."
+  },
+  "integrate_and_fire": {
+    "membrane_dynamics": [
+      {
+        "t_ms": 0,
+        "V_mV": -70.0,
+        "eml": 1,
+        "reason": "V(t) = V_rest + ... exp(-t/\u03c4): EML-1 (exponential RC decay toward steady state)"
+      },
+      {
+        "t_ms": 5,
+        "V_mV": -67.788,
+        "eml": 1,
+        "reason": "V(t) = V_rest + ... exp(-t/\u03c4): EML-1 (exponential RC decay toward steady state)"
+      },
+      {
+        "t_ms": 10,
+        "V_mV": -66.065,
+        "eml": 1,
+        "reason": "V(t) = V_rest + ... exp(-t/\u03c4): EML-1 (exponential RC decay toward steady state)"
+      },
+      {
+        "t_ms": 20,
+        "V_mV": -63.679,
+        "eml": 1,
+        "reason": "V(t) = V_rest + ... exp(-t/\u03c4): EML-1 (exponential RC decay toward steady state)"
+      },
+      {
+        "t_ms": 50,
+        "V_mV": -60.821,
+        "eml": 1,
+        "reason": "V(t) = V_rest + ... exp(-t/\u03c4): EML-1 (exponential RC decay toward steady state)"
+      }
+    ],
+    "f_I_curve": [
+      {
+        "I_R": 5,
+        "f_Hz": 0.0,
+        "eml": 2,
+        "subthreshold": true
+      },
+      {
+        "I_R": 10,
+        "f_Hz": 0.0,
+        "eml": 2,
+        "subthreshold": true
+      },
+      {
+        "I_R": 15,
+        "f_Hz": 0.0,
+        "eml": 2,
+        "subthreshold": true
+      },
+      {
+        "I_R_mV": 20,
+        "t_spike_ms": 27.726,
+        "f_Hz": 36.07,
+        "eml": 2,
+        "reason": "f = 1/(\u03c4\u00b7ln(IR/(IR-\u0394V))): EML-2 (inverse of logarithm of ratio)"
+      },
+      {
+        "I_R_mV": 30,
+        "t_spike_ms": 13.863,
+        "f_Hz": 72.13,
+        "eml": 2,
+        "reason": "f = 1/(\u03c4\u00b7ln(IR/(IR-\u0394V))): EML-2 (inverse of logarithm of ratio)"
+      }
+    ],
+    "isi": [
+      {
+        "t_ms": 0,
+        "rate_Hz": 0.05,
+        "P_ISI": 0.05,
+        "eml": 1,
+        "reason": "ISI ~ Exp(r): P(t)=r\u00b7e^{-rt} = EML-1 (exponential ISI = Poisson spike train)"
+      },
+      {
+        "t_ms": 10,
+        "rate_Hz": 0.05,
+        "P_ISI": 0.030327,
+        "eml": 1,
+        "reason": "ISI ~ Exp(r): P(t)=r\u00b7e^{-rt} = EML-1 (exponential ISI = Poisson spike train)"
+      },
+      {
+        "t_ms": 20,
+        "rate_Hz": 0.05,
+        "P_ISI": 0.018394,
+        "eml": 1,
+        "reason": "ISI ~ Exp(r): P(t)=r\u00b7e^{-rt} = EML-1 (exponential ISI = Poisson spike train)"
+      },
+      {
+        "t_ms": 50,
+        "rate_Hz": 0.05,
+        "P_ISI": 0.004104,
+        "eml": 1,
+        "reason": "ISI ~ Exp(r): P(t)=r\u00b7e^{-rt} = EML-1 (exponential ISI = Poisson spike train)"
+      },
+      {
+        "t_ms": 100,
+        "rate_Hz": 0.05,
+        "P_ISI": 0.000337,
+        "eml": 1,
+        "reason": "ISI ~ Exp(r): P(t)=r\u00b7e^{-rt} = EML-1 (exponential ISI = Poisson spike train)"
+      }
+    ],
+    "eml_subthreshold": 1,
+    "eml_t_spike": 2,
+    "eml_f_I": 2,
+    "eml_ISI_Poisson": 1,
+    "refractory_period_eml": 0
+  },
+  "synaptic_plasticity": {
+    "stdp_window": [
+      {
+        "delta_t_ms": -50,
+        "dW": -0.000821,
+        "kind": "LTD",
+        "eml": 1,
+        "reason": "STDP window exp(\u00b1\u0394t/\u03c4): EML-1 (exponential time window = EML-1 ground state of learning)"
+      },
+      {
+        "delta_t_ms": -20,
+        "dW": -0.003679,
+        "kind": "LTD",
+        "eml": 1,
+        "reason": "STDP window exp(\u00b1\u0394t/\u03c4): EML-1 (exponential time window = EML-1 ground state of learning)"
+      },
+      {
+        "delta_t_ms": -10,
+        "dW": -0.006065,
+        "kind": "LTD",
+        "eml": 1,
+        "reason": "STDP window exp(\u00b1\u0394t/\u03c4): EML-1 (exponential time window = EML-1 ground state of learning)"
+      },
+      {
+        "delta_t_ms": -5,
+        "dW": -0.007788,
+        "kind": "LTD",
+        "eml": 1,
+        "reason": "STDP window exp(\u00b1\u0394t/\u03c4): EML-1 (exponential time window = EML-1 ground state of learning)"
+      },
+      {
+        "delta_t_ms": 0,
+        "dW": 0.01,
+        "kind": "LTP",
+        "eml": 1,
+        "reason": "STDP window exp(\u00b1\u0394t/\u03c4): EML-1 (exponential time window = EML-1 ground state of learning)"
+      },
+      {
+        "delta_t_ms": 5,
+        "dW": 0.007788,
+        "kind": "LTP",
+        "eml": 1,
+        "reason": "STDP window exp(\u00b1\u0394t/\u03c4): EML-1 (exponential time window = EML-1 ground state of learning)"
+      },
+      {
+        "delta_t_ms": 10,
+        "dW": 0.006065,
+        "kind": "LTP",
+        "eml": 1,
+        "reason": "STDP window exp(\u00b1\u0394t/\u03c4): EML-1 (exponential time window = EML-1 ground state of learning)"
+      },
+      {
+        "delta_t_ms": 20,
+        "dW": 0.003679,
+        "kind": "LTP",
+        "eml": 1,
+        "reason": "STDP window exp(\u00b1\u0394t/\u03c4): EML-1 (exponential time window = EML-1 ground state of learning)"
+      },
+      {
+        "delta_t_ms": 50,
+        "dW": 0.000821,
+        "kind": "LTP",
+        "eml": 1,
+        "reason": "STDP window exp(\u00b1\u0394t/\u03c4): EML-1 (exponential time window = EML-1 ground state of learning)"
+      }
+    ],
+    "hebbian": [
+      {
+        "pre": 0.5,
+        "post": 0.3,
+        "dW": 0.0015,
+        "eml": 2,
+        "reason": "\u0394W = \u03b7\u00b7x\u00b7y: product = EML-2 (outer product correlation)"
+      },
+      {
+        "pre": 1.0,
+        "post": 0.8,
+        "dW": 0.008,
+        "eml": 2,
+        "reason": "\u0394W = \u03b7\u00b7x\u00b7y: product = EML-2 (outer product correlation)"
+      },
+      {
+        "pre": 0.1,
+        "post": 0.9,
+        "dW": 0.0009,
+        "eml": 2,
+        "reason": "\u0394W = \u03b7\u00b7x\u00b7y: product = EML-2 (outer product correlation)"
+      }
+    ],
+    "oja": [
+      {
+        "W": 0.2,
+        "x": 0.7,
+        "y": 0.5,
+        "dW": 0.003,
+        "W_new": 0.203,
+        "eml": 2,
+        "reason": "Oja: \u03b7(xy-y\u00b2W): EML-2 (quadratic stabilization of EML-2 Hebbian)"
+      },
+      {
+        "W": 0.5,
+        "x": 0.7,
+        "y": 0.5,
+        "dW": 0.00225,
+        "W_new": 0.5022,
+        "eml": 2,
+        "reason": "Oja: \u03b7(xy-y\u00b2W): EML-2 (quadratic stabilization of EML-2 Hebbian)"
+      },
+      {
+        "W": 1.0,
+        "x": 0.7,
+        "y": 0.5,
+        "dW": 0.001,
+        "W_new": 1.001,
+        "eml": 2,
+        "reason": "Oja: \u03b7(xy-y\u00b2W): EML-2 (quadratic stabilization of EML-2 Hebbian)"
+      }
+    ],
+    "eml_STDP": 1,
+    "eml_hebbian": 2,
+    "eml_oja": 2
+  },
+  "neural_criticality": {
+    "avalanche_sizes": [
+      {
+        "s": 1,
+        "P_s_unnorm": 1.0,
+        "tau": 1.5,
+        "eml": 2,
+        "reason": "P(s) ~ s^{-3/2}: EML-2 (power law = mean-field branching critical exponent)"
+      },
+      {
+        "s": 2,
+        "P_s_unnorm": 0.353553,
+        "tau": 1.5,
+        "eml": 2,
+        "reason": "P(s) ~ s^{-3/2}: EML-2 (power law = mean-field branching critical exponent)"
+      },
+      {
+        "s": 5,
+        "P_s_unnorm": 0.089443,
+        "tau": 1.5,
+        "eml": 2,
+        "reason": "P(s) ~ s^{-3/2}: EML-2 (power law = mean-field branching critical exponent)"
+      },
+      {
+        "s": 10,
+        "P_s_unnorm": 0.031623,
+        "tau": 1.5,
+        "eml": 2,
+        "reason": "P(s) ~ s^{-3/2}: EML-2 (power law = mean-field branching critical exponent)"
+      },
+      {
+        "s": 50,
+        "P_s_unnorm": 0.002828,
+        "tau": 1.5,
+        "eml": 2,
+        "reason": "P(s) ~ s^{-3/2}: EML-2 (power law = mean-field branching critical exponent)"
+      },
+      {
+        "s": 100,
+        "P_s_unnorm": 0.001,
+        "tau": 1.5,
+        "eml": 2,
+        "reason": "P(s) ~ s^{-3/2}: EML-2 (power law = mean-field branching critical exponent)"
+      }
+    ],
+    "branching": [
+      {
+        "sigma": 0.5,
+        "regime": "subcritical",
+        "mean_cascade_size": 2.0,
+        "eml": 2,
+        "reason_sub": "Mean cascade 1/(1-\u03c3): EML-2 (rational divergence as \u03c3\u21921)",
+        "reason_crit": "\u03c3=1: mean cascade diverges = EML-\u221e phase transition"
+      },
+      {
+        "sigma": 0.9,
+        "regime": "subcritical",
+        "mean_cascade_size": 10.0,
+        "eml": 2,
+        "reason_sub": "Mean cascade 1/(1-\u03c3): EML-2 (rational divergence as \u03c3\u21921)",
+        "reason_crit": "\u03c3=1: mean cascade diverges = EML-\u221e phase transition"
+      },
+      {
+        "sigma": 0.99,
+        "regime": "subcritical",
+        "mean_cascade_size": 100.0,
+        "eml": 2,
+        "reason_sub": "Mean cascade 1/(1-\u03c3): EML-2 (rational divergence as \u03c3\u21921)",
+        "reason_crit": "\u03c3=1: mean cascade diverges = EML-\u221e phase transition"
+      },
+      {
+        "sigma": 1.0,
+        "regime": "critical",
+        "mean_cascade_size": "\u2192\u221e",
+        "eml": "\u221e",
+        "reason_sub": "Mean cascade 1/(1-\u03c3): EML-2 (rational divergence as \u03c3\u21921)",
+        "reason_crit": "\u03c3=1: mean cascade diverges = EML-\u221e phase transition"
+      },
+      {
+        "sigma": 1.01,
+        "regime": "supercritical (epileptic)",
+        "mean_cascade_size": "\u2192\u221e",
+        "eml": "\u221e",
+        "reason_sub": "Mean cascade 1/(1-\u03c3): EML-2 (rational divergence as \u03c3\u21921)",
+        "reason_crit": "\u03c3=1: mean cascade diverges = EML-\u221e phase transition"
+      },
+      {
+        "sigma": 1.1,
+        "regime": "supercritical (epileptic)",
+        "mean_cascade_size": "\u2192\u221e",
+        "eml": "\u221e",
+        "reason_sub": "Mean cascade 1/(1-\u03c3): EML-2 (rational divergence as \u03c3\u21921)",
+        "reason_crit": "\u03c3=1: mean cascade diverges = EML-\u221e phase transition"
+      }
+    ],
+    "lfp_spectrum": [
+      {
+        "f_Hz": 1,
+        "alpha": 1.0,
+        "P_f": 1.0,
+        "eml": 2,
+        "reason": "1/f noise P(f)~f^{-\u03b1}: EML-2 (power law in frequency = scale-free fluctuations)"
+      },
+      {
+        "f_Hz": 2,
+        "alpha": 1.0,
+        "P_f": 0.5,
+        "eml": 2,
+        "reason": "1/f noise P(f)~f^{-\u03b1}: EML-2 (power law in frequency = scale-free fluctuations)"
+      },
+      {
+        "f_Hz": 5,
+        "alpha": 1.0,
+        "P_f": 0.2,
+        "eml": 2,
+        "reason": "1/f noise P(f)~f^{-\u03b1}: EML-2 (power law in frequency = scale-free fluctuations)"
+      },
+      {
+        "f_Hz": 10,
+        "alpha": 1.0,
+        "P_f": 0.1,
+        "eml": 2,
+        "reason": "1/f noise P(f)~f^{-\u03b1}: EML-2 (power law in frequency = scale-free fluctuations)"
+      },
+      {
+        "f_Hz": 50,
+        "alpha": 1.0,
+        "P_f": 0.02,
+        "eml": 2,
+        "reason": "1/f noise P(f)~f^{-\u03b1}: EML-2 (power law in frequency = scale-free fluctuations)"
+      },
+      {
+        "f_Hz": 100,
+        "alpha": 1.0,
+        "P_f": 0.01,
+        "eml": 2,
+        "reason": "1/f noise P(f)~f^{-\u03b1}: EML-2 (power law in frequency = scale-free fluctuations)"
+      }
+    ],
+    "eml_avalanche_exponent": 2,
+    "eml_critical_point": Infinity,
+    "eml_LFP": 2,
+    "critical_brain_eml": Infinity,
+    "hh_chaotic_eml": Infinity
+  },
+  "eml_depth_summary": {
+    "EML-0": "Refractory period (constant); branching ratio \u03c3=1 (unit constant); neuron count",
+    "EML-1": "Membrane decay exp(-t/\u03c4); ISI Poisson exp(-rt); STDP window exp(\u00b1\u0394t/\u03c4)",
+    "EML-2": "F-I curve 1/ln(IR/\u0394V); avalanche P(s)~s^{-3/2}; 1/f LFP; Hebbian \u0394W=\u03b7\u00b7xy; Oja's rule",
+    "EML-\u221e": "Critical branching (\u03c3=1, cascade\u2192\u221e); Hodgkin-Huxley chaotic; epileptic seizure"
+  },
+  "rabbit_hole_log": [
+    "The brain is designed to operate at EML-\u221e: the critical branching ratio \u03c3=1 maximizes dynamic range (sensitivity to inputs across 4-5 orders of magnitude), information transmission capacity, and computational power. The brain tunes itself to the EML-\u221e edge \u2014 the same phase transition that defines Ising T_c, epidemic R\u2080=1, and laser threshold. Evolution found EML-\u221e optimal.",
+    "STDP is EML-1 by the same mechanism as all EML-1 ground states: the exponential time window exp(-|\u0394t|/\u03c4) is the Boltzmann factor of synaptic timing. Pre-before-post (causal) means potentiation; post-before-pre means depression. The temporal kernel is the EML-1 memory of the synapse \u2014 it 'discounts' past coincidences exponentially.",
+    "The f-I curve is EML-2: f = 1/(\u03c4\u00b7ln(IR/(IR-\u0394V))). This logarithmic I-O transformation means neurons act as logarithmic compressors \u2014 Weber's law (perceived intensity ~ log(stimulus) = EML-2) emerges from neuron-level EML-2 I-O curves. Psychophysics is EML-2 because neurons are EML-2 transducers.",
+    "Neural avalanche P(s)~s^{-3/2} is the mean-field branching exponent (\u03c4=3/2 for branching process). This is the same EML-2 power law as the Barab\u00e1si-Albert network degree distribution (S104) and fractal Hausdorff dimension (S93). EML-2 power laws are the signature of criticality across all scales."
+  ],
+  "connections": {
+    "to_session_101": "Cognition: gamma oscillations (EML-3) = NCC. S118 adds: criticality (EML-\u221e) = substrate for consciousness.",
+    "to_session_57": "Critical brain hypothesis = Ising criticality in neural networks. \u03c3=1 is T_c of neural phase transition."
+  }
+}
