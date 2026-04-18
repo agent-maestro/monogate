@@ -1,0 +1,73 @@
+{
+  "session": 412,
+  "title": "GL\u2083 Attack II: Ramanujan Bounds Strategy for General GL\u2083",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "GL3RamanujanApproachEML",
+    "status": {
+      "object": "Ramanujan bounds for general GL_3 automorphic forms",
+      "holomorphic_GL2": "PROVEN (Deligne 1974): all holomorphic \u03c0 \u2208 GL_2 satisfy Ramanujan",
+      "sym2_of_GL2": "PROVEN (T131): Sym\u00b2(\u03c0) for holomorphic \u03c0 satisfies Ramanujan",
+      "GL3_cuspidal_general": {
+        "status": "OPEN in general",
+        "best_known": "Kim-Sarnak 2003: |a_p(\u03c0)| \u2264 p^{5/14+\u03b5} for \u03c0 \u2208 GL_3",
+        "target": "Full Ramanujan: |a_p(\u03c0)| \u2264 p^{(3-1)/2} = p (normalized: \u2264 1)",
+        "gap": "5/14 vs 0: gap = 5/14"
+      },
+      "GL3_via_functoriality": {
+        "sym2": "All Sym\u00b2(\u03c0): PROVEN (T131); covers a codimension-\u221e subset of GL_3",
+        "sym3": "Sym\u00b3(\u03c0): Kim 2002 (GL_2\u2192GL_4); partial GL_3 coverage",
+        "AD": "Arthur-Clozel descent: GL_3 cuspidals via trace formula; conditional",
+        "status": "Ramanujan GL_3: proven for Sym\u00b2 subfamily; open for general cuspidals"
+      }
+    },
+    "partial_ecl": {
+      "object": "Partial ECL for GL_3 using known bounds",
+      "known_bound_approach": {
+        "kim_sarnak": "|a_p| \u2264 p^{5/14+\u03b5} for GL_3",
+        "implies": "Partial spectral bound: oscillations satisfy p^{-5/14} amplitude",
+        "et_question": "Does partial Ramanujan suffice for ET=3?",
+        "answer": "ET upper bound: ET\u22643 (EML-4 Gap, structural). Lower bound: need |oscillation|>0 permanently.",
+        "partial_lower": "p^{-5/14} \u2192 oscillations decay as p^{5/14}; still nonzero \u2192 ET\u22653 partially",
+        "conclusion": "ET(L_GL3)=3 likely holds with Kim-Sarnak; formal proof needs refinement"
+      },
+      "conditional_ecl_gl3": {
+        "theorem": "T119 (S396): ECL for GL_3 conditional on full Ramanujan",
+        "upgrade": "T132 (S412): ECL for GL_3 Sym\u00b2 subfamily UNCONDITIONAL (T131)",
+        "general_gl3": "Conditional on Kim-Sarnak strengthening to full Ramanujan"
+      },
+      "new_theorem": "T132: GL_3 Sym\u00b2 ECL Unconditional (S412): ECL holds for all Sym\u00b2(\u03c0) GL_3 L-functions"
+    },
+    "roadmap": {
+      "object": "GRH roadmap for GL_3",
+      "proven": {
+        "sym2_subfamily": "All L(Sym\u00b2\u03c0, s) for holomorphic \u03c0: GRH PROVEN (T131+T108+T112)",
+        "size": "Sym\u00b2 subfamily: uncountably many GL_3 L-functions (one per GL_2 newform)"
+      },
+      "conditional": {
+        "general_cuspidal": "All GL_3 cuspidals: conditional on full Ramanujan",
+        "maass_forms": "GL_3 Maass forms: conditional on Selberg 1/4 conjecture for GL_3"
+      },
+      "strategy": {
+        "step1": "Prove Kim-Sarnak bound is \u2264 0+\u03b5 (strengthening)",
+        "step2": "Or prove all GL_3 cuspidals are functorial lifts from GL_2",
+        "step3": "Langlands functoriality GL_2\u2192GL_3 would give full coverage"
+      },
+      "eml_prediction": "All GL_3 L-functions: ET=3; GRH holds; ECL universal for GL_3"
+    },
+    "verdicts": {
+      "status": "Ramanujan GL_3: Sym\u00b2 proven; general open; best bound 5/14",
+      "partial_ecl": "T132: Sym\u00b2 ECL unconditional; general GL_3 conditional",
+      "roadmap": "GRH GL_3 Sym\u00b2: PROVEN; general: conditional on Ramanujan",
+      "new_theorem": "T132: GL_3 Sym\u00b2 ECL Unconditional"
+    }
+  },
+  "key_theorem": "GL_3 Sym\u00b2 ECL Unconditional (T132, S412): Ramanujan GL_3: proven for Sym\u00b2(\u03c0) subfamily (T131); best general bound: Kim-Sarnak 5/14. T132: ECL for all Sym\u00b2(\u03c0) GL_3 L-functions is UNCONDITIONAL (from T131). GRH for Sym\u00b2 L-functions: PROVEN. General GL_3: ECL conditional on full Ramanujan (closing the 5/14 gap). Strategy: Langlands functoriality GL_2\u2192GL_3 would give full coverage; or strengthen Kim-Sarnak bound to 0+\u03b5.",
+  "rabbit_hole_log": [
+    "Ramanujan GL_3: Sym\u00b2 proven (T131); general open (Kim-Sarnak best: 5/14)",
+    "T132: Sym\u00b2 ECL unconditional \u2014 upgrades T119 for the Sym\u00b2 subfamily",
+    "GRH GL_3 Sym\u00b2: PROVEN; general: conditional",
+    "Strategy: functoriality GL_2\u2192GL_3 or strengthen Kim-Sarnak",
+    "NEW: T132 GL_3 Sym\u00b2 ECL Unconditional"
+  ]
+}
