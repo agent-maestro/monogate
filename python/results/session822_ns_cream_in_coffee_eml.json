@@ -1,0 +1,43 @@
+{
+  "session": 822,
+  "title": "Cream in Coffee as Reverse Traversal",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "NSCreamInCoffeeEML",
+    "analysis": {
+      "object": "T543: Cream in Coffee as Reverse Traversal depth analysis",
+      "domains": {
+        "kh_instability": {
+          "description": "Miscible interface: Kelvin-Helmholtz instability; billowing rolls are EML-3",
+          "depth": "EML-3",
+          "reason": "K-H rolls are EML-3 oscillatory structures at cream-coffee interface"
+        },
+        "mixing_cascade": {
+          "description": "Mixing proceeds: EML-inf turbulent mixing -> EML-3 diffusion -> EML-2 gradient -> EML-0 uniform",
+          "depth": "EML-inf",
+          "reason": "Mixing is reverse traversal: inf->3->2->1->0; death of the cream"
+        },
+        "irreversibility": {
+          "description": "Mixed state is EML-0 (uniform, dead); thermodynamic arrow is depth arrow",
+          "depth": "EML-0",
+          "reason": "Final mixed state is EML-0: maximum entropy, minimum depth"
+        },
+        "every_mixing": {
+          "description": "Every mixing process is a death: reverse traversal inf->...->0",
+          "depth": "EML-inf",
+          "reason": "Mixing = death theorem: all mixing follows inf->3->2->1->0 depth path"
+        }
+      }
+    },
+    "distribution": {
+      "EML-3": 1,
+      "EML-inf": 2,
+      "EML-0": 1
+    },
+    "theorem": "T543: Cream in Coffee as Reverse Traversal (S822)."
+  },
+  "key_theorem": "T543: Cream in Coffee as Reverse Traversal (S822).",
+  "rabbit_hole_log": [
+    "T543: kh_instability depth confirmed"
+  ]
+}
