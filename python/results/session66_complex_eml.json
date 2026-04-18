@@ -1,0 +1,302 @@
+{
+  "session": 66,
+  "title": "Complex Analysis EML Complexity",
+  "section1_log": {
+    "log_values": [
+      {
+        "z": [
+          1.0,
+          0.0
+        ],
+        "log_z": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "z": [
+          0.0,
+          1.0
+        ],
+        "log_z": [
+          0.0,
+          1.5707963267948966
+        ]
+      },
+      {
+        "z": [
+          -1.0,
+          0.01
+        ],
+        "log_z": [
+          4.999750016665417e-05,
+          3.131592986903128
+        ]
+      },
+      {
+        "z": [
+          2.0,
+          2.0
+        ],
+        "log_z": [
+          1.039720770839918,
+          0.7853981633974483
+        ]
+      },
+      {
+        "z": [
+          2.718281828459045,
+          0.0
+        ],
+        "log_z": [
+          1.0,
+          0.0
+        ]
+      }
+    ],
+    "monodromy": {
+      "start_z": 1.0,
+      "log_start": 0.0,
+      "log_end": 6.283185307179586,
+      "winding_number": 1,
+      "monodromy_group": "Z (integers: EML-0)"
+    },
+    "riemann_surface": {
+      "space": "C* = C\\{0}",
+      "covering": "Universal cover = infinite-sheeted helix",
+      "deck_transformations": "Z: z \u2192 z + 2\u03c0i in the cover",
+      "single_valued_on_cover": true,
+      "eml_depth_single_branch": 2,
+      "eml_depth_monodromy": 0
+    },
+    "eml_depth_branch": 2,
+    "eml_depth_monodromy": 0
+  },
+  "section2_laurent": {
+    "residues": [
+      {
+        "pole": "(1+0j)",
+        "order": 1,
+        "residue": "(0.5+0j)"
+      },
+      {
+        "pole": "(-1+0j)",
+        "order": 1,
+        "residue": "(-0.5+0j)"
+      }
+    ],
+    "contour_small": [
+      0.0,
+      -2.220446049250313e-16
+    ],
+    "contour_large": [
+      -2.220446049250313e-16,
+      2.220446049250313e-16
+    ],
+    "eml_depth_residue": 0,
+    "eml_depth_term": 2
+  },
+  "section3_residue": {
+    "tests": [
+      {
+        "function": "1/(z-1)",
+        "integral": [
+          -2.220446049250313e-16,
+          6.283185307179586
+        ],
+        "expected_real": 0.0,
+        "expected_imag": 6.283185307179586,
+        "match": true
+      },
+      {
+        "function": "1/(z\u00b2-1)",
+        "integral": [
+          0.0,
+          1.6653345369377348e-16
+        ],
+        "expected_real": 0.0,
+        "expected_imag": 0.0,
+        "match": true
+      },
+      {
+        "function": "sin(z)/z",
+        "integral": [
+          2.220446049250313e-16,
+          0.0
+        ],
+        "expected_real": 0.0,
+        "expected_imag": 0.0,
+        "match": true
+      }
+    ],
+    "all_match": true,
+    "eml_depth": 0
+  },
+  "section4_conformal": {
+    "map_values": [
+      {
+        "z": [
+          0.001,
+          0.001
+        ],
+        "exp_z": [
+          1.0009999996665,
+          0.0010010003333333001
+        ],
+        "log_z": [
+          -6.561181688702164,
+          0.7853981633974483
+        ]
+      },
+      {
+        "z": [
+          1.0,
+          0.0
+        ],
+        "exp_z": [
+          2.718281828459045,
+          0.0
+        ],
+        "log_z": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "z": [
+          0.0,
+          1.5707963267948966
+        ],
+        "exp_z": [
+          6.123233995736766e-17,
+          1.0
+        ],
+        "log_z": [
+          0.4515827052894548,
+          1.5707963267948966
+        ]
+      },
+      {
+        "z": [
+          1.0,
+          1.0
+        ],
+        "exp_z": [
+          1.4686939399158851,
+          2.2873552871788423
+        ],
+        "log_z": [
+          0.34657359027997264,
+          0.7853981633974483
+        ]
+      },
+      {
+        "z": [
+          -1.0,
+          0.5
+        ],
+        "exp_z": [
+          0.32284458245003306,
+          0.17637079922503196
+        ],
+        "log_z": [
+          0.11157177565710488,
+          2.677945044588987
+        ]
+      }
+    ],
+    "eml_depths": {
+      "exp": 1,
+      "log": 2,
+      "mobius": 2,
+      "riemann_map": "inf"
+    }
+  },
+  "section5_filtration": {
+    "comparison": {
+      "over_R": {
+        "EML-0": "rational functions, polynomials",
+        "EML-1": "exp(x), exp(-x\u00b2/2) \u2014 distinguished by Infinite Zeros Barrier",
+        "EML-2": "log(x), sqrt(x), erf adjacent",
+        "EML-3": "erf(x) = integral of EML-2",
+        "EML-inf": "Liouville-non-elementary: non-elementary integrals"
+      },
+      "over_C": {
+        "EML-0": "meromorphic with rational principal parts",
+        "EML-1": "e^z \u2014 same as over R",
+        "EML-2": "Log z, rational functions, algebraic functions",
+        "EML-inf": "essential singularities, Weierstrass functions",
+        "coarser_note": "Over C, the sin vs exp distinction collapses: sin(z) = (e^{iz}-e^{-iz})/(2i) \u2014 both EML-1 over C!"
+      }
+    },
+    "singularity_types": {
+      "removable": "EML-0 (no singularity after removal)",
+      "pole_order_n": "EML-2 (rational principal part)",
+      "logarithmic_branch": "EML-2 (Log z)",
+      "essential": "EML-inf (Picard theorem: takes every value)",
+      "natural_boundary": "EML-inf (cannot extend beyond boundary)"
+    },
+    "key_theorem": "Over C: sin is EML-1 (same as exp). Over R: sin is EML-3."
+  },
+  "taxonomy": {
+    "complex_log_single_branch": {
+      "formula": "Log(z) = ln|z| + i\u00b7Arg(z)  (principal branch, \u2102\\(-\u221e,0])",
+      "eml_depth": 2,
+      "reason": "Single-valued branch: EML-2 (contains real log)."
+    },
+    "log_monodromy": {
+      "formula": "Continuation around 0: Log(z) \u2192 Log(z) + 2\u03c0i",
+      "eml_depth": 0,
+      "reason": "Monodromy = \u2124 (winding numbers): EML-0."
+    },
+    "laurent_z_power": {
+      "formula": "z^n = exp(n\u00b7Log z): EML-2",
+      "eml_depth": 2,
+      "reason": "exp of EML-2 (log) \u2192 EML-2. Laurant coefficients a_n: EML-0 (constants)."
+    },
+    "residue_result": {
+      "formula": "\u222e_\u03b3 f(z)dz = 2\u03c0i \u03a3 Res(f,z_k)",
+      "eml_depth": 0,
+      "reason": "Result is 2\u03c0i \u00d7 (sum of residues = EML-0 coefficients) \u2192 EML-0."
+    },
+    "conformal_exp": {
+      "formula": "exp: \u2102 \u2192 \u2102*, z \u21a6 e^z",
+      "eml_depth": 1,
+      "reason": "EML-1 atom. Maps horizontal strip to sector."
+    },
+    "riemann_mapping": {
+      "formula": "Riemann map f: D \u2192 \u03a9 (generic simply connected \u03a9 \u2260 \u2102)",
+      "eml_depth": "inf",
+      "reason": "Generic Riemann map is not elementary \u2192 EML-inf."
+    },
+    "weierstrass_p": {
+      "formula": "\u2118(z) = 1/z\u00b2 + \u03a3'_{\u03c9\u2208\u039b}(1/(z-\u03c9)\u00b2-1/\u03c9\u00b2)",
+      "eml_depth": "inf",
+      "reason": "Doubly periodic, meromorphic, non-elementary \u2192 EML-inf."
+    },
+    "essential_singularity": {
+      "formula": "f near essential sing: takes every value (Picard)",
+      "eml_depth": "inf",
+      "reason": "Essential singularity = EML-inf behavior (exp(-1/z) near 0)."
+    },
+    "poles_and_residues": {
+      "formula": "Pole at z\u2080: f(z) = a_{-n}/(z-z\u2080)^n + ... + a_0 + ...",
+      "eml_depth": 2,
+      "reason": "Rational principal part \u2192 EML-2; residue a_{-1} \u2192 EML-0."
+    }
+  },
+  "summary": {
+    "key_insight": "Over \u2102, the EML filtration is COARSER than over \u211d: sin(z) = (e^{iz}-e^{-iz})/2i becomes EML-1 over \u2102 (same as exp). The EML classification over \u2102 is by SINGULARITY TYPE: poles \u2192 EML-2, logarithmic branch \u2192 EML-2, essential \u2192 EML-\u221e. The monodromy of Log is \u2124 (EML-0): winding numbers are integers.",
+    "eml_depths": {
+      "complex_log_single_branch": "2",
+      "log_monodromy": "0",
+      "laurent_z_power": "2",
+      "residue_result": "0",
+      "conformal_exp": "1",
+      "riemann_mapping": "inf",
+      "weierstrass_p": "inf",
+      "essential_singularity": "inf",
+      "poles_and_residues": "2"
+    }
+  }
+}
