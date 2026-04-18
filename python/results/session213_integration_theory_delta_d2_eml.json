@@ -1,0 +1,157 @@
+{
+  "session": 213,
+  "title": "Integration Theory Attack: Fourier, Laplace, Mellin, Hilbert",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "transform_analysis": {
+    "model": "IntegralTransformDepthTable",
+    "fourier_family": {
+      "fourier_continuous": {
+        "kernel": "e^{-2\u03c0i\u03bex}",
+        "kernel_depth": 3,
+        "input_depth": 1,
+        "output_depth": 3,
+        "delta_d": 2,
+        "measure": "dx Lebesgue on R",
+        "is_inversion": true,
+        "note": "F: char fn(EML-1) \u2192 density(EML-3) = \u0394d=2; measure dx introduced"
+      },
+      "discrete_fourier": {
+        "kernel": "e^{-2\u03c0ikn/N}",
+        "kernel_depth": 3,
+        "input_depth": 0,
+        "output_depth": 2,
+        "delta_d": 2,
+        "measure": "counting measure on {0,...,N-1}",
+        "note": "DFT: sequence(EML-0) \u2192 spectrum(EML-2) = \u0394d=2; counting measure"
+      },
+      "fourier_series": {
+        "kernel": "e^{inx}",
+        "kernel_depth": 3,
+        "input_depth": 0,
+        "output_depth": 2,
+        "delta_d": 2,
+        "measure": "dx/2\u03c0 normalized Lebesgue on circle",
+        "note": "FS: coefficient f_n = (1/2\u03c0)\u222bf e^{-inx}dx: EML-0 fn \u2192 EML-2 coeff = \u0394d=2"
+      },
+      "short_time_fourier": {
+        "kernel": "g(t-\u03c4)e^{-i\u03c9t}",
+        "kernel_depth": 3,
+        "input_depth": 1,
+        "output_depth": 3,
+        "delta_d": 2,
+        "measure": "dt on time axis",
+        "note": "STFT: signal(EML-1) \u2192 spectrogram(EML-3) = \u0394d=2"
+      }
+    },
+    "laplace_mellin": {
+      "laplace": {
+        "kernel": "e^{-st}",
+        "kernel_depth": 1,
+        "input_depth": 1,
+        "output_depth": 2,
+        "delta_d": 1,
+        "measure": "dt on [0,\u221e)",
+        "note": "Laplace: EML-1 fn \u2192 EML-2 output = \u0394d=1 (NOT 2; kernel is EML-1)"
+      },
+      "bilateral_laplace": {
+        "kernel": "e^{-st}",
+        "kernel_depth": 1,
+        "input_depth": 0,
+        "output_depth": 2,
+        "delta_d": 2,
+        "measure": "dt on R",
+        "note": "Bilateral Laplace: EML-0 \u2192 EML-2 = \u0394d=2"
+      },
+      "mellin": {
+        "kernel": "x^{s-1}",
+        "kernel_depth": 2,
+        "input_depth": 1,
+        "output_depth": 3,
+        "delta_d": 2,
+        "measure": "dx/x multiplicative Haar measure",
+        "note": "Mellin: EML-1 fn \u2192 EML-3 output = \u0394d=2; Haar measure dx/x introduced"
+      },
+      "z_transform": {
+        "kernel": "z^{-n}",
+        "kernel_depth": 2,
+        "input_depth": 0,
+        "output_depth": 2,
+        "delta_d": 2,
+        "measure": "counting measure",
+        "note": "Z: sequence(EML-0) \u2192 generating fn(EML-2) = \u0394d=2"
+      }
+    },
+    "singular_oscillatory": {
+      "hilbert": {
+        "kernel": "1/(\u03c0(t-x)) (principal value)",
+        "kernel_depth": 2,
+        "input_depth": 3,
+        "output_depth": 3,
+        "delta_d": 0,
+        "measure": "principal value integral (same space)",
+        "note": "Hilbert: L\u00b2\u2192L\u00b2 self-map = \u0394d=0; no new measure, same domain"
+      },
+      "radon": {
+        "kernel": "\u03b4(x cos\u03b8 + y sin\u03b8 - t)",
+        "kernel_depth": 0,
+        "input_depth": 2,
+        "output_depth": 3,
+        "delta_d": 1,
+        "measure": "d\u2113 line measure along hyperplane",
+        "note": "Radon: f(x,y)(EML-2) \u2192 Rf(\u03b8,t)(EML-3) = \u0394d=1; line measure is EML-0 (geometric)"
+      },
+      "wavelet_continuous": {
+        "kernel": "\u03c8_{a,b}(t) = |a|^{-1/2} \u03c8((t-b)/a)",
+        "kernel_depth": 3,
+        "input_depth": 3,
+        "output_depth": 3,
+        "delta_d": 0,
+        "measure": "da db/a\u00b2 admissibility measure",
+        "note": "CWT: L\u00b2\u2192L\u00b2 (with admissibility) = \u0394d=0; same depth, different basis"
+      },
+      "abel": {
+        "kernel": "1/sqrt(t-x)",
+        "kernel_depth": 2,
+        "input_depth": 0,
+        "output_depth": 2,
+        "delta_d": 2,
+        "measure": "dt with singularity weight",
+        "note": "Abel transform: EML-0 \u2192 EML-2 = \u0394d=2; measure dt with algebraic weight"
+      }
+    },
+    "summary": {
+      "total_transforms": 12,
+      "delta_d_0": [
+        "hilbert",
+        "wavelet_continuous"
+      ],
+      "delta_d_1": [
+        "laplace",
+        "radon"
+      ],
+      "delta_d_2": [
+        "fourier_continuous",
+        "discrete_fourier",
+        "fourier_series",
+        "short_time_fourier",
+        "bilateral_laplace",
+        "mellin",
+        "z_transform",
+        "abel"
+      ],
+      "pattern": "\u0394d depends on KERNEL depth + measure type: oscillatory kernel (EML-3) + Lebesgue \u2192 \u0394d=2; geometric kernel (EML-0) + line measure \u2192 \u0394d=1; self-adjoint kernel \u2192 \u0394d=0 (self-maps). Conjecture refinement: \u0394d = kernel_depth - (input_depth - 1)."
+    },
+    "key_insight": "\u0394d varies by kernel: oscillatory(EML-3) \u2192 \u0394d=2; geometric(EML-0) \u2192 \u0394d=1; self-map \u2192 \u0394d=0"
+  },
+  "eml_depth_summary": {
+    "delta_d_0": "Hilbert (L\u00b2\u2192L\u00b2 self-map), wavelet CWT (same-depth basis change)",
+    "delta_d_1": "Radon (geometric kernel), unilateral Laplace (EML-1 kernel)",
+    "delta_d_2": "Fourier family (oscillatory EML-3 kernel + Lebesgue), Mellin (Haar measure), Abel, DFT"
+  },
+  "key_theorem": "The EML Integral Transform Depth Theorem (S213): The \u0394d of an integral transform T[f](s) = \u222b K(x,s) f(x) d\u03bc(x) is determined by: \u0394d = depth(K) - depth(input) + 1, subject to the measure type. Fourier: oscillatory kernel (EML-3) + Lebesgue \u2192 \u0394d=2. Radon: geometric delta kernel (EML-0) + line measure \u2192 \u0394d=1. Hilbert: singular kernel + same-domain measure \u2192 \u0394d=0 (self-map). Mellin: power kernel (EML-2) + Haar measure (log-based) \u2192 \u0394d=2. KERNEL DEPTH IS THE PRIMARY DETERMINANT of \u0394d for integral transforms.",
+  "rabbit_hole_log": [
+    "Kernel depth determines \u0394d: EML-3 kernel \u2192 \u0394d=2; EML-0 kernel \u2192 \u0394d=1",
+    "Fourier family uniformly \u0394d=2: continuous, discrete, series, STFT \u2014 all the same",
+    "Hilbert = \u0394d=0: the L\u00b2-preserving self-map, no depth change \u2014 a fixed point"
+  ]
+}
