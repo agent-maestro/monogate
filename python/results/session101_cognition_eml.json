@@ -1,0 +1,268 @@
+{
+  "session": 101,
+  "title": "Consciousness & Cognitive Science: EML as Model of Thought",
+  "key_theorem": {
+    "theorem": "EML Cognitive Depth Theorem",
+    "statement": "Cognitive processes follow the EML depth hierarchy: resting state = EML-1 (synchronized ground state). Attention = EML-1 (softmax = Boltzmann). Working memory capacity = EML-0 (7\u00b12), decay = EML-1, rehearsal = EML-3. Insight = EML-\u221e \u2192 EML-3 depth transition (like grokking in neural networks). Qualia = EML-\u221e hypothesis (irreducible, non-compressible subjective experience). Integrated Information \u03a6 = EML-2 (logarithmic). Psychosis = EML-\u221e (disordered thought); deep meditation = EML-2 (structured stillness)."
+  },
+  "attention": {
+    "attention_mechanism": "softmax(QK\u1d40/\u221ad)\u00b7V: EML-1 weights \u00d7 EML-2 values",
+    "focused_attention": {
+      "scores": [
+        5.0,
+        0.5,
+        0.3
+      ],
+      "temperature": 1.0,
+      "attention_weights": [
+        0.980196,
+        0.010889,
+        0.008915
+      ],
+      "entropy_bits": 0.16,
+      "eml_weights": 1,
+      "eml_scores": 2,
+      "reason": "softmax = Boltzmann distribution = EML-1"
+    },
+    "diffuse_attention": {
+      "scores": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "temperature": 1.0,
+      "attention_weights": [
+        0.333333,
+        0.333333,
+        0.333333
+      ],
+      "entropy_bits": 1.585,
+      "eml_weights": 1,
+      "eml_scores": 2,
+      "reason": "softmax = Boltzmann distribution = EML-1"
+    },
+    "high_temp": {
+      "scores": [
+        5.0,
+        0.5,
+        0.3
+      ],
+      "temperature": 5.0,
+      "attention_weights": [
+        0.556422,
+        0.226224,
+        0.217354
+      ],
+      "entropy_bits": 1.4342,
+      "eml_weights": 1,
+      "eml_scores": 2,
+      "reason": "softmax = Boltzmann distribution = EML-1"
+    },
+    "switching": [
+      {
+        "state": "Focused on stimulus A",
+        "weights": [
+          0.95,
+          0.05
+        ],
+        "eml": 1,
+        "reason": "Nearly degenerate Boltzmann = EML-1 near EML-0 limit"
+      },
+      {
+        "state": "Switching (transitional)",
+        "weights": [
+          0.5,
+          0.5
+        ],
+        "eml": Infinity,
+        "reason": "Unstable transition state: attention split = EML-\u221e (like phase boundary)"
+      },
+      {
+        "state": "Focused on stimulus B",
+        "weights": [
+          0.05,
+          0.95
+        ],
+        "eml": 1,
+        "reason": "New EML-1 ground state after switching"
+      }
+    ],
+    "eml_softmax": 1,
+    "eml_scores": 2
+  },
+  "working_memory": {
+    "ebbinghaus_curve": [
+      {
+        "t_hours": 0.5,
+        "retention_fraction": 0.9794,
+        "eml": 1,
+        "reason": "R(t) = exp(-t/S): EML-1 exponential forgetting"
+      },
+      {
+        "t_hours": 1,
+        "retention_fraction": 0.9592,
+        "eml": 1,
+        "reason": "R(t) = exp(-t/S): EML-1 exponential forgetting"
+      },
+      {
+        "t_hours": 4,
+        "retention_fraction": 0.8465,
+        "eml": 1,
+        "reason": "R(t) = exp(-t/S): EML-1 exponential forgetting"
+      },
+      {
+        "t_hours": 24,
+        "retention_fraction": 0.3679,
+        "eml": 1,
+        "reason": "R(t) = exp(-t/S): EML-1 exponential forgetting"
+      },
+      {
+        "t_hours": 168,
+        "retention_fraction": 0.0009,
+        "eml": 1,
+        "reason": "R(t) = exp(-t/S): EML-1 exponential forgetting"
+      }
+    ],
+    "capacity": {
+      "miller_capacity": "7\u00b12 items",
+      "eml_capacity": 0,
+      "eml_item_activation": 1,
+      "eml_rehearsal": 3,
+      "eml_chunking": 2,
+      "chunking_insight": "Chunking: N items \u2192 log_k(N) chunks = EML-2 (logarithmic compression reduces EML-0 count)"
+    },
+    "sleep_replay": {
+      "theta_oscillation": "4-8 Hz hippocampal theta: EML-3 (oscillation during REM)",
+      "consolidation": "EML-3 replay \u2192 EML-2 consolidated trace (depth reduction through sleep)",
+      "eml_stm": 1,
+      "eml_ltm": 2
+    }
+  },
+  "insight_qualia": {
+    "insight_dynamics": [
+      {
+        "phase": "Impasse (stuck)",
+        "representation": "Fixed wrong frame, exhaustive EML-\u221e search",
+        "eml": Infinity,
+        "description": "Random search in wrong solution space = EML-\u221e (incompressible)"
+      },
+      {
+        "phase": "Incubation",
+        "representation": "Background spreading activation = EML-3 (oscillatory diffusion)",
+        "eml": 3,
+        "description": "Unconscious diffusion of activation: EML-3 spatial oscillation in neural space"
+      },
+      {
+        "phase": "Insight flash",
+        "representation": "Sudden restructuring: EML-\u221e \u2192 EML-3 transition",
+        "eml": Infinity,
+        "description": "The transition instant itself is EML-\u221e (discontinuous reconfiguration)"
+      },
+      {
+        "phase": "Post-insight",
+        "representation": "New EML-3 structured frame",
+        "eml": 3,
+        "description": "Problem now has compact EML-3 solution \u2014 depth reduced"
+      }
+    ],
+    "integrated_information": [
+      {
+        "n_nodes": 10,
+        "connectivity": 0.3,
+        "phi_approx": 3.5667,
+        "eml": 2,
+        "reason": "\u03a6 \u2248 n\u00b7log(1/(1-c)): EML-2 (logarithm of rational function)"
+      },
+      {
+        "n_nodes": 100,
+        "connectivity": 0.5,
+        "phi_approx": 69.3147,
+        "eml": 2,
+        "reason": "\u03a6 \u2248 n\u00b7log(1/(1-c)): EML-2 (logarithm of rational function)"
+      },
+      {
+        "n_nodes": 1000,
+        "connectivity": 0.7,
+        "phi_approx": 1203.9728,
+        "eml": 2,
+        "reason": "\u03a6 \u2248 n\u00b7log(1/(1-c)): EML-2 (logarithm of rational function)"
+      }
+    ],
+    "qualia_hypothesis": {
+      "ncc_gamma_40hz": "EML-3 (oscillation)",
+      "binding_unity": "EML-\u221e (irreducible integration?)",
+      "phi_iit": "EML-2 (logarithmic functional)",
+      "hard_problem": "Qualia may be EML-\u221e: no finite EML tree can generate subjective 'redness'",
+      "eml_consciousness": "EML-3 (measurable correlates) + EML-\u221e (irreducible qualia) = hybrid"
+    }
+  },
+  "cognitive_phases": {
+    "cognitive_phase_diagram": [
+      {
+        "state": "Deep anesthesia",
+        "eml": 0,
+        "oscillation": "None",
+        "phi": "~0"
+      },
+      {
+        "state": "Slow-wave sleep",
+        "eml": 1,
+        "oscillation": "0.5-2 Hz delta",
+        "phi": "low"
+      },
+      {
+        "state": "REM / dreaming",
+        "eml": 3,
+        "oscillation": "Theta 6-8 Hz",
+        "phi": "medium"
+      },
+      {
+        "state": "Focused attention",
+        "eml": 2,
+        "oscillation": "Beta 13-30 Hz",
+        "phi": "medium-high"
+      },
+      {
+        "state": "Flow state",
+        "eml": 3,
+        "oscillation": "Gamma 40 Hz",
+        "phi": "high"
+      },
+      {
+        "state": "Creativity / insight",
+        "eml": 3,
+        "oscillation": "Mixed theta+gamma",
+        "phi": "high"
+      },
+      {
+        "state": "Psychosis",
+        "eml": "\u221e",
+        "oscillation": "Disorganized",
+        "phi": "disrupted"
+      },
+      {
+        "state": "Meditation (deep)",
+        "eml": 2,
+        "oscillation": "Low-freq synchrony",
+        "phi": "very high"
+      }
+    ],
+    "key_insight": "Healthy cognition oscillates between EML-1 (rest) and EML-3 (active). Pathology = EML-\u221e (disorganized) or EML-0 (vegetative). Insight = brief EML-\u221e transition enabling EML-3 restructuring."
+  },
+  "eml_depth_summary": {
+    "EML-0": "Vegetative state; discrete memory capacity 7\u00b12; digit span",
+    "EML-1": "Slow-wave sleep oscillation; attention weights (softmax); memory decay exp(-t/\u03c4)",
+    "EML-2": "Integrated information \u03a6; chunking compression; beta-wave focused attention",
+    "EML-3": "REM replay; gamma oscillation NCC; insight post-restructuring; creativity",
+    "EML-\u221e": "Qualia (hard problem); psychosis; attention switching instant; pre-insight impasse"
+  },
+  "rabbit_hole_log": [
+    "Attention as Boltzmann: softmax weights are exactly exp(score_i)/Z = EML-1. The brain's attention mechanism computes the same distribution as statistical mechanics ground states. This suggests attention is a physical minimum-energy operation.",
+    "Insight = grokking: the EML-\u221e \u2192 EML-3 transition in Session 96 (modular arithmetic) mirrors the Aha! moment: random search (EML-\u221e) suddenly finds the compact structure (EML-3). Incubation = background EML-3 diffusion enabling the restructuring.",
+    "The hard problem of consciousness: qualia resist EML classification because they're private. From a third-person (external) view, NCCs are EML-3 (measurable oscillations). But the first-person 'what it's like' may genuinely be EML-\u221e \u2014 not because it's complex, but because no external formula captures it."
+  ],
+  "connections": {
+    "to_session_96": "Grokking = EML-\u221e\u2192EML-3. Insight moments follow identical EML depth transition",
+    "to_session_57": "Phase transitions = EML-\u221e. Attention switching = cognitive phase transition = EML-\u221e at the moment"
+  }
+}
