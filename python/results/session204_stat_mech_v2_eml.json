@@ -1,0 +1,46 @@
+{
+  "session": 204,
+  "title": "Statistical Mechanics Deep II: Onsager, Transfer Matrices & Partition Functions",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "partition_function": {
+    "model": "PartitionFunctionEML",
+    "canonical": {
+      "Z": 1.553,
+      "F": -0.4402,
+      "S": 0.5073,
+      "Z_depth": 1,
+      "F_depth": 2,
+      "S_depth": 2,
+      "energies": [
+        0.0,
+        1.0,
+        2.0,
+        3.0
+      ],
+      "note": "Z=EML-1 (sum of exp); F=log(Z)/\u03b2=EML-2; S=EML-2"
+    },
+    "onsager_ising": {
+      "beta": 0.44,
+      "beta_c": 0.4407,
+      "k_ising": 1.0,
+      "free_energy_depth": 3,
+      "critical_exponents_depth": 2,
+      "phase_transition_depth": "\u221e",
+      "elliptic_integral_depth": 3,
+      "note": "Onsager: F=EML-3 (elliptic integral); critical exponents=EML-2; transition=EML-\u221e"
+    },
+    "key_insight": "Z=EML-1; F=log(Z)=EML-2; Onsager=EML-3; transition=EML-\u221e"
+  },
+  "eml_depth_summary": {
+    "EML-1": "Z = \u03a3 exp(-\u03b2E) (partition function = sum of EML-1)",
+    "EML-2": "F = -log(Z)/\u03b2, entropy S = EML-2; critical exponents",
+    "EML-3": "Onsager exact solution (elliptic integral); transfer matrix",
+    "EML-\u221e": "Phase transition, symmetry breaking"
+  },
+  "key_theorem": "The EML Statistical Mechanics Theorem (S204): Z = \u03a3 exp(-\u03b2E): each term is EML-1, but the sum = EML-1 (closed under addition). Free energy F = -log(Z)/\u03b2 = EML-2 (log of EML-1 = EML-2). Onsager exact 2D Ising = EML-3 (elliptic integral = EML-3). Phase transitions = EML-\u221e (symmetry breaking, divergent correlation length). The Z \u2192 F \u2192 S ladder = EML-1 \u2192 EML-2 \u2192 EML-2 = standard partition function depth chain.",
+  "rabbit_hole_log": [
+    "Z=EML-1: partition function is the archetype of the universal EML-1 ground state sum",
+    "F=log(Z)=EML-2: the thermodynamic potential is always one log above Z",
+    "Onsager=EML-3: only known EXACT solution in 2D stat mech lives at EML-3"
+  ]
+}
