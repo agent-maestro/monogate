@@ -1,0 +1,320 @@
+{
+  "session": 117,
+  "title": "KPZ Universality & Non-Equilibrium Growth: EML at the Edge",
+  "key_theorem": {
+    "theorem": "EML Non-Equilibrium Universality Theorem",
+    "statement": "KPZ nonlinear term (\u2207h)\u00b2 breaks EML-3 (linear) to EML-\u221e (fluctuations). KPZ scaling exponents (\u03b1=1/2, \u03b2=1/3, z=3/2) are EML-2 (rational). Cole-Hopf Z=exp(\u03bbh/2\u03bd) maps EML-\u221e height to EML-1 multiplicative noise. GUE/GOE level spacing P(s) ~ s^\u03b2\u00b7exp(-cs\u00b2) is EML-3. Wigner semicircle ~ \u221a(R\u00b2-\u03bb\u00b2) is EML-2. Poisson (integrable) level spacing exp(-s) is EML-1. Tracy-Widom F_2 (Painlev\u00e9 II) is EML-\u221e. KPZ height fluctuations = largest GUE eigenvalue = EML-\u221e universality class."
+  },
+  "kpz_equation": {
+    "exponents_1d": {
+      "dimension": 1,
+      "roughness_alpha": 0.5,
+      "growth_beta": 0.3333333333333333,
+      "dynamic_z": 1.5,
+      "scaling_relation": "\u03b1 = z\u00b7\u03b2 (check: 1/2 = 3/2 \u00b7 1/3 = 1/2 \u2713)",
+      "eml_exponents": 2,
+      "reason": "KPZ exponents 1/2, 1/3, 3/2: rational = EML-2 (rationals are EML-2 algebraic)"
+    },
+    "height_variance": [
+      {
+        "t": 1,
+        "variance_exponent": 0.6667,
+        "variance_t2beta": 1.0,
+        "eml": 2,
+        "reason": "\u27e8h\u00b2\u27e9 ~ t^{2/3}: EML-2 (power law in time with rational exponent)"
+      },
+      {
+        "t": 4,
+        "variance_exponent": 0.6667,
+        "variance_t2beta": 2.519842,
+        "eml": 2,
+        "reason": "\u27e8h\u00b2\u27e9 ~ t^{2/3}: EML-2 (power law in time with rational exponent)"
+      },
+      {
+        "t": 9,
+        "variance_exponent": 0.6667,
+        "variance_t2beta": 4.326749,
+        "eml": 2,
+        "reason": "\u27e8h\u00b2\u27e9 ~ t^{2/3}: EML-2 (power law in time with rational exponent)"
+      },
+      {
+        "t": 16,
+        "variance_exponent": 0.6667,
+        "variance_t2beta": 6.349604,
+        "eml": 2,
+        "reason": "\u27e8h\u00b2\u27e9 ~ t^{2/3}: EML-2 (power law in time with rational exponent)"
+      },
+      {
+        "t": 100,
+        "variance_exponent": 0.6667,
+        "variance_t2beta": 21.544347,
+        "eml": 2,
+        "reason": "\u27e8h\u00b2\u27e9 ~ t^{2/3}: EML-2 (power law in time with rational exponent)"
+      }
+    ],
+    "cole_hopf": {
+      "transformation": "Z(x,t) = exp(\u03bbh/(2\u03bd))",
+      "result": "\u2202Z/\u2202t = \u03bd\u2207\u00b2Z + (\u03bb/2\u03bd)\u00b7\u03b7\u00b7Z (stochastic heat equation = SHE)",
+      "eml_Z": 1,
+      "eml_KPZ_height": Infinity,
+      "insight": "Cole-Hopf maps KPZ (EML-\u221e height) to SHE (EML-1 exponential). Same as Burgers (S76). EML-1 solution to EML-\u221e problem via exp transformation."
+    },
+    "universality_class": [
+      {
+        "system": "KPZ equation (\u03bb\u22600)",
+        "dim": 1,
+        "eml_fluctuations": Infinity,
+        "reason": "Nonlinear term \u2192 EML-\u221e fluctuations (Tracy-Widom)"
+      },
+      {
+        "system": "Edwards-Wilkinson (\u03bb=0)",
+        "dim": 1,
+        "eml_fluctuations": 3,
+        "reason": "Linear: EML-3 (heat equation = EML-3 solution)"
+      },
+      {
+        "system": "ASEP (asymmetric exclusion)",
+        "dim": 1,
+        "eml_fluctuations": Infinity,
+        "reason": "Discrete KPZ: same EML-\u221e universality class"
+      },
+      {
+        "system": "PNG model (polynuclear growth)",
+        "dim": 1,
+        "eml_fluctuations": Infinity,
+        "reason": "KPZ universality: Tracy-Widom = EML-\u221e"
+      },
+      {
+        "system": "Random polymer (free energy)",
+        "dim": 1,
+        "eml_fluctuations": Infinity,
+        "reason": "Directed polymer in random environment: KPZ class = EML-\u221e"
+      }
+    ],
+    "eml_linear_part": 3,
+    "eml_noise": 1,
+    "eml_nonlinear_term": 2,
+    "eml_fluctuations": Infinity,
+    "eml_exponents": 2
+  },
+  "random_matrices": {
+    "gue_spacing": [
+      {
+        "s": 0.0,
+        "P_s_GUE": 0.0,
+        "eml": 3,
+        "reason": "P(s) = c\u00b7s\u00b2\u00b7exp(-4s\u00b2/\u03c0): EML-3 (power \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 0.5,
+        "P_s_GUE": 0.58959,
+        "eml": 3,
+        "reason": "P(s) = c\u00b7s\u00b2\u00b7exp(-4s\u00b2/\u03c0): EML-3 (power \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 1.0,
+        "P_s_GUE": 0.907589,
+        "eml": 3,
+        "reason": "P(s) = c\u00b7s\u00b2\u00b7exp(-4s\u00b2/\u03c0): EML-3 (power \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 1.5,
+        "P_s_GUE": 0.415787,
+        "eml": 3,
+        "reason": "P(s) = c\u00b7s\u00b2\u00b7exp(-4s\u00b2/\u03c0): EML-3 (power \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 2.0,
+        "P_s_GUE": 0.079628,
+        "eml": 3,
+        "reason": "P(s) = c\u00b7s\u00b2\u00b7exp(-4s\u00b2/\u03c0): EML-3 (power \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 3.0,
+        "P_s_GUE": 0.000308,
+        "eml": 3,
+        "reason": "P(s) = c\u00b7s\u00b2\u00b7exp(-4s\u00b2/\u03c0): EML-3 (power \u00d7 Gaussian = EML-3)"
+      }
+    ],
+    "goe_spacing": [
+      {
+        "s": 0.0,
+        "P_s_GOE": 0.0,
+        "eml": 3,
+        "reason": "P(s) = (\u03c0/2)s\u00b7exp(-\u03c0s\u00b2/4): EML-3 (linear \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 0.5,
+        "P_s_GOE": 0.645381,
+        "eml": 3,
+        "reason": "P(s) = (\u03c0/2)s\u00b7exp(-\u03c0s\u00b2/4): EML-3 (linear \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 1.0,
+        "P_s_GOE": 0.716186,
+        "eml": 3,
+        "reason": "P(s) = (\u03c0/2)s\u00b7exp(-\u03c0s\u00b2/4): EML-3 (linear \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 1.5,
+        "P_s_GOE": 0.402485,
+        "eml": 3,
+        "reason": "P(s) = (\u03c0/2)s\u00b7exp(-\u03c0s\u00b2/4): EML-3 (linear \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 2.0,
+        "P_s_GOE": 0.135761,
+        "eml": 3,
+        "reason": "P(s) = (\u03c0/2)s\u00b7exp(-\u03c0s\u00b2/4): EML-3 (linear \u00d7 Gaussian = EML-3)"
+      },
+      {
+        "s": 3.0,
+        "P_s_GOE": 0.004012,
+        "eml": 3,
+        "reason": "P(s) = (\u03c0/2)s\u00b7exp(-\u03c0s\u00b2/4): EML-3 (linear \u00d7 Gaussian = EML-3)"
+      }
+    ],
+    "poisson_spacing": [
+      {
+        "s": 0.0,
+        "P_s": 1.0,
+        "eml": 1,
+        "reason": "Poisson P(s) = e^{-s}: EML-1 (exponential = ground state of uncorrelated levels)"
+      },
+      {
+        "s": 0.5,
+        "P_s": 0.606531,
+        "eml": 1,
+        "reason": "Poisson P(s) = e^{-s}: EML-1 (exponential = ground state of uncorrelated levels)"
+      },
+      {
+        "s": 1.0,
+        "P_s": 0.367879,
+        "eml": 1,
+        "reason": "Poisson P(s) = e^{-s}: EML-1 (exponential = ground state of uncorrelated levels)"
+      },
+      {
+        "s": 1.5,
+        "P_s": 0.22313,
+        "eml": 1,
+        "reason": "Poisson P(s) = e^{-s}: EML-1 (exponential = ground state of uncorrelated levels)"
+      },
+      {
+        "s": 2.0,
+        "P_s": 0.135335,
+        "eml": 1,
+        "reason": "Poisson P(s) = e^{-s}: EML-1 (exponential = ground state of uncorrelated levels)"
+      },
+      {
+        "s": 3.0,
+        "P_s": 0.049787,
+        "eml": 1,
+        "reason": "Poisson P(s) = e^{-s}: EML-1 (exponential = ground state of uncorrelated levels)"
+      }
+    ],
+    "semicircle": [
+      {
+        "lambda": -1.8,
+        "rho": 0.069374,
+        "eml": 2,
+        "reason": "Semicircle \u03c1 ~ \u221a(R\u00b2-\u03bb\u00b2): EML-2 (square root of polynomial)"
+      },
+      {
+        "lambda": -1.0,
+        "rho": 0.137832,
+        "eml": 2,
+        "reason": "Semicircle \u03c1 ~ \u221a(R\u00b2-\u03bb\u00b2): EML-2 (square root of polynomial)"
+      },
+      {
+        "lambda": -0.5,
+        "rho": 0.154101,
+        "eml": 2,
+        "reason": "Semicircle \u03c1 ~ \u221a(R\u00b2-\u03bb\u00b2): EML-2 (square root of polynomial)"
+      },
+      {
+        "lambda": 0.0,
+        "rho": 0.159155,
+        "eml": 2,
+        "reason": "Semicircle \u03c1 ~ \u221a(R\u00b2-\u03bb\u00b2): EML-2 (square root of polynomial)"
+      },
+      {
+        "lambda": 0.5,
+        "rho": 0.154101,
+        "eml": 2,
+        "reason": "Semicircle \u03c1 ~ \u221a(R\u00b2-\u03bb\u00b2): EML-2 (square root of polynomial)"
+      },
+      {
+        "lambda": 1.0,
+        "rho": 0.137832,
+        "eml": 2,
+        "reason": "Semicircle \u03c1 ~ \u221a(R\u00b2-\u03bb\u00b2): EML-2 (square root of polynomial)"
+      },
+      {
+        "lambda": 1.8,
+        "rho": 0.069374,
+        "eml": 2,
+        "reason": "Semicircle \u03c1 ~ \u221a(R\u00b2-\u03bb\u00b2): EML-2 (square root of polynomial)"
+      }
+    ],
+    "dyson_index_eml": 0,
+    "eml_GUE_spacing": 3,
+    "eml_GOE_spacing": 3,
+    "eml_poisson": 1,
+    "eml_semicircle": 2,
+    "eml_tracy_widom": Infinity
+  },
+  "tracy_widom": {
+    "painleve_II": {
+      "equation": "q'' = tq + 2q\u00b3 (Painlev\u00e9 II)",
+      "solution_type": "Transcendental \u2014 no closed form in elementary functions",
+      "eml": Infinity,
+      "reason": "Painlev\u00e9 II is EML-\u221e: outside elementary and algebraic functions, cannot be expressed in any finite EML tree",
+      "tracy_widom": "F_2(t) = exp(-\u222b_t^\u221e (x-t)q\u00b2dx): defined via Painlev\u00e9 II solution \u2192 EML-\u221e"
+    },
+    "kpz_rmt_connection": {
+      "universal_distribution": "Tracy-Widom F_2",
+      "eml": Infinity,
+      "appears_in": [
+        "Largest GUE eigenvalue fluctuation",
+        "KPZ 1D height fluctuation t^{1/3}",
+        "Longest increasing subsequence length fluctuation",
+        "First passage time of TASEP",
+        "Free energy of directed polymer"
+      ],
+      "mean_TW": -1.7711,
+      "variance_TW": 0.8132,
+      "reason_inf": "All controlled by Painlev\u00e9 II = EML-\u221e. The entire KPZ universality class has EML-\u221e fluctuations."
+    },
+    "hierarchy": {
+      "Edwards_Wilkinson": {
+        "eml": 3,
+        "fluctuations": "Gaussian (EML-3)"
+      },
+      "KPZ_1D": {
+        "eml": Infinity,
+        "fluctuations": "Tracy-Widom (EML-\u221e)"
+      },
+      "MBE_growth": {
+        "eml": Infinity,
+        "fluctuations": "Higher KPZ class"
+      }
+    }
+  },
+  "eml_depth_summary": {
+    "EML-0": "Dyson index \u03b2 \u2208 {1,2,4}; KPZ universality class membership (discrete label)",
+    "EML-1": "Poisson level spacing exp(-s) (integrable = no repulsion); noise \u03b7 per mode",
+    "EML-2": "Wigner semicircle \u221a(R\u00b2-\u03bb\u00b2); KPZ exponents (rational); height variance t^{2/3}",
+    "EML-3": "GUE P(s)~s\u00b2e^{-cs\u00b2}; GOE P(s)~se^{-cs\u00b2}; Edwards-Wilkinson (linear) fluctuations",
+    "EML-\u221e": "Tracy-Widom F_2 (Painlev\u00e9 II); KPZ height fluctuations; ASEP; longest increasing subsequence"
+  },
+  "rabbit_hole_log": [
+    "The KPZ nonlinear term is the minimal perturbation that breaks EML-2: \u2202h/\u2202t = \u03bd\u2207\u00b2h (EML-3 solution) becomes EML-\u221e with the addition of (\u03bb/2)(\u2207h)\u00b2 (EML-2 term). The EML-2 perturbation of an EML-3 linear equation produces EML-\u221e fluctuations. This is the sharpest example of EML depth non-monotonicity under perturbation: adding an EML-2 term to an EML-3 equation jumps to EML-\u221e.",
+    "Cole-Hopf appears again (Session 76, Burgers): Z=exp(h) maps EML-\u221e to EML-1. The same transformation that solved Burgers equation maps KPZ to a stochastic heat equation. EML-1 is the 'solver' of EML-\u221e problems via the exponential transformation. This pattern appears in: Burgers (S76), KPZ (S117), Black-Scholes (S95), and BCS gap (S108).",
+    "Tracy-Widom is EML-\u221e but with precise numerical values: mean -1.7711, variance 0.8132. These numbers are known to thousands of digits from the Painlev\u00e9 II connection. EML-\u221e doesn't mean 'we don't know the numbers' \u2014 it means there's no elementary formula. Tracy-Widom is the canonical example of an EML-\u221e object that is completely characterized numerically.",
+    "The KPZ-RMT connection is the deepest universality result since Ising: the Tracy-Widom distribution appears identically in KPZ height fluctuations, GUE largest eigenvalue, longest increasing subsequence, and free polymer energy. These EML-\u221e problems all share the same Painlev\u00e9 II transcendent. Universality = same EML-\u221e fixed point."
+  ],
+  "connections": {
+    "to_session_76": "Burgers equation Cole-Hopf (S76) = KPZ Cole-Hopf (S117). Same EML-\u221e \u2192 EML-1 transformation.",
+    "to_session_57": "KPZ transition EML-3\u2192EML-\u221e: adding nonlinear term crosses the universality class boundary. Same as Ising above T_c."
+  }
+}
