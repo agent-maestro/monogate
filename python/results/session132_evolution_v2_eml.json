@@ -1,0 +1,153 @@
+{
+  "session": 132,
+  "title": "Evolutionary Biology Deep II: Fitness Landscapes, Speciation & Punctuated Equilibrium",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "nk_fitness_landscape": {
+    "model": "NKFitnessLandscape",
+    "N": 10,
+    "K": 2,
+    "expected_local_optima": 0.02,
+    "log_optima_structure": "exp(N * ln(2/(K+1))) \u2014 EML-1",
+    "adaptive_walk_fitness": [
+      0.3586
+    ],
+    "walk_converged_at_step": 1,
+    "landscape_ruggedness": 0.2,
+    "eml_depth": {
+      "n_optima_formula": 1,
+      "adaptive_walk_convergence": 1,
+      "ruggedness_ratio": 2,
+      "fitness_landscape_structure": 2
+    },
+    "key_insight": "NK landscape: # optima = EML-1; each local basin = EML-1 exponential stability"
+  },
+  "wright_fisher_dynamics": {
+    "model": "WrightFisherDynamics",
+    "population_size": 200,
+    "drift_variance_at_p0.5": 0.00125,
+    "fixation_probability_table": {
+      "0.0": {
+        "0.01": 0.01,
+        "0.05": 0.05,
+        "0.1": 0.1,
+        "0.5": 0.5
+      },
+      "0.001": {
+        "0.01": 0.0121,
+        "0.05": 0.0601,
+        "0.1": 0.1189,
+        "0.5": 0.5498
+      },
+      "0.01": {
+        "0.01": 0.0399,
+        "0.05": 0.1847,
+        "0.1": 0.3358,
+        "0.5": 0.8808
+      },
+      "0.05": {
+        "0.01": 0.1813,
+        "0.05": 0.6321,
+        "0.1": 0.8647,
+        "0.5": 1.0
+      }
+    },
+    "coalescence_time_generations": 400,
+    "reproductive_isolation_vs_time": {
+      "100": 0.0952,
+      "500": 0.3935,
+      "1000": 0.6321,
+      "5000": 0.9933,
+      "10000": 1.0
+    },
+    "speciation_time_at_threshold_0.5": 693.1,
+    "eml_depth": {
+      "drift_variance": 2,
+      "fixation_probability": 1,
+      "reproductive_isolation": 1,
+      "speciation_event": "\u221e"
+    },
+    "key_insight": "Fixation = EML-1 (Kimura formula); speciation threshold crossing = EML-\u221e"
+  },
+  "punctuated_equilibrium": {
+    "model": "PunctuatedEquilibrium",
+    "stasis_duration_gens": 1000.0,
+    "event_duration_gens": 10.0,
+    "trajectory_sample": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        301.5,
+        0.7397
+      ],
+      [
+        603.0,
+        0.5472
+      ],
+      [
+        904.5,
+        0.4047
+      ],
+      [
+        1206.0,
+        5.8138
+      ],
+      [
+        1507.5,
+        5.602
+      ],
+      [
+        1809.0,
+        5.4453
+      ],
+      [
+        2110.6,
+        10.8953
+      ]
+    ],
+    "information_rates": {
+      "stasis_info_nats": 0.0069,
+      "event_info_rate_per_gen": 0.1,
+      "ratio_event_to_stasis": 14.48
+    },
+    "sexual_selection_runaway": {
+      "0": 0.1,
+      "10": 0.1649,
+      "20": 0.2718,
+      "30": 0.4482,
+      "40": 0.7389,
+      "50": 1.2182
+    },
+    "eml_depth": {
+      "stasis_dynamics": 1,
+      "sexual_selection_runaway": 1,
+      "punctuation_event": "\u221e",
+      "information_during_stasis": 2,
+      "information_during_event": "\u221e"
+    },
+    "key_insight": "Stasis = EML-1 (mean reversion, exponential stability). Sexual selection runaway = EML-1 (exponential growth). Speciation/punctuation = EML-\u221e (non-analytic morphological jump)."
+  },
+  "eml_depth_summary": {
+    "EML-0": "Topology of genotype space, coalescence counts",
+    "EML-1": "NK local optima count, adaptive walk convergence, fixation probability, stasis, runaway",
+    "EML-2": "Drift variance, reproductive isolation, ruggedness ratio, stasis information",
+    "EML-3": "Oscillatory population dynamics (predator-prey limit cycles)",
+    "EML-\u221e": "Speciation threshold crossing, punctuation events, extinction (irreversible)"
+  },
+  "key_theorem": "The EML Evolutionary Depth Theorem: All gradual evolutionary processes (drift, selection, stasis) are EML-1 or EML-2. The discrete, irreversible events of evolutionary history \u2014 speciation, extinction, punctuated equilibrium jumps \u2014 are EML-\u221e: they cannot be expressed as finite compositions of exp and ln over the continuous state space.",
+  "rabbit_hole_log": [
+    "NK optima count = EML-1: same structure as Boltzmann partition function",
+    "Kimura fixation = EML-1: (1-exp)/(1-exp) \u2014 ratio of two EML-1 atoms",
+    "Reproductive isolation = 1-exp(-mu*t): EML-1 in time, EML-2 as depth (involves ln in inversion)",
+    "Stasis = Ornstein-Uhlenbeck = EML-1 attractor",
+    "Punctuation events: sharp limit of sigmoid \u2192 step function = EML-\u221e",
+    "Sexual selection runaway = EML-1 until fitness cost triggers EML-\u221e crash/speciation"
+  ],
+  "connections": {
+    "S57_stat_mech": "Boltzmann factor structure = NK local optima count (both EML-1)",
+    "S62_pde": "OU process in stasis = EML-1 (same as Ornstein-Uhlenbeck = mean-reverting SDE)",
+    "S75_qft": "Phase transition in speciation = EML-\u221e (same class as QCD confinement)",
+    "S130_grand_synthesis_7": "Speciation is irreversible: asymmetry \u0394d=\u221e (EML-\u221e barrier)"
+  }
+}
