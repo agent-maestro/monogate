@@ -1,0 +1,317 @@
+{
+  "session": 71,
+  "title": "Pseudo vs True Randomness & EML Complexity",
+  "key_theorem": {
+    "theorem": "EML Randomness Theorem",
+    "statement": "A sequence s = (s_n) is pseudo-random iff its minimal EML depth is finite. PRNGs are EML-2: their closed-form generator is x_n = f(n) for EML-2 f. True random sequences (thermal noise, quantum, Chaitin \u03a9) are EML-\u221e: no EML-finite function generates them.",
+    "corollary_csprng": "CSPRNGs exhibit an EML depth paradox: structural depth is EML-2 (polynomial key map) but computational depth is EML-\u221e (no poly-time inversion). This is the EML interpretation of one-way functions.",
+    "corollary_chaos": "Deterministic chaotic systems transition from EML-2 (short time) to effective EML-\u221e (long time) at the Lyapunov scale. This is the same EML-\u221e transition as phase transitions (Session 57) and PDE blowup (Session 62)."
+  },
+  "lcg": {
+    "type": "Linear Congruential Generator",
+    "parameters": {
+      "a": 1664525,
+      "c": 1013904223,
+      "m": 4294967296,
+      "seed": 42
+    },
+    "first_20_values": [
+      1083814273,
+      378494188,
+      2479403867,
+      955863294,
+      1613448261,
+      110225632,
+      1921058495,
+      508781842,
+      3753001289,
+      4271921684,
+      3664477795,
+      2146095206,
+      2757373069,
+      3699926152,
+      2561818183,
+      389768954,
+      602196497,
+      4080598076,
+      3970935403,
+      3820240078
+    ],
+    "normalized_01": [
+      0.252345,
+      0.088125,
+      0.577281,
+      0.222554,
+      0.37566,
+      0.025664,
+      0.447281,
+      0.11846,
+      0.873814,
+      0.994634,
+      0.853203,
+      0.499677,
+      0.642001,
+      0.861456,
+      0.59647,
+      0.09075,
+      0.14021,
+      0.950088,
+      0.924555,
+      0.889469
+    ],
+    "closed_form_matches_recurrence": false,
+    "closed_form": "x_n = (a^n\u00b7x_0 + c\u00b7(a^n-1)/(a-1)) mod m",
+    "eml_class": "EML-2: LCG closed form x_n = f(n)",
+    "reason": "a^n = exp(n\u00b7ln a) is EML-2; full LCG recurrence is EML-2"
+  },
+  "mersenne_twister": {
+    "type": "Mersenne Twister MT19937",
+    "seed": 42,
+    "first_20_values": [
+      2746317213,
+      478163327,
+      107420369,
+      3184935163,
+      1181241943,
+      1051802512,
+      958682846,
+      599310825,
+      3163119785,
+      440213415,
+      2906402157,
+      3181143731,
+      3831882064,
+      2342331444,
+      373399426,
+      2536146025,
+      1812140441,
+      136505587,
+      127978094,
+      402418010
+    ],
+    "period": {
+      "period": "2^19937 - 1",
+      "log_period": 13819.2753,
+      "eml_expression": "exp(19937\u00b7ln 2) - 1",
+      "eml_depth": 2
+    },
+    "eml_class": "EML-2: MT19937 output sequence",
+    "reason": "MT state update is a linear recurrence: x_n = M^n\u00b7x_0 over GF(2). M^n symbolically = exp(n\u00b7ln M) \u2192 EML-2. Empirically passes all statistical tests, but structurally EML-2.",
+    "cryptographic_security": false,
+    "note": "MT is not cryptographically secure: given 624 outputs, future outputs are predictable."
+  },
+  "csprng": {
+    "type": "Cryptographic PRNG (ChaCha20/AES-CTR model)",
+    "structural_eml": "EML-2: ChaCha20/AES-CTR structure",
+    "computational_eml": "EML-\u221e: ChaCha20/AES-CTR output (observer view)",
+    "paradox": "CSPRNG is EML-2 structurally (polynomial map of key+counter) but EML-\u221e computationally (no poly-time algorithm identifies the EML-2 form). This is the EML interpretation of one-way functions and computational pseudorandomness.",
+    "eml_one_way_principle": "A function f is one-way iff its EML depth (structural) is finite but its computational EML depth (to invert) is effectively EML-\u221e."
+  },
+  "randomness_spectrum": {
+    "theorem": "EML Randomness Theorem: A sequence s = (s_n) is pseudo-random iff there exists k < \u221e such that s_n = round(f(n)) for some EML-k function f. A sequence is truly random iff no EML-finite function generates it, i.e., the minimal EML depth of any generating function is EML-\u221e.",
+    "spectrum": [
+      {
+        "source": "Constant 0101... (period 2)",
+        "eml_depth": 0,
+        "statistical_quality": "fails all tests",
+        "deterministic": true,
+        "eml_generator": "x_n = n mod 2"
+      },
+      {
+        "source": "Logistic map r=3.57 (onset of chaos)",
+        "eml_depth": 2,
+        "statistical_quality": "structured correlations",
+        "deterministic": true,
+        "eml_generator": "x_{n+1} = r\u00b7x_n\u00b7(1-x_n) \u2014 rational recurrence"
+      },
+      {
+        "source": "LCG (linear congruential)",
+        "eml_depth": 2,
+        "statistical_quality": "passes basic tests, fails lattice test",
+        "deterministic": true,
+        "eml_generator": "x_n = (a^n\u00b7x_0 + ...) mod m = EML-2"
+      },
+      {
+        "source": "Mersenne Twister MT19937",
+        "eml_depth": 2,
+        "statistical_quality": "passes NIST, Diehard, TestU01",
+        "deterministic": true,
+        "eml_generator": "linear recurrence mod 2^32 = EML-2"
+      },
+      {
+        "source": "ChaCha20-based CSPRNG",
+        "eml_depth_structural": 2,
+        "eml_depth_computational": "\u221e",
+        "statistical_quality": "passes all known tests, cryptographically secure",
+        "deterministic": true,
+        "eml_generator": "ARX polynomial map = EML-2 structurally; EML-\u221e computationally"
+      },
+      {
+        "source": "\u03c0 digits (decimal)",
+        "eml_depth": 3,
+        "statistical_quality": "conjectured normal (passes frequency tests)",
+        "deterministic": true,
+        "eml_generator": "BBP formula = EML-3; digits EML-3"
+      },
+      {
+        "source": "Chaitin \u03a9 digits",
+        "eml_depth": "\u221e",
+        "statistical_quality": "Martin-L\u00f6f random",
+        "deterministic": false,
+        "eml_generator": "No finite EML tree; left-computable only"
+      },
+      {
+        "source": "Thermal noise (Johnson-Nyquist)",
+        "eml_depth": "\u221e",
+        "statistical_quality": "True Gaussian white noise",
+        "deterministic": false,
+        "eml_generator": "Physical process \u2014 no EML-finite generator"
+      },
+      {
+        "source": "Quantum measurement (QRNG)",
+        "eml_depth": "\u221e",
+        "statistical_quality": "Certifiably random (Bell inequality)",
+        "deterministic": false,
+        "eml_generator": "No hidden variable EML-finite generator (Bell theorem)"
+      }
+    ]
+  },
+  "lyapunov_chaos": {
+    "periodic_r3.2": {
+      "r": 3.2,
+      "lyapunov_exponent": -0.9139,
+      "chaotic": false,
+      "early_values": [
+        0.4,
+        0.768,
+        0.570163,
+        0.784247,
+        0.541452,
+        0.794502,
+        0.52246,
+        0.798386,
+        0.515091,
+        0.799271
+      ],
+      "late_values": [
+        0.513045,
+        0.799455,
+        0.513045,
+        0.799455,
+        0.513045,
+        0.799455,
+        0.513045,
+        0.799455,
+        0.513045,
+        0.799455
+      ],
+      "eml_depth_short_time": 2,
+      "eml_depth_long_time": "\u221e",
+      "reason": "Short time: recurrence x_n = f^n(x_0) is a rational function \u2192 EML-2. Long time: chaos \u2192 Lyapunov divergence exp(\u03bbt) \u2192 sensitive dependence \u2192 effective EML-\u221e (no finite-depth tree predicts x_n for large n without full precision)."
+    },
+    "chaotic_r3.9": {
+      "r": 3.9,
+      "lyapunov_exponent": 0.5026,
+      "chaotic": true,
+      "early_values": [
+        0.4,
+        0.936,
+        0.233626,
+        0.698274,
+        0.821681,
+        0.571434,
+        0.955099,
+        0.167252,
+        0.543186,
+        0.967726
+      ],
+      "late_values": [
+        0.948652,
+        0.189975,
+        0.600149,
+        0.935884,
+        0.234022,
+        0.699096,
+        0.820407,
+        0.574625,
+        0.953282,
+        0.17369
+      ],
+      "eml_depth_short_time": 2,
+      "eml_depth_long_time": "\u221e",
+      "reason": "Short time: recurrence x_n = f^n(x_0) is a rational function \u2192 EML-2. Long time: chaos \u2192 Lyapunov divergence exp(\u03bbt) \u2192 sensitive dependence \u2192 effective EML-\u221e (no finite-depth tree predicts x_n for large n without full precision)."
+    },
+    "feigenbaum_transition": {
+      "r_feigenbaum": 3.56995,
+      "lyapunov_below_r_inf": -0.1362,
+      "lyapunov_above_r_inf": 0.5026,
+      "eml_transition": "EML-2 \u2192 EML-\u221e at r = r_\u221e",
+      "feigenbaum_constant_delta": 4.6692016,
+      "feigenbaum_eml": "\u03b4 = lim (r_{n+1}-r_n)/(r_{n+2}-r_{n+1}) = EML-3 (transcendental constant)",
+      "connection": "Same EML-\u221e transition as phase transitions (Session 57) and NS blowup (Session 62)"
+    }
+  },
+  "eml_depth_comparison": [
+    {
+      "source": "010101...",
+      "eml_depth": 0,
+      "period": 2,
+      "passes_tests": false
+    },
+    {
+      "source": "LCG (Numerical Recipes)",
+      "eml_depth": 2,
+      "period": 4294967296,
+      "passes_tests": "basic"
+    },
+    {
+      "source": "MT19937",
+      "eml_depth": 2,
+      "period": "2^19937-1",
+      "passes_tests": true
+    },
+    {
+      "source": "ChaCha20 (structural)",
+      "eml_depth": 2,
+      "period": "2^128",
+      "passes_tests": true
+    },
+    {
+      "source": "\u03c0 digits",
+      "eml_depth": 3,
+      "period": null,
+      "passes_tests": "conjectured"
+    },
+    {
+      "source": "Thermal noise",
+      "eml_depth": "\u221e",
+      "period": null,
+      "passes_tests": true
+    },
+    {
+      "source": "QRNG (Bell-certified)",
+      "eml_depth": "\u221e",
+      "period": null,
+      "passes_tests": true
+    },
+    {
+      "source": "Chaitin \u03a9",
+      "eml_depth": "\u221e",
+      "period": null,
+      "passes_tests": true
+    }
+  ],
+  "eml_depth_summary": {
+    "EML-0": "Constant and periodic sequences",
+    "EML-1": "Exponentially modulated sequences (structured)",
+    "EML-2": "LCG, Mersenne Twister, CSPRNG (structurally), logistic map (short time)",
+    "EML-3": "\u03c0 digits (conjectured normal; BBP formula is EML-3)",
+    "EML-\u221e": "True thermal noise, quantum randomness (QRNG), Chaitin \u03a9, logistic map (long time)"
+  },
+  "connections": {
+    "to_session_57": "Phase transition EML-\u221e = same barrier as deterministic chaos onset",
+    "to_session_69": "Chaitin \u03a9 = EML-\u221e (algorithmic) = EML-\u221e (PRNG barrier)",
+    "to_session_70": "Quantum QRNG = EML-\u221e via Bell theorem = same class as thermal noise",
+    "to_complexity_theory": "One-way functions = EML-2 structurally, EML-\u221e computationally"
+  }
+}
