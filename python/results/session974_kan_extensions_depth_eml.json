@@ -1,0 +1,37 @@
+{
+  "session": 974,
+  "title": "Kan Extensions as Depth Extrapolation",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "KanExtensionsDepthEML",
+    "analysis": {
+      "object": "T695: Kan Extensions as Depth Extrapolation depth analysis",
+      "domains": {
+        "left_kan_upper": {
+          "description": "Left Kan extension: depth upper bound; extends functor by taking colimits",
+          "depth": "EML-inf",
+          "reason": "Left Kan = depth upper bound: colimit construction increments depth; left Kan is maximally constructive"
+        },
+        "right_kan_lower": {
+          "description": "Right Kan extension: depth lower bound; extends functor by taking limits",
+          "depth": "EML-2",
+          "reason": "Right Kan = depth lower bound: limit construction preserves depth; right Kan is maximally conservative"
+        },
+        "all_concepts": {
+          "description": "Mac Lane: all concepts are Kan extensions; therefore all concepts have depth",
+          "depth": "EML-inf",
+          "reason": "Kan universality: if all concepts are Kan extensions and Kan extensions have depth, then all concepts have depth"
+        }
+      }
+    },
+    "distribution": {
+      "EML-inf": 2,
+      "EML-2": 1
+    },
+    "theorem": "T695: Kan Extensions as Depth Extrapolation (S974)."
+  },
+  "key_theorem": "T695: Kan Extensions as Depth Extrapolation (S974).",
+  "rabbit_hole_log": [
+    "T695: left_kan_upper depth confirmed"
+  ]
+}
