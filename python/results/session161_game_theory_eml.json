@@ -1,0 +1,167 @@
+{
+  "session": 161,
+  "title": "Game Theory: EML Depth of Strategic Interaction",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "nash_equilibria": {
+    "model": "NashEquilibria",
+    "prisoners_dilemma": {
+      "payoff_matrix": {
+        "('C', 'C')": [
+          3,
+          3
+        ],
+        "('D', 'C')": [
+          5,
+          0
+        ],
+        "('C', 'D')": [
+          0,
+          5
+        ],
+        "('D', 'D')": [
+          1,
+          1
+        ]
+      },
+      "nash_equilibrium": [
+        "D",
+        "D"
+      ],
+      "pareto_optimum": [
+        "C",
+        "C"
+      ],
+      "price_of_anarchy": 3.0,
+      "eml_depth_nash": 0,
+      "eml_depth_gap": "\u221e",
+      "note": "Nash = EML-0 argmax; Nash\u2194Pareto gap = EML-\u221e (coordination failure)"
+    },
+    "mixed_strategy": {
+      "p_star": 0.571429,
+      "q_star": 0.714286,
+      "expected_payoff": 2.0,
+      "eml_depth": 0
+    },
+    "nash_complexity": {
+      "2player_zero_sum": "EML-2 (linear programming)",
+      "2player_general": "PPAD-complete (EML-\u221e)",
+      "n_player": "PPAD-complete (EML-\u221e)",
+      "correlated_equilibrium": "EML-2 (linear program)",
+      "note": "Nash computation = EML-\u221e; correlated equilibrium = EML-2 (tractable)"
+    },
+    "eml_depth": {
+      "pure_nash": 0,
+      "mixed_nash": 0,
+      "nash_computation": "\u221e",
+      "correlated_equilibrium": 2
+    },
+    "key_insight": "Nash equilibria = EML-0 (argmax); computing them = EML-\u221e (PPAD); CE = EML-2"
+  },
+  "replicator_dynamics": {
+    "model": "ReplicatorDynamics",
+    "rock_paper_scissors": {
+      "payoff_antisymmetric": true,
+      "center_equilibrium": [
+        0.3333,
+        0.3333,
+        0.3333
+      ],
+      "initial_freq": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "final_freq": [
+        0.3757,
+        0.3532,
+        0.2711
+      ],
+      "orbit_type": "periodic (EML-3)",
+      "eml_depth": 3
+    },
+    "hawk_dove_ess": {
+      "V": 2.0,
+      "C": 6.0,
+      "ess_hawk_fraction": 0.3333,
+      "payoffs_hawk": [
+        -2.0,
+        2.0
+      ],
+      "payoffs_dove": [
+        0.0,
+        1.0
+      ],
+      "eml_depth_ess": 0,
+      "eml_depth_dynamics": 2
+    },
+    "pd_replicator_final": [
+      0.0717,
+      0.9283
+    ],
+    "eml_depth": {
+      "replicator_step": 2,
+      "rps_orbit": 3,
+      "ess": 0,
+      "pd_convergence": 2
+    },
+    "key_insight": "RPS replicator = EML-3 (cyclic orbit); ESS = EML-0; PD convergence = EML-2"
+  },
+  "mechanism_design": {
+    "model": "MechanismDesign",
+    "vickrey_auction": {
+      "bids": [
+        3.5,
+        2.1,
+        4.8,
+        1.9
+      ],
+      "winner": 2,
+      "payment": 3.5,
+      "social_welfare": 4.8,
+      "eml_depth": 0,
+      "truthful": true
+    },
+    "gibbard_satterthwaite": {
+      "theorem": "Any non-dictatorial, onto voting rule is manipulable",
+      "eml_depth_theorem": "\u221e",
+      "implication": "Strategy-proof mechanisms are EML-\u221e rare (only Vickrey + variations)",
+      "arrow_impossibility": "EML-\u221e: no social welfare function satisfies all Arrow axioms",
+      "note": "Impossibility theorems = EML-\u221e (non-existence proofs)"
+    },
+    "myerson_revenue_by_n": {
+      "1": 0.0,
+      "2": 0.333333,
+      "3": 0.5,
+      "5": 0.666667,
+      "10": 0.818182,
+      "100": 0.980198
+    },
+    "eml_depth": {
+      "vickrey": 0,
+      "myerson_revenue": 0,
+      "gibbard_satterthwaite": "\u221e",
+      "arrow_impossibility": "\u221e"
+    },
+    "key_insight": "Vickrey/Myerson = EML-0 (sorting); G-S impossibility = EML-\u221e"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Pure/mixed Nash (argmax), ESS (V/C), Vickrey payment, Myerson revenue",
+    "EML-1": "Not prominent in strategic games",
+    "EML-2": "Correlated equilibrium (LP), replicator dynamics (quadratic), PD convergence",
+    "EML-3": "Rock-Paper-Scissors replicator (cyclic orbit = EML-3 oscillation)",
+    "EML-\u221e": "Nash computation (PPAD), Gibbard-Satterthwaite, Arrow impossibility"
+  },
+  "key_theorem": "The EML Game Theory Depth Theorem: Nash equilibria (as fixed points) are EML-0 \u2014 argmax operations. Computing them is EML-\u221e (PPAD-complete). Correlated equilibria are EML-2 (linear program). Replicator dynamics for symmetric games are EML-2; for antisymmetric (RPS) EML-3. All social choice impossibility theorems (Arrow, G-S) are EML-\u221e: they prove non-existence of EML-finite mechanisms that satisfy normative axioms.",
+  "rabbit_hole_log": [
+    "Nash equilibrium = EML-0 (argmax); same depth as sorting, counting",
+    "RPS replicator orbit = EML-3: cyclic oscillation (same as Lotka-Volterra, gravity waves)",
+    "Correlated equilibrium = EML-2: Linear program over joint distributions",
+    "PPAD = EML-\u221e: computing Nash = same complexity as Brouwer fixed point",
+    "Arrow impossibility = EML-\u221e: non-existence theorems live at EML-\u221e (like G\u00f6del)"
+  ],
+  "connections": {
+    "S142_evolution_v3": "RPS replicator orbit = EML-3: same as S142 evolutionary cycling",
+    "S139_foundations_v2": "Arrow impossibility = EML-\u221e: same class as G\u00f6del/CH undecidability",
+    "S158_cellular_automata": "PPAD-completeness = EML-\u221e computation class (same as Turing-complete)"
+  }
+}
