@@ -1,0 +1,156 @@
+{
+  "session": 261,
+  "title": "QFT & Non-Perturbative Phenomena Shadow Analysis",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "qft_shadow": {
+    "model": "QFTShadowEML",
+    "instantons": {
+      "object": "Instantons in Yang-Mills theory",
+      "eml_depth": "\u221e",
+      "shadow_depth": 3,
+      "shadow_objects": {
+        "instanton_amplitude": {
+          "description": "A ~ exp(-S_E/\u210f) \u00b7 exp(i\u03b8) where S_E = 8\u03c0\u00b2/g\u00b2",
+          "depth": 3,
+          "why": "exp(i\u03b8): complex phase from \u03b8-vacuum angle = EML-3"
+        },
+        "BPST_solution": {
+          "description": "A_\u03bc^a = 2\u03b7_{a\u03bc\u03bd}x_\u03bd/(x\u00b2+\u03c1\u00b2): real, but generates complex topological charge",
+          "depth": 3,
+          "why": "Q = \u222bTr(F\u2227F)/(8\u03c0\u00b2) \u2208 Z: integer charge with complex phase e^{iQ\u03b8} = EML-3"
+        }
+      }
+    },
+    "theta_vacuum": {
+      "object": "QCD \u03b8-vacuum",
+      "eml_depth": "\u221e",
+      "shadow_depth": 3,
+      "shadow_objects": {
+        "theta_superposition": {
+          "description": "|\u03b8\u27e9 = \u03a3_n exp(in\u03b8)|n\u27e9: superposition over topological sectors",
+          "depth": 3,
+          "why": "exp(in\u03b8): complex Fourier sum over winding numbers = EML-3"
+        },
+        "CP_violation": {
+          "description": "CP-violating term: \u03b8\u00b7Tr(F\u2227F)/(32\u03c0\u00b2) in Lagrangian",
+          "depth": 3,
+          "why": "\u03b8 \u2260 0 breaks CP: complex oscillation in vacuum structure = EML-3"
+        }
+      }
+    },
+    "rg_fixed_points": {
+      "object": "RG fixed points (non-trivial CFTs)",
+      "eml_depth": "\u221e",
+      "shadow_depth": 3,
+      "shadow_objects": {
+        "anomalous_dimensions": {
+          "description": "\u03b3*(g*) at fixed point g*: non-perturbative anomalous dimension",
+          "depth": 3,
+          "why": "Non-perturbative g* means g* = exp(-1/\u03b2\u2080g) type: but at fixed point, operator dimensions involve exp(i\u03c0\u03b3) phases = EML-3"
+        },
+        "operator_spectrum": {
+          "description": "\u0394 = d + \u03b3*(g*): operator dimension at non-trivial fixed point",
+          "depth": 3,
+          "why": "\u03b3* non-perturbative \u2192 involves complex saddle points in path integral = EML-3"
+        }
+      },
+      "perturbative_comparison": {
+        "perturbative_RG": {
+          "eml_depth": 2,
+          "shadow": "N/A (already EML-2)"
+        },
+        "non_perturbative_fixed_point": {
+          "eml_depth": "\u221e",
+          "shadow": 3
+        }
+      }
+    },
+    "condensates": {
+      "object": "Vacuum condensates (\u27e8\u03c8\u0304\u03c8\u27e9, gluon condensate)",
+      "eml_depth": "\u221e",
+      "shadow_depth": 2,
+      "shadow_objects": {
+        "chiral_condensate": {
+          "description": "\u27e8\u03c8\u0304\u03c8\u27e9 \u2248 -(250 MeV)\u00b3: order parameter for chiral symmetry breaking",
+          "depth": 2,
+          "why": "Condensate = real-valued expectation value = EML-2 (thermodynamic average)"
+        },
+        "gluon_condensate": {
+          "description": "\u27e8\u03b1s/\u03c0 \u00b7 Tr(G\u00b2)\u27e9 \u2248 (330 MeV)\u2074: gluon condensate",
+          "depth": 2,
+          "why": "Real-valued OPE coefficient: power correction to correlators = EML-2"
+        }
+      },
+      "note": "Condensates have EML-2 shadow: they are real-valued order parameters (measurement)"
+    },
+    "asymptotic_freedom": {
+      "object": "QCD Landau pole / asymptotic freedom boundary",
+      "eml_depth": "\u221e",
+      "shadow_depth": 2,
+      "shadow_objects": {
+        "running_coupling": {
+          "description": "\u03b1s(\u03bc) = 1/(\u03b2\u2080 log(\u03bc\u00b2/\u039b_QCD\u00b2)): Landau pole at \u03bc=\u039b_QCD",
+          "depth": 2,
+          "why": "1/log is EML-2 (ratio with log); pole = EML-\u221e; shadow via log = EML-2"
+        },
+        "\u039bQCD_scale": {
+          "description": "\u039b_QCD = \u03bc \u00b7 exp(-1/(2\u03b2\u2080\u03b1s(\u03bc))): dimensional transmutation",
+          "depth": 2,
+          "why": "exp(1/\u03b1s) with 1/\u03b1s = \u03b2\u2080\u00b7log: nested exp+log = EML-2 shadow"
+        }
+      }
+    },
+    "solitons": {
+      "object": "Topological solitons (magnetic monopoles, vortices)",
+      "eml_depth": "\u221e",
+      "shadow_depth": 3,
+      "shadow_objects": {
+        "monopole_charge": {
+          "description": "Dirac monopole: g = 2\u03c0/e, Dirac string phase = exp(ie\u222eA\u00b7dl)",
+          "depth": 3,
+          "why": "Dirac phase factor = complex exponential = EML-3"
+        },
+        "vortex_winding": {
+          "description": "Abrikosov vortex: \u03a6 = n\u00b7\u03a6\u2080, \u03c8 = |\u03c8|exp(in\u03b8)",
+          "depth": 3,
+          "why": "exp(in\u03b8): winding number phase = complex oscillation = EML-3"
+        }
+      }
+    },
+    "qft_shadow_table": {
+      "instantons": {
+        "shadow": 3,
+        "type": "oscillation (\u03b8-phase)"
+      },
+      "theta_vacuum": {
+        "shadow": 3,
+        "type": "oscillation (exp(in\u03b8))"
+      },
+      "RG_fixed_points": {
+        "shadow": 3,
+        "type": "oscillation (complex saddle)"
+      },
+      "condensates": {
+        "shadow": 2,
+        "type": "measurement (real order parameter)"
+      },
+      "asymptotic_freedom": {
+        "shadow": 2,
+        "type": "measurement (log coupling)"
+      },
+      "solitons": {
+        "shadow": 3,
+        "type": "oscillation (winding phase)"
+      }
+    },
+    "pattern": "Topological/non-perturbative = EML-3; condensates/running coupling = EML-2"
+  },
+  "key_theorem": "The QFT Non-Perturbative Shadow Rule (S261): Non-perturbative QFT phenomena split by shadow type: TOPOLOGICAL (winding numbers, phases) \u2192 EML-3 shadow:   instantons (e^{i\u03b8}), \u03b8-vacuum (e^{in\u03b8}), solitons (e^{in\u03b8}), monopoles (e^{ie\u222eA}). NON-TOPOLOGICAL (real-valued condensates, running coupling) \u2192 EML-2 shadow:   \u27e8\u03c8\u0304\u03c8\u27e9 (real order parameter), \u039b_QCD (exp(-1/g) with real argument),   gluon condensate (real OPE coefficient). THE RULE: shadow depth = 3 iff the non-perturbative phenomenon carries an irreducible complex phase (topological angle, winding, Dirac string). shadow depth = 2 iff the phenomenon is real-valued (condensate, scale). This rule distinguishes the TWO types of non-perturbative physics: phase-carrying (topological, EML-3) vs magnitude-only (condensate, EML-2). Both are EML-\u221e (non-perturbative = beyond any finite loop order), but their shadows encode which mathematical tools approach them.",
+  "rabbit_hole_log": [
+    "Topological \u2192 EML-3 shadow: instantons, \u03b8-vacuum, solitons all carry exp(i\u03b8) phases",
+    "Condensates \u2192 EML-2 shadow: \u27e8\u03c8\u0304\u03c8\u27e9 and gluon condensate are real-valued",
+    "RULE: shadow=3 iff irreducible complex phase; shadow=2 iff real-valued non-perturbative",
+    "RG fixed points \u2192 EML-3: non-perturbative anomalous dimensions involve complex saddles",
+    "Asymptotic freedom \u2192 EML-2: \u03b1s(\u03bc) ~ 1/log(\u03bc\u00b2/\u039b\u00b2) is real-valued"
+  ]
+}
