@@ -1,0 +1,228 @@
+{
+  "session": 76,
+  "title": "Navier-Stokes & PDE Singularities Deep",
+  "key_theorem": {
+    "theorem": "Cole-Hopf = EML Depth Reduction Map",
+    "statement": "The Cole-Hopf transform u = -2\u03bd\u00b7\u2202_x(ln \u03c8) is an EML-2 map that reduces the nonlinear Burgers equation (EML-\u221e solutions in the inviscid limit) to the linear heat equation (EML-3 solutions via the heat kernel). This is the EML analog of a 'linearization' or 'depth reduction' transformation.",
+    "corollary_kolmogorov": "All Kolmogorov turbulence scales (\u03b7, v_\u03b7, \u03c4_\u03b7, E(k)) are EML-2, as they are rational powers of the physical parameters (\u03bd, \u03b5).",
+    "ns_blowup": {
+      "conjecture": "EML NS Blowup Conjecture",
+      "statement": "NS solution blows up at T* iff vorticity \u03c9(\u00b7,t) transitions from EML-finite (t < T*) to EML-\u221e (t = T*).",
+      "bkm_criterion": {
+        "statement": "NS blowup at T* iff \u222b\u2080^{T*} \u2016\u03c9(\u00b7,t)\u2016_{L\u221e} dt = \u221e",
+        "eml_version": "NS blowup at T* iff \u2016\u03c9(\u00b7,t)\u2016_{L\u221e} as a function of t transitions from EML-finite (t < T*) to EML-\u221e (t \u2192 T*).",
+        "connection_to_phase_transition": "Same structure as EML Phase Transition Theorem (Session 57): smooth phase \u2194 EML-finite vorticity; singular phase \u2194 EML-\u221e vorticity."
+      },
+      "vorticity_models": [
+        {
+          "model": "Smooth global solution",
+          "vorticity_bound": "\u2016\u03c9\u2016_{L\u221e} \u2264 C for all t",
+          "eml_depth": 2,
+          "reason": "Bounded by polynomial in t \u2192 EML-2",
+          "blowup": false
+        },
+        {
+          "model": "1D analogue (Constantin-Lax-Majda)",
+          "vorticity_bound": "\u03c9(x,t) = 1/(T*-t) as t\u2192T*",
+          "eml_depth": "\u221e",
+          "reason": "1/(T*-t) \u2192 \u221e at T*: diverges \u2192 EML-\u221e at blowup",
+          "blowup": true
+        },
+        {
+          "model": "Log-singular (borderline case)",
+          "vorticity_bound": "\u2016\u03c9\u2016 \u2264 C\u00b7ln(1/(T*-t))",
+          "eml_depth": 2,
+          "reason": "ln(1/(T*-t)) \u2192 \u221e but BKM criterion: \u222bln(1/(T*-t))dt < \u221e \u2192 NO blowup",
+          "blowup": false
+        }
+      ],
+      "millennium_restatement": "The NS Millennium Problem in EML language: Does there exist smooth initial data such that the NS vorticity transitions to EML-\u221e at finite time T*? (Yes \u2192 blowup exists; No \u2192 global smooth solutions for all smooth initial data)"
+    }
+  },
+  "burgers_equation": {
+    "viscosity": 0.1,
+    "cole_hopf_transform": "u = -2\u03bd\u00b7\u2202_x(ln \u03c8) [EML-2 map: ln + derivative]",
+    "heat_equation_for_psi": "\u03c8_t = \u03bd\u00b7\u03c8_xx [\u03c8 is EML-3 via heat kernel]",
+    "burgers_solution_type": "EML-3 via Cole-Hopf",
+    "solution_gaussian_ic": {
+      "0.1": [
+        -0.392157,
+        -0.196078,
+        0.0,
+        0.196078,
+        0.392157
+      ],
+      "0.5": [
+        -0.363636,
+        -0.181818,
+        0.0,
+        0.181818,
+        0.363636
+      ],
+      "1.0": [
+        -0.333333,
+        -0.166667,
+        0.0,
+        0.166667,
+        0.333333
+      ],
+      "2.0": [
+        -0.285714,
+        -0.142857,
+        0.0,
+        0.142857,
+        0.285714
+      ]
+    },
+    "inviscid_shock_time": null,
+    "shock_eml": "EML-\u221e at shock: u becomes multivalued \u2192 infinite gradient",
+    "eml_depth_cole_hopf": 2,
+    "eml_depth_viscous_solution": 3,
+    "eml_depth_shock": "\u221e"
+  },
+  "shock_times": [
+    {
+      "x0": 0.1,
+      "t_shock": 0.3347
+    },
+    {
+      "x0": 0.3,
+      "t_shock": 0.5415
+    },
+    {
+      "x0": 0.5,
+      "t_shock": 0
+    },
+    {
+      "x0": 0.7,
+      "t_shock": 0
+    },
+    {
+      "x0": 0.9,
+      "t_shock": 0
+    }
+  ],
+  "kolmogorov_scales": {
+    "nu": 1e-06,
+    "epsilon": 0.001,
+    "kolmogorov_length_m": 0.00017783,
+    "kolmogorov_velocity_ms": 0.00562341,
+    "kolmogorov_time_s": 0.03162278,
+    "energy_spectrum": {
+      "10.0": 0.00032317,
+      "100.0": 6.96e-06,
+      "1000.0": 1.5e-07,
+      "10000.0": 0.0
+    },
+    "eml_all_scales": "EML-2",
+    "reason": "All Kolmogorov scales = rational powers of (\u03bd,\u03b5) = exp(rational\u00b7ln(\u00b7)) = EML-2",
+    "eml_spectrum": "EML-2: E(k) = C\u03b5^{2/3}k^{-5/3}"
+  },
+  "taylor_green_vortex": {
+    "Re": 1000.0,
+    "initial_energy": 0.375,
+    "initial_enstrophy": 0.375,
+    "vortex_stretching": "\u2202_t \u03a9 = -\u03a9/Re + \u222bu\u00b7S\u00b7\u03c9 dV [stretching term can overcome dissipation]",
+    "eml_depth_evolution": {
+      "initial_condition_eml": 3,
+      "initial_condition_reason": "sin(x)cos(y)cos(z) = product of EML-3 functions = EML-3",
+      "evolution": [
+        {
+          "t": 0.0,
+          "eml_depth": 3,
+          "comment": "EML-3 for small t; effective EML-\u221e at large t when turbulence develops",
+          "energy_approx": 0.375
+        },
+        {
+          "t": 0.1,
+          "eml_depth": 3,
+          "comment": "EML-3 for small t; effective EML-\u221e at large t when turbulence develops",
+          "energy_approx": 0.374962
+        },
+        {
+          "t": 1.0,
+          "eml_depth": "\u221e",
+          "comment": "EML-3 for small t; effective EML-\u221e at large t when turbulence develops",
+          "energy_approx": 0.374625
+        },
+        {
+          "t": 5.0,
+          "eml_depth": "\u221e",
+          "comment": "EML-3 for small t; effective EML-\u221e at large t when turbulence develops",
+          "energy_approx": "turbulent"
+        }
+      ],
+      "transition_to_EML_inf": "Occurs when vortex stretching exceeds viscous damping: Re >> 1"
+    }
+  },
+  "cole_hopf_eml_analysis": {
+    "transform": "u = -2\u03bd \u00b7 \u2202_x(ln \u03c8)",
+    "input": "\u03c8 solves heat equation \u03c8_t = \u03bd\u00b7\u03c8_xx \u2192 EML-3 (heat kernel = erf)",
+    "output": "u = Burgers solution \u2192 EML-3 (composition EML-2 \u2218 EML-3)",
+    "depth_reduction": "Cole-Hopf reduces the NONLINEAR Burgers (EML-\u221e in inviscid limit) to the LINEAR heat equation (EML-3 solutions). The EML-2 map ln(\u03c8) acts as a 'depth linearizer'.",
+    "why_eml_2": "ln is the EML-2 gate; \u2202_x is depth-preserving \u2192 total EML-2 for the transform"
+  },
+  "taxonomy": {
+    "cole_hopf_transform": {
+      "eml_depth": 2,
+      "description": "u = -2\u03bd\u00b7\u2202_x(ln \u03c8): transforms Burgers \u2192 heat equation",
+      "reason": "ln gate + derivative = EML-2 map"
+    },
+    "burgers_viscous_solution": {
+      "eml_depth": 3,
+      "description": "u(x,t) via Cole-Hopf + heat kernel",
+      "reason": "Composition: heat kernel (EML-3) \u2218 Cole-Hopf (EML-2) = EML-3"
+    },
+    "burgers_shock_inviscid": {
+      "eml_depth": "\u221e",
+      "description": "Shock formation in \u03bd=0 Burgers at t = t_c",
+      "reason": "u becomes multivalued: gradient \u2202_x u \u2192 -\u221e at shock \u2192 EML-\u221e"
+    },
+    "kolmogorov_length": {
+      "eml_depth": 2,
+      "description": "\u03b7 = (\u03bd\u00b3/\u03b5)^{1/4}",
+      "reason": "Rational power of \u03bd and \u03b5 = exp(rational\u00b7ln(\u00b7)) = EML-2"
+    },
+    "kolmogorov_spectrum": {
+      "eml_depth": 2,
+      "description": "E(k) = C\u00b7\u03b5^{2/3}\u00b7k^{-5/3}",
+      "reason": "Power law = EML-2"
+    },
+    "taylor_green_initial": {
+      "eml_depth": 3,
+      "description": "sin(x)cos(y)cos(z) \u2014 TG vortex initial condition",
+      "reason": "Product of EML-3 (trig) functions = EML-3"
+    },
+    "taylor_green_turbulent": {
+      "eml_depth": "\u221e",
+      "description": "TG vortex at large Re and large t",
+      "reason": "Turbulence = effective EML-\u221e (chaotic, no EML-finite attractor)"
+    },
+    "ns_vorticity_smooth": {
+      "eml_depth": 2,
+      "description": "\u2016\u03c9(\u00b7,t)\u2016_{L\u221e} \u2264 C for smooth global solutions",
+      "reason": "Polynomial bound in t = EML-2"
+    },
+    "ns_vorticity_blowup": {
+      "eml_depth": "\u221e",
+      "description": "Vorticity at NS blowup time T*",
+      "reason": "\u2016\u03c9\u2016 \u2192 \u221e at T*: EML-\u221e transition (same class as phase transitions)"
+    },
+    "energy_dissipation": {
+      "eml_depth": 2,
+      "description": "\u03b5 = \u03bd\u27e8|\u2207u|\u00b2\u27e9: energy dissipation rate",
+      "reason": "Second-order functional of u = EML-2"
+    }
+  },
+  "eml_depth_summary": {
+    "EML-2": "Cole-Hopf transform, Kolmogorov scales, energy dissipation, NS vorticity (smooth), power-law spectrum",
+    "EML-3": "Burgers solution via Cole-Hopf, Taylor-Green initial condition, heat kernel erf",
+    "EML-\u221e": "Inviscid shock formation, NS blowup vorticity, turbulence (large Re, large t)"
+  },
+  "connections": {
+    "to_session_62": "Session 62 NS blowup conjecture: Session 76 deepens with Cole-Hopf + Kolmogorov",
+    "to_session_57": "Shock/blowup = EML Phase Transition (same theorem as Ising T_c)",
+    "to_session_64": "Feynman-Kac: heat kernel EML-3 bridge; Cole-Hopf uses same heat kernel",
+    "to_session_75": "QFT confinement = EML-\u221e at \u039b_QCD; NS blowup = EML-\u221e at T* \u2014 same mechanism"
+  }
+}
