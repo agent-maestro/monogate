@@ -1,0 +1,61 @@
+{
+  "session": 396,
+  "title": "RDL Limit Stability: GL_3 Attack \u2014 Extending GRH",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "RDLGL3AttackEML",
+    "ramanujan": {
+      "object": "Ramanujan-Petersson conjecture status for GL_3",
+      "gl1": "Ramanujan for GL_1: trivial (Hecke characters; |\u03c7(p)|=1)",
+      "gl2_holomorphic": "Ramanujan for GL_2 holomorphic: PROVEN (Deligne 1974, Weil conjectures)",
+      "gl2_maass": "Ramanujan for GL_2 Maass: OPEN (Selberg 1/4 conjecture: \u03bb\u2081\u22651/4)",
+      "gl3": {
+        "status": "OPEN: best known bound |a_p|\u2264p^{5/14+\u03b5} (Kim-Sarnak 2003)",
+        "target": "Full Ramanujan: |a_p|\u2264p^{(3-1)/2}=p^1 (or more precisely p^0 for normalized)",
+        "gap": "Known: 5/14 vs conjectured 0; gap = 5/14"
+      },
+      "gl4_beyond": "GL_n (n\u22654): even weaker bounds; full Ramanujan fully open"
+    },
+    "partial_ecl": {
+      "object": "Partial ECL for GL_3 using Kim-Sarnak bounds",
+      "setup": "L\u2208GL_3: Euler product with |a_p|\u2264p^{5/14+\u03b5}",
+      "partial_ecl": {
+        "upper_bound": "ET(L(s))\u22643 (T106 tropical sandwich: no natural EML-4 object)",
+        "lower_bound_partial": "ET(L(s))\u22653 \u2014 partial: oscillations p^{it\u00b75/14} are sub-unitary but nonzero",
+        "gap": "Full ET\u22653 requires full Ramanujan (|a_p|=1); Kim-Sarnak gives partial",
+        "conclusion": "ET(L_GL3(s)) = 3 IF ET\u22653 lower bound holds (which requires full Ramanujan)"
+      },
+      "conditional_theorem": "T119a (S396): ECL for GL_3 conditional on Selberg 1/4 + Ramanujan GL_3",
+      "new_theorem": "T119: GL_3 Conditional ECL (S396): ET(L_GL3)=3 conditional on Ramanujan GL_3"
+    },
+    "functoriality": {
+      "object": "GL_3 Ramanujan via Langlands functoriality from GL_2",
+      "strategy": {
+        "step1": "Use Sym\u00b2 lift: GL_2 \u2192 GL_3 (Gelbart-Jacquet 1978)",
+        "step2": "Ramanujan for GL_3 Sym\u00b2(GL_2): follows from Deligne via functoriality",
+        "step3": "General GL_3: reduce to Sym\u00b2 via strong functoriality (Langlands)",
+        "status": "Sym\u00b2 case: PROVEN; general GL_3: conditional on strong functoriality"
+      },
+      "eml_reading": {
+        "Sym2_lift": "Sym\u00b2(EML-3) = EML-3 (symmetric power preserves depth)",
+        "functoriality": "Langlands transfer: EML depth preserved (LUC instance #26?)",
+        "prediction": "ECL for all Sym^n lifts: proven by induction if functoriality holds"
+      },
+      "cascade": "Sym\u00b2 lift \u2192 GL_3 Ramanujan \u2192 ECL GL_3 \u2192 GRH GL_3"
+    },
+    "verdicts": {
+      "ramanujan": "GL_3 Ramanujan: OPEN; best bound 5/14 (Kim-Sarnak); target 0",
+      "partial_ecl": "T119: ECL GL_3 conditional on Ramanujan GL_3",
+      "functoriality": "Sym\u00b2 route: partial progress; strong functoriality needed",
+      "new_theorem": "T119: GL_3 Conditional ECL"
+    }
+  },
+  "key_theorem": "GL_3 Conditional ECL (T119, S396): Ramanujan status: GL_1 trivial, GL_2/Q proven (Deligne), GL_3 open (best: 5/14, Kim-Sarnak 2003). ECL for GL_3: ET(L_GL3)=3 CONDITIONAL on full Ramanujan GL_3. Strategy: Sym\u00b2 lift (Gelbart-Jacquet) + Langlands functoriality \u2192 GL_3 Ramanujan from GL_2. Sym\u00b2(GL_2): proven; general GL_3: conditional on strong functoriality. EML prediction: Sym^n lifts preserve depth; ECL holds for all Sym^n if functoriality holds. GRH roadmap: GL_n ECL \u2190 Ramanujan GL_n \u2190 Langlands functoriality.",
+  "rabbit_hole_log": [
+    "GL_3 Ramanujan: open; Kim-Sarnak best bound 5/14 vs target 0",
+    "Partial ECL GL_3: ET\u22643 proven, ET\u22653 conditional on Ramanujan",
+    "Sym\u00b2 route: GL_2\u2192GL_3 via Gelbart-Jacquet; proven for Sym\u00b2",
+    "EML prediction: Sym^n preserves depth; LUC instance #26 candidate",
+    "NEW: T119 GL_3 Conditional ECL \u2014 conditional on Ramanujan GL_3"
+  ]
+}
