@@ -1,0 +1,70 @@
+{
+  "session": 518,
+  "title": "Volcanic Eruption Dynamics",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "VolcanicEruptionDynamicsEML",
+    "analysis": {
+      "object": "T239: Volcanic eruption dynamics depth analysis",
+      "domains": {
+        "pressure_buildup": {
+          "description": "Magma chamber pressure: P(t) = P\u2080exp(\u03b1t)",
+          "depth": "EML-1",
+          "reason": "Exponential pressure accumulation from magma influx"
+        },
+        "vei_scale": {
+          "description": "Volcanic Explosivity Index: logarithmic scale 0-8",
+          "depth": "EML-2",
+          "reason": "Logarithmic scale like Richter \u2014 EML-2"
+        },
+        "eruption_oscillation": {
+          "description": "Periodic eruption patterns (Stromboli: every 10-30 min)",
+          "depth": "EML-3",
+          "reason": "Regular periodic eruption = oscillatory \u2014 EML-3"
+        },
+        "lava_viscosity": {
+          "description": "\u03b7 = A\u00b7exp(Ea/RT) \u2014 Arrhenius viscosity",
+          "depth": "EML-1",
+          "reason": "Exponential temperature dependence"
+        },
+        "supervolcano": {
+          "description": "Yellowstone/Toba: no finite prediction model",
+          "depth": "EML-\u221e",
+          "reason": "Chaotic, catastrophic, no finite EML model captures dynamics"
+        },
+        "pyroclastic_flow": {
+          "description": "Turbulent ash flow: Re >> 1",
+          "depth": "EML-3",
+          "reason": "Turbulent oscillatory flow = EML-3"
+        },
+        "ash_dispersal": {
+          "description": "Gaussian plume: C ~ exp(-r\u00b2/\u03c3\u00b2)",
+          "depth": "EML-1",
+          "reason": "Gaussian = exp(-r\u00b2) \u2014 EML-1"
+        },
+        "seismic_precursors": {
+          "description": "Harmonic tremor before eruption",
+          "depth": "EML-3",
+          "reason": "Harmonic tremor: \u03a3 a\u2099 sin(n\u03c9\u2080t) = EML-3 oscillation"
+        }
+      },
+      "oscillatory_prediction": "Can the framework distinguish which volcanoes are partially predictable? YES. EML-3 volcanoes (Stromboli, Old Faithful-type) have oscillatory eruption patterns \u2014 these ARE partially predictable using EML-3 models. EML-\u221e volcanoes (Yellowstone, major calderas) have no finite pattern \u2014 unpredictable. The harmonic tremor (EML-3 precursor) IS the predictable signal within EML-\u221e eruptions."
+    },
+    "distribution": {
+      "EML-1": 3,
+      "EML-2": 1,
+      "EML-3": 3,
+      "EML-\u221e": 1
+    },
+    "verdict": "Eruption oscillation: EML-3. Supervolcano: EML-\u221e. EML classifies predictability.",
+    "theorem": "T239: Volcanic Depth \u2014 EML-3 volcanoes predictable; EML-\u221e supervolcanoes not"
+  },
+  "key_theorem": "T239: Volcanic Depth (S518). Stromboli/Erta Ale: EML-3 (periodic eruption oscillation) \u2192 partially predictable. Yellowstone/Toba: EML-\u221e (no finite model) \u2192 unpredictable. Harmonic tremor: EML-3 signal within EML-\u221e eruption \u2014 the predictable island.",
+  "rabbit_hole_log": [
+    "Pressure: exp(\u03b1t) \u2192 EML-1",
+    "VEI: logarithmic \u2192 EML-2",
+    "Stromboli: 10-30 min periodic \u2192 EML-3",
+    "Supervolcano: no finite model \u2192 EML-\u221e",
+    "T239: EML classifies volcanic predictability"
+  ]
+}
