@@ -1,0 +1,102 @@
+{
+  "session": 82,
+  "title": "Pseudo vs True Randomness: Chaos vs Stochastic Deep",
+  "key_theorem": {
+    "theorem": "EML Indistinguishability Theorem",
+    "statement": "For observation windows t >> \u03c4_L = 1/\u03bb, a deterministic chaotic system and an SDE with matched statistics are EML-\u221e indistinguishable: both generate sequences with K(x_n) \u2248 \u0398(n) (incompressible). The distinction (deterministic vs stochastic) is only visible at t << \u03c4_L (EML-2)."
+  },
+  "strange_attractors": [
+    {
+      "name": "Logistic map (r=3.9)",
+      "lyapunov_exponent": 0.486,
+      "correlation_dimension": 0.97,
+      "kaplan_yorke_dim": 1.0,
+      "recurrence_time_epsilon_0.01": 100.0,
+      "eml_attractor": "\u221e",
+      "eml_reason": "Strange attractor: Cantor-set-like structure = fractal = EML-\u221e; SRB measure is EML-\u221e"
+    },
+    {
+      "name": "H\u00e9non map",
+      "lyapunov_exponent": 0.42,
+      "correlation_dimension": 1.26,
+      "kaplan_yorke_dim": 1.26,
+      "recurrence_time_epsilon_0.01": 331.1311,
+      "eml_attractor": "\u221e",
+      "eml_reason": "Fractal attractor with dimension 1.26 (non-integer) \u2192 EML-\u221e; SRB measure not smooth"
+    },
+    {
+      "name": "Circle map (rotation by \u221a2)",
+      "lyapunov_exponent": 0.0,
+      "correlation_dimension": 1.0,
+      "kaplan_yorke_dim": 1.0,
+      "recurrence_time_epsilon_0.01": 100.0,
+      "eml_attractor": 3,
+      "eml_reason": "Quasi-periodic on circle: trajectory dense but EML-3 (parametrized by exp(2\u03c0i\u221a2\u00b7n))"
+    },
+    {
+      "name": "Lorenz attractor",
+      "lyapunov_exponent": 0.906,
+      "correlation_dimension": 2.06,
+      "kaplan_yorke_dim": 2.06,
+      "recurrence_time_epsilon_0.01": 13182.5674,
+      "eml_attractor": "\u221e",
+      "eml_reason": "Butterfly wings: fractal, non-integer Hausdorff dimension \u2192 EML-\u221e"
+    }
+  ],
+  "lyapunov_time": {
+    "lyapunov_exponent": 0.5,
+    "initial_precision_bits": 64,
+    "predictable_steps": 88,
+    "predictable_time_tau_L": 44.0,
+    "eml_short_time": "EML-2 (deterministic, closed form)",
+    "eml_long_time": "EML-\u221e (EML-2 initial condition \u2192 EML-\u221e after n\u00b7\u03c4_L steps)"
+  },
+  "sde_vs_ode": {
+    "chaotic_ode": {
+      "autocorrelation": "C(\u03c4) ~ exp(-\u03bb\u03c4): EML-1 exponential decay",
+      "power_spectrum": "Broad band with peaks: rational + EML-3",
+      "eml_short": 2,
+      "eml_long": "\u221e"
+    },
+    "sde_brownian": {
+      "autocorrelation": "C(\u03c4) = \u03b4(\u03c4): EML-\u221e (Dirac delta)",
+      "power_spectrum": "White noise: flat = EML-\u221e",
+      "eml_path": "\u221e",
+      "eml_expectation": 3
+    },
+    "indistinguishability": "For t >> \u03c4_L = 1/\u03bb, a chaotic ODE and an SDE with matched mean/variance are EML-\u221e indistinguishable: both generate sequences with K(x_n) \u2248 \u0398(n)."
+  },
+  "invariant_measures": {
+    "periodic_orbit": {
+      "eml": 0,
+      "description": "Dirac masses on periodic points: EML-0"
+    },
+    "quasi_periodic": {
+      "eml": 3,
+      "description": "Lebesgue measure on torus: EML-3 (parametrized by angles)"
+    },
+    "srb_measure_chaotic": {
+      "eml": "\u221e",
+      "description": "Fractal SRB measure: EML-\u221e"
+    },
+    "gaussian_sde": {
+      "eml": 1,
+      "description": "Ornstein-Uhlenbeck stationary measure = Gaussian = EML-1"
+    },
+    "poisson_sde": {
+      "eml": 1,
+      "description": "Stationary measure of counting process = Poisson = EML-1"
+    }
+  },
+  "eml_depth_summary": {
+    "EML-0": "Periodic orbit invariant measure; fixed points",
+    "EML-1": "Autocorrelation decay exp(-\u03bb\u03c4); Ornstein-Uhlenbeck stationary measure; Gaussian SDE",
+    "EML-2": "Short-time ODE trajectory; Kaplan-Yorke dimension; recurrence time power law",
+    "EML-3": "Quasi-periodic invariant measure; torus parametrization",
+    "EML-\u221e": "Strange attractor SRB measure; Brownian paths; chaotic trajectories t>>\u03c4_L"
+  },
+  "connections": {
+    "to_session_71": "Session 71: PRNG=EML-2. Session 82: chaos also EML-2 short-time \u2192 EML-\u221e long-time",
+    "to_session_64": "SDE paths = EML-\u221e; expectations = EML-3 (Feynman-Kac). Session 82 compares to chaos."
+  }
+}
