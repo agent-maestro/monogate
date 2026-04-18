@@ -1,0 +1,58 @@
+{
+  "session": 741,
+  "title": "Navier-Stokes 2D vs 3D Dimensional Threshold v2",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "NSDimensionalThresholdV2EML",
+    "analysis": {
+      "object": "T462: Navier-Stokes 2D vs 3D Dimensional Threshold v2 depth analysis",
+      "domains": {
+        "2d_inverse_cascade": {
+          "description": "2D: inverse cascade pushes energy to large scales",
+          "depth": "EML-2",
+          "reason": "inverse cascade = EML-2 energy return"
+        },
+        "3d_direct_cascade": {
+          "description": "3D: direct cascade to small scales; vortex stretching amplifies",
+          "depth": "EML-3",
+          "reason": "direct cascade with EML-3 amplification"
+        },
+        "dimension_2_vs_3": {
+          "description": "Dimension 2: no vortex stretching \u2192 EML-3 proof; dimension 3: stretching \u2192 EML-inf",
+          "depth": "EML-inf",
+          "reason": "dimension is the EML-inf switch"
+        },
+        "dim_4_harder": {
+          "description": "Dimension 4+: even harder; EML-inf more severe",
+          "depth": "EML-inf",
+          "reason": "higher dimensions increase EML-inf severity"
+        },
+        "dimensional_argument": {
+          "description": "T462: 2D NS is EML-3; 3D is the dimensional EML-inf threshold due to vortex stretching",
+          "depth": "EML-inf",
+          "reason": "dimensional threshold theorem"
+        },
+        "threshold_law": {
+          "description": "T462: dimension 3 is the EML-inf threshold; the dimensional jump 2D\u21923D adds vortex stretching = EML-3\u2192EML-inf",
+          "depth": "EML-inf",
+          "reason": ""
+        }
+      }
+    },
+    "distribution": {
+      "EML-2": 1,
+      "EML-3": 1,
+      "EML-inf": 4
+    },
+    "theorem": "T462: Navier-Stokes 2D vs 3D Dimensional Threshold v2 (S741)."
+  },
+  "key_theorem": "T462: Navier-Stokes 2D vs 3D Dimensional Threshold v2 (S741).",
+  "rabbit_hole_log": [
+    "T462: 2d_inverse_cascade depth=EML-2 confirmed",
+    "T462: 3d_direct_cascade depth=EML-3 confirmed",
+    "T462: dimension_2_vs_3 depth=EML-inf confirmed",
+    "T462: dim_4_harder depth=EML-inf confirmed",
+    "T462: dimensional_argument depth=EML-inf confirmed",
+    "T462: threshold_law depth=EML-inf confirmed"
+  ]
+}
