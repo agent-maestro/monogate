@@ -1,0 +1,356 @@
+{
+  "session": 70,
+  "title": "Quantum Randomness & EML",
+  "key_theorem": {
+    "theorem": "Quantum Bell-EML Theorem",
+    "statement": "Quantum measurement outcomes are EML-\u221e as functions of any hidden variable \u03bb. No EML-finite function O(a,\u03bb) exists that reproduces all quantum correlations.",
+    "proof_sketch": "Assume O(a,\u03bb) is EML-k for some finite k. Then the CHSH expression is a linear combination of EML-k functions integrated against a probability distribution \u03c1(\u03bb) \u2014 the result is EML-k, bounded by |\u00b7| \u2264 2. But quantum mechanics achieves 2\u221a2 > 2. Contradiction. Therefore O(a,\u03bb) must be EML-\u221e for at least some \u03bb.",
+    "tsirelson_bound": {
+      "value": 2.828427,
+      "eml_class": "EML-2 (2\u00b7exp(\u00bd\u00b7ln 2))"
+    }
+  },
+  "quantum_states": [
+    {
+      "name": "|0\u27e9",
+      "amplitudes": [
+        "(1+0j)",
+        "0j"
+      ],
+      "probabilities": [
+        1.0,
+        0.0
+      ],
+      "normalized": true,
+      "born_rule_eml_depth": 2,
+      "born_rule_reason": "|c|\u00b2 = exp(2\u00b7Re(ln c)) \u2014 two EML gates \u2192 EML-2"
+    },
+    {
+      "name": "|+\u27e9",
+      "amplitudes": [
+        "0.7071067811865475",
+        "0.7071067811865475"
+      ],
+      "probabilities": [
+        0.5,
+        0.5
+      ],
+      "normalized": true,
+      "born_rule_eml_depth": 2,
+      "born_rule_reason": "|c|\u00b2 = exp(2\u00b7Re(ln c)) \u2014 two EML gates \u2192 EML-2"
+    },
+    {
+      "name": "|-\u27e9",
+      "amplitudes": [
+        "0.7071067811865475",
+        "-0.7071067811865475"
+      ],
+      "probabilities": [
+        0.5,
+        0.5
+      ],
+      "normalized": true,
+      "born_rule_eml_depth": 2,
+      "born_rule_reason": "|c|\u00b2 = exp(2\u00b7Re(ln c)) \u2014 two EML gates \u2192 EML-2"
+    },
+    {
+      "name": "|+i\u27e9",
+      "amplitudes": [
+        "0.7071067811865475",
+        "0.7071067811865475j"
+      ],
+      "probabilities": [
+        0.5,
+        0.5
+      ],
+      "normalized": true,
+      "born_rule_eml_depth": 2,
+      "born_rule_reason": "|c|\u00b2 = exp(2\u00b7Re(ln c)) \u2014 two EML gates \u2192 EML-2"
+    }
+  ],
+  "coherent_state": {
+    "alpha": "(1.5+0j)",
+    "mean_photon_number": 2.25,
+    "probabilities_first_10": [
+      0.105399,
+      0.237148,
+      0.266792,
+      0.200094,
+      0.112553,
+      0.050649,
+      0.018993,
+      0.006105,
+      0.001717,
+      0.000429
+    ],
+    "eml_class": "EML-1: Poisson distribution P(n)",
+    "reason": "Coherent state amplitudes are EML-1 (Poisson = Boltzmann in disguise)"
+  },
+  "wigner_function": [
+    {
+      "n": 0,
+      "min_value": 0.0,
+      "max_value": 0.220452,
+      "has_negative_values": false,
+      "eml_depth": 1,
+      "reason": "W_0 = Gaussian = EML-1"
+    },
+    {
+      "n": 1,
+      "min_value": -0.058487,
+      "max_value": 0.135594,
+      "has_negative_values": true,
+      "eml_depth": 3,
+      "reason": "W_1 = Laguerre(L_1) \u00d7 Gaussian = EML-3 (polynomial \u00d7 exp)"
+    },
+    {
+      "n": 2,
+      "min_value": -0.04398,
+      "max_value": 0.112443,
+      "has_negative_values": true,
+      "eml_depth": 3,
+      "reason": "W_2 = Laguerre(L_2) \u00d7 Gaussian = EML-3 (polynomial \u00d7 exp)"
+    },
+    {
+      "n": 3,
+      "min_value": -0.099372,
+      "max_value": 0.101521,
+      "has_negative_values": true,
+      "eml_depth": 3,
+      "reason": "W_3 = Laguerre(L_3) \u00d7 Gaussian = EML-3 (polynomial \u00d7 exp)"
+    }
+  ],
+  "wigner_negativity": {
+    "W_0_has_negative": false,
+    "W_1_has_negative": true,
+    "W_2_has_negative": true,
+    "W_3_has_negative": true,
+    "comment": "Wigner negativity is a quantum signature. Classically W \u2265 0 (EML-1 Gaussian). Quantum excited states W_n < 0 \u2192 breaks classical probability interpretation. But W_n itself is EML-3 (not EML-\u221e): the quantum structure is expressible in EML-3."
+  },
+  "bell_inequality": {
+    "classical_bound": 2.0,
+    "quantum_bound_tsirelson": 2.828427,
+    "tsirelson_eml": "EML-2: Tsirelson bound 2\u221a2",
+    "optimal_measurement": {
+      "angles_deg": [
+        0,
+        45,
+        22.5,
+        67.5
+      ],
+      "E(a,b)": -0.92388,
+      "E(a,b')": -0.382683,
+      "E(a',b)": -0.92388,
+      "E(a',b')": -0.92388,
+      "CHSH": 2.388955,
+      "classical_bound": 2.0,
+      "quantum_bound": 2.828427,
+      "violates_classical": true
+    },
+    "hidden_variable_theorem": "Bell's theorem: no EML-finite hidden variable \u03bb can reproduce quantum correlations. The measurement outcome distribution as a function of \u03bb must be EML-\u221e.",
+    "eml_consequence": "Quantum randomness is EML-\u221e in any hidden variable: if outcome O(a,\u03bb) were EML-finite in \u03bb, CHSH would be \u2264 2; but quantum mechanics achieves 2\u221a2 > 2 \u2192 EML-\u221e required."
+  },
+  "chsh_examples": [
+    {
+      "angles_deg": [
+        0,
+        45,
+        22.5,
+        67.5
+      ],
+      "E(a,b)": -0.92388,
+      "E(a,b')": -0.382683,
+      "E(a',b)": -0.92388,
+      "E(a',b')": -0.92388,
+      "CHSH": 2.388955,
+      "classical_bound": 2.0,
+      "quantum_bound": 2.828427,
+      "violates_classical": true
+    },
+    {
+      "angles_deg": [
+        0,
+        90,
+        45,
+        135
+      ],
+      "E(a,b)": -0.707107,
+      "E(a,b')": 0.707107,
+      "E(a',b)": -0.707107,
+      "E(a',b')": -0.707107,
+      "CHSH": 2.828427,
+      "classical_bound": 2.0,
+      "quantum_bound": 2.828427,
+      "violates_classical": true
+    },
+    {
+      "angles_deg": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "E(a,b)": -1.0,
+      "E(a,b')": -1.0,
+      "E(a',b)": -1.0,
+      "E(a',b')": -1.0,
+      "CHSH": 2.0,
+      "classical_bound": 2.0,
+      "quantum_bound": 2.828427,
+      "violates_classical": false
+    }
+  ],
+  "quantum_entropy": {
+    "bell_state_mutual_info": {
+      "state": "|\u03a6+\u27e9 = (|00\u27e9+|11\u27e9)/\u221a2",
+      "S_A": 0.693147,
+      "S_B": 0.693147,
+      "S_AB": 0.0,
+      "I_AB": 1.386294,
+      "eml_depth_entropy": 2,
+      "reason": "S = -\u03a3 p\u00b7ln p = EML-2 (x\u00b7ln x is EML-2)"
+    },
+    "qubit_entropy_sweep": [
+      {
+        "p": 0.0,
+        "S": 0.0
+      },
+      {
+        "p": 0.1,
+        "S": 0.325083
+      },
+      {
+        "p": 0.25,
+        "S": 0.562335
+      },
+      {
+        "p": 0.5,
+        "S": 0.693147
+      },
+      {
+        "p": 0.75,
+        "S": 0.562335
+      },
+      {
+        "p": 0.9,
+        "S": 0.325083
+      },
+      {
+        "p": 1.0,
+        "S": 0.0
+      }
+    ],
+    "kl_divergence_example": {
+      "p_eigenvalues": [
+        0.9,
+        0.1
+      ],
+      "q_eigenvalues": [
+        0.5,
+        0.5
+      ],
+      "D_KL": 0.368064,
+      "eml_depth": 2,
+      "reason": "D(\u03c1||\u03c3) = \u03a3 p\u00b7(ln p - ln q) = EML-2"
+    }
+  },
+  "taxonomy": {
+    "born_rule_probability": {
+      "eml_depth": 2,
+      "description": "P(n) = |c\u2099|\u00b2 \u2014 measurement outcome probability",
+      "reason": "|c|\u00b2 = exp(2 Re(ln c)); modulus squared = EML-2",
+      "examples": [
+        "P(\u2191) = cos\u00b2(\u03b8/2)",
+        "P(n|\u03b1) = Poisson(n;|\u03b1|\u00b2)"
+      ]
+    },
+    "quantum_amplitude_eml1": {
+      "eml_depth": 1,
+      "description": "Quantum amplitude c\u2099 = exp(i\u03b8\u2099)/\u221aZ per basis state",
+      "reason": "Single exp gate; phase factor = EML-1 atom",
+      "examples": [
+        "exp(i\u03c9t)",
+        "exp(ipx/\u0127)",
+        "coherent state amplitude"
+      ]
+    },
+    "wigner_vacuum": {
+      "eml_depth": 1,
+      "description": "Wigner function W_0 = Gaussian = EML-1",
+      "reason": "exp(-2H/\u0127\u03c9) \u2014 Boltzmann factor at each phase space point",
+      "examples": [
+        "W_0(x,p) = (1/\u03c0)exp(-x\u00b2-p\u00b2)"
+      ]
+    },
+    "wigner_excited_n": {
+      "eml_depth": 3,
+      "description": "Wigner W_n for excited states: Laguerre \u00d7 Gaussian",
+      "reason": "L_n(x) = polynomial in x \u2192 EML-2; times exp \u2192 EML-3",
+      "examples": [
+        "W_1(x,p) = (1/\u03c0)(4(x\u00b2+p\u00b2)-2)exp(-x\u00b2-p\u00b2)"
+      ]
+    },
+    "tsirelson_bound": {
+      "eml_depth": 2,
+      "description": "Quantum CHSH bound 2\u221a2 = 2\u00b7exp(\u00bd\u00b7ln 2)",
+      "reason": "\u221a2 = exp(\u00bd ln 2) = EML-2; classical bound 2 = EML-0",
+      "examples": [
+        "CHSH \u2264 2 classical, \u2264 2\u221a2 quantum"
+      ]
+    },
+    "bell_correlator": {
+      "eml_depth": 3,
+      "description": "E(\u03b8) = -cos(\u03b8) for singlet state",
+      "reason": "cos(\u03b8) = EML-3",
+      "examples": [
+        "E(a,b) = -cos(a-b) for singlet"
+      ]
+    },
+    "quantum_entropy_vn": {
+      "eml_depth": 2,
+      "description": "Von Neumann entropy S(\u03c1) = -Tr(\u03c1 ln \u03c1)",
+      "reason": "x\u00b7ln x = EML-2; same as Shannon entropy",
+      "examples": [
+        "S(I/2) = ln 2",
+        "S(|\u03c8\u27e9\u27e8\u03c8|) = 0"
+      ]
+    },
+    "quantum_mutual_info": {
+      "eml_depth": 2,
+      "description": "I(A:B) = S(A) + S(B) - S(AB)",
+      "reason": "Linear combination of EML-2 entropies = EML-2",
+      "examples": [
+        "I(A:B) = 2 ln 2 for Bell state"
+      ]
+    },
+    "quantum_outcome_hidden_variable": {
+      "eml_depth": Infinity,
+      "description": "Measurement outcome O(a,\u03bb) as function of hidden variable \u03bb",
+      "reason": "Bell's theorem: no EML-finite \u03bb-function reproduces QM correlations",
+      "examples": [
+        "Any \u03bb-model for singlet correlations must be EML-\u221e in \u03bb"
+      ]
+    },
+    "coherent_state_photon_dist": {
+      "eml_depth": 1,
+      "description": "Poisson distribution P(n|\u03b1) = exp(-|\u03b1|\u00b2)|\u03b1|^{2n}/n!",
+      "reason": "Poisson = Boltzmann factor = EML-1 (same class as stat mech)",
+      "examples": [
+        "Laser photon statistics"
+      ]
+    }
+  },
+  "eml_depth_summary": {
+    "EML-0": "Topological quantum numbers, Chern numbers (TQFT partition functions)",
+    "EML-1": "Quantum amplitudes exp(i\u03b8), Poisson photon statistics, vacuum Wigner function",
+    "EML-2": "Born rule probabilities |c|\u00b2, quantum entropy, Tsirelson bound 2\u221a2",
+    "EML-3": "Wigner function W_n (Laguerre\u00d7Gaussian), Bell correlator cos(\u03b8), harmonic oscillator eigenstates",
+    "EML-\u221e": "Hidden variable functions violating Bell, quantum measurement outcomes in \u03bb-space"
+  },
+  "connections": {
+    "to_session_57": "Coherent state photon distribution = Boltzmann/Poisson = EML-1 (stat mech connection)",
+    "to_session_58": "TQFT partition function = EML-0 (Chern-Simons) \u2014 topology connection",
+    "to_session_61": "Path integral amplitude = EML-1 per history (QFT connection)",
+    "to_session_69": "Quantum randomness = EML-\u221e like algorithmic randomness; both transcend EML-finite"
+  }
+}
