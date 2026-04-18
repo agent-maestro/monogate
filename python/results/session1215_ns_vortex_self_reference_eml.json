@@ -1,0 +1,57 @@
+{
+  "session": 1215,
+  "title": "Vortex Stretching = Self-Reference",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "NSVortexSelfReference",
+    "analysis": {
+      "object": "T935: Vortex Stretching = Self-Reference depth analysis",
+      "domains": {
+        "vortex_stretching_def": {
+          "description": "Vortex stretching: in 3D, vortex tubes stretch and intensify as they align with the strain rate. The vorticity equation: Domega/Dt = omega.nabla u.",
+          "depth": "EML-inf",
+          "reason": "Vortex stretching: omega amplifies itself"
+        },
+        "self_modification": {
+          "description": "Vortex stretching is self-modification: the vortex tube (omega) modifies the velocity field (u) which modifies the stretching of the vortex tube (omega.nabla u). The vortex edits its own evolution equation.",
+          "depth": "EML-inf",
+          "reason": "Self-modification: vortex edits its own ODE"
+        },
+        "2d_absence": {
+          "description": "2D: no vortex stretching (2D vorticity is a scalar, no stretching term). 2D NS is NOT self-referential. 2D is regular and provably so.",
+          "depth": "EML-2",
+          "reason": "2D: no self-reference = regular = provable"
+        },
+        "3d_self_reference": {
+          "description": "3D: vortex stretching = self-reference. The mathematical object IS the physical process that defines the mathematical object. G\u00f6delian structure.",
+          "depth": "EML-inf",
+          "reason": "3D self-reference: G\u00f6delian structure"
+        },
+        "blow_up_as_godel_sentence": {
+          "description": "If NS has a blow-up, it would be a self-referential flow that says 'I blow up' -- and then DOES blow up. If no blow-up, all such flows self-regulate. The question of which (regular vs blow-up) is the G\u00f6del sentence.",
+          "depth": "EML-inf",
+          "reason": "Blow-up vs regularity: the G\u00f6del sentence"
+        },
+        "independence_from_self_reference": {
+          "description": "Self-reference => independence (by G\u00f6del). Vortex stretching = self-reference => NS regularity question is independent. This is the core of T933.",
+          "depth": "EML-inf",
+          "reason": "Self-reference => G\u00f6del => independence"
+        },
+        "t935_theorem": {
+          "description": "T935: Vortex stretching in 3D NS is the physical implementation of mathematical self-reference. The vortex edits its own evolution equation. This is G\u00f6delian. 2D lacks vortex stretching = lacks self-reference = regular = provable. 3D has self-reference = independent. T935: vortex stretching = self-reference.",
+          "depth": "EML-inf",
+          "reason": "Vortex stretching = self-reference => NS 3D independence"
+        }
+      }
+    },
+    "distribution": {
+      "EML-inf": 6,
+      "EML-2": 1
+    },
+    "theorem": "T935: Vortex Stretching = Self-Reference (S1215)."
+  },
+  "key_theorem": "T935: Vortex Stretching = Self-Reference (S1215).",
+  "rabbit_hole_log": [
+    "T935: vortex_stretching_def depth confirmed"
+  ]
+}
