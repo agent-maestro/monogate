@@ -1,0 +1,59 @@
+{
+  "session": 1031,
+  "title": "Berkovich-Artin Descent \u2014 Atomic Decomposition",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "BerkovichArtinAnatomy",
+    "analysis": {
+      "object": "T752: Berkovich-Artin Descent \u2014 Atomic Decomposition depth analysis",
+      "domains": {
+        "step1_tropical_cycle": {
+          "description": "Have: tropical algebraic cycle C_trop in trop(X)",
+          "depth": "EML-0",
+          "reason": "Discrete fan -- EML-0"
+        },
+        "step2_berkovich_lift": {
+          "description": "Lift C_trop to a Berkovich analytic cycle C_an in X^{an}",
+          "depth": "EML-3",
+          "reason": "Berkovich analytification -- analytic EML-3"
+        },
+        "step3_gaga_algebraize": {
+          "description": "Algebraize C_an to a classical algebraic cycle C_alg in X",
+          "depth": "EML-0",
+          "reason": "Algebraic cycle -- EML-0"
+        },
+        "step2_depth": {
+          "description": "Step 2 (tropical -> Berkovich): EML-0 -> EML-3 is a TYPE3 upward jump",
+          "depth": "EML-3",
+          "reason": "Analytification adds oscillatory structure"
+        },
+        "step3_depth": {
+          "description": "Step 3 (Berkovich -> algebraic): EML-3 -> EML-0 is TYPE3 downward -- the hard step",
+          "depth": "EML-inf",
+          "reason": "Algebraization is the EML-inf barrier"
+        },
+        "artin_role": {
+          "description": "Artin approximation: formal (EML-2) solutions approximate algebraic (EML-0)",
+          "depth": "EML-2",
+          "reason": "The bridge Artin provides"
+        },
+        "sole_gap": {
+          "description": "The sole gap: does Berkovich analytic cycle algebraize? EML-3 -> EML-0 crossing",
+          "depth": "EML-inf",
+          "reason": "T752: gap is STEP 3 only. Steps 1-2 are EML-3 and proved."
+        }
+      }
+    },
+    "distribution": {
+      "EML-0": 2,
+      "EML-3": 2,
+      "EML-inf": 2,
+      "EML-2": 1
+    },
+    "theorem": "T752: Berkovich-Artin Descent \u2014 Atomic Decomposition (S1031)."
+  },
+  "key_theorem": "T752: Berkovich-Artin Descent \u2014 Atomic Decomposition (S1031).",
+  "rabbit_hole_log": [
+    "T752: step1_tropical_cycle depth confirmed"
+  ]
+}
