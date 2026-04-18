@@ -1,0 +1,118 @@
+{
+  "session": 279,
+  "title": "Complex Networks & Higher-Order Interactions",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "ComplexNetworksEML",
+    "graph_laplacian": {
+      "object": "Graph Laplacian L = D - A",
+      "eml_depth": 2,
+      "semiring_test": {
+        "L1_tensor_L2": {
+          "operation": "Kronecker product L\u2081 \u2297 L\u2082 (two-layer network)",
+          "prediction": "max(2,2) = 2 (same type: both graph Laplacians = EML-2)",
+          "result": "L\u2081\u2297L\u2082: eigenvalues \u03bb\u1d62+\u03bc\u2c7c (Laplacian additivity): EML-2 \u2713"
+        }
+      }
+    },
+    "simplicial_laplacian": {
+      "object": "Simplicial Laplacian L_k (k-th Hodge Laplacian)",
+      "eml_depth": 3,
+      "why": "L_k = B_k^T B_k + B_{k+1} B_{k+1}^T: involves complex boundary maps = EML-3",
+      "semiring_test": {
+        "L0_tensor_L1": {
+          "prediction": "EML-2 \u2297 EML-3 = \u221e (different primitive types)",
+          "result": "Coupling node and edge Laplacians creates EML-\u221e (multiplex saturation)",
+          "confirms": "Cross-type saturation rule \u2713"
+        },
+        "L1_tensor_L1": {
+          "prediction": "max(3,3) = 3 (same type: both Hodge)",
+          "result": "Two 1-Laplacians coupled = EML-3 \u2713"
+        }
+      }
+    },
+    "percolation": {
+      "object": "Bond/site percolation phase transition p_c",
+      "eml_depth": "\u221e",
+      "shadow_depth": 2,
+      "semiring_test": {
+        "below_pc": {
+          "depth": 2,
+          "behavior": "P(giant) ~ (p-p_c)^\u03b2: power law = EML-2"
+        },
+        "at_pc": {
+          "depth": "\u221e",
+          "behavior": "TYPE 2 Horizon"
+        },
+        "higher_order_percolation": {
+          "object": "k-clique percolation (communities via overlapping cliques)",
+          "depth": "\u221e",
+          "shadow": 3,
+          "why": "k-clique community = topology: simplicial complex = EML-3 shadow",
+          "new_finding": "Higher-order percolation shadow=3 vs ordinary percolation shadow=2"
+        }
+      }
+    },
+    "higher_order_sync": {
+      "object": "Higher-order synchronization (simplicial Kuramoto)",
+      "formula": "\u03b8\u0307\u1d62 = \u03c9\u1d62 + K\u2081\u03a3\u2c7c sin(\u03b8\u2c7c-\u03b8\u1d62) + K\u2082\u03a3\u2c7c\u2096 sin(\u03b8\u2c7c+\u03b8\u2096-2\u03b8\u1d62)",
+      "depth": "\u221e",
+      "shadow": 3,
+      "semiring_test": {
+        "pairwise_only": {
+          "K2_0": "Standard Kuramoto = EML-3 (exp(i\u0394\u03b8) complex phases)",
+          "depth": 3
+        },
+        "higher_order_term": {
+          "K2_nonzero": "sin(\u03b8\u2c7c+\u03b8\u2096-2\u03b8\u1d62) = Im(exp(i(\u03b8\u2c7c+\u03b8\u2096-2\u03b8\u1d62))): EML-3",
+          "depth": 3
+        },
+        "result": "Both terms EML-3: max(3,3)=3 \u2713 (same type: complex phases)"
+      }
+    },
+    "rich_club": {
+      "object": "Rich-club coefficient \u03c1(k) = E_k / E_max(k)",
+      "eml_depth": 2,
+      "semiring_test": {
+        "scale_free_rich_club": {
+          "operation": "Rich-club \u2297 scale-free degree distribution",
+          "prediction": "EML-2 \u2297 EML-2 = 2 (both real power laws)",
+          "result": "2\u22972=2 \u2713"
+        }
+      }
+    },
+    "multiplex": {
+      "object": "Multiplex network (M layers)",
+      "eml_depth": "\u221e",
+      "shadow": 2,
+      "semiring_test": {
+        "intra_layer": {
+          "type": "EML-2 (graph Laplacian)"
+        },
+        "inter_layer": {
+          "type": "EML-2 (coupling = EML-2)"
+        },
+        "same_type_result": "max(2,2)=2: multiplex stays EML-2 if all layers same type",
+        "cross_type_result": {
+          "scenario": "Layer 1: graph (EML-2) \u2297 Layer 2: simplicial complex (EML-3)",
+          "result": "EML-\u221e (cross-type saturation: EML-2 \u2297 EML-3 = \u221e)",
+          "confirms": "Two-level ring structure: object product (stratum ring) vs depth semiring"
+        }
+      }
+    },
+    "semiring_verdicts": {
+      "2_tensor_2": "=2 \u2713 (graph \u2297 graph)",
+      "3_tensor_3": "=3 \u2713 (Hodge \u2297 Hodge)",
+      "2_tensor_3": "=\u221e \u2713 (graph \u2297 simplicial: cross-type saturation)",
+      "new_finding": "Higher-order percolation shadow=3 vs ordinary percolation shadow=2"
+    }
+  },
+  "key_theorem": "Network Semiring Theorem (S279): Graph Laplacians are EML-2; simplicial (Hodge) Laplacians are EML-3. 2\u22972=2: graph\u00d7graph multiplex stays EML-2. 3\u22973=3: simplicial\u00d7simplicial stays EML-3. 2\u22973=\u221e: graph\u00d7simplicial multiplex saturates (cross-type). NEW FINDING: higher-order percolation (k-clique) shadow=EML-3 vs ordinary percolation shadow=EML-2. The topological order of higher-order interactions (simplicial = EML-3) shifts the shadow depth of phase transitions from 2 to 3.",
+  "rabbit_hole_log": [
+    "Simplicial Laplacian = EML-3 (Hodge structure with complex boundary maps)",
+    "2\u22973=\u221e confirmed: graph \u2297 simplicial = cross-type saturation",
+    "Higher-order percolation: shadow=EML-3 (k-clique = topology) vs ordinary shadow=2",
+    "Max rule: max(3,3)=3 for higher-order sync (both complex phases)",
+    "Cross-type multiplex: EML-2 layer \u2297 EML-3 layer = EML-\u221e"
+  ]
+}
