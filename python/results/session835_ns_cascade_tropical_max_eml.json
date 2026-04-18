@@ -1,0 +1,37 @@
+{
+  "session": 835,
+  "title": "Energy Cascade as Tropical MAX",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "NSCascadeTropicalMaxEML",
+    "analysis": {
+      "object": "T556: Energy Cascade as Tropical MAX depth analysis",
+      "domains": {
+        "max_dominance": {
+          "description": "At each cascade step, MAX picks the dominant eddy; smaller eddies are subdominant",
+          "depth": "EML-3",
+          "reason": "Tropical MAX at each scale: energy goes to largest available recipient"
+        },
+        "only_tropical_phenomenon": {
+          "description": "Energy cascade is the ONLY purely tropical NS phenomenon; everything else is non-tropical",
+          "depth": "EML-3",
+          "reason": "Cascade is tropical; pressure field, boundary layers, viscosity are not"
+        },
+        "cascade_explains_hardness": {
+          "description": "Non-tropical remainder is why NS is hard: tropical part is EML-3; non-tropical is EML-inf",
+          "depth": "EML-inf",
+          "reason": "Hardness comes from non-tropical EML-inf residual beyond cascade structure"
+        }
+      }
+    },
+    "distribution": {
+      "EML-3": 2,
+      "EML-inf": 1
+    },
+    "theorem": "T556: Energy Cascade as Tropical MAX (S835)."
+  },
+  "key_theorem": "T556: Energy Cascade as Tropical MAX (S835).",
+  "rabbit_hole_log": [
+    "T556: max_dominance depth confirmed"
+  ]
+}
