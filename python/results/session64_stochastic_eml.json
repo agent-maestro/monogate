@@ -1,0 +1,246 @@
+{
+  "session": 64,
+  "title": "Stochastic Processes EML Complexity",
+  "section1_brownian": {
+    "expectation_tests": [
+      {
+        "f": "x\u00b2",
+        "mc": 1.005234002489774,
+        "exact": 1.0,
+        "match": true
+      },
+      {
+        "f": "exp(x)",
+        "mc": 1.6544856972639448,
+        "exact": 1.6487212707001282,
+        "match": true
+      },
+      {
+        "f": "|x|",
+        "mc": 0.79868752960233,
+        "exact": 0.7978845608028654,
+        "match": true
+      },
+      {
+        "f": "x\u2074",
+        "mc": 3.045366244471227,
+        "exact": 3.0,
+        "match": true
+      }
+    ],
+    "holder_estimate": 3.6484128252147823,
+    "eml_depth_path": "inf",
+    "eml_depth_expectation": 3
+  },
+  "section2_gbm": {
+    "gbm_table": [
+      {
+        "T": 0.25,
+        "mean": 101.25784515406345,
+        "variance": 103.04588275194308
+      },
+      {
+        "T": 0.5,
+        "mean": 102.53151205244289,
+        "variance": 212.37084878192405
+      },
+      {
+        "T": 1.0,
+        "mean": 105.12710963760242,
+        "variance": 451.0288078157963
+      },
+      {
+        "T": 2.0,
+        "mean": 110.51709180756477,
+        "variance": 1017.270541772672
+      },
+      {
+        "T": 5.0,
+        "mean": 128.40254166877415,
+        "variance": 3650.3143677034845
+      }
+    ],
+    "mc_mean_T1": 105.25375363992883,
+    "exact_mean_T1": 105.12710963760242,
+    "eml_depth_mean": 1
+  },
+  "section3_feynman_kac": {
+    "fk_quadratic": [
+      {
+        "x": -1.0,
+        "fk": 1.9999999264713866,
+        "exact": 2.0
+      },
+      {
+        "x": 0.0,
+        "fk": 0.9999999283547006,
+        "exact": 1.0
+      },
+      {
+        "x": 1.0,
+        "fk": 1.9999999264713866,
+        "exact": 2.0
+      },
+      {
+        "x": 2.0,
+        "fk": 4.999999920821592,
+        "exact": 5.0
+      }
+    ],
+    "call_payoff_fk": 0.08331299335566193,
+    "call_payoff_mc": 0.08400343507738078,
+    "match": true,
+    "eml_depth_quadratic": 1,
+    "eml_depth_call": 2
+  },
+  "section4_black_scholes": {
+    "bsm_table": [
+      {
+        "S": 100,
+        "K": 100,
+        "T": 1.0,
+        "BSM": 10.450583572185565,
+        "MC": 10.420541193153111,
+        "err_pct": 0.2874707995992081
+      },
+      {
+        "S": 100,
+        "K": 90,
+        "T": 1.0,
+        "BSM": 16.69944840841599,
+        "MC": 16.656241419595627,
+        "err_pct": 0.25873301426684864
+      },
+      {
+        "S": 100,
+        "K": 110,
+        "T": 1.0,
+        "BSM": 6.040088129724225,
+        "MC": 6.039699893165324,
+        "err_pct": 0.006427662747406134
+      },
+      {
+        "S": 100,
+        "K": 100,
+        "T": 0.25,
+        "BSM": 6.583084497992466,
+        "MC": 6.564567753306471,
+        "err_pct": 0.2812775968296668
+      }
+    ],
+    "eml_depth": 3
+  },
+  "section5_ornstein_uhlenbeck": {
+    "stationary_variance": 0.5,
+    "table": [
+      {
+        "t": 0.5,
+        "mean": 1.2130613194252668,
+        "variance": 0.31606027941427883
+      },
+      {
+        "t": 1.0,
+        "mean": 0.7357588823428847,
+        "variance": 0.43233235838169365
+      },
+      {
+        "t": 2.0,
+        "mean": 0.2706705664732254,
+        "variance": 0.4908421805556329
+      },
+      {
+        "t": 5.0,
+        "mean": 0.013475893998170934,
+        "variance": 0.49997730003511875
+      },
+      {
+        "t": 10.0,
+        "mean": 9.079985952496971e-05,
+        "variance": 0.4999999989694232
+      }
+    ],
+    "sim_stationary_variance": 0.3976700065962217,
+    "match": false,
+    "eml_depth": 2
+  },
+  "section6_levy_khintchine": {
+    "brownian_cf": [
+      {
+        "theta": 0.5,
+        "t_0.5": 0.9394130628134758,
+        "t_1.0": 0.8824969025845955,
+        "t_2.0": 0.7788007830714049
+      },
+      {
+        "theta": 1.0,
+        "t_0.5": 0.7788007830714049,
+        "t_1.0": 0.6065306597126334,
+        "t_2.0": 0.36787944117144233
+      },
+      {
+        "theta": 2.0,
+        "t_0.5": 0.36787944117144233,
+        "t_1.0": 0.1353352832366127,
+        "t_2.0": 0.01831563888873418
+      }
+    ],
+    "brownian_exact_match": true,
+    "eml_depth_in_t": 1,
+    "note": "E[exp(i\u03b8X_t)] = exp(t\u00b7psi): EML-1 in t for ALL Levy processes"
+  },
+  "taxonomy": {
+    "brownian_paths": {
+      "formula": "W_t: H\u00f6lder-1/2 paths, non-differentiable everywhere",
+      "eml_depth": "inf",
+      "reason": "Individual paths are EML-inf (no finite EML representation)."
+    },
+    "brownian_expectation": {
+      "formula": "E[f(W_T)] = \u222bf(x)\u00b7exp(-x\u00b2/2T)/\u221a(2\u03c0T) dx",
+      "eml_depth": "depth(f) + 1 typically, EML-3 for smooth f",
+      "reason": "Expectation = convolution with Gaussian (heat kernel, EML-2). For f=max(x-K,0): E = BSM formula involving \u03a6 (erf) \u2192 EML-3. KEY BRIDGE: EML-inf paths \u2192 EML-3 expectations via integration."
+    },
+    "gbm": {
+      "formula": "S_t = S\u2080\u00b7exp((\u03bc-\u03c3\u00b2/2)t + \u03c3W_t)",
+      "eml_depth": "inf (path-by-path)",
+      "reason": "Involves \u03c3W_t which is EML-inf. Expected value: EML-1 (log-normal mean)."
+    },
+    "ito_formula": {
+      "formula": "df(X_t) = f'(X_t)dX_t + \u00bdf''(X_t)dt",
+      "eml_depth": "depth(f)",
+      "reason": "It\u00f4 formula: EML depth of f preserved (differentiation preserves class)."
+    },
+    "feynman_kac": {
+      "formula": "u(x,t) = E[exp(-\u222br\u00b7ds)\u00b7f(X_T)|X_t=x] solves PDE",
+      "eml_depth": "depth(f) + 1",
+      "reason": "PDE solution has depth(f)+1 (heat kernel adds EML-2 propagation)."
+    },
+    "black_scholes": {
+      "formula": "C = S\u00b7\u03a6(d\u2081) - K\u00b7exp(-rT)\u00b7\u03a6(d\u2082)",
+      "eml_depth": 3,
+      "reason": "\u03a6(d) = (1+erf(d/\u221a2))/2: EML-3. BSM formula is EML-3."
+    },
+    "levy_khintchine": {
+      "formula": "E[exp(i\u03b8X_t)] = exp(t\u00b7\u03c8(\u03b8))",
+      "eml_depth": 1,
+      "reason": "Characteristic function = exp(t\u00b7\u03c8): EML-1 in t."
+    },
+    "ornstein_uhlenbeck": {
+      "formula": "dX_t = -\u03b3X_t\u00b7dt + \u03c3\u00b7dW_t; stationary: N(0,\u03c3\u00b2/2\u03b3)",
+      "eml_depth": 2,
+      "reason": "Stationary variance \u03c3\u00b2/(2\u03b3): EML-2 (Gaussian distribution)."
+    }
+  },
+  "summary": {
+    "key_bridge": "EML-inf (Brownian paths) \u2192 EML-3 (expectations) via heat kernel (EML-2). The expectation operator INTEGRATES OUT the noise, reducing EML depth. BSM formula: EML-3 (contains erf/\u03a6). OU stationary: EML-2 (Gaussian). L\u00e9vy char fn: EML-1 in t.",
+    "eml_depths": {
+      "brownian_paths": "inf",
+      "brownian_expectation": "depth(f) + 1 typically, EML-3 for smooth f",
+      "gbm": "inf (path-by-path)",
+      "ito_formula": "depth(f)",
+      "feynman_kac": "depth(f) + 1",
+      "black_scholes": "3",
+      "levy_khintchine": "1",
+      "ornstein_uhlenbeck": "2"
+    }
+  }
+}
