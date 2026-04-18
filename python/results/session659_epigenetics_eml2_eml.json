@@ -1,0 +1,58 @@
+{
+  "session": 659,
+  "title": "Epigenetics as EML-2 Measurement Operations",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "EpigeneticsEML2EML",
+    "analysis": {
+      "object": "T380: Epigenetics as EML-2 Measurement Operations depth analysis",
+      "domains": {
+        "dna_methylation": {
+          "description": "Methyl group on cytosine: EML-0 mark",
+          "depth": "EML-0",
+          "reason": "discrete chemical mark on EML-0 base"
+        },
+        "histone_modification": {
+          "description": "Acetylation/methylation of histone",
+          "depth": "EML-2",
+          "reason": "measurement: degree of modification = EML-2"
+        },
+        "chromatin_state": {
+          "description": "Open/closed: EML-0 binary switch",
+          "depth": "EML-0",
+          "reason": "discrete chromatin state"
+        },
+        "gene_expression_level": {
+          "description": "Expression as EML-2 measurement",
+          "depth": "EML-2",
+          "reason": "mRNA count = EML-2 measurement"
+        },
+        "epigenetic_inheritance": {
+          "description": "Marks passed to daughter cells",
+          "depth": "EML-1",
+          "reason": "exponential propagation through cell divisions"
+        },
+        "epigenetics_depth_law": {
+          "description": "T380: epigenetic marks are EML-2 measurement operations on EML-0 sequence",
+          "depth": "EML-2",
+          "reason": ""
+        }
+      }
+    },
+    "distribution": {
+      "EML-0": 2,
+      "EML-2": 3,
+      "EML-1": 1
+    },
+    "theorem": "T380: Epigenetics as EML-2 Measurement Operations (S659)."
+  },
+  "key_theorem": "T380: Epigenetics as EML-2 Measurement Operations (S659).",
+  "rabbit_hole_log": [
+    "T380: dna_methylation depth=EML-0 confirmed",
+    "T380: histone_modification depth=EML-2 confirmed",
+    "T380: chromatin_state depth=EML-0 confirmed",
+    "T380: gene_expression_level depth=EML-2 confirmed",
+    "T380: epigenetic_inheritance depth=EML-1 confirmed",
+    "T380: epigenetics_depth_law depth=EML-2 confirmed"
+  ]
+}
