@@ -1,0 +1,268 @@
+{
+  "session": 67,
+  "title": "Quantum Computing & Optimization EML",
+  "section1_gates": {
+    "hadamard": [
+      [
+        "(0.7071067811865475+0j)",
+        "(0.7071067811865475+0j)"
+      ],
+      [
+        "(0.7071067811865475+0j)",
+        "(-0.7071067811865475+0j)"
+      ]
+    ],
+    "unitary_error": 2.220446049250313e-16,
+    "phase_pi4_entry": "(0.7071067811865476+0.7071067811865476j)",
+    "cnot_is_permutation": true,
+    "eml_hadamard": 2,
+    "eml_phase": 1,
+    "eml_cnot": 0
+  },
+  "section2_qft": {
+    "qft4_first_row": [
+      [
+        0.5,
+        0.0
+      ],
+      [
+        0.5,
+        0.0
+      ],
+      [
+        0.5,
+        0.0
+      ],
+      [
+        0.5,
+        0.0
+      ]
+    ],
+    "tests": [
+      {
+        "n": 4,
+        "unitary_err": 1.1704836984704332e-16,
+        "dft_err": 1.9805488226317096
+      },
+      {
+        "n": 8,
+        "unitary_err": 5.329070518200751e-15,
+        "dft_err": 2.0976221810322557
+      },
+      {
+        "n": 16,
+        "unitary_err": 1.840875642400397e-15,
+        "dft_err": 2.1531297958423794
+      },
+      {
+        "n": 32,
+        "unitary_err": 2.7755575615628914e-15,
+        "dft_err": 2.423848162913412
+      }
+    ],
+    "eml_depth": 1
+  },
+  "section3_grover": {
+    "table": [
+      {
+        "N": 4,
+        "k_opt": 1,
+        "p_success": 1.0,
+        "quantum_queries": 2,
+        "speedup": 2.0
+      },
+      {
+        "N": 16,
+        "k_opt": 3,
+        "p_success": 0.9613189697265625,
+        "quantum_queries": 4,
+        "speedup": 4.0
+      },
+      {
+        "N": 100,
+        "k_opt": 7,
+        "p_success": 0.9953444003575992,
+        "quantum_queries": 8,
+        "speedup": 10.0
+      },
+      {
+        "N": 1000,
+        "k_opt": 24,
+        "p_success": 0.999558144631399,
+        "quantum_queries": 25,
+        "speedup": 31.622776601683793
+      },
+      {
+        "N": 10000,
+        "k_opt": 78,
+        "p_success": 0.999999406855308,
+        "quantum_queries": 79,
+        "speedup": 100.0
+      }
+    ],
+    "amplitude_N100_k5": 0.89204120576,
+    "eml_depth": 3
+  },
+  "section4_legendre": {
+    "quadratic": [
+      {
+        "y": -3.0,
+        "numerical": 4.499993868870402,
+        "exact": 4.5,
+        "match": true
+      },
+      {
+        "y": -1.0,
+        "numerical": 0.4999898648674012,
+        "exact": 0.5,
+        "match": true
+      },
+      {
+        "y": 0.0,
+        "numerical": -1.2512509381248802e-05,
+        "exact": 0.0,
+        "match": true
+      },
+      {
+        "y": 1.0,
+        "numerical": 0.49998986486740116,
+        "exact": 0.5,
+        "match": true
+      },
+      {
+        "y": 2.0,
+        "numerical": 1.999991991993996,
+        "exact": 2.0,
+        "match": true
+      },
+      {
+        "y": 3.0,
+        "numerical": 4.499993868870403,
+        "exact": 4.5,
+        "match": true
+      }
+    ],
+    "all_quad_match": true,
+    "exp_examples": [
+      {
+        "y": 0.5,
+        "f*": -0.8465735902799727
+      },
+      {
+        "y": 1.0,
+        "f*": -1.0
+      },
+      {
+        "y": 2.718281828459045,
+        "f*": 0.0
+      }
+    ],
+    "eml_quadratic": 2,
+    "eml_exp": 2,
+    "depth_preservation": "Legendre of x^2/2 = y^2/2: EML-2 \u2192 EML-2 (preserved)"
+  },
+  "section5_optimization": {
+    "gd_path": [
+      5.0,
+      4.0,
+      3.2,
+      2.56,
+      2.048,
+      1.6384,
+      1.31072,
+      1.0485760000000002,
+      0.8388608000000002,
+      0.6710886400000001
+    ],
+    "gd_converges_to": 0.057646075230342354,
+    "kkt_depth_examples": [
+      {
+        "df": 2,
+        "dg": [
+          2,
+          0
+        ],
+        "L_depth": 2
+      },
+      {
+        "df": 2,
+        "dg": [
+          2,
+          2
+        ],
+        "L_depth": 2
+      }
+    ],
+    "entropy_uniform": 1.3862943611198906,
+    "entropy_max": 1.3862943611198906,
+    "eml_log_barrier": 2,
+    "eml_entropy_mirror": 2
+  },
+  "taxonomy": {
+    "hadamard_gate": {
+      "formula": "H = (1/\u221a2)[[1,1],[1,-1]]",
+      "eml_depth": 2,
+      "reason": "Entry 1/\u221a2 = 2^{-1/2}: algebraic (EML-2 as real number, but rational power)."
+    },
+    "phase_gate": {
+      "formula": "R_\u03b8 = diag(1, e^{i\u03b8})",
+      "eml_depth": 1,
+      "reason": "Entry e^{i\u03b8}: EML-1 atom."
+    },
+    "cnot_gate": {
+      "formula": "CNOT = [[1,0,0,0],[0,1,0,0],[0,0,0,1],[0,0,1,0]]",
+      "eml_depth": 0,
+      "reason": "Permutation matrix (0s and 1s only): EML-0."
+    },
+    "qft_matrix": {
+      "formula": "QFT_n: entry (j,k) = e^{2\u03c0ijk/n}/\u221an",
+      "eml_depth": 1,
+      "reason": "e^{2\u03c0i\u00b7rational}: roots of unity = EML-1 atoms."
+    },
+    "grover_amplitude": {
+      "formula": "sin((2k+1)\u00b7arcsin(1/\u221aN))",
+      "eml_depth": 3,
+      "reason": "arcsin = inverse of EML-3 sin \u2192 EML-3; composition \u2192 EML-3."
+    },
+    "legendre_transform_quadratic": {
+      "formula": "f(x)=x\u00b2/2: f*(y)=y\u00b2/2",
+      "eml_depth": 2,
+      "reason": "EML-2 \u2192 EML-2: Legendre transform preserves depth for quadratics."
+    },
+    "legendre_transform_exp": {
+      "formula": "f(x)=exp(x): f*(y)=y\u00b7log(y)-y",
+      "eml_depth": 2,
+      "reason": "y\u00b7log(y)-y: contains log \u2192 EML-2."
+    },
+    "log_barrier": {
+      "formula": "-\u03a3 log(-g_i(x))  (interior point method)",
+      "eml_depth": 2,
+      "reason": "Contains log of constraint: EML-2."
+    },
+    "kkt_lagrangian": {
+      "formula": "L = f + \u03a3 \u03bb_i g_i",
+      "eml_depth": "max(depth(f), depth(g))",
+      "reason": "Linear combination: EML depth = max of components."
+    },
+    "entropy_mirror": {
+      "formula": "-\u03a3 x_i log x_i  (mirror descent potential)",
+      "eml_depth": 2,
+      "reason": "Same structure as entropy H(x): EML-2."
+    }
+  },
+  "summary": {
+    "key_insight": "QFT entries are EML-1 (roots of unity). Grover amplitude: EML-3 (arcsin composition). Legendre transform of x\u00b2/2 = y\u00b2/2: depth-preserving (EML-2\u2192EML-2). Log-barrier and entropy mirror: EML-2. The Legendre transform's depth-preservation is a key optimization theorem.",
+    "eml_depths": {
+      "hadamard_gate": "2",
+      "phase_gate": "1",
+      "cnot_gate": "0",
+      "qft_matrix": "1",
+      "grover_amplitude": "3",
+      "legendre_transform_quadratic": "2",
+      "legendre_transform_exp": "2",
+      "log_barrier": "2",
+      "kkt_lagrangian": "max(depth(f), depth(g))",
+      "entropy_mirror": "2"
+    }
+  }
+}
