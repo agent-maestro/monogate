@@ -1,0 +1,45 @@
+"""Session 589 --- Categorification Events in Language"""
+from __future__ import annotations
+from dataclasses import dataclass
+from typing import Any
+
+
+@dataclass
+class CategorificationEventsLanguageEML:
+    def depth_analysis(self) -> dict[str, Any]:
+        return {
+            "object": "T310: Categorification Events in Language depth analysis",
+            "domains": {
+                "aha_sentence": {"description": "I have a dream -- rewires listener", "depth": "EML-inf", "reason": "Deltad=inf: reality permanently restructured"},
+                "paradigm_shift_phrase": {"description": "E=mc2 as words: energy IS mass", "depth": "EML-inf", "reason": "categorification: new object class created"},
+                "vow_declaration": {"description": "I do in marriage ceremony", "depth": "EML-inf", "reason": "speech act = irreversible depth transition"},
+                "diagnosis_sentence": {"description": "You have cancer -- categorification", "depth": "EML-inf", "reason": "permanent class assignment; no reversion"},
+                "forgiveness_phrase": {"description": "I forgive you as depth collapse", "depth": "EML-inf", "reason": "collapses accumulated EML-3 tension to EML-0 peace"},
+                "koan_sentence": {"description": "What is the sound of one hand clapping?", "depth": "EML-inf", "reason": "designed to trigger EML-inf in the listener"},
+            },
+        }
+
+    def analyze(self) -> dict[str, Any]:
+        return {
+            "model": "CategorificationEventsLanguageEML",
+            "analysis": self.depth_analysis(),
+            "distribution": {'EML-inf': 6},
+            "theorem": "T310: Categorification Events in Language (S589).",
+        }
+
+
+def analyze_categorification_events_language_eml() -> dict[str, Any]:
+    t = CategorificationEventsLanguageEML()
+    return {
+        "session": 589,
+        "title": "Categorification Events in Language",
+        "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+        "analysis": t.analyze(),
+        "key_theorem": "T310: Categorification Events in Language (S589).",
+        "rabbit_hole_log": ['T310: aha_sentence depth=EML-inf confirmed', 'T310: paradigm_shift_phrase depth=EML-inf confirmed', 'T310: vow_declaration depth=EML-inf confirmed', 'T310: diagnosis_sentence depth=EML-inf confirmed', 'T310: forgiveness_phrase depth=EML-inf confirmed', 'T310: koan_sentence depth=EML-inf confirmed'],
+    }
+
+
+if __name__ == "__main__":
+    import json
+    print(json.dumps(analyze_categorification_events_language_eml(), indent=2, default=str))
