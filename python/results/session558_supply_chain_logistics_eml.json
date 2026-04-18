@@ -1,0 +1,65 @@
+{
+  "session": 558,
+  "title": "Supply Chain Logistics Bullwhip EML-3 Collapse EML-inf",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "SupplyChainLogisticsEML",
+    "analysis": {
+      "object": "T279: Supply Chain Logistics Bullwhip EML-3 Collapse EML-inf depth analysis",
+      "domains": {
+        "inventory_count": {
+          "description": "SKU discrete counting",
+          "depth": "EML-0",
+          "reason": "discrete = EML-0"
+        },
+        "demand_forecast": {
+          "description": "exponential smoothing",
+          "depth": "EML-1",
+          "reason": "geometric smoothing = EML-1"
+        },
+        "reorder_point": {
+          "description": "log safety stock",
+          "depth": "EML-2",
+          "reason": "log-normal = EML-2"
+        },
+        "bullwhip_effect": {
+          "description": "small oscillation amplifies up chain",
+          "depth": "EML-3",
+          "reason": "amplification = EML-3 superspreader-type"
+        },
+        "covid_collapse": {
+          "description": "pandemic supply chain collapse",
+          "depth": "EML-inf",
+          "reason": "cross-type EML-3 x EML-2 = EML-inf"
+        },
+        "recovery_ramp": {
+          "description": "supply recovery exponential",
+          "depth": "EML-1",
+          "reason": "ramp-up = EML-1"
+        },
+        "resilience": {
+          "description": "resilience EML depth robustness",
+          "depth": "EML-2",
+          "reason": "resilience = EML-2 measurement"
+        },
+        "tropical_routing": {
+          "description": "logistics tropical shortest path",
+          "depth": "EML-2",
+          "reason": "tropical distance = EML-2 T279"
+        }
+      }
+    },
+    "distribution": {
+      "EML-0": 1,
+      "EML-1": 2,
+      "EML-2": 3,
+      "EML-3": 1,
+      "EML-inf": 1
+    },
+    "theorem": "T279: Supply Chain Logistics Bullwhip EML-3 Collapse EML-inf"
+  },
+  "key_theorem": "T279: Supply Chain Logistics Bullwhip EML-3 Collapse EML-inf (S558).",
+  "rabbit_hole_log": [
+    "T279: Supply Chain Logistics Bullwhip EML-3 Collapse EML-inf"
+  ]
+}
