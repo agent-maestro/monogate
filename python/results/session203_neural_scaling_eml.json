@@ -1,0 +1,66 @@
+{
+  "session": 203,
+  "title": "Neural Scaling Laws & ML Emergence",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "neural_scaling": {
+    "model": "NeuralScalingEML",
+    "chinchilla_scaling": {
+      "loss": 2.58,
+      "irreducible_E": 1.69,
+      "E_depth": 0,
+      "N_scaling_depth": 2,
+      "D_scaling_depth": 2,
+      "total_loss_depth": 2,
+      "optimal_ratio": 20,
+      "note": "Chinchilla: power laws = EML-2; irreducible loss E = EML-0"
+    },
+    "emergence": {
+      "threshold": 1000000000.0,
+      "below_threshold": {
+        "10000000.0": {
+          "capability": 0,
+          "depth": 0
+        },
+        "100000000.0": {
+          "capability": 0,
+          "depth": 0
+        }
+      },
+      "above_threshold": {
+        "1000000000.0": {
+          "capability": 0.0,
+          "depth": 3
+        },
+        "10000000000.0": {
+          "capability": 1.0,
+          "depth": 3
+        }
+      },
+      "threshold_depth": "\u221e",
+      "below_depth": 0,
+      "above_depth": 3,
+      "note": "Emergence: below=EML-0; threshold=EML-\u221e; above=EML-3"
+    },
+    "in_context_learning": {
+      "k_shots": 5,
+      "accuracy": 0.8111,
+      "icl_depth": 3,
+      "saturation_depth": 1,
+      "note": "ICL: accuracy = 1-exp(-k/\u03c4): EML-3 oscillatory convergence"
+    },
+    "key_insight": "Scaling=EML-2; emergence=EML-\u221e; ICL=EML-3; irreducible loss=EML-0"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Irreducible entropy, chance-level capability, optimal N/D ratio",
+    "EML-1": "Memorization curves, training convergence",
+    "EML-2": "Scaling laws N^\u03b1, D^\u03b2 (Chinchilla, OpenAI)",
+    "EML-3": "Capability post-emergence, in-context learning oscillation",
+    "EML-\u221e": "Emergence threshold (discontinuous capability jump)"
+  },
+  "key_theorem": "The EML Neural Scaling Theorem (S203): Neural scaling laws are EML-2 objects: L(N) = E + A/N^\u03b1 is a power law = EML-2 (same depth as Kolmogorov spectrum, running coupling, Zipf's law). This extends the universal EML-2 class to machine learning scaling. Emergence thresholds are EML-\u221e: discontinuous capability gains are Horizon events in the neural scaling landscape. In-context learning is EML-3: capabilities oscillate with context length.",
+  "rabbit_hole_log": [
+    "Scaling laws = EML-2: power laws universally EML-2 across physics AND ML",
+    "Emergence = EML-\u221e: same as phase transitions in stat mech \u2014 discontinuous",
+    "ICL = EML-3: context window acts as an oscillatory interference medium"
+  ]
+}
