@@ -1,0 +1,66 @@
+{
+  "session": 226,
+  "title": "Horizon Map I: Riemann Hypothesis Shadow Depth",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "rh_shadow_map": {
+    "model": "RHShadowMap",
+    "zeta": {
+      "rh_depth": "\u221e",
+      "partial_sum_depth": 2,
+      "euler_product_depth": 2,
+      "critical_line_depth": 3,
+      "off_critical_depth": "\u221e",
+      "partial_zeta_2": 1.635,
+      "partial_zeta_3": 1.202,
+      "shadow_description": "Partial Dirichlet series (EML-2 for \u03c3>1); critical line zeros (EML-3)",
+      "note": "RH: \u03b6(s)=EML-2 for \u03c3>1; critical line \u03c3=1/2: EML-3 (oscillatory)"
+    },
+    "gue": {
+      "gue_pair_correlation_depth": 2,
+      "pair_correlations": [
+        0.5947,
+        1.0,
+        0.955,
+        1.0
+      ],
+      "level_spacing_depth": 2,
+      "wigner_surmise_depth": 1,
+      "shadow_depth": 2,
+      "shadow_name": "GUE statistics (Montgomery-Odlyzko)",
+      "note": "GUE = EML-2 shadow of RH: pair correlation = sinc\u00b2(\u03c0r) = EML-2"
+    },
+    "explicit_formula": {
+      "li_x_depth": 2,
+      "li_x_rho_term_depth": 3,
+      "prime_counting_depth": 3,
+      "shadow_depth": 3,
+      "shadow_name": "Riemann explicit formula for \u03c0(x)",
+      "note": "Explicit formula: EML-3 shadow of RH"
+    },
+    "conditional": {
+      "gap_bound_depth": 2,
+      "cramer_depth": 2,
+      "zero_free_region_depth": 2,
+      "dirichlet_twist_depth": 2,
+      "shadow_depth": 2,
+      "note": "Conditional results on RH: all EML-2 (proved corollaries)"
+    },
+    "shadow_depths": {
+      "GUE_statistics": 2,
+      "partial_Dirichlet": 2,
+      "explicit_formula": 3,
+      "conditional_results": 2
+    },
+    "min_shadow_depth": 2,
+    "max_shadow_depth": 3,
+    "dominant_shadow_depth": 2,
+    "key_insight": "RH primary shadow = EML-2 (GUE statistics); secondary = EML-3 (explicit formula)"
+  },
+  "direction_c_status": "ACTIVE \u2014 RH shadow = EML-2 (primary) + EML-3 (explicit formula)",
+  "key_theorem": "The RH Horizon Shadow Theorem (S226, Direction C): The Riemann Hypothesis (EML-\u221e) has two accessible shadows: (1) EML-2 shadow: GUE pair correlations (Montgomery-Odlyzko); conditional results (gaps, Cram\u00e9r); partial \u03b6(s) for \u03c3>1. (2) EML-3 shadow: Riemann explicit formula for \u03c0(x); zeros on critical line \u03c3=1/2. The PRIMARY shadow is EML-2 (GUE statistics). Shadow Depth Conjecture check: RH shadow depth = 2 = depth of the GUE probability measure on zeros (a probability measure over zero spacings).",
+  "rabbit_hole_log": [
+    "GUE = EML-2: pair correlation sinc\u00b2(\u03c0r) is EML-2 \u2014 the measure is probability over zeros",
+    "Explicit formula = EML-3: oscillatory terms Li(x^\u03c1) are EML-3 (critical line zeros)",
+    "Shadow depth = 2 confirms conjecture: RH accessible shadow = GUE probability measure"
+  ]
+}
