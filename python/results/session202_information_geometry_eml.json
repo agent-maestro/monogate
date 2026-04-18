@@ -1,0 +1,67 @@
+{
+  "session": 202,
+  "title": "Information Geometry: Fisher Metric, Natural Gradient & Exponential Families",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "fisher_metric": {
+    "model": "FisherMetricEML",
+    "fisher_info": {
+      "theta": 0.5,
+      "fisher_info": 4.0,
+      "eml_depth_fisher": 2,
+      "log_likelihood": -6.9315,
+      "eml_depth_log_likelihood": 2,
+      "cramer_rao_bound": 0.025,
+      "eml_depth_cramer_rao": 2,
+      "note": "Fisher=EML-2; log-likelihood=EML-2; Cram\u00e9r-Rao=EML-2 \u2014 all information geometry = EML-2"
+    },
+    "kl_divergence": {
+      "kl_depth": 2,
+      "kl_value": 0.0823,
+      "js_divergence": 0.0,
+      "js_depth": 2,
+      "jensen_shannon_depth": 2,
+      "note": "KL, JS, all f-divergences = EML-2 (log-based information)"
+    },
+    "exponential_family": {
+      "log_partition_depth": 2,
+      "A_eta": 0.5,
+      "mean_dA_deta": 1.0,
+      "variance_fisher": 1.0,
+      "natural_param_depth": 0,
+      "sufficient_stat_depth": 3,
+      "note": "Exp family: A(\u03b7)=EML-2; mean=EML-2; Fisher=d\u00b2A/d\u03b7\u00b2=EML-2"
+    },
+    "key_insight": "ALL of information geometry = EML-2: explains why EML-2 is most populated stratum"
+  },
+  "natural_gradient": {
+    "model": "NaturalGradientEML",
+    "natural_gradient": {
+      "fisher_matrix_depth": 2,
+      "gradient_depth": 2,
+      "natural_gradient_depth": 2,
+      "nat_grad_value": 0.25,
+      "update": 0.0025,
+      "note": "Natural gradient = Fisher\u207b\u00b9 \u00b7 gradient: EML-2 throughout"
+    },
+    "geodesic": {
+      "geodesic_depth": 2,
+      "curvature_depth": 2,
+      "christoffel_approx": 0.25,
+      "curvature": 0.4055,
+      "note": "Statistical manifold geodesic: Riemannian curvature = EML-2 (log-based)"
+    },
+    "key_insight": "Natural gradient = EML-2 throughout; statistical manifold curvature = EML-2"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Natural parameters, sufficient statistics (values)",
+    "EML-2": "Fisher information, KL/JS divergence, log-partition A(\u03b7), natural gradient, curvature",
+    "EML-3": "Sufficient statistics T(x) (oscillatory data), likelihood function",
+    "EML-\u221e": "Non-parametric density estimation"
+  },
+  "key_theorem": "The EML Information Geometry Theorem (S202): Information geometry is the EML-2 stratum of statistics: Fisher information = EML-2. KL divergence = EML-2. Log-partition function A(\u03b7) = EML-2. Natural gradient = EML-2. ALL of differential-geometric statistics is EML-2. This explains the observation from S190: EML-2 has 21+ confirmations (most of any stratum) because information geometry is ubiquitous in physics, statistics, and machine learning. The exponential family IS the EML-2 object in probability.",
+  "rabbit_hole_log": [
+    "ALL information geometry = EML-2: Fisher, KL, JS, natural gradient, geodesic curvature",
+    "Log-partition function A(\u03b7) = EML-2: connects exp family to EML depth directly",
+    "EML-2 dominance explained: information geometry underlies all learning and stat mech"
+  ]
+}
