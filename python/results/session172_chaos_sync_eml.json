@@ -1,0 +1,431 @@
+{
+  "session": 172,
+  "title": "Chaos & Control Advanced: Multi-Strata Synchronization",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "chaos_synchronization": {
+    "model": "ChaosSynchronization",
+    "identical_sync": {
+      "0.0": {
+        "t": 0.0,
+        "transverse_decay": 1.0,
+        "oscillation": 1.0,
+        "sync_error": 1.0,
+        "eml_depth_decay": 1,
+        "eml_depth_oscillation": 3,
+        "eml_depth_manifold": 3,
+        "note": "Sync manifold approach = EML-3 (oscillatory); decay = EML-1"
+      },
+      "0.5": {
+        "t": 0.5,
+        "transverse_decay": 0.951229,
+        "oscillation": 0.877583,
+        "sync_error": 0.83478236,
+        "eml_depth_decay": 1,
+        "eml_depth_oscillation": 3,
+        "eml_depth_manifold": 3,
+        "note": "Sync manifold approach = EML-3 (oscillatory); decay = EML-1"
+      },
+      "1.0": {
+        "t": 1.0,
+        "transverse_decay": 0.904837,
+        "oscillation": 0.540302,
+        "sync_error": 0.48888574,
+        "eml_depth_decay": 1,
+        "eml_depth_oscillation": 3,
+        "eml_depth_manifold": 3,
+        "note": "Sync manifold approach = EML-3 (oscillatory); decay = EML-1"
+      },
+      "3.1416": {
+        "t": 3.141592653589793,
+        "transverse_decay": 0.730403,
+        "oscillation": -1.0,
+        "sync_error": -0.73040269,
+        "eml_depth_decay": 1,
+        "eml_depth_oscillation": 3,
+        "eml_depth_manifold": 3,
+        "note": "Sync manifold approach = EML-3 (oscillatory); decay = EML-1"
+      },
+      "6.2832": {
+        "t": 6.283185307179586,
+        "transverse_decay": 0.533488,
+        "oscillation": 1.0,
+        "sync_error": 0.53348809,
+        "eml_depth_decay": 1,
+        "eml_depth_oscillation": 3,
+        "eml_depth_manifold": 3,
+        "note": "Sync manifold approach = EML-3 (oscillatory); decay = EML-1"
+      }
+    },
+    "phase_sync": {
+      "0": {
+        "phi1": 0,
+        "phi2": 0.1,
+        "n": 1,
+        "m": 1,
+        "phase_diff": -0.1,
+        "wrapped_diff": -0.1,
+        "is_locked": true,
+        "eml_depth_phase": 2,
+        "eml_depth_ratio": 0,
+        "note": "Phase = EML-2 (arctan = log depth); locking ratio = EML-0"
+      },
+      "1": {
+        "phi1": 1,
+        "phi2": 1.1,
+        "n": 1,
+        "m": 1,
+        "phase_diff": -0.1,
+        "wrapped_diff": -0.1,
+        "is_locked": false,
+        "eml_depth_phase": 2,
+        "eml_depth_ratio": 0,
+        "note": "Phase = EML-2 (arctan = log depth); locking ratio = EML-0"
+      },
+      "2": {
+        "phi1": 2,
+        "phi2": 2.1,
+        "n": 1,
+        "m": 1,
+        "phase_diff": -0.1,
+        "wrapped_diff": -0.1,
+        "is_locked": false,
+        "eml_depth_phase": 2,
+        "eml_depth_ratio": 0,
+        "note": "Phase = EML-2 (arctan = log depth); locking ratio = EML-0"
+      },
+      "3": {
+        "phi1": 3,
+        "phi2": 3.1,
+        "n": 1,
+        "m": 1,
+        "phase_diff": -0.1,
+        "wrapped_diff": -0.1,
+        "is_locked": false,
+        "eml_depth_phase": 2,
+        "eml_depth_ratio": 0,
+        "note": "Phase = EML-2 (arctan = log depth); locking ratio = EML-0"
+      }
+    },
+    "generalized_sync": {
+      "0.5": {
+        "x": 0.5,
+        "F_analytic_sigmoid": 0.622459,
+        "F_log_example": 0.223144,
+        "eml_depth_F_analytic": 1,
+        "eml_depth_F_fractal": "\u221e",
+        "eml_depth_GSS_detection": 0,
+        "note": "Generalized sync function F: analytic = EML-1, fractal = EML-\u221e"
+      },
+      "1.0": {
+        "x": 1.0,
+        "F_analytic_sigmoid": 0.731059,
+        "F_log_example": 0.693147,
+        "eml_depth_F_analytic": 1,
+        "eml_depth_F_fractal": "\u221e",
+        "eml_depth_GSS_detection": 0,
+        "note": "Generalized sync function F: analytic = EML-1, fractal = EML-\u221e"
+      },
+      "2.0": {
+        "x": 2.0,
+        "F_analytic_sigmoid": 0.880797,
+        "F_log_example": 1.609438,
+        "eml_depth_F_analytic": 1,
+        "eml_depth_F_fractal": "\u221e",
+        "eml_depth_GSS_detection": 0,
+        "note": "Generalized sync function F: analytic = EML-1, fractal = EML-\u221e"
+      }
+    },
+    "lag_sync": {
+      "1.0": {
+        "t": 1.0,
+        "tau": 0.5,
+        "x1_t": 0.540302,
+        "x2_t_minus_tau": 0.877583,
+        "lag_error": 0.33728,
+        "eml_depth": 2,
+        "note": "Lag sync = EML-2 (time ratio \u03c4); manifold = EML-2"
+      },
+      "2.0": {
+        "t": 2.0,
+        "tau": 0.5,
+        "x1_t": -0.416147,
+        "x2_t_minus_tau": 0.070737,
+        "lag_error": 0.486884,
+        "eml_depth": 2,
+        "note": "Lag sync = EML-2 (time ratio \u03c4); manifold = EML-2"
+      },
+      "3.1416": {
+        "t": 3.141592653589793,
+        "tau": 0.5,
+        "x1_t": -1.0,
+        "x2_t_minus_tau": -0.877583,
+        "lag_error": 0.122417,
+        "eml_depth": 2,
+        "note": "Lag sync = EML-2 (time ratio \u03c4); manifold = EML-2"
+      }
+    },
+    "eml_depth": {
+      "identical_manifold": 3,
+      "phase_sync": 2,
+      "generalized_sync": "\u221e",
+      "lag_sync": 2,
+      "anti_sync": 3
+    },
+    "key_insight": "Sync types stratify: identical=EML-3, phase=EML-2, generalized=EML-\u221e"
+  },
+  "multi_strata_control": {
+    "model": "MultiStrataControl",
+    "ogy_control": {
+      "0.1": {
+        "error": "degenerate_fp",
+        "eml_depth": 0
+      },
+      "0.3": {
+        "error": "degenerate_fp",
+        "eml_depth": 0
+      },
+      "0.5": {
+        "error": "degenerate_fp",
+        "eml_depth": 0
+      },
+      "0.7": {
+        "error": "degenerate_fp",
+        "eml_depth": 0
+      }
+    },
+    "delayed_feedback_control": {
+      "0.3": -0.05,
+      "0.5": -0.05,
+      "0.7": -0.05,
+      "0.9": -0.05
+    },
+    "adaptive_control": {
+      "0.1": {
+        "error_e": 0.1,
+        "lyapunov_V": 0.005,
+        "control_u": -0.01,
+        "parameter_update": -0.001,
+        "convergence_bound": 0.904837,
+        "eml_depth_lyapunov": 2,
+        "eml_depth_convergence": 1,
+        "note": "Adaptive control Lyapunov = EML-2; convergence exp(-\u03b2t) = EML-1"
+      },
+      "0.5": {
+        "error_e": 0.5,
+        "lyapunov_V": 0.125,
+        "control_u": -0.05,
+        "parameter_update": -0.025,
+        "convergence_bound": 0.904837,
+        "eml_depth_lyapunov": 2,
+        "eml_depth_convergence": 1,
+        "note": "Adaptive control Lyapunov = EML-2; convergence exp(-\u03b2t) = EML-1"
+      },
+      "1.0": {
+        "error_e": 1.0,
+        "lyapunov_V": 0.5,
+        "control_u": -0.1,
+        "parameter_update": -0.1,
+        "convergence_bound": 0.904837,
+        "eml_depth_lyapunov": 2,
+        "eml_depth_convergence": 1,
+        "note": "Adaptive control Lyapunov = EML-2; convergence exp(-\u03b2t) = EML-1"
+      },
+      "2.0": {
+        "error_e": 2.0,
+        "lyapunov_V": 2.0,
+        "control_u": -0.2,
+        "parameter_update": -0.4,
+        "convergence_bound": 0.904837,
+        "eml_depth_lyapunov": 2,
+        "eml_depth_convergence": 1,
+        "note": "Adaptive control Lyapunov = EML-2; convergence exp(-\u03b2t) = EML-1"
+      }
+    },
+    "bifurcation_control": {
+      "-0.5": {
+        "mu": -0.5,
+        "mu_c": 0.0,
+        "order": "pitchfork",
+        "effective_mu": -0.5,
+        "eq_plus": 0.0,
+        "eq_minus": -0.0,
+        "eml_depth_normal_form": 2,
+        "eml_depth_bifurcation": "\u221e",
+        "eml_depth_control_shift": 0,
+        "note": "Bifurcation still EML-\u221e even under control \u2014 cannot reduce stratum"
+      },
+      "0.0": {
+        "mu": 0.0,
+        "mu_c": 0.0,
+        "order": "pitchfork",
+        "effective_mu": 0.0,
+        "eq_plus": 0.0,
+        "eq_minus": -0.0,
+        "eml_depth_normal_form": 2,
+        "eml_depth_bifurcation": "\u221e",
+        "eml_depth_control_shift": 0,
+        "note": "Bifurcation still EML-\u221e even under control \u2014 cannot reduce stratum"
+      },
+      "0.5": {
+        "mu": 0.5,
+        "mu_c": 0.0,
+        "order": "pitchfork",
+        "effective_mu": 0.5,
+        "eq_plus": 0.707107,
+        "eq_minus": -0.707107,
+        "eml_depth_normal_form": 2,
+        "eml_depth_bifurcation": "\u221e",
+        "eml_depth_control_shift": 0,
+        "note": "Bifurcation still EML-\u221e even under control \u2014 cannot reduce stratum"
+      },
+      "1.0": {
+        "mu": 1.0,
+        "mu_c": 0.0,
+        "order": "pitchfork",
+        "effective_mu": 1.0,
+        "eq_plus": 1.0,
+        "eq_minus": -1.0,
+        "eml_depth_normal_form": 2,
+        "eml_depth_bifurcation": "\u221e",
+        "eml_depth_control_shift": 0,
+        "note": "Bifurcation still EML-\u221e even under control \u2014 cannot reduce stratum"
+      }
+    },
+    "eml_depth": {
+      "ogy_perturbation": 2,
+      "pyragas_dfc": 0,
+      "adaptive_lyapunov": 2,
+      "bifurcation_event": "\u221e",
+      "control_shift": 0
+    },
+    "key_insight": "Control methods span EML-0 to EML-\u221e; bifurcation stays EML-\u221e under control"
+  },
+  "sync_transitions": {
+    "model": "SynchronizationTransitions",
+    "coupling_threshold": {
+      "epsilon_vals": {
+        "0.1": {
+          "lambda_perp": 0.75,
+          "phase": "desynchronized_EML-3"
+        },
+        "0.3": {
+          "lambda_perp": 0.45,
+          "phase": "desynchronized_EML-3"
+        },
+        "0.5": {
+          "lambda_perp": 0.15,
+          "phase": "desynchronized_EML-3"
+        },
+        "0.6": {
+          "lambda_perp": 0.0,
+          "phase": "near_transition_EML-\u221e"
+        },
+        "0.7": {
+          "lambda_perp": -0.15,
+          "phase": "synchronized_EML-3"
+        },
+        "0.9": {
+          "lambda_perp": -0.45,
+          "phase": "synchronized_EML-3"
+        },
+        "1.0": {
+          "lambda_perp": -0.6,
+          "phase": "synchronized_EML-3"
+        }
+      },
+      "epsilon_critical": 0.6,
+      "eml_depth_desync": 3,
+      "eml_depth_sync": 3,
+      "eml_depth_transition": "\u221e",
+      "key": "Sync transition \u03b5_c = EML-\u221e; both regimes EML-3"
+    },
+    "chimera_state": {
+      "n_oscillators": 10,
+      "coherent_count": 5,
+      "incoherent_count": 5,
+      "coherent_fraction": 0.5,
+      "phase_variance_incoherent": 3.2899,
+      "eml_depth_coherent_fraction": 0,
+      "eml_depth_incoherent_dynamics": 3,
+      "eml_depth_chimera_formation": "\u221e",
+      "note": "Chimera = EML-3 chaos + EML-0 counting; formation = EML-\u221e symmetry break"
+    },
+    "kuramoto_model": {
+      "0.5": {
+        "K": 0.5,
+        "K_c": 0.6366,
+        "order_r": 0.0,
+        "regime": "incoherent",
+        "eml_depth_K_c": 2,
+        "eml_depth_r": 2,
+        "eml_depth_transition": "\u221e"
+      },
+      "1.0": {
+        "K": 1.0,
+        "K_c": 0.6366,
+        "order_r": 0.60281,
+        "regime": "partially_synchronized",
+        "eml_depth_K_c": 2,
+        "eml_depth_r": 2,
+        "eml_depth_transition": "\u221e"
+      },
+      "1.5": {
+        "K": 1.5,
+        "K_c": 0.6366,
+        "order_r": 0.758674,
+        "regime": "partially_synchronized",
+        "eml_depth_K_c": 2,
+        "eml_depth_r": 2,
+        "eml_depth_transition": "\u221e"
+      },
+      "2.0": {
+        "K": 2.0,
+        "K_c": 0.6366,
+        "order_r": 0.825645,
+        "regime": "partially_synchronized",
+        "eml_depth_K_c": 2,
+        "eml_depth_r": 2,
+        "eml_depth_transition": "\u221e"
+      },
+      "3.0": {
+        "K": 3.0,
+        "K_c": 0.6366,
+        "order_r": 0.887577,
+        "regime": "partially_synchronized",
+        "eml_depth_K_c": 2,
+        "eml_depth_r": 2,
+        "eml_depth_transition": "\u221e"
+      }
+    },
+    "eml_depth": {
+      "desync_chaos": 3,
+      "sync_chaos": 3,
+      "sync_transition": "\u221e",
+      "chimera_formation": "\u221e",
+      "kuramoto_K_c": "\u221e",
+      "order_r": 2
+    },
+    "key_insight": "Sync transitions = EML-\u221e; synchronized/desynchronized regimes = EML-3"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Locking ratio n:m, coherent fraction, Pyragas DFC, bifurcation control shift",
+    "EML-1": "Transverse manifold decay exp(-\u03b3t), adaptive convergence exp(-\u03b2t)",
+    "EML-2": "Phase sync arctan, lag ratio \u03c4, OGY perturbation, Kuramoto K_c, order r(K)",
+    "EML-3": "Sync manifold oscillation, desynchronized chaos, synchronized chaos",
+    "EML-\u221e": "Sync transitions, chimera formation, bifurcation events, generalized sync F"
+  },
+  "key_theorem": "The EML Multi-Strata Synchronization Theorem: Chaos synchronization spans EML strata in a precise way. Identical synchronization lives on an EML-3 manifold (oscillatory). Phase synchronization is EML-2 (Hilbert phase, arctan depth). Generalized synchronization is EML-\u221e (unknown functional F). Transitions between regimes are always EML-\u221e (bifurcation of collective mode). Control methods: Pyragas DFC = EML-0, OGY = EML-2, adaptive Lyapunov = EML-2. Bifurcation events remain EML-\u221e even under control \u2014 feedback can move \u03b5_c but cannot reduce the EML-\u221e stratum of the transition itself.",
+  "rabbit_hole_log": [
+    "Identical sync manifold = EML-3: x\u2081=x\u2082 achieved via oscillatory approach",
+    "Chimera state = EML-\u221e formation + EML-3 dynamics: coexistence defies simple depth",
+    "Kuramoto transition K_c = 2/\u03c0\u03c9: EML-2 threshold, EML-\u221e bifurcation at K=K_c",
+    "OGY control = EML-2: same depth class as Black-Scholes d\u2081, Fisher information",
+    "Generalized sync F: if F=exp(x) \u2192 EML-1; if F=fractal \u2192 EML-\u221e",
+    "Pyragas DFC = EML-0: K*(x(t-\u03c4)-x(t)) is just linear difference"
+  ],
+  "connections": {
+    "S152_chaos_v2": "BifurcationTheory confirmed EML-\u221e; multi-strata control = new here",
+    "S165_soc": "Kuramoto transition = SOC criticality: both EML-\u221e collective bifurcation",
+    "S168_neuro_v2": "Neural criticality \u03c3=1 = Kuramoto K_c: same EML-\u221e sync transition"
+  }
+}
