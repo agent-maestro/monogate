@@ -1,0 +1,58 @@
+{
+  "session": 1005,
+  "title": "Weight Filtration as Surjectivity Engine",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "WeightSurjectivityEngine",
+    "analysis": {
+      "object": "T726: Weight Filtration as Surjectivity Engine depth analysis",
+      "domains": {
+        "weight_exhaustive": {
+          "description": "Weight filtration W_k is exhaustive -- every class has weight",
+          "depth": "EML-0",
+          "reason": "Discrete integer labeling -- EML-0"
+        },
+        "weight_depth_id": {
+          "description": "W_k = EML-k/2 by T699 -- weight IS depth",
+          "depth": "EML-0",
+          "reason": "Integer assignment -- EML-0 identification"
+        },
+        "hierarchy_covers_all": {
+          "description": "EML hierarchy {0,1,2,3,inf} covers all objects by T721",
+          "depth": "EML-0",
+          "reason": "Grand Synthesis XL completeness"
+        },
+        "algebraic_cycles_at_eml0": {
+          "description": "Algebraic cycles live at EML-0 by definition",
+          "depth": "EML-0",
+          "reason": "Discrete constructive objects"
+        },
+        "hodge_classes_at_eml3": {
+          "description": "Hodge classes live at EML-3 by oscillatory de Rham structure",
+          "depth": "EML-3",
+          "reason": "Complex analysis -- oscillatory"
+        },
+        "surjectivity_as_depth_covering": {
+          "description": "Surjectivity: EML-0 image covers EML-3 target",
+          "depth": "EML-inf",
+          "reason": "Covering lower depth from higher depth -- TYPE3 inverse"
+        },
+        "exhaustiveness_gap": {
+          "description": "Exhaustive weight != surjective cycle class map -- gap remains",
+          "depth": "EML-inf",
+          "reason": "Exhaustiveness is coverage of depth labels, not geometric coverage"
+        }
+      }
+    },
+    "distribution": {
+      "EML-0": 4,
+      "EML-3": 1,
+      "EML-inf": 2
+    },
+    "theorem": "T726: Weight Filtration as Surjectivity Engine (S1005)."
+  },
+  "key_theorem": "T726: Weight Filtration as Surjectivity Engine (S1005).",
+  "rabbit_hole_log": [
+    "T726: weight_exhaustive depth confirmed"
+  ]
+}
