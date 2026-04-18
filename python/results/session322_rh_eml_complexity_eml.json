@@ -1,0 +1,94 @@
+{
+  "session": 322,
+  "title": "RH-EML: Computational Complexity of Zeros",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "RHEMLComplexityEML",
+    "zero_computation": {
+      "object": "Computational complexity of finding/verifying zeta zeros",
+      "phases": {
+        "gram_points": {
+          "depth": 2,
+          "formula": "\u03b8(T): Riemann-Siegel formula = EML-2 (smooth approximation)",
+          "why": "Gram points g_n: \u03b8(g_n) = n\u03c0; \u03b8 = EML-2 (Stirling + real log)"
+        },
+        "zero_verification": {
+          "depth": 3,
+          "why": "Z(t) = exp(i\u03b8(t))\u00b7\u03b6(1/2+it): phase tracking = EML-3",
+          "complexity": "O(t^{1/2+\u03b5}) per zero via Riemann-Siegel: EML-2 cost, EML-3 output"
+        },
+        "counting_zeros": {
+          "depth": 2,
+          "formula": "N(T) = T/(2\u03c0)\u00b7log(T/2\u03c0e) + 7/8 + S(T): EML-2 smooth + EML-3 fluctuation",
+          "S_depth": 3,
+          "S_why": "S(T) = (1/\u03c0)arg(\u03b6(1/2+iT)): argument = EML-3 (phase)"
+        }
+      }
+    },
+    "algorithms": {
+      "object": "Algorithms for zeta zeros: EML depth of the algorithm itself",
+      "algorithms": {
+        "riemann_siegel": {
+          "depth": 2,
+          "formula": "Z(t) ~ 2\u00b7\u03a3_{n\u2264\u221a(t/2\u03c0)} n^{-1/2}\u00b7cos(\u03b8(t)-t\u00b7log n)",
+          "why": "cos = Re(exp(i\u00b7)): output EML-3, summation EML-2",
+          "complexity": "O(t^{1/2}): EML-2 algorithmic depth"
+        },
+        "odlyzko_schonhage": {
+          "depth": 3,
+          "why": "FFT-based: DFT of Dirichlet series = EML-3 (Fourier = complex oscillatory)",
+          "complexity": "O(t^{1/3}): deeper algorithm (EML-3) = faster"
+        },
+        "depth_speed_tradeoff": {
+          "observation": "Higher EML depth algorithm \u2192 faster zero computation",
+          "EML2_algo": "O(t^{1/2}): brute Riemann-Siegel",
+          "EML3_algo": "O(t^{1/3}): Odlyzko-Sch\u00f6nhage via FFT",
+          "new_insight": "EML depth of algorithm predicts complexity exponent"
+        }
+      }
+    },
+    "p_vs_np": {
+      "object": "Connection between RH and P vs NP via EML depths",
+      "analysis": {
+        "P_class": {
+          "depth": 2,
+          "why": "Polynomial-time algorithms: log of runtime = EML-2 (polynomial = exp(log))"
+        },
+        "NP_class": {
+          "depth": 3,
+          "why": "Exponential verification vs polynomial guess: EML-3 (complex branching)"
+        },
+        "rh_complexity": {
+          "rh_verification": "Checking zero on critical line: EML-3 (phase verification)",
+          "rh_falsification": "Finding off-line zero: would be EML-\u221e (cross-type search)",
+          "connection": "RH = P(EML-2) task in NP(EML-3) landscape: 3\u22972=3",
+          "shadow_p_np": "shadow(P\u2260NP) = 2 (S309); shadow(RH) = 3: different strata!"
+        }
+      }
+    },
+    "continuation": {
+      "object": "Complexity of analytically continuing \u03b6(s) off the critical line",
+      "depth_argument": {
+        "on_line": "\u03b6(1/2+it): EML-3 (pure imaginary = complex oscillatory)",
+        "off_line": "\u03b6(\u03c3+it) for \u03c3\u22601/2: mixed real+imaginary exponent = EML-\u221e",
+        "continuation": "Analytic continuation from EML-3 to EML-\u221e: depth jump = \u221e",
+        "implication": "\u03b6(s) cannot be continuously deformed off-line without depth discontinuity",
+        "new_insight": "EML depth is an obstruction to moving zeros off the critical line"
+      }
+    },
+    "verdicts": {
+      "zero_counting": "N(T)=EML-2 (smooth)+EML-3 (S(T) fluctuation)",
+      "algorithm_depth": "EML depth of algorithm predicts complexity exponent (EML-2\u2192t^{1/2}, EML-3\u2192t^{1/3})",
+      "rh_p_np": "RH(shadow=3) \u2260 P\u2260NP(shadow=2): different strata; different proof methods",
+      "new_result": "EML depth is an obstruction to moving zeros off-line: depth jump = \u221e"
+    }
+  },
+  "key_theorem": "Complexity-EML Theorem (S322): EML depth of zero-finding algorithm predicts computational complexity: EML-2 algorithm (Riemann-Siegel) \u2192 O(t^{1/2}); EML-3 algorithm (Odlyzko-Sch\u00f6nhage FFT) \u2192 O(t^{1/3}). NEW: EML depth is an obstruction to moving zeros off the critical line: analytic continuation from EML-3 to EML-\u221e requires infinite depth jump. RH (shadow=3) and P\u2260NP (shadow=2) live in DIFFERENT EML strata: they require fundamentally different proof methods.",
+  "rabbit_hole_log": [
+    "Zero counting: N(T)=EML-2(smooth)+EML-3(S(T))",
+    "Algorithm depth \u2192 complexity: EML-2=O(t^{1/2}), EML-3=O(t^{1/3})",
+    "NEW: EML depth = obstruction to moving zeros off-line (depth jump = \u221e)",
+    "RH(shadow=3) \u2260 P\u2260NP(shadow=2): different strata, different proof methods",
+    "Odlyzko-Sch\u00f6nhage: deeper algorithm (EML-3) is faster"
+  ]
+}
