@@ -1,0 +1,38 @@
+{
+  "session": 806,
+  "title": "NS Energy Cascade under Tropical Semiring v2",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "NSEnergyCascadeV2",
+    "analysis": {
+      "object": "T527: NS Energy Cascade under Tropical Semiring v2 depth analysis",
+      "domains": {
+        "kolmogorov_cascade": {
+          "description": "Kolmogorov cascade: energy flows large->small scales; tropical MAX at each step",
+          "depth": "EML-3",
+          "reason": "Energy cascade is EML-3 oscillatory transfer; tropical MAX picks dominant mode"
+        },
+        "tropical_closure": {
+          "description": "Tropical ring closure: cascade is MAX-PLUS closed; no energy escapes tropical semiring",
+          "depth": "EML-2",
+          "reason": "Energy conservation is EML-2 constraint on EML-3 cascade"
+        },
+        "blowup_tropical": {
+          "description": "Blow-up = Deltad=inf from cascade; tropical semiring cannot prevent if stretching unbounded",
+          "depth": "EML-inf",
+          "reason": "EML-inf blow-up occurs when cascade escapes tropical closure"
+        }
+      }
+    },
+    "distribution": {
+      "EML-3": 1,
+      "EML-2": 1,
+      "EML-inf": 1
+    },
+    "theorem": "T527: NS Energy Cascade under Tropical Semiring v2 (S806)."
+  },
+  "key_theorem": "T527: NS Energy Cascade under Tropical Semiring v2 (S806).",
+  "rabbit_hole_log": [
+    "T527: kolmogorov_cascade depth confirmed"
+  ]
+}
