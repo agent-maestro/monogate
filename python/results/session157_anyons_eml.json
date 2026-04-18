@@ -1,0 +1,158 @@
+{
+  "session": 157,
+  "title": "Topological Phases & Anyons: EML Depth of Braiding and Fusion",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "topological_invariants": {
+    "model": "TopologicalInvariants",
+    "chern_berry": {
+      "chern_numbers_possible": [
+        -1,
+        0,
+        1
+      ],
+      "eml_depth_chern": 0,
+      "eml_depth_berry_curvature": 3,
+      "bulk_boundary": "C \u2260 0 \u27f9 chiral edge modes (bulk-boundary correspondence)",
+      "eml_depth_edge_modes": "\u221e (topological protection = EML-\u221e)"
+    },
+    "winding_numbers": {
+      "0": 0,
+      "1.5708": 0,
+      "3.1416": 0,
+      "4.7124": 0,
+      "6.2832": 1
+    },
+    "z2_invariant": {
+      "true": {
+        "z2_invariant": 1,
+        "phase": "Topological Insulator",
+        "eml_depth": 0,
+        "kramers_pairs_mod2": 1,
+        "edge_states": "helical pairs (EML-\u221e protected)"
+      },
+      "false": {
+        "z2_invariant": 0,
+        "phase": "Trivial",
+        "eml_depth": 0,
+        "kramers_pairs_mod2": 0,
+        "edge_states": "none"
+      }
+    },
+    "eml_depth": {
+      "chern_number": 0,
+      "z2_invariant": 0,
+      "berry_curvature": 3,
+      "topological_protection": "\u221e"
+    },
+    "key_insight": "All topological invariants = EML-0 (integers); edge states they protect = EML-\u221e"
+  },
+  "anyonic_braiding": {
+    "model": "AnyonicBraiding",
+    "filling_nu": 0.3333333333333333,
+    "abelian_phase": {
+      "theta_exchange": 1.047198,
+      "theta_over_pi": 0.3333333333333333,
+      "statistics": "Abelian anyon",
+      "eml_depth": 3,
+      "note": "exp(i\u03c0\u03bd) = EML-3: trigonometric phase (same depth as cos/sin)"
+    },
+    "ising_fusion_rules": {
+      "anyons": [
+        "1 (vacuum)",
+        "\u03c3 (Ising)",
+        "\u03c8 (fermion)"
+      ],
+      "fusion_rules": {
+        "\u03c3 \u00d7 \u03c3": "1 + \u03c8",
+        "\u03c3 \u00d7 \u03c8": "\u03c3",
+        "\u03c8 \u00d7 \u03c8": "1",
+        "1 \u00d7 x": "x"
+      },
+      "quantum_dimension_sigma": 1.414214,
+      "total_quantum_dim_D": 2.0,
+      "eml_depth_multiplicities": 0,
+      "eml_depth_quantum_dim": 2,
+      "eml_depth_fusion_category": "\u221e"
+    },
+    "non_abelian_r_matrix": {
+      "anyon_type": "Ising",
+      "golden_ratio_phi": 1.618034,
+      "fibonacci_r_phase": 1.618034,
+      "eml_depth_r_entries": 3,
+      "eml_depth_r_action": "\u221e",
+      "topological_qc": "Non-Abelian braiding = fault-tolerant qubit gate (EML-\u221e substrate)"
+    },
+    "topological_entanglement_entropy": {
+      "gamma_topo": 0.693147,
+      "D_total_quantum_dim": 2.0,
+      "area_law_correction": "-\u03b3 = -0.6931 (EML-2)",
+      "eml_depth_gamma": 2,
+      "eml_depth_detection": 0,
+      "note": "\u03b3 = log D = EML-2; detects topological order (EML-\u221e) via EML-2 signature"
+    },
+    "eml_depth": {
+      "abelian_phase": 3,
+      "fusion_multiplicities": 0,
+      "quantum_dimension": 2,
+      "non_abelian_braiding": "\u221e"
+    },
+    "key_insight": "Abelian braiding = EML-3 (phase exp(i\u03c0\u03bd)); non-Abelian braiding = EML-\u221e"
+  },
+  "tqft": {
+    "model": "TQFTDepth",
+    "k_level": 2,
+    "chern_simons_action": {
+      "0.5": 0.0398,
+      "1.0": 0.1592,
+      "2.0": 0.6366
+    },
+    "jones_polynomial": {
+      "k_level": 2,
+      "t_value": "1j",
+      "jones_trefoil": "Re=-1.0, Im=-0.0",
+      "eml_depth_jones": 3,
+      "eml_depth_partition_function": "\u221e",
+      "note": "Jones polynomial = EML-3; TQFT partition function = EML-\u221e"
+    },
+    "wrt_invariant": {
+      "k": 2,
+      "quantum_dimensions_d_j": [
+        1.0,
+        1.414214,
+        1.0
+      ],
+      "eml_depth_d_j": 3,
+      "eml_depth_wrt_invariant": "\u221e",
+      "note": "d_j = EML-3; WRT summation over all reps = EML-\u221e"
+    },
+    "eml_depth": {
+      "cs_level": 0,
+      "cs_action": 3,
+      "jones": 3,
+      "wrt_invariant": "\u221e",
+      "tqft_partition_fn": "\u221e"
+    },
+    "key_insight": "Jones polynomial = EML-3; TQFT partition function = EML-\u221e (topological invariant)"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Chern numbers, winding numbers, Z\u2082 invariant, fusion multiplicities",
+    "EML-1": "Not prominently represented in topological phases",
+    "EML-2": "Quantum dimension log D, topological entanglement entropy \u03b3",
+    "EML-3": "Berry curvature, abelian braiding phase exp(i\u03c0\u03bd), Jones polynomial",
+    "EML-\u221e": "Non-Abelian braiding (unitary matrices, context-dependent), TQFT partition function"
+  },
+  "key_theorem": "The EML Topological Phases Theorem: Topological invariants (Chern, Z\u2082, winding) are EML-0 \u2014 integers. Abelian anyonic exchange phases are EML-3 (transcendental: exp(i\u03c0\u03bd)). Quantum dimensions log D are EML-2. Non-Abelian braiding \u2014 the core of topological quantum computing \u2014 is EML-\u221e: the unitary gates it produces depend on the full history of particle exchanges, not on any EML-finite function of local data. TQFT partition functions are EML-\u221e: topological invariants unreachable by EML-finite computation.",
+  "rabbit_hole_log": [
+    "Chern number = EML-0: same level as counting! Topology reduces geometry to integers",
+    "Berry curvature = EML-3: the integral giving the Chern number involves EML-3 integrand",
+    "Abelian phase exp(i\u03c0\u03bd) = EML-3: oscillatory, same depth as Fourier modes",
+    "Non-Abelian braiding = EML-\u221e: path-dependent, non-commutative = EML-\u221e",
+    "Jones polynomial = EML-3: built from sin ratios (EML-3), but detects EML-\u221e structure",
+    "Topological protection: EML-0 invariant guards EML-\u221e edge state from perturbation"
+  ],
+  "connections": {
+    "S148_materials_fqhe": "FQHE Hall conductance = EML-0; non-Abelian anyons = EML-\u221e: confirmed here",
+    "S135_crypto": "Topological QC (non-Abelian) would compute at EML-\u221e substrate",
+    "S58_topology": "Chern/winding = EML-0 from S58; now Berry curvature = EML-3 added"
+  }
+}
