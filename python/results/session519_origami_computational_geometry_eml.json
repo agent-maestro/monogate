@@ -1,0 +1,70 @@
+{
+  "session": 519,
+  "title": "Origami & Computational Geometry",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "OrigamiComputationalGeometryEML",
+    "analysis": {
+      "object": "T240: Origami and computational geometry depth analysis",
+      "domains": {
+        "fold_counting": {
+          "description": "Number of folds in a crease pattern",
+          "depth": "EML-0",
+          "reason": "Integer count of discrete fold lines"
+        },
+        "fold_angles": {
+          "description": "Fold angle: sin(\u03b8), cos(\u03b8) for mountain/valley folds",
+          "depth": "EML-3",
+          "reason": "Trigonometric functions = EML-3 oscillatory"
+        },
+        "flat_foldability": {
+          "description": "Is crease pattern flat-foldable? (Kawasaki theorem)",
+          "depth": "EML-0",
+          "reason": "Discrete check: alternating angles sum to 180\u00b0 \u2014 combinatorial"
+        },
+        "rigid_origami": {
+          "description": "Rigid panels with fold at creases only",
+          "depth": "EML-2",
+          "reason": "Rigid origami = polynomial constraint system = EML-2"
+        },
+        "origami_universality": {
+          "description": "Any shape can be folded from paper (Demaine)",
+          "depth": "EML-\u221e",
+          "reason": "Infinite complexity of arbitrary shapes \u2014 no finite description"
+        },
+        "miura_ori": {
+          "description": "Miura fold: single DOF deployable pattern",
+          "depth": "EML-2",
+          "reason": "One degree of freedom \u2014 algebraic parametrization"
+        },
+        "tree_theorem": {
+          "description": "Maekawa-Kawasaki tree embedding for complex designs",
+          "depth": "EML-2",
+          "reason": "Discrete tree structure with algebraic branch length constraints"
+        },
+        "waterbomb_base": {
+          "description": "Classic waterbomb base: 6-fold symmetric",
+          "depth": "EML-0",
+          "reason": "Discrete 6-fold symmetry \u2014 counting"
+        }
+      },
+      "universality_connection": "Is origami universality related to EML universality? Answer: DEEP CONNECTION. Origami universality = any shape is foldable = EML-\u221e (no finite description). EML universality = eml(x,y) generates all elementary functions = EML-3 gate is sufficient. The connection: both are about sufficiency for approximation. Origami: paper + folds \u2192 any shape (EML-\u221e target). EML: exp+log \u2192 all elementary functions (EML-3 sufficient). The hierarchy of foldable structures: finite-design = EML-0..2; arbitrary = EML-\u221e."
+    },
+    "distribution": {
+      "EML-0": 3,
+      "EML-2": 3,
+      "EML-3": 1,
+      "EML-\u221e": 1
+    },
+    "verdict": "Flat-foldability: EML-0. Rigid origami: EML-2. Universality: EML-\u221e.",
+    "theorem": "T240: Origami Depth \u2014 flat fold EML-0, rigid EML-2, universal EML-\u221e"
+  },
+  "key_theorem": "T240: Origami Depth (S519). Flat-foldability (Kawasaki): EML-0 (combinatorial check). Rigid origami: EML-2 (polynomial constraints). Origami universality: EML-\u221e (any shape). Connection to EML universality: both are sufficiency-for-approximation theorems.",
+  "rabbit_hole_log": [
+    "Fold counting: integer \u2192 EML-0",
+    "Fold angles: sin/cos \u2192 EML-3",
+    "Flat foldability: Kawasaki discrete check \u2192 EML-0",
+    "Rigid origami: polynomial DOF constraints \u2192 EML-2",
+    "T240: Origami universality = EML-\u221e (same as EML generator universality)"
+  ]
+}
