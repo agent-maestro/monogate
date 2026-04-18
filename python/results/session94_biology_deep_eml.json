@@ -1,0 +1,194 @@
+{
+  "session": 94,
+  "title": "Biology Deep: Morphogenesis, Evolution & Genetic Regulatory Networks",
+  "key_theorem": {
+    "theorem": "EML Biology Depth Theorem",
+    "statement": "Biological self-organization follows the EML depth hierarchy: gene states are EML-0, Hill functions and attractor thresholds are EML-2, Turing patterns and oscillations are EML-3, and complex attractor landscapes are EML-\u221e. Nash equilibria in evolutionary games are EML-2 (rational strategies). Rock-Paper-Scissors cyclic dynamics are EML-3. The Turing instability threshold (diffusion ratio) is EML-2; the resulting spatial pattern wavelength is EML-3 (involves \u03c0)."
+  },
+  "turing_morphogenesis": {
+    "turing_mechanism": "Reaction-diffusion: short-range activation, long-range inhibition",
+    "gierer_meinhardt": {
+      "model": "Gierer-Meinhardt activator-inhibitor",
+      "u_star": 1.0,
+      "v_star": 1.0,
+      "analysis": {
+        "jacobian": {
+          "a11": 1,
+          "a12": -1,
+          "a21": 2,
+          "a22": -1
+        },
+        "D_u": 0.01,
+        "D_v": 1.0,
+        "trace": 0,
+        "det": 1,
+        "turing_condition": 0.99,
+        "turing_unstable": false,
+        "critical_wavenumber_sq": 10.0,
+        "pattern_wavelength": 1.9869,
+        "eml_k_c": 2,
+        "eml_wavelength": 3,
+        "reason": "k_c = \u221a(det/(D_u\u00b7D_v)): EML-2; wavelength = 2\u03c0/k_c: EML-3 (\u03c0 appears)"
+      },
+      "biological_example": "Animal stripe/spot patterns (zebrafish, leopard)"
+    },
+    "eml_near_threshold": 3,
+    "eml_far_threshold": Infinity,
+    "eml_insight": "Turing instability threshold is EML-2; patterns are EML-3; spatiotemporal chaos beyond threshold is EML-\u221e"
+  },
+  "evolutionary_game_theory": {
+    "games": {
+      "hawk_dove": {
+        "A": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "nash": "mixed strategy p* = (1/2, 1/2)",
+        "eml_nash": 2
+      },
+      "prisoners_dilemma": {
+        "A": [
+          [
+            3,
+            0
+          ],
+          [
+            5,
+            1
+          ]
+        ],
+        "nash": "defect-defect (dominant strategy)",
+        "eml_nash": 0
+      },
+      "rps": {
+        "A": [
+          [
+            0,
+            -1,
+            1
+          ],
+          [
+            1,
+            0,
+            -1
+          ],
+          [
+            -1,
+            1,
+            0
+          ]
+        ],
+        "nash": "uniform (1/3,1/3,1/3)",
+        "eml_nash": 2
+      }
+    },
+    "rps_dynamics": [
+      {
+        "step": 0,
+        "p_R": 0.392,
+        "p_P": 0.408,
+        "p_S": 0.2,
+        "distance_from_nash": 0.2667
+      },
+      {
+        "step": 5,
+        "p_R": 0.3504,
+        "p_P": 0.4448,
+        "p_S": 0.2048,
+        "distance_from_nash": 0.257
+      },
+      {
+        "step": 10,
+        "p_R": 0.3091,
+        "p_P": 0.4731,
+        "p_S": 0.2178,
+        "distance_from_nash": 0.2796
+      },
+      {
+        "step": 15,
+        "p_R": 0.2716,
+        "p_P": 0.4895,
+        "p_S": 0.2389,
+        "distance_from_nash": 0.3123
+      },
+      {
+        "step": 20,
+        "p_R": 0.2404,
+        "p_P": 0.4916,
+        "p_S": 0.2681,
+        "distance_from_nash": 0.3165
+      },
+      {
+        "step": 25,
+        "p_R": 0.2166,
+        "p_P": 0.479,
+        "p_S": 0.3044,
+        "distance_from_nash": 0.2913
+      }
+    ],
+    "eml_payoff_matrix": 0,
+    "eml_nash_equilibrium": 2,
+    "eml_rps_orbit": 3,
+    "eml_replicator_equation": 1,
+    "reason": "Nash = fixed point of replicator (EML-2); RPS = cyclic orbit (EML-3); payoff = EML-0"
+  },
+  "gene_regulatory_networks": {
+    "boolean_network": {
+      "n_genes": 3,
+      "n_states": 8,
+      "update_rules": "g1\u2190\u00acg3, g2\u2190g1, g3\u2190g2",
+      "attractors": [
+        [
+          0,
+          4,
+          6,
+          7,
+          3,
+          1
+        ],
+        [
+          2,
+          5
+        ]
+      ],
+      "eml_per_state": 0,
+      "eml_attractor": 2,
+      "eml_landscape": Infinity,
+      "reason": "Each state = EML-0; periodic attractor = EML-2; full landscape (all attractors) = EML-\u221e"
+    },
+    "hill_function": {
+      "hill_function": "f(x) = x^n/(K^n + x^n)",
+      "eml": 2,
+      "reason": "Rational function of x^n = EML-2 (rational of power = EML-2)",
+      "limit_n_inf": "Step function \u0398(x-K) \u2014 EML-\u221e in the limit n\u2192\u221e",
+      "ode_with_hill": "\u1e8b = f(x) - \u03b3x: EML-2 ODE (rational RHS)",
+      "oscillation": "Toggle switch bistability: EML-2 (saddle-node bifurcation at EML-2 threshold)"
+    },
+    "eml_boolean_state": 0,
+    "eml_boolean_attractor": 2,
+    "eml_continuous_grn": 2,
+    "eml_ode_oscillation": 3
+  },
+  "eml_depth_summary": {
+    "EML-0": "Gene expression states {0,1}; payoff matrix entries; discrete cell fates",
+    "EML-1": "Population growth exp(rt); fitness landscape max-entropy fixed point",
+    "EML-2": "Hill function x^n/(K^n+x^n); Nash equilibrium; Turing instability ratio; ODE steady states",
+    "EML-3": "Turing spatial patterns cos(k\u00b7x); RPS cyclic orbit; GRN oscillations; circadian rhythm",
+    "EML-\u221e": "Generic GRN attractor landscape; spatiotemporal chaos beyond Turing threshold; ecological chaos"
+  },
+  "rabbit_hole_log": [
+    "Turing's insight was EML-3: the homogeneous state (EML-1) destabilizes into spatial EML-3 patterns via a EML-2 threshold (diffusion ratio). The biology encodes the EML depth transition EML-1 \u2192 EML-3 via EML-2 mechanism.",
+    "Hill functions approach step functions as n\u2192\u221e: EML-2 \u2192 EML-\u221e in the sharp switching limit. This is the biological version of the EML-\u221e phase transition: gene expression switches become EML-\u221e sharp thresholds.",
+    "Evolutionary game theory Nash equilibria: mixed strategy = EML-2 (rational frequency). But evolutionary dynamics can be chaotic (EML-\u221e) for general n-strategy games \u2014 Lotka-Volterra chaos in high dimensions."
+  ],
+  "connections": {
+    "to_session_57": "Session 57: phase transitions = EML-\u221e. Session 94: Turing instability threshold = EML-2 \u2192 EML-3 pattern transition",
+    "to_session_60": "Nash equilibrium = max-entropy = EML-2. Same as Fisher information geometry of payoff landscape"
+  }
+}
