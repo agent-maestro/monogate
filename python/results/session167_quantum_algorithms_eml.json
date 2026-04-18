@@ -1,0 +1,129 @@
+{
+  "session": 167,
+  "title": "Quantum Algorithms: EML Depth of Quantum Speedup",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "quantum_fourier_transform": {
+    "model": "QuantumFourierTransform",
+    "n_qubits": 8,
+    "gate_count": 64,
+    "matrix_entries": {
+      "j0_k0": "(0.35355339059327373+0j)",
+      "j1_k1": "(0.25+0.25j)",
+      "j2_k3": "(-6.494670421766199e-17-0.35355339059327373j)",
+      "j4_k4": "(0.35355339059327373-1.7319121124709866e-16j)"
+    },
+    "period_finding": {
+      "N": 15,
+      "classical_log_complexity": 2.4662,
+      "quantum_gate_complexity": 64.0,
+      "speedup_ratio": 0.18,
+      "eml_depth_classical": 1,
+      "eml_depth_quantum": 3,
+      "depth_reduction": "1 \u2192 3 (classical EML-1 \u2192 quantum EML-3 speedup)"
+    },
+    "eml_depth": {
+      "gate_count": 0,
+      "qft_matrix": 3,
+      "period_finding": 3
+    },
+    "key_insight": "QFT matrix = EML-3 (oscillatory); gate count = EML-0; speedup = 1\u21923"
+  },
+  "grover_search": {
+    "model": "GroverSearch",
+    "n_qubits": 10,
+    "N_items": 1024,
+    "optimal_iterations": 25,
+    "classical_queries": 512,
+    "speedup": "O(\u221aN) vs O(N): quadratic",
+    "success_probabilities": {
+      "1": 0.0088,
+      "12": 0.496,
+      "25": 0.9995,
+      "35": 0.6354
+    },
+    "eml_depth": {
+      "oracle": 3,
+      "success_probability": 3,
+      "classical_search": 0,
+      "speedup_analysis": 0
+    },
+    "key_insight": "Grover = EML-3 (oscillatory amplitude amplification); \u221aN speedup"
+  },
+  "quantum_complexity": {
+    "model": "QuantumComplexityEML",
+    "complexity_hierarchy": {
+      "P": {
+        "eml": 0,
+        "note": "polynomial classical = EML-0"
+      },
+      "BQP": {
+        "eml": 3,
+        "note": "polynomial quantum = EML-3 (QFT, Grover)"
+      },
+      "NP": {
+        "eml": "?",
+        "note": "verifier polynomial; witness search = EML-\u221e?"
+      },
+      "QMA": {
+        "eml": "\u221e",
+        "note": "quantum Merlin-Arthur = EML-\u221e"
+      },
+      "PSPACE": {
+        "eml": "\u221e",
+        "note": "polynomial space = EML-\u221e"
+      },
+      "P_vs_NP": {
+        "status": "open",
+        "eml_of_statement": "\u221e"
+      },
+      "BQP_vs_NP": {
+        "status": "open",
+        "eml_of_statement": "\u221e"
+      }
+    },
+    "vqe_hybrid": {
+      "quantum_circuit": "EML-3 (parameterized unitaries = exp(i\u03b8P))",
+      "classical_optimizer": "EML-2 (gradient descent on loss)",
+      "barren_plateaus": "EML-1 (exp(-n/4) gradient variance)",
+      "effective_eml": "hybrid (EML-3 quantum + EML-2 classical)",
+      "convergence_guarantee": "none in general = EML-\u221e"
+    },
+    "hhl_linear_systems": {
+      "condition_number_kappa": 10.0,
+      "classical_ops": 10000.0,
+      "quantum_ops": 996.58,
+      "speedup_factor": 10.03,
+      "eml_depth_quantum": 3,
+      "readout_caveat": "Reading full solution = O(N) \u2014 speedup EML-\u221e conditional"
+    },
+    "eml_depth": {
+      "P": 0,
+      "BQP": 3,
+      "QMA": "\u221e",
+      "PSPACE": "\u221e",
+      "P_vs_NP_statement": "\u221e"
+    },
+    "key_insight": "P = EML-0; BQP = EML-3 (quantum gate); QMA/PSPACE = EML-\u221e"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Gate count, classical P algorithms, period r (integer output)",
+    "EML-1": "Classical factoring exp(N^{1/3}), barren plateau gradients",
+    "EML-2": "VQE classical optimizer, HHL condition number scaling",
+    "EML-3": "QFT matrix exp(2\u03c0ijk/N)/\u221aN, Grover amplitude, quantum unitary exp(iHt)",
+    "EML-\u221e": "QMA, PSPACE, P vs NP statement, BQP vs NP, HHL readout"
+  },
+  "key_theorem": "The EML Quantum Speedup Theorem: Classical algorithms in P are EML-0 (polynomial, no exponentials). Quantum algorithms in BQP are EML-3: quantum gates = exp(iHt) (oscillatory). Quantum speedup = EML-3 computation outperforming EML-1 classical: Shor reduces EML-1 factoring to EML-3 period-finding. Grover reduces EML-0 oracle queries from O(N) to O(\u221aN) via EML-3 amplitude oscillation. The P vs NP and BQP vs NP questions are EML-\u221e statements: they cannot be resolved by any EML-finite argument.",
+  "rabbit_hole_log": [
+    "QFT matrix = EML-3: exp(2\u03c0ijk/N)/\u221aN \u2014 same depth as Fourier basis!",
+    "Shor: EML-1 classical \u2192 EML-3 quantum speedup: depth reduction 1\u21923",
+    "Grover = EML-3: amplitude sin((2k+1)\u03b8) \u2014 oscillates to target",
+    "P = EML-0: polynomial-time algorithms (no exp/log in complexity)",
+    "BQP = EML-3: quantum polynomial = EML-3 gates",
+    "Barren plateaus = EML-1: gradient variance exp(-n/4) kills VQE at scale"
+  ],
+  "connections": {
+    "S135_crypto": "Shor's QFT period-finding = EML-3 (confirmed here in detail)",
+    "S155_qft_nonpert": "exp(iHt) = EML-3 here; exp(-S_E/\u210f) = EML-1 there: Wick connects them",
+    "S158_cellular_automata": "BQP = EML-3; PSPACE = EML-\u221e: quantum complexity stratifies like Wolfram classes"
+  }
+}
