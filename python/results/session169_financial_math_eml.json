@@ -1,0 +1,102 @@
+{
+  "session": 169,
+  "title": "Financial Mathematics: EML Depth of Market Dynamics",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "black_scholes": {
+    "model": "BlackScholes",
+    "S": 100,
+    "K": 100,
+    "T": 1.0,
+    "r": 0.05,
+    "sigma": 0.2,
+    "d1": 0.35,
+    "d2": 0.15,
+    "call_price": 10.4506,
+    "put_price": 5.5735,
+    "greeks": {
+      "delta": 0.636831,
+      "vega": 37.524
+    },
+    "put_call_parity_check": 0.0,
+    "eml_depth": {
+      "d1_d2": 2,
+      "call_price": 3,
+      "greeks": 3,
+      "bs_framework": 3
+    },
+    "key_insight": "BS call/put = EML-3 (Gaussian CDF); d\u2081,d\u2082 = EML-2 (log terms)"
+  },
+  "market_microstructure": {
+    "model": "MarketMicrostructure",
+    "kyle_lambda": 0.05,
+    "amihud_illiquidity": 8e-08,
+    "market_impact_sqrt_law": {
+      "1000.0": 0.000632,
+      "10000.0": 0.002,
+      "100000.0": 0.006325,
+      "1000000.0": 0.02
+    },
+    "bid_ask_spread": 0.002,
+    "eml_depth": {
+      "kyle_lambda": 0,
+      "amihud": 0,
+      "market_impact": 2,
+      "flash_crash": "\u221e"
+    },
+    "key_insight": "Spread = EML-0; market impact = EML-2 (\u221a); flash crash = EML-\u221e"
+  },
+  "tail_risk": {
+    "model": "TailRiskEML",
+    "pareto_tail": {
+      "1": 1.0,
+      "2": 0.176777,
+      "5": 0.017889,
+      "10": 0.003162,
+      "20": 0.000559
+    },
+    "black_swan": {
+      "n_sigmas": 10.0,
+      "gaussian_prob": "0.00e+00",
+      "fat_tail_prob": "0.0010",
+      "probability_excess": "\u221e",
+      "eml_depth_gaussian": 3,
+      "eml_depth_fat_tail": 2,
+      "eml_depth_gap": "\u221e"
+    },
+    "gev_distribution": {
+      "-1": 0.037496,
+      "0": 0.367879,
+      "1": 0.658988,
+      "2": 0.811608,
+      "3": 0.888952
+    },
+    "eml_depth": {
+      "pareto_tail": 2,
+      "gaussian_tail": 3,
+      "gev": 1,
+      "crash_event": "\u221e"
+    },
+    "key_insight": "Fat tails = EML-2; Gaussian tails = EML-3; market crash = EML-\u221e"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Bid-ask spread, Kyle \u03bb, Amihud illiquidity, put-call parity (integer check)",
+    "EML-1": "Discount factor e^{-rT}, GEV distribution, GARCH volatility clustering",
+    "EML-2": "d\u2081,d\u2082 log terms, market impact \u221a(Q/ADV), fat tail Pareto",
+    "EML-3": "Black-Scholes call price (Gaussian CDF), delta, vega, Gaussian return tails",
+    "EML-\u221e": "Market crashes, flash crashes, contagion, systemic risk"
+  },
+  "key_theorem": "The EML Financial Mathematics Depth Theorem: Black-Scholes is EML-3: it assumes log-normal prices (exp of Brownian motion = EML-3). The Greeks (delta, vega) are EML-3 (Gaussian CDF). Market microstructure (spreads, Kyle's \u03bb) is EML-0. Fat tails are EML-2 (power law), but Gaussian model predicts EML-3 tails. The gap between EML-2 fat tails and EML-3 Gaussian predictions is EML-\u221e: it explains why Black-Scholes fails in crashes, and why market crashes are EML-\u221e events.",
+  "rabbit_hole_log": [
+    "BS d\u2081 = log(S/K)/(\u03c3\u221aT) = EML-2: log ratio (same as running coupling \u03b1_s!)",
+    "BS call = EML-3: \u03a6(d\u2081) = error function = integral of Gaussian = EML-3",
+    "e^{-rT} = EML-1: discount factor (same as BCS, Kondo, instanton!)",
+    "Fat tail P(X>x) = x^{-\u03b1} = EML-2: power law (same as Zipf, SOC avalanche)",
+    "Market crash = EML-\u221e: 1987 crash was ~25\u03c3 event \u2014 impossible under Gaussian (EML-3)",
+    "Kyle \u03bb = EML-0: linear price impact (simplest possible market structure)"
+  ],
+  "connections": {
+    "S156_stochastic": "BS = log-normal = Brownian motion = EML-3 (from S156)",
+    "S165_soc": "Market crashes = SOC avalanches: same EML-\u221e structure",
+    "S155_qft_nonpert": "e^{-rT} = EML-1: same depth class as instanton, BCS, Kondo"
+  }
+}
