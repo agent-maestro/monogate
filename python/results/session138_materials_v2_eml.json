@@ -1,0 +1,140 @@
+{
+  "session": 138,
+  "title": "Materials Science Deep II: BCS Superconductivity, Mott Transition & Topological Phases",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "bcs_superconductivity": {
+    "model": "BCSSuperconductivity",
+    "coupling_N0_V": 0.25,
+    "gap_eV": "9.1578e-04",
+    "critical_temperature_K": 6.0251,
+    "condensation_energy_eV": "-4.1933e-07",
+    "gap_vs_T_ratio": {
+      "0.0": 0.000916,
+      "0.2": 0.000819,
+      "0.5": 0.000648,
+      "0.8": 0.00041,
+      "0.9": 0.00029,
+      "0.95": 0.000205,
+      "1.0": 0.0
+    },
+    "superfluid_density_vs_T": {
+      "0.0": 1.0,
+      "0.2": 0.9984,
+      "0.5": 0.9375,
+      "0.8": 0.5904,
+      "0.9": 0.3439,
+      "0.95": 0.1855,
+      "1.0": 0.0
+    },
+    "eml_depth": {
+      "bcs_gap": 1,
+      "critical_temperature": 1,
+      "condensation_energy": 2,
+      "gap_vs_T": 2,
+      "superconducting_transition": "\u221e"
+    },
+    "key_insight": "BCS gap = EML-1 (exponential in -1/\u03bb); superconducting transition = EML-\u221e"
+  },
+  "mott_insulator_hubbard": {
+    "model": "MottInsulatorHubbard",
+    "hopping_t": 1.0,
+    "repulsion_U": 6.0,
+    "bandwidth_W": 4.0,
+    "mott_gap": 2.0,
+    "quasiparticle_weight_Z": 0.4375,
+    "lower_hubbard_band_DOS": {
+      "-6.0": 0.0,
+      "-4.0": 0.2757,
+      "-2.0": 0.2757,
+      "0.0": 0.0,
+      "2.0": 0.0,
+      "4.0": 0.0,
+      "6.0": 0.0
+    },
+    "Z_vs_U": {
+      "0": 1.0,
+      "2": 0.9375,
+      "4": 0.75,
+      "6": 0.4375,
+      "8": 0.0,
+      "10": 0.0,
+      "12": 0.0
+    },
+    "wigner_crystal_threshold_rs": 100.0,
+    "eml_depth": {
+      "bandwidth": 0,
+      "mott_gap": 0,
+      "quasiparticle_weight": 2,
+      "mott_transition": "\u221e",
+      "wigner_crystal_transition": "\u221e"
+    },
+    "key_insight": "Brinkman-Rice Z = EML-2; Mott transition (Z\u21920) and Wigner crystal = EML-\u221e"
+  },
+  "topological_phases": {
+    "model": "TopologicalPhases",
+    "n_bands": 4,
+    "haldane_chern_number_vs_m": {
+      "-2.0": 0,
+      "-1.0": 0,
+      "-0.5": -1,
+      "0.0": -1,
+      "0.5": 1,
+      "1.0": 0,
+      "2.0": 0
+    },
+    "topological_gap_vs_m": {
+      "-2.0": 0.0,
+      "-1.0": 0.0,
+      "-0.5": 0.5,
+      "0.0": 1.0,
+      "0.5": 0.5,
+      "1.0": 0.0,
+      "2.0": 0.0
+    },
+    "berry_phase_vs_n_k_points": {
+      "4": 2.356194,
+      "8": 2.748894,
+      "16": 2.945243,
+      "32": 3.043418,
+      "64": 3.092505,
+      "128": 3.117049
+    },
+    "bulk_edge_correspondence": {
+      "bulk_chern_number": "EML-0 (integer invariant)",
+      "n_edge_states": "EML-0 (equals |C|)",
+      "edge_state_dispersion": "EML-2 (linear in k: E = v_F * k)",
+      "topological_transition": "EML-\u221e (gap closing = phase boundary)",
+      "Z2_invariant": "EML-0 (Boolean: trivial or topological)"
+    },
+    "eml_depth": {
+      "chern_number": 0,
+      "topological_gap": 0,
+      "berry_phase": 3,
+      "edge_state_dispersion": 2,
+      "topological_transition": "\u221e"
+    },
+    "key_insight": "Topological invariants (Chern, Z2) = EML-0; transitions (gap closing) = EML-\u221e"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Chern numbers, Z2 invariants, topological gap, Mott gap (integer/linear)",
+    "EML-1": "BCS gap \u0394=2\u0127\u03c9_D exp(-1/\u03bb), critical temperature T_c",
+    "EML-2": "Condensation energy (\u0394\u00b2), quasiparticle weight Z, superfluid density, DOS",
+    "EML-3": "Berry phase (\u03c0 from winding), phonon dispersion curves",
+    "EML-\u221e": "Superconducting transition, Mott metal-insulator transition, topological phase change, Wigner crystal"
+  },
+  "key_theorem": "The EML Materials Depth Theorem: BCS superconductivity is EML-1 \u2014 the gap \u0394 = exp(-1/\u03bb) is a single EML atom. This is the same universality class as Boltzmann, de Sitter, and PRNG recurrences. Topological invariants (Chern, Z2) are EML-0 \u2014 they are counting invariants. All phase transitions \u2014 superconducting, Mott, topological, Wigner \u2014 are EML-\u221e: they occur at non-analytic boundaries where the ground state changes discontinuously.",
+  "rabbit_hole_log": [
+    "BCS gap = exp(-1/N\u2080V): EML-1 \u2014 single exponential with log-inverse argument",
+    "T_c = (2e^\u03b3/\u03c0)*(\u0127\u03c9_D/k_B)*exp(-1/\u03bb): EML-1 (same structure as BCS gap)",
+    "Condensation energy = N\u2080\u0394\u00b2/2: EML-2 (square of EML-1 = EML-2)",
+    "Chern number = integer: EML-0 (topological invariant, not computed by exp/ln)",
+    "Topological transition: gap closes \u2192 EML-\u221e (same as percolation, IIT criticality)",
+    "Mott transition Z\u21920: quadratic Brinkman-Rice = EML-2, divergence = EML-\u221e"
+  ],
+  "connections": {
+    "S57_stat_mech": "BCS gap = EML-1: same as Boltzmann factor (both single-exponential)",
+    "S58_topology": "Chern numbers = topological invariants = EML-0 (same class)",
+    "S75_qft": "Superconducting transition = QFT phase transition (EML-\u221e)",
+    "S128_materials_deep": "Extends superconductivity from Session 128 with topology"
+  }
+}
