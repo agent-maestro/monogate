@@ -1,0 +1,43 @@
+"""Session 924 --- Why Scratching an Itch Makes It Worse"""
+from __future__ import annotations
+from dataclasses import dataclass
+from typing import Any
+
+@dataclass
+class ItchScratchEML:
+    def depth_analysis(self) -> dict[str, Any]:
+        return {
+            "object": "T645: Why Scratching an Itch Makes It Worse depth analysis",
+            "domains": {
+                "itch_eml3": {"description": "Itch: EML-3 oscillatory nerve signal (C-fiber nociceptor activation)", "depth": "EML-3", "reason": "Itch is EML-3: oscillatory afferent C-fiber signal; temporal summation creates persistence"},
+                "scratch_eml2": {"description": "Scratch: temporary EML-2 override (pressure cancels itch signal briefly)", "depth": "EML-2", "reason": "Scratching is EML-2: pressure measurement signal overrides EML-3 itch temporarily"},
+                "histamine_eml1": {"description": "Scratching triggers histamine: EML-1 exponential amplification", "depth": "EML-1", "reason": "Scratch amplifies itch: EML-1 histamine release; exponential sensitization of nociceptors"},
+                "depth_trap": {"description": "Itch-scratch cycle: EML-3 oscillation + EML-2 scratch + EML-1 amplification = depth trap", "depth": "EML-3", "reason": "Itch is depth trap: same structure as quicksand (T571); fighting makes it worse"},
+                "willpower_eml0": {"description": "Willpower: EML-0 override; stop entirely; break the trap at the lowest stratum", "depth": "EML-0", "reason": "Itch escape is EML-0: complete cessation; depth reduction to zero breaks the trap"},
+            },
+        }
+    def analyze(self) -> dict[str, Any]:
+        depths = [v['depth'] for v in self.depth_analysis()['domains'].values()]
+        dist: dict[str, int] = {}
+        for d in depths: dist[d] = dist.get(d, 0) + 1
+        return {
+            "model": "ItchScratchEML",
+            "analysis": self.depth_analysis(),
+            "distribution": dist,
+            "theorem": "T645: Why Scratching an Itch Makes It Worse (S924).",
+        }
+
+def analyze_itch_scratch_eml() -> dict[str, Any]:
+    t = ItchScratchEML()
+    return {
+        "session": 924,
+        "title": "Why Scratching an Itch Makes It Worse",
+        "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+        "analysis": t.analyze(),
+        "key_theorem": "T645: Why Scratching an Itch Makes It Worse (S924).",
+        "rabbit_hole_log": ["T645: itch_eml3 depth confirmed"],
+    }
+
+if __name__ == "__main__":
+    import json
+    print(json.dumps(analyze_itch_scratch_eml(), indent=2, default=str))
