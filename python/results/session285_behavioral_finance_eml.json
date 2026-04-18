@@ -1,0 +1,122 @@
+{
+  "session": 285,
+  "title": "Behavioral Finance & Market Microstructure",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "BehavioralFinanceEML",
+    "prospect_theory": {
+      "object": "Prospect theory (Kahneman-Tversky 1979)",
+      "formula": "V(x) = x^\u03b1 if x\u22650; -\u03bb(-x)^\u03b2 if x<0",
+      "eml_depth": 2,
+      "why": "Power law value function: x^\u03b1 = exp(\u03b1\u00b7log x) = EML-2",
+      "semiring_test": {
+        "value_tensor_probability": {
+          "operation": "Value(EML-2) \u2297 Probability_weight(EML-2)",
+          "probability_weighting": "w(p) = exp(-(-log p)^\u03b3): EML-2",
+          "result": "Prospect theory: 2\u22972=2 \u2713"
+        },
+        "loss_aversion": {
+          "\u03bb": "\u03bb \u2248 2.25: loss aversion coefficient",
+          "depth": 2,
+          "why": "\u03bb = scalar multiplier: no depth change"
+        }
+      }
+    },
+    "order_flow": {
+      "object": "Order flow and price impact (Kyle 1985)",
+      "formula": "\u0394p = \u03bb\u00b7q: linear price impact",
+      "eml_depth": 2,
+      "semiring_test": {
+        "kyle_lambda": {
+          "\u03bb": "Kyle lambda = \u03c3_v / (2\u03c3_u): EML-2",
+          "depth": 2,
+          "why": "Ratio of standard deviations: EML-2 (Gaussian moments)"
+        },
+        "informed_tensor_noise": {
+          "operation": "Informed_trade(EML-2) \u2297 Noise_trade(EML-2) = max(2,2) = 2",
+          "result": "Order flow decomposition: 2\u22972=2 \u2713"
+        },
+        "market_impact": {
+          "formula": "E[\u0394P|Q] = \u03bbQ: EML-2",
+          "depth": 2
+        }
+      }
+    },
+    "flash_crash": {
+      "object": "Flash crash (May 6 2010 event)",
+      "eml_depth": "\u221e",
+      "shadow": 2,
+      "semiring_test": {
+        "pre_crash": {
+          "depth": 2,
+          "behavior": "Normal price dynamics: EML-2 (GBM)"
+        },
+        "crash_event": {
+          "type": "TYPE 2 Horizon (liquidity cascade)",
+          "depth": "\u221e",
+          "shadow": 2,
+          "why": "Cascade: exponential amplification = EML-2 shadow"
+        },
+        "hft_feedback": {
+          "operation": "HFT(EML-2) \u2297 Order_book(EML-2) = max(2,2) = 2",
+          "result": "HFT contribution: 2\u22972=2; crash is TYPE 2 Horizon \u2713"
+        }
+      }
+    },
+    "biases": {
+      "object": "Behavioral biases (anchoring, herding, overconfidence)",
+      "eml_depth": 2,
+      "semiring_test": {
+        "anchoring": {
+          "formula": "P_anchor = P_ref \u00b7 exp(k\u00b7signal): EML-2",
+          "depth": 2
+        },
+        "herding": {
+          "formula": "\u03c1_herd = exp(-\u03b2\u00b7|\u03c3_i - \u03c3\u0304|): EML-2 (mean-field)",
+          "depth": 2
+        },
+        "overconfidence": {
+          "formula": "\u03c3\u0302\u00b2 = c\u00b7\u03c3\u00b2: variance underestimation = EML-2 (scalar)",
+          "depth": 2
+        },
+        "combined": {
+          "operation": "Anchor(EML-2) \u2297 Herd(EML-2) \u2297 Overconf(EML-2) = max(2,2,2) = 2",
+          "result": "All behavioral biases: 2\u22972\u22972=2 \u2713"
+        }
+      }
+    },
+    "microstructure": {
+      "object": "Market microstructure (bid-ask spread, limit order book)",
+      "eml_depth": 2,
+      "semiring_test": {
+        "spread": {
+          "formula": "Spread = 2\u00b7c + 2\u00b7\u03bb\u00b7\u03c3_v\u00b2/\u03c3_u\u00b2: EML-2",
+          "depth": 2,
+          "why": "Spread = adverse selection + inventory: both EML-2"
+        },
+        "limit_order_book": {
+          "depth": 2,
+          "formula": "LOB density f(p) ~ exp(-|p-p*|/\u03c3): EML-2"
+        },
+        "tensor_test": {
+          "operation": "Spread(EML-2) \u2297 LOB(EML-2) = max(2,2) = 2",
+          "result": "Microstructure: 2\u22972=2 \u2713"
+        }
+      }
+    },
+    "semiring_verdicts": {
+      "prospect_theory": "2\u22972=2 \u2713 (power law + probability weighting both EML-2)",
+      "kyle_model": "2\u22972=2 \u2713 (linear impact)",
+      "flash_crash": "TYPE 2 Horizon; shadow=2 (liquidity cascade)",
+      "all_biases": "2\u22972\u22972=2 \u2713 (behavioral finance is EML-2 closed)"
+    }
+  },
+  "key_theorem": "Behavioral Finance Semiring Theorem (S285): Behavioral finance is a CLOSED EML-2 SUBRING. Prospect theory: V(x)=x^\u03b1 = EML-2 (power law); w(p) = exp(-(-log p)^\u03b3) = EML-2. All behavioral biases (anchoring, herding, overconfidence) = EML-2. Market microstructure (Kyle lambda, LOB, spreads) = EML-2. Flash crash = TYPE 2 Horizon with EML-2 shadow (liquidity cascade). VERDICT: behavioral finance is one of the cleanest EML-2 closed subrings found so far. All phenomena reduce to real exponential / power law / log-normal = EML-2. No EML-3 phenomena found: behavioral finance lacks oscillatory structure.",
+  "rabbit_hole_log": [
+    "Prospect theory: 2\u22972=2 (power law value + probability weighting both EML-2)",
+    "Kyle model: 2\u22972=2 (linear price impact = EML-2)",
+    "Flash crash: TYPE 2 Horizon; cascade amplification = EML-2 shadow",
+    "All biases: anchoring/herding/overconfidence all EML-2 = closed subring",
+    "Behavioral finance = cleanest EML-2 closed subring in finance"
+  ]
+}
