@@ -1,0 +1,118 @@
+{
+  "session": 298,
+  "title": "Cosmological Structure Formation",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "CosmologicalStructureEML",
+    "press_schechter": {
+      "object": "Press-Schechter halo mass function",
+      "formula": "dn/dM = \u221a(2/\u03c0)\u00b7(\u03c1_m/M\u00b2)\u00b7|d(ln \u03c3)/d(ln M)|\u00b7(\u03b4_c/\u03c3)\u00b7exp(-\u03b4_c\u00b2/2\u03c3\u00b2)",
+      "eml_depth": 2,
+      "why": "exp(-\u03b4_c\u00b2/2\u03c3\u00b2): Gaussian suppression = EML-2",
+      "semiring_test": {
+        "gaussian_collapse": {
+          "depth": 2,
+          "formula": "P(\u03b4>\u03b4_c) = erfc(\u03b4_c/\u221a2\u03c3) ~ exp(-\u03b4_c\u00b2/2\u03c3\u00b2): EML-2"
+        },
+        "tensor_test": {
+          "operation": "MassFunction(EML-2) \u2297 CollapseBarrier(EML-2) = max(2,2) = 2",
+          "result": "Press-Schechter: 2\u22972=2 \u2713"
+        }
+      }
+    },
+    "bao": {
+      "object": "Baryon Acoustic Oscillations (BAO)",
+      "formula": "P(k) \u221d T\u00b2(k)\u00b7k^n_s: power spectrum with BAO wiggles",
+      "eml_depth": 3,
+      "why": "BAO: sound waves at recombination = oscillatory = exp(i\u00b7k\u00b7r_s) = EML-3",
+      "semiring_test": {
+        "transfer_function": {
+          "depth": 3,
+          "formula": "T(k) = oscillatory at k\u00b7r_s: EML-3"
+        },
+        "matter_power_spectrum": {
+          "depth": 3,
+          "why": "P(k) has BAO wiggles = oscillatory EML-3 modulation"
+        },
+        "bao_tensor_halo": {
+          "operation": "BAO(EML-3) \u2297 HaloMassFunction(EML-2)",
+          "prediction": "Different types: EML-\u221e",
+          "result": "Biased galaxy clustering: EML-\u221e (cross-type: oscillatory\u00d7collapse)"
+        }
+      }
+    },
+    "collapse": {
+      "object": "Gravitational collapse (spherical and non-spherical)",
+      "eml_depth": 2,
+      "semiring_test": {
+        "linear_growth": {
+          "formula": "D_+(a) ~ a\u00b7_2F_1(...): growth factor = EML-2 (hypergeometric \u2192 EML-2 asymptotically)",
+          "depth": 2
+        },
+        "turnaround": {
+          "depth": "\u221e",
+          "type": "TYPE 2 Horizon (turnaround: \u0227=0)",
+          "shadow": 2
+        },
+        "virialization": {
+          "depth": "\u221e",
+          "shadow": 2,
+          "type": "TYPE 2 Horizon (virialization: violent relaxation)"
+        }
+      }
+    },
+    "reionization": {
+      "object": "Cosmic reionization (z~6-11)",
+      "eml_depth": "\u221e",
+      "shadow": 2,
+      "semiring_test": {
+        "neutral_fraction": {
+          "formula": "x_HI(z) ~ exp(-\u03c4(z)): exponential opacity = EML-2",
+          "depth": 2
+        },
+        "reionization_transition": {
+          "type": "TYPE 2 Horizon (percolation of ionized bubbles)",
+          "depth": "\u221e",
+          "shadow": 2
+        },
+        "new_finding": {
+          "insight": "Reionization = percolation TYPE 2 Horizon: same structure as jamming transition"
+        }
+      }
+    },
+    "dark_matter": {
+      "object": "Dark matter halo profiles (NFW)",
+      "eml_depth": 2,
+      "formula": "\u03c1(r) = \u03c1_s / ((r/r_s)(1+r/r_s)\u00b2): NFW profile",
+      "semiring_test": {
+        "NFW": {
+          "depth": 2,
+          "why": "Power-law \u00d7 exponential cutoff = EML-2"
+        },
+        "halo_concentration": {
+          "formula": "c(M) ~ exp(-0.1\u00b7ln(M/M_*)): log-normal scatter = EML-2",
+          "depth": 2
+        },
+        "tensor_test": {
+          "operation": "NFW(EML-2) \u2297 BAO(EML-3) = EML-\u221e",
+          "result": "Galaxy clustering: EML-2 halos \u2297 EML-3 BAO = \u221e \u2713"
+        }
+      }
+    },
+    "semiring_verdicts": {
+      "halo_mass_function": "2\u22972=2 \u2713 (Gaussian collapse = EML-2)",
+      "BAO": "EML-3 (sound waves = oscillatory)",
+      "galaxy_clustering": "EML-3\u2297EML-2=\u221e (BAO modulation of halos = cross-type)",
+      "reionization": "TYPE 2 Horizon; percolation = EML-\u221e, shadow=2",
+      "new_finding": "BAO=EML-3; halo collapse=EML-2: galaxy survey = cross-type EML-\u221e"
+    }
+  },
+  "key_theorem": "Cosmological Structure Semiring Theorem (S298): Gravitational collapse = EML-2 (Gaussian Press-Schechter). NEW: BAO = EML-3 (sound wave oscillations = exp(i\u00b7k\u00b7r_s)). Galaxy bias: BAO(EML-3)\u2297Halos(EML-2) = EML-\u221e: galaxy surveys coupling oscillatory BAO with EML-2 collapse = cross-type. This explains why galaxy clustering is harder to predict than halo mass functions alone. Reionization = percolation TYPE 2 Horizon (same structure as jamming). NFW profile: EML-2. Virialization: TYPE 2 Horizon. COSMOLOGICAL DEPTH LADDER: HaloCrunch(EML-2) \u2192 BAO(EML-3) \u2192 GalaxySurvey(EML-\u221e).",
+  "rabbit_hole_log": [
+    "Press-Schechter: EML-2 (Gaussian collapse barrier)",
+    "BAO: EML-3 (sound oscillations = exp(i\u00b7k\u00b7r_s))",
+    "Galaxy surveys: BAO(EML-3)\u2297Halos(EML-2) = \u221e (cross-type = hard to predict)",
+    "Reionization: percolation TYPE 2 Horizon (same as jamming!)",
+    "NFW profile: EML-2; virialization: TYPE 2 Horizon"
+  ]
+}
