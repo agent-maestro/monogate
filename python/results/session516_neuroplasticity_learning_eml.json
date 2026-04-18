@@ -1,0 +1,71 @@
+{
+  "session": 516,
+  "title": "Neuroplasticity & Learning",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "NeuroplasticityLearningEML",
+    "analysis": {
+      "object": "T237: Neuroplasticity and learning depth analysis",
+      "domains": {
+        "hebbian_learning": {
+          "description": "\u0394w \u221d x_pre \u00b7 x_post (neurons that fire together, wire together)",
+          "depth": "EML-1",
+          "reason": "Multiplicative weight update = EML-1"
+        },
+        "synaptic_pruning": {
+          "description": "Pruning follows power law: N(t) ~ t^{-\u03b1}",
+          "depth": "EML-2",
+          "reason": "Power law decay = EML-2"
+        },
+        "brain_oscillations": {
+          "description": "Alpha (8-12 Hz), beta (13-30), gamma (30-100), theta (4-8)",
+          "depth": "EML-3",
+          "reason": "sin(2\u03c0ft) \u2014 explicit EML-3 oscillation at each band"
+        },
+        "long_term_potentiation": {
+          "description": "LTP: exponential strengthening with repeated activation",
+          "depth": "EML-1",
+          "reason": "AMPA receptor insertion: exponential in stimulation count"
+        },
+        "forgetting_curve": {
+          "description": "R(t) = exp(-t/S) \u2014 Ebbinghaus",
+          "depth": "EML-1",
+          "reason": "Exponential decay of memory"
+        },
+        "insight": {
+          "description": "Aha moment: discontinuous jump to solution",
+          "depth": "EML-\u221e",
+          "reason": "Non-analytic jump \u2014 TYPE1 depth change, but appears as EML-\u221e event"
+        },
+        "developmental_stages": {
+          "description": "Piaget: sensorimotor\u2192preoperational\u2192concrete\u2192formal",
+          "depth": "EML-0",
+          "reason": "Discrete stage transitions \u2014 EML-0 categories"
+        },
+        "motor_learning": {
+          "description": "Power law of practice: T(n) = an^{-b}",
+          "depth": "EML-2",
+          "reason": "Power law improvement = EML-2"
+        }
+      },
+      "developmental_traversal": "Is learning a traversal of the hierarchy? YES. Child cognitive development: EML-0 (sensorimotor, object permanence \u2014 discrete categories), EML-1 (preoperational, symbolic exponential thinking), EML-2 (concrete operations, logarithmic measurement, conservation), EML-3 (formal operations, abstract oscillatory reasoning). Piaget's 4 stages = 4 depth levels of EML. This is not metaphor \u2014 it is the same mathematical structure."
+    },
+    "distribution": {
+      "EML-0": 1,
+      "EML-1": 3,
+      "EML-2": 2,
+      "EML-3": 1,
+      "EML-\u221e": 1
+    },
+    "verdict": "Learning: Hebbian EML-1. Brain waves: EML-3. Piaget stages = EML depth hierarchy.",
+    "theorem": "T237: Neuroplasticity Depth \u2014 Piaget stages = EML levels; brain waves = EML-3"
+  },
+  "key_theorem": "T237: Neuroplasticity Depth (S516). Piaget's 4 cognitive stages = exactly the 4 EML finite depth levels. Brain oscillations: EML-3. Forgetting curve: EML-1. Insight: EML-\u221e event. Child development = literal depth hierarchy traversal 0\u21921\u21922\u21923.",
+  "rabbit_hole_log": [
+    "Hebbian: \u0394w \u221d x_pre\u00b7x_post \u2192 EML-1 multiplicative",
+    "Brain waves: alpha/beta/gamma/theta = EML-3",
+    "Ebbinghaus: exp(-t/S) = EML-1",
+    "Piaget: sensorimotor(0)\u2192preop(1)\u2192concrete(2)\u2192formal(3)",
+    "T237: Piaget stages = EML depth levels (exact correspondence)"
+  ]
+}
