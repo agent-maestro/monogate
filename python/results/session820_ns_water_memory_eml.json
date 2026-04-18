@@ -1,0 +1,37 @@
+{
+  "session": 820,
+  "title": "Water Memoryless Property as EML-inf",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "NSWaterMemoryEML",
+    "analysis": {
+      "object": "T541: Water Memoryless Property as EML-inf depth analysis",
+      "domains": {
+        "markov_property": {
+          "description": "Turbulent flow is Markovian: no memory of past states; structurally memoryless",
+          "depth": "EML-inf",
+          "reason": "Memoryless = EML-inf: the state space is uncountably infinite at each instant"
+        },
+        "each_eddy": {
+          "description": "Each turbulent eddy contains the full hierarchy: EML-0 core to EML-inf boundary",
+          "depth": "EML-inf",
+          "reason": "Self-similar turbulence: every eddy is a micro-exhibition of full depth"
+        },
+        "viscous_regularization": {
+          "description": "Viscosity is the firewall against depth-inf eruption; regularizes EML-3 to EML-2",
+          "depth": "EML-2",
+          "reason": "Viscosity is depth reducer: EML-3 -> EML-2; prevents EML-inf physical blow-up"
+        }
+      }
+    },
+    "distribution": {
+      "EML-inf": 2,
+      "EML-2": 1
+    },
+    "theorem": "T541: Water Memoryless Property as EML-inf (S820)."
+  },
+  "key_theorem": "T541: Water Memoryless Property as EML-inf (S820).",
+  "rabbit_hole_log": [
+    "T541: markov_property depth confirmed"
+  ]
+}
