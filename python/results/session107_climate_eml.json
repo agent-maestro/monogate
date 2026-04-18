@@ -1,0 +1,339 @@
+{
+  "session": 107,
+  "title": "Climate & Earth Systems: EML in Planetary Dynamics",
+  "key_theorem": {
+    "theorem": "EML Climate Depth Theorem",
+    "statement": "Earth's equilibrium temperature T_eq = (S\u2080(1-\u03b1)/4\u03c3)^{1/4} is EML-2 (rational power). CO\u2082 forcing \u0394F = 5.35\u00b7ln(C/C\u2080) is EML-2 (logarithmic in concentration). Climate sensitivity \u03bb is EML-0 (linear response constant). Stefan-Boltzmann F=\u03c3T\u2074 is EML-2 (power of temperature). Planck feedback -4\u03c3T\u00b3 is EML-2. Water vapor feedback (Clausius-Clapeyron) is EML-1 (exp(-L/RT)). ENSO oscillation is EML-3 (quasi-periodic). Climate tipping points (AMOC, ice sheets, permafrost) are EML-\u221e."
+  },
+  "energy_balance": {
+    "equilibrium": [
+      {
+        "albedo": 0.3,
+        "tau_optical_depth": 0.0,
+        "T_eq_K": 254.58,
+        "T_surface_K": 254.58,
+        "T_surface_C": -18.57,
+        "eml": 2,
+        "reason": "T = ((S\u2080(1-\u03b1)/4\u03c3))^{1/4}: EML-2 (rational power of constants)"
+      },
+      {
+        "albedo": 0.3,
+        "tau_optical_depth": 0.78,
+        "T_eq_K": 254.58,
+        "T_surface_K": 276.43,
+        "T_surface_C": 3.28,
+        "eml": 2,
+        "reason": "T = ((S\u2080(1-\u03b1)/4\u03c3))^{1/4}: EML-2 (rational power of constants)"
+      },
+      {
+        "albedo": 0.61,
+        "tau_optical_depth": 0.0,
+        "T_eq_K": 219.95,
+        "T_surface_K": 219.95,
+        "T_surface_C": -53.2,
+        "eml": 2,
+        "reason": "T = ((S\u2080(1-\u03b1)/4\u03c3))^{1/4}: EML-2 (rational power of constants)"
+      }
+    ],
+    "co2_forcing": [
+      {
+        "C_ppm": 280,
+        "C0_ppm": 280.0,
+        "delta_F_Wm2": 0.0,
+        "delta_T_K": 0.0,
+        "eml": 2,
+        "reason": "\u0394F = 5.35\u00b7ln(C/C\u2080): EML-2 (logarithmic forcing in CO\u2082 concentration)"
+      },
+      {
+        "C_ppm": 350,
+        "C0_ppm": 280.0,
+        "delta_F_Wm2": 1.194,
+        "delta_T_K": 0.955,
+        "eml": 2,
+        "reason": "\u0394F = 5.35\u00b7ln(C/C\u2080): EML-2 (logarithmic forcing in CO\u2082 concentration)"
+      },
+      {
+        "C_ppm": 420,
+        "C0_ppm": 280.0,
+        "delta_F_Wm2": 2.169,
+        "delta_T_K": 1.735,
+        "eml": 2,
+        "reason": "\u0394F = 5.35\u00b7ln(C/C\u2080): EML-2 (logarithmic forcing in CO\u2082 concentration)"
+      },
+      {
+        "C_ppm": 560,
+        "C0_ppm": 280.0,
+        "delta_F_Wm2": 3.708,
+        "delta_T_K": 2.967,
+        "eml": 2,
+        "reason": "\u0394F = 5.35\u00b7ln(C/C\u2080): EML-2 (logarithmic forcing in CO\u2082 concentration)"
+      },
+      {
+        "C_ppm": 840,
+        "C0_ppm": 280.0,
+        "delta_F_Wm2": 5.878,
+        "delta_T_K": 4.702,
+        "eml": 2,
+        "reason": "\u0394F = 5.35\u00b7ln(C/C\u2080): EML-2 (logarithmic forcing in CO\u2082 concentration)"
+      }
+    ],
+    "stefan_boltzmann": [
+      {
+        "T_K": 255,
+        "F_Wm2": 239.74,
+        "eml": 2,
+        "reason": "F = \u03c3T\u2074 = \u03c3\u00b7exp(4\u00b7ln T): EML-2 (power of temperature)"
+      },
+      {
+        "T_K": 288,
+        "F_Wm2": 390.08,
+        "eml": 2,
+        "reason": "F = \u03c3T\u2074 = \u03c3\u00b7exp(4\u00b7ln T): EML-2 (power of temperature)"
+      },
+      {
+        "T_K": 310,
+        "F_Wm2": 523.64,
+        "eml": 2,
+        "reason": "F = \u03c3T\u2074 = \u03c3\u00b7exp(4\u00b7ln T): EML-2 (power of temperature)"
+      }
+    ],
+    "climate_sensitivity_lambda": {
+      "value_K_per_Wm2": 0.8,
+      "eml": 0,
+      "reason": "\u03bb = \u0394T/\u0394F: EML-0 (linear response = proportionality constant)"
+    }
+  },
+  "ocean_circulation": {
+    "stommel_box": [
+      {
+        "delta_T": 10,
+        "delta_S": 2,
+        "q_overturning": -0.6,
+        "regime": "off_or_weak",
+        "eml": 2,
+        "reason": "q = k(\u03b1_T \u0394T - \u03b2_S \u0394S): EML-2 (linear combination of forcings)"
+      },
+      {
+        "delta_T": 10,
+        "delta_S": 13,
+        "q_overturning": -9.4,
+        "regime": "off_or_weak",
+        "eml": 2,
+        "reason": "q = k(\u03b1_T \u0394T - \u03b2_S \u0394S): EML-2 (linear combination of forcings)"
+      },
+      {
+        "delta_T": 5,
+        "delta_S": 10,
+        "q_overturning": -7.5,
+        "regime": "off_or_weak",
+        "eml": 2,
+        "reason": "q = k(\u03b1_T \u0394T - \u03b2_S \u0394S): EML-2 (linear combination of forcings)"
+      }
+    ],
+    "enso": [
+      {
+        "t_years": 0.5,
+        "SST_anomaly_K": 0.9759,
+        "eml": 3,
+        "reason": "A\u00b7cos(2\u03c0t/T)\u00b7exp(-t/\u03c4): EML-3 (oscillation \u00d7 EML-1 decay = EML-3)"
+      },
+      {
+        "t_years": 1.0,
+        "SST_anomaly_K": 0.0,
+        "eml": 3,
+        "reason": "A\u00b7cos(2\u03c0t/T)\u00b7exp(-t/\u03c4): EML-3 (oscillation \u00d7 EML-1 decay = EML-3)"
+      },
+      {
+        "t_years": 2.0,
+        "SST_anomaly_K": -1.0748,
+        "eml": 3,
+        "reason": "A\u00b7cos(2\u03c0t/T)\u00b7exp(-t/\u03c4): EML-3 (oscillation \u00d7 EML-1 decay = EML-3)"
+      },
+      {
+        "t_years": 4.0,
+        "SST_anomaly_K": 0.7701,
+        "eml": 3,
+        "reason": "A\u00b7cos(2\u03c0t/T)\u00b7exp(-t/\u03c4): EML-3 (oscillation \u00d7 EML-1 decay = EML-3)"
+      },
+      {
+        "t_years": 8.0,
+        "SST_anomaly_K": 0.3954,
+        "eml": 3,
+        "reason": "A\u00b7cos(2\u03c0t/T)\u00b7exp(-t/\u03c4): EML-3 (oscillation \u00d7 EML-1 decay = EML-3)"
+      }
+    ],
+    "amoc_tipping": [
+      {
+        "freshwater_Sv": 0.1,
+        "threshold_Sv": 0.3,
+        "AMOC_state": "on",
+        "eml": 2,
+        "reason": "AMOC operational: EML-2 linear response regime"
+      },
+      {
+        "freshwater_Sv": 0.25,
+        "threshold_Sv": 0.3,
+        "AMOC_state": "on",
+        "eml": 2,
+        "reason": "AMOC operational: EML-2 linear response regime"
+      },
+      {
+        "freshwater_Sv": 0.3,
+        "threshold_Sv": 0.3,
+        "AMOC_state": "critical",
+        "eml": "\u221e",
+        "reason": "AMOC near tipping point: EML-\u221e (saddle-node bifurcation)"
+      },
+      {
+        "freshwater_Sv": 0.4,
+        "threshold_Sv": 0.3,
+        "AMOC_state": "off",
+        "eml": "\u221e",
+        "reason": "AMOC collapsed: EML-\u221e transition (hysteresis, irreversible)"
+      },
+      {
+        "freshwater_Sv": 0.6,
+        "threshold_Sv": 0.3,
+        "AMOC_state": "off",
+        "eml": "\u221e",
+        "reason": "AMOC collapsed: EML-\u221e transition (hysteresis, irreversible)"
+      }
+    ],
+    "eml_THC_turnover": 0,
+    "eml_AMOC_linear": 2,
+    "eml_ENSO": 3,
+    "eml_AMOC_tipping": Infinity
+  },
+  "feedbacks": {
+    "clausius_clapeyron": [
+      {
+        "T_K": 263,
+        "T_C": -10.1,
+        "e_s_Pa": 0.0,
+        "eml": 1,
+        "reason": "e_s = e\u2080\u00b7exp(-L_v/R_vT): EML-1 (Boltzmann-like exponential in 1/T)"
+      },
+      {
+        "T_K": 273,
+        "T_C": -0.1,
+        "e_s_Pa": 0.0,
+        "eml": 1,
+        "reason": "e_s = e\u2080\u00b7exp(-L_v/R_vT): EML-1 (Boltzmann-like exponential in 1/T)"
+      },
+      {
+        "T_K": 283,
+        "T_C": 9.9,
+        "e_s_Pa": 0.0,
+        "eml": 1,
+        "reason": "e_s = e\u2080\u00b7exp(-L_v/R_vT): EML-1 (Boltzmann-like exponential in 1/T)"
+      },
+      {
+        "T_K": 293,
+        "T_C": 19.9,
+        "e_s_Pa": 0.0,
+        "eml": 1,
+        "reason": "e_s = e\u2080\u00b7exp(-L_v/R_vT): EML-1 (Boltzmann-like exponential in 1/T)"
+      },
+      {
+        "T_K": 303,
+        "T_C": 29.9,
+        "e_s_Pa": 0.0,
+        "eml": 1,
+        "reason": "e_s = e\u2080\u00b7exp(-L_v/R_vT): EML-1 (Boltzmann-like exponential in 1/T)"
+      }
+    ],
+    "planck_feedback": [
+      {
+        "T_K": 255,
+        "lambda_P": -3.7607,
+        "eml": 2,
+        "reason": "\u03bb_P = -4\u03c3T\u00b3: EML-2 (T\u00b3 = power law)"
+      },
+      {
+        "T_K": 273,
+        "lambda_P": -4.6146,
+        "eml": 2,
+        "reason": "\u03bb_P = -4\u03c3T\u00b3: EML-2 (T\u00b3 = power law)"
+      },
+      {
+        "T_K": 288,
+        "lambda_P": -5.4178,
+        "eml": 2,
+        "reason": "\u03bb_P = -4\u03c3T\u00b3: EML-2 (T\u00b3 = power law)"
+      }
+    ],
+    "feedback_table": [
+      {
+        "name": "Planck",
+        "lambda_Wm2K": -3.2,
+        "eml": 2,
+        "reason": "-4\u03c3T\u00b3: EML-2"
+      },
+      {
+        "name": "Water vapor",
+        "lambda_Wm2K": 1.8,
+        "eml": 1,
+        "reason": "e^{-L/RT}: EML-1 Clausius-Clapeyron"
+      },
+      {
+        "name": "Lapse rate",
+        "lambda_Wm2K": -0.5,
+        "eml": 2,
+        "reason": "Temperature profile change: EML-2"
+      },
+      {
+        "name": "Ice-albedo",
+        "lambda_Wm2K": 0.35,
+        "eml": 2,
+        "reason": "d\u03b1/dT: linear near ice edge = EML-2"
+      },
+      {
+        "name": "Cloud (net)",
+        "lambda_Wm2K": 0.4,
+        "eml": Infinity,
+        "reason": "Cloud feedbacks: largest uncertainty, nonlinear = EML-\u221e"
+      }
+    ],
+    "ecs": {
+      "F_2xCO2": 3.7,
+      "lambda_total_no_cloud": -1.55,
+      "ECS_K": 2.39,
+      "eml_ECS": 2,
+      "note": "Cloud feedbacks excluded (EML-\u221e uncertainty); best estimate ECS ~ 2.5-4.0 K"
+    },
+    "tipping_elements": [
+      {
+        "name": "WAIS (West Antarctic Ice Sheet)",
+        "eml": Infinity,
+        "reason": "Marine ice sheet instability = EML-\u221e tipping point"
+      },
+      {
+        "name": "Amazon dieback",
+        "eml": Infinity,
+        "reason": "Vegetation-rainfall feedback collapse = EML-\u221e"
+      },
+      {
+        "name": "Permafrost thaw",
+        "eml": Infinity,
+        "reason": "Carbon release feedback: threshold crossing = EML-\u221e"
+      }
+    ]
+  },
+  "eml_depth_summary": {
+    "EML-0": "Climate sensitivity \u03bb; ocean turnover time ~1000 yr; discrete tipping element list",
+    "EML-1": "Water vapor (Clausius-Clapeyron e^{-L/RT}); AMOC exponential relaxation to equilibrium",
+    "EML-2": "T_eq (rational power of constants); CO\u2082 forcing ln(C/C\u2080); Stefan-Boltzmann T\u2074; Planck feedback T\u00b3; ECS estimate",
+    "EML-3": "ENSO quasi-oscillation; Milankovitch orbital cycles (quasi-periodic); atmospheric Rossby waves",
+    "EML-\u221e": "AMOC collapse tipping; ice sheet marine instability; permafrost carbon feedback; cloud feedbacks"
+  },
+  "rabbit_hole_log": [
+    "CO\u2082 forcing is logarithmic (EML-2) because of spectral saturation: the central absorption bands of CO\u2082 are already opaque. Each doubling of CO\u2082 adds the same radiative forcing. The EML-2 structure of forcing is the physical reason why climate sensitivity is defined per CO\u2082 doubling, not per ppm increment.",
+    "Clausius-Clapeyron is EML-1: water vapor pressure e_s(T) = e\u2080\u00b7exp(-L_v/R_vT). This is the Boltzmann factor of evaporation. Water vapor feedback amplifies Planck (EML-2) feedback by the ratio of EML-1 sensitivity to temperature, making it the dominant positive feedback in the climate system.",
+    "Tipping elements are EML-\u221e precisely because they are saddle-node bifurcations: the system approaches a fold in phase space where the Jacobian eigenvalue crosses zero. At this fold, the normal form is x' = \u03bc - x\u00b2, exactly the EML-\u221e structure of the Ising transition and NS blowup.",
+    "Milankovitch cycles (EML-3) force EML-\u221e ice ages: quasi-periodic orbital forcing (EML-3: 41 kyr obliquity, 100 kyr eccentricity, 23 kyr precession) drives the system across EML-\u221e tipping thresholds. The climate is an EML-3 \u2192 EML-\u221e cascade system."
+  ],
+  "connections": {
+    "to_session_57": "Phase transitions = EML-\u221e. Climate tipping points = planetary EML-\u221e phase transitions.",
+    "to_session_76": "NS equations (EML-\u221e turbulence) govern ocean and atmospheric dynamics. Same EML class."
+  }
+}
