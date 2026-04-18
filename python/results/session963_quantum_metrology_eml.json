@@ -1,0 +1,37 @@
+{
+  "session": 963,
+  "title": "Quantum Metrology and Precision Measurement",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "QuantumMetrologyEML",
+    "analysis": {
+      "object": "T684: Quantum Metrology and Precision Measurement depth analysis",
+      "domains": {
+        "standard_quantum_limit": {
+          "description": "SQL: 1/sqrt(N) precision; EML-2 classical measurement limit",
+          "depth": "EML-2",
+          "reason": "SQL is EML-2: classical measurement precision scales as EML-2 with N independent probes"
+        },
+        "heisenberg_limit": {
+          "description": "Heisenberg limit: 1/N precision; EML-3 entangled measurement exceeds EML-2 SQL",
+          "depth": "EML-3",
+          "reason": "Heisenberg limit is EML-3: entangled probes exploit EML-3 quantum correlations for super-precision"
+        },
+        "quantum_advantage_metrology": {
+          "description": "Quantum metrology: EML-3 entanglement enables EML-2 super-precision; depth difference = advantage",
+          "depth": "EML-3",
+          "reason": "Metrology theorem: EML-3 input enables EML-2 output beyond classical EML-2 limit; depth > measurement"
+        }
+      }
+    },
+    "distribution": {
+      "EML-2": 1,
+      "EML-3": 2
+    },
+    "theorem": "T684: Quantum Metrology and Precision Measurement (S963)."
+  },
+  "key_theorem": "T684: Quantum Metrology and Precision Measurement (S963).",
+  "rabbit_hole_log": [
+    "T684: standard_quantum_limit depth confirmed"
+  ]
+}
