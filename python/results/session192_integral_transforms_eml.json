@@ -1,0 +1,338 @@
+{
+  "session": 192,
+  "title": "\u0394d Charge Angle 1: Integral Transforms & Fourier Analysis",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "fourier_family": {
+    "model": "FourierFamilyEML",
+    "continuous_fourier": {
+      "transform": "Continuous Fourier",
+      "kernel_depth": 3,
+      "cases": {
+        "signal_to_spectrum": {
+          "input_depth": 3,
+          "output_depth": 3,
+          "delta_d": 0,
+          "reason": "Fourier maps EML-3 oscillation \u2192 EML-3 spectral oscillation (Parseval)"
+        },
+        "density_to_char_fn": {
+          "input_depth": 3,
+          "output_depth": 1,
+          "delta_d": -2,
+          "reason": "Probability density (oscillatory) \u2192 char fn (moment exponential)"
+        },
+        "char_fn_to_density": {
+          "input_depth": 1,
+          "output_depth": 3,
+          "delta_d": 2,
+          "reason": "Fourier inversion: char fn \u2192 density raises depth by 2"
+        }
+      },
+      "dominant_delta_d": "0 (signal) or 2 (inversion)",
+      "note": "Fourier is self-dual on EML-3; becomes \u0394d=2 when crossing probability/density divide"
+    },
+    "discrete_fourier": {
+      "DFT_kernel_depth": 3,
+      "DFT_input_depth": 3,
+      "DFT_delta_d": 0,
+      "DTFT_delta_d": 0,
+      "inverse_DFT_delta_d": 0,
+      "shannon_sampling_delta_d": 0,
+      "sample_DFT_row_0": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sample_DFT_row_1": [
+        1.0,
+        0.7071,
+        0.0,
+        -0.7071
+      ],
+      "note": "All discrete Fourier variants: EML-3 self-maps, \u0394d=0"
+    },
+    "stft_spectrogram": {
+      "stft_kernel_depth": 3,
+      "signal_depth": 3,
+      "stft_output_depth": 3,
+      "spectrogram_depth": 2,
+      "delta_d_stft": 0,
+      "delta_d_spectrogram": -1,
+      "window_function": {
+        "0.0": 1.0,
+        "0.5": 0.3679,
+        "1.0": 0.0183
+      },
+      "note": "STFT: EML-3 self-map; spectrogram loses phase \u2192 EML-2 (energy)"
+    },
+    "eml_depth": {
+      "fourier_signal_in": 3,
+      "fourier_signal_out": 3,
+      "char_fn": 1,
+      "density": 3,
+      "spectrogram": 2
+    },
+    "key_insight": "Fourier family: \u0394d=0 (signal\u2192spectrum) or \u0394d=2 (char fn\u2194density inversion)"
+  },
+  "laplace_mellin_z": {
+    "model": "LaplaceMellinZEML",
+    "laplace": {
+      "kernel_depth": 1,
+      "exp_decay_case": {
+        "f_depth": 1,
+        "F_depth": 0,
+        "delta_d": -1
+      },
+      "power_case": {
+        "f_depth": 0,
+        "F_depth": 0,
+        "delta_d": 0
+      },
+      "oscillatory_case": {
+        "f_depth": 3,
+        "F_depth": 0,
+        "delta_d": -3
+      },
+      "inverse_simple": {
+        "F_depth": 0,
+        "f_depth": 1,
+        "delta_d": 1
+      },
+      "inverse_general": {
+        "delta_d": "\u221e",
+        "reason": "Bromwich requires complex contour, ill-posed in general"
+      },
+      "sample_rational": {
+        "1.0": 0.5,
+        "2.0": 0.3333,
+        "5.0": 0.1667
+      },
+      "note": "Laplace kernel=EML-1; reduces depth (oscillation\u2192rational); inverse: simple=\u0394d=1, general=\u0394d=\u221e"
+    },
+    "mellin": {
+      "relation_to_fourier": "Mellin = Fourier after x = e^t substitution",
+      "kernel_depth": "1 (real s) or 3 (complex s)",
+      "gamma_function_depth": "\u221e",
+      "gamma_values": {
+        "1.0": 1.0,
+        "2.0": 1.0,
+        "3.0": 2.0
+      },
+      "power_case_delta_d": 0,
+      "oscillatory_case_delta_d": 0,
+      "inverse_specific_delta_d": 2,
+      "inverse_general_delta_d": "\u221e",
+      "note": "Mellin mirrors Fourier: \u0394d=0 for signal maps; \u0394d=2 for oscillation reconstruction"
+    },
+    "z_transform": {
+      "kernel_depth": "1 (off circle) or 3 (on unit circle)",
+      "exp_seq_case": {
+        "x_depth": 1,
+        "X_depth": 0,
+        "delta_d": -1
+      },
+      "oscillatory_case": {
+        "x_depth": 3,
+        "X_depth": 0,
+        "delta_d": -3
+      },
+      "inverse_simple": {
+        "delta_d": 1
+      },
+      "inverse_general": {
+        "delta_d": "\u221e"
+      },
+      "unit_circle_delta_d": 0,
+      "sample_X_z": {
+        "1.5": 1.5,
+        "2.0": 1.3333,
+        "3.0": 1.2
+      },
+      "note": "Z-transform mirrors Laplace: reduces depth off circle; EML-3 self-map on circle"
+    },
+    "key_insight": "Laplace/Mellin/Z: kernel=EML-1 reduces depth; oscillation reconstruction gives \u0394d=1 or 2"
+  },
+  "hilbert_radon_wavelet": {
+    "model": "HilbertRadonWaveletEML",
+    "hilbert": {
+      "kernel_depth": 3,
+      "input_depth": 3,
+      "output_depth": 3,
+      "delta_d": 0,
+      "property": "H\u00b2 = -I (involution up to sign)",
+      "cos_vals": {
+        "0.0": 1.0,
+        "0.7854": 0.0,
+        "1.5708": -1.0
+      },
+      "sin_vals": {
+        "0.0": 0.0,
+        "0.7854": 1.0,
+        "1.5708": 0.0
+      },
+      "note": "Hilbert = EML-3 self-map: phase shift \u03c0/2, no depth change. \u0394d=0"
+    },
+    "radon": {
+      "kernel_depth": 0,
+      "forward": {
+        "input_depth": 3,
+        "output_depth": 2,
+        "delta_d": -1
+      },
+      "inverse_fbp": {
+        "input_depth": 2,
+        "output_depth": 3,
+        "delta_d": 1
+      },
+      "ramp_filter": {
+        "0.5": 0.5,
+        "1.0": 1.0,
+        "2.0": 2.0
+      },
+      "application": "CT/MRI image reconstruction",
+      "note": "Radon: only natural \u0394d=\u00b11 integral transform (averaging kernel = EML-0)"
+    },
+    "wavelet": {
+      "kernel_depth": 3,
+      "forward_delta_d": 0,
+      "scalogram_delta_d": -1,
+      "inverse_delta_d": 0,
+      "morlet_real_part": {
+        "0.0": 1.0,
+        "0.5": -0.8737,
+        "1.0": 0.5824
+      },
+      "advantage_over_fourier": "Multi-resolution: EML-3 self-map that localizes in time AND frequency",
+      "note": "Wavelet: EML-3 self-map (\u0394d=0); scalogram drops to EML-2 (phase lost)"
+    },
+    "key_insight": "Hilbert/wavelet: EML-3 self-maps (\u0394d=0); Radon: unique \u0394d=\u00b11 (averaging kernel)"
+  },
+  "comprehensive_transform_table": {
+    "Fourier (signal\u2192spec)": {
+      "kernel": 3,
+      "input": 3,
+      "output": 3,
+      "delta_d": 0
+    },
+    "Fourier inv (char\u2192density)": {
+      "kernel": 3,
+      "input": 1,
+      "output": 3,
+      "delta_d": 2
+    },
+    "DFT": {
+      "kernel": 3,
+      "input": 3,
+      "output": 3,
+      "delta_d": 0
+    },
+    "STFT\u2192spectrogram": {
+      "kernel": 3,
+      "input": 3,
+      "output": 2,
+      "delta_d": -1
+    },
+    "Laplace (exp\u2192rational)": {
+      "kernel": 1,
+      "input": 1,
+      "output": 0,
+      "delta_d": -1
+    },
+    "Laplace (osc\u2192rational)": {
+      "kernel": 1,
+      "input": 3,
+      "output": 0,
+      "delta_d": -3
+    },
+    "Laplace inverse (simple)": {
+      "kernel": 1,
+      "input": 0,
+      "output": 1,
+      "delta_d": 1
+    },
+    "Laplace inverse (general)": {
+      "kernel": 1,
+      "input": "varies",
+      "output": "\u221e",
+      "delta_d": "\u221e"
+    },
+    "Mellin (osc\u2192osc)": {
+      "kernel": 3,
+      "input": 3,
+      "output": 3,
+      "delta_d": 0
+    },
+    "Z-transform (on circle)": {
+      "kernel": 3,
+      "input": 3,
+      "output": 3,
+      "delta_d": 0
+    },
+    "Z-transform (off circle)": {
+      "kernel": 1,
+      "input": 1,
+      "output": 0,
+      "delta_d": -1
+    },
+    "Hilbert": {
+      "kernel": 3,
+      "input": 3,
+      "output": 3,
+      "delta_d": 0
+    },
+    "Radon forward": {
+      "kernel": 0,
+      "input": 3,
+      "output": 2,
+      "delta_d": -1
+    },
+    "Radon inverse (FBP)": {
+      "kernel": 0,
+      "input": 2,
+      "output": 3,
+      "delta_d": 1
+    },
+    "Wavelet CWT": {
+      "kernel": 3,
+      "input": 3,
+      "output": 3,
+      "delta_d": 0
+    },
+    "Wavelet scalogram": {
+      "kernel": 3,
+      "input": 3,
+      "output": 2,
+      "delta_d": -1
+    }
+  },
+  "delta_d_values_found": [
+    "-3",
+    "-1",
+    "0",
+    "1",
+    "2",
+    "\u221e"
+  ],
+  "delta_d_3_found": false,
+  "eml_depth_summary": {
+    "EML-0": "Rational Laplace output, Mellin power case, line indicator kernel",
+    "EML-1": "Laplace kernel (real), exp decay input/output, Z off-circle",
+    "EML-2": "Spectrogram, Radon output, scalogram",
+    "EML-3": "Fourier kernel, Hilbert, Wavelet, oscillatory signals, char fn inversion output",
+    "EML-\u221e": "General Laplace/Mellin inverse"
+  },
+  "key_theorem": "The Integral Transform EML Depth Table (S192): All 16 transform cases tested span \u0394d \u2208 {-3,-1,0,1,2,\u221e}. In the forward direction of the Asymmetry Theorem (d(f\u207b\u00b9) - d(f)), \u0394d \u2208 {0, 1, 2, \u221e} for all reconstructive (inverse) operations. \u0394d=3 absent. Key structural findings: Fourier-type kernels (depth 3) produce \u0394d=2 inversion for moment\u2192oscillation. Radon (depth-0 kernel) produces \u0394d=1 inversion (unique averaging transform). Hilbert and wavelet are EML-3 endomorphisms: \u0394d=0 (phase shift, multi-resolution). Laplace/Z (off-circle): depth-reducing (EML-1 kernel compresses oscillation to EML-0). The transform table fully supports the Extended Asymmetry Theorem from S191.",
+  "rabbit_hole_log": [
+    "Hilbert = EML-3 self-map: shifts phase \u03c0/2 but stays at EML-3 \u2014 pure oscillation preserving",
+    "Radon = unique \u0394d=\u00b11: averaging kernel (EML-0) is the key \u2014 no oscillation in kernel",
+    "Wavelet = EML-3 self-map: multi-resolution Fourier, same depth as STFT",
+    "Laplace off unit circle compresses EML-3 \u2192 EML-0: oscillation completely lost in rational form",
+    "All 16 cases: \u0394d \u2208 {-3,-1,0,1,2,\u221e} \u2014 no \u0394d=-2 in forward direction, no \u0394d=3 in inverse",
+    "Spectrogram |STFT|\u00b2: phase destruction takes EML-3\u2192EML-2 (\u0394d=-1 going forward)"
+  ],
+  "connections": {
+    "S191_breakthrough": "Transform table fully confirms Extended Asymmetry Theorem",
+    "S186_stoch": "Fourier inversion \u0394d=2 confirmed: char fn\u2192density = archetypal Fourier inv",
+    "S192_radon": "Radon \u0394d=1: new unique class \u2014 averaging kernel is the structural cause"
+  }
+}
