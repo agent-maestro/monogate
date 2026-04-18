@@ -1,0 +1,120 @@
+{
+  "session": 297,
+  "title": "Epidemiology & Pandemic Dynamics",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "EpidemiologyPandemicEML",
+    "sir": {
+      "object": "SIR model: dS/dt=-\u03b2SI/N, dI/dt=\u03b2SI/N-\u03b3I, dR/dt=\u03b3I",
+      "eml_depth": 2,
+      "why": "\u03b2,\u03b3 = rate constants; I(t) ~ exp((\u03b2-\u03b3)t) near exponential growth phase = EML-2",
+      "semiring_test": {
+        "exponential_growth": {
+          "depth": 2,
+          "formula": "I(t) ~ I_0\u00b7exp(r\u00b7t): EML-2"
+        },
+        "logistic_saturation": {
+          "depth": 2,
+          "formula": "I(t) ~ N/(1+exp(-rt)): EML-2"
+        },
+        "tensor_test": {
+          "operation": "GrowthPhase(EML-2) \u2297 DeclinePhase(EML-2) = max(2,2) = 2",
+          "result": "SIR: 2\u22972=2 \u2713"
+        }
+      }
+    },
+    "r0": {
+      "object": "Basic reproduction number R\u2080 = \u03b2/\u03b3 and herd immunity threshold",
+      "eml_depth": "\u221e",
+      "shadow": 2,
+      "semiring_test": {
+        "below_threshold": {
+          "depth": 2,
+          "behavior": "Epidemic fades: I(t)\u21920 exponentially = EML-2"
+        },
+        "at_threshold_R0_1": {
+          "type": "TYPE 2 Horizon (epidemic threshold)",
+          "depth": "\u221e",
+          "shadow": 2,
+          "why": "R\u2080=1: bifurcation = EML-\u221e; shadow=2 (endemic level = EML-2)"
+        },
+        "herd_immunity": {
+          "formula": "p_herd = 1 - 1/R\u2080: EML-2 (algebraic function of R\u2080)",
+          "depth": 2
+        }
+      }
+    },
+    "superspreader": {
+      "object": "Superspreader events (k-overdispersion)",
+      "eml_depth": 3,
+      "why": "Negative binomial with overdispersion k: P(X=n) involves complex moments = EML-3",
+      "semiring_test": {
+        "negative_binomial": {
+          "formula": "P(X=n) = \u0393(n+k)/(n!\u0393(k)) \u00b7 (k/(k+R\u2080))^k \u00b7 (R\u2080/(k+R\u2080))^n",
+          "depth": 3,
+          "why": "Gamma function = complex analytic = EML-3"
+        },
+        "superspreader_tensor_sir": {
+          "operation": "Superspreader(EML-3) \u2297 SIR(EML-2)",
+          "prediction": "Different types: EML-\u221e",
+          "result": "Overdispersed epidemic: EML-3\u2297EML-2=\u221e (cross-type: explains unpredictability)"
+        }
+      }
+    },
+    "vaccination": {
+      "object": "Vaccination dynamics and waning immunity",
+      "eml_depth": 2,
+      "semiring_test": {
+        "waning_immunity": {
+          "formula": "VE(t) = VE_0\u00b7exp(-t/\u03c4_wane): EML-2",
+          "depth": 2
+        },
+        "herd_immunity_with_vax": {
+          "formula": "p_vax = 1 - 1/(R\u2080\u00b7VE): EML-2",
+          "depth": 2
+        },
+        "tensor_test": {
+          "operation": "VaccineEfficacy(EML-2) \u2297 WaningImmunity(EML-2) = max(2,2) = 2",
+          "result": "Vaccination dynamics: 2\u22972=2 \u2713"
+        }
+      }
+    },
+    "tipping": {
+      "object": "Pandemic tipping points (variant emergence, lockdown release)",
+      "eml_depth": "\u221e",
+      "shadow": 2,
+      "semiring_test": {
+        "variant_emergence": {
+          "depth": "\u221e",
+          "type": "TYPE 2 Horizon (escape variant = sudden fitness jump)",
+          "shadow": 2
+        },
+        "lockdown_release": {
+          "depth": "\u221e",
+          "type": "TYPE 2 Horizon (release = R\u2080 crosses 1)",
+          "shadow": 2
+        },
+        "wave_structure": {
+          "formula": "Wave n: I_n(t) ~ exp(r_n\u00b7t): each wave EML-2",
+          "depth": 2,
+          "why": "Each wave = EML-2; transition between waves = TYPE 2 Horizon"
+        }
+      }
+    },
+    "semiring_verdicts": {
+      "SIR_dynamics": "2\u22972=2 \u2713 (exponential growth+decay = EML-2)",
+      "R0_threshold": "TYPE 2 Horizon; shadow=2 (bifurcation at R\u2080=1)",
+      "superspreader": "EML-3 (Gamma function); superspreader\u2297SIR=\u221e (cross-type)",
+      "vaccination": "2\u22972=2 \u2713",
+      "new_finding": "Superspreader overdispersion = EML-3 (Gamma function): explains why pandemic prediction is hard \u2014 cross-type product with deterministic SIR"
+    }
+  },
+  "key_theorem": "Epidemic Semiring Theorem (S297): SIR/SEIR = EML-2 closed (exponential growth/decay). R\u2080=1 threshold = TYPE 2 Horizon, shadow=2. NEW FINDING: Superspreader events = EML-3 (negative binomial via Gamma function). Superspreader(EML-3) \u2297 SIR(EML-2) = EML-\u221e: EXPLAINS PANDEMIC UNPREDICTABILITY. The cross-type product of stochastic overdispersion (EML-3) and deterministic transmission (EML-2) makes precise pandemic forecasting fundamentally EML-\u221e. Vaccination waning: EML-2. Pandemic waves: each wave EML-2; transitions = TYPE 2 Horizons. EPIDEMIC DEPTH LADDER: SIR(EML-2) \u2192 R\u2080=1(TYPE2) \u2192 Superspreader(EML-3) \u2192 Full pandemic(EML-\u221e).",
+  "rabbit_hole_log": [
+    "SIR: EML-2 closed (exponential growth, logistic saturation)",
+    "R\u2080=1: TYPE 2 Horizon; shadow=2 (endemic level real-valued)",
+    "NEW: superspreader = EML-3 (Gamma function in negative binomial)",
+    "Superspreader(EML-3)\u2297SIR(EML-2) = \u221e: pandemic unpredictability = cross-type",
+    "Each wave: EML-2; wave transitions: TYPE 2 Horizons"
+  ]
+}
