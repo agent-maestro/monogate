@@ -1,0 +1,355 @@
+{
+  "session": 116,
+  "title": "Optics, Diffraction & Quantum Coherence: EML of Light",
+  "key_theorem": {
+    "theorem": "EML Optics Depth Theorem",
+    "statement": "Wave amplitude exp(ikr) is EML-1 per ray. Interference patterns (sinc\u00b2, cos\u00b2) are EML-3 (oscillatory). Fraunhofer diffraction = FT of aperture = EML-3. Temporal coherence \u03b3(\u03c4)=exp(-|\u03c4|/\u03c4_c) is EML-1. Coherence length \u03bb\u00b2/\u0394\u03bb is EML-2. Spatial coherence = van Cittert-Zernike = EML-3. Laser threshold = EML-\u221e (phase transition). Coherent state photon statistics = EML-1 (Poissonian). Squeezed quadrature variance exp(\u00b12r) = EML-1. Wigner function of coherent state = EML-3 (Gaussian in phase space)."
+  },
+  "diffraction": {
+    "single_slit": [
+      {
+        "theta_deg": 0,
+        "I_over_I0": 1.0,
+        "eml": 3
+      },
+      {
+        "theta_deg": 0.057,
+        "beta": 0.0628,
+        "I_over_I0": 0.998685,
+        "eml": 3,
+        "reason": "I = sinc\u00b2(\u03b2) = (sin \u03b2/\u03b2)\u00b2: EML-3 (oscillatory in angle)"
+      },
+      {
+        "theta_deg": 0.115,
+        "beta": 0.1257,
+        "I_over_I0": 0.994747,
+        "eml": 3,
+        "reason": "I = sinc\u00b2(\u03b2) = (sin \u03b2/\u03b2)\u00b2: EML-3 (oscillatory in angle)"
+      },
+      {
+        "theta_deg": 0.286,
+        "beta": 0.3142,
+        "I_over_I0": 0.967531,
+        "eml": 3,
+        "reason": "I = sinc\u00b2(\u03b2) = (sin \u03b2/\u03b2)\u00b2: EML-3 (oscillatory in angle)"
+      },
+      {
+        "theta_deg": 0.573,
+        "beta": 0.6283,
+        "I_over_I0": 0.875144,
+        "eml": 3,
+        "reason": "I = sinc\u00b2(\u03b2) = (sin \u03b2/\u03b2)\u00b2: EML-3 (oscillatory in angle)"
+      },
+      {
+        "theta_deg": 1.146,
+        "beta": 1.2566,
+        "I_over_I0": 0.572832,
+        "eml": 3,
+        "reason": "I = sinc\u00b2(\u03b2) = (sin \u03b2/\u03b2)\u00b2: EML-3 (oscillatory in angle)"
+      },
+      {
+        "theta_deg": 2.865,
+        "beta": 3.1403,
+        "I_over_I0": 0.0,
+        "eml": 3,
+        "reason": "I = sinc\u00b2(\u03b2) = (sin \u03b2/\u03b2)\u00b2: EML-3 (oscillatory in angle)"
+      }
+    ],
+    "double_slit": [
+      {
+        "theta_deg": 0,
+        "I_over_I0": 1.0,
+        "eml": 3
+      },
+      {
+        "theta_deg": 0.057,
+        "I_over_I0": 0.903319,
+        "eml": 3,
+        "reason": "I = cos\u00b2(\u03b4/2)\u00b7sinc\u00b2(\u03b2): EML-3 (product of oscillatory functions)"
+      },
+      {
+        "theta_deg": 0.115,
+        "I_over_I0": 0.651071,
+        "eml": 3,
+        "reason": "I = cos\u00b2(\u03b4/2)\u00b7sinc\u00b2(\u03b2): EML-3 (product of oscillatory functions)"
+      },
+      {
+        "theta_deg": 0.286,
+        "I_over_I0": 0.0,
+        "eml": 3,
+        "reason": "I = cos\u00b2(\u03b4/2)\u00b7sinc\u00b2(\u03b2): EML-3 (product of oscillatory functions)"
+      },
+      {
+        "theta_deg": 0.573,
+        "I_over_I0": 0.875144,
+        "eml": 3,
+        "reason": "I = cos\u00b2(\u03b4/2)\u00b7sinc\u00b2(\u03b2): EML-3 (product of oscillatory functions)"
+      },
+      {
+        "theta_deg": 1.146,
+        "I_over_I0": 0.572832,
+        "eml": 3,
+        "reason": "I = cos\u00b2(\u03b4/2)\u00b7sinc\u00b2(\u03b2): EML-3 (product of oscillatory functions)"
+      },
+      {
+        "theta_deg": 2.865,
+        "I_over_I0": 0.0,
+        "eml": 3,
+        "reason": "I = cos\u00b2(\u03b4/2)\u00b7sinc\u00b2(\u03b2): EML-3 (product of oscillatory functions)"
+      }
+    ],
+    "aperture_types": [
+      {
+        "aperture_type": "slit",
+        "field_pattern": "sinc(u) = sin(\u03c0u)/\u03c0u",
+        "eml": 3,
+        "reason": "All Fraunhofer patterns = FT of aperture = EML-3 (oscillatory integral)"
+      },
+      {
+        "aperture_type": "circle",
+        "field_pattern": "2J\u2081(v)/v (Airy disk)",
+        "eml": 3,
+        "reason": "All Fraunhofer patterns = FT of aperture = EML-3 (oscillatory integral)"
+      },
+      {
+        "aperture_type": "rectangular",
+        "field_pattern": "sinc(u)\u00b7sinc(v)",
+        "eml": 3,
+        "reason": "All Fraunhofer patterns = FT of aperture = EML-3 (oscillatory integral)"
+      },
+      {
+        "aperture_type": "grating",
+        "field_pattern": "\u03a3 exp(inkd\u00b7sin\u03b8) = sin(N\u03b4/2)/sin(\u03b4/2)",
+        "eml": 3,
+        "reason": "All Fraunhofer patterns = FT of aperture = EML-3 (oscillatory integral)"
+      }
+    ],
+    "eml_amplitude": 1,
+    "eml_intensity": 3,
+    "huygens_fresnel_eml": 3
+  },
+  "coherence_lasers": {
+    "temporal_coherence": [
+      {
+        "tau_s": 0.0,
+        "tau_c_s": 1e-12,
+        "gamma": 1.0,
+        "eml": 1,
+        "reason": "\u03b3(\u03c4) = exp(-|\u03c4|/\u03c4_c): EML-1 (exponential coherence decay = ground state of dephasing)"
+      },
+      {
+        "tau_s": 1e-13,
+        "tau_c_s": 1e-12,
+        "gamma": 0.904837,
+        "eml": 1,
+        "reason": "\u03b3(\u03c4) = exp(-|\u03c4|/\u03c4_c): EML-1 (exponential coherence decay = ground state of dephasing)"
+      },
+      {
+        "tau_s": 2e-13,
+        "tau_c_s": 1e-12,
+        "gamma": 0.818731,
+        "eml": 1,
+        "reason": "\u03b3(\u03c4) = exp(-|\u03c4|/\u03c4_c): EML-1 (exponential coherence decay = ground state of dephasing)"
+      },
+      {
+        "tau_s": 3.0000000000000003e-13,
+        "tau_c_s": 1e-12,
+        "gamma": 0.740818,
+        "eml": 1,
+        "reason": "\u03b3(\u03c4) = exp(-|\u03c4|/\u03c4_c): EML-1 (exponential coherence decay = ground state of dephasing)"
+      },
+      {
+        "tau_s": 4e-13,
+        "tau_c_s": 1e-12,
+        "gamma": 0.67032,
+        "eml": 1,
+        "reason": "\u03b3(\u03c4) = exp(-|\u03c4|/\u03c4_c): EML-1 (exponential coherence decay = ground state of dephasing)"
+      }
+    ],
+    "coherence_lengths": [
+      {
+        "lambda_nm": 633.0,
+        "delta_lambda_nm": 0.001,
+        "l_c_mm": 400.689,
+        "eml": 2,
+        "reason": "l_c = \u03bb\u00b2/\u0394\u03bb: EML-2 (ratio of squared wavelength to bandwidth = power law ratio)"
+      },
+      {
+        "lambda_nm": 1550.0,
+        "delta_lambda_nm": 0.01,
+        "l_c_mm": 240.25,
+        "eml": 2,
+        "reason": "l_c = \u03bb\u00b2/\u0394\u03bb: EML-2 (ratio of squared wavelength to bandwidth = power law ratio)"
+      },
+      {
+        "lambda_nm": 589.0,
+        "delta_lambda_nm": 1.0,
+        "l_c_mm": 0.3469,
+        "eml": 2,
+        "reason": "l_c = \u03bb\u00b2/\u0394\u03bb: EML-2 (ratio of squared wavelength to bandwidth = power law ratio)"
+      }
+    ],
+    "photon_statistics": [
+      {
+        "n_mean": 5,
+        "above_threshold": false,
+        "dist_type": "Bose-Einstein (thermal)",
+        "P_0": 0.166667,
+        "eml": 1,
+        "reason": "Thermal P(n) = \u27e8n\u27e9^n/(1+\u27e8n\u27e9)^{n+1}: EML-1 (geometric distribution = EML-1)"
+      },
+      {
+        "n_mean": 5,
+        "above_threshold": true,
+        "dist_type": "Poissonian (coherent state)",
+        "P_0": 0.006738,
+        "eml": 1,
+        "reason": "Poissonian P(n) = exp(-\u27e8n\u27e9)\u00b7\u27e8n\u27e9^n/n!: EML-1 (same structure as exp(-\u03bb)\u03bb^n/n!)"
+      }
+    ],
+    "laser_threshold": {
+      "below_threshold": {
+        "eml": 1,
+        "state": "thermal (chaotic) light",
+        "Mandel_Q": "\u22650"
+      },
+      "at_threshold": {
+        "eml": Infinity,
+        "state": "critical \u2014 photon number diverges",
+        "Mandel_Q": "\u2192\u221e",
+        "reason": "Threshold = EML-\u221e phase transition (laser = new ordered phase)"
+      },
+      "above_threshold": {
+        "eml": 1,
+        "state": "coherent state |\u03b1\u27e9",
+        "Mandel_Q": "0"
+      },
+      "summary": "Laser threshold: EML-\u221e transition birthing EML-1 coherent state \u2014 identical to all other ground-state transitions"
+    },
+    "eml_coherence_time": 0,
+    "eml_coherence_length": 2,
+    "eml_coherence_function": 1,
+    "eml_spatial_coherence": 3,
+    "eml_laser_below": 1,
+    "eml_laser_above": 1,
+    "eml_laser_threshold": Infinity
+  },
+  "quantum_optics": {
+    "coherent_states": [
+      {
+        "alpha": 1.0,
+        "n_mean": 1.0,
+        "P_n": [
+          0.367879,
+          0.367879,
+          0.18394,
+          0.061313,
+          0.015328,
+          0.003066,
+          0.000511,
+          7.3e-05,
+          9e-06,
+          1e-06
+        ],
+        "eml": 1,
+        "reason": "|\u03b1\u27e9: P(n) = Poissonian = EML-1. State amplitude: exp(-|\u03b1|\u00b2/2) = EML-1"
+      },
+      {
+        "alpha": 2.0,
+        "n_mean": 4.0,
+        "P_n": [
+          0.018316,
+          0.073263,
+          0.146525,
+          0.195367,
+          0.195367,
+          0.156293,
+          0.104196,
+          0.05954,
+          0.02977,
+          0.013231
+        ],
+        "eml": 1,
+        "reason": "|\u03b1\u27e9: P(n) = Poissonian = EML-1. State amplitude: exp(-|\u03b1|\u00b2/2) = EML-1"
+      },
+      {
+        "alpha": 3.0,
+        "n_mean": 9.0,
+        "P_n": [
+          0.000123,
+          0.001111,
+          0.004998,
+          0.014994,
+          0.033737,
+          0.060727,
+          0.09109,
+          0.117116,
+          0.131756,
+          0.131756
+        ],
+        "eml": 1,
+        "reason": "|\u03b1\u27e9: P(n) = Poissonian = EML-1. State amplitude: exp(-|\u03b1|\u00b2/2) = EML-1"
+      }
+    ],
+    "squeezing": [
+      {
+        "squeezing_r": 0.0,
+        "Delta_X1_sq": 0.25,
+        "Delta_X2_sq": 0.25,
+        "product_DX1_DX2_sq": 0.0625,
+        "heisenberg_min": 0.0625,
+        "eml": 1,
+        "reason": "Squeezed quadrature variance exp(\u00b12r): EML-1 (exponential squeezing = EML-1)"
+      },
+      {
+        "squeezing_r": 0.5,
+        "Delta_X1_sq": 0.09197,
+        "Delta_X2_sq": 0.67957,
+        "product_DX1_DX2_sq": 0.0625,
+        "heisenberg_min": 0.0625,
+        "eml": 1,
+        "reason": "Squeezed quadrature variance exp(\u00b12r): EML-1 (exponential squeezing = EML-1)"
+      },
+      {
+        "squeezing_r": 1.0,
+        "Delta_X1_sq": 0.033834,
+        "Delta_X2_sq": 1.847264,
+        "product_DX1_DX2_sq": 0.0625,
+        "heisenberg_min": 0.0625,
+        "eml": 1,
+        "reason": "Squeezed quadrature variance exp(\u00b12r): EML-1 (exponential squeezing = EML-1)"
+      },
+      {
+        "squeezing_r": 2.0,
+        "Delta_X1_sq": 0.004579,
+        "Delta_X2_sq": 13.649538,
+        "product_DX1_DX2_sq": 0.0625,
+        "heisenberg_min": 0.0625,
+        "eml": 1,
+        "reason": "Squeezed quadrature variance exp(\u00b12r): EML-1 (exponential squeezing = EML-1)"
+      }
+    ],
+    "eml_fock_state": 0,
+    "eml_coherent_state": 1,
+    "eml_wigner_coherent": 3,
+    "eml_squeezed": 1,
+    "heisenberg_limit_eml": 2
+  },
+  "eml_depth_summary": {
+    "EML-0": "Photon number n (Fock state); coherence time \u03c4_c = 1/\u0394\u03bd; aperture function (0 or 1)",
+    "EML-1": "Wave amplitude exp(ikr); temporal coherence exp(-|\u03c4|/\u03c4_c); coherent state; squeezed variance exp(\u00b12r)",
+    "EML-2": "Coherence length \u03bb\u00b2/\u0394\u03bb; Heisenberg limit 1/\u221aN; linewidth \u0394\u03bd ~ 1/\u03c4_c",
+    "EML-3": "All diffraction patterns (sinc\u00b2, Airy, grating); spatial coherence FT; Wigner function",
+    "EML-\u221e": "Laser threshold (critical fluctuations); photon number divergence at threshold"
+  },
+  "rabbit_hole_log": [
+    "The laser is a perfect EML-\u221e\u2192EML-1 transition: below threshold, light is thermal (EML-1 Bose-Einstein). At threshold, photon number fluctuations diverge (EML-\u221e). Above threshold, a coherent state emerges (EML-1). This is the optical analog of every other EML-\u221e\u2192EML-1 transition: Ising T_c\u2192ferromagnet, epidemic R\u2080=1\u2192endemic, de Sitter inflation onset.",
+    "All optics is EML-3 because light is waves: every diffraction pattern \u2014 single slit sinc\u00b2, double slit cosine modulation, circular aperture Airy disk, grating comb \u2014 is EML-3. The Fourier transform of any aperture function is EML-3 because it is an oscillatory integral (EML-3 by definition). Wave optics and EML-3 are coextensive.",
+    "Squeezed light is EML-1 below the vacuum: the squeezing parameter r controls quadrature variances as exp(\u00b12r). This is EML-1 squeezing of the EML-3 Wigner function. You can squeeze the uncertainty below the vacuum level (\u0394X < 1/2) by concentrating the EML-3 uncertainty into the conjugate quadrature. Quantum control is EML-1 modulation of EML-3 quantum states.",
+    "Coherence time is EML-0 (\u03c4_c = 1/\u0394\u03bd) but coherence length is EML-2 (l_c = \u03bb\u00b2/\u0394\u03bb): this is the EML-0\u2192EML-2 gap from spatial to temporal. Adding propagation (multiplying by c) introduces a wavelength-squared structure that costs one EML level. Distance is EML-2 relative to frequency because distance involves the geometry of the wave (EML-3 cycle length)."
+  ],
+  "connections": {
+    "to_session_57": "Laser threshold = EML-\u221e phase transition. Same universality as Ising, epidemic, de Sitter.",
+    "to_session_61": "QHO Wigner function = EML-3 Gaussian. Coherent state Wigner = EML-3. Optics = QM in phase space."
+  }
+}
