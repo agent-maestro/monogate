@@ -1,0 +1,155 @@
+{
+  "session": 262,
+  "title": "Stochastic Processes & Path Integrals Shadow Analysis",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "stochastic_shadow": {
+    "model": "StochasticShadowEML",
+    "brownian": {
+      "object": "Brownian motion sample paths",
+      "eml_depth": "\u221e",
+      "shadow_depth": 2,
+      "shadow_objects": {
+        "ito_formula": {
+          "description": "It\u00f4 formula: df(B_t) = f'(B_t)dB_t + \u00bdf''(B_t)dt",
+          "depth": 2,
+          "why": "Quadratic variation [B,B]_t = t: exp(log t) correction = EML-2"
+        },
+        "heat_kernel": {
+          "description": "p(t,x,y) = (4\u03c0t)^{-d/2} exp(-|x-y|\u00b2/4t): transition density",
+          "depth": 2,
+          "why": "exp(-|x|\u00b2/4t)/\u221at: Gaussian with log-normalization = EML-2"
+        },
+        "quadratic_variation": {
+          "description": "E[|B_t - B_s|\u00b2] = |t-s|: second moment = power law",
+          "depth": 2,
+          "why": "Power-law structure: EML-2"
+        }
+      },
+      "note": "Brownian paths are EML-\u221e (not differentiable, infinite variation) but shadow=EML-2"
+    },
+    "feynman_kac": {
+      "object": "Feynman-Kac formula / path integral",
+      "eml_depth": "\u221e",
+      "shadow_depth": 2,
+      "shadow_objects": {
+        "feynman_kac": {
+          "description": "u(t,x) = E_x[exp(-\u222b\u2080\u1d57 V(B_s)ds) f(B_t)]: path integral",
+          "depth": 2,
+          "why": "exp(-\u222bV\u00b7ds): exponential of integral = EML-2 (paired exp+log structure)"
+        },
+        "partition_function": {
+          "description": "Z = E[exp(-\u03b2H)]: canonical partition function over Brownian bridges",
+          "depth": 2,
+          "why": "E[exp(\u00b7)]: log-partition function F = -log Z = EML-2"
+        }
+      },
+      "note": "Path integral is EML-\u221e (infinite-dimensional measure) but shadow=EML-2"
+    },
+    "levy": {
+      "object": "L\u00e9vy processes (stable processes, jump processes)",
+      "eml_depth": "\u221e",
+      "shadow_depth": 3,
+      "shadow_objects": {
+        "characteristic_function": {
+          "description": "E[exp(iuX_t)] = exp(t\u00b7\u03c8(u)): L\u00e9vy-Khintchine formula",
+          "depth": 3,
+          "why": "exp(iuX_t): complex exponential in characteristic function = EML-3"
+        },
+        "levy_exponent": {
+          "description": "\u03c8(u) = ibu - \u03c3\u00b2u\u00b2/2 + \u222b(e^{iux}-1-iux\u00b71_{|x|<1})\u03bd(dx)",
+          "depth": 3,
+          "why": "e^{iux} in the jump part: irreducible complex exponential = EML-3"
+        }
+      },
+      "comparison_with_brownian": {
+        "brownian": "shadow=EML-2: no complex phase in characteristic function (E[exp(iuB_t)]=exp(-u\u00b2t/2))",
+        "note": "Brownian = real Gaussian \u2192 EML-2; L\u00e9vy = jump measure with complex phases \u2192 EML-3"
+      }
+    },
+    "sle": {
+      "object": "Schramm-Loewner Evolution (SLE_\u03ba)",
+      "eml_depth": "\u221e",
+      "shadow_depth": 3,
+      "shadow_objects": {
+        "loewner_equation": {
+          "description": "\u2202_t g_t(z) = 2/(g_t(z) - W_t): driven by Brownian motion W_t = \u221a\u03ba\u00b7B_t",
+          "depth": 3,
+          "why": "Conformal map g_t is complex-valued; 2/(g-W) = complex exponential structure = EML-3"
+        },
+        "hausdorff_dimension": {
+          "description": "dim(SLE_\u03ba) = 1 + \u03ba/8 for \u03ba \u2264 8: fractal dimension",
+          "depth": 3,
+          "why": "\u03ba parameterizes oscillation amplitude; fractal = EML-3 complexity"
+        }
+      }
+    },
+    "ising_critical": {
+      "object": "2D Ising model at criticality",
+      "eml_depth": "\u221e",
+      "shadow_depth": 3,
+      "shadow_objects": {
+        "correlation_functions": {
+          "description": "\u27e8\u03c3_i \u03c3_j\u27e9 ~ |i-j|^{-1/4}: critical correlations",
+          "depth": 3,
+          "why": "Described by SLE_{3}: complex conformal maps = EML-3"
+        },
+        "free_fermion_spectrum": {
+          "description": "Z = |det(I - K)|: Fredholm determinant at criticality",
+          "depth": 3,
+          "why": "Fredholm det = exp(Tr log(I-K)): involves complex eigenvalues of K = EML-3"
+        }
+      }
+    },
+    "stochastic_pde": {
+      "object": "Stochastic PDEs (KPZ, stochastic heat equation)",
+      "eml_depth": "\u221e",
+      "shadow_depth": 2,
+      "shadow_objects": {
+        "kpz_equation": {
+          "description": "\u2202_t h = \u2202\u00b2_x h + (\u2202_x h)\u00b2/2 + \u03be: KPZ universality class",
+          "depth": 2,
+          "why": "KPZ exponents (1/3, 2/3): power laws = EML-2; no complex phase"
+        },
+        "renormalization": {
+          "description": "h(t,x) ~ t^{1/3} f(x/t^{2/3}): self-similar scaling",
+          "depth": 2,
+          "why": "Self-similar: exp(\u03b1 log t) = EML-2; real-valued scaling = EML-2"
+        }
+      }
+    },
+    "stochastic_shadow_table": {
+      "Brownian_paths": {
+        "shadow": 2,
+        "type": "measurement (It\u00f4/heat kernel)"
+      },
+      "Feynman-Kac": {
+        "shadow": 2,
+        "type": "measurement (log-partition function)"
+      },
+      "L\u00e9vy_processes": {
+        "shadow": 3,
+        "type": "oscillation (e^{iuX} characteristic fn)"
+      },
+      "SLE_\u03ba": {
+        "shadow": 3,
+        "type": "oscillation (complex conformal map)"
+      },
+      "Ising_critical": {
+        "shadow": 3,
+        "type": "oscillation (Fredholm det, SLE)"
+      },
+      "KPZ": {
+        "shadow": 2,
+        "type": "measurement (power law scaling)"
+      }
+    }
+  },
+  "key_theorem": "The Stochastic Shadow Rule (S262): Stochastic EML-\u221e objects split by whether their characteristic function is real or complex: REAL characteristic function \u2192 EML-2 shadow:   Brownian motion (E[e^{iuB_t}]=e^{-u\u00b2t/2}: Gaussian, no oscillation),   Feynman-Kac (E[e^{-\u03b2H}]: real exponential, log-partition = EML-2),   KPZ/SPDE (real power-law scaling). COMPLEX characteristic function \u2192 EML-3 shadow:   L\u00e9vy processes (E[e^{iuX_t}]=e^{t\u03c8(u)}: jump measure with e^{iux} term),   SLE (complex Loewner equation), Ising criticality (SLE-described). THE RULE: shadow=3 iff the canonical approximation uses e^{iu\u00b7}: complex Fourier/L\u00e9vy. shadow=2 iff the canonical approximation uses e^{-real}: Gaussian/heat kernel/partition. This rule is the probabilistic version of the QFT rule (S261): complex phase in the exponential = EML-3; real exponential = EML-2.",
+  "rabbit_hole_log": [
+    "Brownian paths: EML-\u221e but shadow=EML-2 (It\u00f4 formula, heat kernel \u2014 real exp)",
+    "L\u00e9vy processes: shadow=EML-3 (characteristic function has e^{iux} jump term)",
+    "SLE: shadow=EML-3 (complex conformal Loewner equation)",
+    "KPZ: shadow=EML-2 (power-law scaling, real-valued exponents)",
+    "RULE: real exponential kernel \u2192 EML-2; complex exponential \u2192 EML-3"
+  ]
+}
