@@ -1,0 +1,87 @@
+{
+  "session": 217,
+  "title": "Quantum Mechanics Attack: Pure \u2192 Mixed State and \u0394d=2",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "density_matrix": {
+    "model": "DensityMatrixDeltaDEML",
+    "pure_to_mixed": {
+      "n_states": 3,
+      "probabilities": [
+        0.3333,
+        0.3333,
+        0.3333
+      ],
+      "von_neumann_entropy": 1.0986,
+      "purity": 0.3333,
+      "pure_state_depth": 0,
+      "density_matrix_depth": 2,
+      "delta_d": 2,
+      "measure_introduced": "Probability distribution {p_i} over pure states",
+      "conjecture_check": "YES \u2014 {p_i} is exactly a probability measure over |\u03c8_i\u27e9",
+      "note": "|\u03c8\u27e9(EML-0) \u2192 \u03c1=\u03a3p_i|\u03c8_i\u27e9\u27e8\u03c8_i|(EML-2) = \u0394d=2; measure {p_i}"
+    },
+    "partial_trace": {
+      "dim_A": 2,
+      "dim_B": 2,
+      "hilbert_dim": 4,
+      "max_entanglement_entropy": 0.6931,
+      "joint_pure_depth": 0,
+      "reduced_density_depth": 2,
+      "delta_d_pure_to_reduced": 2,
+      "partial_trace_of_mixed_delta_d": 0,
+      "measure_introduced": "Counting measure over basis {|b_i\u27e9} of B in Tr_B",
+      "note": "Partial trace: pure(0) \u2192 \u03c1_A(2) = \u0394d=2; trace introduces counting measure"
+    },
+    "decoherence": {
+      "gamma": 0.1,
+      "t": 1.0,
+      "decoherence_factor": 0.9048,
+      "log_coherence_time": -0.1,
+      "coherence_depth": 0,
+      "decoherence_rate_depth": 0,
+      "classical_limit_depth": 2,
+      "delta_d_quantum_to_classical": 2,
+      "measure_introduced": "Environment trace measure (partial trace over environment = EML probability)",
+      "note": "Decoherence: quantum coherence(EML-0) \u2192 classical distribution(EML-2) = \u0394d=2"
+    },
+    "key_insight": "ALL quantum\u2192classical transitions = \u0394d=2; measure = probability over states/environment"
+  },
+  "born_rule": {
+    "model": "QuantumMeasurementEML",
+    "born_rule": {
+      "eigenvalues": [
+        1.0,
+        -1.0
+      ],
+      "amplitudes": [
+        0.7071067811865475,
+        0.7071067811865475
+      ],
+      "probabilities": [
+        0.5,
+        0.5
+      ],
+      "measurement_entropy": 0.6931,
+      "amplitude_depth": 0,
+      "probability_depth": 2,
+      "delta_d_born": 2,
+      "measure_introduced": "Probability measure {P(a_i)} = Born probability distribution",
+      "conjecture_check": "YES \u2014 Born rule creates probability measure from amplitudes",
+      "interpretation": "Born rule IS the \u0394d=2 quantum\u2192classical bridge",
+      "note": "|\u03c8\u27e9(EML-0) \u2192 {P(a_i)}(EML-2) = \u0394d=2; Born rule = canonical quantum \u0394d=2"
+    },
+    "key_insight": "Born rule = \u0394d=2 quantum-classical bridge; creates probability measure from amplitudes"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Pure states |\u03c8\u27e9, amplitudes, coherences",
+    "EML-1": "Decoherence factor exp(-\u03b3t)",
+    "EML-2": "Density matrices \u03c1, Born probabilities, von Neumann entropy",
+    "EML-\u221e": "Measurement problem (collapse = EML-\u221e)"
+  },
+  "key_theorem": "The EML Quantum-Classical Transition Theorem (S217): ALL quantum-to-classical transitions involve \u0394d=2 and introduce a probability measure: (1) Pure-to-mixed: |\u03c8\u27e9 (EML-0) \u2192 \u03c1 = \u03a3p_i|\u03c8_i\u27e9\u27e8\u03c8_i| (EML-2):   measure {p_i} introduced. \u0394d=2. (2) Partial trace: pure |\u03c8_AB\u27e9 (EML-0) \u2192 \u03c1_A = Tr_B(|\u03c8\u27e9\u27e8\u03c8|) (EML-2):   counting measure on B basis. \u0394d=2. (3) Decoherence: quantum coherence (EML-0) \u2192 classical distribution (EML-2):   environment measure introduced by Tr_env. \u0394d=2. (4) Born rule: amplitudes (EML-0) \u2192 probabilities (EML-2): \u0394d=2. THE BORN RULE IS THE \u0394d=2 QUANTUM MEASURE THEOREM: quantum mechanics requires probability via Born rule = requires \u0394d=2.",
+  "rabbit_hole_log": [
+    "Born rule = canonical \u0394d=2: creates probability measure from amplitudes \u2014 quantum \u0394d=2 theorem",
+    "All four quantum-classical transitions = \u0394d=2: pure/partial trace/decoherence/Born",
+    "Decoherence: environment = the probability measure being introduced at \u0394d=2"
+  ]
+}
