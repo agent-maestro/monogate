@@ -1,0 +1,188 @@
+{
+  "session": 152,
+  "title": "Chaos & Control Theory Deep II: Attractors, Bifurcations & Optimal Control",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "chaotic_attractors": {
+    "model": "ChaoticAttractors",
+    "lorenz_largest_lyapunov": 0.906,
+    "lorenz_kaplanyorke_dim": 2.0663,
+    "rossler_period_doubling": {
+      "a_vals": [
+        0.1,
+        0.2,
+        0.3,
+        0.36,
+        0.398
+      ],
+      "behavior_map": {
+        "0.1": "period-1",
+        "0.2": "period-1",
+        "0.3": "period-2",
+        "0.36": "period-4",
+        "0.398": "chaos onset"
+      },
+      "feigenbaum_delta": 4.669201,
+      "eml_depth_period_doubling_sequence": "3 (oscillatory cascade)",
+      "eml_depth_accumulation_point": "\u221e (EML-\u221e onset)",
+      "note": "Period doubling = EML-3 cascade \u2192 EML-\u221e at onset of chaos"
+    },
+    "attractor_reconstruction": {
+      "delay_tau": 7,
+      "embedding_dim": 3,
+      "mutual_info_criterion": 2.0794,
+      "false_nearest_neighbor_fraction": 0.7408,
+      "eml_depth_mutual_info": 2,
+      "eml_depth_false_nearest": 1,
+      "theorem": "Takens: m > 2*d_attractor \u2192 faithful reconstruction"
+    },
+    "eml_depth": {
+      "lyapunov_exponent": 3,
+      "fractal_dimension": 3,
+      "period_doubling_onset": "\u221e",
+      "chaos": 3
+    },
+    "key_insight": "Strange attractor = EML-3 (bounded + fractal oscillation); bifurcation = EML-\u221e"
+  },
+  "bifurcation_theory": {
+    "model": "BifurcationTheory",
+    "saddle_node": {
+      "-0.5": "no fixed points (EML-\u221e region)",
+      "-0.1": "no fixed points (EML-\u221e region)",
+      "0.0": "bifurcation point (EML-\u221e event)",
+      "0.1": "stable: x=0.3162, unstable: x=-0.3162 (EML-2)",
+      "0.5": "stable: x=0.7071, unstable: x=-0.7071 (EML-2)"
+    },
+    "hopf_bifurcation": {
+      "0.0": {
+        "state": "stable spiral",
+        "amplitude": 0.0,
+        "eml_depth": 2
+      },
+      "0.1": {
+        "state": "stable limit cycle",
+        "amplitude": 0.316228,
+        "frequency": 0.95,
+        "eml_depth_amplitude": 2,
+        "eml_depth_frequency": 2,
+        "bifurcation_point_eml": "\u221e"
+      },
+      "0.5": {
+        "state": "stable limit cycle",
+        "amplitude": 0.707107,
+        "frequency": 0.75,
+        "eml_depth_amplitude": 2,
+        "eml_depth_frequency": 2,
+        "bifurcation_point_eml": "\u221e"
+      },
+      "1.0": {
+        "state": "stable limit cycle",
+        "amplitude": 1.0,
+        "frequency": 0.5,
+        "eml_depth_amplitude": 2,
+        "eml_depth_frequency": 2,
+        "bifurcation_point_eml": "\u221e"
+      }
+    },
+    "cusp_catastrophe": {
+      "(0, 0)": "outside cusp (1 equilibrium, EML-2 region), disc=0.0000",
+      "(0.5, 1.0)": "inside cusp (3 equilibria, EML-\u221e region), disc=1.2500",
+      "(1.0, 0.5)": "outside cusp (1 equilibrium, EML-2 region), disc=-26.0000"
+    },
+    "feigenbaum": {
+      "feigenbaum_delta": 4.66920160910299,
+      "feigenbaum_alpha": 2.502907875095893,
+      "eml_depth_constants": 2,
+      "universality": "All unimodal maps share \u03b4, \u03b1 (renormalization group fixed point)",
+      "rg_fixed_point_eml": "\u221e (functional equation at fixed point = EML-\u221e)",
+      "constants_eml": "2 (transcendental constants from limiting process)"
+    },
+    "eml_depth": {
+      "saddle_node_bif": "\u221e",
+      "hopf_bif": "\u221e",
+      "limit_cycle_amplitude": 2,
+      "feigenbaum_constants": 2
+    },
+    "key_insight": "All bifurcations = EML-\u221e events; post-bifurcation states = EML-2"
+  },
+  "optimal_control": {
+    "model": "OptimalControl",
+    "Q": 1.0,
+    "R": 0.1,
+    "lqr_gain_K": 5.472136,
+    "pontryagin_H": {
+      "(0.5, -0.3)": -0.2705,
+      "(1.0, -0.8)": -0.368,
+      "(2.0, -1.5)": 0.3625
+    },
+    "minimum_time_control": {
+      "0.5": {
+        "x0": 0.5,
+        "time_optimal_approx": 0.4055,
+        "n_switches": 0,
+        "eml_depth_T_star": 2,
+        "eml_depth_switching": "\u221e (non-smooth, EML-\u221e at switch instants)",
+        "note": "Switching times = EML-\u221e events in the trajectory"
+      },
+      "1.0": {
+        "x0": 1.0,
+        "time_optimal_approx": 0.6931,
+        "n_switches": 0,
+        "eml_depth_T_star": 2,
+        "eml_depth_switching": "\u221e (non-smooth, EML-\u221e at switch instants)",
+        "note": "Switching times = EML-\u221e events in the trajectory"
+      },
+      "2.0": {
+        "x0": 2.0,
+        "time_optimal_approx": 1.0986,
+        "n_switches": 0,
+        "eml_depth_T_star": 2,
+        "eml_depth_switching": "\u221e (non-smooth, EML-\u221e at switch instants)",
+        "note": "Switching times = EML-\u221e events in the trajectory"
+      },
+      "5.0": {
+        "x0": 5.0,
+        "time_optimal_approx": 1.7918,
+        "n_switches": 0,
+        "eml_depth_T_star": 2,
+        "eml_depth_switching": "\u221e (non-smooth, EML-\u221e at switch instants)",
+        "note": "Switching times = EML-\u221e events in the trajectory"
+      }
+    },
+    "lyapunov_stability": {
+      "lyapunov_P": 0.5,
+      "decay_rate": -1.0,
+      "stable": true,
+      "eml_depth_V": 2,
+      "eml_depth_decay_rate": 3,
+      "note": "V = EML-2; asymptotic rate (Lyapunov exponent) = EML-3"
+    },
+    "eml_depth": {
+      "lqr_gain": 2,
+      "riccati_solution": 2,
+      "bang_bang_switches": "\u221e",
+      "lyapunov_V": 2
+    },
+    "key_insight": "LQR (quadratic cost) = EML-2; bang-bang switches = EML-\u221e; Lyapunov exponent = EML-3"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Topological entropy (counting) for symbolic dynamics",
+    "EML-1": "Feigenbaum convergence ratio, false-nearest-neighbor decay",
+    "EML-2": "Lyapunov function V(x), LQR gain K, time-optimal T*, mutual information",
+    "EML-3": "Strange attractor (bounded + fractal oscillation), Lyapunov exponents",
+    "EML-\u221e": "All bifurcation points, chaos onset, bang-bang switching instants"
+  },
+  "key_theorem": "The EML Chaos-Control Depth Theorem: Chaotic attractors are EML-3: bounded, oscillatory, fractal \u2014 but expressible as EML-3 objects (they have dimension, spectrum, Lyapunov exponents). Bifurcation points are EML-\u221e: the transition itself has no EML-finite description. Optimal control (LQR) is EML-2: the Riccati solution is a quadratic form. Bang-bang control has EML-\u221e switching instants embedded in an EML-2 trajectory. Chaos = EML-3; the route to chaos = EML-\u221e cascade.",
+  "rabbit_hole_log": [
+    "Lorenz D_KY = 2.06 (fractal) = EML-3: not integer, not EML-2",
+    "Feigenbaum \u03b4=4.669 = EML-2 constant (renormalization group fixed point)",
+    "Period doubling: each bifurcation = EML-\u221e event; sequence = EML-3 cascade",
+    "LQR Riccati: P solves algebraic eq = EML-2 (quadratic form, algebraic)",
+    "Bang-bang switching = EML-\u221e events: exactly like physical tipping points",
+    "Takens delay embedding: mutual info for \u03c4 = EML-2 (logarithm)"
+  ],
+  "connections": {
+    "S52_chaos": "Extends S52 with bifurcation depth analysis and Feigenbaum universality",
+    "S134_graph_percolation": "Bifurcation = EML-\u221e (same class as percolation threshold)",
+    "S147_climate_tipping": "Fold bifurcation in climate = saddle-node here: same EML-\u221e structure"
+  }
+}
