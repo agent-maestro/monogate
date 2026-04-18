@@ -1,0 +1,181 @@
+{
+  "session": 95,
+  "title": "Finance Deep: High-Frequency Dynamics, Volatility & Risk",
+  "key_theorem": {
+    "theorem": "EML Finance Depth Classification",
+    "statement": "Stochastic volatility (Heston): E[v(t)] = EML-1 (OU mean reversion). Option prices via Fourier inversion: EML-3. GARCH volatility: EML-2 (rational recursion); ACF decay: EML-1 (geometric). Normal VaR: EML-3 (Gaussian quantile = erfinv). Power law VaR: EML-2 (rational power) \u2014 fat tails are EML-2, not EML-3! Extreme events beyond any model: EML-\u221e (black swans, market crashes). Key insight: financial fat tails (EML-2) are mathematically simpler than Gaussian tails (EML-3)."
+  },
+  "stochastic_volatility": {
+    "model": "Heston stochastic volatility",
+    "expected_variance": {
+      "v0": 0.04,
+      "kappa": 2.0,
+      "theta": 0.04,
+      "T": 1.0,
+      "integrated_variance": 0.04,
+      "E_v_trajectory": [
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "feller_condition": 0.16,
+      "feller_satisfied": null,
+      "eml_E_v": 1,
+      "eml_integrated": 2,
+      "reason": "E[v(t)] = \u03b8 + (v\u2080-\u03b8)exp(-\u03bat): EML-1; \u222bE[v] dt: EML-2"
+    },
+    "characteristic_function": {
+      "u": 1.0,
+      "d_approx": 2.078461,
+      "eml": 3,
+      "reason": "Char function \u03c6(u) = exp(A(u,T) + B(u,T)\u00b7v\u2080): EML-3 (exp of complex EML-2 argument)"
+    },
+    "eml_volatility_process": 1,
+    "eml_option_price": 3,
+    "eml_variance_swap": 2
+  },
+  "garch_volatility": {
+    "model": "GARCH(1,1)",
+    "stationary_variance": "\u03c9/(1-\u03b1-\u03b2): EML-2 (rational)",
+    "simulation": [
+      {
+        "t": 0,
+        "sigma": 0.044721,
+        "ret": -0.006444
+      },
+      {
+        "t": 10,
+        "sigma": 0.033784,
+        "ret": 0.007848
+      },
+      {
+        "t": 20,
+        "sigma": 0.03221,
+        "ret": 0.017128
+      },
+      {
+        "t": 30,
+        "sigma": 0.032255,
+        "ret": 0.018329
+      },
+      {
+        "t": 40,
+        "sigma": 0.041885,
+        "ret": -0.003612
+      }
+    ],
+    "acf_decay": [
+      {
+        "lag": 1,
+        "rho_k": 0.95,
+        "eml": 1
+      },
+      {
+        "lag": 2,
+        "rho_k": 0.9025,
+        "eml": 1
+      },
+      {
+        "lag": 3,
+        "rho_k": 0.857375,
+        "eml": 1
+      },
+      {
+        "lag": 4,
+        "rho_k": 0.814506,
+        "eml": 1
+      },
+      {
+        "lag": 5,
+        "rho_k": 0.773781,
+        "eml": 1
+      },
+      {
+        "lag": 6,
+        "rho_k": 0.735092,
+        "eml": 1
+      },
+      {
+        "lag": 7,
+        "rho_k": 0.698337,
+        "eml": 1
+      },
+      {
+        "lag": 8,
+        "rho_k": 0.66342,
+        "eml": 1
+      }
+    ],
+    "eml_garch_variance": 2,
+    "eml_acf": 1,
+    "eml_kurtosis": 2,
+    "volatility_clustering": "Long periods of high/low vol = EML-1 autocorrelation decay (\u03b1+\u03b2)^k"
+  },
+  "risk_measures": {
+    "normal_VaR_95": {
+      "distribution": "Normal",
+      "mu": 0,
+      "sigma": 1,
+      "alpha": 0.95,
+      "VaR": 1.645211,
+      "ES_CVaR": -2.061499,
+      "eml_VaR": 3,
+      "eml_ES": 3,
+      "reason": "Gaussian quantile = erfinv \u2248 EML-3; ES = \u03bc - \u03c3\u03c6(z)/(1-\u03b1) = EML-3"
+    },
+    "normal_VaR_99": {
+      "distribution": "Normal",
+      "mu": 0,
+      "sigma": 1,
+      "alpha": 0.99,
+      "VaR": 2.326785,
+      "ES_CVaR": -2.662503,
+      "eml_VaR": 3,
+      "eml_ES": 3,
+      "reason": "Gaussian quantile = erfinv \u2248 EML-3; ES = \u03bc - \u03c3\u03c6(z)/(1-\u03b1) = EML-3"
+    },
+    "power_law_VaR_95": {
+      "distribution": "Power law (Pareto)",
+      "x_min": 1.0,
+      "alpha_tail": 3.0,
+      "confidence": 0.95,
+      "VaR": 2.714418,
+      "ES_CVaR": 4.0716,
+      "eml_VaR": 2,
+      "eml_ES": 2,
+      "reason": "VaR = x_min\u00b7(1-\u03b1)^{-1/\u03b1}: power of rational = EML-2"
+    },
+    "power_law_VaR_99": {
+      "distribution": "Power law (Pareto)",
+      "x_min": 1.0,
+      "alpha_tail": 3.0,
+      "confidence": 0.99,
+      "VaR": 4.641589,
+      "ES_CVaR": 6.9624,
+      "eml_VaR": 2,
+      "eml_ES": 2,
+      "reason": "VaR = x_min\u00b7(1-\u03b1)^{-1/\u03b1}: power of rational = EML-2"
+    },
+    "eml_normal_risk": 3,
+    "eml_fat_tail_risk": 2,
+    "eml_extreme_events": Infinity,
+    "fat_tail_insight": "Power law VaR = EML-2 (simpler than Gaussian EML-3!). Fat tails are more regular than Gaussian in EML depth \u2014 the danger is EML-2, not EML-3."
+  },
+  "eml_depth_summary": {
+    "EML-0": "Constant volatility (Black-Scholes); integer payoffs",
+    "EML-1": "Mean-reverting vol E[v] = EML-1; GARCH ACF (\u03b1+\u03b2)^k; drift exp(\u03bct)",
+    "EML-2": "Stationary GARCH variance \u03c9/(1-\u03b1-\u03b2); power law VaR x^{-1/\u03b1}; Feller condition",
+    "EML-3": "Normal VaR (erfinv); option price (Fourier-Heston); Black-Scholes formula",
+    "EML-\u221e": "Market crashes; flash crashes; correlation breakdown; systemic risk events"
+  },
+  "rabbit_hole_log": [
+    "Counterintuitive: power law (fat tail) VaR is EML-2, but Gaussian VaR is EML-3. The fatter the tail, the lower the EML depth of the risk measure. Heavy-tailed risks are analytically simpler (EML-2) than light-tailed ones (EML-3).",
+    "Volatility clustering (GARCH): the ACF decays as (\u03b1+\u03b2)^k = EML-1. This is the financial analog of the Lyapunov time (Session 82): the memory timescale \u03c4 = -1/ln(\u03b1+\u03b2) is EML-2 (log of parameters).",
+    "Black-Scholes = EML-3: exp(-rT)\u00b7[S\u2080\u00b7\u03a6(d\u2081) - K\u00b7\u03a6(d\u2082)] involves erfinv (EML-3). But the model FAILS precisely at EML-\u221e events (fat tail returns, vol smile = EML-\u221e term structure)."
+  ],
+  "connections": {
+    "to_session_57": "Phase transitions = EML-\u221e. Market crashes = EML-\u221e \u2014 financial phase transition",
+    "to_session_64": "SDE paths = EML-\u221e; Feynman-Kac (S64) gives option prices = EML-3. Session 95 confirms"
+  }
+}
