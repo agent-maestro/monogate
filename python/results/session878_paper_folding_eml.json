@@ -1,0 +1,42 @@
+{
+  "session": 878,
+  "title": "Paper Folding Limits as Depth Transition",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "PaperFoldingEML",
+    "analysis": {
+      "object": "T599: Paper Folding Limits as Depth Transition depth analysis",
+      "domains": {
+        "fold_doubles_eml1": {
+          "description": "Each fold doubles thickness: EML-1 exponential",
+          "depth": "EML-1",
+          "reason": "Paper folding is EML-1: thickness = t * 2^n after n folds"
+        },
+        "limit_eml2": {
+          "description": "Limit when thickness exceeds width: EML-2 measurement threshold",
+          "depth": "EML-2",
+          "reason": "Folding limit is EML-2: geometric measurement of thickness vs remaining width"
+        },
+        "gallivan_formula": {
+          "description": "Gallivan formula extends limit: EML-2 measurement equation for required length",
+          "depth": "EML-2",
+          "reason": "Gallivan's insight is EML-2: measurement formula that extends EML-1 exponential"
+        },
+        "physical_limit": {
+          "description": "Physical limit is EML-2 measurement of EML-1 exponential; no EML-inf needed",
+          "depth": "EML-2",
+          "reason": "Paper folding stays in {1,2}: clean system without depth categorification"
+        }
+      }
+    },
+    "distribution": {
+      "EML-1": 1,
+      "EML-2": 3
+    },
+    "theorem": "T599: Paper Folding Limits as Depth Transition (S878)."
+  },
+  "key_theorem": "T599: Paper Folding Limits as Depth Transition (S878).",
+  "rabbit_hole_log": [
+    "T599: fold_doubles_eml1 depth confirmed"
+  ]
+}
