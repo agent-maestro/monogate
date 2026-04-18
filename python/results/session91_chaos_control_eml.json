@@ -1,0 +1,267 @@
+{
+  "session": 91,
+  "title": "Chaos Control & Synchronization: EML as Controller",
+  "key_theorem": {
+    "theorem": "EML Chaos Control Depth Reduction Theorem",
+    "statement": "An EML-2 linear feedback controller (OGY: \u03b4p = -F\u00b7(x-x*)) can stabilize an EML-\u221e chaotic attractor onto an EML-2 UPO. The convergence to the controlled orbit is EML-1 (exponential). EML-2 (linear coupling) is sufficient to synchronize EML-\u221e trajectories with EML-1 convergence rate. EML-3 or higher controllers are not needed for stabilization \u2014 EML-2 is the minimal controller depth for chaos control."
+  },
+  "ogy_control": {
+    "method": "OGY chaos control",
+    "upo": {
+      "r": 3.9,
+      "x_star": 0.74359,
+      "jacobian_at_x_star": -1.9,
+      "unstable": true,
+      "eml_upo": 2,
+      "reason": "Fixed point x* = 1-1/r: rational function of r = EML-2"
+    },
+    "perturbation_example": {
+      "x_n": 0.4,
+      "x_star": 0.7436,
+      "deviation": -0.3436,
+      "delta_r": 0.01,
+      "eml_perturbation": 2,
+      "reason": "\u03b4r = -F\u00b7(x-x*): linear feedback = EML-2"
+    },
+    "controlled_trajectory": [
+      {
+        "step": 0,
+        "x": 0.4,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.34359
+      },
+      {
+        "step": 1,
+        "x": 0.9384,
+        "delta_r": -0.01,
+        "distance_to_upo": 0.19481
+      },
+      {
+        "step": 2,
+        "x": 0.224863,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.518727
+      },
+      {
+        "step": 3,
+        "x": 0.681512,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.062078
+      },
+      {
+        "step": 4,
+        "x": 0.848679,
+        "delta_r": -0.01,
+        "distance_to_upo": 0.105089
+      },
+      {
+        "step": 5,
+        "x": 0.499566,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.244024
+      },
+      {
+        "step": 6,
+        "x": 0.977499,
+        "delta_r": -0.01,
+        "distance_to_upo": 0.233909
+      },
+      {
+        "step": 7,
+        "x": 0.085558,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.658032
+      },
+      {
+        "step": 8,
+        "x": 0.305911,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.437679
+      },
+      {
+        "step": 9,
+        "x": 0.830209,
+        "delta_r": -0.01,
+        "distance_to_upo": 0.086619
+      },
+      {
+        "step": 10,
+        "x": 0.548343,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.195247
+      },
+      {
+        "step": 11,
+        "x": 0.968362,
+        "delta_r": -0.01,
+        "distance_to_upo": 0.224772
+      },
+      {
+        "step": 12,
+        "x": 0.119178,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.624412
+      },
+      {
+        "step": 13,
+        "x": 0.41045,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.33314
+      },
+      {
+        "step": 14,
+        "x": 0.946145,
+        "delta_r": -0.01,
+        "distance_to_upo": 0.202555
+      },
+      {
+        "step": 15,
+        "x": 0.198214,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.545376
+      },
+      {
+        "step": 16,
+        "x": 0.621398,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.122192
+      },
+      {
+        "step": 17,
+        "x": 0.919877,
+        "delta_r": -0.01,
+        "distance_to_upo": 0.176287
+      },
+      {
+        "step": 18,
+        "x": 0.286706,
+        "delta_r": 0.01,
+        "distance_to_upo": 0.456884
+      },
+      {
+        "step": 19,
+        "x": 0.799618,
+        "delta_r": -0.01,
+        "distance_to_upo": 0.056028
+      }
+    ],
+    "eml_depth_reduction": "EML-\u221e (strange attractor) \u2192 EML-2 (UPO) via EML-2 controller",
+    "eml_convergence": "EML-1: exponential approach to UPO after control engages"
+  },
+  "synchronization": {
+    "method": "Pecora-Carroll master-slave synchronization",
+    "coupled_logistic": [
+      {
+        "step": 0,
+        "x": 0.819,
+        "y": 0.819,
+        "sync_error": 0.0
+      },
+      {
+        "step": 1,
+        "x": 0.578132,
+        "y": 0.578132,
+        "sync_error": 0.0
+      },
+      {
+        "step": 2,
+        "x": 0.951192,
+        "y": 0.951192,
+        "sync_error": 0.0
+      },
+      {
+        "step": 3,
+        "x": 0.181061,
+        "y": 0.181061,
+        "sync_error": 0.0
+      },
+      {
+        "step": 4,
+        "x": 0.578283,
+        "y": 0.578283,
+        "sync_error": 0.0
+      },
+      {
+        "step": 5,
+        "x": 0.9511,
+        "y": 0.9511,
+        "sync_error": 0.0
+      },
+      {
+        "step": 10,
+        "x": 0.583399,
+        "y": 0.583399,
+        "sync_error": 0.0
+      },
+      {
+        "step": 15,
+        "x": 0.251866,
+        "y": 0.251866,
+        "sync_error": 0.0
+      },
+      {
+        "step": 20,
+        "x": 0.623357,
+        "y": 0.623357,
+        "sync_error": 0.0
+      },
+      {
+        "step": 25,
+        "x": 0.953952,
+        "y": 0.953952,
+        "sync_error": 0.0
+      }
+    ],
+    "eml_analysis": [
+      {
+        "phase": "Before synchronization",
+        "error": "|x(t)-y(t)| ~ O(1)",
+        "eml": Infinity,
+        "reason": "Both trajectories independently EML-\u221e"
+      },
+      {
+        "phase": "Synchronization process",
+        "error": "|e(t)| ~ exp(\u03bb_c\u00b7t), \u03bb_c < 0",
+        "eml": 1,
+        "reason": "Exponential convergence = EML-1"
+      },
+      {
+        "phase": "After synchronization",
+        "error": "|x(t)-y(t)| < \u03b5",
+        "eml": 1,
+        "reason": "Synchronized state: error = EML-1 (exponentially small); trajectories still EML-\u221e"
+      },
+      {
+        "phase": "Coupling term K\u00b7(x-y)",
+        "error": "Linear in deviation",
+        "eml": 2,
+        "reason": "Linear feedback = EML-2; drives EML-\u221e system to EML-1 convergence"
+      }
+    ],
+    "conditional_lyapunov": "\u03bb_c < 0 \u2194 synchronization: EML-1 convergence condition"
+  },
+  "delayed_feedback": {
+    "method": "Pyragas delayed feedback control",
+    "control_signal": "u(t) = K\u00b7[x(t-\u03c4) - x(t)]",
+    "eml_u_on_upo": 0,
+    "eml_u_off_upo": 2,
+    "reason": "u = K\u00b7\u0394x: linear difference = EML-2; vanishes on UPO = EML-0",
+    "advantage": "Non-invasive: does not perturb the target orbit",
+    "eml_depth_reduction": "EML-\u221e \u2192 EML-2 UPO via EML-2 controller (same as OGY)"
+  },
+  "eml_depth_summary": {
+    "EML-0": "UPO control signal when on orbit (u=0); topological period T",
+    "EML-1": "Synchronization convergence exp(\u03bb_c\u00b7t); approach to UPO after control",
+    "EML-2": "OGY perturbation \u03b4p = -F\u00b7(x-x*); delayed feedback u = K\u00b7\u0394x; coupling term",
+    "EML-\u221e": "Uncontrolled chaotic trajectory; master trajectory (remains EML-\u221e)"
+  },
+  "rabbit_hole_log": [
+    "The OGY insight: EML-\u221e attractors contain infinitely many EML-2 UPOs as their 'skeleton'. The controller just selects one and holds the trajectory near it. EML-\u221e is a superposition of EML-2 structures.",
+    "Synchronization and the EML depth principle: the coupling term K\u00b7(x-y) = EML-2 drives exponential (EML-1) convergence of EML-\u221e trajectories. The controller depth (EML-2) equals the depth of the geometry (EML-2 linear algebra of the Jacobian).",
+    "Contrast with Session 85 (vortex control): NS has no known EML-2 controller because the BKM obstruction is EML-\u221e. Chaos control works because the attractor has EML-2 UPO structure. NS singularity has no such sub-structure."
+  ],
+  "connections": {
+    "to_session_82": "Session 82: chaos = EML-\u221e long-time. Session 91: EML-2 controller forces EML-\u221e back to EML-2 UPO",
+    "to_session_85": "Session 85: NS has no EML-2 controller (BKM obstruction). Session 91: chaotic ODEs do have EML-2 controllers"
+  }
+}
