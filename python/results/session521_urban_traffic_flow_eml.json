@@ -1,0 +1,70 @@
+{
+  "session": 521,
+  "title": "Urban Traffic Flow",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "UrbanTrafficFlowEML",
+    "analysis": {
+      "object": "T242: Urban traffic flow depth analysis",
+      "domains": {
+        "traffic_density": {
+          "description": "Vehicle count per lane-km",
+          "depth": "EML-0",
+          "reason": "Integer counting of discrete vehicles"
+        },
+        "traffic_wave": {
+          "description": "Stop-and-go wave: backward propagation at ~20 km/h",
+          "depth": "EML-3",
+          "reason": "Jamiton/traffic wave = EML-3 oscillation propagating backward"
+        },
+        "lws_model": {
+          "description": "LWS: \u2202\u03c1/\u2202t + \u2202q/\u2202x = 0, q = \u03c1\u00b7v(\u03c1)",
+          "depth": "EML-2",
+          "reason": "Conservation law with algebraic q(\u03c1) = EML-2"
+        },
+        "flow_rate": {
+          "description": "Greenshields: v = v_max(1 - \u03c1/\u03c1_max)",
+          "depth": "EML-0",
+          "reason": "Linear relation \u2014 EML-0 structure"
+        },
+        "level_of_service": {
+          "description": "LOS A-F classification based on density/capacity ratio",
+          "depth": "EML-2",
+          "reason": "Logarithmic density ratio \u2014 EML-2 measurement"
+        },
+        "gridlock": {
+          "description": "Complete deadlock: no flow possible",
+          "depth": "EML-\u221e",
+          "reason": "Phase transition: sudden gridlock emergence"
+        },
+        "signal_optimization": {
+          "description": "Green wave timing: coordinated signal phases",
+          "depth": "EML-3",
+          "reason": "Synchronized oscillatory timing across intersections"
+        },
+        "ramp_metering": {
+          "description": "Freeway on-ramp rate control",
+          "depth": "EML-2",
+          "reason": "Logarithmic control feedback"
+        }
+      },
+      "traffic_wave_prediction": "Does the framework predict when traffic waves form? YES. Traffic waves form when density crosses the EML-2\u2192EML-3 boundary. Below critical density: LWS (EML-2) \u2014 stable flow, predictable. Above critical density: Jamiton waves (EML-3) \u2014 oscillatory, partially predictable. Gridlock: EML-3 \u00d7 high density = EML-\u221e phase transition. Rush hour = predictable EML-3 phenomenon (periodic daily cycle). Flash gridlock = EML-\u221e (incident-triggered phase transition)."
+    },
+    "distribution": {
+      "EML-0": 2,
+      "EML-2": 3,
+      "EML-3": 2,
+      "EML-\u221e": 1
+    },
+    "verdict": "Traffic waves: EML-3. LWS model: EML-2. Gridlock: EML-\u221e.",
+    "theorem": "T242: Traffic Flow Depth \u2014 waves EML-3, gridlock EML-\u221e phase transition"
+  },
+  "key_theorem": "T242: Traffic Flow Depth (S521). LWS model: EML-2 (conservation). Traffic waves: EML-3 (Jamiton oscillation). Rush hour: predictable EML-3 (periodic daily cycle). Flash gridlock: EML-\u221e (incident-triggered phase transition). EML predicts: EML-2\u2192EML-3 density threshold = wave formation onset.",
+  "rabbit_hole_log": [
+    "LWS: \u2202\u03c1/\u2202t + \u2202q/\u2202x = 0 with algebraic q(\u03c1) \u2192 EML-2",
+    "Traffic waves: backward-propagating jamiton \u2192 EML-3",
+    "Green wave: synchronized oscillation \u2192 EML-3",
+    "Gridlock: phase transition \u2192 EML-\u221e",
+    "T242: Rush hour = predictable EML-3; flash gridlock = EML-\u221e"
+  ]
+}
