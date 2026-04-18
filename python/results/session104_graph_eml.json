@@ -1,0 +1,353 @@
+{
+  "session": 104,
+  "title": "Graph Theory & Complex Networks: EML as Network Substrate",
+  "key_theorem": {
+    "theorem": "EML Network Depth Theorem",
+    "statement": "Erd\u0151s-R\u00e9nyi degree distribution is EML-1 (Poisson = single exponential). Scale-free power-law degree distribution is EML-2 (exp(-\u03b3\u00b7ln k)). Graph Laplacian spectrum is EML-3 (cosine eigenvalues: 2(1-cos(\u03c0k/n))). Heat kernel trace Tr(K_t) = \u03a3 exp(-\u03bb_k\u00b7t) is EML-1. Centrality measures (degree, betweenness) are EML-0 (rational). PageRank and eigenvector centrality are EML-1 (fixed point = ground state). Percolation phase transition at p_c is EML-\u221e. Community detection (modularity) is EML-\u221e (NP-hard)."
+  },
+  "degree_distributions": {
+    "er_poisson": [
+      {
+        "k": 0,
+        "P_k": 0.04978707,
+        "eml": 1,
+        "reason": "Poisson: e^{-\u03bb}\u03bb^k/k! = EML-1"
+      },
+      {
+        "k": 1,
+        "P_k": 0.14936121,
+        "eml": 1,
+        "reason": "Poisson: e^{-\u03bb}\u03bb^k/k! = EML-1"
+      },
+      {
+        "k": 2,
+        "P_k": 0.22404181,
+        "eml": 1,
+        "reason": "Poisson: e^{-\u03bb}\u03bb^k/k! = EML-1"
+      },
+      {
+        "k": 3,
+        "P_k": 0.22404181,
+        "eml": 1,
+        "reason": "Poisson: e^{-\u03bb}\u03bb^k/k! = EML-1"
+      },
+      {
+        "k": 4,
+        "P_k": 0.16803136,
+        "eml": 1,
+        "reason": "Poisson: e^{-\u03bb}\u03bb^k/k! = EML-1"
+      },
+      {
+        "k": 5,
+        "P_k": 0.10081881,
+        "eml": 1,
+        "reason": "Poisson: e^{-\u03bb}\u03bb^k/k! = EML-1"
+      },
+      {
+        "k": 6,
+        "P_k": 0.05040941,
+        "eml": 1,
+        "reason": "Poisson: e^{-\u03bb}\u03bb^k/k! = EML-1"
+      },
+      {
+        "k": 7,
+        "P_k": 0.02160403,
+        "eml": 1,
+        "reason": "Poisson: e^{-\u03bb}\u03bb^k/k! = EML-1"
+      }
+    ],
+    "scale_free": [
+      {
+        "k": 1,
+        "P_k": 0.83190772,
+        "gamma": 3.0,
+        "eml": 2,
+        "reason": "P(k) ~ k^{-\u03b3} = exp(-\u03b3\u00b7ln k): EML-2 (power law)"
+      },
+      {
+        "k": 2,
+        "P_k": 0.10398846,
+        "gamma": 3.0,
+        "eml": 2,
+        "reason": "P(k) ~ k^{-\u03b3} = exp(-\u03b3\u00b7ln k): EML-2 (power law)"
+      },
+      {
+        "k": 5,
+        "P_k": 0.00665526,
+        "gamma": 3.0,
+        "eml": 2,
+        "reason": "P(k) ~ k^{-\u03b3} = exp(-\u03b3\u00b7ln k): EML-2 (power law)"
+      },
+      {
+        "k": 10,
+        "P_k": 0.00083191,
+        "gamma": 3.0,
+        "eml": 2,
+        "reason": "P(k) ~ k^{-\u03b3} = exp(-\u03b3\u00b7ln k): EML-2 (power law)"
+      },
+      {
+        "k": 50,
+        "P_k": 6.66e-06,
+        "gamma": 3.0,
+        "eml": 2,
+        "reason": "P(k) ~ k^{-\u03b3} = exp(-\u03b3\u00b7ln k): EML-2 (power law)"
+      },
+      {
+        "k": 100,
+        "P_k": 8.3e-07,
+        "gamma": 3.0,
+        "eml": 2,
+        "reason": "P(k) ~ k^{-\u03b3} = exp(-\u03b3\u00b7ln k): EML-2 (power law)"
+      }
+    ],
+    "network_types": [
+      {
+        "name": "Erd\u0151s-R\u00e9nyi",
+        "dist": "Poisson",
+        "eml": 1
+      },
+      {
+        "name": "Scale-free (BA)",
+        "dist": "Power law",
+        "eml": 2
+      },
+      {
+        "name": "Regular lattice",
+        "dist": "Delta",
+        "eml": 0
+      },
+      {
+        "name": "Small-world (WS)",
+        "dist": "Peaked exponential",
+        "eml": 1
+      }
+    ]
+  },
+  "spectral_theory": {
+    "path_graph_n10": {
+      "n": 10,
+      "eigenvalues": [
+        0.0,
+        0.097887,
+        0.381966,
+        0.824429,
+        1.381966,
+        2.0,
+        2.618034,
+        3.175571
+      ],
+      "lambda_1": 0.0,
+      "fiedler_lambda_2": 0.097887,
+      "eml_lambda1": 0,
+      "eml_fiedler": 2,
+      "eml_spectrum": 3,
+      "reason": "\u03bb_k = 2(1-cos(\u03c0k/n)): EML-3 (cosine function of integer index)"
+    },
+    "cycle_graph_n8": {
+      "n": 8,
+      "eigenvalues": [
+        0.0,
+        0.585786,
+        2.0,
+        3.414214,
+        4.0,
+        3.414214,
+        2.0,
+        0.585786
+      ],
+      "fiedler": 0.585786,
+      "eml_spectrum": 3,
+      "reason": "Cycle spectrum: 2(1-cos(2\u03c0k/n)): EML-3"
+    },
+    "heat_kernel": [
+      {
+        "t": 0.1,
+        "trace": 8.434225,
+        "eml": 1,
+        "reason": "Tr(K_t) = \u03a3 exp(-\u03bb_k\u00b7t): sum of EML-1 terms = EML-1"
+      },
+      {
+        "t": 0.5,
+        "trace": 5.089928,
+        "eml": 1,
+        "reason": "Tr(K_t) = \u03a3 exp(-\u03bb_k\u00b7t): sum of EML-1 terms = EML-1"
+      },
+      {
+        "t": 1.0,
+        "trace": 3.575925,
+        "eml": 1,
+        "reason": "Tr(K_t) = \u03a3 exp(-\u03bb_k\u00b7t): sum of EML-1 terms = EML-1"
+      },
+      {
+        "t": 5.0,
+        "trace": 1.778333,
+        "eml": 1,
+        "reason": "Tr(K_t) = \u03a3 exp(-\u03bb_k\u00b7t): sum of EML-1 terms = EML-1"
+      }
+    ],
+    "eml_lambda1": 0,
+    "eml_fiedler": 2,
+    "eml_full_spectrum": 3,
+    "eml_heat_kernel": 1,
+    "cheeger_inequality": "h(G) \u2265 \u03bb\u2082/2: EML-2 bound on conductance"
+  },
+  "phase_transitions": {
+    "percolation": [
+      {
+        "p": 0.0005,
+        "p_c": 0.001001,
+        "S_giant": 0.0,
+        "regime": "subcritical",
+        "eml": 0,
+        "reason": "Giant component: EML-2 near p_c; EML-\u221e exactly at p_c (susceptibility diverges)"
+      },
+      {
+        "p": 0.001,
+        "p_c": 0.001001,
+        "S_giant": 0.0,
+        "regime": "subcritical",
+        "eml": "\u221e",
+        "reason": "Giant component: EML-2 near p_c; EML-\u221e exactly at p_c (susceptibility diverges)"
+      },
+      {
+        "p": 0.002,
+        "p_c": 0.001001,
+        "S_giant": 0.499499,
+        "regime": "near-critical",
+        "eml": 2,
+        "reason": "Giant component: EML-2 near p_c; EML-\u221e exactly at p_c (susceptibility diverges)"
+      },
+      {
+        "p": 0.005,
+        "p_c": 0.001001,
+        "S_giant": 0.7998,
+        "regime": "near-critical",
+        "eml": 2,
+        "reason": "Giant component: EML-2 near p_c; EML-\u221e exactly at p_c (susceptibility diverges)"
+      },
+      {
+        "p": 0.01,
+        "p_c": 0.001001,
+        "S_giant": 0.9,
+        "regime": "supercritical",
+        "eml": 1,
+        "reason": "Giant component: EML-2 near p_c; EML-\u221e exactly at p_c (susceptibility diverges)"
+      }
+    ],
+    "small_world": [
+      {
+        "k": 6,
+        "p_rewire": 0.0,
+        "C_0": 0.4,
+        "C_p": 0.4,
+        "eml_C": 2,
+        "eml_L": 2,
+        "reason": "C(p)=C\u2080(1-p)\u00b3: EML-2 (polynomial); L~ln(n)/ln(k): EML-2 (log/log ratio)"
+      },
+      {
+        "k": 6,
+        "p_rewire": 0.1,
+        "C_0": 0.4,
+        "C_p": 0.2916,
+        "eml_C": 2,
+        "eml_L": 2,
+        "reason": "C(p)=C\u2080(1-p)\u00b3: EML-2 (polynomial); L~ln(n)/ln(k): EML-2 (log/log ratio)"
+      },
+      {
+        "k": 6,
+        "p_rewire": 0.3,
+        "C_0": 0.4,
+        "C_p": 0.1372,
+        "eml_C": 2,
+        "eml_L": 2,
+        "reason": "C(p)=C\u2080(1-p)\u00b3: EML-2 (polynomial); L~ln(n)/ln(k): EML-2 (log/log ratio)"
+      },
+      {
+        "k": 6,
+        "p_rewire": 0.5,
+        "C_0": 0.4,
+        "C_p": 0.05,
+        "eml_C": 2,
+        "eml_L": 2,
+        "reason": "C(p)=C\u2080(1-p)\u00b3: EML-2 (polynomial); L~ln(n)/ln(k): EML-2 (log/log ratio)"
+      },
+      {
+        "k": 6,
+        "p_rewire": 1.0,
+        "C_0": 0.4,
+        "C_p": 0.0,
+        "eml_C": 2,
+        "eml_L": 2,
+        "reason": "C(p)=C\u2080(1-p)\u00b3: EML-2 (polynomial); L~ln(n)/ln(k): EML-2 (log/log ratio)"
+      }
+    ],
+    "phase_transition_eml": Infinity,
+    "reason_transition": "Percolation threshold = network phase transition = EML-\u221e",
+    "community_detection_eml": Infinity,
+    "reason_community": "Modularity optimization NP-hard = EML-\u221e (no polynomial algorithm)"
+  },
+  "random_walks": {
+    "pagerank_n5": {
+      "n": 5,
+      "alpha": 0.85,
+      "iterations": 20,
+      "pagerank": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "eml": 1,
+      "reason": "PageRank = fixed point of linear map = EML-1 (dominant eigenvector)"
+    },
+    "mixing_times": [
+      {
+        "n": 100,
+        "lambda_2": 0.1,
+        "T_mix_approx": 92.1,
+        "eml": 2,
+        "reason": "T_mix ~ ln(n)/\u03bb\u2082: EML-2 (logarithm / EML-2 Fiedler value)"
+      },
+      {
+        "n": 1000,
+        "lambda_2": 0.05,
+        "T_mix_approx": 230.26,
+        "eml": 2,
+        "reason": "T_mix ~ ln(n)/\u03bb\u2082: EML-2 (logarithm / EML-2 Fiedler value)"
+      },
+      {
+        "n": 10000,
+        "lambda_2": 0.01,
+        "T_mix_approx": 1381.55,
+        "eml": 2,
+        "reason": "T_mix ~ ln(n)/\u03bb\u2082: EML-2 (logarithm / EML-2 Fiedler value)"
+      }
+    ],
+    "centrality_eml": {
+      "degree": 0,
+      "betweenness": 0,
+      "closeness": 0,
+      "eigenvector": 1,
+      "pagerank": 1,
+      "reason": "Degree/betweenness/closeness = rational counts = EML-0; eigenvector = EML-1 fixed point"
+    }
+  },
+  "eml_depth_summary": {
+    "EML-0": "Node degree; betweenness/closeness centrality; percolation threshold p_c = 1/\u27e8k\u27e9; graph coloring number",
+    "EML-1": "ER Poisson degree P(k)=e^{-\u03bb}\u03bb^k/k!; PageRank (eigenvector fixed point); heat kernel Tr(e^{-tL}); small-world tail",
+    "EML-2": "Scale-free P(k)~k^{-\u03b3}; Fiedler value \u03bb\u2082; clustering C(p)=(1-p)\u00b3; mixing time ln(n)/\u03bb\u2082; MST weight",
+    "EML-3": "Laplacian eigenvalues 2(1-cos(\u03c0k/n)); normalized adjacency band structure; oscillatory modes",
+    "EML-\u221e": "Percolation transition (susceptibility diverges); community detection NP-hard; graph isomorphism (likely)"
+  },
+  "rabbit_hole_log": [
+    "Scale-free networks are EML-2 but ER networks are EML-1: the Barab\u00e1si-Albert preferential attachment mechanism adds one ln operation (the power law exponent \u03b3 selects a log-linear structure). Rich-get-richer = EML-2 vs. random = EML-1. Social networks are more complex than random by exactly one EML depth.",
+    "PageRank is the EML-1 ground state of the internet: it's the dominant eigenvector of the (damped) adjacency matrix, exactly analogous to the Boltzmann distribution in statistical mechanics. The damping factor \u03b1=0.85 is the EML-1 'temperature' of the web.",
+    "Spectral gap \u03bb\u2082 controls everything: mixing time, conductance, and synchronization in coupled oscillators all depend on \u03bb\u2082 = EML-2. The Fiedler vector partitions the graph. The entire information-transport capacity of a network is captured by a single EML-2 number.",
+    "Percolation = EML-\u221e at p_c: the giant component size S(p) is continuous but its derivative is infinite at p_c. This is an EML-\u221e transition (like Ising, like NS blowup) where the local structure (EML-2) cannot predict the global behavior (EML-\u221e)."
+  ],
+  "connections": {
+    "to_session_57": "Ising phase transition = EML-\u221e. Percolation = network EML-\u221e transition. Same universality class.",
+    "to_session_88": "Grand Synthesis: PageRank = EML-1 ground state principle. Degree = EML-0 topological invariant."
+  }
+}
