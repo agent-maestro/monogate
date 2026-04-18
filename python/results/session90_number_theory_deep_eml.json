@@ -1,0 +1,270 @@
+{
+  "session": 90,
+  "title": "Number Theory Deep: Dirichlet L-Functions, Primes & Zeta Zeros",
+  "key_theorem": {
+    "theorem": "EML Explicit Formula Decomposition",
+    "statement": "The von Mangoldt explicit formula decomposes the prime-counting function \u03c8(x) (EML-\u221e: irregular step function) into EML-1 (main term x) + EML-3 oscillations (\u03a3 x^\u03c1/\u03c1 with \u03c1 on critical line). This is the EML depth decomposition of primes: EML-\u221e = EML-1 + EML-3. Dirichlet L-functions are EML-3 (Euler product over EML-3 characters). M\u00f6bius M(x) is EML-\u221e unconditionally; EML-3 under RH."
+  },
+  "dirichlet_L_functions": {
+    "definition": "L(s,\u03c7) = \u03a3 \u03c7(n)/n^s = \u220f_p (1-\u03c7(p)p^{-s})^{-1}",
+    "eml_depth": 3,
+    "eml_reason": "\u03c7(n) periodic + n^{-s} = exp(-s\u00b7ln n) \u2192 EML-3 series",
+    "characters_mod4": [
+      {
+        "modulus": 4,
+        "name": "\u03c7\u2080 (principal)",
+        "values": {
+          "1": 1,
+          "2": 0,
+          "3": 1,
+          "4": 0
+        },
+        "primitive": false,
+        "eml": 0,
+        "reason": "Principal character: \u03c7\u2080(n)=1 if gcd(n,q)=1 else 0 \u2014 EML-0 (integer-valued)"
+      },
+      {
+        "modulus": 4,
+        "name": "\u03c7\u2081 (Kronecker symbol mod 4)",
+        "values": {
+          "1": 1,
+          "2": 0,
+          "3": -1,
+          "4": 0
+        },
+        "primitive": true,
+        "eml": 0,
+        "reason": "Values in {-1,0,1} \u2014 EML-0 per value; pattern = EML-3 (periodic = exp(2\u03c0in/4))"
+      }
+    ],
+    "L_values": [
+      {
+        "s": "0.5+0i",
+        "Re_L": 0.632336,
+        "Im_L": 0.0,
+        "modulus_L": 0.632336,
+        "N_terms": 200
+      },
+      {
+        "s": "0.5+14.13i",
+        "Re_L": 1.833643,
+        "Im_L": 1.192178,
+        "modulus_L": 2.18713,
+        "N_terms": 200
+      }
+    ],
+    "dirichlet_beta": [
+      {
+        "n_terms": 10,
+        "beta_1": 0.7604599,
+        "pi_over_4": 0.78539816,
+        "error": 0.02493826,
+        "eml_beta_1": 3,
+        "reason": "\u03b2(1) = \u03c0/4: \u03c0 = EML-3"
+      },
+      {
+        "n_terms": 50,
+        "beta_1": 0.78039866,
+        "pi_over_4": 0.78539816,
+        "error": 0.0049995,
+        "eml_beta_1": 3,
+        "reason": "\u03b2(1) = \u03c0/4: \u03c0 = EML-3"
+      },
+      {
+        "n_terms": 200,
+        "beta_1": 0.78414817,
+        "pi_over_4": 0.78539816,
+        "error": 0.00124999,
+        "eml_beta_1": 3,
+        "reason": "\u03b2(1) = \u03c0/4: \u03c0 = EML-3"
+      }
+    ],
+    "GRH": "Generalized RH: zeros of L(s,\u03c7) on Re(s)=1/2 \u2014 EML-3 critical line"
+  },
+  "explicit_formula": {
+    "formula": "\u03c8(x) = x - \u03a3_\u03c1 x^\u03c1/\u03c1 - ln(2\u03c0) - \u00bdln(1-x^{-2})",
+    "eml_depth_psi": Infinity,
+    "eml_depth_main_term": 1,
+    "eml_depth_oscillatory": 3,
+    "depth_decomposition": "EML-\u221e prime staircase = EML-1 main + EML-3 zeros \u2014 the explicit formula is an EML depth decomposition",
+    "approximations": [
+      {
+        "x": 10,
+        "psi_explicit_approx": 7.7816,
+        "psi_actual_primes": 5.3471,
+        "main_term_x": 10,
+        "oscillatory_correction": -0.3805,
+        "n_zeros_used": 10
+      },
+      {
+        "x": 20,
+        "psi_explicit_approx": 19.755,
+        "psi_actual_primes": 16.0876,
+        "main_term_x": 20,
+        "oscillatory_correction": 1.5929,
+        "n_zeros_used": 10
+      },
+      {
+        "x": 50,
+        "psi_explicit_approx": 49.1546,
+        "psi_actual_primes": 40.9602,
+        "main_term_x": 50,
+        "oscillatory_correction": 0.9925,
+        "n_zeros_used": 10
+      },
+      {
+        "x": 100,
+        "psi_explicit_approx": 95.0399,
+        "psi_actual_primes": 83.7284,
+        "main_term_x": 100,
+        "oscillatory_correction": -3.1222,
+        "n_zeros_used": 10
+      }
+    ]
+  },
+  "mobius_liouville": {
+    "mobius_mu": {
+      "definition": "\u03bc(n) = 0 (sq-free fails) or (-1)^\u03c9(n)",
+      "eml_per_value": 0,
+      "eml_partial_sum_M_x": Infinity,
+      "eml_under_rh": 3,
+      "reason_under_rh": "M(x) = O(x^{1/2+\u03b5}) under RH: x^{1/2} = EML-3"
+    },
+    "mertens_function": [
+      {
+        "n": 1,
+        "M_n": 1,
+        "sqrt_n": 1.0,
+        "within_mertens_bound": false
+      },
+      {
+        "n": 2,
+        "M_n": 0,
+        "sqrt_n": 1.414,
+        "within_mertens_bound": true
+      },
+      {
+        "n": 3,
+        "M_n": -1,
+        "sqrt_n": 1.732,
+        "within_mertens_bound": true
+      },
+      {
+        "n": 4,
+        "M_n": -1,
+        "sqrt_n": 2.0,
+        "within_mertens_bound": true
+      },
+      {
+        "n": 5,
+        "M_n": -2,
+        "sqrt_n": 2.236,
+        "within_mertens_bound": true
+      },
+      {
+        "n": 10,
+        "M_n": -1,
+        "sqrt_n": 3.162,
+        "within_mertens_bound": true
+      },
+      {
+        "n": 20,
+        "M_n": -3,
+        "sqrt_n": 4.472,
+        "within_mertens_bound": true
+      },
+      {
+        "n": 30,
+        "M_n": -3,
+        "sqrt_n": 5.477,
+        "within_mertens_bound": true
+      },
+      {
+        "n": 40,
+        "M_n": 0,
+        "sqrt_n": 6.325,
+        "within_mertens_bound": true
+      },
+      {
+        "n": 50,
+        "M_n": -3,
+        "sqrt_n": 7.071,
+        "within_mertens_bound": true
+      }
+    ],
+    "liouville_lambda": [
+      {
+        "n": 5,
+        "L_n": -1,
+        "lambda_n": -1
+      },
+      {
+        "n": 10,
+        "L_n": 0,
+        "lambda_n": 1
+      },
+      {
+        "n": 15,
+        "L_n": -1,
+        "lambda_n": 1
+      },
+      {
+        "n": 20,
+        "L_n": -4,
+        "lambda_n": -1
+      },
+      {
+        "n": 25,
+        "L_n": -1,
+        "lambda_n": 1
+      },
+      {
+        "n": 30,
+        "L_n": -4,
+        "lambda_n": -1
+      },
+      {
+        "n": 35,
+        "L_n": -3,
+        "lambda_n": 1
+      },
+      {
+        "n": 40,
+        "L_n": 0,
+        "lambda_n": 1
+      },
+      {
+        "n": 45,
+        "L_n": -5,
+        "lambda_n": -1
+      },
+      {
+        "n": 50,
+        "L_n": -6,
+        "lambda_n": -1
+      }
+    ],
+    "mertens_conjecture": {
+      "statement": "|M(x)| < \u221ax for all x > 1",
+      "status": "DISPROVED (Odlyzko-te Riele 1985)",
+      "eml_violation": Infinity,
+      "reason": "Disproof uses EML-\u221e oscillations in M(x) that exceed \u221ax"
+    }
+  },
+  "eml_depth_summary": {
+    "EML-0": "\u03bc(n) per value \u2208 {-1,0,1}; \u03bb(n) per value; prime indicators",
+    "EML-1": "Main term x in explicit formula; prime number theorem x/ln(x)",
+    "EML-2": "ln(x) corrections; Meissel-Mertens constant; prime gap mean ln(p)",
+    "EML-3": "x^{1/2+i\u03b3} oscillatory terms; L(s,\u03c7) Dirichlet series; M(x) under RH",
+    "EML-\u221e": "\u03c8(x) full prime staircase; M(x) unconditional; prime gap max"
+  },
+  "rabbit_hole_log": [
+    "The explicit formula is literally an EML decomposition: it writes an EML-\u221e object as EML-1 + (sum of EML-3 terms). Each Riemann zero contributes one EML-3 frequency. RH = all frequencies have amplitude x^{1/2} (EML-3 bound).",
+    "Dirichlet characters \u03c7(n) mod q: their Gauss sums \u03c4(\u03c7) = \u03a3 \u03c7(n)exp(2\u03c0in/q) are EML-3 (exponential sum). |\u03c4(\u03c7)|\u00b2 = q for primitive \u03c7 \u2014 EML-0 = q (integer).",
+    "Twin prime conjecture: prime gaps p_{n+1}-p_n are EML-\u221e (no formula). Hardy-Littlewood conjectures: density of twin primes ~ 2C\u2082\u00b7x/ln\u00b2x (EML-2 density)."
+  ],
+  "connections": {
+    "to_session_89": "Session 89: RH zeros = EML-3. Session 90: explicit formula uses those zeros to reconstruct EML-\u221e prime distribution",
+    "to_session_87": "Session 87: Dedekind \u03b7(\u03c4) = EML-3. Session 90: L(s,\u03c7) = EML-3 \u2014 both are EML-3 arithmetic series"
+  }
+}
