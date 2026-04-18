@@ -1,0 +1,400 @@
+{
+  "session": 171,
+  "title": "RH-EML Deep: Stratified Zero Statistics & Conditional Proofs",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "zero_density_strata": {
+    "model": "ZeroDensityStrata",
+    "eml_inf_strata_by_sigma": {
+      "0.0": {
+        "stratum": 5,
+        "label": "trivial-zeros",
+        "eml_depth": 2,
+        "zero_density": "isolated zeros at -2, -4, -6, ...",
+        "rh_status": "EML-2 (trivial zeros, explicitly computable)"
+      },
+      "0.25": {
+        "stratum": 1,
+        "label": "reducible-quantum (functional-eq side)",
+        "eml_depth": "\u221e (stratum 1)",
+        "zero_density": "paired with \u03c3' = 1-\u03c3 > 1/2",
+        "rh_status": "EML-\u221e (functional equation maps from \u03c3>1/2)"
+      },
+      "0.5": {
+        "stratum": 0,
+        "label": "reducible-base",
+        "eml_depth": 3,
+        "zero_density": "N(1/2,T) ~ T/2\u03c0 log(T/2\u03c0e) (all nontrivial)",
+        "rh_status": "EML-3 (critical line \u2014 oscillatory, below EML-\u221e)"
+      },
+      "0.6": {
+        "stratum": 1,
+        "label": "reducible-quantum",
+        "eml_depth": "\u221e (stratum 1)",
+        "zero_density": "N(\u03c3,T) = O(T^{A(1-\u03c3)}), A\u226412/5",
+        "rh_status": "EML-\u221e stratum 1 (RH: empty; off-RH: finite density)"
+      },
+      "0.75": {
+        "stratum": 1,
+        "label": "reducible-quantum",
+        "eml_depth": "\u221e (stratum 1)",
+        "zero_density": "N(\u03c3,T) = O(T^{A(1-\u03c3)}), A\u226412/5",
+        "rh_status": "EML-\u221e stratum 1 (RH: empty; off-RH: finite density)"
+      },
+      "1.0": {
+        "stratum": 2,
+        "label": "reducible-physical",
+        "eml_depth": "\u221e (stratum 2)",
+        "zero_density": "pole of \u03b6 (not a zero)",
+        "rh_status": "EML-\u221e simple pole (different EML-\u221e flavor than zeros)"
+      },
+      "1.5": {
+        "stratum": 5,
+        "label": "absolute-exterior",
+        "eml_depth": 1,
+        "zero_density": "N(\u03c3,T) = 0 for \u03c3>1 (Euler product)",
+        "rh_status": "EML-1 (no zeros, absolutely convergent)"
+      }
+    },
+    "zero_density_estimates": {
+      "100": {
+        "0.5": {
+          "sigma": 0.5,
+          "T": 100,
+          "N_ingham_bound": 101.0,
+          "N_huxley_bound": 254.21,
+          "zero_free_boundary": 0.783321,
+          "in_zero_free_region": false,
+          "eml_stratum": 0
+        },
+        "0.6": {
+          "sigma": 0.6,
+          "T": 100,
+          "N_ingham_bound": 40.13,
+          "N_huxley_bound": 83.97,
+          "zero_free_boundary": 0.783321,
+          "in_zero_free_region": false,
+          "eml_stratum": 1
+        },
+        "0.7": {
+          "sigma": 0.7,
+          "T": 100,
+          "N_ingham_bound": 15.94,
+          "N_huxley_bound": 27.74,
+          "zero_free_boundary": 0.783321,
+          "in_zero_free_region": false,
+          "eml_stratum": 1
+        },
+        "0.8": {
+          "sigma": 0.8,
+          "T": 100,
+          "N_ingham_bound": 6.33,
+          "N_huxley_bound": 9.16,
+          "zero_free_boundary": 0.783321,
+          "in_zero_free_region": true,
+          "eml_stratum": 1
+        },
+        "0.9": {
+          "sigma": 0.9,
+          "T": 100,
+          "N_ingham_bound": 2.52,
+          "N_huxley_bound": 3.03,
+          "zero_free_boundary": 0.783321,
+          "in_zero_free_region": true,
+          "eml_stratum": 1
+        }
+      },
+      "1000": {
+        "0.5": {
+          "sigma": 0.5,
+          "T": 1000,
+          "N_ingham_bound": 1001.0,
+          "N_huxley_bound": 3985.85,
+          "zero_free_boundary": 0.855256,
+          "in_zero_free_region": false,
+          "eml_stratum": 0
+        },
+        "0.6": {
+          "sigma": 0.6,
+          "T": 1000,
+          "N_ingham_bound": 251.39,
+          "N_huxley_bound": 759.31,
+          "zero_free_boundary": 0.855256,
+          "in_zero_free_region": false,
+          "eml_stratum": 1
+        },
+        "0.7": {
+          "sigma": 0.7,
+          "T": 1000,
+          "N_ingham_bound": 63.13,
+          "N_huxley_bound": 144.65,
+          "zero_free_boundary": 0.855256,
+          "in_zero_free_region": false,
+          "eml_stratum": 1
+        },
+        "0.8": {
+          "sigma": 0.8,
+          "T": 1000,
+          "N_ingham_bound": 15.86,
+          "N_huxley_bound": 27.56,
+          "zero_free_boundary": 0.855256,
+          "in_zero_free_region": false,
+          "eml_stratum": 1
+        },
+        "0.9": {
+          "sigma": 0.9,
+          "T": 1000,
+          "N_ingham_bound": 3.98,
+          "N_huxley_bound": 5.25,
+          "zero_free_boundary": 0.855256,
+          "in_zero_free_region": true,
+          "eml_stratum": 1
+        }
+      },
+      "10000": {
+        "0.5": {
+          "sigma": 0.5,
+          "T": 10000,
+          "N_ingham_bound": 10001.0,
+          "N_huxley_bound": 63103.31,
+          "zero_free_boundary": 0.891428,
+          "in_zero_free_region": false,
+          "eml_stratum": 0
+        },
+        "0.6": {
+          "sigma": 0.6,
+          "T": 10000,
+          "N_ingham_bound": 1585.02,
+          "N_huxley_bound": 6918.97,
+          "zero_free_boundary": 0.891428,
+          "in_zero_free_region": false,
+          "eml_stratum": 1
+        },
+        "0.7": {
+          "sigma": 0.7,
+          "T": 10000,
+          "N_ingham_bound": 251.2,
+          "N_huxley_bound": 758.63,
+          "zero_free_boundary": 0.891428,
+          "in_zero_free_region": false,
+          "eml_stratum": 1
+        },
+        "0.8": {
+          "sigma": 0.8,
+          "T": 10000,
+          "N_ingham_bound": 39.81,
+          "N_huxley_bound": 83.18,
+          "zero_free_boundary": 0.891428,
+          "in_zero_free_region": false,
+          "eml_stratum": 1
+        },
+        "0.9": {
+          "sigma": 0.9,
+          "T": 10000,
+          "N_ingham_bound": 6.31,
+          "N_huxley_bound": 9.12,
+          "zero_free_boundary": 0.891428,
+          "in_zero_free_region": true,
+          "eml_stratum": 1
+        }
+      }
+    },
+    "stratum_density_map": {
+      "0.0": {
+        "stratum": 5,
+        "eml_depth": 2,
+        "N_huxley_bound": 15886995.99,
+        "zero_free": false
+      },
+      "0.25": {
+        "stratum": 1,
+        "eml_depth": "\u221e (stratum 1)",
+        "N_huxley_bound": 251640.96,
+        "zero_free": false
+      },
+      "0.5": {
+        "stratum": 0,
+        "eml_depth": 3,
+        "N_huxley_bound": 3985.85,
+        "zero_free": false
+      },
+      "0.6": {
+        "stratum": 1,
+        "eml_depth": "\u221e (stratum 1)",
+        "N_huxley_bound": 759.31,
+        "zero_free": false
+      },
+      "0.7": {
+        "stratum": 1,
+        "eml_depth": "\u221e (stratum 1)",
+        "N_huxley_bound": 144.65,
+        "zero_free": false
+      },
+      "0.75": {
+        "stratum": 1,
+        "eml_depth": "\u221e (stratum 1)",
+        "N_huxley_bound": 63.13,
+        "zero_free": false
+      },
+      "0.8": {
+        "stratum": 1,
+        "eml_depth": "\u221e (stratum 1)",
+        "N_huxley_bound": 27.56,
+        "zero_free": false
+      },
+      "0.9": {
+        "stratum": 1,
+        "eml_depth": "\u221e (stratum 1)",
+        "N_huxley_bound": 5.25,
+        "zero_free": true
+      },
+      "0.95": {
+        "stratum": 1,
+        "eml_depth": "\u221e (stratum 1)",
+        "N_huxley_bound": 2.29,
+        "zero_free": true
+      },
+      "1.0": {
+        "stratum": 2,
+        "eml_depth": "\u221e (stratum 2)",
+        "N_huxley_bound": 0,
+        "zero_free": false
+      },
+      "1.5": {
+        "stratum": 5,
+        "eml_depth": 1,
+        "N_huxley_bound": 0,
+        "zero_free": false
+      }
+    },
+    "eml_depth": {
+      "critical_line": 3,
+      "strip_1_2_to_1": "\u221e stratum 1",
+      "pole": "\u221e stratum 2",
+      "trivial_zeros": 2
+    },
+    "key_insight": "\u03c3=1/2: EML-3 (not EML-\u221e!); 1/2<\u03c3<1: EML-\u221e stratum 1 (RH: empty)"
+  },
+  "conditional_proof": {
+    "model": "ConditionalProofDeep",
+    "asymmetry_argument": {
+      "on_critical_line": {
+        "d_zeta": 3,
+        "d_inv_zeta": 3,
+        "delta_d": 0,
+        "consistent_with_asymmetry": true
+      },
+      "off_line_zero": {
+        "d_zeta_at_sigma0": "\u221e stratum 1",
+        "d_inv_zeta_at_sigma0": "\u221e stratum 1",
+        "functional_eq_check": "consistent at stratum level",
+        "new_argument": "Stratum asymmetry: zero at stratum 1 \u2192 N(\u03c3,T) jump = EML-\u221e discontinuity",
+        "contradiction": "N(\u03c3,T) is EML-2 smooth \u2192 contradicts EML-\u221e jump",
+        "status": "conditional (requires N(\u03c3,T) smoothness as axiom)"
+      },
+      "proof_status": "Conditional proof fragment: gap = N(\u03c3,T) smoothness not yet proved from first principles"
+    },
+    "lindelof_connection": {
+      "lindelof_zero_density": {
+        "0.5": 1000.0,
+        "0.6": 251.19,
+        "0.7": 63.1,
+        "0.8": 15.85,
+        "0.9": 3.98
+      },
+      "eml_interpretation": "Lindel\u00f6f = EML-2 envelope exact (no EML-\u221e excess)",
+      "rh_implies_lindelof": true,
+      "lindelof_implies_rh": false,
+      "eml_depth_lindelof_statement": 2,
+      "eml_depth_proof": "\u221e"
+    },
+    "dirichlet_strata": {
+      "grh": "All L(\u03c7,s) nontrivial zeros on \u03c3=1/2 (EML-3)",
+      "universality": "\u03b6 approximates any f in EML-\u221e stratum 1 region",
+      "eml_depth_universality": "\u221e (universal approximation = EML-\u221e property)",
+      "grh_eml": "GRH \u27fa EML-\u221e stratum 1 empty for all L-functions",
+      "voronin_stratum": "Stratum 1 is 'universally dense' with approximations \u2014 yet conjectured zero-free"
+    },
+    "proof_gap": "N(\u03c3,T) EML-2 smoothness not derived from EML axioms alone",
+    "eml_depth": {
+      "proof_fragment": 2,
+      "full_proof": "\u221e",
+      "lindelof": 2,
+      "rh_statement": "\u221e"
+    },
+    "key_insight": "Conditional: off-line zero \u2192 EML-\u221e jump in N(\u03c3,T) contradicts EML-2 smoothness"
+  },
+  "gue_statistics": {
+    "model": "ZeroStatisticsGUE",
+    "gue_hypothesis": "Zero spacings ~ GUE eigenvalue spacings (EML-3 level repulsion)",
+    "montgomery_pair_correlation": {
+      "0.5": 0.594715,
+      "1.0": 1.0,
+      "1.5": 0.954968,
+      "2.0": 1.0,
+      "3.0": 1.0
+    },
+    "keating_snaith_moments": {
+      "1": {
+        "k": 1,
+        "T": 1000.0,
+        "log_T_power": 5.0699,
+        "arithmetic_factor_approx": 1.617918,
+        "moment_estimate": 8.2026,
+        "eml_depth_log_term": 2,
+        "eml_depth_arithmetic": 3
+      },
+      "2": {
+        "k": 2,
+        "T": 1000.0,
+        "log_T_power": 660.6784,
+        "arithmetic_factor_approx": 4.235154,
+        "moment_estimate": 2798.075,
+        "eml_depth_log_term": 2,
+        "eml_depth_arithmetic": 3
+      },
+      "3": {
+        "k": 3,
+        "T": 1000.0,
+        "log_T_power": 2212981.2916,
+        "arithmetic_factor_approx": 17.936533,
+        "moment_estimate": 39693211.4227,
+        "eml_depth_log_term": 2,
+        "eml_depth_arithmetic": 3
+      }
+    },
+    "eml_depth": {
+      "pair_correlation": 3,
+      "log_moment": 2,
+      "arithmetic_factor": 3,
+      "gue_connection": "\u221e"
+    },
+    "key_insight": "GUE zeros ~ EML-3 (sinc\u00b2 correlation); moments = EML-2 \u00d7 EML-3"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Zero-free region boundary (rational approximation)",
+    "EML-1": "Euler product convergence for \u03c3>1",
+    "EML-2": "Zero density N(\u03c3,T) function itself, Lindel\u00f6f envelope, Keating-Snaith log moments",
+    "EML-3": "Critical line zeros (oscillatory), GUE pair correlation (sinc\u00b2), Montgomery",
+    "EML-\u221e": "Off-line zeros (stratum 1), pole at s=1 (stratum 2), RH statement itself"
+  },
+  "key_theorem": "The EML RH Stratified Zero Theorem: The nontrivial zeros on \u03c3=1/2 are EML-3 (oscillatory, not EML-\u221e). The critical strip 1/2 < \u03c3 < 1 is EML-\u221e stratum 1 (conjectured empty by RH). The zero-density function N(\u03c3,T) is EML-2 (smooth in \u03c3). A zero at \u03c3\u2080 > 1/2 would create an EML-\u221e jump discontinuity in N(\u03c3,T). This EML-\u221e jump contradicts the EML-2 smoothness of N(\u03c3,T) \u2014 giving a conditional proof fragment: if N(\u03c3,T) is EML-2 smooth (Lindel\u00f6f-type), then RH holds. The Lindel\u00f6f Hypothesis = 'the EML-2 skeleton of \u03b6 is exact.'",
+  "proof_fragment": {
+    "hypothesis": "N(\u03c3,T) is Lipschitz in \u03c3 \u2200\u03c3 \u2208 (1/2,1)",
+    "conclusion": "All nontrivial zeros satisfy Re(\u03c1) = 1/2 (RH)",
+    "gap": "Lipschitz property of N(\u03c3,T) not derived from axioms \u2014 equivalent to Lindel\u00f6f",
+    "status": "conditional proof fragment"
+  },
+  "rabbit_hole_log": [
+    "\u03c3=1/2 zeros = EML-3 (not EML-\u221e!): critical line is BELOW EML-\u221e",
+    "1/2 < \u03c3 < 1 = EML-\u221e stratum 1: the 'quantum reducible' layer",
+    "N(\u03c3,T) = EML-2 smooth: zero density function has quadratic structure",
+    "Off-line zero \u2192 EML-\u221e jump in N(\u03c3,T): contradicts EML-2 smoothness (new!)",
+    "Lindel\u00f6f = 'EML-2 skeleton exact': weakest form of our conjecture",
+    "GUE pair correlation = sinc\u00b2 = EML-3: same depth as zeros themselves"
+  ],
+  "connections": {
+    "S151_rh_stratified": "Extends: \u03c3=1/2 = EML-3 (not EML-\u221e as stated in S151 \u2014 corrected here!)",
+    "S150_grand_synth_9": "EML-\u221e stratum 1 = reducible-quantum: confirmed for \u03b6 zeros",
+    "S165_soc": "N(\u03c3,T) EML-2 smooth \u2194 no SOC-like critical divergence in zero density"
+  }
+}
