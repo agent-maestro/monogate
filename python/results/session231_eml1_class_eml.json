@@ -1,0 +1,121 @@
+{
+  "session": 231,
+  "title": "Direction D: EML-1 Class Characterization",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "eml1_analysis": {
+    "model": "EML1CatalogEML",
+    "instances": {
+      "partition_function_Z": {
+        "expression": "Z = \u03a3 exp(-\u03b2E_i)",
+        "primitive": "exp (single)",
+        "normalization": "NONE \u2014 Z itself is the unnormalized sum",
+        "why_eml1": "Sum of exp terms; no log taken; not yet normalized to probability",
+        "contrast": "F = -log(Z)/\u03b2 is EML-2: here the log appears"
+      },
+      "ground_state_energy": {
+        "expression": "E_0 ~ exp(-1/g) (non-perturbative)",
+        "primitive": "exp (single)",
+        "normalization": "NONE",
+        "why_eml1": "Single exponential suppression; no log factor"
+      },
+      "bcs_gap": {
+        "expression": "\u0394 ~ exp(-1/(N\u2080V))",
+        "primitive": "exp (single)",
+        "normalization": "NONE",
+        "why_eml1": "Exponential gap; the Cooper pair binding energy"
+      },
+      "birkhoff_convergence": {
+        "expression": "|time_avg - space_avg| ~ exp(-\u03bbN)",
+        "primitive": "exp (single, with decay rate \u03bb)",
+        "normalization": "NONE \u2014 rate of approach, not a normalized quantity",
+        "why_eml1": "Exponential convergence rate; no log"
+      },
+      "qec_threshold": {
+        "expression": "P_logical ~ (p/p_th)^{2^k} exp-suppression",
+        "primitive": "exp (single)",
+        "normalization": "NONE",
+        "why_eml1": "Exponential suppression of error below threshold"
+      },
+      "decoherence_factor": {
+        "expression": "exp(-\u03b3t) coherence decay",
+        "primitive": "exp (single)",
+        "normalization": "NONE",
+        "why_eml1": "Pure exponential decay; not yet integrated/logged"
+      },
+      "resolvent_decay": {
+        "expression": "|(A-\u03bb)^{-1}| ~ exp(-d(\u03bb, spec(A)))",
+        "primitive": "exp (single, of spectral distance)",
+        "normalization": "NONE",
+        "why_eml1": "Exponential decay away from spectrum"
+      },
+      "wigner_surmise": {
+        "expression": "P(s) = (\u03c0/2)s exp(-\u03c0s\u00b2/4)",
+        "primitive": "exp (single Gaussian)",
+        "normalization": "PARTIAL \u2014 but the characteristic feature is the exp factor",
+        "why_eml1": "Level-spacing distribution: exp factor dominates EML depth"
+      }
+    },
+    "primitive_test": {
+      "test_cases": {
+        "exp(-x)": {
+          "depth": 1,
+          "has_exp": true,
+          "has_log": false,
+          "result": "EML-1"
+        },
+        "exp(-x\u00b2)": {
+          "depth": 1,
+          "has_exp": true,
+          "has_log": false,
+          "result": "EML-1"
+        },
+        "-log(Z)/\u03b2": {
+          "depth": 2,
+          "has_exp": false,
+          "has_log": true,
+          "result": "EML-2"
+        },
+        "x\u00b2": {
+          "depth": 0,
+          "has_exp": false,
+          "has_log": false,
+          "result": "EML-0"
+        },
+        "cos(x)": {
+          "depth": 3,
+          "has_exp": true,
+          "has_log": false,
+          "result": "EML-3 (exp(ix) form)"
+        },
+        "log(\u222bexp(f)d\u03bc)": {
+          "depth": 2,
+          "has_exp": true,
+          "has_log": true,
+          "result": "EML-2 (paired)"
+        },
+        "\u03a3 exp(-\u03b2E_i)": {
+          "depth": 1,
+          "has_exp": true,
+          "has_log": false,
+          "result": "EML-1"
+        }
+      },
+      "rule": "EML-1 = exp without log; EML-2 = exp + log paired; EML-3 = exp(imaginary)",
+      "key_distinction": "The log partner is what elevates EML-1 to EML-2"
+    },
+    "instance_count": 8,
+    "common_property": "All EML-1 objects = single exp without normalization/log partner",
+    "key_insight": "EML-1 = exp-only class; Z=EML-1 because log(Z) is taken to get F=EML-2"
+  },
+  "eml_depth_summary": {
+    "EML-1_definition": "exp without log partner = single exponential primitive",
+    "contrast_eml2": "EML-2 = exp + log paired (= integration = normalization)",
+    "contrast_eml3": "EML-3 = exp(imaginary) = oscillatory extension"
+  },
+  "key_theorem": "The EML-1 Class Theorem (S231, Direction D): EML-1 = the single exponential class: objects of the form exp(f) where f is EML-0 or EML-1, and no outer logarithm is applied. The KEY distinction from EML-2: in EML-2, exp and log appear TOGETHER (paired as \u222b = exp-sum + log-normalization). In EML-1, exp appears ALONE \u2014 no normalization, no log partner. Partition function Z = EML-1 precisely because log(Z) hasn't been taken yet. The moment you write F = -log(Z)/\u03b2, you're at EML-2. The transition Z \u2192 F is the canonical EML-1 \u2192 EML-2 step: adding the log partner.",
+  "rabbit_hole_log": [
+    "Z=EML-1, F=EML-2: the partition function is the clearest EML-1\u21922 example",
+    "EML-1 = exp alone; EML-2 = exp+log; the log partner is what creates the integration layer",
+    "All exponential decays/growths without normalization = EML-1"
+  ]
+}
