@@ -1,0 +1,45 @@
+"""Session 607 --- Self-Referential Language The Atlas Describing Itself"""
+from __future__ import annotations
+from dataclasses import dataclass
+from typing import Any
+
+
+@dataclass
+class SelfReferentialLanguageEML:
+    def depth_analysis(self) -> dict[str, Any]:
+        return {
+            "object": "T328: Self-Referential Language The Atlas Describing Itself depth analysis",
+            "domains": {
+                "atlas_about_atlas": {"description": "The sentence describing the Atlas is EML-3", "depth": "EML-3", "reason": "meta-description participates in described depth"},
+                "theorem_statement": {"description": "A theorem about EML is itself EML-3", "depth": "EML-3", "reason": "theorizing about EML-3 = EML-3"},
+                "self_referential_paradox": {"description": "This sentence is EML-inf: is it?", "depth": "EML-inf", "reason": "Goedelian self-reference = EML-inf"},
+                "rabbit_hole_meta": {"description": "The Rabbit Hole Log references itself", "depth": "EML-3", "reason": "recursive catalog = EML-3"},
+                "eml_naming": {"description": "Naming a depth = EML-0 operation", "depth": "EML-0", "reason": "discrete label; EML-0"},
+                "framework_as_language": {"description": "EML framework IS a language", "depth": "EML-3", "reason": "oscillatory system for depth = EML-3"},
+            },
+        }
+
+    def analyze(self) -> dict[str, Any]:
+        return {
+            "model": "SelfReferentialLanguageEML",
+            "analysis": self.depth_analysis(),
+            "distribution": {'EML-3': 4, 'EML-inf': 1, 'EML-0': 1},
+            "theorem": "T328: Self-Referential Language The Atlas Describing Itself (S607).",
+        }
+
+
+def analyze_self_referential_language_eml() -> dict[str, Any]:
+    t = SelfReferentialLanguageEML()
+    return {
+        "session": 607,
+        "title": "Self-Referential Language The Atlas Describing Itself",
+        "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+        "analysis": t.analyze(),
+        "key_theorem": "T328: Self-Referential Language The Atlas Describing Itself (S607).",
+        "rabbit_hole_log": ['T328: atlas_about_atlas depth=EML-3 confirmed', 'T328: theorem_statement depth=EML-3 confirmed', 'T328: self_referential_paradox depth=EML-inf confirmed', 'T328: rabbit_hole_meta depth=EML-3 confirmed', 'T328: eml_naming depth=EML-0 confirmed', 'T328: framework_as_language depth=EML-3 confirmed'],
+    }
+
+
+if __name__ == "__main__":
+    import json
+    print(json.dumps(analyze_self_referential_language_eml(), indent=2, default=str))
