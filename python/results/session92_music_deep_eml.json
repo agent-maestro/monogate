@@ -1,0 +1,373 @@
+{
+  "session": 92,
+  "title": "Music Deep: Timbre, Psychoacoustics & Generative Composition",
+  "key_theorem": {
+    "theorem": "EML-3 Universality of Musical Structure",
+    "statement": "All musical sound phenomena are EML-3: pure tones A\u00b7sin(2\u03c0ft), timbre (spectral superposition), beating and roughness, polyrhythms, vibrato, and generative composition rules. Perceptual quantities derived from spectra are EML-2: spectral centroid, harmonic entropy, loudness (energy = EML-2 functional). Metric hierarchy (integer time signatures) is EML-0. EML depth of music matches EML depth of physics: waves = EML-3, energy = EML-2, counting = EML-0."
+  },
+  "timbre": {
+    "spectral_centroids": [
+      {
+        "instrument": "pure_tone",
+        "harmonics": [
+          1.0
+        ],
+        "spectral_centroid": 1.0,
+        "brightness": "dark",
+        "eml_timbre": 3,
+        "eml_centroid": 2,
+        "reason": "Centroid = weighted mean of harmonic indices = EML-2 (rational function of EML-3 amplitudes)"
+      },
+      {
+        "instrument": "piano",
+        "harmonics": [
+          1.0,
+          0.7,
+          0.5,
+          0.35,
+          0.25,
+          0.18,
+          0.12,
+          0.08,
+          0.05,
+          0.03
+        ],
+        "spectral_centroid": 3.0245,
+        "brightness": "bright",
+        "eml_timbre": 3,
+        "eml_centroid": 2,
+        "reason": "Centroid = weighted mean of harmonic indices = EML-2 (rational function of EML-3 amplitudes)"
+      },
+      {
+        "instrument": "clarinet",
+        "harmonics": [
+          1.0,
+          0.0,
+          0.5,
+          0.0,
+          0.25,
+          0.0,
+          0.12,
+          0.0,
+          0.06,
+          0.0
+        ],
+        "spectral_centroid": 2.658,
+        "brightness": "mid",
+        "eml_timbre": 3,
+        "eml_centroid": 2,
+        "reason": "Centroid = weighted mean of harmonic indices = EML-2 (rational function of EML-3 amplitudes)"
+      },
+      {
+        "instrument": "violin",
+        "harmonics": [
+          1.0,
+          0.9,
+          0.7,
+          0.5,
+          0.35,
+          0.25,
+          0.18,
+          0.12,
+          0.08,
+          0.05
+        ],
+        "spectral_centroid": 3.2906,
+        "brightness": "bright",
+        "eml_timbre": 3,
+        "eml_centroid": 2,
+        "reason": "Centroid = weighted mean of harmonic indices = EML-2 (rational function of EML-3 amplitudes)"
+      },
+      {
+        "instrument": "trumpet",
+        "harmonics": [
+          1.0,
+          0.8,
+          0.9,
+          0.6,
+          0.4,
+          0.7,
+          0.3,
+          0.5,
+          0.2,
+          0.3
+        ],
+        "spectral_centroid": 4.3509,
+        "brightness": "bright",
+        "eml_timbre": 3,
+        "eml_centroid": 2,
+        "reason": "Centroid = weighted mean of harmonic indices = EML-2 (rational function of EML-3 amplitudes)"
+      }
+    ],
+    "adsr_envelope": [
+      {
+        "t": 0.01,
+        "envelope": 0.2,
+        "eml": 1,
+        "reason": "ADSR decay = exp(-t/R): EML-1"
+      },
+      {
+        "t": 0.1,
+        "envelope": 0.85,
+        "eml": 1,
+        "reason": "ADSR decay = exp(-t/R): EML-1"
+      },
+      {
+        "t": 0.5,
+        "envelope": 0.7,
+        "eml": 1,
+        "reason": "ADSR decay = exp(-t/R): EML-1"
+      },
+      {
+        "t": 0.85,
+        "envelope": 0.633386,
+        "eml": 1,
+        "reason": "ADSR decay = exp(-t/R): EML-1"
+      },
+      {
+        "t": 1.0,
+        "envelope": 0.469224,
+        "eml": 1,
+        "reason": "ADSR decay = exp(-t/R): EML-1"
+      }
+    ],
+    "eml_timbre": 3,
+    "eml_centroid": 2,
+    "eml_envelope": 1
+  },
+  "roughness_consonance": {
+    "beating_analysis": [
+      {
+        "f1": 440.0,
+        "f2": 660.0,
+        "beat_freq_Hz": 220.0,
+        "roughness": 0.0,
+        "consonance": 1.0,
+        "eml_beat": 3,
+        "eml_roughness": 3
+      },
+      {
+        "f1": 440.0,
+        "f2": 550.0,
+        "beat_freq_Hz": 110.0,
+        "roughness": 0.0657,
+        "consonance": 0.9343,
+        "eml_beat": 3,
+        "eml_roughness": 3
+      },
+      {
+        "f1": 440.0,
+        "f2": 441.0,
+        "beat_freq_Hz": 1.0,
+        "roughness": 0.6249,
+        "consonance": 0.3751,
+        "eml_beat": 3,
+        "eml_roughness": 3
+      },
+      {
+        "f1": 440.0,
+        "f2": 473.0,
+        "beat_freq_Hz": 33.0,
+        "roughness": 1.0,
+        "consonance": 0.0,
+        "eml_beat": 3,
+        "eml_roughness": 3
+      }
+    ],
+    "just_intonation": [
+      {
+        "interval": "unison",
+        "ratio": "1/1",
+        "decimal": 1.0,
+        "complexity_p_q": 2,
+        "harmonic_entropy_bits": 1.0,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "minor_2nd",
+        "ratio": "16/15",
+        "decimal": 1.066667,
+        "complexity_p_q": 31,
+        "harmonic_entropy_bits": 4.9542,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "major_2nd",
+        "ratio": "9/8",
+        "decimal": 1.125,
+        "complexity_p_q": 17,
+        "harmonic_entropy_bits": 4.0875,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "minor_3rd",
+        "ratio": "6/5",
+        "decimal": 1.2,
+        "complexity_p_q": 11,
+        "harmonic_entropy_bits": 3.4594,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "major_3rd",
+        "ratio": "5/4",
+        "decimal": 1.25,
+        "complexity_p_q": 9,
+        "harmonic_entropy_bits": 3.1699,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "perfect_4th",
+        "ratio": "4/3",
+        "decimal": 1.333333,
+        "complexity_p_q": 7,
+        "harmonic_entropy_bits": 2.8074,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "tritone",
+        "ratio": "7/5",
+        "decimal": 1.4,
+        "complexity_p_q": 12,
+        "harmonic_entropy_bits": 3.585,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "perfect_5th",
+        "ratio": "3/2",
+        "decimal": 1.5,
+        "complexity_p_q": 5,
+        "harmonic_entropy_bits": 2.3219,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "minor_6th",
+        "ratio": "8/5",
+        "decimal": 1.6,
+        "complexity_p_q": 13,
+        "harmonic_entropy_bits": 3.7004,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "major_6th",
+        "ratio": "5/3",
+        "decimal": 1.666667,
+        "complexity_p_q": 8,
+        "harmonic_entropy_bits": 3.0,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "minor_7th",
+        "ratio": "16/9",
+        "decimal": 1.777778,
+        "complexity_p_q": 25,
+        "harmonic_entropy_bits": 4.6439,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "major_7th",
+        "ratio": "15/8",
+        "decimal": 1.875,
+        "complexity_p_q": 23,
+        "harmonic_entropy_bits": 4.5236,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      },
+      {
+        "interval": "octave",
+        "ratio": "2/1",
+        "decimal": 2.0,
+        "complexity_p_q": 3,
+        "harmonic_entropy_bits": 1.585,
+        "eml": 2,
+        "reason": "log\u2082(p+q): EML-2 (logarithm of integer = EML-2)"
+      }
+    ],
+    "eml_consonance": 3,
+    "eml_harmonic_entropy": 2
+  },
+  "rhythmic_hierarchy": {
+    "polyrhythms": [
+      {
+        "ratio": "3:2",
+        "period_lcm": 6.0,
+        "beat_n_interval": 1.0,
+        "beat_m_interval": 1.5,
+        "eml_each_pulse": 3,
+        "eml_polyrhythm": 3,
+        "reason": "Two EML-3 periodic signals with incommensurate periods \u2192 quasi-periodic = EML-3"
+      },
+      {
+        "ratio": "4:3",
+        "period_lcm": 12.0,
+        "beat_n_interval": 1.0,
+        "beat_m_interval": 1.3333,
+        "eml_each_pulse": 3,
+        "eml_polyrhythm": 3,
+        "reason": "Two EML-3 periodic signals with incommensurate periods \u2192 quasi-periodic = EML-3"
+      },
+      {
+        "ratio": "5:4",
+        "period_lcm": 20.0,
+        "beat_n_interval": 1.0,
+        "beat_m_interval": 1.25,
+        "eml_each_pulse": 3,
+        "eml_polyrhythm": 3,
+        "reason": "Two EML-3 periodic signals with incommensurate periods \u2192 quasi-periodic = EML-3"
+      }
+    ],
+    "generative_rules": [
+      {
+        "rule": "Harmonic rhythm",
+        "formula": "f_n = f_0 \u00b7 2^{n/12} (equal temperament)",
+        "eml": 3,
+        "reason": "2^{n/12} = exp(n\u00b7ln2/12): EML-3 (exp of EML-2)"
+      },
+      {
+        "rule": "Phase modulation (vibrato)",
+        "formula": "x(t) = A\u00b7sin(2\u03c0f\u00b7t + \u03b2\u00b7sin(2\u03c0f_v\u00b7t))",
+        "eml": 3,
+        "reason": "sin of sin = EML-3 composition"
+      },
+      {
+        "rule": "Amplitude modulation (tremolo)",
+        "formula": "x(t) = (1 + m\u00b7sin(2\u03c0f_t\u00b7t))\u00b7A\u00b7sin(2\u03c0f\u00b7t)",
+        "eml": 3,
+        "reason": "Product of EML-3 = EML-3"
+      },
+      {
+        "rule": "Spectral centroid trajectory",
+        "formula": "SC(t) = SC_0 + A\u00b7exp(-t/\u03c4)",
+        "eml": 1,
+        "reason": "Exponential decay of brightness = EML-1"
+      }
+    ],
+    "eml_rhythm": 3,
+    "eml_metric_hierarchy": 0
+  },
+  "eml_depth_summary": {
+    "EML-0": "Integer time signatures 4/4, 3/4; note values (whole/half/quarter); just intonation integer ratios",
+    "EML-1": "ADSR decay envelope exp(-t/\u03c4); spectral centroid decay; loudness falloff",
+    "EML-2": "Spectral centroid (weighted mean); harmonic entropy log\u2082(p+q); equal temperament 2^{n/12}",
+    "EML-3": "Tones sin(2\u03c0ft); timbre (spectral sum); beating; polyrhythms; vibrato; composition rules"
+  },
+  "rabbit_hole_log": [
+    "Music is EML-3 physics: the ear is a Fourier analyzer (inner hair cells = EML-3 frequency decomposition). Consonance = constructive interference of EML-3 waves. Dissonance = beating between EML-3 components.",
+    "Equal temperament 2^{1/12} \u2248 1.05946: this is exp(ln2/12) = EML-3 (exp of EML-2). Just intonation uses p/q rationals = EML-0. The tension between EML-3 (ET) and EML-0 (JI) is the fundamental tuning problem.",
+    "Generative composition: if we parameterize music by its EML tree, then EML-3 rules (PM, AM, FM) generate all classical synthesis. Higher EML depth = more complex timbres. Algorithmic composition = navigation of EML-3 space."
+  ],
+  "connections": {
+    "to_session_37": "Session 37 (EML Fourier): Fourier basis = EML-3. Session 92: music IS Fourier analysis in physical form",
+    "to_session_60": "Harmonic entropy = Shannon entropy of JI approximations = EML-2. Same class as Fisher information"
+  }
+}
