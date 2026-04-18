@@ -1,0 +1,158 @@
+{
+  "session": 80,
+  "title": "Algorithmic Randomness: Schnorr, Prefix-free K & EML Depth",
+  "key_theorem": {
+    "theorem": "EML Randomness Zoo Theorem",
+    "statement": "The algorithmic randomness hierarchy maps onto EML depth: ML-random and Schnorr-random are EML-\u221e; Kurtz-random is EML-3 (envelope); computable-random is EML-2; periodic is EML-0. EML depth is the fine structure of algorithmic complexity: K(x) \u2248 O(k\u00b7polylog n) for EML-k processes."
+  },
+  "randomness_zoo": [
+    {
+      "name": "Martin-L\u00f6f random (ML-random)",
+      "definition": "Passes all computable statistical tests; not in any ML-null set",
+      "eml_depth": "\u221e",
+      "eml_reason": "No EML-finite generating function; digit function is incompressible",
+      "examples": [
+        "Chaitin \u03a9",
+        "typical Borel normal",
+        "quantum measurement outcomes"
+      ],
+      "stronger_than": []
+    },
+    {
+      "name": "Schnorr random",
+      "definition": "Passes all computable martingales with computable risk bounds",
+      "eml_depth": "\u221e",
+      "eml_reason": "EML-\u221e but 'uniformly' so; weaker than ML-random",
+      "examples": [
+        "Some computable reals fail Schnorr; generic reals are Schnorr random"
+      ],
+      "stronger_than": [
+        "ML-random"
+      ]
+    },
+    {
+      "name": "Kurtz random (weakly random)",
+      "definition": "Not in any computably open null set",
+      "eml_depth": 3,
+      "eml_reason": "Weaker notion; computable approximation possible from outside \u2192 EML-3 envelope",
+      "examples": [
+        "Lower-Schnorr random reals"
+      ],
+      "stronger_than": [
+        "ML-random",
+        "Schnorr random"
+      ]
+    },
+    {
+      "name": "Computable random",
+      "definition": "Passes all computable statistical tests of 'simple' form",
+      "eml_depth": 2,
+      "eml_reason": "Tests are computable functions \u2192 EML-2 generators suffice to fool them",
+      "examples": [
+        "Champernowne (computable, passes frequency tests, EML-2)"
+      ],
+      "stronger_than": [
+        "ML-random",
+        "Schnorr random",
+        "Kurtz random"
+      ]
+    },
+    {
+      "name": "Periodic / EML-0",
+      "definition": "Constant or periodic: trivially structured",
+      "eml_depth": 0,
+      "eml_reason": "Digit function n\u21a6d_n is EML-0 (period \u2264 some constant)",
+      "examples": [
+        "010101...",
+        "000..."
+      ],
+      "stronger_than": [
+        "all above"
+      ]
+    }
+  ],
+  "prefix_free_k": {
+    "upper_bounds": [
+      {
+        "class": "EML-0 (constant/periodic)",
+        "K_upper": "O(1)",
+        "eml_depth": 0
+      },
+      {
+        "class": "EML-1 (exp(r\u00b7n) digits)",
+        "K_upper": "O(log n)",
+        "eml_depth": 1
+      },
+      {
+        "class": "EML-2 (polynomial/log, e.g. Champernowne)",
+        "K_upper": "O(log\u00b2 n)",
+        "eml_depth": 2
+      },
+      {
+        "class": "EML-3 (\u03c0 digits via BBP)",
+        "K_upper": "O(log\u00b3 n)",
+        "eml_depth": 3
+      },
+      {
+        "class": "EML-\u221e (ML-random)",
+        "K_upper": "\u0398(n) \u2014 incompressible",
+        "eml_depth": "\u221e"
+      }
+    ],
+    "coding_theorem": {
+      "theorem": "Coding Theorem (Levin-Schnorr)",
+      "statement": "m(x) = 2^{-K(x)} up to multiplicative constant, where m is the universal semimeasure",
+      "eml_interpretation": "m(x) = EML-1 atom in K(x): m = exp(-K(x)\u00b7ln 2); K = EML-\u221e for random x means m\u21920"
+    },
+    "eml_k_correspondence": "EML-k process generates strings with K(x_n) = O(k\u00b7polylog(n))"
+  },
+  "solovay_test": {
+    "theorem": "Solovay \u2194 Martin-L\u00f6f (both EML-\u221e)",
+    "random_series": {
+      "K_sequence_sample": [
+        0.5,
+        1.5,
+        2.5,
+        3.5,
+        4.5,
+        5.5,
+        6.5,
+        7.5,
+        8.5,
+        9.5
+      ],
+      "partial_sum": 1.414211,
+      "converges": true,
+      "random_by_solovay": true
+    },
+    "structured_series": {
+      "K_sequence_sample": [
+        3.0,
+        4.754887502163468,
+        6.0,
+        6.965784284662087,
+        7.754887502163468,
+        8.422064766172813,
+        9.0,
+        9.509775004326936,
+        9.965784284662087,
+        10.378294855911893
+      ],
+      "partial_sum": 0.200868,
+      "converges": true,
+      "random_by_solovay": true
+    },
+    "eml_solovay": "The Solovay sum \u03a3 2^{-K(x_n)} is EML-1 per term; convergence = EML-\u221e of x"
+  },
+  "eml_k_correspondence": {
+    "k=0": "Constant strings; K=O(1)",
+    "k=1": "exp-generated sequences; K=O(log n)",
+    "k=2": "Champernowne, LCG; K=O(log\u00b2n)",
+    "k=3": "\u03c0 digits, BBP; K=O(log\u00b3n)",
+    "k=\u221e": "ML-random; K=\u0398(n)"
+  },
+  "connections": {
+    "to_session_69": "Session 69: Chaitin \u03a9, normal numbers. Session 80: deeper hierarchy (Schnorr, Solovay, prefix-free K)",
+    "to_session_72": "Approximation rate O(N^{-s}) \u2194 K(x_N) \u2248 s\u00b7log N: same information-theoretic content"
+  }
+}
