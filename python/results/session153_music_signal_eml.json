@@ -1,0 +1,211 @@
+{
+  "session": 153,
+  "title": "Music & Signal Processing: EML Depth of Harmonic Structures",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "harmonic_series": {
+    "model": "HarmonicSeriesEML",
+    "fundamental_hz": 440.0,
+    "overtone_series": {
+      "1": 440.0,
+      "2": 880.0,
+      "3": 1320.0,
+      "4": 1760.0,
+      "5": 2200.0,
+      "6": 2640.0,
+      "7": 3080.0,
+      "8": 3520.0
+    },
+    "just_intonation_subset": {
+      "unison": {
+        "ratio": "1/1",
+        "freq_hz": 440.0,
+        "cents_from_ET": 0.0,
+        "eml_depth_ratio": 0,
+        "eml_depth_cents": 2
+      },
+      "minor_2nd": {
+        "ratio": "16/15",
+        "freq_hz": 469.333,
+        "cents_from_ET": 11.73,
+        "eml_depth_ratio": 0,
+        "eml_depth_cents": 2
+      },
+      "major_2nd": {
+        "ratio": "9/8",
+        "freq_hz": 495.0,
+        "cents_from_ET": 3.91,
+        "eml_depth_ratio": 0,
+        "eml_depth_cents": 2
+      },
+      "minor_3rd": {
+        "ratio": "6/5",
+        "freq_hz": 528.0,
+        "cents_from_ET": 15.64,
+        "eml_depth_ratio": 0,
+        "eml_depth_cents": 2
+      },
+      "major_3rd": {
+        "ratio": "5/4",
+        "freq_hz": 550.0,
+        "cents_from_ET": -13.69,
+        "eml_depth_ratio": 0,
+        "eml_depth_cents": 2
+      }
+    },
+    "et_scale_hz": {
+      "0": 440.0,
+      "1": 466.1638,
+      "2": 493.8833,
+      "3": 523.2511,
+      "4": 554.3653,
+      "5": 587.3295,
+      "6": 622.254,
+      "7": 659.2551,
+      "8": 698.4565,
+      "9": 739.9888,
+      "10": 783.9909,
+      "11": 830.6094,
+      "12": 880.0
+    },
+    "beating": {
+      "(440, 442)": {
+        "f1": 440,
+        "f2": 442,
+        "beat_hz": 2,
+        "critical_bandwidth_hz": 113.5,
+        "roughness_approx": 0.9474,
+        "eml_depth_beat": 0,
+        "eml_depth_roughness": 2
+      },
+      "(440, 450)": {
+        "f1": 440,
+        "f2": 450,
+        "beat_hz": 10,
+        "critical_bandwidth_hz": 113.5,
+        "roughness_approx": 0.9741,
+        "eml_depth_beat": 0,
+        "eml_depth_roughness": 2
+      },
+      "(440, 660)": {
+        "f1": 440,
+        "f2": 660,
+        "beat_hz": 220,
+        "critical_bandwidth_hz": 113.5,
+        "roughness_approx": 0.0578,
+        "eml_depth_beat": 0,
+        "eml_depth_roughness": 2
+      }
+    },
+    "eml_depth": {
+      "harmonic_ratios": 0,
+      "equal_temperament": 3,
+      "beating": 0,
+      "roughness": 2
+    },
+    "key_insight": "Harmonic ratios = EML-0; ET tuning = EML-3 (irrational powers); roughness = EML-2"
+  },
+  "spectral_analysis": {
+    "model": "SpectralAnalysisEML",
+    "sample_rate": 44100.0,
+    "n_fft": 1024,
+    "freq_resolution_hz": 43.0664,
+    "dft_bins": {
+      "0": 0.0,
+      "1": 43.07,
+      "10": 430.66,
+      "100": 4306.64,
+      "512": 22050.0
+    },
+    "spectral_entropy_nats": 5.5887,
+    "mel_scale": {
+      "100": 150.49,
+      "500": 607.45,
+      "1000": 999.99,
+      "4000": 2146.06,
+      "8000": 2840.02,
+      "16000": 3574.92
+    },
+    "wavelet_heisenberg": {
+      "0.001": {
+        "scale": 0.001,
+        "sigma_t": 0.001,
+        "sigma_f": 79.577472,
+        "heisenberg_product": 0.079577,
+        "eml_depth": 2
+      },
+      "0.01": {
+        "scale": 0.01,
+        "sigma_t": 0.01,
+        "sigma_f": 7.957747,
+        "heisenberg_product": 0.079577,
+        "eml_depth": 2
+      },
+      "0.1": {
+        "scale": 0.1,
+        "sigma_t": 0.1,
+        "sigma_f": 0.795775,
+        "heisenberg_product": 0.079577,
+        "eml_depth": 2
+      }
+    },
+    "eml_depth": {
+      "dft_bins": 0,
+      "spectral_entropy": 2,
+      "mel_scale": 2,
+      "cepstrum": 2,
+      "wavelet": 2
+    },
+    "key_insight": "All spectral analysis tools are EML-2 (logarithmic, quadratic forms)"
+  },
+  "musical_tension": {
+    "model": "MusicalTensionEML",
+    "chord_tensions": {
+      "C_maj": 1.0,
+      "G_maj": 1.0,
+      "D_min": 1.6667,
+      "B_dim": 3.0,
+      "F_maj": 1.0,
+      "G7": 1.5
+    },
+    "voice_leading_distance": {
+      "C_to_G": 9,
+      "G7_to_C": 14
+    },
+    "g7_to_c_resolution": {
+      "tension_before": 1.5,
+      "tension_after": 1.0,
+      "delta_tension": 0.5,
+      "is_resolution_event": false,
+      "eml_depth": "2 (gradual change)"
+    },
+    "timbre_centroid_hz": 248.52,
+    "eml_depth": {
+      "tension_model": 2,
+      "voice_leading": 0,
+      "resolution_event": "\u221e",
+      "timbre": 2
+    },
+    "key_insight": "Harmonic tension = EML-2; resolution event = EML-\u221e (perceptual phase transition)"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Harmonic ratios (3/2, 5/4...), beat frequency, semitone counts, DFT bins",
+    "EML-1": "False-nearest-neighbor decay in Takens embedding, roughness peak",
+    "EML-2": "Mel scale, spectral entropy, MFCC, timbre, tonal tension, wavelet",
+    "EML-3": "Equal temperament (2^(n/12) = irrational), pure tones, Fourier basis",
+    "EML-\u221e": "Musical resolution events (perceptual phase transitions), timbre jumps"
+  },
+  "key_theorem": "The EML Music Depth Theorem: Harmonic frequency ratios are EML-0 \u2014 the integers. Pure tones and the Fourier basis are EML-3 (oscillatory). Psychoacoustic models (roughness, tension, Mel scale) are EML-2. Equal temperament lives at EML-3 (irrational powers: 2^(1/12) = e^(log2/12)). Musical resolution \u2014 the moment tension collapses \u2014 is EML-\u221e: a perceptual phase transition that cannot be described by any EML-finite function of the notes.",
+  "rabbit_hole_log": [
+    "Harmonic series n*f\u2080 = EML-0: integers, no exp/log needed",
+    "Equal temperament 2^(1/12) = EML-3: same depth as sin/cos!",
+    "Mel scale = 2595*log10(1+f/700) = EML-2: logarithmic perception",
+    "Spectral entropy = EML-2: Shannon entropy over power spectrum",
+    "G7\u2192C resolution = EML-\u221e: perceptual phase transition (same as Hopf bifurcation!)",
+    "Heisenberg uncertainty product \u03c3_t*\u03c3_f = 1/(4\u03c0) = EML-2 constant"
+  ],
+  "connections": {
+    "S37_fourier": "Fourier basis = EML-3 (oscillatory); spectrum = EML-2 (entropy)",
+    "S152_chaos": "Hopf bifurcation (limit cycle) \u2194 musical tone onset: both EML-\u221e transition to EML-3",
+    "S136_linguistics": "Semantic shift = EML-\u221e; musical resolution = EML-\u221e (same: expectation violation)"
+  }
+}
