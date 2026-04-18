@@ -1,0 +1,363 @@
+{
+  "session": 62,
+  "title": "Navier-Stokes & PDE EML Complexity",
+  "section1_heat_kernel": {
+    "normalization": [
+      {
+        "t": 0.01,
+        "norm": 0.9999999999999736,
+        "err": 2.6423307986078726e-14,
+        "G_0": 2.8209479177387813
+      },
+      {
+        "t": 0.1,
+        "norm": 0.9999999999999735,
+        "err": 2.653433028854124e-14,
+        "G_0": 0.8920620580763855
+      },
+      {
+        "t": 0.5,
+        "norm": 0.9999999999999736,
+        "err": 2.6423307986078726e-14,
+        "G_0": 0.3989422804014327
+      },
+      {
+        "t": 1.0,
+        "norm": 0.9999999999999734,
+        "err": 2.6645352591003757e-14,
+        "G_0": 0.28209479177387814
+      },
+      {
+        "t": 2.0,
+        "norm": 0.9999999999999736,
+        "err": 2.6423307986078726e-14,
+        "G_0": 0.19947114020071635
+      }
+    ],
+    "all_normalized": true,
+    "convergence": [
+      {
+        "t": 0.1,
+        "u_0": 0.7381523371058168
+      },
+      {
+        "t": 0.5,
+        "u_0": 0.38411835698921065
+      },
+      {
+        "t": 1.0,
+        "u_0": 0.27721869795554416
+      },
+      {
+        "t": 2.0,
+        "u_0": 0.19806144568787692
+      }
+    ],
+    "eml_depth": 2
+  },
+  "section2_wave_equation": {
+    "gaussian_ic_rows": [
+      {
+        "t": 0.0,
+        "u": 1.0,
+        "exact": 1.0
+      },
+      {
+        "t": 0.5,
+        "u": 0.7788007830714049,
+        "exact": 0.7788007830714049
+      },
+      {
+        "t": 1.0,
+        "u": 0.36787944117144233,
+        "exact": 0.36787944117144233
+      },
+      {
+        "t": 2.0,
+        "u": 0.01831563888873418,
+        "exact": 0.01831563888873418
+      }
+    ],
+    "eml_depth_preserving": true,
+    "eml_depth_for_gaussian_IC": 2
+  },
+  "section3_burgers": {
+    "shock_profiles": {
+      "x": [
+        -3.0,
+        -2.5,
+        -2.0,
+        -1.5,
+        -1.0,
+        -0.5,
+        0.0,
+        0.5,
+        1.0,
+        1.5,
+        2.0,
+        2.5,
+        3.0
+      ],
+      "t01": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "t05": [
+        1.0,
+        1.0,
+        1.0,
+        0.9999999999998128,
+        0.9999999958776927,
+        0.9999092042625951,
+        0.0,
+        -0.9999092042625951,
+        -0.9999999958776927,
+        -0.9999999999998128,
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "t20": [
+        0.9999993881955461,
+        0.9999925467214317,
+        0.9999092042625951,
+        0.9988944427261528,
+        0.9866142981514303,
+        0.8482836399575129,
+        0.0,
+        -0.8482836399575129,
+        -0.9866142981514303,
+        -0.9988944427261528,
+        -0.9999092042625951,
+        -0.9999925467214317,
+        -0.9999993881955461
+      ]
+    },
+    "eml_depth": 3,
+    "note": "Cole-Hopf transform: Burgers \u2192 heat eq \u2192 EML-3 solution"
+  },
+  "section4_schrodinger": {
+    "free_packet": [
+      {
+        "x": -3.0,
+        "t0": 0.06657212939314774,
+        "t1": 0.024349227509055205,
+        "t3": 0.029500036306198792
+      },
+      {
+        "x": -1.0,
+        "t0": 0.49190519871123883,
+        "t1": 0.2684058295646861,
+        "t3": 0.1373940442151358
+      },
+      {
+        "x": 0.0,
+        "t0": 0.6316187777460647,
+        "t1": 0.4890673081842252,
+        "t3": 0.23540667984296024
+      },
+      {
+        "x": 1.0,
+        "t0": 0.49190519871123883,
+        "t1": 0.5973481591421825,
+        "t3": 0.34582399324997426
+      },
+      {
+        "x": 3.0,
+        "t0": 0.06657212939314774,
+        "t1": 0.2684058295646861,
+        "t3": 0.47041828325567353
+      }
+    ],
+    "ho_wavefunctions": [
+      {
+        "n": 0,
+        "psi_0": 0.7511255444649425,
+        "psi_1": 0.45558067201133257,
+        "E_n": 0.5
+      },
+      {
+        "n": 1,
+        "psi_0": 0.0,
+        "psi_1": 0.6442883651134751,
+        "E_n": 1.5
+      },
+      {
+        "n": 2,
+        "psi_0": -0.5311259660135984,
+        "psi_1": 0.32214418255673755,
+        "E_n": 2.5
+      },
+      {
+        "n": 3,
+        "psi_0": -0.0,
+        "psi_1": -0.2630296236233335,
+        "E_n": 3.5
+      },
+      {
+        "n": 4,
+        "psi_0": 0.4599685791773267,
+        "psi_1": -0.464975076292511,
+        "E_n": 4.5
+      }
+    ],
+    "orthonormality": [
+      {
+        "n": 0,
+        "norm": 1.0000000000000402
+      },
+      {
+        "n": 1,
+        "norm": 1.0000000000000397
+      },
+      {
+        "n": 2,
+        "norm": 1.00000000000004
+      },
+      {
+        "n": 3,
+        "norm": 1.0000000000000402
+      }
+    ],
+    "eml_depth_free": 1,
+    "eml_depth_ho": 3
+  },
+  "section5_ns_conjecture": {
+    "conjecture": {
+      "statement": "3D NS smooth solutions: vorticity is EML-finite. Blowup = vorticity becomes EML-inf.",
+      "1d_evidence": "Burgers (1D NS analogue): Cole-Hopf \u2192 heat equation. Vorticity = u_x is EML-3. Global smooth, no blowup.",
+      "status": "conjecture",
+      "relation_to_millennium": "If proven: EML-finite vorticity \u2192 smooth solution (one direction). The EML depth serves as a quantitative regularity criterion."
+    },
+    "burgers_vorticity_depth": 3,
+    "burgers_profiles": {
+      "t_0.1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9999997221895089,
+        -0.9999997221895089,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "t_0.5": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9999999999999983,
+        0.9999999999990924,
+        0.9999999994978469,
+        0.9999997221895089,
+        0.9998463162863197,
+        0.9184373437414545,
+        -0.9184373437414545,
+        -0.9998463162863197,
+        -0.9999997221895089,
+        -0.9999999994978469,
+        -0.9999999999990924,
+        -0.9999999999999983,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "t_1.0": [
+        0.9999999999998128,
+        0.999999999995598,
+        0.99999999989646,
+        0.9999999975646335,
+        0.9999999427176851,
+        0.9999986526620604,
+        0.9999683097103329,
+        0.999254877774581,
+        0.9826197888368629,
+        0.658110776025736,
+        -0.658110776025736,
+        -0.9826197888368629,
+        -0.999254877774581,
+        -0.9999683097103329,
+        -0.9999986526620604,
+        -0.9999999427176851,
+        -0.9999999975646335,
+        -0.99999999989646,
+        -0.999999999995598,
+        -0.9999999999998128
+      ]
+    }
+  },
+  "taxonomy": {
+    "heat_kernel": {
+      "formula": "G(x,t) = exp(-x\u00b2/4\u03bat) / \u221a(4\u03c0\u03bat)",
+      "eml_depth": 2,
+      "reason": "Gaussian in x: exp(quadratic) = EML-2. EML-2 in t (envelope 1/\u221at)."
+    },
+    "wave_equation_solution": {
+      "formula": "u(x,t) = f(x-ct) + g(x+ct)  (d'Alembert)",
+      "eml_depth": "depth(f)",
+      "reason": "EML depth of solution = EML depth of initial data f,g."
+    },
+    "burgers_cole_hopf": {
+      "formula": "u = -2\u03bd\u00b7(\u2202\u03b8/\u2202x)/\u03b8, where \u03b8 solves heat eq",
+      "eml_depth": 3,
+      "reason": "\u03b8 = heat kernel convolution with exp(-initial data/2\u03bd): EML-3. u = -2\u03bd\u00b7\u2202_x(log \u03b8): log of EML-3 = EML-3. Cole-Hopf \u2192 EML-3."
+    },
+    "schrodinger_free": {
+      "formula": "\u03c8(x,t) = exp(i(kx - \u0127k\u00b2t/2m))",
+      "eml_depth": 1,
+      "reason": "Pure exponential of linear phase: EML-1."
+    },
+    "schrodinger_ho": {
+      "formula": "\u03c8_n(x) = H_n(x) \u00b7 exp(-x\u00b2/2) / normalization",
+      "eml_depth": 3,
+      "reason": "Hermite polynomial H_n times Gaussian: EML-3 (Session 59)."
+    },
+    "ns_smooth_conjecture": {
+      "formula": "NS solutions: EML-finite vorticity \u27fa smoothness",
+      "eml_depth": "finite_or_inf",
+      "reason": "CONJECTURE: Smooth NS solutions have EML-finite vorticity. Blowup at T* would require EML-inf. Proven for 1D Burgers (Cole-Hopf \u2192 EML-3, global smooth).",
+      "status": "conjecture"
+    },
+    "burgers_1d": {
+      "formula": "u_t + u\u00b7u_x = \u03bd\u00b7u_xx",
+      "eml_depth": 3,
+      "reason": "Cole-Hopf transform reduces to heat eq. Global smooth solution: EML-3."
+    }
+  },
+  "summary": {
+    "key_insight": "PDE solutions inherit EML depth from initial data via the heat kernel (EML-2). Cole-Hopf transform linearizes Burgers to heat eq, capping depth at EML-3. Free Schr\u00f6dinger: EML-1. HO quantum: EML-3. NS conjecture: blowup = EML-inf vorticity. Regularity = finiteness of EML depth.",
+    "eml_depths": {
+      "heat_kernel": "2",
+      "wave_equation_solution": "depth(f)",
+      "burgers_cole_hopf": "3",
+      "schrodinger_free": "1",
+      "schrodinger_ho": "3",
+      "ns_smooth_conjecture": "finite_or_inf",
+      "burgers_1d": "3"
+    }
+  }
+}
