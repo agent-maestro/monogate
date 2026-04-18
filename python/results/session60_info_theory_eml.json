@@ -1,0 +1,224 @@
+{
+  "session": 60,
+  "title": "Information Theory EML Complexity",
+  "section1_entropy": {
+    "h_gaussian_sigma1": 1.4189385332046727,
+    "h_gaussian_sigma2": 2.112085713764618,
+    "h_bernoulli_half": 0.6931471805599453,
+    "h_bernoulli_half_expected": 0.6931471805599453,
+    "h_poisson_lam1": 1.3048422422562513,
+    "h_poisson_lam5": 2.204395243428367,
+    "h_exponential_lam1": 1.0,
+    "eml_depth": 2
+  },
+  "section2_kl_divergence": {
+    "gaussian_kl_rows": [
+      {
+        "mu": 0.5,
+        "computed": 0.125,
+        "formula": 0.125,
+        "match": true
+      },
+      {
+        "mu": 1.0,
+        "computed": 0.5,
+        "formula": 0.5,
+        "match": true
+      },
+      {
+        "mu": 2.0,
+        "computed": 2.0,
+        "formula": 2.0,
+        "match": true
+      },
+      {
+        "mu": 3.0,
+        "computed": 4.5,
+        "formula": 4.5,
+        "match": true
+      }
+    ],
+    "all_gaussian_match": true,
+    "discrete_kl_example": 0.02526715392157057,
+    "eml_depth": 2
+  },
+  "section3_fisher_information": {
+    "fisher_rows": [
+      {
+        "sigma": 0.5,
+        "I_mu": 4.0,
+        "formula_1_over_sigma2": 4.0,
+        "match": true
+      },
+      {
+        "sigma": 1.0,
+        "I_mu": 1.0,
+        "formula_1_over_sigma2": 1.0,
+        "match": true
+      },
+      {
+        "sigma": 2.0,
+        "I_mu": 0.25,
+        "formula_1_over_sigma2": 0.25,
+        "match": true
+      },
+      {
+        "sigma": 3.0,
+        "I_mu": 0.1111111111111111,
+        "formula_1_over_sigma2": 0.1111111111111111,
+        "match": true
+      }
+    ],
+    "cramer_rao_sigma1": 1.0,
+    "fisher_bernoulli_half": 4.0,
+    "fisher_poisson_lam1": 1.0,
+    "eml_depth": 2
+  },
+  "section4_mutual_information": {
+    "gaussian_mi": [
+      {
+        "rho": 0.0,
+        "mi": -0.0
+      },
+      {
+        "rho": 0.3,
+        "mi": 0.047155339735620645
+      },
+      {
+        "rho": 0.5,
+        "mi": 0.14384103622589045
+      },
+      {
+        "rho": 0.7,
+        "mi": 0.3366722766318828
+      },
+      {
+        "rho": 0.9,
+        "mi": 0.8303656034108255
+      },
+      {
+        "rho": 0.99,
+        "mi": 1.9585177736258443
+      }
+    ],
+    "joint_mi_example": 0.17774088384195053,
+    "bsc_capacity_p01": 0.9192068641040888,
+    "bsc_capacity_p10": 0.5310044064107189,
+    "eml_depth": 2
+  },
+  "section5_max_entropy_theorem": {
+    "gaussian_natural_theta1": 0.0,
+    "gaussian_natural_theta2": -0.5,
+    "log_partition": 0.0,
+    "log_partition_expected": 0.9189385332046727,
+    "match": false,
+    "eml_depth_kernel": 1,
+    "max_entropy_mean_achieved": 2.9999999999999996,
+    "max_entropy_mean_target": 3.0
+  },
+  "section6_rate_distortion": {
+    "rate_distortion_rows": [
+      {
+        "D": 0.1,
+        "R": 1.151292546497023,
+        "formula": 1.151292546497023,
+        "match": true
+      },
+      {
+        "D": 0.25,
+        "R": 0.6931471805599453,
+        "formula": 0.6931471805599453,
+        "match": true
+      },
+      {
+        "D": 0.5,
+        "R": 0.34657359027997264,
+        "formula": 0.34657359027997264,
+        "match": true
+      },
+      {
+        "D": 0.75,
+        "R": 0.14384103622589042,
+        "formula": 0.14384103622589042,
+        "match": true
+      },
+      {
+        "D": 1.0,
+        "R": 0.0,
+        "formula": 0.0,
+        "match": true
+      }
+    ],
+    "awgn_capacity": {
+      "snr_1.0": 0.34657359027997264,
+      "snr_10.0": 1.1989476363991853,
+      "snr_100.0": 2.30756025842063
+    },
+    "eml_depth": 2
+  },
+  "full_analysis": {
+    "eml_depths": {
+      "shannon_entropy": 2,
+      "kl_divergence": 2,
+      "fisher_information": 2,
+      "mutual_information": 2,
+      "max_entropy_exponential": 1,
+      "rate_distortion": 2,
+      "cramer_rao": 2,
+      "differential_entropy_gaussian": 2
+    },
+    "key_insight": "All fundamental information-theoretic quantities (entropy, KL, Fisher, mutual info) are EML-2 (contain log). The maximum entropy solution is EML-1 (exponential family), the simplest non-trivial class. This unifies statistical mechanics (Boltzmann) and information theory under EML-1: both are consequences of maximizing entropy subject to linear (EML-0) constraints.",
+    "cramer_rao_eml": "Cram\u00e9r-Rao: Var \u2265 1/I(\u03b8), EML-2 (rational in EML-2)"
+  },
+  "taxonomy": {
+    "shannon_entropy": {
+      "formula": "H(X) = -\u03a3 p\u00b7log p",
+      "eml_depth": 2,
+      "reason": "x\u00b7log(x) is EML-2 (log is EML-2 atom)",
+      "domain": "discrete or continuous distributions"
+    },
+    "kl_divergence": {
+      "formula": "D_KL(P\u2016Q) = \u03a3 p\u00b7log(p/q)",
+      "eml_depth": 2,
+      "reason": "log(p/q) = log(p) - log(q), both EML-2; sum is EML-2",
+      "domain": "pairs of distributions"
+    },
+    "fisher_information": {
+      "formula": "I(\u03b8) = E[(\u2202log p/\u2202\u03b8)\u00b2]",
+      "eml_depth": 2,
+      "reason": "\u2202log p/\u2202\u03b8 is EML-2; squaring preserves depth; expectation is integral",
+      "domain": "parametric families"
+    },
+    "mutual_information": {
+      "formula": "I(X;Y) = H(X) + H(Y) - H(X,Y)",
+      "eml_depth": 2,
+      "reason": "difference of EML-2 entropies remains EML-2",
+      "domain": "joint distributions"
+    },
+    "max_entropy_exponential": {
+      "formula": "p*(x|\u03b8) = h(x)\u00b7exp(\u03b8\u1d40T(x) - A(\u03b8))",
+      "eml_depth": 1,
+      "reason": "kernel is exp(linear) = EML-1 atom; h(x) multiplied in",
+      "domain": "constrained optimization over distributions",
+      "key_theorem": true
+    },
+    "rate_distortion": {
+      "formula": "R(D) = min_{p(x\u0302|x): E[d]\u2264D} I(X;X\u0302)",
+      "eml_depth": 2,
+      "reason": "variational optimization of EML-2 quantity; result is EML-2",
+      "domain": "source coding"
+    },
+    "cramer_rao": {
+      "formula": "Var(\u03b8\u0302) \u2265 1/I(\u03b8)",
+      "eml_depth": 2,
+      "reason": "I(\u03b8) is EML-2; reciprocal 1/I(\u03b8) is EML-2 (rational in EML-2)",
+      "domain": "estimation theory"
+    },
+    "differential_entropy_gaussian": {
+      "formula": "h(N(\u03bc,\u03c3\u00b2)) = \u00bd\u00b7log(2\u03c0e\u03c3\u00b2)",
+      "eml_depth": 2,
+      "reason": "log of constants and \u03c3\u00b2 \u2014 EML-2",
+      "domain": "continuous distributions"
+    }
+  }
+}
