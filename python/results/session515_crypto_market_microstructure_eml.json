@@ -1,0 +1,71 @@
+{
+  "session": 515,
+  "title": "Cryptocurrency Market Microstructure",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "CryptoMarketMicrostructureEML",
+    "analysis": {
+      "object": "T236: Cryptocurrency market microstructure depth analysis",
+      "domains": {
+        "order_book": {
+          "description": "Limit order book: list of bid/ask prices and sizes",
+          "depth": "EML-0",
+          "reason": "Discrete list of orders \u2014 pure combinatorics"
+        },
+        "price_log_normal": {
+          "description": "Log price follows Brownian motion: d(ln P) = \u03bcdt + \u03c3dW",
+          "depth": "EML-2",
+          "reason": "Log-normal distribution \u2014 logarithmic returns"
+        },
+        "mean_reversion": {
+          "description": "Market making: oscillatory buy/sell around mid-price",
+          "depth": "EML-3",
+          "reason": "Oscillatory mean-reversion cycle = EML-3"
+        },
+        "flash_crash": {
+          "description": "Millisecond price collapse: cascade of liquidations",
+          "depth": "EML-\u221e",
+          "reason": "Phase transition: order book collapses discontinuously"
+        },
+        "amm_curve": {
+          "description": "Uniswap: x\u00b7y = k constant product",
+          "depth": "EML-2",
+          "reason": "Hyperbolic curve = algebraic = EML-2"
+        },
+        "whale_impact": {
+          "description": "Large order \u2192 exponential price impact",
+          "depth": "EML-1",
+          "reason": "Price impact ~ exp(size/depth) Almgren-Chriss"
+        },
+        "funding_rate": {
+          "description": "Perpetual futures funding: oscillatory rebalancing",
+          "depth": "EML-3",
+          "reason": "8-hourly oscillatory funding mechanism"
+        },
+        "defi_yield_v2": {
+          "description": "Compound: APY = (1 + r/n)^n - 1",
+          "depth": "EML-1",
+          "reason": "Compound interest \u2192 exp(r) in limit"
+        }
+      },
+      "predictability_classification": "Does the framework classify which market phenomena are predictable vs EML-\u221e? YES. EML-2 (log-normal): predictable with Gaussian models. EML-3 (mean reversion): predictable with oscillatory models (Ornstein-Uhlenbeck). EML-\u221e (flash crash): structurally unpredictable \u2014 cross-type product. Flash crash = EML-3 (market microstructure oscillation) \u00d7 EML-2 (log-normal price) = EML-\u221e. Same superspreader mechanism: cross-type interaction \u2192 unpredictability."
+    },
+    "distribution": {
+      "EML-0": 1,
+      "EML-1": 2,
+      "EML-2": 2,
+      "EML-3": 2,
+      "EML-\u221e": 1
+    },
+    "verdict": "Crypto: log-price EML-2, mean-reversion EML-3, flash crash EML-\u221e cross-type.",
+    "theorem": "T236: Crypto Market Depth \u2014 flash crash = EML-3\u00d7EML-2 = EML-\u221e superspreader"
+  },
+  "key_theorem": "T237: Crypto Market Depth (S515). Log price: EML-2 (log-normal Brownian). Mean reversion: EML-3. Flash crash: EML-3 \u00d7 EML-2 = EML-\u221e (superspreader cross-type). AMM constant product: EML-2 (hyperbola). Predictability: EML-2 (Gaussian) and EML-3 (OU) predictable; EML-\u221e not.",
+  "rabbit_hole_log": [
+    "d(ln P) = \u03bcdt + \u03c3dW \u2192 EML-2 log-normal",
+    "Market making oscillation \u2192 EML-3",
+    "Flash crash: EML-3 \u00d7 EML-2 = EML-\u221e",
+    "AMM x\u00b7y=k: hyperbolic = EML-2",
+    "T236: Flash crash = superspreader, same cross-type mechanism"
+  ]
+}
