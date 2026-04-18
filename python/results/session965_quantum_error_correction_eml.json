@@ -1,0 +1,43 @@
+{
+  "session": 965,
+  "title": "Quantum Error Correction and Fault Tolerance",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "QuantumErrorCorrectionEML",
+    "analysis": {
+      "object": "T686: Quantum Error Correction and Fault Tolerance depth analysis",
+      "domains": {
+        "logical_qubit_emlinf": {
+          "description": "Logical qubit: EML-inf; protected quantum information",
+          "depth": "EML-inf",
+          "reason": "Logical qubit is EML-inf: encoded quantum information is EML-inf; physically stored in many physical qubits"
+        },
+        "syndrome_measurement": {
+          "description": "Error syndrome: EML-0 (discrete error type) or EML-2 (parity check measurement)",
+          "depth": "EML-0",
+          "reason": "Error syndrome is EML-0: discrete Pauli error classification; EML-2 parity measurement identifies it"
+        },
+        "threshold_theorem": {
+          "description": "Fault tolerance threshold: EML-2 measurement; below threshold -> scalable QC",
+          "depth": "EML-2",
+          "reason": "Threshold theorem is EML-2: error rate below ~1% enables EML-inf logical qubit protection"
+        },
+        "surface_code": {
+          "description": "Surface code: EML-0 topological invariants protect EML-inf logical qubit via EML-2 syndromes",
+          "depth": "EML-0",
+          "reason": "Surface code = topological QEC: EML-0 topology + EML-2 syndromes -> EML-inf logical protection"
+        }
+      }
+    },
+    "distribution": {
+      "EML-inf": 1,
+      "EML-0": 2,
+      "EML-2": 1
+    },
+    "theorem": "T686: Quantum Error Correction and Fault Tolerance (S965)."
+  },
+  "key_theorem": "T686: Quantum Error Correction and Fault Tolerance (S965).",
+  "rabbit_hole_log": [
+    "T686: logical_qubit_emlinf depth confirmed"
+  ]
+}
