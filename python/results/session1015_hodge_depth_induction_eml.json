@@ -1,0 +1,58 @@
+{
+  "session": 1015,
+  "title": "Induction on EML Depth \u2014 Can We Step Up Codimension?",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "HodgeDepthInduction",
+    "analysis": {
+      "object": "T736: Induction on EML Depth \u2014 Can We Step Up Codimension? depth analysis",
+      "domains": {
+        "induction_base": {
+          "description": "Base: Lefschetz (1,1) at codimension 1 -- proved (T735)",
+          "depth": "EML-2",
+          "reason": "EML-2 exact sequence proof"
+        },
+        "inductive_hypothesis": {
+          "description": "Assume surjectivity at codimension p; prove at codimension p+1",
+          "depth": "EML-inf",
+          "reason": "Standard induction schema"
+        },
+        "depth_increase_with_codim": {
+          "description": "Does EML depth increase with codimension?",
+          "depth": "EML-3",
+          "reason": "Codim 1 = EML-2; codim 2 = EML-3? Hypothesis"
+        },
+        "step_up_mechanism": {
+          "description": "From codim p to p+1: need Lefschetz-type sequence one level up",
+          "depth": "EML-inf",
+          "reason": "No known such sequence for p > 1"
+        },
+        "gysin_map": {
+          "description": "Gysin map: H^*(Y) -> H^{*+2}(X) for subvariety Y in X",
+          "depth": "EML-2",
+          "reason": "Push-forward = EML-2 linear map"
+        },
+        "gysin_surjectivity": {
+          "description": "If Gysin is surjective, induction works",
+          "depth": "EML-inf",
+          "reason": "Gysin surjectivity = equivalent to Hodge for hypersurfaces"
+        },
+        "induction_block": {
+          "description": "Gysin surjectivity unknown for general p -- induction blocked at step 2",
+          "depth": "EML-inf",
+          "reason": "T736: induction fails at first step due to Gysin obstruction"
+        }
+      }
+    },
+    "distribution": {
+      "EML-2": 2,
+      "EML-inf": 4,
+      "EML-3": 1
+    },
+    "theorem": "T736: Induction on EML Depth \u2014 Can We Step Up Codimension? (S1015)."
+  },
+  "key_theorem": "T736: Induction on EML Depth \u2014 Can We Step Up Codimension? (S1015).",
+  "rabbit_hole_log": [
+    "T736: induction_base depth confirmed"
+  ]
+}
