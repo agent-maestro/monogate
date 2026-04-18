@@ -1,0 +1,150 @@
+{
+  "session": 158,
+  "title": "Cellular Automata: EML Depth of Emergent Computation",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "elementary_ca_rule110": {
+    "model": "ElementaryCA",
+    "rule": 110,
+    "rule_table_entries": 8,
+    "wolfram_class": {
+      "class": "IV",
+      "eml_depth": "EML-\u221e",
+      "behavior": "universal computation \u2014 Turing complete"
+    },
+    "evolution_5steps_center_col": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "rule90_sierpinski_dim": 1.584963,
+    "eml_depth": {
+      "rule_table": 0,
+      "class_I_II": 0,
+      "class_III": 3,
+      "class_IV": "\u221e",
+      "fractal_dim": 2
+    },
+    "key_insight": "Rule 110: EML-\u221e \u2014 universal computation \u2014 Turing complete"
+  },
+  "elementary_ca_rule30": {
+    "model": "ElementaryCA",
+    "rule": 30,
+    "rule_table_entries": 8,
+    "wolfram_class": {
+      "class": "III",
+      "eml_depth": "EML-3",
+      "behavior": "chaotic, PRNG-quality"
+    },
+    "evolution_5steps_center_col": [
+      1,
+      1,
+      0,
+      1,
+      1,
+      1
+    ],
+    "rule90_sierpinski_dim": 1.584963,
+    "eml_depth": {
+      "rule_table": 0,
+      "class_I_II": 0,
+      "class_III": 3,
+      "class_IV": "\u221e",
+      "fractal_dim": 2
+    },
+    "key_insight": "Rule 30: EML-3 \u2014 chaotic, PRNG-quality"
+  },
+  "game_of_life": {
+    "model": "GameOfLife",
+    "rules": {
+      "birth": "3 live neighbors",
+      "survival": "2 or 3 live neighbors",
+      "death": "< 2 (underpopulation) or > 3 (overpopulation)",
+      "eml_depth_rules": 0,
+      "eml_depth_dynamics": "\u221e",
+      "reason": "Turing complete: any TM computation \u27f9 any EML depth reachable"
+    },
+    "glider": {
+      "glider_period": 4,
+      "glider_speed_fraction": 0.25,
+      "gosper_gun_period": 30,
+      "eml_depth_period": 0,
+      "eml_depth_glider_gun": "\u221e",
+      "note": "Glider = EML-0 periodic; Glider gun = EML-\u221e (generates universal computation)"
+    },
+    "halting_problem": {
+      "turing_complete": true,
+      "extinction_decidable": false,
+      "halting_problem": "undecidable",
+      "eml_depth_undecidability": "\u221e",
+      "eml_connection": "Same EML-\u221e stratum as G\u00f6del sentence, CH, RH (if undecidable)"
+    },
+    "eml_depth": {
+      "b3s23_rules": 0,
+      "glider_period": 0,
+      "extinction_question": "\u221e",
+      "full_dynamics": "\u221e"
+    },
+    "key_insight": "GoL rules = EML-0; GoL dynamics = EML-\u221e (Turing complete, halting undecidable)"
+  },
+  "complexity_measures": {
+    "model": "CAComplexityMeasures",
+    "spatial_entropy": {
+      "uniform": -0.0,
+      "alternating": 0.6931,
+      "random_like": 0.6931
+    },
+    "compression_ratio": {
+      "0": 0.0168,
+      "8": 0.1168,
+      "30": 0.9168,
+      "90": 0.5168,
+      "110": 0.9668,
+      "184": 0.2168
+    },
+    "lyapunov_exponents": {
+      "0": -0.5,
+      "8": -0.5,
+      "30": 0.7071,
+      "90": -0.5,
+      "110": -0.5,
+      "184": -0.5
+    },
+    "eml_depth": {
+      "spatial_entropy": 2,
+      "compression": 2,
+      "lyapunov_chaotic": 3,
+      "kolmogorov_complexity": "\u221e"
+    },
+    "key_insight": "CA entropy = EML-2; Lyapunov (chaotic) = EML-3; Kolmogorov complexity = EML-\u221e"
+  },
+  "eml_depth_summary": {
+    "EML-0": "CA rule tables, cell states, glider periods, Chern numbers",
+    "EML-1": "Not prominent in CA complexity",
+    "EML-2": "Spatial entropy, compression ratio, fractal dimension (log ratio)",
+    "EML-3": "Class III chaotic CA (random-appearing), Lyapunov exponents",
+    "EML-\u221e": "Class IV (universal computation), Game of Life, extinction question (halting)"
+  },
+  "wolfram_classes_eml": {
+    "Class I": "EML-0 (uniform fixed point)",
+    "Class II": "EML-0 or EML-3 (periodic or fractal)",
+    "Class III": "EML-3 (chaotic, measurable Lyapunov exponent)",
+    "Class IV": "EML-\u221e (universal computation, halting problem)"
+  },
+  "key_theorem": "The EML Cellular Automata Depth Theorem: A CA rule is a finite lookup table \u2014 EML-0. The behavior it generates can be EML-0 (Class I/II), EML-3 (Class III), or EML-\u221e (Class IV). This is the EML version of Wolfram's universality: EML-0 local rules can generate EML-\u221e global behavior. The key EML-\u221e threshold: Turing completeness \u2194 halting problem \u2194 EML-\u221e undecidability. The same threshold as G\u00f6del: from EML-0 axioms, reach EML-\u221e statements.",
+  "rabbit_hole_log": [
+    "Rule table = EML-0: 8-bit lookup, finite, no computation",
+    "Rule 30 = EML-3: chaotic output used in Mathematica PRNG",
+    "Rule 110 = EML-\u221e: Turing complete (Cook 2004) \u2014 EML-0 rules \u2192 EML-\u221e computation",
+    "Sierpinski triangle dim = log3/log2 = EML-2 (log ratio of integers)",
+    "GoL extinction = halting problem = EML-\u221e: same stratum as G\u00f6del/CH/RH",
+    "EML-0 rules \u2192 EML-\u221e behavior: the deepest depth-generating pattern in EML theory"
+  ],
+  "connections": {
+    "S139_foundations_v2": "G\u00f6del (EML-\u221e) \u2194 GoL halting (EML-\u221e): both from finite axioms/rules",
+    "S152_chaos_control": "Class III CA = chaotic attractor: both EML-3",
+    "S150_grand_synthesis_9": "EML-0 \u2192 EML-\u221e depth generation confirms the Horizon Theorem"
+  }
+}
