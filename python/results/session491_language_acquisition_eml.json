@@ -1,0 +1,76 @@
+{
+  "session": 491,
+  "title": "Language Acquisition & Syntactic Bootstrapping",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "LanguageAcquisitionEML",
+    "analysis": {
+      "object": "T212: EML depth analysis of language acquisition",
+      "domains": {
+        "phoneme_inventory": {
+          "description": "Discrete set of phonemes per language (~44 in English)",
+          "depth": "EML-0",
+          "reason": "Finite discrete set \u2014 pure counting"
+        },
+        "syntactic_rules": {
+          "description": "CFG rules: S \u2192 NP VP, NP \u2192 Det N, etc.",
+          "depth": "EML-0",
+          "reason": "Structural rules \u2014 no continuous variable"
+        },
+        "vocabulary_growth": {
+          "description": "Child vocab: exponential after age 18 months (vocabulary explosion)",
+          "depth": "EML-1",
+          "reason": "Exponential word learning rate during critical period"
+        },
+        "zipf_word_frequency": {
+          "description": "Word frequency: f(r) ~ r^{-\u03b1}",
+          "depth": "EML-2",
+          "reason": "Power law \u2014 log-log linear relationship"
+        },
+        "syntactic_bootstrapping": {
+          "description": "Children use syntactic frames to infer word meaning",
+          "depth": "EML-2",
+          "reason": "Bayesian inference over syntactic contexts \u2014 log-probability computations"
+        },
+        "prosodic_patterns": {
+          "description": "Stress, rhythm, intonation \u2014 phonological oscillation",
+          "depth": "EML-3",
+          "reason": "Periodic stress patterns = oscillatory structure"
+        },
+        "semantic_compositionality": {
+          "description": "\u03bb-calculus composition: meaning = f(meaning(parts))",
+          "depth": "EML-0",
+          "reason": "Pure structural composition \u2014 Montague semantics"
+        },
+        "language_acquisition_device": {
+          "description": "Universal Grammar: innate syntactic principles",
+          "depth": "EML-0",
+          "reason": "Finite set of binary parameters \u2014 discrete genetic endowment"
+        },
+        "ambiguity_resolution": {
+          "description": "Context-dependent resolution of syntactic ambiguity",
+          "depth": "EML-\u221e",
+          "reason": "Context is arbitrarily deep \u2014 no finite description of all disambiguation"
+        }
+      },
+      "traversal_characterization": "Child language development as depth traversal: EML-0 (babbling, phoneme inventory), EML-1 (vocabulary explosion), EML-2 (syntactic bootstrapping, Zipf), EML-3 (prosody, full sentence oscillation). Acquisition is a literal 0\u21921\u21922\u21923 traversal of the hierarchy."
+    },
+    "distribution": {
+      "EML-0": 4,
+      "EML-1": 1,
+      "EML-2": 2,
+      "EML-3": 1,
+      "EML-\u221e": 1
+    },
+    "verdict": "Language: mostly EML-0/2 structure; prosody EML-3; ambiguity EML-\u221e.",
+    "theorem": "T212: Language Acquisition Depth \u2014 acquisition IS a 0\u21921\u21922\u21923 traversal"
+  },
+  "key_theorem": "T212: Language Acquisition Depth (S491). Child development IS a 0\u21921\u21922\u21923 traversal: phonemes(0) \u2192 vocab explosion(1) \u2192 syntactic bootstrapping(2) \u2192 prosody(3). Universal Grammar: EML-0 (finite binary parameters). Ambiguity resolution: EML-\u221e.",
+  "rabbit_hole_log": [
+    "Phoneme inventory: finite discrete set \u2192 EML-0",
+    "Vocabulary explosion: exponential rate \u2192 EML-1",
+    "Zipf law + bootstrapping: log-probability \u2192 EML-2",
+    "Prosody: periodic stress oscillation \u2192 EML-3",
+    "T212: Language development = depth hierarchy traversal"
+  ]
+}
