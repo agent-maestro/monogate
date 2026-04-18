@@ -1,0 +1,37 @@
+{
+  "session": 792,
+  "title": "BSD Regulator and Leading Coefficient v2",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "BSDRegulatorV2",
+    "analysis": {
+      "object": "T513: BSD Regulator and Leading Coefficient v2 depth analysis",
+      "domains": {
+        "regulator_det": {
+          "description": "Regulator = det of height pairing matrix; EML-2 linear algebra",
+          "depth": "EML-2",
+          "reason": "Deltad=+2 from discrete rank count to continuous volume"
+        },
+        "leading_coeff": {
+          "description": "BSD formula: L^(r)(E,1)/r! = Omega*Reg*Sha*prod(c_p) / |E(Q)_tors|^2",
+          "depth": "EML-2",
+          "reason": "All terms except Sha are EML-2 computable"
+        },
+        "sha_obstruction": {
+          "description": "Sha(E) finiteness unproven for rank>=2; EML-inf unknown",
+          "depth": "EML-inf",
+          "reason": "Sha is EML-inf object; cardinality is EML-2 shadow only"
+        }
+      }
+    },
+    "distribution": {
+      "EML-2": 2,
+      "EML-inf": 1
+    },
+    "theorem": "T513: BSD Regulator and Leading Coefficient v2 (S792)."
+  },
+  "key_theorem": "T513: BSD Regulator and Leading Coefficient v2 (S792).",
+  "rabbit_hole_log": [
+    "T513: regulator_det depth confirmed"
+  ]
+}
