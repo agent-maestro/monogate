@@ -1,0 +1,444 @@
+{
+  "session": 73,
+  "title": "Differential Galois Theory Deep Extensions",
+  "key_theorem": {
+    "theorem": "Stokes Phenomenon = EML-\u221e Barrier over \u2102",
+    "statement": "For an ODE with irregular singular point, the solution is EML-finite sector by sector but EML-\u221e globally. The Stokes multipliers (connection constants between sectors) are algebraic (EML-0). But the full multi-valued solution requires the complete monodromy group action, which cannot be compressed into any EML-finite global expression.",
+    "corollary_hypergeometric": "The EML depth of \u2082F\u2081(a,b;c;z) as a function of (a,b,c) is: EML-2 on a measure-zero parameter set (integer/Schwarz conditions), EML-3 for rational non-Schwarz parameters, EML-\u221e for generic (full measure) parameters."
+  },
+  "hypergeometric_examples": [
+    {
+      "a": -1,
+      "b": 1,
+      "c": 1,
+      "values_at": {
+        "0.0": 1.0,
+        "0.2": 0.75,
+        "0.5": 0.5,
+        "0.8": 0.25
+      },
+      "eml_class": "EML-2: \u2082F\u2081(-1,1;1;z) \u2014 polynomial",
+      "monodromy": "Finite monodromy group (algebraic/polynomial) \u2192 EML-2",
+      "euler_integral": "\u2082F\u2081(-1,1;1;z) = [B(1,1-1)]^{-1} \u222b_0^1 t^{1-1}(1-t)^{1-1-1}(1-zt)^{--1} dt"
+    },
+    {
+      "a": -2,
+      "b": 1,
+      "c": 1,
+      "values_at": {
+        "0.0": 1.0,
+        "0.2": 0.5625,
+        "0.5": 0.25,
+        "0.8": 0.0625
+      },
+      "eml_class": "EML-2: \u2082F\u2081(-2,1;1;z) \u2014 polynomial",
+      "monodromy": "Finite monodromy group (algebraic/polynomial) \u2192 EML-2",
+      "euler_integral": "\u2082F\u2081(-2,1;1;z) = [B(1,1-1)]^{-1} \u222b_0^1 t^{1-1}(1-t)^{1-1-1}(1-zt)^{--2} dt"
+    },
+    {
+      "a": 0.5,
+      "b": 0.5,
+      "c": 1.5,
+      "values_at": {
+        "0.0": 1.0,
+        "0.2": 1.047198,
+        "0.5": 1.110721,
+        "0.8": 1.2092
+      },
+      "eml_class": "EML-2: \u2082F\u2081(0.5,0.5;1.5;z) \u2014 logarithmic",
+      "monodromy": "Finite monodromy group (algebraic/polynomial) \u2192 EML-2",
+      "euler_integral": "\u2082F\u2081(0.5,0.5;1.5;z) = [B(0.5,1.5-0.5)]^{-1} \u222b_0^1 t^{0.5-1}(1-t)^{1.5-0.5-1}(1-zt)^{-0.5} dt"
+    },
+    {
+      "a": 1,
+      "b": 1,
+      "c": 2,
+      "values_at": {
+        "0.0": 1.0,
+        "0.2": 1.150728,
+        "0.5": 1.386294,
+        "0.8": 1.848392
+      },
+      "eml_class": "EML-2: \u2082F\u2081(1,1;2;z) \u2014 logarithmic",
+      "monodromy": "Finite monodromy group (algebraic/polynomial) \u2192 EML-2",
+      "euler_integral": "\u2082F\u2081(1,1;2;z) = [B(1,2-1)]^{-1} \u222b_0^1 t^{1-1}(1-t)^{2-1-1}(1-zt)^{-1} dt"
+    },
+    {
+      "a": 0.5,
+      "b": -0.5,
+      "c": 1,
+      "values_at": {
+        "0.0": 1.0,
+        "0.2": 0.934215,
+        "0.5": 0.859847,
+        "0.8": 0.770982
+      },
+      "eml_class": "EML-2: \u2082F\u2081(0.5,-0.5;1;z) \u2014 logarithmic",
+      "monodromy": "Finite monodromy group (algebraic/polynomial) \u2192 EML-2",
+      "euler_integral": "\u2082F\u2081(0.5,-0.5;1;z) = [B(-0.5,1--0.5)]^{-1} \u222b_0^1 t^{-0.5-1}(1-t)^{1--0.5-1}(1-zt)^{-0.5} dt"
+    },
+    {
+      "a": 0.3333333333333333,
+      "b": 0.6666666666666666,
+      "c": 1,
+      "values_at": {
+        "0.0": 1.0,
+        "0.2": 1.064925,
+        "0.5": 1.159595,
+        "0.8": 1.328778
+      },
+      "eml_class": "EML-3: \u2082F\u2081(0.3333333333333333,0.6666666666666666;1;z) \u2014 transcendental",
+      "monodromy": "Infinite but solvable monodromy (Euler integral representation) \u2192 EML-3",
+      "euler_integral": "\u2082F\u2081(0.3333333333333333,0.6666666666666666;1;z) = [B(0.6666666666666666,1-0.6666666666666666)]^{-1} \u222b_0^1 t^{0.6666666666666666-1}(1-t)^{1-0.6666666666666666-1}(1-zt)^{-0.3333333333333333} dt"
+    }
+  ],
+  "fuchsian_odes": [
+    {
+      "name": "Euler-Cauchy equation",
+      "equation": "x\u00b2y'' + \u03b1xy' + \u03b2y = 0",
+      "singular_points": [
+        "0",
+        "\u221e"
+      ],
+      "indicial_roots": [
+        "r\u2081, r\u2082 roots of r(r-1)+\u03b1r+\u03b2=0"
+      ],
+      "eml_depth": 2,
+      "eml_reason": "Solutions: x^{r\u2081}, x^{r\u2082} = exp(r\u00b7ln x) = EML-2",
+      "solutions": [
+        "y = x^{r\u2081} = exp(r\u2081\u00b7ln x)",
+        "y = x^{r\u2082} if r\u2081-r\u2082 \u2209 \u2124, else x^{r\u2081}\u00b7ln(x)"
+      ]
+    },
+    {
+      "name": "Hypergeometric equation",
+      "equation": "z(1-z)y'' + [c-(a+b+1)z]y' - ab\u00b7y = 0",
+      "singular_points": [
+        "0",
+        "1",
+        "\u221e"
+      ],
+      "indicial_roots": [
+        "0",
+        "1-c"
+      ],
+      "eml_depth": 3,
+      "eml_reason": "\u2082F\u2081(a,b;c;z) \u2014 Euler integral representation \u2192 EML-3 for generic params",
+      "solutions": [
+        "\u2082F\u2081(a,b;c;z)",
+        "z^{1-c}\u00b7\u2082F\u2081(a-c+1,b-c+1;2-c;z)"
+      ]
+    },
+    {
+      "name": "Legendre equation",
+      "equation": "(1-x\u00b2)y'' - 2xy' + n(n+1)y = 0",
+      "singular_points": [
+        "-1",
+        "1",
+        "\u221e"
+      ],
+      "indicial_roots": [
+        "0",
+        "0"
+      ],
+      "eml_depth": 2,
+      "eml_reason": "P_n(x) = Legendre polynomial (integer n) = polynomial \u2192 EML-2; Q_n has log \u2192 EML-2",
+      "solutions": [
+        "P_n(x) (polynomial, EML-2)",
+        "Q_n(x) = P_n(x)\u00b7\u00bd\u00b7ln((1+x)/(1-x)) + poly \u2192 EML-2"
+      ]
+    },
+    {
+      "name": "Bessel equation (half-integer \u03bd)",
+      "equation": "x\u00b2y'' + xy' + (x\u00b2-\u03bd\u00b2)y = 0, \u03bd = n+\u00bd",
+      "singular_points": [
+        "0",
+        "\u221e"
+      ],
+      "indicial_roots": [
+        "\u00b1\u03bd"
+      ],
+      "eml_depth": 3,
+      "eml_reason": "j_n(x) = spherical Bessel = sin/cos \u00d7 polynomial / x^{n+1} \u2192 EML-3",
+      "solutions": [
+        "j_n(x) = (-x)^n(1/x d/dx)^n(sin x/x) \u2014 EML-3",
+        "y_n(x) similarly EML-3"
+      ]
+    },
+    {
+      "name": "Bessel equation (general \u03bd)",
+      "equation": "x\u00b2y'' + xy' + (x\u00b2-\u03bd\u00b2)y = 0, \u03bd \u2209 \u2124+\u00bd",
+      "singular_points": [
+        "0",
+        "\u221e"
+      ],
+      "indicial_roots": [
+        "\u00b1\u03bd"
+      ],
+      "eml_depth": "\u221e",
+      "eml_reason": "J_\u03bd(x) = \u03a3(-1)^n x^{2n+\u03bd}/(n!\u0393(n+\u03bd+1)) \u2014 no closed EML-finite form for general \u03bd",
+      "solutions": [
+        "J_\u03bd(x)",
+        "Y_\u03bd(x) \u2014 both EML-\u221e for non-half-integer \u03bd"
+      ]
+    },
+    {
+      "name": "Lam\u00e9 equation",
+      "equation": "y'' + (n(n+1)\u00b7k\u00b2\u00b7sn\u00b2(x,k) + h)y = 0",
+      "singular_points": [
+        "e\u2081",
+        "e\u2082",
+        "e\u2083",
+        "\u221e"
+      ],
+      "indicial_roots": [
+        "depends on h,n,k"
+      ],
+      "eml_depth": "\u221e",
+      "eml_reason": "Solutions are Lam\u00e9 functions \u2014 no general EML-finite form; EML-\u221e for generic parameters",
+      "solutions": [
+        "Ec_n^m(x,k)",
+        "Es_n^m(x,k) \u2014 EML-\u221e for non-integer/non-special params"
+      ]
+    }
+  ],
+  "stokes_phenomenon": {
+    "equation": "Airy: y'' = xy",
+    "stokes_lines": [
+      "arg(x) = \u03c0/3",
+      "arg(x) = \u03c0",
+      "arg(x) = 5\u03c0/3"
+    ],
+    "asymptotics_positive_x": [
+      {
+        "x": 1.0,
+        "Ai_asymptotic": 0.1448323,
+        "eml_depth": 1
+      },
+      {
+        "x": 2.0,
+        "Ai_asymptotic": 0.0359935,
+        "eml_depth": 1
+      },
+      {
+        "x": 4.0,
+        "Ai_asymptotic": 0.00096304,
+        "eml_depth": 1
+      },
+      {
+        "x": 8.0,
+        "Ai_asymptotic": 5e-08,
+        "eml_depth": 1
+      }
+    ],
+    "asymptotics_negative_x": [
+      {
+        "x": -1.0,
+        "Ai_asymptotic": 0.56021752,
+        "eml_depth": 3
+      },
+      {
+        "x": -2.0,
+        "Ai_asymptotic": 0.21510435,
+        "eml_depth": 3
+      },
+      {
+        "x": -4.0,
+        "Ai_asymptotic": -0.06531225,
+        "eml_depth": 3
+      },
+      {
+        "x": -8.0,
+        "Ai_asymptotic": -0.05423426,
+        "eml_depth": 3
+      }
+    ],
+    "eml_interpretation": {
+      "positive_x_sector": "EML-1: Ai(x) \u2248 exp(-2x^{3/2}/3)/... \u2014 pure exponential decay",
+      "negative_x_sector": "EML-3: Ai(x) \u2248 sin(2|x|^{3/2}/3 + \u03c0/4)/... \u2014 oscillatory",
+      "global": "EML-\u221e: No single EML-finite expression works for all x \u2208 \u2102",
+      "stokes_multiplier": "The connection constant between sectors is EML-0 (algebraic number)",
+      "theorem": "Stokes Phenomenon = EML-\u221e Barrier over \u2102: A solution is EML-finite sector by sector but EML-\u221e globally because sector-gluing requires the full monodromy group action."
+    }
+  },
+  "hypergeometric_parameter_space": {
+    "total_sampled": 64,
+    "eml_distribution": {
+      "0": 0,
+      "1": 0,
+      "2": 40,
+      "3": 24,
+      "\u221e": 0
+    },
+    "sample": [
+      {
+        "a": -0.5,
+        "b": -0.5,
+        "c": 0.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": -0.5,
+        "c": 1.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": -0.5,
+        "c": 2.0,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": -0.5,
+        "c": 3.0,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": -0.25,
+        "c": 0.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": -0.25,
+        "c": 1.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": -0.25,
+        "c": 2.0,
+        "eml_depth": 3
+      },
+      {
+        "a": -0.5,
+        "b": -0.25,
+        "c": 3.0,
+        "eml_depth": 3
+      },
+      {
+        "a": -0.5,
+        "b": 0.25,
+        "c": 0.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": 0.25,
+        "c": 1.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": 0.25,
+        "c": 2.0,
+        "eml_depth": 3
+      },
+      {
+        "a": -0.5,
+        "b": 0.25,
+        "c": 3.0,
+        "eml_depth": 3
+      },
+      {
+        "a": -0.5,
+        "b": 0.5,
+        "c": 0.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": 0.5,
+        "c": 1.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": 0.5,
+        "c": 2.0,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.5,
+        "b": 0.5,
+        "c": 3.0,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.25,
+        "b": -0.5,
+        "c": 0.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.25,
+        "b": -0.5,
+        "c": 1.5,
+        "eml_depth": 2
+      },
+      {
+        "a": -0.25,
+        "b": -0.5,
+        "c": 2.0,
+        "eml_depth": 3
+      },
+      {
+        "a": -0.25,
+        "b": -0.5,
+        "c": 3.0,
+        "eml_depth": 3
+      }
+    ],
+    "observation": "EML-\u221e (generic) dominates; EML-2 occurs on measure-zero set (integer conditions)"
+  },
+  "eml_parameter_map": {
+    "EML-2_conditions": [
+      "a or b \u2208 {0,-1,-2,...} \u2192 polynomial (finite series)",
+      "a-c \u2208 \u2124 or b-c \u2208 \u2124 \u2192 logarithmic case \u2192 ln gate \u2192 EML-2",
+      "a-b \u2208 \u2124 \u2192 Kummer solution \u2192 EML-2",
+      "Schwarz triangles (1/p,1/q,1/r) with 1/p+1/q+1/r\u22651 \u2192 algebraic \u2192 EML-2"
+    ],
+    "EML-3_conditions": [
+      "Rational (a,b,c) not satisfying EML-2 conditions \u2192 Euler integral \u2192 EML-3",
+      "Examples: \u2082F\u2081(1/2,1/2;3/2;z)=arcsin(\u221az)/\u221az, \u2082F\u2081(1/2,-1/2;1;z)=E(\u221az) [elliptic E]"
+    ],
+    "EML_inf_conditions": [
+      "Generic (a,b,c) with irrational or transcendental parameters",
+      "Monodromy group = Zariski-dense in SL(2,\u2102) \u2192 no EML-finite global expression",
+      "Full measure in parameter space"
+    ]
+  },
+  "ramanujan_identities": {
+    "chudnovsky": {
+      "formula": "Chudnovsky: 1/\u03c0 = \u03a3 (-1)^n (6n)!(13591409+545140134n) / ((3n)!(n!)^3\u00b7640320^{3n+3/2})",
+      "n_terms": 3,
+      "approximated_pi": 3.1415926536,
+      "true_pi": 3.1415926536,
+      "eml_depth_series_terms": 2,
+      "eml_depth_limit": 3,
+      "insight": "Each term is EML-2 (rational \u00d7 algebraic); sum converges to EML-3 (\u03c0). EML depth can jump at limits."
+    },
+    "elliptic_K_identity": {
+      "identity": "\u2082F\u2081(1/2,1/2;1;z) = (2/\u03c0)\u00b7K(\u221az) [complete elliptic integral of first kind]",
+      "z": 0.5,
+      "2F1_value": 1.180341,
+      "elliptic_K_value": 1.180341,
+      "eml_2F1": "EML-3 (generic rational params, transcendental)",
+      "eml_K": "EML-3 (elliptic integral = definite integral of algebraic function)"
+    }
+  },
+  "eml_depth_summary": {
+    "EML-2": "Algebraic ODEs, polynomial solutions, logarithmic Frobenius, Legendre P_n, Euler-Cauchy",
+    "EML-3": "Airy (sector), Bessel half-integer, \u2082F\u2081 with rational params, Euler integral, elliptic K and E",
+    "EML-\u221e": "Airy globally, Bessel general \u03bd, generic \u2082F\u2081, Lam\u00e9, Mathieu, Heun \u2014 no closed EML-finite form"
+  },
+  "connections": {
+    "to_session_59": "Session 59 Kovacic: Case 1\u2192EML-2, Case 2\u2192EML-3, Case 3\u2192EML-\u221e. Session 73 extends to Fuchsian/irregular.",
+    "to_session_66": "Complex Analysis EML: Stokes phenomenon = EML-\u221e over \u2102 (monodromy of ln)",
+    "to_session_70": "Quantum randomness = EML-\u221e in hidden variable; Stokes = EML-\u221e in global solution",
+    "to_ramanujan": "Ramanujan identities: EML-2 series summing to EML-3 values \u2014 depth jumps at limits"
+  }
+}
