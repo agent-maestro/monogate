@@ -1,0 +1,57 @@
+{
+  "session": 739,
+  "title": "Navier-Stokes Vortex Stretching and EML-3",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "NSVortexStretchingEML3EML",
+    "analysis": {
+      "object": "T460: Navier-Stokes Vortex Stretching and EML-3 depth analysis",
+      "domains": {
+        "vortex_stretching_v2": {
+          "description": "(omega dot nabla)u: convective amplification of vorticity",
+          "depth": "EML-3",
+          "reason": "gradient of velocity = EML-3"
+        },
+        "2d_no_stretching": {
+          "description": "In 2D: vortex stretching absent; regularity proved",
+          "depth": "EML-3",
+          "reason": "absence of EML-3 term = EML-3 proof possible"
+        },
+        "3d_stretching": {
+          "description": "In 3D: vortex stretching creates EML-3 cascade",
+          "depth": "EML-3",
+          "reason": "EML-3 term forces EML-inf blowup risk"
+        },
+        "shadow_survives": {
+          "description": "Vortex stretching survives shadow projection to EML-3",
+          "depth": "EML-3",
+          "reason": "EML-3 shadow confirmed: not EML-2"
+        },
+        "blowup_mechanism": {
+          "description": "Vortex stretching \u2192 blow-up: EML-3 \u2192 EML-inf",
+          "depth": "EML-inf",
+          "reason": "EML-3 term can trigger Deltad=inf blowup"
+        },
+        "vortex_law": {
+          "description": "T460: vortex stretching is EML-3; absent in 2D; survives shadow in 3D; triggers EML-inf blowup risk",
+          "depth": "EML-3",
+          "reason": ""
+        }
+      }
+    },
+    "distribution": {
+      "EML-3": 5,
+      "EML-inf": 1
+    },
+    "theorem": "T460: Navier-Stokes Vortex Stretching and EML-3 (S739)."
+  },
+  "key_theorem": "T460: Navier-Stokes Vortex Stretching and EML-3 (S739).",
+  "rabbit_hole_log": [
+    "T460: vortex_stretching_v2 depth=EML-3 confirmed",
+    "T460: 2d_no_stretching depth=EML-3 confirmed",
+    "T460: 3d_stretching depth=EML-3 confirmed",
+    "T460: shadow_survives depth=EML-3 confirmed",
+    "T460: blowup_mechanism depth=EML-inf confirmed",
+    "T460: vortex_law depth=EML-3 confirmed"
+  ]
+}
