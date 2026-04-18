@@ -1,0 +1,233 @@
+{
+  "session": 105,
+  "title": "Cryptography & Information Security: EML Hardness Hierarchy",
+  "key_theorem": {
+    "theorem": "EML Cryptographic Hardness Theorem",
+    "statement": "Perfect secrecy (OTP) is EML-0 operationally (I(M;C)=0). RSA encryption C=M^e mod n is EML-2 (modular exponentiation). Factoring and discrete log are EML-\u221e (no polynomial algorithm classically). GNFS is sub-exponential: exp((ln n)^{1/3}\u00b7(ln ln n)^{2/3}) = EML-2 (two nested logs). Hash outputs are EML-\u221e (no structure, preimage/collision resistance). Birthday bound is EML-2 (2^{n/2} = square root). LWE hardness is EML-\u221e (worst-case lattice). Shor's algorithm reduces factoring to EML-2 (quantum polynomial)."
+  },
+  "classical_crypto": {
+    "otp": {
+      "message_bits": 128,
+      "H_M_bits": 128,
+      "H_K_required": 128,
+      "mutual_information": 0,
+      "eml_cipher": 0,
+      "eml_key_entropy": 2,
+      "reason": "OTP: I(M;C)=0 = perfect secrecy = EML-0 cipher; H(K)\u2265H(M) = EML-2 bound"
+    },
+    "caesar": {
+      "plaintext": "HELLO",
+      "ciphertext": "KHOOR",
+      "shift": 3,
+      "eml": 0,
+      "reason": "C = (M + k) mod 26: affine map over Z_26 = EML-0 (modular arithmetic)",
+      "security": "Breakable by frequency analysis \u2014 EML-0 offers no computational security"
+    },
+    "shannon_perfect_secrecy": {
+      "condition": "H(K) \u2265 H(M)",
+      "eml_H_K": 2,
+      "eml_OTP": 0,
+      "insight": "Perfect secrecy is EML-0 operationally but requires EML-2 key entropy"
+    }
+  },
+  "public_key": {
+    "rsa_example": {
+      "M": 42,
+      "e": 65537,
+      "n": 3233,
+      "C": 2557,
+      "eml_encryption": 2,
+      "eml_decryption_without_key": Infinity,
+      "reason_enc": "C = M^e mod n: modular exp = EML-2 (exp of log)",
+      "reason_hard": "Factoring n to recover d: EML-\u221e (best known = GNFS ~ exp((ln n)^{1/3}))"
+    },
+    "dh_example": {
+      "g": 2,
+      "p": 23,
+      "alice_private": 6,
+      "alice_public": 18,
+      "bob_private": 15,
+      "bob_public": 16,
+      "shared_key": 4,
+      "keys_match": true,
+      "eml_key_exchange": 2,
+      "eml_dlp_attack": Infinity,
+      "reason": "g^x mod p: EML-2 to compute, EML-\u221e to invert (DLP)"
+    },
+    "gnfs": [
+      {
+        "n_bits": 512,
+        "gnfs_exponent": 44.31,
+        "log10_operations": 19.2,
+        "eml_complexity": 2,
+        "reason": "GNFS: exp((ln n)^{1/3}\u00b7(ln ln n)^{2/3}) = sub-exponential = EML-2 (two nested logs)"
+      },
+      {
+        "n_bits": 1024,
+        "gnfs_exponent": 60.14,
+        "log10_operations": 26.1,
+        "eml_complexity": 2,
+        "reason": "GNFS: exp((ln n)^{1/3}\u00b7(ln ln n)^{2/3}) = sub-exponential = EML-2 (two nested logs)"
+      },
+      {
+        "n_bits": 2048,
+        "gnfs_exponent": 81.02,
+        "log10_operations": 35.2,
+        "eml_complexity": 2,
+        "reason": "GNFS: exp((ln n)^{1/3}\u00b7(ln ln n)^{2/3}) = sub-exponential = EML-2 (two nested logs)"
+      },
+      {
+        "n_bits": 4096,
+        "gnfs_exponent": 108.48,
+        "log10_operations": 47.1,
+        "eml_complexity": 2,
+        "reason": "GNFS: exp((ln n)^{1/3}\u00b7(ln ln n)^{2/3}) = sub-exponential = EML-2 (two nested logs)"
+      }
+    ],
+    "eml_rsa_enc": 2,
+    "eml_rsa_security": Infinity,
+    "eml_dlp": Infinity,
+    "eml_ecdlp": Infinity,
+    "hardness_summary": "Cryptographic one-way functions: EML-2 to evaluate, EML-\u221e to invert"
+  },
+  "hash_functions": {
+    "birthday_bounds": [
+      {
+        "output_bits": 128,
+        "log2_collision_queries": 64.0,
+        "log10_collision_queries": 19.3,
+        "eml_birthday": 2,
+        "reason": "Birthday bound 2^{n/2} = exp(n\u00b7ln2/2): EML-2 (exp of linear in n)"
+      },
+      {
+        "output_bits": 160,
+        "log2_collision_queries": 80.0,
+        "log10_collision_queries": 24.1,
+        "eml_birthday": 2,
+        "reason": "Birthday bound 2^{n/2} = exp(n\u00b7ln2/2): EML-2 (exp of linear in n)"
+      },
+      {
+        "output_bits": 256,
+        "log2_collision_queries": 128.0,
+        "log10_collision_queries": 38.5,
+        "eml_birthday": 2,
+        "reason": "Birthday bound 2^{n/2} = exp(n\u00b7ln2/2): EML-2 (exp of linear in n)"
+      },
+      {
+        "output_bits": 512,
+        "log2_collision_queries": 256.0,
+        "log10_collision_queries": 77.1,
+        "eml_birthday": 2,
+        "reason": "Birthday bound 2^{n/2} = exp(n\u00b7ln2/2): EML-2 (exp of linear in n)"
+      }
+    ],
+    "merkle_damgard": {
+      "n_blocks": 16,
+      "chain_depth": 16,
+      "eml_per_step": 1,
+      "eml_full_chain": 1,
+      "reason": "f(H_{i-1}, m_i) iterated: EML-1 sequence (geometric chain of EML-1 steps)",
+      "length_extension_vulnerability": true
+    },
+    "sha256_avalanche": {
+      "msg1": "hello",
+      "msg2": "hellp",
+      "hash1": "2cf24dba5fb0a30e...",
+      "hash2": "fdd7585e08c4e2af...",
+      "bits_differing": 131,
+      "fraction": 0.512,
+      "eml": Infinity,
+      "reason": "Avalanche: 1-bit change \u2192 ~50% output change = EML-\u221e (no structure in output)"
+    },
+    "eml_hash_output": Infinity,
+    "eml_preimage": Infinity,
+    "eml_collision": Infinity,
+    "eml_birthday_bound": 2,
+    "eml_md_chain": 1
+  },
+  "post_quantum": {
+    "lwe": [
+      {
+        "n": 256,
+        "q": 3329,
+        "sigma": 3.2,
+        "noise_entropy_bits": 3.73,
+        "distinguishing_advantage": 0.999997,
+        "eml_lwe_noise": 1,
+        "eml_lwe_hardness": Infinity,
+        "reason_noise": "e ~ Gaussian: EML-1 per component",
+        "reason_hard": "LWE hardness \u2261 gap-SVP: worst-case lattice problem = EML-\u221e"
+      },
+      {
+        "n": 512,
+        "q": 3329,
+        "sigma": 3.2,
+        "noise_entropy_bits": 3.73,
+        "distinguishing_advantage": 0.999997,
+        "eml_lwe_noise": 1,
+        "eml_lwe_hardness": Infinity,
+        "reason_noise": "e ~ Gaussian: EML-1 per component",
+        "reason_hard": "LWE hardness \u2261 gap-SVP: worst-case lattice problem = EML-\u221e"
+      }
+    ],
+    "grover": [
+      {
+        "n_bits": 128,
+        "classical_queries_log2": 128,
+        "quantum_queries_log2": 64.0,
+        "speedup_factor": "2^{64}",
+        "eml_grover": 2,
+        "reason": "Grover: O(\u221aN) = O(2^{n/2}): quadratic speedup = EML-2 (halves exponent)"
+      },
+      {
+        "n_bits": 256,
+        "classical_queries_log2": 256,
+        "quantum_queries_log2": 128.0,
+        "speedup_factor": "2^{128}",
+        "eml_grover": 2,
+        "reason": "Grover: O(\u221aN) = O(2^{n/2}): quadratic speedup = EML-2 (halves exponent)"
+      }
+    ],
+    "shor": [
+      {
+        "n_bits": 2048,
+        "classical_log10_ops": 545.7,
+        "quantum_gate_count": 8589934592,
+        "eml_shor": 2,
+        "reason": "Shor: O(n\u00b3) quantum gates = EML-2 (polynomial in n = exp(3\u00b7ln n))",
+        "implication": "Shor reduces RSA (EML-\u221e classical) to EML-2 (quantum polynomial)"
+      },
+      {
+        "n_bits": 4096,
+        "classical_log10_ops": 818.2,
+        "quantum_gate_count": 68719476736,
+        "eml_shor": 2,
+        "reason": "Shor: O(n\u00b3) quantum gates = EML-2 (polynomial in n = exp(3\u00b7ln n))",
+        "implication": "Shor reduces RSA (EML-\u221e classical) to EML-2 (quantum polynomial)"
+      }
+    ],
+    "pq_eml_summary": {
+      "LWE_hardness": Infinity,
+      "NTRU_polynomial_ops": 2,
+      "Grover_speedup": 2,
+      "Shor_complexity": 2
+    },
+    "insight": "Quantum computing moves RSA from EML-\u221e to EML-2 \u2014 post-quantum crypto needs new EML-\u221e problems"
+  },
+  "eml_depth_summary": {
+    "EML-0": "OTP cipher (perfect secrecy); Caesar/Vigen\u00e8re; RSA modulus arithmetic given factors",
+    "EML-1": "Merkle-Damg\u00e5rd chain (iterated composition); Gaussian LWE noise per component",
+    "EML-2": "RSA/DH computation (modular exp); GNFS complexity; birthday bound; Shor/Grover; power-law key sizes",
+    "EML-\u221e": "Factoring n; discrete log; ECDLP; hash preimage/collision; LWE hardness (gap-SVP)"
+  },
+  "rabbit_hole_log": [
+    "Cryptographic hardness = EML asymmetry: the same modular exponentiation that is EML-2 to compute forward is EML-\u221e to invert backward. Cryptography exists precisely because EML depth is not preserved under inversion.",
+    "GNFS is exactly EML-2: the best classical factoring algorithm runs in exp((ln n)^{1/3}\u00b7(ln ln n)^{2/3}). This is two nested logarithms under an exponential = EML-2. RSA's security is that EML-2 classical effort is still enormous for 2048-bit keys.",
+    "Shor's algorithm is an EML-depth reduction: quantum computing changes RSA from EML-\u221e (classical) to EML-2 (polynomial quantum). Post-quantum cryptography seeks functions that remain EML-\u221e even for quantum computers. LWE achieves this via worst-case lattice hardness.",
+    "The hash function avalanche effect is EML-\u221e by design: cryptographers engineer hash functions to have no EML-finite description of their input-output behavior. The EML-\u221e property is the goal of hash design, not an accident."
+  ],
+  "connections": {
+    "to_session_71": "PRNGs are EML-2 (deterministic recurrence). Hash outputs target EML-\u221e (true randomness). Crypto bridges them.",
+    "to_session_69": "Algorithmic randomness: hash outputs are computationally EML-\u221e (pseudo-random oracle). Kolmogorov complexity analog."
+  }
+}
