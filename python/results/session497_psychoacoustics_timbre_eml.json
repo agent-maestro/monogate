@@ -1,0 +1,71 @@
+{
+  "session": 497,
+  "title": "Psychoacoustics & Timbre Perception",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "analysis": {
+    "model": "PsychoacousticsTimbreEML",
+    "analysis": {
+      "object": "T218: Psychoacoustics and timbre under the Shadow Depth Theorem",
+      "domains": {
+        "loudness_perception": {
+          "description": "Sone scale: S = I^0.3",
+          "depth": "EML-2",
+          "reason": "Power law \u2014 Stevens' law, log-log linear"
+        },
+        "pitch_perception": {
+          "description": "Mel scale: mel(f) = 2595\u00b7log(1+f/700)",
+          "depth": "EML-2",
+          "reason": "Logarithmic frequency mapping"
+        },
+        "timbre_spectral": {
+          "description": "Timbre = spectral envelope of harmonics",
+          "depth": "EML-3",
+          "reason": "Weighted sum of harmonics \u03a3 a\u2099 sin(2\u03c0nft+\u03c6\u2099) = EML-3"
+        },
+        "attack_decay": {
+          "description": "ADSR envelope: exp decay and exp rise",
+          "depth": "EML-1",
+          "reason": "Exponential attack/decay curves"
+        },
+        "critical_bands": {
+          "description": "Bark scale: 24 critical bands",
+          "depth": "EML-0",
+          "reason": "Discrete count of auditory filter channels"
+        },
+        "consonance": {
+          "description": "Sensory consonance (Helmholtz roughness model)",
+          "depth": "EML-3",
+          "reason": "Beating frequency |f\u2081-f\u2082| creates oscillatory roughness"
+        },
+        "phantom_fundamental": {
+          "description": "Missing fundamental: brain infers f\u2080 from harmonics",
+          "depth": "EML-3",
+          "reason": "Reconstruction of EML-3 oscillation from its spectral shadows"
+        },
+        "emotion_music": {
+          "description": "Emotional response to music (valence, arousal)",
+          "depth": "EML-\u221e",
+          "reason": "Qualia \u2014 the unreachable Horizon"
+        }
+      },
+      "sdt_application": "SDT applied to timbre: Timbre is the shadow of the harmonic structure at the receiver. shadow(timbre) = shadow(\u03a3 a\u2099 sin(2\u03c0nft)) = shadow(EML-3) = oscillatory. The SDT predicts: human timbre perception must be mediated by an oscillatory mechanism \u2014 which is confirmed: auditory cortex uses oscillatory neural populations."
+    },
+    "distribution": {
+      "EML-0": 1,
+      "EML-1": 1,
+      "EML-2": 2,
+      "EML-3": 3,
+      "EML-\u221e": 1
+    },
+    "verdict": "Timbre: EML-3. Loudness/pitch: EML-2. ADSR: EML-1. Emotion: EML-\u221e.",
+    "theorem": "T218: Psychoacoustics Depth \u2014 timbre is EML-3 shadow; SDT predicts oscillatory perception"
+  },
+  "key_theorem": "T218: Psychoacoustics Depth (S497). Timbre = spectral envelope = EML-3. SDT: shadow(timbre) = oscillatory \u2192 brain must use oscillatory mechanism. Confirmed: auditory cortex = oscillatory neural populations. Phantom fundamental: EML-3 reconstruction from spectral shadows.",
+  "rabbit_hole_log": [
+    "Timbre: \u03a3 a\u2099 sin(2\u03c0nft+\u03c6\u2099) = EML-3 (sum of oscillations)",
+    "SDT: shadow of EML-3 = oscillatory \u2192 auditory cortex must be oscillatory",
+    "Phantom fundamental: EML-3 inferred from EML-3 shadows",
+    "Loudness/pitch: log-power laws \u2192 EML-2",
+    "T218: SDT makes a testable prediction about auditory cortex architecture"
+  ]
+}
