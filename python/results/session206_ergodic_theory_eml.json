@@ -1,0 +1,79 @@
+{
+  "session": 206,
+  "title": "Ergodic Theory: Mixing, Birkhoff's Theorem & Entropy",
+  "eml_operator": "eml(x,y) = exp(x) - ln(y)",
+  "birkhoff": {
+    "model": "BirkhoffEML",
+    "convergence": {
+      "n_steps": 100,
+      "mixing_rate": 0.1,
+      "convergence_bound": 4.5e-05,
+      "log_convergence": -10.0,
+      "birkhoff_depth": 1,
+      "convergence_depth": 1,
+      "note": "Birkhoff convergence = EML-1 (exponential approach to ergodic mean)"
+    },
+    "decomposition": {
+      "ergodic_components_depth": 0,
+      "decomposition_measure_depth": 2,
+      "non_ergodic_depth": "\u221e",
+      "choquet_theory_depth": 2,
+      "note": "Ergodic decomposition: components=EML-0; measure=EML-2; non-ergodic=EML-\u221e"
+    },
+    "key_insight": "Birkhoff=EML-1; ergodic decomposition measure=EML-2; non-ergodic=EML-\u221e"
+  },
+  "mixing_entropy": {
+    "model": "MixingEntropyEML",
+    "mixing_rates": {
+      "t": 10.0,
+      "exponential_mixing": 0.049787,
+      "polynomial_mixing": 0.316228,
+      "exp_mixing_depth": 1,
+      "poly_mixing_depth": 2,
+      "non_mixing_depth": 0,
+      "note": "Mixing: exponential=EML-1; polynomial=EML-2 (power law); non-mixing=EML-0"
+    },
+    "ks_entropy": {
+      "lyapunov_exponents": [
+        0.693,
+        0.0,
+        -0.693
+      ],
+      "ks_entropy": 0.693,
+      "lyapunov_depth": 2,
+      "ks_entropy_depth": 2,
+      "zero_entropy_depth": 1,
+      "pesin_formula_depth": 2,
+      "note": "KS entropy = \u03a3 positive Lyapunov exponents = EML-2; Lyapunov = log(Jac) = EML-2"
+    },
+    "spectral_gap": {
+      "second_eigenvalue": 0.95,
+      "spectral_gap": 0.05,
+      "mixing_time": 20.0,
+      "gap_depth": 2,
+      "mixing_time_depth": 2,
+      "note": "Spectral gap=EML-2; mixing time t_mix=1/\u03b4=EML-2"
+    },
+    "ornstein": {
+      "bernoulli_classification_depth": 0,
+      "isomorphism_construction_depth": "\u221e",
+      "k_system_depth": "\u221e",
+      "entropy_invariant_depth": 2,
+      "ornstein_theorem": "Bernoulli shifts classified by entropy=EML-0; construction=EML-\u221e",
+      "note": "Ornstein: entropy=EML-0 invariant; isomorphism proof=EML-\u221e"
+    },
+    "key_insight": "KS entropy=EML-2; spectral gap=EML-2; mixing=EML-1 or 2; isomorphism=EML-\u221e"
+  },
+  "eml_depth_summary": {
+    "EML-0": "Ergodic components (countable), Bernoulli classification by entropy, non-mixing constant",
+    "EML-1": "Birkhoff convergence (exponential), zero-entropy integrable, exponential mixing",
+    "EML-2": "KS entropy (Pesin formula), Lyapunov exponents, spectral gap, polynomial mixing",
+    "EML-\u221e": "Isomorphism construction (non-constructive), non-Bernoulli K-systems"
+  },
+  "key_theorem": "The EML Ergodic Theory Theorem (S206): Ergodic theory spans the EML ladder naturally: Birkhoff convergence = EML-1 (exponential approach to ergodic mean). KS entropy h_KS = \u03a3 max(\u03bb_i,0) = EML-2 (Pesin: sum of positive Lyapunov). Spectral gap \u03b4 = EML-2 (mixing speed in log scale). Polynomial mixing C(t)~t^{-\u03b1} = EML-2 (power law = universal EML-2 signature). Ornstein isomorphism: Bernoulli classification by entropy = EML-0; construction of isomorphism = EML-\u221e (non-constructive existence proof). DELTA_D HIGHLIGHT: h_KS computation path: Jacobian (EML-0 matrix) \u2192 eigenvalues (EML-2) = \u0394d=2 (anomalous dimension pattern).",
+  "rabbit_hole_log": [
+    "KS entropy = EML-2: same depth as Shannon, Fisher, KL \u2014 all information-theoretic",
+    "Bernoulli classification = EML-0: one number (entropy) suffices \u2014 the EML-0 anchor",
+    "Polynomial mixing = EML-2: power law appears in ergodic theory same as in physics"
+  ]
+}
