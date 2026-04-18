@@ -1,0 +1,361 @@
+{
+  "session": 113,
+  "title": "Epidemiology & Contagion: EML of Spreading Processes",
+  "key_theorem": {
+    "theorem": "EML Contagion Theorem",
+    "statement": "R\u2080 = \u03b2/\u03b3 is EML-0 (ratio of rate constants). Epidemic exponential growth I(t)~exp(rt) is EML-1. Herd immunity threshold 1-1/R\u2080 is EML-2. Final size R\u221e (fixed point of 1-exp(-R\u2080\u00b7R\u221e)) is EML-1. Endemic equilibrium I* = 1-1/R\u2080 is EML-1 (Boltzmann ground state). Epidemic threshold R\u2080=1 is EML-\u221e (phase transition). ER network threshold \u03b2_c = \u03b3\u27e8k\u27e9/\u27e8k\u00b2\u27e9 is EML-2. Scale-free network threshold \u03b2_c\u21920 is EML-\u221e (always spreads). DeGroot consensus = EML-1 (dominant eigenvector). Opinion polarization = EML-\u221e (bifurcation)."
+  },
+  "sir_model": {
+    "reproduction_numbers": [
+      {
+        "beta": 0.05,
+        "gamma": 0.1,
+        "R0": 0.5,
+        "growth_rate_r": -0.05,
+        "herd_immunity_threshold": 0.0,
+        "eml_R0": 0,
+        "eml_growth_rate": 2,
+        "eml_herd_immunity": 2,
+        "reason_R0": "R\u2080 = \u03b2/\u03b3: ratio of rate constants = EML-0",
+        "reason_herd": "p_c = 1-1/R\u2080: rational function of R\u2080 = EML-2"
+      },
+      {
+        "beta": 0.08,
+        "gamma": 0.1,
+        "R0": 0.8,
+        "growth_rate_r": -0.02,
+        "herd_immunity_threshold": 0.0,
+        "eml_R0": 0,
+        "eml_growth_rate": 2,
+        "eml_herd_immunity": 2,
+        "reason_R0": "R\u2080 = \u03b2/\u03b3: ratio of rate constants = EML-0",
+        "reason_herd": "p_c = 1-1/R\u2080: rational function of R\u2080 = EML-2"
+      },
+      {
+        "beta": 0.15,
+        "gamma": 0.1,
+        "R0": 1.5,
+        "growth_rate_r": 0.05,
+        "herd_immunity_threshold": 0.3333,
+        "eml_R0": 0,
+        "eml_growth_rate": 2,
+        "eml_herd_immunity": 2,
+        "reason_R0": "R\u2080 = \u03b2/\u03b3: ratio of rate constants = EML-0",
+        "reason_herd": "p_c = 1-1/R\u2080: rational function of R\u2080 = EML-2"
+      },
+      {
+        "beta": 0.2,
+        "gamma": 0.1,
+        "R0": 2.0,
+        "growth_rate_r": 0.1,
+        "herd_immunity_threshold": 0.5,
+        "eml_R0": 0,
+        "eml_growth_rate": 2,
+        "eml_herd_immunity": 2,
+        "reason_R0": "R\u2080 = \u03b2/\u03b3: ratio of rate constants = EML-0",
+        "reason_herd": "p_c = 1-1/R\u2080: rational function of R\u2080 = EML-2"
+      },
+      {
+        "beta": 0.5,
+        "gamma": 0.1,
+        "R0": 5.0,
+        "growth_rate_r": 0.4,
+        "herd_immunity_threshold": 0.8,
+        "eml_R0": 0,
+        "eml_growth_rate": 2,
+        "eml_herd_immunity": 2,
+        "reason_R0": "R\u2080 = \u03b2/\u03b3: ratio of rate constants = EML-0",
+        "reason_herd": "p_c = 1-1/R\u2080: rational function of R\u2080 = EML-2"
+      }
+    ],
+    "growth_phase": [
+      {
+        "t": 0,
+        "I0": 10,
+        "r": 0.15,
+        "I_t": 10.0,
+        "eml": 1,
+        "reason": "I(t) \u2248 I\u2080\u00b7exp(rt): EML-1 (exponential growth = ground state of spreading)"
+      },
+      {
+        "t": 5,
+        "I0": 10,
+        "r": 0.15,
+        "I_t": 21.17,
+        "eml": 1,
+        "reason": "I(t) \u2248 I\u2080\u00b7exp(rt): EML-1 (exponential growth = ground state of spreading)"
+      },
+      {
+        "t": 10,
+        "I0": 10,
+        "r": 0.15,
+        "I_t": 44.8169,
+        "eml": 1,
+        "reason": "I(t) \u2248 I\u2080\u00b7exp(rt): EML-1 (exponential growth = ground state of spreading)"
+      },
+      {
+        "t": 20,
+        "I0": 10,
+        "r": 0.15,
+        "I_t": 200.8554,
+        "eml": 1,
+        "reason": "I(t) \u2248 I\u2080\u00b7exp(rt): EML-1 (exponential growth = ground state of spreading)"
+      }
+    ],
+    "final_sizes": [
+      {
+        "R0": 1.5,
+        "R_inf": 0.0,
+        "eml": 1,
+        "reason": "R\u221e = 1 - exp(-R\u2080\u00b7R\u221e): fixed point of EML-1 map = EML-1 (same as quasispecies, S102)"
+      },
+      {
+        "R0": 2.0,
+        "R_inf": 0.0,
+        "eml": 1,
+        "reason": "R\u221e = 1 - exp(-R\u2080\u00b7R\u221e): fixed point of EML-1 map = EML-1 (same as quasispecies, S102)"
+      },
+      {
+        "R0": 3.0,
+        "R_inf": 0.0,
+        "eml": 1,
+        "reason": "R\u221e = 1 - exp(-R\u2080\u00b7R\u221e): fixed point of EML-1 map = EML-1 (same as quasispecies, S102)"
+      },
+      {
+        "R0": 5.0,
+        "R_inf": 0.0,
+        "eml": 1,
+        "reason": "R\u221e = 1 - exp(-R\u2080\u00b7R\u221e): fixed point of EML-1 map = EML-1 (same as quasispecies, S102)"
+      },
+      {
+        "R0": 10.0,
+        "R_inf": 0.0,
+        "eml": 1,
+        "reason": "R\u221e = 1 - exp(-R\u2080\u00b7R\u221e): fixed point of EML-1 map = EML-1 (same as quasispecies, S102)"
+      }
+    ],
+    "endemic": [
+      {
+        "R0": 0.8,
+        "I_star": 0.0,
+        "eml": 1,
+        "regime": "disease-free"
+      },
+      {
+        "R0": 1.5,
+        "mu": 0.01,
+        "I_star_fraction": 0.3333,
+        "eml": 1,
+        "reason": "I* = 1-1/R\u2080: fixed point = EML-1 (Boltzmann equilibrium of spreading dynamics)"
+      },
+      {
+        "R0": 2.0,
+        "mu": 0.01,
+        "I_star_fraction": 0.5,
+        "eml": 1,
+        "reason": "I* = 1-1/R\u2080: fixed point = EML-1 (Boltzmann equilibrium of spreading dynamics)"
+      },
+      {
+        "R0": 5.0,
+        "mu": 0.01,
+        "I_star_fraction": 0.8,
+        "eml": 1,
+        "reason": "I* = 1-1/R\u2080: fixed point = EML-1 (Boltzmann equilibrium of spreading dynamics)"
+      }
+    ],
+    "phase_transition": [
+      {
+        "R0": 0.5,
+        "regime": "subcritical",
+        "near_critical": false,
+        "eml": 0,
+        "analogy": "Ising T_c; percolation p_c; AMOC threshold \u2014 all EML-\u221e"
+      },
+      {
+        "R0": 0.8,
+        "regime": "subcritical",
+        "near_critical": false,
+        "eml": 0,
+        "analogy": "Ising T_c; percolation p_c; AMOC threshold \u2014 all EML-\u221e"
+      },
+      {
+        "R0": 0.95,
+        "regime": "subcritical",
+        "near_critical": false,
+        "eml": 0,
+        "analogy": "Ising T_c; percolation p_c; AMOC threshold \u2014 all EML-\u221e"
+      },
+      {
+        "R0": 1.0,
+        "regime": "subcritical",
+        "near_critical": true,
+        "eml": "\u221e",
+        "analogy": "Ising T_c; percolation p_c; AMOC threshold \u2014 all EML-\u221e"
+      },
+      {
+        "R0": 1.05,
+        "regime": "epidemic",
+        "near_critical": false,
+        "eml": 1,
+        "analogy": "Ising T_c; percolation p_c; AMOC threshold \u2014 all EML-\u221e"
+      },
+      {
+        "R0": 1.5,
+        "regime": "epidemic",
+        "near_critical": false,
+        "eml": 1,
+        "analogy": "Ising T_c; percolation p_c; AMOC threshold \u2014 all EML-\u221e"
+      },
+      {
+        "R0": 2.0,
+        "regime": "epidemic",
+        "near_critical": false,
+        "eml": 1,
+        "analogy": "Ising T_c; percolation p_c; AMOC threshold \u2014 all EML-\u221e"
+      },
+      {
+        "R0": 3.0,
+        "regime": "epidemic",
+        "near_critical": false,
+        "eml": 1,
+        "analogy": "Ising T_c; percolation p_c; AMOC threshold \u2014 all EML-\u221e"
+      },
+      {
+        "R0": 5.0,
+        "regime": "epidemic",
+        "near_critical": false,
+        "eml": 1,
+        "analogy": "Ising T_c; percolation p_c; AMOC threshold \u2014 all EML-\u221e"
+      }
+    ],
+    "eml_R0": 0,
+    "eml_growth": 1,
+    "eml_herd_immunity": 2,
+    "eml_threshold": Infinity
+  },
+  "network_contagion": {
+    "er_thresholds": [
+      {
+        "k_mean": 4,
+        "k2_mean": 20,
+        "gamma": 0.1,
+        "beta_c": 0.02,
+        "eml": 2,
+        "reason": "\u03b2_c = \u03b3\u27e8k\u27e9/\u27e8k\u00b2\u27e9: ratio of moments = EML-2"
+      },
+      {
+        "k_mean": 4,
+        "k2_mean": 100,
+        "gamma": 0.1,
+        "beta_c": 0.004,
+        "eml": 2,
+        "reason": "\u03b2_c = \u03b3\u27e8k\u27e9/\u27e8k\u00b2\u27e9: ratio of moments = EML-2"
+      }
+    ],
+    "scale_free": [
+      {
+        "gamma_sf": 2.5,
+        "N": 10000,
+        "k2_mean": "\u2192\u221e",
+        "beta_c": 0.0,
+        "no_threshold": true,
+        "eml_threshold": Infinity,
+        "reason": "Scale-free \u27e8k\u00b2\u27e9\u2192\u221e: \u03b2_c\u21920. No epidemic threshold = EML-\u221e (always spreads)"
+      },
+      {
+        "gamma_sf": 3.0,
+        "N": 10000,
+        "k2_mean": "\u2192\u221e",
+        "beta_c": 0.0,
+        "no_threshold": true,
+        "eml_threshold": Infinity,
+        "reason": "Scale-free \u27e8k\u00b2\u27e9\u2192\u221e: \u03b2_c\u21920. No epidemic threshold = EML-\u221e (always spreads)"
+      },
+      {
+        "gamma_sf": 3.5,
+        "N": 10000,
+        "k2_mean": 2.59,
+        "beta_c": 0.517474,
+        "no_threshold": false,
+        "eml_threshold": 2,
+        "reason": "Scale-free \u27e8k\u00b2\u27e9\u2192\u221e: \u03b2_c\u21920. No epidemic threshold = EML-\u221e (always spreads)"
+      }
+    ],
+    "eml_er_threshold": 2,
+    "eml_ba_threshold": Infinity,
+    "super_spreader_amplification_eml": 2
+  },
+  "opinion_dynamics": {
+    "degroot": [
+      {
+        "n_agents": 10,
+        "spectral_gap": 0.3,
+        "T_consensus_approx": 7.68,
+        "eml_dynamics": 1,
+        "eml_mixing_time": 2,
+        "reason": "DeGroot: x(t)\u2192W^\u221ex\u2080 = dominant eigenvector: EML-1. Mixing T~ln(n)/gap: EML-2"
+      },
+      {
+        "n_agents": 100,
+        "spectral_gap": 0.1,
+        "T_consensus_approx": 46.05,
+        "eml_dynamics": 1,
+        "eml_mixing_time": 2,
+        "reason": "DeGroot: x(t)\u2192W^\u221ex\u2080 = dominant eigenvector: EML-1. Mixing T~ln(n)/gap: EML-2"
+      },
+      {
+        "n_agents": 1000,
+        "spectral_gap": 0.05,
+        "T_consensus_approx": 138.16,
+        "eml_dynamics": 1,
+        "eml_mixing_time": 2,
+        "reason": "DeGroot: x(t)\u2192W^\u221ex\u2080 = dominant eigenvector: EML-1. Mixing T~ln(n)/gap: EML-2"
+      }
+    ],
+    "voter_model": [
+      {
+        "N": 100,
+        "T_consensus": 460.5,
+        "eml": 2,
+        "reason": "Voter model T ~ N\u00b7ln(N): EML-2 (product of N and ln N)"
+      },
+      {
+        "N": 1000,
+        "T_consensus": 6907.8,
+        "eml": 2,
+        "reason": "Voter model T ~ N\u00b7ln(N): EML-2 (product of N and ln N)"
+      },
+      {
+        "N": 10000,
+        "T_consensus": 92103.4,
+        "eml": 2,
+        "reason": "Voter model T ~ N\u00b7ln(N): EML-2 (product of N and ln N)"
+      }
+    ],
+    "opinion_polarization": {
+      "eml": Infinity,
+      "reason": "Bifurcation in opinion space = EML-\u221e (same as epidemic threshold, Ising transition)"
+    },
+    "meme_R0": {
+      "eml": 0,
+      "reason": "Viral coefficient = ratio = EML-0 (like epidemic R\u2080)"
+    },
+    "echo_chamber_eml": 1
+  },
+  "eml_depth_summary": {
+    "EML-0": "R\u2080 = \u03b2/\u03b3; meme virality coefficient; discrete SIR state count",
+    "EML-1": "Exponential growth I~exp(rt); final size fixed point; endemic equilibrium; DeGroot consensus",
+    "EML-2": "Herd immunity 1-1/R\u2080; ER network threshold \u27e8k\u27e9/\u27e8k\u00b2\u27e9; voter consensus N\u00b7ln(N); super-spreader amplification k\u00b2/\u27e8k\u27e9",
+    "EML-\u221e": "Epidemic threshold R\u2080=1; scale-free BA threshold \u2192 0; opinion polarization bifurcation"
+  },
+  "rabbit_hole_log": [
+    "The epidemic threshold is the social analog of every other EML-\u221e phase transition: Ising T_c, percolation p_c, AMOC threshold, climate tipping \u2014 all EML-\u221e. R\u2080=1 is the universality class representative for social/biological spreading. Above R\u2080=1, the infected fraction jumps continuously from 0 to a finite value \u2014 same order parameter as the Ising magnetization.",
+    "Scale-free networks have no epidemic threshold: for P(k)~k^{-\u03b3} with \u03b3\u22643, \u27e8k\u00b2\u27e9\u2192\u221e and \u03b2_c\u21920. Any disease spreads on a sufficiently large BA network. This is EML-\u221e in the network-theoretic sense: no finite EML-2 threshold exists. The internet and social networks are scale-free, so information and malware spread inevitably.",
+    "The final size equation R\u221e = 1-exp(-R\u2080\u00b7R\u221e) is EML-1 by the same logic as the quasispecies (Session 102): it's a fixed point of an EML-1 map. The epidemic 'remembers' its own history through the exp(-R\u2080\u00b7R\u221e) term \u2014 the fraction of immune people suppresses the force of infection exponentially.",
+    "DeGroot consensus = EML-1: W^t\u00b7x\u2080 \u2192 \u03c0 (dominant eigenvector of W) as t\u2192\u221e. Opinion averaging is PageRank (Session 104) applied to belief vectors. All consensus dynamics \u2014 from cells averaging chemical signals to democracies averaging votes \u2014 converge to EML-1 ground states."
+  ],
+  "connections": {
+    "to_session_57": "Epidemic threshold = EML-\u221e phase transition. Same universality class as Ising, percolation, AMOC.",
+    "to_session_104": "Network SIR threshold = graph spectral gap (EML-2). Scale-free \u2192 EML-\u221e (no threshold). Confirms Session 104."
+  }
+}
