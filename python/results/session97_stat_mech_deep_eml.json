@@ -1,0 +1,205 @@
+{
+  "session": 97,
+  "title": "Statistical Mechanics Deep: Renormalization, Criticality & Universality",
+  "key_theorem": {
+    "theorem": "EML Criticality Classification",
+    "statement": "Near a critical point, all thermodynamic quantities are EML-2 (power laws |t|^x, |h|^x). Scaling functions g(x) are EML-3 (universal conformal functions). Critical exponents for exactly solvable models (MF, 2D Ising) are rational = EML-2. Critical exponents for 3D systems (bootstrap-only) are EML-\u221e. The RG map K'(K) is EML-2; its fixed point is EML-0 (trivial) or EML-\u221e (T_c). The EML Phase Transition Theorem (Session 57) is confirmed: T_c itself is EML-\u221e."
+  },
+  "block_spin_rg": {
+    "block_spin_map": "1D Ising K' = (1/2)ln(cosh(2K))",
+    "rg_flow": [
+      {
+        "K": 0.1,
+        "K_prime": 0.009934,
+        "K_prime_over_K": 0.09934,
+        "flows_toward": "K*=0 (disordered)",
+        "eml_K_prime": 2,
+        "reason": "(1/2)ln(cosh(2K)): logarithm of EML-3 function = EML-2"
+      },
+      {
+        "K": 0.3,
+        "K_prime": 0.085068,
+        "K_prime_over_K": 0.283559,
+        "flows_toward": "K*=0 (disordered)",
+        "eml_K_prime": 2,
+        "reason": "(1/2)ln(cosh(2K)): logarithm of EML-3 function = EML-2"
+      },
+      {
+        "K": 0.5,
+        "K_prime": 0.21689,
+        "K_prime_over_K": 0.433781,
+        "flows_toward": "K*=0 (disordered)",
+        "eml_K_prime": 2,
+        "reason": "(1/2)ln(cosh(2K)): logarithm of EML-3 function = EML-2"
+      },
+      {
+        "K": 1.0,
+        "K_prime": 0.662501,
+        "K_prime_over_K": 0.662501,
+        "flows_toward": "K*=0 (disordered)",
+        "eml_K_prime": 2,
+        "reason": "(1/2)ln(cosh(2K)): logarithm of EML-3 function = EML-2"
+      },
+      {
+        "K": 2.0,
+        "K_prime": 1.653594,
+        "K_prime_over_K": 0.826797,
+        "flows_toward": "K*=0 (disordered)",
+        "eml_K_prime": 2,
+        "reason": "(1/2)ln(cosh(2K)): logarithm of EML-3 function = EML-2"
+      }
+    ],
+    "scaling_exponents": [
+      {
+        "model": "1D Ising (critical T=0)",
+        "yt": "\u221e (relevant, T_c=0)",
+        "yh": 1.0,
+        "nu": 0.0,
+        "eml_exponents": 2,
+        "reason": "yh=1: rational = EML-2"
+      },
+      {
+        "model": "2D Ising (exact, T_c = 2/ln(1+\u221a2))",
+        "yt": 1.0,
+        "yh": 1.875,
+        "nu": 1.0,
+        "eml_exponents": 2,
+        "reason": "yt=1, yh=15/8: rational = EML-2 (Onsager exact)"
+      },
+      {
+        "model": "Mean-field / Landau",
+        "yt": 2.0,
+        "yh": 3.0,
+        "nu": 0.5,
+        "eml_exponents": 2,
+        "reason": "All exponents rational (1/2, 1/3, etc.) = EML-2"
+      },
+      {
+        "model": "3D Ising (numerical bootstrap)",
+        "yt": 1.5876,
+        "yh": 2.4815,
+        "nu": 0.6299,
+        "eml_exponents": Infinity,
+        "reason": "\u03bd\u22480.6299: irrational, bootstrap-only = EML-\u221e"
+      }
+    ],
+    "eml_rg_map": 2,
+    "fixed_point_eml": 0
+  },
+  "scaling_hypothesis": {
+    "scaling_hypothesis": "f_s(t,h) = |t|^{2-\u03b1} g(h/|t|^{\u03b2\u03b4})",
+    "eml_singular_part": 2,
+    "eml_scaling_function": 3,
+    "mean_field": {
+      "exponents": {
+        "alpha": 0,
+        "beta": 0.5,
+        "gamma": 1.0,
+        "delta": 3.0,
+        "nu": 0.5,
+        "eta": 0
+      },
+      "relations": {
+        "griffiths_alpha+2beta+gamma": 2.0,
+        "widom_gamma-beta(delta-1)": 0.0,
+        "fisher_gamma-nu(2-eta)": 0.0,
+        "all_satisfied": true
+      },
+      "eml": 2
+    },
+    "2D_ising": {
+      "exponents": {
+        "alpha": 0,
+        "beta": 0.125,
+        "gamma": 1.75,
+        "delta": 15.0,
+        "nu": 1.0,
+        "eta": 0.25
+      },
+      "relations": {
+        "griffiths_alpha+2beta+gamma": 2.0,
+        "widom_gamma-beta(delta-1)": 0.0,
+        "fisher_gamma-nu(2-eta)": 0.0,
+        "all_satisfied": true
+      },
+      "eml": 2
+    },
+    "3D_ising": {
+      "exponents": {
+        "alpha": 0.11,
+        "beta": 0.326,
+        "gamma": 1.237,
+        "delta": 4.789,
+        "nu": 0.63,
+        "eta": 0.036
+      },
+      "relations": {
+        "griffiths_alpha+2beta+gamma": 1.999,
+        "widom_gamma-beta(delta-1)": 0.001786,
+        "fisher_gamma-nu(2-eta)": -0.00032,
+        "all_satisfied": true
+      },
+      "eml": Infinity
+    }
+  },
+  "correlation_functions": {
+    "critical_corr": "\u27e8\u03c3(0)\u03c3(r)\u27e9 ~ r^{-(d-2+\u03b7)}: EML-2 (power law)",
+    "off_critical_corr": "\u27e8\u03c3(0)\u03c3(r)\u27e9 ~ exp(-r/\u03be)\u00b7r^{-(d-2+\u03b7)}: EML-2",
+    "correlation_length": "\u03be ~ |t|^{-\u03bd}: EML-2 (power law divergence)",
+    "eml_critical": 2,
+    "eml_off_critical": 2,
+    "eml_at_singularity": Infinity,
+    "table_2d_ising": [
+      {
+        "r": 1,
+        "corr_at_Tc": 1.0,
+        "corr_off_Tc_xi5": 0.818731,
+        "eml_at_Tc": 2,
+        "eml_off_Tc": 2
+      },
+      {
+        "r": 2,
+        "corr_at_Tc": 0.840896,
+        "corr_off_Tc_xi5": 0.56367,
+        "eml_at_Tc": 2,
+        "eml_off_Tc": 2
+      },
+      {
+        "r": 5,
+        "corr_at_Tc": 0.66874,
+        "corr_off_Tc_xi5": 0.246016,
+        "eml_at_Tc": 2,
+        "eml_off_Tc": 2
+      },
+      {
+        "r": 10,
+        "corr_at_Tc": 0.562341,
+        "corr_off_Tc_xi5": 0.076105,
+        "eml_at_Tc": 2,
+        "eml_off_Tc": 2
+      },
+      {
+        "r": 20,
+        "corr_at_Tc": 0.472871,
+        "corr_off_Tc_xi5": 0.008661,
+        "eml_at_Tc": 2,
+        "eml_off_Tc": 2
+      }
+    ]
+  },
+  "eml_depth_summary": {
+    "EML-0": "Fixed points of RG (K*=0 trivial); topological Chern number (TKNN)",
+    "EML-2": "All critical power laws |t|^x; \u03be ~ |t|^{-\u03bd}; RG map; rational critical exponents",
+    "EML-3": "Universal scaling functions g(x); conformal correlation functions",
+    "EML-\u221e": "Critical point T_c itself; irrational exponents (3D Ising); non-analyticity at T_c"
+  },
+  "rabbit_hole_log": [
+    "The scaling hypothesis f_s(t,h) = |t|^{2-\u03b1}\u00b7g(h/|t|^{\u03b2\u03b4}) has an interesting EML structure: the outer power |t|^{2-\u03b1} is EML-2, but the scaling function g(x) is EML-3 (determined by CFT, involves conformal blocks). The |t|^{2-\u03b1} envelope is EML-2; the shape is EML-3.",
+    "All scaling relations (Griffiths, Widom, Fisher) are linear equations among exponents. They are satisfied because all exponents come from the same EML-2 fixed point. The violation of hyperscaling (d>4) occurs when the mean-field exponents (EML-2 rational) differ from the true ones \u2014 another EML-2 vs EML-\u221e distinction.",
+    "2D Ising: all exponents rational (\u03b2=1/8, \u03b3=7/4, \u03b4=15, \u03bd=1, \u03b7=1/4). This is an EML-2 model. 3D Ising: all exponents irrational. This is EML-\u221e. The exact solvability of 2D vs approximate numerics of 3D maps to EML-2 vs EML-\u221e."
+  ],
+  "connections": {
+    "to_session_84": "Session 84: Wilson-Fisher fixed point. Session 97: block spin RG confirms same structure from different angle",
+    "to_session_57": "Session 57: phase transitions = EML-\u221e. Session 97: T_c is EML-\u221e, everything near T_c is EML-2"
+  }
+}
