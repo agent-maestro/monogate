@@ -1,0 +1,5 @@
+"""Session 199 — Δd Charge Angle 8: Meta-Mathematics & Gödel Limits (notebook script)"""
+import json, sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+from monogate.frontiers.foundations_v4_eml import analyze_foundations_v4_eml
+print(json.dumps(analyze_foundations_v4_eml(), indent=2, default=str))
