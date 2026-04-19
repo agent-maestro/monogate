@@ -1,0 +1,48 @@
+{
+  "session": "S91",
+  "title": "Re Lower Bound + Inductive Step Analysis",
+  "re_min_observed": -15.154262180410377,
+  "re_max_observed": 1811072562.6930003,
+  "re_below_1_count": 12691,
+  "re_below_0_count": 11358,
+  "re_below_1_sample": [
+    [
+      0.06826603124787667,
+      0.0,
+      3
+    ],
+    [
+      0.0,
+      0.0,
+      3
+    ],
+    [
+      0.03637456973131448,
+      0.0,
+      4
+    ],
+    [
+      0.19221352629960142,
+      0.0,
+      4
+    ],
+    [
+      0.19768791128627594,
+      0.0,
+      4
+    ]
+  ],
+  "induction_step": {
+    "holds_computationally": true,
+    "fails_analytically": true,
+    "reason": "x real + y with Im(y) < 0 => Im(eml) = -arg(y) > 0",
+    "example": {
+      "x": "1 (real)",
+      "y": "e^(-0.5i) = cos(-0.5)+i*sin(-0.5)",
+      "eml_im": 0.5,
+      "conclusion": "Im > 0 but y not in EML_1 at depth <= 5"
+    }
+  },
+  "key_insight": "SB cannot be proved by simple Im-preservation induction. The induction step fails analytically (x real, y with small |arg|). But SB holds empirically because EML_1 elements with Im < 0 have large |arg|, preventing the violation. The true reason SB holds must be a quantitative bound on arg(y) for y in EML_1.",
+  "next_step": "S92: Quantitative arg bound \u2014 prove |arg(z)| > threshold for z in EML_1 with Im(z) < 0"
+}
