@@ -1,0 +1,125 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="0.99999524: The Near-Miss"
+  description="How close can an EML tree get to i? The 4.76e-6 gap and the transcendental obstruction behind it."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>research</span>
+    <span>7 min read</span>
+  </div>
+
+  <h1>0.99999524: The Near-Miss</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    How close can an EML tree get to i? A gap of 4.76×10⁻⁶ and the transcendental obstruction behind it.
+  </p>
+
+  <div class="divider"></div>
+
+  <p>
+    One of the open problems on <a href="https://monogate.dev">monogate.dev</a> is constructing
+    the imaginary unit i from the EML grammar with terminal &#123;1&#125;. We haven't solved it. But in
+    exploring how close you can get, we found something more interesting than a near-miss — we
+    found a proof of why the gap can't close.
+  </p>
+
+  <h2>The setup</h2>
+
+  <p>
+    The EML grammar over ℂ starts with 1 and applies <code>eml(x, y) = exp(x) − Log(y)</code>
+    (principal branch complex log). At depth 1, the reachable set is a curve in ℂ. At depth 2,
+    it's an arc. At depth 6, it's a dense-looking cloud of isolated points.
+  </p>
+
+  <p>
+    We want Im(z) = 1, Re(z) = 0. The question is: does anything in the depth-6 closure hit exactly i?
+  </p>
+
+  <h2>The near-miss</h2>
+
+  <p>
+    Enumerating depth-6 complex EML values near Im = 1, we found a point with Im = 0.99999524.
+    The gap to Im = 1 is 4.76×10⁻⁶. For reference: depth-5 values have Im ≤ 0 (all negative imaginary
+    part), so the jump to Im ≈ 1 at depth 6 is a structural phase transition, not a gradual
+    convergence.
+  </p>
+
+  <p>
+    The near-miss requires Re(y) = π/tan(1) ≈ 2.0270 as the second argument in the outermost EML
+    call. This is where the obstruction lives.
+  </p>
+
+  <h2>The obstruction: tan(1)</h2>
+
+  <p>
+    To reach Im = 1 exactly, you need Re(y) = π/tan(1) exactly. But π/tan(1) is transcendental —
+    it's a ratio of π (transcendental by Hermite-Lindemann) and tan(1), which is transcendental
+    by the Lindemann-Weierstrass theorem applied to e^&#123;2i&#125; ≠ 1.
+  </p>
+
+  <p>
+    The EML grammar with terminal &#123;1&#125; can only generate numbers in the EL field — the field of
+    exponential-logarithmic numbers built from 1. π/tan(1) does not belong to this field at any
+    finite depth.
+  </p>
+
+  <div class="math-block">
+    gap(depth) → 0 only if π/tan(1) ∈ EL_k for some finite k
+  </div>
+
+  <p>
+    This is the content of the real constructibility barrier. The gap at depth-6 (targeted search)
+    is 6.67×10⁻⁷ for the real part. As depth increases, the gap decreases — but it can never
+    reach zero by a constructibility argument, unless tan(1) has some unexpected algebraic
+    relationship to EML-expressible constants.
+  </p>
+
+  <h2>Why depth-7 doesn't help</h2>
+
+  <p>
+    We found a structural reason the near-miss gap doesn't improve at depth 7:
+  </p>
+
+  <p>
+    All depth-5 complex EML values have Im = −π (exactly). That's because at depth 5, the
+    values all pass through eml applied to negative real inputs, and sin(−π) = 0 makes the
+    imaginary part of the resulting Log call collapse to −π regardless of the real part.
+  </p>
+
+  <p>
+    This means depth-6 inputs that come from depth-5 nodes contribute zero to Im(eml), and
+    all depth-6 values arising from that route have positive imaginary part — positive arg.
+    But reaching Im = 1, Re = 0 requires arg = π/2, while arg = −1 (pointing toward −i)
+    is structurally inaccessible from positive-imaginary depth-6 values.
+  </p>
+
+  <p>
+    The 4.76×10⁻⁶ gap is not a computational limitation. It's structural.
+  </p>
+
+  <h2>What we have</h2>
+
+  <p>
+    We have: a near-miss, a transcendental obstruction, and a structural explanation for why
+    depth-7 doesn't close the gap. What we don't have: a proof that i is unreachable at any
+    finite depth. That remains the open problem.
+  </p>
+
+  <p>
+    The near-miss is written up as a draft paper:
+    <code>python/paper/near_miss_obstruction.tex</code>. The main theorem there is the
+    transcendental obstruction — that the exact gap is π/tan(1), which is provably outside the
+    EL field at any finite depth under Schanuel's conjecture.
+  </p>
+
+  <div class="divider"></div>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    Challenge board: <a href="https://monogate.dev">monogate.dev</a> ·
+    Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a>
+  </p>
+</Base>

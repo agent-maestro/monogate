@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="Euler's Formula Is the EML Operator"
+  description="eml(ix, 1) = exp(ix) = cos(x) + i·sin(x). The deepest identity in mathematics, stated as one EML node."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>exposition</span>
+    <span>4 min read</span>
+  </div>
+
+  <h1>Euler's Formula Is the EML Operator</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    One node. The deepest identity in mathematics.
+  </p>
+
+  <div class="divider"></div>
+
+  <p>Euler's formula is usually written as:</p>
+
+  <div class="math-block">e<sup>ix</sup> = cos(x) + i·sin(x)</div>
+
+  <p>
+    In EML notation, <code>eml(x, y) = exp(x) − ln(y)</code>. Setting y = 1 gives
+    <code>eml(x, 1) = exp(x) − ln(1) = exp(x)</code>, since ln(1) = 0.
+  </p>
+
+  <p>
+    Now set x = ix (complex input):
+  </p>
+
+  <div class="math-block">eml(ix, 1) = exp(ix) − ln(1) = exp(ix) = cos(x) + i·sin(x)</div>
+
+  <p>
+    That's it. Euler's formula is a single EML node evaluation with a complex-valued input.
+    One node. No composition. The imaginary part extracts sin(x); the real part extracts cos(x).
+  </p>
+
+  <h2>What this means for the depth hierarchy</h2>
+
+  <p>
+    Over the reals, we proved that sin(x) requires an infinite EML tree (the Infinite Zeros Barrier).
+    Over the complex numbers, sin(x) costs exactly one node — as the imaginary part of a single
+    complex EML evaluation.
+  </p>
+
+  <p>
+    This is not a contradiction. It's a domain shift. The same function has different EML complexity
+    depending on whether you allow complex arithmetic. That distinction — real vs. complex,
+    EML-∞ vs. EML-1 — is what the depth hierarchy formalizes.
+  </p>
+
+  <p>
+    In the EML classification:
+  </p>
+
+  <ul style="margin: 16px 0 20px 24px; color: #d4d4d4; line-height: 2;">
+    <li>sin(x) over ℝ: EML-∞ (provably impossible as finite real tree)</li>
+    <li>sin(x) over ℂ: EML-1 (Im(eml(ix, 1)))</li>
+  </ul>
+
+  <p>
+    The bypass works because Euler's formula is available in the complex domain. Whether it's
+    available from the EML grammar starting with terminal &#123;1&#125; — which can only generate real
+    constants at depth 0 — depends on whether i is constructible from &#123;1&#125;. That's the open problem.
+  </p>
+
+  <h2>Why this is remarkable</h2>
+
+  <p>
+    Euler's formula is usually described as a mysterious coincidence: why should the exponential
+    function, which comes from calculus and differential equations, equal a combination of
+    trigonometric functions, which come from geometry?
+  </p>
+
+  <p>
+    In EML terms, it's not mysterious at all. The EML operator is precisely <code>exp(x) − ln(y)</code>.
+    When you set x = ix and y = 1, you're using the EML operator's most basic identity to
+    unify exponential and trigonometric behavior. The "mystery" dissolves into: these functions
+    are the same thing, evaluated with complex vs. real arguments.
+  </p>
+
+  <p>
+    The EML framework doesn't explain Euler's formula. But it does make clear that Euler's
+    formula is a consequence of the structure of the EML operator itself, not an accident.
+  </p>
+
+  <h2>The Euler Gateway theorem</h2>
+
+  <p>
+    In the monogate theorem catalog, this is listed as T03 (Euler Gateway):
+  </p>
+
+  <blockquote>
+    ceml(ix, 1) = exp(ix) − Log(1) = exp(ix) = cos(x) + i·sin(x). The single depth-1 ceml tree
+    with input ix and second argument 1 equals exp(ix).
+  </blockquote>
+
+  <p>
+    It's listed as a theorem — a proved fact — not a conjecture. The verification is direct:
+    Log(1) = 0, so ceml(ix, 1) = exp(ix). Euler's formula is standard. QED.
+  </p>
+
+  <div class="divider"></div>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    Full theorem catalog: <a href="https://challenge.monogate.dev/theorems">challenge.monogate.dev/theorems</a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
+  </p>
+</Base>

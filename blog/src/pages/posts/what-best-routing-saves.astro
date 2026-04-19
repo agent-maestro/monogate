@@ -1,0 +1,172 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="What BEST Routing Actually Saves"
+  description="Empirical speedups from hybrid EML/EDL/EXL dispatch: 52–74% node savings, up to 2.8× wall-clock."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>engineering</span>
+    <span>6 min read</span>
+  </div>
+
+  <h1>What BEST Routing Actually Saves</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    Empirical speedups from hybrid EML/EDL/EXL dispatch. The numbers, honestly reported.
+  </p>
+
+  <div class="divider"></div>
+
+  <p>
+    The EML operator family has three members:
+  </p>
+
+  <ul style="margin: 16px 0 20px 24px; color: #d4d4d4; line-height: 2;">
+    <li><strong>EML</strong>: <code>exp(x) − ln(y)</code></li>
+    <li><strong>EDL</strong>: <code>exp(x) / ln(y)</code></li>
+    <li><strong>EXL</strong>: <code>exp(x) · ln(y)</code></li>
+  </ul>
+
+  <p>
+    Each generates all elementary functions, but they have different node counts for different
+    primitives. BEST (Binary Expression Select & Transform) routing is the idea of dispatching
+    each operation to whichever operator computes it cheapest.
+  </p>
+
+  <h2>Node count table</h2>
+
+  <p>
+    These are verified minimum node counts — the exact number of EML-family calls required:
+  </p>
+
+  <div style="overflow-x: auto; margin: 24px 0;">
+    <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px;">
+      <thead>
+        <tr style="border-bottom: 1px solid #1c1f2e;">
+          <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Function</th>
+          <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Pure EML</th>
+          <th style="text-align: right; padding: 8px 12px; color: #4ade80;">BEST</th>
+          <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Savings</th>
+        </tr>
+      </thead>
+      <tbody>
+        {[
+          ['exp(x)', 1, 1, 0],
+          ['ln(x)', 4, 1, 75],
+          ['x + y', 11, 11, 0],
+          ['x × y', 13, 7, 46],
+          ['x ÷ y', 15, 1, 93],
+          ['x²', 9, 5, 44],
+          ['sin(x) over ℂ', 108, 1, 99],
+        ].map(([fn, pure, best, pct]) => (
+          <tr style="border-bottom: 1px solid #1c1f2e12;">
+            <td style="padding: 8px 12px; color: #d4d4d4;">{fn}</td>
+            <td style="text-align: right; padding: 8px 12px; color: #d4d4d4;">{pure}</td>
+            <td style="text-align: right; padding: 8px 12px; color: #4ade80; font-weight: 700;">{best}</td>
+            <td style="text-align: right; padding: 8px 12px; color: #6b7280;">{pct > 0 ? `−${pct}%` : '—'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    The big wins are ln(x) (75% savings via EXL), division (93% savings via EDL), and
+    complex sin (99% via CBEST). Addition has no savings — it genuinely costs 11 nodes
+    no matter which operator you use.
+  </p>
+
+  <h2>Wall-clock speedups</h2>
+
+  <p>
+    Node count savings translate to wall-clock speedups, but not uniformly. The crossover
+    threshold is about 20% node savings — below that, the dispatch overhead exceeds the compute savings.
+  </p>
+
+  <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px; margin: 24px 0;">
+    <thead>
+      <tr style="border-bottom: 1px solid #1c1f2e;">
+        <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Workload</th>
+        <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Node savings</th>
+        <th style="text-align: right; padding: 8px 12px; color: #fbbf24;">Speedup</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        ['sin/cos Taylor (TinyMLP)', '74%', '2.8×'],
+        ['Polynomial x⁴+x³+x²', '54%', '2.1×'],
+        ['GELU (Transformer FFN)', '18%', '0.93×'],
+      ].map(([wl, savings, speedup]) => (
+        <tr style="border-bottom: 1px solid #1c1f2e12;">
+          <td style="padding: 8px 12px; color: #d4d4d4;">{wl}</td>
+          <td style="text-align: right; padding: 8px 12px; color: #d4d4d4;">{savings}</td>
+          <td style="text-align: right; padding: 8px 12px; color: #fbbf24; font-weight: 700;">{speedup}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <p>
+    GELU is a negative result, honestly reported: 18% node savings falls below the crossover
+    threshold, and BEST routing is slower on GELU-heavy workloads. If you're building a
+    transformer FFN replacement, BEST routing doesn't help.
+  </p>
+
+  <h2>Performance kernels</h2>
+
+  <p>
+    We also have a Rust-accelerated kernel and a fused Python kernel. These compound with BEST:
+  </p>
+
+  <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px; margin: 24px 0;">
+    <thead>
+      <tr style="border-bottom: 1px solid #1c1f2e;">
+        <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Backend</th>
+        <th style="text-align: right; padding: 8px 12px; color: #6b7280;">ms/step</th>
+        <th style="text-align: right; padding: 8px 12px; color: #06b6d4;">Speedup</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        ['Standard Python', '8.3', '1×'],
+        ['FusedEMLActivation', '2.3', '3.6×'],
+        ['Fused + torch.compile', '1.9', '4.4×'],
+        ['Rust (monogate-core)', '1.4', '5.9×'],
+      ].map(([backend, ms, speedup]) => (
+        <tr style="border-bottom: 1px solid #1c1f2e12;">
+          <td style="padding: 8px 12px; color: #d4d4d4;">{backend}</td>
+          <td style="text-align: right; padding: 8px 12px; color: #d4d4d4;">{ms}</td>
+          <td style="text-align: right; padding: 8px 12px; color: #06b6d4; font-weight: 700;">{speedup}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <p>
+    Benchmark: EMLLayer depth=2, 256→256, batch=1024, CPU. The Rust kernel uses PyO3 bindings.
+  </p>
+
+  <h2>What BEST routing is not</h2>
+
+  <p>
+    BEST routing is a node-count optimization within the EML framework. It doesn't make EML
+    competitive with purpose-built implementations of individual functions. A native
+    <code>sin(x)</code> in hardware is faster than any EML tree, even a 1-node complex CBEST.
+  </p>
+
+  <p>
+    What BEST routing does: reduces the cost of expressing arbitrary combinations of elementary
+    functions as EML trees, when you're already committed to the EML framework for other reasons
+    (symbolic manipulation, gradient-free search, interpretability).
+  </p>
+
+  <div class="divider"></div>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    Install: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
+    Rust source: <a href="https://github.com/odrzywolak/monogate">monogate-core/</a>
+  </p>
+</Base>

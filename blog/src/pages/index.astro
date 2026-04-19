@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+
+const posts = [
+  {
+    slug: 'infinite-zeros-barrier',
+    title: 'The Infinite Zeros Barrier',
+    date: '2026-04-19',
+    description: 'Why sin(x) cannot be expressed as a finite real EML tree — and why that matters.',
+    tag: 'theorem',
+  },
+  {
+    slug: 'near-miss',
+    title: '0.99999524: The Near-Miss',
+    date: '2026-04-19',
+    description: 'How close can an EML tree get to i? The 4.76e-6 gap and the transcendental obstruction behind it.',
+    tag: 'research',
+  },
+  {
+    slug: 'euler-formula-is-eml',
+    title: "Euler's Formula Is the EML Operator",
+    date: '2026-04-19',
+    description: 'eml(ix, 1) = exp(ix) = cos(x) + i·sin(x). The deepest identity in mathematics, as one EML node.',
+    tag: 'exposition',
+  },
+  {
+    slug: 'what-best-routing-saves',
+    title: 'What BEST Routing Actually Saves',
+    date: '2026-04-19',
+    description: 'Empirical speedups from hybrid EML/EDL/EXL dispatch: 52–74% node savings, up to 2.8× wall-clock.',
+    tag: 'engineering',
+  },
+  {
+    slug: 'auditing-1200-sessions',
+    title: '19 Theorems: Auditing 1,200 AI Research Sessions',
+    date: '2026-04-19',
+    description: 'We claimed 957 theorems. The honest count is 18. What went wrong and how we fixed it.',
+    tag: 'meta',
+  },
+];
+
+const tagColors: Record<string, string> = {
+  theorem: '#4ade80',
+  research: '#a78bfa',
+  exposition: '#06b6d4',
+  engineering: '#fbbf24',
+  meta: '#f87171',
+};
+---
+
+<Base title="monogate blog" description="Research notes on the EML operator.">
+  <div style="margin-bottom: 48px;">
+    <div style="font-family: monospace; font-size: 11px; color: #a78bfa; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;">monogate</div>
+    <h1 style="font-size: 2.4rem; margin-bottom: 8px;">Research Notes</h1>
+    <p style="color: #6b7280; font-size: 1rem; margin-bottom: 0;">
+      On the EML operator: <code>eml(x, y) = exp(x) − ln(y)</code>. One binary operator. All elementary functions.
+    </p>
+    <div style="width: 40px; height: 1px; background: #a78bfa; margin-top: 24px;"></div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 4px;">
+    {posts.map(post => (
+      <a href={`/posts/${post.slug}`} style="display: block; padding: 20px 24px; border-radius: 8px; background: #0d0f18; border: 1px solid #1c1f2e; text-decoration: none;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-size: 1.05rem; font-weight: 600; color: #d4d4d4;">{post.title}</span>
+          <span style={`font-family: monospace; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 3px; background: ${tagColors[post.tag]}18; border: 1px solid ${tagColors[post.tag]}; color: ${tagColors[post.tag]};`}>{post.tag.toUpperCase()}</span>
+        </div>
+        <p style="font-size: 0.9rem; color: #6b7280; margin: 0; line-height: 1.5;">{post.description}</p>
+        <div style="font-family: monospace; font-size: 10px; color: #4a4d62; margin-top: 8px;">{post.date}</div>
+      </a>
+    ))}
+  </div>
+</Base>

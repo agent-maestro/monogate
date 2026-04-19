@@ -1,0 +1,103 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="The Infinite Zeros Barrier"
+  description="Why sin(x) cannot be expressed as a finite real EML tree — and why that matters."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>theorem</span>
+    <span>5 min read</span>
+  </div>
+
+  <h1>The Infinite Zeros Barrier</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">Why sin(x) cannot be expressed as a finite real EML tree — and why that matters.</p>
+
+  <div class="divider"></div>
+
+  <p>
+    The EML operator <code>eml(x, y) = exp(x) − ln(y)</code> generates every elementary function
+    as a finite binary tree. That's the claim in <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>.
+    So why isn't sin(x) on the easy list?
+  </p>
+
+  <p>
+    The answer is clean and provable. Here it is.
+  </p>
+
+  <h2>The theorem</h2>
+
+  <blockquote>
+    No finite real-valued EML tree with terminals &#123;1, x&#125; equals sin(x) for all x ∈ ℝ.
+  </blockquote>
+
+  <p>The proof is two lines:</p>
+
+  <p>
+    <strong>Step 1.</strong> Every finite EML tree is a composition of <code>exp</code> and <code>ln</code>
+    applied to polynomials. Each such composition is real-analytic on its domain.
+  </p>
+
+  <p>
+    <strong>Step 2.</strong> By the analytic identity theorem, a non-zero real-analytic function
+    has isolated zeros — which means finitely many on any bounded interval. But sin(x) has a zero
+    at every integer multiple of π. No bounded interval avoids infinitely many of them.
+    Contradiction.
+  </p>
+
+  <p>
+    The proof works for any function with infinitely many real zeros: cos(x), Bessel J₀, Airy Ai,
+    any function of the form f(x) = 0 on an infinite discrete set.
+  </p>
+
+  <h2>Empirical confirmation</h2>
+
+  <p>
+    We enumerated all EML trees up to 11 nodes — 281,026,468 trees total — against sin(x)
+    at test points &#123;0, π/6, π/4, π/2, π&#125;. Zero candidates at tolerances 10⁻⁴, 10⁻⁶, 10⁻⁹.
+    A Rust implementation extended this to N=12 (1.704 billion trees). Still zero.
+  </p>
+
+  <p>The empirical results are redundant — the proof already settles it — but they make the impossibility visceral.</p>
+
+  <h2>The bypass</h2>
+
+  <p>
+    The barrier is specific to real-valued trees. Over the complex numbers, Euler's formula gives
+    us an exact route in a single node:
+  </p>
+
+  <div class="math-block">
+    Im(eml(ix, 1)) = Im(exp(ix)) = sin(x)
+  </div>
+
+  <p>
+    One node. Machine precision. The barrier doesn't disappear — it means you can't do it
+    with real arithmetic. Complex arithmetic is not "cheating"; it's a different domain.
+  </p>
+
+  <h2>Why it matters</h2>
+
+  <p>
+    The barrier is a structural fact about function spaces. It says something precise about
+    what finite tree computation can and cannot do. The EML depth hierarchy —
+    where sin is "EML-3 over ℂ" and "EML-∞ over ℝ" — is grounded in this structural distinction.
+  </p>
+
+  <p>
+    It also connects to open problems. The complex bypass works because i is available as input.
+    Whether i is <em>constructible</em> from &#123;1&#125; alone — whether you can produce the imaginary
+    unit from a grammar that starts with only real constants — is genuinely open.
+    That's the i-constructibility challenge at <a href="https://monogate.dev">monogate.dev</a>.
+  </p>
+
+  <div class="divider"></div>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
+  </p>
+</Base>

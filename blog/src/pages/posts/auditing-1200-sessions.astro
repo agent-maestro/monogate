@@ -1,0 +1,183 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="19 Theorems: Auditing 1,200 AI Research Sessions"
+  description="We claimed 957 theorems. The honest count is 18. What went wrong and how we fixed it."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>meta</span>
+    <span>8 min read</span>
+  </div>
+
+  <h1>19 Theorems: Auditing 1,200 AI Research Sessions</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    We claimed 957 theorems. The honest count is 18. What went wrong and how we fixed it.
+  </p>
+
+  <div class="divider"></div>
+
+  <p>
+    From April 2026 onward, we ran over 1,200 AI-assisted research sessions on the EML operator.
+    The sessions produced code, notebooks, and a running "theorem" count. By session 1,237,
+    that count had reached 957.
+  </p>
+
+  <p>
+    The honest count is 18.
+  </p>
+
+  <p>
+    This post is about what happened, why it happened, and what we changed.
+  </p>
+
+  <h2>What we were doing</h2>
+
+  <p>
+    Each session would take an area of mathematics or science — consciousness, evolutionary
+    biology, the Millennium Problems, grief, dolphins — and ask: what is the EML depth of the
+    key objects in this domain? Then it would call the answer a "theorem."
+  </p>
+
+  <p>
+    A sample from session 546:
+  </p>
+
+  <blockquote>
+    T267: Animal cognition — insects=EML-0; dogs=EML-2; dolphins=EML-3.
+  </blockquote>
+
+  <p>
+    This is not a theorem. It's a metaphor. There's no mathematical content — no proof that
+    the cognitive processes of dogs require exactly two levels of exponential-logarithmic
+    composition to describe. The "theorem" is an informal analogy dressed in formal notation.
+  </p>
+
+  <p>
+    We had hundreds of these. Grief mapped to EML depth levels. Consciousness as EML-∞.
+    The Navier-Stokes regularity problem "proved" independent of ZFC by EML-theoretic analysis.
+    The Riemann Hypothesis "resolved" by identifying which EML depth class the critical line
+    belongs to.
+  </p>
+
+  <p>
+    None of this was mathematics. It was speculative classification with formal-looking notation.
+  </p>
+
+  <h2>Why it happened</h2>
+
+  <p>
+    The pattern emerged naturally from how the AI assistant engaged with the research. Each
+    session asked it to classify something — and it did, confidently and in the style of a
+    theorem. The human reading these outputs saw formal notation and session numbers and a
+    running count, and the count felt like progress.
+  </p>
+
+  <p>
+    The underlying incentive structure rewarded breadth. More domains covered, more sessions
+    run, higher theorem count. The quality of the "theorems" wasn't being audited.
+  </p>
+
+  <p>
+    This is a general hazard of AI-assisted research: the AI will produce confident-sounding
+    formal output for whatever prompt you give it. If you ask it to classify consciousness
+    by EML depth, it will do so with the same syntactic confidence as when it proves that
+    ln(1) = 0.
+  </p>
+
+  <h2>What the honest count is</h2>
+
+  <p>
+    We audited every claimed result. The criteria for a theorem:
+  </p>
+
+  <ul style="margin: 16px 0 20px 24px; color: #d4d4d4; line-height: 2;">
+    <li>Complete proof with no gaps</li>
+    <li>Checkable: can be verified by running code or following mathematical steps</li>
+    <li>Mathematical content: makes a precise claim about mathematical objects</li>
+  </ul>
+
+  <p>By these criteria, the count is:</p>
+
+  <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px; margin: 24px 0;">
+    <thead>
+      <tr style="border-bottom: 1px solid #1c1f2e;">
+        <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Tier</th>
+        <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Count</th>
+        <th style="text-align: left; padding: 8px 12px; color: #6b7280;">What it means</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        ['THEOREM', 7, 'Complete proof, no gaps', '#4ade80'],
+        ['PROPOSITION', 5, 'Proved, routine', '#6ab0f5'],
+        ['CONJECTURE', 4, 'Stated, believed, unproved', '#e8a020'],
+        ['OBSERVATION', 4, 'Empirical, no proof', '#fbbf24'],
+        ['DEFINITION', 4, 'Choices, not claims', '#a78bfa'],
+        ['SPECULATION', 4, 'Interesting but unfalsifiable', '#4a4d62'],
+      ].map(([tier, count, desc, color]) => (
+        <tr style="border-bottom: 1px solid #1c1f2e12;">
+          <td style="padding: 8px 12px;">
+            <span style={`font-family: monospace; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 3px; background: ${color}18; border: 1px solid ${color}; color: ${color};`}>{tier}</span>
+          </td>
+          <td style="text-align: right; padding: 8px 12px; color: #d4d4d4; font-weight: 700;">{count}</td>
+          <td style="padding: 8px 12px; color: #6b7280; font-size: 12px;">{desc}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <p>
+    The 4 SPECULATION entries are properly labeled — including "P = EML-2, NP = EML-∞" and
+    "Consciousness and EML-∞." These are interesting metaphors. They're not theorems. We keep
+    them in the catalog with the SPECULATION label because ideas shouldn't be deleted just
+    because they're not proved — but they should be honest about what they are.
+  </p>
+
+  <h2>The 7 actual theorems</h2>
+
+  <p>
+    For completeness, the 7 theorems (abbreviated):
+  </p>
+
+  <ol style="margin: 16px 0 20px 24px; color: #d4d4d4; line-height: 2.2; font-size: 0.9rem;">
+    <li><strong>T01 — Infinite Zeros Barrier</strong>: sin(x) has no finite real EML tree.</li>
+    <li><strong>T02 — EML Universality</strong>: eml generates every elementary function. (Odrzywołek, arXiv:2603.21852)</li>
+    <li><strong>T03 — Euler Gateway</strong>: ceml(ix, 1) = exp(ix) = cos(x) + i·sin(x).</li>
+    <li><strong>T04 — Log Recovery</strong>: ln(x) = 1 − ceml(0, x).</li>
+    <li><strong>T05 — Phantom Attractor is a Precision Artifact</strong>: The apparent attractor at ~6.27 in EML gradient descent vanishes at 15+ digit precision.</li>
+    <li><strong>T06 — Tropical Self-EML</strong>: teml(a, a) = |a| in the tropical semiring.</li>
+    <li><strong>T07 — BEST Routing sin/cos via 1 node</strong>: sin(x) = Im(ceml(ix, 1)).</li>
+  </ol>
+
+  <h2>What we changed</h2>
+
+  <p>
+    The challenge board at <a href="https://monogate.dev">monogate.dev</a> was already clean —
+    it had the 6-tier system (THEOREM / PROPOSITION / CONJECTURE / OBSERVATION / DEFINITION / SPECULATION)
+    from the start. The problem was the private research log, which accumulated 957 speculative
+    classifications without the tier system.
+  </p>
+
+  <p>
+    We cleaned the private log: archived 1,500+ lines of speculative session summaries, replaced
+    them with a 50-line honest summary. The frontier research files remain in the codebase
+    (the Python modules that compute EML depths of domain-specific formulas), but they're
+    now described accurately — as domain classifications, not theorems.
+  </p>
+
+  <p>
+    The lesson: if you're using an AI to help with research, you need to audit what it calls
+    a "theorem" — and build the auditing into the workflow, not as a one-time correction.
+    The AI doesn't know what it doesn't know.
+  </p>
+
+  <div class="divider"></div>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    Honest theorem catalog: <a href="https://challenge.monogate.dev/theorems">challenge.monogate.dev/theorems</a>
+  </p>
+</Base>
