@@ -1,0 +1,4 @@
+import subprocess, sys
+result = subprocess.run([sys.executable, 'python/monogate/frontiers/analytic_number_theory_eml.py'], capture_output=True, text=True, encoding='utf-8', errors='replace', cwd='D:/monogate')
+print(result.stdout[:3000])
+if result.returncode != 0: print(result.stderr[:500])

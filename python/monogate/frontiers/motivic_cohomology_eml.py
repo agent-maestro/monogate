@@ -1,18 +1,20 @@
-"""Session 984 --- Motivic Cohomology Bridge"""
+"""Session 1241 --- Motivic Cohomology — K-theory and Mixed Motives"""
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
 @dataclass
-class MotivicCohomologyEML:
+class MotivicCohomology:
     def depth_analysis(self) -> dict[str, Any]:
         return {
-            "object": "T705: Motivic Cohomology Bridge depth analysis",
+            "object": "T961: Motivic Cohomology — K-theory and Mixed Motives depth analysis",
             "domains": {
-                "motivic_depth": {"description": "Motivic cohomology H^n_M(X,Z(p)): EML depth = p (the twist parameter is EML depth)", "depth": "EML-3", "reason": "Motivic cohomology depth: twist p is EML depth; H^n_M(X,Z(p)) lives at EML-p"},
-                "comparison_map": {"description": "Motivic-to-Hodge comparison map: depth-preserving; EML-p motivic -> EML-p/2 Hodge by integration", "depth": "EML-2", "reason": "Comparison map is depth-halving: motivic depth p -> Hodge weight p/2; Deltad=-p/2"},
-                "k_theory_transfer": {"description": "Algebraic K-theory lives at EML-1 (exponential growth of projective modules); transfers via motivic", "depth": "EML-1", "reason": "K-theory transfer: EML-1 K-theory results map to EML-3 motivic via Bloch-Kato; motivic maps to Hodge"},
-                "regulator_eml2": {"description": "Beilinson regulator: motivic -> Deligne cohomology; EML-2 measurement of EML-3 motivic class", "depth": "EML-2", "reason": "Beilinson regulator is EML-2: measurement map from motivic (EML-3) to Deligne cohomology (EML-2)"},
+                "algebraic_k_theory": {"description": "Quillen K-theory: K0 Grothendieck group; K1 units; higher via +-construction", "depth": "EML-2", "reason": "Quillen K-theory: K0 Grothendieck group; K1 units; higher vi"},
+                "motivic_complex": {"description": "Bloch motivic complex Z(n): cycle groups -> K-groups; norm residue map", "depth": "EML-2", "reason": "Bloch motivic complex Z(n): cycle groups -> K-groups; norm r"},
+                "milnor_k_theory": {"description": "Milnor K-theory: KnM(F) = tensor products modulo Steinberg; tame symbols", "depth": "EML-1", "reason": "Milnor K-theory: KnM(F) = tensor products modulo Steinberg; "},
+                "bloch_kato": {"description": "Bloch-Kato (Voevodsky): KnM/p isomorphic to Galois cohomology — proved", "depth": "EML-2", "reason": "Bloch-Kato (Voevodsky): KnM/p isomorphic to Galois cohomolog"},
+                "mixed_motives": {"description": "Category MM(k): extensions of pure motives; Ext1 = K-theory; derived cat", "depth": "EML-3", "reason": "Category MM(k): extensions of pure motives; Ext1 = K-theory;"},
+                "beilinson_conjectures": {"description": "Beilinson: special values of L(M,s) vs motivic cohomology; determinant of periods", "depth": "EML-inf", "reason": "Beilinson: special values of L(M,s) vs motivic cohomology; d"},
             },
         }
     def analyze(self) -> dict[str, Any]:
@@ -20,23 +22,21 @@ class MotivicCohomologyEML:
         dist: dict[str, int] = {}
         for d in depths: dist[d] = dist.get(d, 0) + 1
         return {
-            "model": "MotivicCohomologyEML",
+            "model": "MotivicCohomology",
             "analysis": self.depth_analysis(),
             "distribution": dist,
-            "theorem": "T705: Motivic Cohomology Bridge (S984).",
+            "theorem": "T961: Motivic Cohomology — K-theory and Mixed Motives (S1241).",
         }
 
 def analyze_motivic_cohomology_eml() -> dict[str, Any]:
-    t = MotivicCohomologyEML()
+    t = MotivicCohomology()
     return {
-        "session": 984,
-        "title": "Motivic Cohomology Bridge",
+        "session": 1241,
+        "title": "Motivic Cohomology — K-theory and Mixed Motives",
         "eml_operator": "eml(x,y) = exp(x) - ln(y)",
-        "analysis": t.analyze(),
-        "key_theorem": "T705: Motivic Cohomology Bridge (S984).",
-        "rabbit_hole_log": ["T705: motivic_depth depth confirmed"],
+        **t.analyze(),
     }
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import json
-    print(json.dumps(analyze_motivic_cohomology_eml(), indent=2, default=str))
+    print(json.dumps(analyze_motivic_cohomology_eml(), indent=2))
