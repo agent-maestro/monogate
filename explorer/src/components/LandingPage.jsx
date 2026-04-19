@@ -56,6 +56,7 @@ export default function LandingPage({ onEnter }) {
       fontFamily: "'Space Mono', monospace",
       padding: "60px 24px 100px",
       boxSizing: "border-box",
+      overflowX: "hidden",
     }}>
       <div style={{ maxWidth: 760, margin: "0 auto" }}>
 
@@ -151,9 +152,10 @@ export default function LandingPage({ onEnter }) {
 
         {/* ── Performance kernels ──────────────────────────────────────── */}
         <Section label="v0.6.0 — FusedEMLLayer speedups (CPU)">
+          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
           <div style={{
             background: C.surface, border: `1px solid ${C.border}`,
-            borderRadius: 8, overflow: "hidden",
+            borderRadius: 8, overflow: "hidden", minWidth: 420,
           }}>
             <div style={{
               display: "grid", gridTemplateColumns: "2.5fr 80px 1fr",
@@ -186,6 +188,7 @@ export default function LandingPage({ onEnter }) {
               {" "}· drop-in replacement for EMLLayer · ONNX-exportable
             </div>
           </div>
+          </div>
         </Section>
 
         {/* ── LLM optimizer callout ─────────────────────────────────────── */}
@@ -203,6 +206,8 @@ export default function LandingPage({ onEnter }) {
               background: "#070810", border: `1px solid ${C.border}`,
               borderRadius: 5, padding: "10px 14px", fontSize: 10,
               color: C.muted, lineHeight: 1.8,
+              overflowX: "auto", WebkitOverflowScrolling: "touch",
+              whiteSpace: "pre",
             }}>
               <span style={{ color: C.muted }}>$ </span>
               <span style={{ color: C.text }}>monogate-optimize </span>
@@ -223,9 +228,10 @@ export default function LandingPage({ onEnter }) {
 
         {/* ── Benchmark table ──────────────────────────────────────────── */}
         <Section label="Measured node savings">
+          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
           <div style={{
             background: C.surface, border: `1px solid ${C.border}`,
-            borderRadius: 8, overflow: "hidden",
+            borderRadius: 8, overflow: "hidden", minWidth: 460,
           }}>
             <div style={{
               display: "grid", gridTemplateColumns: "2fr 72px 72px 64px 1fr",
@@ -264,11 +270,12 @@ export default function LandingPage({ onEnter }) {
               At 74%, sin/cos deliver <span style={{ color: C.green }}>2.8–3.4× wall-clock speedup</span>.
             </div>
           </div>
+          </div>
         </Section>
 
         {/* ── Is / Is not ──────────────────────────────────────────────── */}
         <Section label="What it is — what it isn't">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <div className="is-not-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
             <div style={{
               background: "rgba(94,196,122,0.04)",
               border: "1px solid rgba(94,196,122,0.18)",
@@ -317,6 +324,18 @@ export default function LandingPage({ onEnter }) {
 
         {/* ── External links ───────────────────────────────────────────── */}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 56 }}>
+          <a href="https://games.monogate.dev" style={{
+            padding: "7px 14px", fontSize: 10, borderRadius: 4,
+            border: `1px solid ${C.accent}`, color: C.accent,
+            textDecoration: "none", fontFamily: "'Space Mono', monospace",
+            letterSpacing: "0.04em",
+            transition: "color 0.15s, border-color 0.15s, background 0.15s",
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(232,160,32,0.08)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+          >
+            Games ↗
+          </a>
           {[
             { label: "GitHub",  href: "https://github.com/almaguer1986/monogate" },
             { label: "npm",     href: "https://www.npmjs.com/package/monogate" },
@@ -346,12 +365,21 @@ export default function LandingPage({ onEnter }) {
             arXiv:2603.21852
           </a>
           {" "}· Odrzywołek 2026 · CC BY 4.0
+          {" · "}
+          <a href="https://games.monogate.dev" style={{ color: C.accent, textDecoration: "none" }}>
+            Games ↗
+          </a>
           <span style={{ color: "#1e2030", marginLeft: 12 }}>
             github.com/almaguer1986/monogate
           </span>
         </div>
 
       </div>
+      <style>{`
+        @media (max-width: 480px) {
+          .is-not-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }
