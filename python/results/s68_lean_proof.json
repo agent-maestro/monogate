@@ -1,0 +1,83 @@
+{
+  "session": "S68",
+  "title": "Lean: sin_not_in_real_EML_k structured proof",
+  "lean_file": "D:/monogate-research/lean/EML/EMLDepth.lean",
+  "theorem": "sin_not_in_real_EML_k",
+  "statement": "\u2200 k : \u2115, (fun x : \u2102 => \u2191(Real.sin x.re)) \u2209 EML_k k",
+  "proof_cases": [
+    {
+      "case": "depth = 0, t = const c",
+      "status": "PROVED",
+      "argument": "sin(0) = 0 and sin(pi/2) = 1, both must equal c.re. So 0 = 1.",
+      "lean_tactics": "simp [Real.sin_zero, Real.sin_pi_div_two]; linarith"
+    },
+    {
+      "case": "depth = 0, t = var",
+      "status": "PROVED",
+      "argument": "var.evalReal x = x, so sin(pi/2) = pi/2. But pi > 2, so 1 != pi/2.",
+      "lean_tactics": "rw [Real.sin_pi_div_two]; have pi > 2; linarith"
+    },
+    {
+      "case": "depth >= 1, t has no var",
+      "status": "PROVED",
+      "argument": "no_var_evalReal_const gives constant c. sin(0)=0 and sin(pi/2)=1 both = c. 0=1.",
+      "lean_tactics": "obtain const from no_var_evalReal_const; linarith",
+      "dependency": "no_var_evalReal_const (has 1 sorry)"
+    },
+    {
+      "case": "depth >= 1, t has var",
+      "status": "PROVED (conditional on depth_k_unbounded)",
+      "argument": "depth_k_unbounded_along_real gives evalReal -> +inf or -inf. But Real.abs_sin_le_one gives |sin| <= 1 for all x. If evalReal -> +inf, find x with evalReal(x) > 2 > 1 >= sin(x). Contradiction. If evalReal -> -inf, find x with evalReal(x) < -2 <= -1 <= sin(x). Contradiction.",
+      "lean_tactics": "cases depth_k_unbounded; { obtain x with evalReal x > 2; rw hreal at this; linarith [abs_sin_le_one] }; { obtain x with evalReal x < -2; rw hreal at this; linarith [abs_sin_le_one] }",
+      "dependency": "depth_k_unbounded_along_real (has 1 sorry in inductive step)"
+    }
+  ],
+  "sorry_count_change": {
+    "before_s68": 2,
+    "after_s68": 2,
+    "note": "sin_not_in_real_EML_k itself has 0 sorries in its body \u2014 it fully reduces to depth_k_unbounded (which has 1 sorry) and no_var_evalReal_const (which has 1 sorry). The theorem is now fully structured; only the 2 dependencies remain."
+  },
+  "key_mathlib_lemmas_used": [
+    "Real.abs_sin_le_one",
+    "Real.sin_zero",
+    "Real.sin_pi_div_two",
+    "Real.pi_gt_three",
+    "Filter.tendsto_atTop_atTop",
+    "Filter.tendsto_atTop_atBot"
+  ],
+  "verification": [
+    {
+      "case": "const c",
+      "sin_0": 0.0,
+      "sin_pi2": 1.0,
+      "contradiction": "sin(0)=0.0 and sin(pi/2)=1.0 must both equal c",
+      "valid": true
+    },
+    {
+      "case": "var (id)",
+      "x": 1.5707963267948966,
+      "sin_x": 1.0,
+      "id_x": 1.5707963267948966,
+      "pi_over_2": 1.5707963267948966,
+      "contradiction": "sin(pi/2) = 1.0 but id(pi/2) = 1.570796",
+      "valid": true
+    },
+    {
+      "case": "unbounded evalReal (exp) vs bounded sin",
+      "sin_bound": 1.0,
+      "exp_values": {
+        "1.0": 2.718281828459045,
+        "2.0": 7.38905609893065,
+        "5.0": 148.4131591025766,
+        "10.0": 22026.465794806718
+      },
+      "exp_exceeds_bound": {
+        "1.0": true,
+        "2.0": true,
+        "5.0": true,
+        "10.0": true
+      },
+      "valid": true
+    }
+  ]
+}
