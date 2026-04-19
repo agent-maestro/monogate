@@ -261,13 +261,13 @@ const ARXIV_URL = ARXIV_ID
   : "https://github.com/almaguer1986/monogate/blob/master/python/paper/preprint.tex";
 const ARXIV_LABEL = ARXIV_ID ? `arXiv:${ARXIV_ID}` : "preprint (pending)";
 
-const BIBTEX = `@article{almaguer2026eml,
-  title  = {Practical Extensions to the {EML} Universal Operator:
+const BIBTEX = `@misc{almaguer2026eml,
+  title  = {Practical Extensions to the {EML} Operator:
              Hybrid Routing, Phantom Attractors, Performance Kernels,
              and the {N=11} Sin Barrier},
   author = {Almaguer, Art},
   year   = {2026},
-  note   = {arXiv:${ARXIV_ID || "ARXIV_ID_PLACEHOLDER"}}
+  note   = {Preprint${ARXIV_ID ? `. arXiv:${ARXIV_ID}` : " — not yet submitted to arXiv"}}
 }`;
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -306,10 +306,10 @@ export default function ResearchTab() {
         <span style={{ fontSize: 18 }}>📄</span>
         <div style={{ flex: 1, minWidth: 200 }}>
           <span style={{ color: C.green, fontWeight: 700, fontSize: 13 }}>
-            {ARXIV_ID ? "Now on arXiv" : "Paper submission-ready"}
+            {ARXIV_ID ? "Now on arXiv" : "Research preprint"}
           </span>
           <span style={{ color: C.muted, fontSize: 12, marginLeft: 8 }}>
-            "Practical Extensions to the EML Universal Operator"
+            "Practical Extensions to the EML Operator" · {ARXIV_ID ? "" : "not yet submitted"}
           </span>
         </div>
         <button

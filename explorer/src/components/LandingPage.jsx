@@ -82,7 +82,7 @@ export default function LandingPage({ onEnter }) {
             margin: "0 0 24px", lineHeight: 1.6, maxWidth: 540,
           }}>
             A symbolic math optimizer built on a single binary operator.
-            Every elementary function as a finite binary tree.
+            Many elementary functions as finite binary trees — with proved limits on what EML cannot reach.
           </p>
 
           <code style={{
