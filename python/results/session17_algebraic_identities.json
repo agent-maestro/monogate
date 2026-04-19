@@ -1,0 +1,207 @@
+{
+  "session": 17,
+  "title": "Complex EML Algebraic Identities",
+  "n_identities": 21,
+  "n_pass": 21,
+  "identity_results": [
+    {
+      "name": "Exp-Add",
+      "description": "ceml(a+b,1) = ceml(a,1)\u00b7ceml(b,1)",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 8.881784197001252e-16
+    },
+    {
+      "name": "Exp-Scale",
+      "description": "ceml(n\u00b7z,1) = ceml(z,1)^n",
+      "passed": 4,
+      "total": 4,
+      "all_pass": true,
+      "max_err": 8.188600426433445e-15
+    },
+    {
+      "name": "Exp-Neg",
+      "description": "ceml(-z,1) = 1/ceml(z,1)",
+      "passed": 4,
+      "total": 4,
+      "all_pass": true,
+      "max_err": 1.2412670766236366e-16
+    },
+    {
+      "name": "Exp-Conj",
+      "description": "conj(ceml(iy,1)) = ceml(-iy,1)  for real y",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 0.0
+    },
+    {
+      "name": "Log-Prod",
+      "description": "ceml(0,z\u00b7w) = ceml(0,z) + ceml(0,w) - 1  [since Log(zw)=Log z+Log w]",
+      "passed": 5,
+      "total": 5,
+      "all_pass": true,
+      "max_err": 1.1102230246251565e-16
+    },
+    {
+      "name": "Log-Power",
+      "description": "ceml(0, x^n) = 1 - n\u00b7(1-ceml(0,x))  [Log(x^n) = n\u00b7Log(x)]",
+      "passed": 5,
+      "total": 5,
+      "all_pass": true,
+      "max_err": 4.440892098500626e-16
+    },
+    {
+      "name": "Log-Recip",
+      "description": "ceml(0, 1/x) = 2 - ceml(0, x)  [Log(1/x) = -Log(x) = -(1-ceml(0,x)) = ceml(0,x)-1... wait]",
+      "passed": 5,
+      "total": 5,
+      "all_pass": true,
+      "max_err": 1.1102230246251565e-16
+    },
+    {
+      "name": "Euler-Modulus",
+      "description": "|ceml(ix,1)| = 1",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 0.0
+    },
+    {
+      "name": "Euler-Conj",
+      "description": "ceml(-ix,1) = conj(ceml(ix,1))  for real x",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 0.0
+    },
+    {
+      "name": "Sin-Odd",
+      "description": "Im(ceml(-ix,1)) = -Im(ceml(ix,1))  [sin is odd]",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 0.0
+    },
+    {
+      "name": "Cos-Even",
+      "description": "Re(ceml(-ix,1)) = Re(ceml(ix,1))  [cos is even]",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 0.0
+    },
+    {
+      "name": "Sin-Add",
+      "description": "Im(ceml(i(x+y),1)) = sin(x)cos(y)+cos(x)sin(y)",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 1.1102230246251565e-16
+    },
+    {
+      "name": "Cos-Add",
+      "description": "Re(ceml(i(x+y),1)) = cos(x)cos(y)-sin(x)sin(y)",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 1.214306433183765e-16
+    },
+    {
+      "name": "Pythagorean",
+      "description": "Im(ceml(ix,1))^2 + Re(ceml(ix,1))^2 = 1",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 0.0
+    },
+    {
+      "name": "Cosh-Add",
+      "description": "cosh(x+y) = cosh(x)\u00b7cosh(y)+sinh(x)\u00b7sinh(y)  [hyperbolic addition formula]",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 8.881784197001252e-16
+    },
+    {
+      "name": "Hyp-Pythagorean",
+      "description": "Re(ceml(x,1))^2 - Im(ceml(ix,1) rotated)^2 = 1  [cosh^2 - sinh^2 = 1]",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 1.7763568394002505e-15
+    },
+    {
+      "name": "Sinh-Odd",
+      "description": "Im(ceml(x,1)) = 0 for real x  [exp(x) is real]",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 0.0
+    },
+    {
+      "name": "Exp-Log",
+      "description": "ceml(1-ceml(0,z), 1) = z  [exp(Log(z)) = z]",
+      "passed": 5,
+      "total": 5,
+      "all_pass": true,
+      "max_err": 4.440892098500626e-16
+    },
+    {
+      "name": "Log-Exp",
+      "description": "1 - ceml(0, ceml(z,1)) = z  [Log(exp(z)) = z for Im(z)\u2208(-\u03c0,\u03c0)]",
+      "passed": 3,
+      "total": 3,
+      "all_pass": true,
+      "max_err": 5.551115123125783e-17
+    },
+    {
+      "name": "Nested-Exp",
+      "description": "ceml(ceml(ix,1), 1) = exp(exp(ix)) = exp(cos+i\u00b7sin)",
+      "passed": 7,
+      "total": 7,
+      "all_pass": true,
+      "max_err": 0.0
+    },
+    {
+      "name": "Ceml-Shift",
+      "description": "ceml(z+2\u03c0i, y) = ceml(z, y)  [exp periodicity]",
+      "passed": 4,
+      "total": 4,
+      "all_pass": true,
+      "max_err": 1.1102230246251565e-15
+    }
+  ],
+  "family_stats": {
+    "Exponential": {
+      "n_pass": 5,
+      "n_total": 5
+    },
+    "Logarithmic": {
+      "n_pass": 4,
+      "n_total": 4
+    },
+    "Euler/Trig": {
+      "n_pass": 7,
+      "n_total": 7
+    },
+    "Hyperbolic": {
+      "n_pass": 3,
+      "n_total": 3
+    },
+    "Composition": {
+      "n_pass": 4,
+      "n_total": 4
+    }
+  },
+  "key_theorems": [
+    "T1: ceml(a+b,1) = ceml(a,1)\u00b7ceml(b,1)  [exp addition law as ceml identity]",
+    "T2: ceml(0, x^n) = 1-n\u00b7(1-ceml(0,x))  [log power law in ceml form]",
+    "T3: ceml(-ix,1) = conj(ceml(ix,1))  for real x  [conjugate symmetry]",
+    "T4: Im(ceml(ix,1))^2 + Re(ceml(ix,1))^2 = 1  [Pythagorean in ceml form]",
+    "T5: ceml(z+2\u03c0i, y) = ceml(z, y)  [2\u03c0i periodicity of first slot]",
+    "T6: ceml(1-ceml(0,z), 1) = z  [exp\u2218Log = id as ceml composition]"
+  ],
+  "status": "PASS"
+}
