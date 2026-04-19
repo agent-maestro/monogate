@@ -1,0 +1,47 @@
+{
+  "session": 27,
+  "title": "Complex MCTS Search for Minimal ceml Expressions",
+  "sin_search": {
+    "best_template": "ceml(i*x,1)",
+    "best_projection": "imag",
+    "best_r2": 1.0,
+    "n_states": 15,
+    "n_iterations": 100,
+    "target": "sin(x)",
+    "expected_template": "ceml(i*x,1)",
+    "expected_projection": "imag",
+    "found_correct": true
+  },
+  "cos_search": {
+    "best_template": "ceml(i*x,1)",
+    "best_projection": "real",
+    "best_r2": 1.0,
+    "n_states": 15,
+    "n_iterations": 100,
+    "target": "cos(x)",
+    "expected_template": "ceml(i*x,1)",
+    "expected_projection": "real",
+    "found_correct": true
+  },
+  "exp_search": {
+    "best_template": "ceml(x,1)",
+    "best_projection": "real",
+    "best_r2": 1.0,
+    "n_states": 15,
+    "n_iterations": 100,
+    "target": "exp(x)",
+    "expected_template": "ceml(x,1)",
+    "found_correct": true
+  },
+  "n_correct_found": 3,
+  "n_benchmarks": 3,
+  "candidate_templates": [
+    "ceml(x,1)",
+    "ceml(i*x,1)",
+    "ceml(2i*x,1)",
+    "ceml(0,x)",
+    "ceml(-x,1)"
+  ],
+  "key_result": "MCTS correctly identified 3/3 target functions. ceml(i*x,1)/imag recovers sin; ceml(i*x,1)/real recovers cos; ceml(x,1)/real recovers exp.",
+  "status": "PASS"
+}

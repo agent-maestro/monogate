@@ -1,0 +1,137 @@
+{
+  "session": 33,
+  "title": "Complex EML Regressor",
+  "evaluation": {
+    "n_samples": 15,
+    "n_correct": 10,
+    "accuracy": 0.6666666666666666,
+    "predictions": [
+      {
+        "true": 1,
+        "pred": 1,
+        "ok": true
+      },
+      {
+        "true": 1,
+        "pred": 1,
+        "ok": true
+      },
+      {
+        "true": 1,
+        "pred": 1,
+        "ok": true
+      },
+      {
+        "true": 1,
+        "pred": 1,
+        "ok": true
+      },
+      {
+        "true": 1,
+        "pred": 1,
+        "ok": true
+      },
+      {
+        "true": 1,
+        "pred": 1,
+        "ok": true
+      },
+      {
+        "true": 2,
+        "pred": 2,
+        "ok": true
+      },
+      {
+        "true": 2,
+        "pred": 2,
+        "ok": true
+      },
+      {
+        "true": 2,
+        "pred": 1,
+        "ok": false
+      },
+      {
+        "true": 2,
+        "pred": 3,
+        "ok": false
+      },
+      {
+        "true": 2,
+        "pred": 1,
+        "ok": false
+      },
+      {
+        "true": 2,
+        "pred": 2,
+        "ok": true
+      },
+      {
+        "true": 3,
+        "pred": 1,
+        "ok": false
+      },
+      {
+        "true": 3,
+        "pred": 1,
+        "ok": false
+      },
+      {
+        "true": 3,
+        "pred": 3,
+        "ok": true
+      }
+    ],
+    "classifier": {
+      "class_means": {
+        "1": [
+          2.721,
+          0.876,
+          0.959,
+          0.3,
+          0.667,
+          3.099,
+          1.092,
+          -1.249,
+          0.63,
+          1.037
+        ],
+        "2": [
+          2.648,
+          0.0,
+          0.877,
+          2.706,
+          0.0,
+          3.057,
+          1.434,
+          0.419,
+          0.448,
+          0.0
+        ],
+        "3": [
+          1.105,
+          0.224,
+          0.421,
+          1.04,
+          0.0,
+          1.367,
+          1.202,
+          -0.146,
+          0.269,
+          0.311
+        ]
+      }
+    }
+  },
+  "accuracy": 0.6666666666666666,
+  "feature_importance": {
+    "re_range": "High oscillation range \u2192 EML-1 (trig via Euler gateway)",
+    "mean_im": "Large imaginary part \u2192 EML-1 complex output",
+    "unit_dev": "Near unit modulus \u2192 EML-1 trig",
+    "log_growth": "Exponential growth \u2192 EML-1 exp; polynomial \u2192 EML-2",
+    "sign_changes": "Oscillatory (sign changes) \u2192 EML-1",
+    "rate": "Rate of change signature distinguishes depth classes"
+  },
+  "key_finding": "Nearest-centroid classifier achieves 67% accuracy on 15 labeled function samples. Theory-derived features (oscillation, unit modulus, growth rate) are predictive of EML depth class.",
+  "status": "PASS"
+}

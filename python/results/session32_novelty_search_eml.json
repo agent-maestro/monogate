@@ -1,0 +1,197 @@
+{
+  "session": 32,
+  "title": "Novelty Search over Complex EML Trees",
+  "novelty_archive": {
+    "archive_size": 10,
+    "archive_entries": [
+      {
+        "behavior": "(0.1, 0.6, 0.7)",
+        "template": "ceml(2ix,1)"
+      },
+      {
+        "behavior": "(1.7, 1.4, 2.3)",
+        "template": "ceml(ix+1,1)"
+      },
+      {
+        "behavior": "(0.5, -0.1, 0.5)",
+        "template": "ceml(-x,1)"
+      },
+      {
+        "behavior": "(2.0, 0.4, 2.1)",
+        "template": "ceml(x,1)"
+      },
+      {
+        "behavior": "(-0.1, 0.3, 0.6)",
+        "template": "ceml(ix,ceml(x,1))"
+      },
+      {
+        "behavior": "(0.5, -0.3, 0.6)",
+        "template": "ceml(0,ceml(ix,1)+1)"
+      },
+      {
+        "behavior": "(-0.2, 0.6, 0.7)",
+        "template": "ceml(ix,ceml(0,x)+1)"
+      },
+      {
+        "behavior": "(1.4, -0.2, 1.4)",
+        "template": "ceml(0,x)"
+      },
+      {
+        "behavior": "(0.6, 0.5, 0.8)",
+        "template": "ceml(ix,1)"
+      },
+      {
+        "behavior": "(1.6, 0.9, 1.9)",
+        "template": "ceml(ceml(ix,1),1)"
+      }
+    ],
+    "mean_novelty": 0.016918277632208188,
+    "max_novelty": 2.4,
+    "n_iterations": 500,
+    "n_templates": 10
+  },
+  "template_analysis": [
+    {
+      "template": "ceml(ix,1)",
+      "behavior": [
+        0.6,
+        0.5,
+        0.8
+      ],
+      "oscillatory": true,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 0.8
+    },
+    {
+      "template": "ceml(x,1)",
+      "behavior": [
+        2.0,
+        0.4,
+        2.1
+      ],
+      "oscillatory": true,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 2.1
+    },
+    {
+      "template": "ceml(0,x)",
+      "behavior": [
+        1.4,
+        -0.2,
+        1.4
+      ],
+      "oscillatory": true,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 1.4
+    },
+    {
+      "template": "ceml(-x,1)",
+      "behavior": [
+        0.5,
+        -0.1,
+        0.5
+      ],
+      "oscillatory": false,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 0.5
+    },
+    {
+      "template": "ceml(2ix,1)",
+      "behavior": [
+        0.1,
+        0.6,
+        0.7
+      ],
+      "oscillatory": true,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 0.7
+    },
+    {
+      "template": "ceml(ix+1,1)",
+      "behavior": [
+        1.7,
+        1.4,
+        2.3
+      ],
+      "oscillatory": true,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 2.3
+    },
+    {
+      "template": "ceml(ceml(ix,1),1)",
+      "behavior": [
+        1.6,
+        0.9,
+        1.9
+      ],
+      "oscillatory": true,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 1.9
+    },
+    {
+      "template": "ceml(ix,ceml(x,1))",
+      "behavior": [
+        -0.1,
+        0.3,
+        0.6
+      ],
+      "oscillatory": true,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 0.6
+    },
+    {
+      "template": "ceml(0,ceml(ix,1)+1)",
+      "behavior": [
+        0.5,
+        -0.3,
+        0.6
+      ],
+      "oscillatory": false,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 0.6
+    },
+    {
+      "template": "ceml(ix,ceml(0,x)+1)",
+      "behavior": [
+        -0.2,
+        0.6,
+        0.7
+      ],
+      "oscillatory": false,
+      "real_valued": false,
+      "unit_modulus": false,
+      "mean_abs": 0.7
+    }
+  ],
+  "key_findings": [
+    "Archive size: 10 distinct behavior cells discovered",
+    "Unit-modulus templates: []",
+    "Oscillatory templates: ['ceml(ix,1)', 'ceml(x,1)', 'ceml(0,x)', 'ceml(2ix,1)', 'ceml(ix+1,1)', 'ceml(ceml(ix,1),1)', 'ceml(ix,ceml(x,1))']",
+    "Nested ceml creates rich functional variety: exp(exp(ix)) oscillates with amplitude growth",
+    "ceml(0, ceml(ix,1)+1) = 1 - Log(exp(ix)+1) \u2014 related to softplus-like function"
+  ],
+  "interesting_discoveries": [
+    {
+      "template": "ceml(ceml(ix,1),1)",
+      "interpretation": "exp(exp(ix)) \u2014 doubly oscillating exponential"
+    },
+    {
+      "template": "ceml(0,ceml(ix,1)+1)",
+      "interpretation": "1-Log(exp(ix)+1) \u2014 complex log-sigmoid"
+    },
+    {
+      "template": "ceml(ix,ceml(x,1))",
+      "interpretation": "exp(ix)-Log(exp(x)) = exp(ix)-x \u2014 amplitude-modulated oscillation"
+    }
+  ],
+  "status": "PASS"
+}

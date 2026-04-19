@@ -1,0 +1,124 @@
+{
+  "session": 28,
+  "title": "Objective Functions for Complex EML Search",
+  "benchmark_results": {
+    "sin_r2": 1.0,
+    "sin_mae": 0.0,
+    "euler_r2_complex": 1.0,
+    "euler_modulus_r2": 1.0,
+    "euler_phase_loss": 0.0,
+    "euler_re_r2": 1.0,
+    "euler_im_r2": 1.0,
+    "euler_analytic_score": 0.9999995515632799,
+    "sin_analytic_score": 0.7889517759264193
+  },
+  "depth_tradeoff": [
+    {
+      "depth": 1,
+      "r2": 0.95,
+      "depth_weighted_loss": 0.15000000000000005
+    },
+    {
+      "depth": 1,
+      "r2": 0.99,
+      "depth_weighted_loss": 0.11000000000000001
+    },
+    {
+      "depth": 1,
+      "r2": 0.999,
+      "depth_weighted_loss": 0.101
+    },
+    {
+      "depth": 1,
+      "r2": 1.0,
+      "depth_weighted_loss": 0.1
+    },
+    {
+      "depth": 2,
+      "r2": 0.95,
+      "depth_weighted_loss": 0.25000000000000006
+    },
+    {
+      "depth": 2,
+      "r2": 0.99,
+      "depth_weighted_loss": 0.21000000000000002
+    },
+    {
+      "depth": 2,
+      "r2": 0.999,
+      "depth_weighted_loss": 0.201
+    },
+    {
+      "depth": 2,
+      "r2": 1.0,
+      "depth_weighted_loss": 0.2
+    },
+    {
+      "depth": 3,
+      "r2": 0.95,
+      "depth_weighted_loss": 0.3500000000000001
+    },
+    {
+      "depth": 3,
+      "r2": 0.99,
+      "depth_weighted_loss": 0.31000000000000005
+    },
+    {
+      "depth": 3,
+      "r2": 0.999,
+      "depth_weighted_loss": 0.30100000000000005
+    },
+    {
+      "depth": 3,
+      "r2": 1.0,
+      "depth_weighted_loss": 0.30000000000000004
+    },
+    {
+      "depth": 5,
+      "r2": 0.95,
+      "depth_weighted_loss": 0.55
+    },
+    {
+      "depth": 5,
+      "r2": 0.99,
+      "depth_weighted_loss": 0.51
+    },
+    {
+      "depth": 5,
+      "r2": 0.999,
+      "depth_weighted_loss": 0.501
+    },
+    {
+      "depth": 5,
+      "r2": 1.0,
+      "depth_weighted_loss": 0.5
+    }
+  ],
+  "objectives_summary": {
+    "for_real_targets": [
+      "r2_real",
+      "mae_real"
+    ],
+    "for_complex_targets": [
+      "r2_complex",
+      "mae_complex",
+      "modulus_r2",
+      "phase_loss"
+    ],
+    "for_analyticity": [
+      "analytic_continuation_score"
+    ],
+    "for_search": [
+      "depth_weighted_loss = (1-R\u00b2) + lambda*depth"
+    ]
+  },
+  "key_findings": [
+    "sin(x) R\u00b2 = 1.000000 (should be 1.0)",
+    "Euler exp(ix) complex R\u00b2 = 1.000000",
+    "Euler modulus R\u00b2 = 1.000000",
+    "Euler analytic continuation score = 1.0000 (higher=more analytic)",
+    "sin(x) analytic score = 0.7890 (should be lower - not complex-analytic)"
+  ],
+  "recommendation": "For complex EML search: use r2_complex as primary metric + depth_weighted_loss(lambda=0.1) to prefer shallow trees. Use analytic_continuation_score as a bonus reward for holomorphic expressions.",
+  "status": "PASS"
+}
