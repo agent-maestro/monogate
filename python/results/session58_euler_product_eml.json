@@ -1,0 +1,64 @@
+{
+  "session": 58,
+  "title": "Euler Products, L-functions & EML Depth",
+  "depth_table": [
+    {
+      "quantity": "p^{-s}",
+      "depth": 1
+    },
+    {
+      "quantity": "Euler factor (1-p^{-s})^{-1}",
+      "depth": 1
+    },
+    {
+      "quantity": "Partial Euler product",
+      "depth": 1
+    },
+    {
+      "quantity": "\u03b6(s) exact",
+      "depth": "EML-\u221e"
+    },
+    {
+      "quantity": "q^n = exp(2\u03c0in\u03c4)",
+      "depth": 1
+    },
+    {
+      "quantity": "Modular form \u03a3 a_n q^n [partial]",
+      "depth": 1
+    },
+    {
+      "quantity": "Zeros of \u03b6",
+      "depth": "EML-\u221e"
+    }
+  ],
+  "verification": {
+    "euler_vs_series": [
+      {
+        "s": "(2+0j)",
+        "rel_err": 0.0012101272768171045,
+        "ok": true
+      },
+      {
+        "s": "(3+0j)",
+        "rel_err": 9.726321396226635e-06,
+        "ok": true
+      },
+      {
+        "s": "(4+0j)",
+        "rel_err": 7.211364657509574e-08,
+        "ok": true
+      }
+    ],
+    "all_ok": true,
+    "zeta2": true,
+    "zeta4": true
+  },
+  "theorems": [
+    "CEML-T126: p^{-s} = exp(-s\u00b7log(p)) = ceml(-s\u00b7log(p),1) \u2014 depth 1",
+    "CEML-T127: Euler factors and partial Euler products are depth-1 ceml",
+    "CEML-T128: \u03b6(s) exact is EML-\u221e (infinite product over all primes)",
+    "CEML-T129: Modular form q-expansions (q^n) are depth-1 ceml per harmonic",
+    "CEML-T130: Zeros of \u03b6 are EML-\u221e: no finite ceml expression known"
+  ],
+  "status": "PASS"
+}
