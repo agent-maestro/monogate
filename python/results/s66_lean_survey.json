@@ -1,0 +1,108 @@
+{
+  "sorry_census": {
+    "total_sorries": 13,
+    "by_file": {
+      "EMLDepth.lean": [
+        {
+          "line": 119,
+          "name": "depth_k_unbounded_along_real",
+          "priority": "CRITICAL"
+        },
+        {
+          "line": 125,
+          "name": "sin_not_in_real_EML_k",
+          "priority": "CRITICAL"
+        }
+      ],
+      "GrandSynthesis.lean": [
+        {
+          "name": "eml0_strict_eml1",
+          "priority": "HIGH"
+        },
+        {
+          "name": "eml1_strict_eml2",
+          "priority": "HIGH"
+        },
+        {
+          "name": "eml2_strict_eml3",
+          "priority": "HIGH"
+        },
+        {
+          "name": "sin_bounded_vs_ceml_unbounded",
+          "priority": "HIGH"
+        }
+      ],
+      "Millennium.lean": [
+        {
+          "name": "zeta_zeros",
+          "priority": "RESEARCH"
+        },
+        {
+          "name": "BSD_rank",
+          "priority": "RESEARCH"
+        },
+        {
+          "name": "period_integrals",
+          "priority": "RESEARCH"
+        },
+        {
+          "name": "mass_gap",
+          "priority": "RESEARCH"
+        },
+        {
+          "name": "algebraic_cycle_depth",
+          "priority": "FORMALIZATION"
+        },
+        {
+          "name": "NS_fourier_mode",
+          "priority": "FORMALIZATION"
+        }
+      ],
+      "TropicalSemiring.lean": [
+        {
+          "name": "tropical_convexity",
+          "priority": "LOW"
+        }
+      ]
+    },
+    "critical_path": [
+      "depth_k_unbounded_along_real",
+      "sin_not_in_real_EML_k"
+    ],
+    "key_mathlib_lemmas": [
+      "Real.tendsto_exp_atTop",
+      "Real.abs_sin_le_one",
+      "Filter.Tendsto.comp",
+      "Real.isLittleO_log_exp_atTop"
+    ],
+    "proof_plan_written": true,
+    "proof_plan_path": "D:/monogate-research/lean/PROOF_PLAN.md"
+  },
+  "schedule": [
+    {
+      "session": "S66",
+      "goal": "Survey + plan",
+      "deliverable": "PROOF_PLAN.md"
+    },
+    {
+      "session": "S67",
+      "goal": "depth_k_unbounded_along_real",
+      "deliverable": "EMLDepth.lean: sorry@119 removed"
+    },
+    {
+      "session": "S68",
+      "goal": "sin_not_in_real_EML_k",
+      "deliverable": "EMLDepth.lean: sorry@125 removed"
+    },
+    {
+      "session": "S69",
+      "goal": "GrandSynthesis 4 sorries",
+      "deliverable": "GrandSynthesis.lean: all 4 removed"
+    },
+    {
+      "session": "S70",
+      "goal": "Phase 1 gate: tag v3.1.0",
+      "deliverable": "git tag + capability card"
+    }
+  ]
+}
