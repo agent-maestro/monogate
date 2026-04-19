@@ -8,10 +8,16 @@ const nextConfig = {
       { source: "/leaderboard", destination: "/challenge/leaderboard", permanent: true },
       { source: "/theorems", destination: "https://monogate.org/theorems", permanent: false },
       { source: "/one-operator", destination: "https://monogate.org", permanent: false },
-      // Cross-domain shortcuts
-      { source: "/games", destination: "https://games.monogate.dev", permanent: false },
-      { source: "/play", destination: "https://games.monogate.dev", permanent: false },
+      // /games → /play (canonical)
+      { source: "/games", destination: "/play", permanent: true },
       { source: "/explorer", destination: "https://www.monogate.dev", permanent: false },
+    ];
+  },
+  async rewrites() {
+    return [
+      // Proxy /play/* to games.monogate.dev/play/* — URL stays at monogate.dev
+      { source: "/play", destination: "https://games.monogate.dev/play" },
+      { source: "/play/:path*", destination: "https://games.monogate.dev/play/:path*" },
     ];
   },
 };
