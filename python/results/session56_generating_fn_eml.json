@@ -1,0 +1,119 @@
+{
+  "session": 56,
+  "title": "Combinatorics and Generating Functions via EML",
+  "depth_table": [
+    {
+      "gf": "e^x (EGF of sets)",
+      "depth": 1,
+      "ceml": "ceml(x,1)"
+    },
+    {
+      "gf": "log(1+x) (EGF of cycles)",
+      "depth": 1,
+      "ceml": "1-ceml(0,1+x)"
+    },
+    {
+      "gf": "C(x) = (1-\u221a(1-4x))/(2x) [Catalan]",
+      "depth": 2,
+      "ceml": "exp(\u00bd\u00b7log(1-4x)) depth-2"
+    },
+    {
+      "gf": "Fibonacci F_n [Binet]",
+      "depth": 2,
+      "ceml": "exp(n\u00b7log(\u03c6)) depth-2"
+    },
+    {
+      "gf": "1/(1-x) [permutations]",
+      "depth": "EML-\u221e",
+      "ceml": "rational, pole at x=1"
+    },
+    {
+      "gf": "Bell numbers B_n",
+      "depth": "EML-\u221e",
+      "ceml": "Dobinski sum: e^{-1}\u03a3 k^n/k!"
+    },
+    {
+      "gf": "Partition function p(n)",
+      "depth": "EML-\u221e",
+      "ceml": "Hardy-Ramanujan infinite product"
+    }
+  ],
+  "catalan": {
+    "x_vals": [
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.24
+    ],
+    "max_err": 0.0,
+    "ok": true
+  },
+  "fibonacci": {
+    "results": [
+      {
+        "n": 2,
+        "F_n": 1,
+        "ok": true
+      },
+      {
+        "n": 3,
+        "F_n": 2,
+        "ok": true
+      },
+      {
+        "n": 4,
+        "F_n": 3,
+        "ok": true
+      },
+      {
+        "n": 5,
+        "F_n": 5,
+        "ok": true
+      },
+      {
+        "n": 6,
+        "F_n": 8,
+        "ok": true
+      },
+      {
+        "n": 7,
+        "F_n": 13,
+        "ok": true
+      },
+      {
+        "n": 8,
+        "F_n": 21,
+        "ok": true
+      },
+      {
+        "n": 9,
+        "F_n": 34,
+        "ok": true
+      },
+      {
+        "n": 10,
+        "F_n": 55,
+        "ok": true
+      },
+      {
+        "n": 11,
+        "F_n": 89,
+        "ok": true
+      }
+    ],
+    "all_ok": true
+  },
+  "egf_log": {
+    "max_err": 5.551115123125783e-17,
+    "ok": true
+  },
+  "theorems": [
+    "CEML-T117: EGF e^x (sets) = ceml(x,1) \u2014 depth 1",
+    "CEML-T118: log(1+x) (cycles) = 1-ceml(0,1+x) \u2014 depth 1",
+    "CEML-T119: Catalan OGF C(x) = (1-\u221a(1-4x))/(2x) \u2014 depth-2 ceml via exp(\u00bd\u00b7log(1-4x))",
+    "CEML-T120: Fibonacci Binet formula = depth-2 ceml: exp(n\u00b7log(\u03c6))",
+    "CEML-T121: Bell numbers, partition function p(n) require EML-\u221e"
+  ],
+  "status": "PASS"
+}
