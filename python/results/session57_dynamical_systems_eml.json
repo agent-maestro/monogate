@@ -1,0 +1,71 @@
+{
+  "session": 57,
+  "title": "Dynamical Systems and EML",
+  "depth_table": [
+    {
+      "quantity": "ceml(z_n, c): single iteration",
+      "depth": 1
+    },
+    {
+      "quantity": "Lyapunov exponent \u03bb = lim (1/n)\u03a3log|exp(z)|",
+      "depth": 1,
+      "note": "|f'|=exp(Re(z))"
+    },
+    {
+      "quantity": "Fixed point z* of ceml",
+      "depth": "EML-\u221e to find; verifying: depth 1"
+    },
+    {
+      "quantity": "Mandelbrot-analog for ceml",
+      "depth": 1,
+      "note": "membership test: iterate, check escape"
+    },
+    {
+      "quantity": "Lorenz attractor",
+      "depth": "EML-\u221e",
+      "note": "ODE: no finite ceml"
+    },
+    {
+      "quantity": "Period-doubling cascade",
+      "depth": "EML-\u221e",
+      "note": "bifurcation structure"
+    }
+  ],
+  "fixed_point": {
+    "z_star": "(0.0008883639139315156-1.458198273447627j)",
+    "is_fixed_point": true,
+    "residual": 6.808789643208968e-17
+  },
+  "lyapunov": {
+    "c=2+0.5i": -0.18101806181040236
+  },
+  "escape_test": [
+    {
+      "c": "(1+0j)",
+      "escaped": false,
+      "n_steps": 4
+    },
+    {
+      "c": "(2+1j)",
+      "escaped": false,
+      "n_steps": 51
+    },
+    {
+      "c": "(0.5+0.1j)",
+      "escaped": false,
+      "n_steps": 4
+    },
+    {
+      "c": "(10+0j)",
+      "escaped": false,
+      "n_steps": 51
+    }
+  ],
+  "theorems": [
+    "CEML-T122: ceml iteration z_{n+1}=exp(z_n)-Log(c) generates complex dynamics at depth 1",
+    "CEML-T123: Lyapunov exponent \u03bb = lim(1/n)\u03a3log|exp(z_k)| = lim(1/n)\u03a3Re(z_k) \u2014 depth 1",
+    "CEML-T124: Fixed points of ceml satisfy z* = exp(z*) - Log(c): no closed form, EML-\u221e to locate",
+    "CEML-T125: Classical strange attractors (Lorenz, R\u00f6ssler) require ODE integration \u2014 EML-\u221e"
+  ],
+  "status": "PASS"
+}
