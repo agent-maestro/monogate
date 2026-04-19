@@ -68,7 +68,10 @@ def op(x: float, y: float) -> float:
     """
     if y <= 0:
         raise ValueError(f"op: y must be > 0, got {y!r}")
-    return math.exp(x) - math.log(y)
+    try:
+        return math.exp(x) - math.log(y)
+    except OverflowError:
+        return float("inf")
 
 
 # ── Constants ─────────────────────────────────────────────────────────────────
@@ -173,11 +176,15 @@ def add_eml(x: float, y: float) -> float:
     >>> abs(add_eml(0.5, -1.5) + 1) < 1e-10
     True
     """
+    if x == 0.0 and y == 0.0:
+        return 0.0
     if x > 0:
         return op(ln_eml(x), op(neg_eml(y), 1))
     if y > 0:
         return op(ln_eml(y), op(neg_eml(x), 1))
-    return neg_eml(op(ln_eml(neg_eml(x)), op(neg_eml(neg_eml(y)), 1)))
+    # both ≤ 0; negate both, add positives, negate result
+    # −x > 0 and −y > 0, so add_eml(−x, −y) is valid then negate
+    return neg_eml(add_eml(neg_eml(x), neg_eml(y)))
 
 
 def mul_eml(x: float, y: float) -> float:
@@ -215,14 +222,36 @@ def pow_eml(x: float, n: float) -> float:
     xⁿ = exp(n · ln(x)).
 
     Proof: exp(n·ln(x)) = exp(ln(xⁿ)) = xⁿ. ∎
-    Nodes:15  Depth:8  Domain: x > 0, n ∈ ℝ
+    Nodes:15  Depth:8  Domain: x > 0, n ∈ ℝ, |n·ln(x)| < 708
+
+    mul_eml requires both arguments > 0, so we route by sign of ln(x) and n:
+      • ln(x) ≥ 0 and n ≥ 0: direct  mul_eml(n, lx)
+      • ln(x) < 0  and n > 0: n·ln(x) = −(n·|ln(x)|)  → neg_eml(mul_eml(n, −lx))
+      • ln(x) ≥ 0 and n < 0: n·ln(x) = −(|n|·ln(x))  → neg_eml(mul_eml(−n, lx))
+      • ln(x) < 0  and n < 0: n·ln(x) = |n|·|ln(x)|  → mul_eml(−n, −lx)
 
     >>> abs(pow_eml(2, 10) - 1024) < 1e-8
     True
     >>> abs(pow_eml(4, 0.5) - 2) < 1e-10
     True
+    >>> abs(pow_eml(0.5, 4) - 0.0625) < 1e-10
+    True
     """
-    return op(mul_eml(n, ln_eml(x)), 1)
+    if n == 0:
+        return 1.0
+    lx = ln_eml(x)
+    if lx == 0.0:
+        return 1.0
+    if lx > 0 and n > 0:
+        return op(mul_eml(n, lx), 1)
+    if lx < 0 and n > 0:
+        # n·ln(x) = −(n·|ln(x)|)
+        return op(neg_eml(mul_eml(n, neg_eml(lx))), 1)
+    if lx > 0 and n < 0:
+        # n·ln(x) = −(|n|·ln(x))
+        return op(neg_eml(mul_eml(neg_eml(n), lx)), 1)
+    # lx < 0 and n < 0: n·ln(x) = |n|·|ln(x)| > 0
+    return op(mul_eml(neg_eml(n), neg_eml(lx)), 1)
 
 
 def recip_eml(x: float) -> float:

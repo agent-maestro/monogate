@@ -345,9 +345,11 @@ def test_pow_edl_x_less_than_1():
     assert abs(result.real - 0.5**10) < 1e-15
 
 
-def test_pow_eml_fails_on_x_less_than_1():
-    with pytest.raises(ValueError):
-        pow_eml(0.5, 10)
+def test_pow_eml_works_on_x_less_than_1():
+    # Bug fixed in Session 1: pow_eml now handles x ∈ (0,1) via sign routing
+    assert abs(pow_eml(0.5, 4) - 0.0625) < 1e-9
+    assert abs(pow_eml(0.5, 2) - 0.25) < 1e-9
+    assert abs(pow_eml(0.1, 3) - 0.001) < 1e-9
 
 
 # ── ln_edl overflow dead zone ─────────────────────────────────────────────────
