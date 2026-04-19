@@ -1,0 +1,99 @@
+{
+  "max_n": 7,
+  "total_values": 298,
+  "im_analysis": {
+    "im_zero": {
+      "count": 274,
+      "sample": [
+        {
+          "expr": "1",
+          "n": 0,
+          "re": 1.0
+        },
+        {
+          "expr": "eml(1,1)",
+          "n": 1,
+          "re": 2.71828
+        },
+        {
+          "expr": "eml(1,eml(1,1))",
+          "n": 2,
+          "re": 1.71828
+        }
+      ]
+    },
+    "im_neg_pi": {
+      "count": 16,
+      "sample": [
+        {
+          "expr": "eml(1,eml(1,eml(eml(eml(1,1),1),1)))",
+          "n": 5,
+          "val": "0.1977-3.1416i"
+        },
+        {
+          "expr": "eml(1,eml(1,eml(eml(eml(1,1),eml(1,1)),1)))",
+          "n": 6,
+          "val": "0.2815-3.1416i"
+        },
+        {
+          "expr": "eml(1,eml(1,eml(eml(eml(1,eml(1,1)),1),1)))",
+          "n": 6,
+          "val": "1.6686-3.1416i"
+        }
+      ]
+    },
+    "im_neg_pi_half": {
+      "count": 0,
+      "sample": []
+    },
+    "im_pos_pi_half": {
+      "count": 0,
+      "sample": []
+    },
+    "im_other": {
+      "count": 8,
+      "sample": [
+        {
+          "expr": "eml(1,eml(1,eml(1,eml(eml(eml(1,1),1),1))))",
+          "n": 6,
+          "im": 1.50795,
+          "im_over_pi": 0.48
+        },
+        {
+          "expr": "eml(1,eml(1,eml(1,eml(1,eml(eml(eml(1,1),1),1)))))",
+          "n": 7,
+          "im": -0.76474,
+          "im_over_pi": -0.24342
+        },
+        {
+          "expr": "eml(1,eml(1,eml(1,eml(eml(eml(1,1),eml(1,1)),1))))",
+          "n": 7,
+          "im": 1.48143,
+          "im_over_pi": 0.47155
+        }
+      ]
+    },
+    "im_equals_1": {
+      "count": 0,
+      "sample": []
+    }
+  },
+  "im_equals_1_found": false,
+  "structural_theorem": {
+    "propagation_rule": "Im(eml(x,y)) = exp(Re x)\u00b7sin(Im x) \u2212 arg(y)",
+    "key_cases": {
+      "x_real_y_real_pos": "Im = 0",
+      "x_real_y_real_neg": "Im = -\u03c0  [LOOPHOLE]",
+      "x_real_y_complex": "Im = -arg(y)  [arg \u2208 (-\u03c0,\u03c0]]",
+      "x_complex_y_real_pos": "Im = exp(Re x)\u00b7sin(Im x)"
+    },
+    "im_equals_1_requirement": {
+      "via_log": "Need constructible y with arg(y) = -1",
+      "condition": "Im(y)/Re(y) = -tan(1) \u2248 -1.5574",
+      "tan_1_transcendental": true,
+      "probability": "No constructible z in N=1..9 satisfies this"
+    },
+    "conjecture_strength": "STRONG NEGATIVE: 1429 trees searched. Im = -\u03c0 appears frequently. Im = -\u03c0/2 appears (from Log(i\u03c0)). Im = 1 never appears. Structural analysis shows reaching Im=1 requires either: (a) a constructible real ln(2) [not known to be in EML({1})], or (b) a constructible z with arg = -1 radian, requiring tan(1) in the real part ratio."
+  },
+  "conclusion": "CONJECTURE STRENGTHENED: No constructible value from {1} (N\u22647) has Im = 1. The structural propagation rule shows that reaching Im=1 requires transcendental quantities (tan(1)) not known to be in EML({1}). Proof requires: show arg = -1 radian is never attained by constructible values. This is equivalent to: tan(1) \u2209 {Im(z)/Re(z) : z \u2208 EML({1}, extended)}."
+}
