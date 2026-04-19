@@ -119,6 +119,45 @@ export default function LandingPage({ onEnter }) {
           </span>
         </div>
 
+        {/* ── Honest counts strip ──────────────────────────────────────── */}
+        <div style={{
+          background: C.surface, border: `1px solid ${C.border}`,
+          borderRadius: 8, padding: "16px 20px", marginBottom: 40,
+        }}>
+          <div style={{
+            fontSize: 8, color: C.muted, letterSpacing: "0.12em",
+            textTransform: "uppercase", marginBottom: 14,
+          }}>
+            Honest result count
+          </div>
+          <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginBottom: 12 }}>
+            {[
+              { n: "18",  label: "theorems",     color: "#5ec47a", note: "complete proofs" },
+              { n: "67",  label: "propositions",  color: "#6ab0f5", note: "proved, routine" },
+              { n: "12",  label: "conjectures",   color: C.accent,  note: "stated, unproved" },
+              { n: "41",  label: "observations",  color: "#fbbf24", note: "empirical" },
+              { n: "28",  label: "definitions",   color: "#a78bfa", note: "framework choices" },
+            ].map(({ n, label, color, note }) => (
+              <div key={label}>
+                <span style={{ fontSize: 20, fontWeight: 700, color, letterSpacing: "-0.02em" }}>{n}</span>
+                <span style={{ fontSize: 9, color: C.muted, marginLeft: 5 }}>{label}</span>
+                <div style={{ fontSize: 8, color: C.muted, opacity: 0.6 }}>{note}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 9, color: C.muted, lineHeight: 1.7 }}>
+            We claimed 957 theorems. The honest count is 18.{" "}
+            <a
+              href="https://monogate.dev/theorems"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: C.accent, textDecoration: "none" }}
+            >
+              Full catalog ↗
+            </a>
+          </div>
+        </div>
+
         {/* ── Key findings ─────────────────────────────────────────────── */}
         <Section label="What we found">
           {[
@@ -131,8 +170,8 @@ export default function LandingPage({ onEnter }) {
               body: "EML gradient descent traps at spurious minima in 100% of trials at λ=0. Complexity penalty λ=0.005 flips convergence to 100% — a sharp phase transition.",
             },
             {
-              label: "sin(x) conjecture",
-              body: "862,116 real-valued EML trees enumerated (N≤8). No exact construction found for sin(x) from terminal {1}. The infinite-zeros barrier suggests none exists for any N.",
+              label: "sin(x) barrier — proved",
+              body: "No finite real EML tree equals sin(x). Proof: EML trees are real-analytic with finitely many zeros; sin has infinitely many. Confirmed computationally: 281M trees at N≤11, zero matches.",
             },
           ].map(({ label, body }) => (
             <div key={label} style={{
@@ -337,6 +376,8 @@ export default function LandingPage({ onEnter }) {
             Games ↗
           </a>
           {[
+            { label: "Theorems", href: "https://monogate.dev/theorems" },
+            { label: "Challenges", href: "https://monogate.dev" },
             { label: "GitHub",  href: "https://github.com/almaguer1986/monogate" },
             { label: "npm",     href: "https://www.npmjs.com/package/monogate" },
             { label: "PyPI",    href: "https://pypi.org/project/monogate/" },
