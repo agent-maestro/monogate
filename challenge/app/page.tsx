@@ -59,6 +59,10 @@ async function getChallenges(): Promise<Challenge[]> {
 
 function StatusBadge({ status }: { status: string }) {
   const solved = status === "solved";
+  const closed = status === "closed";
+  const bgColor = solved ? "rgba(94,196,122,0.10)" : closed ? "rgba(248,113,113,0.10)" : "rgba(232,160,32,0.10)";
+  const borderColor = solved ? C.green : closed ? C.red : C.orange;
+  const label = solved ? "SOLVED" : closed ? "CLOSED — IMPOSSIBLE" : "OPEN";
   return (
     <span style={{
       display: "inline-block",
@@ -67,11 +71,11 @@ function StatusBadge({ status }: { status: string }) {
       letterSpacing: "0.12em",
       padding: "3px 8px",
       borderRadius: 3,
-      background: solved ? "rgba(94,196,122,0.10)" : "rgba(232,160,32,0.10)",
-      border: `1px solid ${solved ? C.green : C.orange}`,
-      color: solved ? C.green : C.orange,
+      background: bgColor,
+      border: `1px solid ${borderColor}`,
+      color: borderColor,
     }}>
-      {solved ? "SOLVED" : "OPEN"}
+      {label}
     </span>
   );
 }
@@ -158,6 +162,7 @@ export default async function HomePage() {
             <a href="/leaderboard" className="nav-link">Leaderboard</a>
             <a href="/theorems" className="nav-link">Theorems</a>
             <a href="/how-to-submit" className="nav-link">How to Submit</a>
+            <a href="https://games.monogate.dev" className="nav-link" target="_blank" rel="noopener noreferrer">Play ↗</a>
           </div>
         </div>
         <div style={{ marginTop: 14, fontSize: 11, color: C.muted, lineHeight: 1.8, maxWidth: 540 }}>

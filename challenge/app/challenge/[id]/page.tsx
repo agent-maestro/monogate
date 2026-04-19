@@ -53,15 +53,19 @@ async function getSubmissions(challengeId: string): Promise<Submission[]> {
 
 function StatusBadge({ status }: { status: string }) {
   const solved = status === "solved";
+  const closed = status === "closed";
+  const bgColor = solved ? "rgba(94,196,122,0.10)" : closed ? "rgba(248,113,113,0.10)" : "rgba(232,160,32,0.10)";
+  const borderColor = solved ? C.green : closed ? C.red : C.orange;
+  const label = solved ? "SOLVED" : closed ? "CLOSED — IMPOSSIBLE" : "OPEN";
   return (
     <span style={{
       display: "inline-block", fontSize: 9, fontWeight: 700,
       letterSpacing: "0.12em", padding: "3px 8px", borderRadius: 3,
-      background: solved ? "rgba(94,196,122,0.10)" : "rgba(232,160,32,0.10)",
-      border: `1px solid ${solved ? C.green : C.orange}`,
-      color: solved ? C.green : C.orange,
+      background: bgColor,
+      border: `1px solid ${borderColor}`,
+      color: borderColor,
     }}>
-      {solved ? "SOLVED" : "OPEN"}
+      {label}
     </span>
   );
 }

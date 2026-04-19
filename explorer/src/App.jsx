@@ -299,21 +299,27 @@ export default function App() {
             </div>
           </div>
           <div style={{ display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
-            <a
-              href="https://challenge.monogate.dev"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                padding:"5px 10px", fontSize:10, borderRadius:4,
-                border:`1px solid ${C.border}`, color:C.muted,
-                textDecoration:"none", fontFamily:"'Space Mono',monospace",
-                letterSpacing:"0.04em", whiteSpace:"nowrap",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.color = C.text; e.currentTarget.style.borderColor = C.muted; }}
-              onMouseLeave={e => { e.currentTarget.style.color = C.muted; e.currentTarget.style.borderColor = C.border; }}
-            >
-              ⊞ Challenges ↗
-            </a>
+            {[
+              { label:"⊞ Challenges ↗", href:"https://challenge.monogate.dev" },
+              { label:"Theorems ↗", href:"https://challenge.monogate.dev/theorems" },
+            ].map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  padding:"5px 10px", fontSize:10, borderRadius:4,
+                  border:`1px solid ${C.border}`, color:C.muted,
+                  textDecoration:"none", fontFamily:"'Space Mono',monospace",
+                  letterSpacing:"0.04em", whiteSpace:"nowrap",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.color = C.text; e.currentTarget.style.borderColor = C.muted; }}
+                onMouseLeave={e => { e.currentTarget.style.color = C.muted; e.currentTarget.style.borderColor = C.border; }}
+              >
+                {label}
+              </a>
+            ))}
             {["verify","table","sandbox","tree","best","calc","opt","viz","sinex","demo","nerf","attractor","research","leaderboard","deml","frontiers","explorer","quantum","analog","fourier","barriers"].map(t => {
               const isCalc  = t === "calc";
               const isOpt   = t === "opt";
