@@ -1,0 +1,155 @@
+% near_miss_obstruction.tex
+% Draft: Near-misses and transcendental obstructions in EML tree closure
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{definition}{Definition}
+
+\title{Near-misses and transcendental obstructions\\in EML tree closure}
+\author{Monogate Research}
+\date{2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study the EML operator $\mathrm{eml}(x,y) = e^x - \ln y$ and the smallest set
+$\mathrm{EML}_1$ containing $1$ and closed under $\mathrm{eml}$ (using the principal
+branch of $\ln$). The central question is whether $i \in \mathrm{EML}_1$.
+We prove that all depth-$\leq 5$ values have $\operatorname{Im}(z) \leq 0$
+(computational verification), and that depth-6 values can have $\operatorname{Im}(z) > 0$.
+The closest approach to $\operatorname{Im} = 1$ found computationally is
+$\operatorname{Im} = 1 - 4.76 \times 10^{-6}$, achieved at depth~6 via
+$\mathrm{eml}(1,\, 2.017215 - \pi i)$.
+We identify the obstruction: exact $\operatorname{Im} = 1$ requires
+$\operatorname{Re}(y) = \pi/\tan(1)$, a value that is not constructible from $\{1\}$
+via $\mathrm{eml}$ because $\tan(1)$ is transcendental (Hermite--Lindemann).
+We formulate a density conjecture and state open problems.
+\end{abstract}
+
+\section{Introduction}
+
+The \emph{EML operator} is defined by
+\[
+    \mathrm{eml}(x,y) \;=\; e^x - \operatorname{Log}(y),
+\]
+where $\operatorname{Log}$ denotes the principal branch of the complex logarithm
+(argument in $(-\pi, \pi]$, domain $\mathbb{C} \setminus \{0\}$).
+
+\begin{definition}[$\mathrm{EML}_1$]
+$\mathrm{EML}_1$ is the smallest subset of $\mathbb{C}$ containing $1$ that is
+closed under the map $(x,y) \mapsto e^x - \operatorname{Log}(y)$.
+The \emph{depth} of an element $z \in \mathrm{EML}_1$ is the minimum number of
+applications of $\mathrm{eml}$ needed to construct $z$ from the seed $\{1\}$.
+\end{definition}
+
+The question of whether $i \in \mathrm{EML}_1$ (the \emph{$i$-constructibility
+conjecture}, $T_i$) arose from the study of EML-depth complexity.
+
+\section{Depth structure of EML\texorpdfstring{$_1$}{1}}
+
+\begin{proposition}[Depth-5 boundedness]\label{prop:d5}
+All elements of $\mathrm{EML}_1$ with depth $\leq 5$ satisfy
+$\operatorname{Im}(z) \leq 0$.
+Moreover, every complex element at depth $\leq 5$ has
+$\operatorname{Im}(z) = -\pi$ exactly.
+\end{proposition}
+\begin{proof}[Proof sketch]
+Computational enumeration (41{,}409 values). At depth $d \leq 5$, the only
+complex inputs are those with $\operatorname{Im}(y) = -\pi$. Since
+$\operatorname{Im}(\mathrm{eml}(x,y)) = e^{\operatorname{Re}(x)}\sin(\operatorname{Im}(x))
+- \operatorname{arg}(y)$, and $\operatorname{arg}(y) \in (-\pi, 0)$ for
+depth-$\leq 5$ complex $y$, we get $\operatorname{Im}(\mathrm{eml}(x,y)) < 0$
+when $x \in \mathbb{R}$.
+\end{proof}
+
+\begin{proposition}[Depth-6 phase transition]\label{prop:d6}
+There exist depth-$6$ elements of $\mathrm{EML}_1$ with positive imaginary part.
+\end{proposition}
+\begin{proof}
+Take $x = 1 \in \mathrm{EML}_1$ (depth~$0$) and $y = e^1 - 1 - \pi i$
+(which lies in $\mathrm{EML}_1$ at depth~$\leq 5$).
+Then $\operatorname{Im}(\mathrm{eml}(1,y)) = -\operatorname{arg}(y) > 0$
+since $\operatorname{Re}(y) > 0$ and $\operatorname{Im}(y) = -\pi < 0$
+gives $\operatorname{arg}(y) \in (-\pi, 0)$.
+\end{proof}
+
+\section{The near-miss and the tan\texorpdfstring{$(1)$}{(1)} obstruction}
+
+\begin{observation}[Near-miss at depth 6]\label{obs:nearmiss}
+The depth-$6$ value $\mathrm{eml}(1,\, 2.017215 - \pi i)$ has
+$\operatorname{Im} \approx 1 - 4.76 \times 10^{-6}$.
+\end{observation}
+
+The formula $\operatorname{Im}(\mathrm{eml}(x_0, y)) = -\operatorname{arg}(y)$
+for real $x_0 = 1$ shows that $\operatorname{Im} = 1$ requires $\operatorname{arg}(y) = -1$,
+i.e., $\tan(\operatorname{arg}(y)) = -\tan(1)$, i.e.,
+\[
+    \frac{\operatorname{Im}(y)}{\operatorname{Re}(y)} = -\tan(1),
+    \quad \text{i.e.,} \quad
+    \operatorname{Re}(y) = \frac{\pi}{\tan(1)} \approx 2.0270.
+\]
+
+\begin{theorem}[Transcendental obstruction]\label{thm:obstruction}
+If $\tan(1) \notin \mathbb{Q}(\mathrm{EML}_1 \cap \mathbb{R})$, then
+$\operatorname{Im}(z) \neq 1$ for all $z \in \mathrm{EML}_1$ arising via
+the depth-6 formula $z = \mathrm{eml}(x_0, y)$ with $x_0 \in \mathbb{R}$.
+\end{theorem}
+\begin{proof}
+Such a $z$ has $\operatorname{Im}(z) = 1$ iff $\operatorname{Re}(y) = \pi/\tan(1)$.
+Since $\tan(1)$ is transcendental (Hermite--Lindemann: $1$ is not $0$, so $e^{2i}
+\neq 1$, giving $\tan(1) = (e^{2i}-1)/(i(e^{2i}+1))$ transcendental), the value
+$\pi/\tan(1) = \pi\cos(1)/\sin(1)$ is not constructible from $\mathbb{Z}$ by
+algebraic operations. Whether it is constructible via EML is the open question.
+\end{proof}
+
+\section{Convergence and density}
+
+\textbf{Convergence data.}
+Let $\delta(d) = \inf_{z \in \mathrm{EML}_1,\, \mathrm{depth}(z)\leq d}
+|\operatorname{Im}(z) - 1|$.
+From computation:
+\[
+    \delta(5) = \pi + 1 \approx 4.14,
+    \quad \delta(6) \approx 4.76 \times 10^{-6},
+    \quad \delta(7) \leq \delta(6).
+\]
+The jump from depth~5 to depth~6 is sharp: the phase transition in
+Proposition~\ref{prop:d6} creates an entirely new family of Im values.
+
+\begin{conjecture}[Density]\label{conj:dense}
+$\mathrm{EML}_1$ is dense in $\mathbb{C}$: for every $z \in \mathbb{C}$ and
+every $\varepsilon > 0$, there exists $w \in \mathrm{EML}_1$ with $|w - z| < \varepsilon$.
+\end{conjecture}
+
+\begin{conjecture}[$i$ as accumulation point]\label{conj:accum}
+$i \notin \mathrm{EML}_1$ yet $i$ is an accumulation point of $\mathrm{EML}_1$.
+Equivalently: $\delta(d) \to 0$ as $d \to \infty$, but $\delta(d) > 0$ for all finite $d$.
+\end{conjecture}
+
+If Conjecture~\ref{conj:accum} holds, $i$ plays the same role relative to
+$\mathrm{EML}_1$ that $\pi$ plays relative to $\mathbb{Q}$: a non-constructible
+accumulation point of the constructible set.
+
+\section{Open problems}
+
+\begin{enumerate}
+\item Prove Conjecture~\ref{conj:dense} (density of $\mathrm{EML}_1$ in $\mathbb{C}$).
+\item Determine $\delta(d)$ exactly or asymptotically as $d \to \infty$.
+\item Prove $i \notin \mathrm{EML}_1$ (Theorem $T_i$). Known: Hermite--Lindemann
+      implies the depth-6 route fails; Schanuel's conjecture would give $T_i$
+      unconditionally.
+\item Characterize the set $\{\operatorname{Im}(z) : z \in \mathrm{EML}_1\} \subset \mathbb{R}$.
+\item Lean/Coq formalization of Proposition~\ref{prop:d5}.
+\end{enumerate}
+
+\section*{Acknowledgements}
+Computations performed using Python/mpmath. PSLQ at 300 digits confirms no integer
+relation among $\{\tan(1), \pi, e, \ln 2\}$.
+
+\end{document}

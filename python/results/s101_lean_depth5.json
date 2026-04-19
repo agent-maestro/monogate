@@ -1,0 +1,33 @@
+{
+  "session": "S101",
+  "title": "Lean Formalization of Depth-5 Boundedness",
+  "lean_path": "monogate-research/lean/EML/DepthFiveBound.lean",
+  "lean_lines": 70,
+  "sorry_census": {
+    "file": "DepthFiveBound.lean",
+    "sorries": [
+      {
+        "name": "depth1_real",
+        "description": "Requires EML1 inversion: the only EML1 element is 1 (depth 0). Lean needs a proof that EML1 is well-founded at small depth.",
+        "difficulty": "MEDIUM",
+        "path_to_proof": "Inversion lemma: EML1 1 by base; EML1 (eml(1,1)) = EML1 e by step."
+      },
+      {
+        "name": "depth5_complex_im_eq_neg_pi",
+        "description": "Computational claim: ALL depth-5 complex values have Im = -pi. Proved numerically in S90-S92 (41,409 values). Lean proof requires decidable enumeration of finite tree or native_decide.",
+        "difficulty": "HARD",
+        "path_to_proof": "native_decide after bounding the tree; or certified computation via Norm_num extension."
+      }
+    ],
+    "total_sorries": 2,
+    "previously_total": 16,
+    "new_total": 18
+  },
+  "propositions": {
+    "depth0_real": "PROVED (trivial)",
+    "depth5_complex_im_eq_neg_pi": "SORRY \u2014 computational, path to native_decide",
+    "depth5_bound": "PROVED (conditional on depth5_complex_im_eq_neg_pi)"
+  },
+  "tier": "PROPOSITION (2 sorries, clear proof paths)",
+  "note": "The depth-5 boundedness result is provable in Lean given computational certification. The sorry in depth5_complex_im_eq_neg_pi can be closed by a native_decide call once the EML tree is represented as a finite inductive type with certified arithmetic."
+}

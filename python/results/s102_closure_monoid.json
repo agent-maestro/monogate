@@ -1,0 +1,81 @@
+{
+  "session": "S102",
+  "title": "EML Closure Monoid \u2014 Growth Rate",
+  "layer_sizes": [
+    {
+      "depth": 0,
+      "new_in_layer": 1,
+      "real": 1,
+      "complex": 0,
+      "cumulative_total": 1
+    },
+    {
+      "depth": 1,
+      "new_in_layer": 1,
+      "real": 1,
+      "complex": 0,
+      "cumulative_total": 2
+    },
+    {
+      "depth": 2,
+      "new_in_layer": 3,
+      "real": 3,
+      "complex": 0,
+      "cumulative_total": 5
+    },
+    {
+      "depth": 3,
+      "new_in_layer": 21,
+      "real": 21,
+      "complex": 0,
+      "cumulative_total": 26
+    },
+    {
+      "depth": 4,
+      "new_in_layer": 284,
+      "real": 284,
+      "complex": 0,
+      "cumulative_total": 310
+    },
+    {
+      "depth": 5,
+      "new_in_layer": 30383,
+      "real": 26213,
+      "complex": 4170,
+      "cumulative_total": 30693
+    }
+  ],
+  "cumulative_totals": [
+    1,
+    2,
+    5,
+    26,
+    310,
+    30693
+  ],
+  "growth_ratios": [
+    2.0,
+    2.5,
+    5.2,
+    11.923076923076923,
+    99.00967741935484
+  ],
+  "growth_fit": {
+    "log_linear_slope": 1.9553680985451536,
+    "log_linear_intercept": -1.2835796091892555,
+    "r_squared": 0.8877523559727918,
+    "implied_exponential_base": 7.0665197206439325,
+    "log_log_slope": 0.6674453796312574,
+    "log_log_r_squared": 0.9926695811513486
+  },
+  "growth_model": "doubly_exponential",
+  "algebraic_structure": {
+    "type": "magma",
+    "operation": "eml(x,y) = exp(x) - Log(y)",
+    "identity": null,
+    "associativity": false,
+    "commutativity": false,
+    "note": "EML_1 is a magma under eml: closed but neither associative nor commutative. It is finitely generated (from {1}). The growth rate of the generated magma is the key quantity."
+  },
+  "connection_to_density": "Growth model: doubly_exponential. If growth is exponential, the magma expands rapidly but not 'infinitely fast'. Density conjecture requires that new values increasingly fill gaps. An exponential growth count is consistent with density if values spread uniformly."
+}

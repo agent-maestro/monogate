@@ -1,0 +1,20 @@
+{
+  "session": "S96",
+  "title": "Depth-7 Targeted Search and Convergence Rate",
+  "gaps_from_im_1": {
+    "depth_5": 4.141592653589793,
+    "depth_6": 4.76e-06,
+    "depth_7": null
+  },
+  "depth6_candidates_near_arg_neg1": 0,
+  "beam_found_improvement": false,
+  "convergence": {
+    "rate_5_to_6": 1.1493163133448656e-06,
+    "rate_6_to_7": null,
+    "interpretation": "Depth 5->6: gap drops 4.14 -> 4.76e-06 (factor 1.15e-06). Depth 6->7: NO improvement found via primary construction. Structural reason: arg=-1 inaccessible in depth-6 values via Im=-pi route."
+  },
+  "structural_finding": "STRUCTURAL FINDING: arg=-1 is inaccessible via primary construction route. Depth-5 complex values all have Im=-pi < 0. Im(eml(x, y)) = exp(Re(x))*sin(Im(x)) - arg(y). For x with Im=-pi: sin(-pi)=0, so Im(result) = -arg(y). Since depth-5 complex y have Im=-pi (third quadrant), arg(y) < 0, so Im > 0. These depth-6 values have Im>0, hence arg>0 (if Re>0), NOT near -1. To get arg(y_d6) near -1: need y_d6 with Im=-pi and Re=pi/tan(1)~2.0270. This requires the REAL part of a depth-6 value to equal pi/tan(1) \u2014 the same obstruction as at depth 6. The gap does not shrink by adding depth via this route. Different route (non-Im=-pi depth-6 values) would require exp(Re(x))*sin(Im(x)) to supply the missing precision, but this adds more irrational contributions, not specifically pi/tan(1).",
+  "key_conclusion": "The 4.76e-6 gap at depth 6 is NOT a transient gap that depth 7 can easily close. It reflects the exact constructibility distance of pi/tan(1) from EML_1. Improvement at depth 7 would require a DIFFERENT route to arg=-1, not just more depth.",
+  "pi_over_tan1": 2.017193445143546,
+  "tan1": 1.5574077246549023
+}

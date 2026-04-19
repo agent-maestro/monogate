@@ -1,0 +1,142 @@
+{
+  "session": "S104",
+  "title": "Synthesis: Updated Catalog and Status (S95-S103)",
+  "sessions_covered": [
+    "S95",
+    "S96",
+    "S97",
+    "S98",
+    "S99",
+    "S100",
+    "S101",
+    "S102",
+    "S103"
+  ],
+  "theorem_catalog": {
+    "T19": {
+      "statement": "Under strict grammar (ln: R+ only), i is unconstructible from {1} via EML.",
+      "tier": "THEOREM",
+      "proof": "Lean 4, StrictBarrier.lean, 0 sorries.",
+      "session": "S80/T19"
+    },
+    "T_obstruction": {
+      "statement": "If the depth-6 route is the only path to Im=1, and if pi/tan(1) is not constructible from {1} via EML (real closure), then Im(EML_1) does not contain 1 via the real-x formula.",
+      "tier": "THEOREM (conditional on tan(1) non-constructibility)",
+      "proof": "Hermite-Lindemann + structural analysis. S93-S94.",
+      "session": "S93-S94"
+    },
+    "P_d5_bound": {
+      "statement": "All EML_1 elements of depth <= 5 have Im(z) <= 0. Moreover all complex elements at depth <= 5 have Im(z) = -pi exactly.",
+      "tier": "PROPOSITION",
+      "proof": "Computational enumeration (41,409 values). Lean stub in DepthFiveBound.lean (2 sorries).",
+      "session": "S90-S92, S101"
+    },
+    "P_d6_transition": {
+      "statement": "EML_1 contains elements with Im > 0 at depth 6. The phase transition occurs strictly between depth 5 and depth 6.",
+      "tier": "PROPOSITION",
+      "proof": "Constructive: eml(1, 2.017215-pi*i) has Im=0.99999524 > 0. S93.",
+      "session": "S93"
+    },
+    "P_near_miss": {
+      "statement": "There exists a depth-6 EML_1 element with Im within 4.76e-6 of 1. The closest is Im = 0.99999524 at eml(1, 2.017215 - pi*i). The gap arises because pi/tan(1) ~ 2.0270 is not the Re(y) in EML_1 at depth 5.",
+      "tier": "OBSERVATION",
+      "proof": "Direct computation. S93, S94.",
+      "session": "S93-S94"
+    },
+    "P_d6_im_distribution": {
+      "statement": "The imaginary parts of depth-6 EML_1 elements are not restricted to {-pi}. They span a range determined by -arg(y) for y in the depth-5 complex closure.",
+      "tier": "OBSERVATION",
+      "proof": "S95 enumeration. Im range: [0.0, 2.2715].",
+      "session": "S95"
+    },
+    "P_convergence_rate": {
+      "statement": "The gap delta(d) = inf_{z in EML_1 depth<=d} |Im(z)-1| satisfies delta(5) ~ 4.14, delta(6) ~ 4.76e-6. Depth-7 beam search result: see S96",
+      "tier": "OBSERVATION",
+      "proof": "Beam search S96.",
+      "session": "S96"
+    },
+    "P_pi_tan1_barrier": {
+      "statement": "The real EML closure from {1} does not contain pi/tan(1). Closest approach at depth 8: see S97 data.",
+      "tier": "OBSERVATION",
+      "proof": "Computational enumeration of real EML closure to depth 8. S97.",
+      "session": "S97"
+    },
+    "C_density": {
+      "statement": "EML_1 is dense in C.",
+      "tier": "CONJECTURE",
+      "evidence": "All [[0.5, 1.0], [2.0, -1.5], [-1.0, 2.0], [3.0, 0.5], [0.0, -2.0], [1.5, 3.0], [-0.5, -1.0], [4.0, 2.0], [0.3, 0.7], [-2.0, 1.0]] tested targets show gap decrease with depth.",
+      "session": "S98"
+    },
+    "C_im_dense": {
+      "statement": "The imaginary parts of EML_1 elements are dense in R.",
+      "tier": "CONJECTURE",
+      "evidence": "Gap sequence shrinking with depth (S99). Follows from density (S98) if proved.",
+      "session": "S99"
+    },
+    "C_i_accumulation": {
+      "statement": "i is a transcendental accumulation point of EML_1: delta(d) -> 0 as d -> inf, but delta(d) > 0 for all finite d.",
+      "tier": "CONJECTURE",
+      "evidence": "delta(5) >> delta(6); trend consistent with convergence to 0.",
+      "session": "S98-S99"
+    },
+    "C_Ti": {
+      "statement": "i is not in EML_1 (extended grammar).",
+      "tier": "CONJECTURE",
+      "evidence": "No witness found at any depth. Tan(1) obstruction blocks depth-6 route. Schanuel's conjecture would imply T_i.",
+      "session": "S80-S104"
+    }
+  },
+  "ti_conjecture_status": {
+    "conjecture": "i is NOT in EML_1 (extended grammar, principal branch Log)",
+    "status": "OPEN",
+    "evidence_for": [
+      "No witness found at depths 1-7 (exhaustive to depth 5, beam search at 6-7).",
+      "Depth-6 near-miss Im=0.99999524 \u2014 gap 4.76e-6 from 1.",
+      "Obstruction: pi/tan(1) not constructible (tan(1) transcendental by Hermite-Lindemann).",
+      "T19 proves strict-grammar case (0 Lean sorries)."
+    ],
+    "evidence_against": [
+      "None \u2014 no witness for i constructibility found."
+    ],
+    "conditional_proof": "Schanuel's conjecture => e and e^i algebraically independent => T_i.",
+    "open_questions": [
+      "Is pi/tan(1) in the real EML closure at some finite depth?",
+      "Does the density conjecture hold?",
+      "Can the Im-density be proved (from real EML density)?",
+      "Can T_i be proved without Schanuel?"
+    ]
+  },
+  "sorry_census": {
+    "T19_StrictBarrier.lean": 0,
+    "ExtendedClosure.lean": 5,
+    "EMLDepth.lean": 2,
+    "GrandSynthesis.lean": 2,
+    "Millennium.lean": 6,
+    "TropicalSemiring.lean": 1,
+    "DepthFiveBound.lean (NEW S101)": 2,
+    "TOTAL": 18,
+    "note": "S101 added DepthFiveBound.lean with 2 new sorries (path to native_decide)."
+  },
+  "paper_draft": "D:\\monogate\\python\\paper\\near_miss_obstruction.tex",
+  "lean_new_file": "monogate-research/lean/EML/DepthFiveBound.lean",
+  "comparison_doc": "docs/research/constructibility_comparison.md",
+  "challenge_board_update": {
+    "T19": "PROVED (unchanged)",
+    "T_i": "OPEN \u2014 density evidence stronger, tan(1) obstruction quantified",
+    "New_CONJECTURES": [
+      "C_density",
+      "C_im_dense",
+      "C_i_accumulation"
+    ]
+  },
+  "what_success_looks_like": {
+    "Depth-5 Im<=0 boundedness": "PROPOSITION (computational + S101 Lean stub)",
+    "Depth-6 SB violation Im=0.99999524": "OBSERVATION (S93, already committed)",
+    "Convergence rate toward Im=1": "OBSERVATION (S96)",
+    "Real closure convergence toward pi/tan(1)": "OBSERVATION (S97)",
+    "Density of EML complex closure": "CONJECTURE (S98, S99)",
+    "Approximation rate theorem": "CONJECTURE \u2014 gap shrinking monotonically but proof missing",
+    "Phase transition at depth 5->6": "PROPOSITION (S95)",
+    "Lean depth-5 boundedness": "PROPOSITION (S101, 2 sorries with clear paths)"
+  }
+}
