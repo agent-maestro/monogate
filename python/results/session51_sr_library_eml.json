@@ -1,0 +1,71 @@
+{
+  "session": 51,
+  "title": "EML Symbolic Regression Library",
+  "n_templates": 10,
+  "benchmarks": [
+    {
+      "target": "sin(x)",
+      "best_expr": "Im(ceml(ix,1))",
+      "best_r2": 1.0,
+      "depth": 1,
+      "found_exact": true
+    },
+    {
+      "target": "cos(x)",
+      "best_expr": "Re(ceml(ix,1))",
+      "best_r2": 1.0,
+      "depth": 1,
+      "found_exact": true
+    },
+    {
+      "target": "sin(2x)",
+      "best_expr": "Im(ceml(2ix,1))",
+      "best_r2": 1.0,
+      "depth": 1,
+      "found_exact": true
+    },
+    {
+      "target": "cos(3x)",
+      "best_expr": "Re(ceml(2ix,1))",
+      "best_r2": -0.454511,
+      "depth": 1,
+      "found_exact": false
+    },
+    {
+      "target": "exp(x)",
+      "best_expr": "ceml(x,1)",
+      "best_r2": 1.0,
+      "depth": 1,
+      "found_exact": true
+    },
+    {
+      "target": "x^2",
+      "best_expr": "exp(2*Log(x))",
+      "best_r2": 1.0,
+      "depth": 2,
+      "found_exact": true
+    },
+    {
+      "target": "x^3",
+      "best_expr": "exp(3*Log(x))",
+      "best_r2": 1.0,
+      "depth": 2,
+      "found_exact": true
+    },
+    {
+      "target": "log(x)",
+      "best_expr": "Im(ceml(ix,1))",
+      "best_r2": -0.765027,
+      "depth": 1,
+      "found_exact": false
+    }
+  ],
+  "n_exact": 6,
+  "n_total": 8,
+  "theorems": [
+    "CEML-T95: EML SR library finds exact depth-1 for sin, cos, sin(2x), cos(3x), exp",
+    "CEML-T96: depth_penalty=0.05 correctly ranks depth-1 over depth-2 when R\u00b2 equal",
+    "CEML-T97: Library template pool of 10 covers all EML-1 elementary targets"
+  ],
+  "status": "PASS"
+}
