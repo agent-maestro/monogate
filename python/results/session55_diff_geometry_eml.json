@@ -1,0 +1,106 @@
+{
+  "session": 55,
+  "title": "Differential Geometry and EML",
+  "depth_table": [
+    {
+      "quantity": "Lie exp map exp(\u03b8J) on SO(2)",
+      "depth": 1,
+      "ceml": "ceml(i\u03b8,1) \u2192 rotation matrix"
+    },
+    {
+      "quantity": "Lie exp map exp(tX) on general G",
+      "depth": 1,
+      "ceml": "matrix ceml(tX,1)"
+    },
+    {
+      "quantity": "Great circle (geodesic)",
+      "depth": 1,
+      "ceml": "sin/cos via ceml i-gateway"
+    },
+    {
+      "quantity": "Geodesic distance arccos(\u00b7)",
+      "depth": 2,
+      "ceml": "arccos = \u03c0/2 - arcsin \u2014 depth 2"
+    },
+    {
+      "quantity": "Gaussian curvature K [sphere]",
+      "depth": 0,
+      "ceml": "constant 1/R\u00b2"
+    },
+    {
+      "quantity": "Gaussian curvature K [torus]",
+      "depth": 1,
+      "ceml": "cos(\u03b8)/(r\u00b7(R+r\u00b7cos(\u03b8)))"
+    },
+    {
+      "quantity": "Parallel transport along geodesic",
+      "depth": 1,
+      "ceml": "rotation via ceml(i\u03b8,1)"
+    },
+    {
+      "quantity": "Ricci flow \u2202g/\u2202t = -2Ric",
+      "depth": "EML-\u221e",
+      "ceml": "PDE \u2014 no finite ceml"
+    },
+    {
+      "quantity": "Chern classes c_k",
+      "depth": 0,
+      "ceml": "integer topological invariants"
+    },
+    {
+      "quantity": "Holonomy group (non-flat)",
+      "depth": 1,
+      "ceml": "rotation matrices via i-gateway"
+    }
+  ],
+  "so2_exp": {
+    "results": [
+      {
+        "theta": 0.0,
+        "R11_ok": true,
+        "R21_ok": true,
+        "det_ok": true
+      },
+      {
+        "theta": 0.7853981633974483,
+        "R11_ok": true,
+        "R21_ok": true,
+        "det_ok": true
+      },
+      {
+        "theta": 1.5707963267948966,
+        "R11_ok": true,
+        "R21_ok": true,
+        "det_ok": true
+      },
+      {
+        "theta": 3.141592653589793,
+        "R11_ok": true,
+        "R21_ok": true,
+        "det_ok": true
+      },
+      {
+        "theta": 6.283185307179586,
+        "R11_ok": true,
+        "R21_ok": true,
+        "det_ok": true
+      }
+    ],
+    "all_ok": true
+  },
+  "geodesic_triangle": {
+    "d12": 1.5707963267948966,
+    "d13": 1.5707963267948966,
+    "d23": 1.5707963267948966,
+    "sides_equal_pi_over_2": true,
+    "spherical_excess": "\u03c0/2 (each angle = \u03c0/2, sum = 3\u03c0/2, excess = \u03c0/2)"
+  },
+  "theorems": [
+    "CEML-T112: Lie group exp map exp(\u03b8J) on SO(2) is depth-1 ceml via i-gateway",
+    "CEML-T113: Geodesics on S\u00b2 use sin/cos: depth-1 ceml",
+    "CEML-T114: Geodesic distance arccos(\u00b7) is depth-2 ceml",
+    "CEML-T115: Gaussian curvature of sphere is EML-0 (constant); torus is EML-1",
+    "CEML-T116: Ricci flow and Chern-Weil theory require EML-\u221e (PDE / infinite series)"
+  ],
+  "status": "PASS"
+}
