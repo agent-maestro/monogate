@@ -1,0 +1,70 @@
+{
+  "session": 53,
+  "title": "Information Theory and EML",
+  "depth_table": [
+    {
+      "quantity": "H(P) = -\u03a3 p log p",
+      "ceml_depth": 1,
+      "formula": "ceml(0,p)=1-log(p)"
+    },
+    {
+      "quantity": "KL(P\u2016Q) = \u03a3 p log(p/q)",
+      "ceml_depth": 1,
+      "formula": "log(p/q)=log(p)-log(q)"
+    },
+    {
+      "quantity": "I(X;Y) = H(X)-H(X|Y)",
+      "ceml_depth": 1,
+      "formula": "two log calls, depth 1 each"
+    },
+    {
+      "quantity": "H(X|Y) = -\u03a3 p(x,y)log p(x|y)",
+      "ceml_depth": 1,
+      "formula": "depth 1 per term"
+    },
+    {
+      "quantity": "Channel capacity C = max I(X;Y)",
+      "ceml_depth": "EML-\u221e",
+      "formula": "optimization over distributions"
+    },
+    {
+      "quantity": "AEP: -1/n log P(X^n) \u2192 H",
+      "ceml_depth": 1,
+      "formula": "LLN + log = depth 1"
+    },
+    {
+      "quantity": "Rate-distortion R(D)",
+      "ceml_depth": "EML-\u221e",
+      "formula": "variational, no finite ceml"
+    }
+  ],
+  "verifications": {
+    "H_uniform": {
+      "val": 0.6931471805599454,
+      "expected": 0.6931471805599453,
+      "ok": true
+    },
+    "H_biased_less": true,
+    "KL_PQ": {
+      "ceml": 0.02013551355068892,
+      "ref": 0.020135513550688863,
+      "ok": true
+    },
+    "MI_indep": {
+      "val": 0.0,
+      "ok": true
+    },
+    "MI_dep": {
+      "val": 0.6931471805599454,
+      "expected": 0.6931471805599453,
+      "ok": true
+    }
+  },
+  "theorems": [
+    "CEML-T103: Shannon entropy H(P) is depth-1 ceml: each -p\u00b7log(p) = p\u00b7(ceml(0,p)-1)",
+    "CEML-T104: KL divergence is depth-1 ceml: log(p/q) = ceml(0,q) - ceml(0,p)",
+    "CEML-T105: Mutual information I(X;Y) is depth-1 ceml (all terms are logs)",
+    "CEML-T106: All additive information measures are EML-1; variational measures (R(D), C) are EML-\u221e"
+  ],
+  "status": "PASS"
+}
