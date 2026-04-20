@@ -1,0 +1,58 @@
+{
+  "EMN1": {
+    "structural_proof_holds": true,
+    "best_mse_N11": 0.0,
+    "best_mse_by_n": {
+      "0": 0.6232845314689686,
+      "1": 7.38905609893065,
+      "2": 0.0019429074702189048,
+      "3": 0.01895878439775197,
+      "4": 8.460236845975041e-06,
+      "5": 2.7329386776094685e-05,
+      "6": 3.740575833947142e-12,
+      "7": 5.02683406844651e-24,
+      "8": 0.0
+    },
+    "conclusion": "ln(x) is NOT exactly EMN-representable. Every EMN tree has a nonzero exp(\u00b7) residual. Best approximation approaches ln(x) as depth increases but never reaches it.",
+    "note_floating_point_trap": "N=8 tree achieves IEEE 754 MSE=0 by driving L(x) to ~-1.6e25, causing exp(L) to underflow to 0.0 in double precision. In exact arithmetic the residual exp(L) is nonzero (~1e-{1.6e25}). The structural proof is correct."
+  },
+  "EMN2": {
+    "deml_neg_mse_N9": 0.0017899659622962582,
+    "deml_converging": true,
+    "emn_neg_mse_N9": 0.0,
+    "emn_converging": true,
+    "trichotomy": {
+      "exactly_complete": [
+        "EML"
+      ],
+      "approximately_complete": [
+        "EMN"
+      ],
+      "incomplete": [
+        "DEML",
+        "EAL",
+        "EXL",
+        "EDL",
+        "POW",
+        "LEX"
+      ]
+    }
+  },
+  "EMN3": {
+    "theorem": "ln(x) is not exactly EMN-representable (real or complex)",
+    "proof_method": "Growth rate: R(x) = x\u00b7exp(exp(L)) cannot be an EMN tree (infinite regress)",
+    "corollary_1": "neg(x) not exactly EMN-representable",
+    "corollary_2": "EMN is not exactly complete",
+    "complex_case": "Same argument \u2014 exp(z) \u2260 0 for all z \u2208 \u2102",
+    "status": "Proved (growth rate lemma assumes bounded tower growth, which holds by structural induction)"
+  },
+  "EMN4": {
+    "ln_exactly_constructible": false,
+    "exp_exactly_constructible": false,
+    "approx_complete": true,
+    "mechanism": "Uses complex intermediates; both ln and exp approximable to arbitrary precision",
+    "convergence": "Doubly exponential in tree depth",
+    "tree_size_bound": "O(d * log log(1/eps)) for d-level EML function at precision eps",
+    "theorem": "EMN is approximately complete: for any elementary function f, compact interval [a,b], and eps>0, there exists an EMN tree T (using complex intermediates) with |Re(T(x))-f(x)| < eps on [a,b]."
+  }
+}

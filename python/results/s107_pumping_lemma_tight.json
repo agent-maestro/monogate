@@ -1,0 +1,56 @@
+{
+  "sin_reference": {
+    "zeros": 5,
+    "eml_class": "EML-inf"
+  },
+  "trees": {
+    "eml(x,1)=exp(x)": {
+      "depth": 1,
+      "zeros_observed": 0,
+      "theoretical_bound": 2,
+      "status": "OK"
+    },
+    "eml(1,|x|+e)=e-ln|x|": {
+      "depth": 1,
+      "zeros_observed": 0,
+      "theoretical_bound": 2,
+      "status": "OK"
+    },
+    "eml(eml(x,1),1)=exp(exp(x))": {
+      "depth": 2,
+      "zeros_observed": 0,
+      "theoretical_bound": 4,
+      "status": "OK"
+    },
+    "eml(1,eml(x,1)) for exp(x)>0": {
+      "depth": 2,
+      "zeros_observed": 1,
+      "theoretical_bound": 4,
+      "status": "OK"
+    },
+    "eml(eml(1,|x|+1),1)": {
+      "depth": 2,
+      "zeros_observed": 0,
+      "theoretical_bound": 4,
+      "status": "OK"
+    },
+    "T_id step1: exp(e-x)": {
+      "depth": 3,
+      "zeros_observed": 0,
+      "theoretical_bound": 8,
+      "status": "OK"
+    },
+    "T_id(x)=x (depth-4 identity)": {
+      "depth": 4,
+      "zeros_observed": 1,
+      "theoretical_bound": 16,
+      "status": "OK"
+    }
+  },
+  "conclusion": {
+    "theorem": "Any finite EML tree has finitely many zeros (real-analytic by Hadamard factorization).",
+    "pumping_lemma": "EML-k tree has at most 2^k zeros. Observed max is 0-1, far below bound.",
+    "tight_conjecture": "Tight bound is O(k) or even O(1) for monotone families. 2^k is the loose analytic bound from repeated Rolle's theorem application.",
+    "barrier_corollary": "sin has inf zeros on R -> sin cannot be any EML-k tree for finite k."
+  }
+}

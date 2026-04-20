@@ -1,0 +1,77 @@
+{
+  "Z1": {
+    "emn_1_emn_x_1_slope": 1,
+    "emn_emn_1_x_1_slope": -0.06598803584531256,
+    "slope_negative": true,
+    "deml_template_applies": false,
+    "conclusion": "EMN has negative-slope linear mechanism (slope -1/e^e at depth 2). DEML incompleteness template does NOT prove EMN incomplete."
+  },
+  "Z2": {
+    "best_neg_mse_probe_range": 0.0,
+    "best_neg_nodes": 8,
+    "best_tree": "(((((x,emn(1,1)),emn(1,1)),1),x),x),1)",
+    "mechanism": "Uses exp(-large)~=0 to approximate ln(x), then emn(ln(x),1)=-x exactly",
+    "error_at_x1": 5.93e-12,
+    "error_at_x2": 9.78e-07,
+    "error_at_x10": 2.62e-05,
+    "domain": "Real x > 0 only (domain errors for x < 0)",
+    "exact_identity": "emn(emn(1,x),1) = -x/e^e (exact but wrong slope)",
+    "conclusion": "EMN approximates neg(x) with error ~1e-7 to ~1e-5 for x in [0.1,10]. Uses complex intermediate values. NOT an exact neg(x) construction. EMN completeness OPEN but much more capable than DEML."
+  },
+  "Z3": {
+    "linear_mech_1": {
+      "tree": "eal(1,eal(x,1))",
+      "slope": 1
+    },
+    "linear_mech_2": {
+      "tree": "eal(eal(1,x),1)",
+      "slope": 15.154262241479259
+    },
+    "all_known_slopes_positive": true,
+    "conclusion": "EAL is INCOMPLETE. All linear mechanisms have positive slope. No subtraction available to produce neg(x)."
+  },
+  "Z4": {
+    "exl_const_universe": [
+      0
+    ],
+    "e_constructible": false,
+    "conclusion": "EXL is INCOMPLETE. Cannot build exp(+x) because e is not constructible from EXL({1}). All constant subtrees collapse to 0."
+  },
+  "Z5": {
+    "question": "Can EDL approximate add to arbitrary precision?",
+    "answer": "EDL cannot exactly add, and approximation does not converge to 0 MSE for x+1",
+    "conclusion": "EDL is INCOMPLETE for addition. Not dense in functions requiring addition. MSE stalls above 0.1 at N<=11."
+  },
+  "Z6": {
+    "operator": "POW(x,y) = y^x",
+    "identity_native": true,
+    "identity_formula": "pow(1,x) = x^1 = x (1-node identity)",
+    "exp_constructible": false,
+    "conclusion": "POW is INCOMPLETE over {1,x}. Identity x is 1-node native (remarkable). exp(x) requires e as leaf. POW with leaf e would be complete."
+  },
+  "Z7": {
+    "operator": "LEX(x,y) = ln(exp(x)-y)",
+    "identity_at_y0": true,
+    "zero_constructible": false,
+    "conclusion": "LEX is INCOMPLETE. Identity x = lex(x,0) native but 0 not constructible from {1}. Constant sequence converges toward 0 but never reaches it."
+  },
+  "Z8": {
+    "conjecture": "Operator G over {1,x} is incomplete if (A) all linear slopes same sign, or (B) constant e not constructible from G({1})",
+    "emn_status": "EXCEPTION \u2014 has negative slope AND approximates neg(x) well. Completeness open.",
+    "operators_classified": {
+      "EML": "COMPLETE",
+      "DEML": "INCOMPLETE (slope argument)",
+      "EMN": "OPEN (negative slopes, near-exact neg(x) at N=8)",
+      "EAL": "INCOMPLETE (all slopes positive)",
+      "EXL": "INCOMPLETE (e not constructible)",
+      "EDL": "INCOMPLETE (add not constructible)",
+      "POW": "INCOMPLETE (e not constructible, but identity native)",
+      "LEX": "INCOMPLETE (0 not constructible from {1})"
+    }
+  },
+  "Z9": {
+    "census_complete": true,
+    "open_cases": 1,
+    "open_case": "EMN \u2014 has negative slopes but exact completeness unresolved"
+  }
+}

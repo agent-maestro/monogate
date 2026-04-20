@@ -1,0 +1,77 @@
+{
+  "NEG1": {
+    "construction": "emn(exl(0, x), 1)",
+    "derivation": "exl(0,x)=ln(x), emn(ln(x),1)=ln(1)-exp(ln(x))=0-x=-x",
+    "node_count": 2,
+    "domain": "x > 0",
+    "verified": true,
+    "max_error": 4.440892098500626e-16,
+    "n1_constructions_found": 0,
+    "status": "PROVED OPTIMAL (positive domain) \u2014 no 1-node construction exists"
+  },
+  "NEG2": {
+    "zero_bootstrap": "exl(1, 1) = exp(1)*ln(1) = 0  [1 node via EXL]",
+    "zero_in_superbest": "0 already a free constant (0 nodes); exl(T,1)=0 confirms easy construction if needed",
+    "exhaustive_pos_domain": "minimum N = 4",
+    "min_description": "emn(1, eml(eml(1, eml(x, 1)), 1))",
+    "all_2node_neg_count": 0,
+    "example_2node_constructions": []
+  },
+  "NEG3": {
+    "general_domain_search": "N=1..5 exhaustive: found at N=5",
+    "general_domain_description": "eml(1, exl(x, eml(eml(eml(1, 1), 1), 1)))",
+    "general_domain_best_known": "6n (EDL chain)",
+    "optimality": "Positive domain: PROVED optimal at 2n. General domain: 6n best known."
+  },
+  "ADD1": {
+    "construction": "eal(exl(0, x), eml(y, 1)) = x + y",
+    "derivation": "exl(0,x)=ln(x), eml(y,1)=exp(y), eal(ln(x),exp(y))=x+y",
+    "node_count": 3,
+    "domain": "x > 0",
+    "max_error": 0.0,
+    "verified": true,
+    "reconciliation": "SuperBEST table already has add=3n (FAM-C2). Consistent.",
+    "single_op_cost": "11n (EML) \u2014 proved optimal for single-operator add"
+  },
+  "ADD2": {
+    "domain_table": {
+      "mul": "x > 0",
+      "add": "x > 0",
+      "sub": "x > 0",
+      "ln": "x > 0"
+    },
+    "neg_pos_domain": "x > 0",
+    "neg_gen_domain": "all x",
+    "recip_domain": "x \u2260 0",
+    "div_domain": "x \u2260 0",
+    "exp_domain": "all x",
+    "static_analysis_opportunity": "If x = exp(z), x > 0 guaranteed \u2014 use 2n neg instead of 6n"
+  },
+  "ADD3": {
+    "unrestricted_add_search": "N=1..5: not found",
+    "unrestricted_add_description": null,
+    "conclusion": "General-domain add: 11n (EML) remains best. Mixed ops don't help without x>0."
+  },
+  "ADD4": {
+    "superbest_updated": {
+      "neg_positive_domain": 2,
+      "neg_general_domain": 6
+    },
+    "total_positive_domain_nodes": 19,
+    "total_general_domain_nodes": 23,
+    "total_naive_nodes": 73,
+    "savings_positive_domain_pct": 74.0,
+    "savings_general_domain_pct": 68.5,
+    "neg_improvement": "6n \u2192 2n = -4 nodes per neg call (positive domain)"
+  },
+  "summary": {
+    "neg_closed": true,
+    "neg_positive_domain_nodes": 2,
+    "neg_general_domain_nodes": 6,
+    "neg_construction_pos": "emn(exl(0, x), 1)",
+    "add_confirmed": true,
+    "add_nodes": 3,
+    "savings_positive": "74.0%",
+    "savings_general": "68.5%"
+  }
+}

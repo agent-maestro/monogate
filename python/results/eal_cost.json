@@ -1,0 +1,76 @@
+{
+  "EAL_A1": {
+    "construction": "eal(x, 1) = exp(x)",
+    "node_count": 1,
+    "proof": "eal(x,1) = exp(x) + ln(1) = exp(x) + 0 = exp(x)",
+    "status": "EXACT, 1 node"
+  },
+  "EAL_A2": {
+    "ln_representable_in_EAL": false,
+    "structural_proof": "eal(f,g) = exp(f)+ln(g) = ln(x) requires exp(f)=0 which is impossible for all x simultaneously",
+    "exhaustive_best_mse": {
+      "0": 0.670788102585948,
+      "1": 5.040364599543947,
+      "2": 10.301638168116215,
+      "3": 12.361188177087175,
+      "4": 12.92486849695213,
+      "5": 13.065303307640344
+    },
+    "is_converging_to_zero": false,
+    "conclusion": "ln(x) is NOT EAL-representable. The positive exp(f) residual cannot be globally eliminated.",
+    "note": "This is a strictly stronger obstruction than the slope argument used in Z3. Z3 showed EAL cannot compute neg(x); this shows EAL cannot compute ln(x)."
+  },
+  "EAL_A3": {
+    "identity": "eal(ln(x), exp(y)) = x + y",
+    "cost_ln_in_EAL": "IMPOSSIBLE",
+    "cost_ln_in_EXL": 1,
+    "cost_exp_in_EAL": 1,
+    "cost_exp_in_EML": 1,
+    "total_add_nodes": 3,
+    "operators_needed": "Mixed(EXL/EML/EAL)",
+    "pure_EAL_add": "IMPOSSIBLE",
+    "conclusion": "add(x,y) = 3 nodes via EAL bridge, but only with external EXL for ln(x). Pure EAL cannot add."
+  },
+  "EAL_A4": {
+    "proposed_construction": "exp(eal(ln(x), exp(ln(y))))",
+    "actual_result": "y * exp(x)",
+    "intended_result": "x * y",
+    "error": "exp(ln(x)) = x, not ln(x). The EAL bridge applies exp to its left argument, so eal(ln(x), B) = x + ln(B), not ln(x) + ln(B).",
+    "correction": "For ln(x) + ln(y) via EAL: use eal(ln(ln(x)), y) = exp(ln(ln(x))) + ln(y) = ln(x) + ln(y)"
+  },
+  "EAL_A5": {
+    "correct_mul_construction": "eml(eal(exl(0,exl(0,x)), y), 1) = xy",
+    "node_breakdown": {
+      "L1_ln_x": {
+        "op": "EXL",
+        "nodes": 1,
+        "cost": "exl(0,x)=ln(x)"
+      },
+      "L2_ln_ln_x": {
+        "op": "EXL",
+        "nodes": 1,
+        "cost": "exl(0,L1)=ln(ln(x))"
+      },
+      "S_sum": {
+        "op": "EAL",
+        "nodes": 1,
+        "cost": "eal(L2,y)=ln(x)+ln(y)"
+      },
+      "R_product": {
+        "op": "EML",
+        "nodes": 1,
+        "cost": "eml(S,1)=exp(S)=xy"
+      }
+    },
+    "total_nodes_free_zero": 4,
+    "total_nodes_strict": 5,
+    "comparison": {
+      "EDL_single_op": 7,
+      "EML_single_op": 13,
+      "mixed_EXL_EAL_EML": 4,
+      "improvement_vs_EDL": 3
+    },
+    "EAL_role": "EAL provides the 1-node bridge combination eal(ln(ln(x)), y)=ln(x)+ln(y). It cannot generate ln itself \u2014 depends on EXL.",
+    "why_4n_optimal": "Each of: ln(x), ln(ln(x)), combination, exp-decode costs at minimum 1 node. Four unavoidable roles \u2192 4 node lower bound."
+  }
+}

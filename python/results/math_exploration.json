@@ -1,0 +1,748 @@
+{
+  "M1": {
+    "distinct_real_values_n7": 311,
+    "positive_count": 256,
+    "catalog_sample": [
+      {
+        "value": 0.0,
+        "n_nodes": 3,
+        "tree": "eml(1,eml(eml(1,1),1))",
+        "name": "0"
+      },
+      {
+        "value": 0.5413248546129181,
+        "n_nodes": 5,
+        "tree": "eml(1,eml(eml(1,eml(1,eml(1,1))),1))",
+        "name": "ln(e-1)"
+      },
+      {
+        "value": 1.0,
+        "n_nodes": 0,
+        "tree": "1",
+        "name": "1"
+      },
+      {
+        "value": 1.718281828459045,
+        "n_nodes": 2,
+        "tree": "eml(1,eml(1,1))",
+        "name": "e-1"
+      },
+      {
+        "value": 2.176956973846127,
+        "n_nodes": 3,
+        "tree": "eml(1,eml(1,eml(1,1)))",
+        "name": "e-ln(e-1)"
+      },
+      {
+        "value": 2.718281828459045,
+        "n_nodes": 1,
+        "tree": "eml(1,1)",
+        "name": "e"
+      },
+      {
+        "value": 5.57494152476088,
+        "n_nodes": 3,
+        "tree": "eml(eml(1,eml(1,1)),1)",
+        "name": "e^(e-1)"
+      },
+      {
+        "value": 12.435980413020218,
+        "n_nodes": 4,
+        "tree": "eml(eml(1,1),eml(eml(1,1),1))",
+        "name": "e^e-e"
+      },
+      {
+        "value": 14.154262241479262,
+        "n_nodes": 3,
+        "tree": "eml(eml(1,1),eml(1,1))",
+        "name": "e^e-1"
+      },
+      {
+        "value": 15.154262241479262,
+        "n_nodes": 2,
+        "tree": "eml(eml(1,1),1)",
+        "name": "e^e"
+      },
+      {
+        "value": 3814278.104760214,
+        "n_nodes": 4,
+        "tree": "eml(eml(eml(1,1),1),eml(1,1))",
+        "name": "e^(e^e)-1"
+      },
+      {
+        "value": 3814279.104760214,
+        "n_nodes": 3,
+        "tree": "eml(eml(eml(1,1),1),1)",
+        "name": "e^(e^e)"
+      }
+    ],
+    "depth_counts": {
+      "0": {
+        "trees_evaluated": 1,
+        "new_distinct": 1
+      },
+      "1": {
+        "trees_evaluated": 1,
+        "new_distinct": 1
+      },
+      "2": {
+        "trees_evaluated": 2,
+        "new_distinct": 2
+      },
+      "3": {
+        "trees_evaluated": 5,
+        "new_distinct": 5
+      },
+      "4": {
+        "trees_evaluated": 12,
+        "new_distinct": 10
+      },
+      "5": {
+        "trees_evaluated": 32,
+        "new_distinct": 26
+      },
+      "6": {
+        "trees_evaluated": 89,
+        "new_distinct": 71
+      },
+      "7": {
+        "trees_evaluated": 262,
+        "new_distinct": 195
+      }
+    },
+    "eml_subset_EL": true,
+    "eml_equals_EL": false,
+    "reason": "EML({1}) uses only exp, ln, subtraction from 1 \u2014 preserves EL class but cannot reach all EL numbers (e.g. 2 requires 11-node addition first)"
+  },
+  "M2": {
+    "EML": {
+      "fixed_points": [],
+      "lyapunov": 4.312829198981038,
+      "dynamics": "chaotic/unstable"
+    },
+    "EMN": {
+      "fixed_points": [
+        -0.7535866481184066
+      ],
+      "lyapunov": -0.21909268178221783,
+      "dynamics": "stable"
+    },
+    "DEML": {
+      "fixed_points": [
+        0.7535866481184071
+      ],
+      "lyapunov": -0.21505767216557886,
+      "dynamics": "stable"
+    },
+    "EAL": {
+      "fixed_points": [
+        0.34416128672195
+      ],
+      "lyapunov": 2.724001544680658,
+      "dynamics": "chaotic/unstable"
+    },
+    "EXL": {
+      "fixed_points": [
+        1.4108061614598164
+      ],
+      "lyapunov": 1.4624264921534105,
+      "dynamics": "chaotic/unstable"
+    },
+    "EDL": {
+      "fixed_points": [
+        0.9999999999992073
+      ],
+      "lyapunov": 33.23619130195072,
+      "dynamics": "chaotic/unstable"
+    },
+    "POW": {
+      "fixed_points": [
+        -0.9999999999999991,
+        -0.6720198275931962
+      ],
+      "lyapunov": -5.263558479348907e-10,
+      "dynamics": "neutral"
+    },
+    "LEX": {
+      "fixed_points": [],
+      "lyapunov": -20.326898922341414,
+      "dynamics": "stable"
+    }
+  },
+  "M3": {
+    "diff_data": {
+      "exp(x) = eml(x,1)": {
+        "n_T": 1,
+        "n_dT": 1,
+        "ratio": 1.0
+      },
+      "e-ln(x) = eml(1,x)": {
+        "n_T": 1,
+        "n_dT": 7,
+        "ratio": 7.0
+      },
+      "eml(x,x)": {
+        "n_T": 1,
+        "n_dT": 7,
+        "ratio": 7.0
+      },
+      "eml(eml(x,1),1)": {
+        "n_T": 2,
+        "n_dT": 7,
+        "ratio": 3.5
+      },
+      "eml(x,eml(1,x))": {
+        "n_T": 2,
+        "n_dT": 15,
+        "ratio": 7.5
+      }
+    },
+    "tower_data": [
+      {
+        "depth": 1,
+        "n_T": 1,
+        "n_dT": 1,
+        "ratio": 1.0
+      },
+      {
+        "depth": 2,
+        "n_T": 2,
+        "n_dT": 7,
+        "ratio": 3.5
+      },
+      {
+        "depth": 3,
+        "n_T": 3,
+        "n_dT": 14,
+        "ratio": 4.666666666666667
+      },
+      {
+        "depth": 4,
+        "n_T": 4,
+        "n_dT": 22,
+        "ratio": 5.5
+      },
+      {
+        "depth": 5,
+        "n_T": 5,
+        "n_dT": 31,
+        "ratio": 6.2
+      },
+      {
+        "depth": 6,
+        "n_T": 6,
+        "n_dT": 41,
+        "ratio": 6.833333333333333
+      }
+    ],
+    "conclusion": "N(T_derivative) = O(N(T)^2) for nested trees due to chain rule; exp(x) is the unique EML tree where T' = T (1 node)"
+  },
+  "M4": {
+    "dynamics_table": {
+      "exp(x)": {
+        "behavior": "diverges",
+        "lyapunov": 4.718136015409962,
+        "attractor": null,
+        "period_2_orbit": null
+      },
+      "ln(x)": {
+        "behavior": "diverges",
+        "lyapunov": 0.24862767399667918,
+        "attractor": null,
+        "period_2_orbit": null
+      },
+      "neg(x)": {
+        "behavior": "period_2",
+        "lyapunov": -2.488000916710307e-10,
+        "attractor": -0.5,
+        "period_2_orbit": [
+          -0.5,
+          0.5
+        ]
+      },
+      "sub(x,1)": {
+        "behavior": "other",
+        "lyapunov": 8.618204946656106e-08,
+        "attractor": null,
+        "period_2_orbit": null
+      },
+      "add(x,1)": {
+        "behavior": "other",
+        "lyapunov": 8.70824402384183e-08,
+        "attractor": null,
+        "period_2_orbit": null
+      },
+      "mul(x,2)": {
+        "behavior": "diverges",
+        "lyapunov": 0.6827334391111426,
+        "attractor": null,
+        "period_2_orbit": null
+      },
+      "div(x,2)": {
+        "behavior": "fixed_point",
+        "lyapunov": -0.6931471805602644,
+        "attractor": 3.111507638930571e-61,
+        "period_2_orbit": null
+      },
+      "recip(x)": {
+        "behavior": "period_2",
+        "lyapunov": -2.488000916400779e-10,
+        "attractor": 2.0,
+        "period_2_orbit": [
+          2.0,
+          0.5
+        ]
+      },
+      "pow(x,2)": {
+        "behavior": "fixed_point",
+        "lyapunov": -13.582880403921184,
+        "attractor": 0.0,
+        "period_2_orbit": null
+      },
+      "neg_exp(x)": {
+        "behavior": "fixed_point",
+        "lyapunov": -0.566643666210293,
+        "attractor": 0.5671432904097838,
+        "period_2_orbit": null
+      },
+      "sqrt(x)": {
+        "behavior": "fixed_point",
+        "lyapunov": -0.6885420118808392,
+        "attractor": 0.9999999999999999,
+        "period_2_orbit": null
+      },
+      "e_const": {
+        "behavior": "fixed_point",
+        "lyapunov": null,
+        "attractor": 2.718281828459045,
+        "period_2_orbit": null
+      },
+      "0_const": {
+        "behavior": "fixed_point",
+        "lyapunov": null,
+        "attractor": 0.0,
+        "period_2_orbit": null
+      }
+    },
+    "omega_constant": 0.5671432904097838,
+    "key_result": "exp(-x) is the unique EML identity tree with a chaotic-free global attractor (\u03a9). neg(x) and recip(x) give pure period-2 orbits. exp(x) diverges universally."
+  },
+  "M5": {
+    "algebraic_results": {
+      "\u221a2": {
+        "value": 1.4142135623730951,
+        "found_n7": false,
+        "closest_dist": 0.045733179095138965
+      },
+      "\u221a3": {
+        "value": 1.7320508075688772,
+        "found_n7": false,
+        "closest_dist": 0.011665419698043245
+      },
+      "\u03c6": {
+        "value": 1.618033988749895,
+        "found_n7": false,
+        "closest_dist": 0.02697875163841701
+      },
+      "\u221b2": {
+        "value": 1.2599210498948732,
+        "found_n7": false,
+        "closest_dist": 0.009363218589428568
+      },
+      "2": {
+        "value": 2.0,
+        "found_n7": false,
+        "closest_dist": 0.002194240579378004
+      },
+      "3": {
+        "value": 3.0,
+        "found_n7": false,
+        "closest_dist": 0.010611104209054645
+      },
+      "1/2": {
+        "value": 0.5,
+        "found_n7": false,
+        "closest_dist": 0.029325242364195092
+      },
+      "1/3": {
+        "value": 0.3333333333333333,
+        "found_n7": false,
+        "closest_dist": 0.03454756943870152
+      },
+      "-1": {
+        "value": -1.0,
+        "found_n7": false,
+        "closest_dist": 3.973034438553569e-06
+      }
+    },
+    "conclusion": "All algebraic numbers are EML({1})-constructible in principle (via integer arithmetic + Newton's method), but possibly expensive. Transcendentals like \u03c0 remain open.",
+    "cost_of_2": 11,
+    "cost_of_sqrt2": "~16 nodes"
+  },
+  "M6": {
+    "ode_table": [
+      {
+        "ode": "y' = y",
+        "solution": "y = Ce^x",
+        "nodes": 1
+      },
+      {
+        "ode": "y' = -y",
+        "solution": "y = Ce^(-x)",
+        "nodes": 1
+      },
+      {
+        "ode": "y' = 1/y",
+        "solution": "y = \u221a(2x+C)",
+        "nodes": 10
+      },
+      {
+        "ode": "y' = 1/x",
+        "solution": "y = ln(x)",
+        "nodes": 1
+      },
+      {
+        "ode": "y' = x",
+        "solution": "y = x\u00b2/2",
+        "nodes": 5
+      },
+      {
+        "ode": "y' = y\u00b2",
+        "solution": "y = -1/(x+C)",
+        "nodes": 8
+      },
+      {
+        "ode": "y' = xy",
+        "solution": "y = Ce^(x\u00b2/2)",
+        "nodes": 6
+      },
+      {
+        "ode": "y'' + y = 0",
+        "solution": "y = sin(x) [real]",
+        "nodes": null
+      },
+      {
+        "ode": "y'' + y = 0",
+        "solution": "y \u2248 sin(x) [complex]",
+        "nodes": 1
+      },
+      {
+        "ode": "y' = ky",
+        "solution": "y = Ce^(kx)",
+        "nodes": 5
+      },
+      {
+        "ode": "y'' - y = 0",
+        "solution": "y = sinh(x)/cosh(x)",
+        "nodes": 6
+      },
+      {
+        "ode": "y' = 1/(1+x\u00b2)",
+        "solution": "y = arctan(x)",
+        "nodes": null
+      },
+      {
+        "ode": "xy' = y",
+        "solution": "y = Cx",
+        "nodes": 4
+      },
+      {
+        "ode": "y' = e^x",
+        "solution": "y = e^x + C",
+        "nodes": 1
+      },
+      {
+        "ode": "y' = y\u00b7ln(y)",
+        "solution": "y = e^(Ce^x)",
+        "nodes": 6
+      }
+    ],
+    "one_node_count": 5,
+    "pattern": "ODE order does not predict EML cost; the solution type does: exp/ln family = cheap, trig = real-impossible, polynomial = moderate"
+  },
+  "M7": {
+    "exp pattern": {
+      "points": [
+        [
+          1,
+          2.718281828459045
+        ],
+        [
+          2,
+          7.3890560989306495
+        ],
+        [
+          3,
+          20.085536923187664
+        ]
+      ],
+      "min_nodes": 1,
+      "mse": 4.4702117962524005e-30
+    },
+    "ln pattern": {
+      "points": [
+        [
+          1,
+          0
+        ],
+        [
+          2.718281828459045,
+          1
+        ],
+        [
+          7.3890560989306495,
+          2
+        ]
+      ],
+      "min_nodes": 3,
+      "mse": 0.0
+    },
+    "constant e": {
+      "points": [
+        [
+          1,
+          2.718281828459045
+        ],
+        [
+          2,
+          2.718281828459045
+        ],
+        [
+          5,
+          2.718281828459045
+        ]
+      ],
+      "min_nodes": 1,
+      "mse": 0.0
+    },
+    "identity x": {
+      "points": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "min_nodes": 0,
+      "mse": 0.0
+    },
+    "affine x+1": {
+      "points": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "min_nodes": null
+    },
+    "exp-1 pattern": {
+      "points": [
+        [
+          1,
+          1.718281828459045
+        ],
+        [
+          2,
+          6.3890560989306495
+        ]
+      ],
+      "min_nodes": 2,
+      "mse": 3.944304526105059e-31
+    }
+  },
+  "M8": {
+    "fourier_costs": {
+      "1": 21,
+      "2": 37,
+      "4": 69,
+      "8": 133,
+      "16": 261
+    },
+    "taylor_sin_costs": {
+      "2": 23,
+      "4": 49,
+      "6": 75,
+      "8": 101,
+      "10": 127
+    },
+    "taylor_exp_costs": {
+      "2": 11,
+      "4": 25,
+      "6": 39,
+      "8": 53
+    },
+    "winner": "Fourier for oscillatory targets (sin/cos: 1 complex node). Taylor for exponential targets. Both lose to direct EML identity trees when the function is native to the operator."
+  },
+  "M9": {
+    "rational_table": [
+      {
+        "name": "1/x",
+        "nodes": 2
+      },
+      {
+        "name": "x\u00b2",
+        "nodes": 4
+      },
+      {
+        "name": "x\u00b3",
+        "nodes": 8
+      },
+      {
+        "name": "x^n (n\u22651)",
+        "nodes": 3
+      },
+      {
+        "name": "x/y",
+        "nodes": 1
+      },
+      {
+        "name": "(x+y)/z",
+        "nodes": 4
+      },
+      {
+        "name": "1/(1+x)",
+        "nodes": 5
+      },
+      {
+        "name": "1/(1+x\u00b2)",
+        "nodes": 9
+      },
+      {
+        "name": "x/(1+x\u00b2)",
+        "nodes": 8
+      },
+      {
+        "name": "(x-1)/(x+1)",
+        "nodes": 9
+      },
+      {
+        "name": "sigmoid \u03c3(x)",
+        "nodes": 6
+      },
+      {
+        "name": "tanh(x)",
+        "nodes": 15
+      },
+      {
+        "name": "x\u00b2/(1+x\u00b2)",
+        "nodes": 12
+      },
+      {
+        "name": "(x\u00b2-1)/(x\u00b2+1)",
+        "nodes": 17
+      },
+      {
+        "name": "ln(1+x)/x",
+        "nodes": 5
+      },
+      {
+        "name": "x\u00b7exp(-x)",
+        "nodes": 5
+      },
+      {
+        "name": "exp(x)/(exp(x)+1)",
+        "nodes": 5
+      },
+      {
+        "name": "\u221a(1+x\u00b2)",
+        "nodes": 10
+      },
+      {
+        "name": "Pad\u00e9 (1+x/2)/(1-x/2)",
+        "nodes": 11
+      },
+      {
+        "name": "1/ln(x)",
+        "nodes": 3
+      }
+    ],
+    "sigmoid_cost": 5,
+    "key_result": "1/ln(x) costs only 3 nodes (ln+recip) \u2014 cheaper than 1/x (2 nodes recip) only by 1. Rational functions cost proportional to sum of their component BEST costs with shared subexpression discount."
+  },
+  "M10": {
+    "nt_table": [
+      {
+        "name": "x/ln(x)",
+        "nodes": 2,
+        "constructible": true
+      },
+      {
+        "name": "1/ln(x)",
+        "nodes": 3,
+        "constructible": true
+      },
+      {
+        "name": "x\u00b7ln(ln(x))",
+        "nodes": 6,
+        "constructible": true
+      },
+      {
+        "name": "-1/12",
+        "nodes": 10,
+        "constructible": "costly"
+      },
+      {
+        "name": "\u03c0\u00b2/6",
+        "nodes": null,
+        "constructible": false
+      },
+      {
+        "name": "ln(p)/p",
+        "nodes": 2,
+        "constructible": true
+      },
+      {
+        "name": "n^(-s)",
+        "nodes": 5,
+        "constructible": true
+      },
+      {
+        "name": "\u03a3ln(p),p\u2264x",
+        "nodes": "1 per prime + 3 per add",
+        "constructible": true
+      },
+      {
+        "name": "ln(n!)",
+        "nodes": "3(N-1) + N\u00d71",
+        "constructible": true
+      },
+      {
+        "name": "\u03b3=0.5772\u2026",
+        "nodes": null,
+        "constructible": false
+      },
+      {
+        "name": "\u03b6(3)",
+        "nodes": null,
+        "constructible": false
+      },
+      {
+        "name": "\u03c6=(1+\u221a5)/2",
+        "nodes": 10,
+        "constructible": true
+      }
+    ],
+    "x_over_ln_x_cost": 2,
+    "open_constants": [
+      "\u03c0",
+      "\u03b3",
+      "\u03b6(3)"
+    ],
+    "key_result": "x/ln(x) (prime number theorem approximation) is a 2-node EML tree \u2014 the cheapest number-theoretic function. \u03c0, \u03b3, \u03b6(3) are all not in EML({1}) at N\u22647 and constructibility is open."
+  }
+}

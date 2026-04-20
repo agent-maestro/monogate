@@ -1,0 +1,209 @@
+{
+  "GEO_G1": {
+    "operation": "Hyperbolic distance (Poincare upper half-plane)",
+    "construction": "eml(ln(u+sqrt(u^2-1)), 1) where u = 1 + |z1-z2|^2/(2*Im(z1)*Im(z2))",
+    "nodes_superbest": 38,
+    "nodes_naive": "~100",
+    "verified": true,
+    "note": "arccosh via EML: eml(log(u+sqrt(u^2-1)),1) = u+sqrt(u^2-1)-0 = d"
+  },
+  "GEO_G2": {
+    "S1_exp_map": {
+      "nodes": 1,
+      "type": "complex EML",
+      "construction": "ceml(i*(theta+v), 1)"
+    },
+    "S1_log_map": {
+      "nodes": 1,
+      "type": "complex EML",
+      "construction": "Im(ceml(log(q/p), 1))... = 1n"
+    },
+    "S2_exp_map": {
+      "nodes_superbest": 24,
+      "notes": "sin/cos share 1 complex EML node"
+    },
+    "verified": true
+  },
+  "GEO_G3": {
+    "bregman_kl_eml": "12n SuperBEST with sub-expression sharing",
+    "verified": true,
+    "dual_coordinates": "1n for Gaussian (linear map)",
+    "note": "EAL bridge used for final addition step"
+  },
+  "GEO_G4": {
+    "K_for_z_eq_ln_r": "-1/r^2",
+    "nodes_superbest": 7,
+    "nodes_classical_formula": 25,
+    "special_cases": {
+      "hyperbolic_plane": "K=-1, 0 nodes (constant)",
+      "sphere_R": "K=1/R^2, 5n"
+    },
+    "note": "neg=2n via exl(0,deml(x,1)) \u2014 SuperBEST (was 6n in old table)"
+  },
+  "GEO_G5": {
+    "vertical_geodesic": {
+      "formula": "y0*exp(t)",
+      "nodes": 4
+    },
+    "circular_geodesic": {
+      "formula": "c + R*exp(it)",
+      "nodes": "1 complex EML + 1 mul"
+    },
+    "christoffel_per_component": 2,
+    "geodesic_ode_rhs_nodes": 17,
+    "classical_nodes": 25
+  },
+  "GEO_G6": {
+    "SO2_exp": {
+      "formula": "ceml(i*theta, 1)",
+      "nodes": 1,
+      "exact": true
+    },
+    "SE2_exp": {
+      "nodes_superbest": 7,
+      "notes": "sin/cos shared from 1 complex EML node"
+    }
+  },
+  "GEO_G7": {
+    "stereographic_projection": {
+      "nodes": 4,
+      "formula": "(x+iy)/(1-z)"
+    },
+    "cayley_transform": {
+      "nodes": 7,
+      "formula": "(z-i)/(z+i)"
+    },
+    "mobius_transform": {
+      "nodes": 13,
+      "formula": "(az+b)/(cz+d)"
+    }
+  },
+  "GEO_G8": {
+    "mean_curvature_general": {
+      "nodes": 19,
+      "description": "from derivative data"
+    },
+    "curvature_y_x2": {
+      "nodes": 13,
+      "formula": "2/(1+4x^2)^(3/2)"
+    },
+    "eml3_approximation": {
+      "depth": 3,
+      "approx_error": "~15%"
+    }
+  },
+  "GEO_G9": {
+    "cross_ratio_full": {
+      "nodes": 19,
+      "formula": "(z1-z3)(z2-z4)/((z1-z4)(z2-z3))"
+    },
+    "log_cross_ratio": {
+      "nodes": 13,
+      "via": "EXL + add/sub chain",
+      "savings_over_full": 6
+    }
+  },
+  "GEO_G10": {
+    "catalog": [
+      {
+        "primitive": "Hyperbolic distance d(z1,z2)",
+        "nodes_superbest": 38,
+        "nodes_naive": 100,
+        "operator": "EML",
+        "exact": true,
+        "domain": "Upper half-plane"
+      },
+      {
+        "primitive": "S\u00b9 exp/log map",
+        "nodes_superbest": 1,
+        "nodes_naive": 8,
+        "operator": "EML (complex)",
+        "exact": true,
+        "domain": "Unit circle"
+      },
+      {
+        "primitive": "S\u00b2 exp map",
+        "nodes_superbest": 24,
+        "nodes_naive": 50,
+        "operator": "EML (complex)",
+        "exact": true,
+        "domain": "2-sphere"
+      },
+      {
+        "primitive": "Bregman KL divergence",
+        "nodes_superbest": 12,
+        "nodes_naive": 40,
+        "operator": "Mixed EXL/EML/EAL",
+        "exact": true,
+        "domain": "x,y>0"
+      },
+      {
+        "primitive": "Gaussian curvature K(z=ln r)",
+        "nodes_superbest": 7,
+        "nodes_naive": 25,
+        "operator": "EML+EDL (mul+recip+neg=2n)",
+        "exact": true,
+        "domain": "r>0"
+      },
+      {
+        "primitive": "Geodesic (vertical, hyperbolic)",
+        "nodes_superbest": 4,
+        "nodes_naive": 12,
+        "operator": "EML",
+        "exact": true,
+        "domain": "Upper half-plane"
+      },
+      {
+        "primitive": "Geodesic (circular, hyperbolic)",
+        "nodes_superbest": 2,
+        "nodes_naive": 12,
+        "operator": "EML (complex)",
+        "exact": true,
+        "domain": "Upper half-plane"
+      },
+      {
+        "primitive": "SO(2) Lie exp map",
+        "nodes_superbest": 1,
+        "nodes_naive": 8,
+        "operator": "EML (complex)",
+        "exact": true,
+        "domain": "All \u03b8"
+      },
+      {
+        "primitive": "SE(2) Lie exp map",
+        "nodes_superbest": 7,
+        "nodes_naive": 20,
+        "operator": "EML (complex)",
+        "exact": true,
+        "domain": "All (\u03c9,v)"
+      },
+      {
+        "primitive": "Stereographic projection",
+        "nodes_superbest": 4,
+        "nodes_naive": 15,
+        "operator": "Mixed (complex div)",
+        "exact": true,
+        "domain": "S\u00b2\u2216{N}"
+      },
+      {
+        "primitive": "Mean curvature \u03ba (graph)",
+        "nodes_superbest": 13,
+        "nodes_naive": 30,
+        "operator": "Mixed EML/EXL",
+        "exact": true,
+        "domain": "x\u2208\u211d, f smooth"
+      },
+      {
+        "primitive": "Cross-ratio ln|CR|",
+        "nodes_superbest": 13,
+        "nodes_naive": 25,
+        "operator": "EXL + add/sub",
+        "exact": true,
+        "domain": "z1,z2,z3,z4 distinct"
+      }
+    ],
+    "total_sb": 126,
+    "total_naive": 345,
+    "savings_pct": 63
+  }
+}

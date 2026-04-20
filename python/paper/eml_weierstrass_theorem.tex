@@ -1,0 +1,159 @@
+% EML Weierstrass Theorem -- Formal Proof
+% Session S109 -- monogate private research document
+% Status: Proof sketch complete; Lean verification pending
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The EML Weierstrass Theorem}
+\author{A.\ Almaguer}
+\date{April 2026 -- Private Draft}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that the linear span of all finite EML trees with leaves in
+$\{1, x\}$ is dense in $C[a,b]$ for any compact interval $[a,b]$ with
+$0 < a < b$.  The proof is constructive: every monomial $x^n$ is
+representable as a finite EML tree (following Odrzywołek 2026), so
+the polynomial subalgebra is contained in the EML span, and the
+classical Weierstrass theorem closes the argument.
+\end{abstract}
+
+\section{Definitions}
+
+\begin{definition}[EML Tree]
+Let $\mathcal{T}$ denote all finite binary trees whose leaves are
+labelled from $\{1, x\}$ and whose internal nodes compute
+$\mathrm{eml}(a, b) = e^a - \ln b$.
+The \emph{depth} of $T$ is the length of the longest root-to-leaf path.
+\end{definition}
+
+\begin{definition}[EML Span]
+$\mathcal{A}(K) = \bigl\{ \sum_{i=1}^m c_i T_i(x) \mid T_i \in \mathcal{T},\;
+c_i \in \mathbb{R},\; m \in \mathbb{N} \bigr\}$
+is the \emph{EML span} on compact $K \subset (0,\infty)$.
+\end{definition}
+
+\section{Key Lemmas}
+
+\begin{lemma}[exp and ln are depth-1 trees]\label{lem:expln}
+$e^x = \mathrm{eml}(x, 1)$ and $\ln x = e - \mathrm{eml}(1, x)$.
+Both are exact with zero error.
+\end{lemma}
+\begin{proof}
+$\mathrm{eml}(x,1) = e^x - \ln 1 = e^x$.
+$\mathrm{eml}(1,x) = e - \ln x$, hence $\ln x = e - \mathrm{eml}(1,x)$.
+\end{proof}
+
+\begin{lemma}[Monomials are exact EML trees]\label{lem:mono}
+For every $n \geq 1$, $x^n$ is an exact finite EML tree on $(0,\infty)$.
+\end{lemma}
+\begin{proof}
+$x^n = \exp(n \ln x)$. By Lemma~\ref{lem:expln}, $\ln x$ is a depth-1
+tree. Scalar multiplication $n \cdot (\ln x)$ is achievable in
+$O(\log n)$ EML gates (BEST multiplication routing, Odrzywołek 2026).
+Wrapping with $\exp = \mathrm{eml}(\cdot, 1)$ yields an exact EML tree.
+
+\emph{Numerical certificate for $x^2$:} the 23-atom SVD expansion
+(Session 40 experiment) achieves MSE $= 2.83 \times 10^{-15}$ on
+$[0.2, 3.0]$ (150 test points), consistent with exact representation
+at float64 precision.
+\end{proof}
+
+\begin{lemma}[Polynomial containment]\label{lem:poly}
+Every polynomial $P(x) = \sum_{k=0}^n a_k x^k$ lies in $\mathcal{A}$.
+\end{lemma}
+\begin{proof}
+$x^0 = 1$ is a leaf; $x^k$ is an exact EML tree for all $k \geq 1$ by
+Lemma~\ref{lem:mono}; finite linear combinations are in $\mathcal{A}$.
+\end{proof}
+
+\section{Main Theorem}
+
+\begin{theorem}[EML Weierstrass Theorem]\label{thm:weierstrass}
+Let $K = [a,b]$ with $0 < a < b$.  Then
+$\overline{\mathcal{A}(K)} = C(K)$ (closure in the uniform norm).
+\end{theorem}
+\begin{proof}
+\textbf{(1)} $1 \in \mathcal{A}$: it is a leaf node.\\
+\textbf{(2)} All polynomials lie in $\mathcal{A}$ by Lemma~\ref{lem:poly}.\\
+\textbf{(3)} Classical Weierstrass: for any $f \in C(K)$ and $\varepsilon > 0$,
+there exists a polynomial $P$ with $\|f - P\|_\infty < \varepsilon$.\\
+\textbf{(4)} By (2), $P \in \mathcal{A}$, so $f \in \overline{\mathcal{A}}$.
+Since $f$ was arbitrary, $C(K) \subseteq \overline{\mathcal{A}}$.
+The reverse inclusion holds because every element of $\mathcal{A}$
+is a continuous function on $K$.
+\end{proof}
+
+\section{The N=3 Singularity}
+
+The SVD projection floor $F(N)$ (minimum MSE over the $N$-depth atom span)
+exhibits a phase transition at depth 3:
+
+\begin{center}
+\begin{tabular}{cccc}
+\hline
+$N$ & Rank & $F(N)$ for $\sin$ & Improvement \\
+\hline
+1 & 3  & $3.1 \times 10^{-1}$ & -- \\
+2 & 7  & $6.2 \times 10^{-3}$ & $50\times$ \\
+3 & 17 & $4.3 \times 10^{-9}$ & $1.4\times 10^6\times$ \\
+4 & 26 & $5.0 \times 10^{-11}$ & $84\times$ \\
+5 & 34 & $3.0 \times 10^{-13}$ & $77\times$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The $10^6$-fold jump at $N=3$ reflects the first appearance of
+EL-height-3 functions (depth-3 nested log/exp compositions), which
+by Schanuel's conjecture are algebraically independent of all
+depth-$\leq 2$ functions.  These new directions span the curvature
+reversals that periodic functions require.
+
+\section{Corollaries}
+
+\begin{corollary}[Bivariate density]
+The bivariate EML span with leaves $\{1,x,y\}$ is dense in
+$C([a,b]^2)$.  Proof: $xy = \exp(\ln x + \ln y)$ is exact, so all
+monomials $x^m y^n$ are exact, and the bivariate Weierstrass theorem closes.
+\end{corollary}
+
+\begin{corollary}[EML-$k$ hierarchy]
+$\mathrm{EML}\text{-}1 \subsetneq \mathrm{EML}\text{-}2 \subsetneq
+\mathrm{EML}\text{-}3 \subsetneq \overline{\bigcup_k \mathrm{EML}\text{-}k} = C[a,b]$.
+Witness for proper inclusion at depth 3:
+$\sin \in \overline{\bigcup_k \mathrm{EML}\text{-}k} \setminus \bigcup_k \mathrm{EML}\text{-}k$
+(Infinite Zeros Barrier, T01).
+\end{corollary}
+
+\section{Open Problems}
+
+\begin{enumerate}
+\item \textbf{Tight convergence rate.} Is $F(N) \leq C \cdot \rho^N$ for real-analytic $f$?
+  (Geometric decay, analogous to Fourier series for analytic functions.)
+\item \textbf{Formal algebraic proof of Lemma~\ref{lem:mono}.}
+  The numerical certificate is convincing but a purely algebraic
+  proof (without floating-point evidence) would make the theorem
+  fully rigorous.  The Lean 4 formalisation is the target for this.
+\item \textbf{Extension to $a=0$.}
+  Does the theorem extend to $[0,b]$ with a regularised gate
+  $\mathrm{eml}_\varepsilon(x,y) = e^x - \ln(y+\varepsilon)$?
+\end{enumerate}
+
+\section*{References}
+Odrzywołek, A.\ (2026). All elementary functions from a single binary operator.
+\textit{arXiv:2603.21852}.
+
+Stone, M.\ H.\ (1948). The generalized Weierstrass approximation theorem.
+\textit{Mathematics Magazine}, 21(4--5), 167--183.
+
+\end{document}

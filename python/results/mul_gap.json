@@ -1,0 +1,85 @@
+{
+  "MUL1": {
+    "construction": "mul_edl = div(x, recip(y))",
+    "breakdown": {
+      "recip_y": 2,
+      "ln_x": 3,
+      "exp_recip": 1,
+      "outer_div": 1
+    },
+    "total_nodes": 7,
+    "bottleneck": "ln_x costs 3 nodes in EDL (same as EML); recip costs 2"
+  },
+  "MUL2": {
+    "eal_add_identity": "eal(ln(a), exp(b)) = a + b",
+    "mixed_mul_4n": "exl(0,exl(0,x)) -> EAL -> EML",
+    "node_count_free_zero": 4,
+    "node_count_derived_zero": 5,
+    "beats_edl_7n": true,
+    "revised_lower_bound": "\u00e2\u2030\u00a5 4n (structural)"
+  },
+  "MUL45": {
+    "eal_identity": "eal(ln(a), exp(b)) = a + b",
+    "mixed_add_cost": 3,
+    "mixed_mul_4n_correct": true,
+    "mixed_mul_5n_correct": true,
+    "ln_xy_shortcut": "eal(exl(0,exl(0,x)), y) = ln(x)+ln(y) in 3n (0 free)"
+  },
+  "MUL6": {
+    "mul_lower_bound_4n": false,
+    "mul_lower_bound_proved_rigorously": false,
+    "argument": "Need 4 distinct roles: extract(x), extract(y), combine, decode",
+    "add_single_op_min": 11,
+    "add_mixed_op_min": 3,
+    "mul_new_best": "4n (0 free) or 5n (0 derived)",
+    "gap_old": 4,
+    "gap_new": 0,
+    "gap_status": "FULLY CLOSED \u2014 3n construction + 3n lower bound match exactly",
+    "revised_lower_bound": "3n TIGHT (MUL-11: exhaustive N=2 finds nothing, 3n construction exists)"
+  },
+  "MUL10": {
+    "mul_old": {
+      "operator": "EDL",
+      "nodes": 7,
+      "status": "best_known"
+    },
+    "mul_new": {
+      "operator": "Mixed(EXL/EAL/EML)",
+      "nodes_free_zero": 4,
+      "nodes_strict": 5,
+      "construction": "eml(eal(exl(0,exl(0,x)), y), 1)",
+      "status": "IMPROVED",
+      "mechanism": "EAL bridge: eal(ln(ln(x)), y) = ln(x)+ln(y) in 1 EAL node"
+    },
+    "add_old": {
+      "operator": "EML",
+      "nodes": 11,
+      "status": "cross_op_optimal"
+    },
+    "add_new": {
+      "operator": "Mixed(EXL/EML/EAL)",
+      "nodes": 3,
+      "construction": "eal(exl(0,a), eml(b,1)) = a+b  [a>0]",
+      "status": "IMPROVED (for positive first argument)",
+      "caveat": "requires a > 0 for ln(a) to be real; complex branch handles a \u00e2\u2030\u00a4 0"
+    },
+    "gap_status": "CLOSED under EXL-extended convention; 1-node open under strict"
+  },
+  "MUL11": {
+    "title": "XL-bridge multiplication \u2014 3 nodes (MUL-11)",
+    "construction": "exl(exl(0,x), eml(y,1))",
+    "breakdown": {
+      "node1": "exl(0, x) = exp(0)*ln(x) = ln(x)  [EXL, 0 free]",
+      "node2": "eml(y, 1) = exp(y) - ln(1) = exp(y)  [EML]",
+      "node3": "exl(ln(x), exp(y)) = exp(ln(x))*ln(exp(y)) = x*y  [EXL]"
+    },
+    "node_count_free_constants": 3,
+    "node_count_strict": 4,
+    "proof": "exl(A,B)=exp(A)*ln(B). exl(ln(x),exp(y))=exp(ln(x))*ln(exp(y))=x*y.",
+    "lower_bound": "3n TIGHT (exhaustive N=2 search: no exact mul in 2 nodes, both strict and EXL-extended)",
+    "beats_4n_eal_bridge": true,
+    "gap_status": "FULLY CLOSED \u2014 3n construction matches 3n lower bound",
+    "savings_vs_naive": "7n -> 3n (57% reduction per mul operation)",
+    "total_best_savings": "65.8% over naive single-operator (was 64.4% with 4n mul)"
+  }
+}

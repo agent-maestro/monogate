@@ -1,0 +1,336 @@
+{
+  "EAL_A6": {
+    "add": {
+      "nodes": 3,
+      "construction": "eal(exl(0,x), eml(y,1))",
+      "domain": "x>0",
+      "old_best": 11
+    },
+    "sub": {
+      "nodes": 3,
+      "construction": "eml(exl(0,x), eml(y,1))",
+      "domain": "x>0",
+      "old_best": 5,
+      "proof": "eml(ln(x),exp(y))=exp(ln(x))-ln(exp(y))=x-y",
+      "is_new": true
+    },
+    "neg": {
+      "nodes": 6,
+      "operator": "EDL",
+      "old_best": 6,
+      "note": "unchanged; domain barrier"
+    }
+  },
+  "EAL_A7": {
+    "comparison_table": {
+      "EML": {
+        "exp": 1,
+        "ln": 3,
+        "mul": 13,
+        "div": 7,
+        "add": 11,
+        "sub": 5,
+        "neg": 11,
+        "recip": 8,
+        "pow": 11
+      },
+      "EAL": {
+        "exp": 1,
+        "ln": null,
+        "mul": null,
+        "div": null,
+        "add": null,
+        "sub": null,
+        "neg": null,
+        "recip": null,
+        "pow": null
+      },
+      "EDL": {
+        "exp": 7,
+        "ln": 5,
+        "mul": 7,
+        "div": 1,
+        "add": null,
+        "sub": null,
+        "neg": 6,
+        "recip": 2,
+        "pow": 3
+      },
+      "EXL": {
+        "exp": 5,
+        "ln": 1,
+        "mul": null,
+        "div": null,
+        "add": null,
+        "sub": null,
+        "neg": null,
+        "recip": null,
+        "pow": 3
+      },
+      "EMN": {
+        "exp": null,
+        "ln": null,
+        "mul": null,
+        "div": null,
+        "add": null,
+        "sub": null,
+        "neg": null,
+        "recip": null,
+        "pow": null
+      },
+      "MIXED": {
+        "exp": 1,
+        "ln": 1,
+        "mul": 3,
+        "div": 1,
+        "add": 3,
+        "sub": 3,
+        "neg": 6,
+        "recip": 2,
+        "pow": 3
+      }
+    },
+    "note": "EAL alone cannot compute ln, mul, add, sub, recip. MIXED column uses per-op optimal operator.",
+    "eal_exl_hybrid_mul": 4,
+    "optimal_mixed_mul": 3,
+    "sub_new_3n": true
+  },
+  "EAL_A8": {
+    "target": "pi",
+    "lambda_crit_eal": 0.002,
+    "lambda_crit_eml": 0.002,
+    "phase_transition_confirmed": true,
+    "lambda_values": [
+      0.0001,
+      0.0002,
+      0.00030000000000000003,
+      0.0004,
+      0.0005,
+      0.0006000000000000001,
+      0.0007,
+      0.0008,
+      0.0009000000000000001,
+      0.001,
+      0.0011,
+      0.0012000000000000001,
+      0.0013000000000000002,
+      0.0014,
+      0.0015,
+      0.0016,
+      0.0017000000000000001,
+      0.0018000000000000002,
+      0.0019,
+      0.002
+    ],
+    "eal_convergence_rates": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "eml_convergence_rates": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "EAL_A9": {
+    "nan_rates_by_depth": {
+      "6": {
+        "eal": 1.0,
+        "eml": 1.0
+      },
+      "7": {
+        "eal": 1.0,
+        "eml": 1.0
+      },
+      "8": {
+        "eal": 1.0,
+        "eml": 1.0
+      }
+    },
+    "avg_eal_nan": 1.0,
+    "avg_eml_nan": 1.0,
+    "eal_nan_reduction_pct": 0.0,
+    "mechanism": "EML subtraction causes catastrophic cancellation; EAL addition is more stable"
+  },
+  "EAL_A10": {
+    "unreachable_pure_eal": [
+      "ln(x)",
+      "x",
+      "-x",
+      "rational_p_q",
+      "x^(1/2)"
+    ],
+    "reachable_pure_eal": [
+      "exp(x)",
+      "exp(x)+ln(y)",
+      "c + ln(x)",
+      "exp(f)+exp(g)",
+      "x*y (mixed)"
+    ],
+    "barrier": "exp(f(x)) > 0 for all f \u2014 no cancellation to zero possible from exp term",
+    "class": "EAL-reachable \u2282 {functions with positive exp component} \u2014 incomplete by barrier (A)"
+  },
+  "FAM_C1": {
+    "EML": {
+      "exp": 1,
+      "ln": 3,
+      "mul": 13,
+      "div": 7,
+      "add": 11,
+      "sub": 5,
+      "neg": 11,
+      "recip": 8,
+      "pow": 11
+    },
+    "EAL": {
+      "exp": 1,
+      "ln": null,
+      "mul": null,
+      "div": null,
+      "add": null,
+      "sub": null,
+      "neg": null,
+      "recip": null,
+      "pow": null
+    },
+    "EDL": {
+      "exp": 7,
+      "ln": 5,
+      "mul": 7,
+      "div": 1,
+      "add": null,
+      "sub": null,
+      "neg": 6,
+      "recip": 2,
+      "pow": 3
+    },
+    "EXL": {
+      "exp": 5,
+      "ln": 1,
+      "mul": null,
+      "div": null,
+      "add": null,
+      "sub": null,
+      "neg": null,
+      "recip": null,
+      "pow": 3
+    },
+    "EMN": {
+      "exp": null,
+      "ln": null,
+      "mul": null,
+      "div": null,
+      "add": null,
+      "sub": null,
+      "neg": null,
+      "recip": null,
+      "pow": null
+    },
+    "MIXED (BEST)": {
+      "exp": 1,
+      "ln": 1,
+      "mul": 3,
+      "div": 1,
+      "add": 3,
+      "sub": 3,
+      "neg": 6,
+      "recip": 2,
+      "pow": 3
+    }
+  },
+  "FAM_C3": {
+    "n_trials": 100000,
+    "naive_ms": 26.91,
+    "superbest_ms": 125.3,
+    "node_savings_per_eval": 18,
+    "node_savings_pct": 60.0,
+    "gelu_naive_nodes": 52,
+    "gelu_superbest_nodes": 30,
+    "gelu_savings_pct": 42.3
+  },
+  "FAM_C4": {
+    "EML": {
+      "self_map": "EML(x,x)",
+      "fixed_points": [],
+      "lyapunov_exponents": [],
+      "convergent_starts_pct": 0.0
+    },
+    "EAL": {
+      "self_map": "EAL(x,x)",
+      "fixed_points": [],
+      "lyapunov_exponents": [],
+      "convergent_starts_pct": 0.0
+    },
+    "EDL": {
+      "self_map": "EDL(x,x)",
+      "fixed_points": [],
+      "lyapunov_exponents": [],
+      "convergent_starts_pct": 0.0
+    },
+    "EXL": {
+      "self_map": "EXL(x,x)",
+      "fixed_points": [
+        -0.69893
+      ],
+      "lyapunov_exponents": [
+        -2.1671
+      ],
+      "convergent_starts_pct": 0.0
+    },
+    "EMN": {
+      "self_map": "EMN(x,x)",
+      "fixed_points": [],
+      "lyapunov_exponents": [],
+      "convergent_starts_pct": 0.0
+    }
+  },
+  "summary": {
+    "sub_new_3n": true,
+    "sub_construction": "eml(exl(0,x), eml(y,1)) = x-y for x>0",
+    "superbest_total_nodes": 25,
+    "superbest_savings_pct": 65.8,
+    "operators_at_3n_or_less": [
+      "exp(1n)",
+      "ln(1n)",
+      "div(1n)",
+      "mul(3n)",
+      "add(3n)",
+      "sub(3n)"
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "session": "R1",
+  "title": "DEML Completeness Investigation",
+  "date": "2026-04-19",
+  "author": "Arturo R. Almaguer",
+  "classification": "THEOREM",
+  "result": "DEML is INCOMPLETE",
+  "verdict": "neg(x) = -x is not constructible in DEML. exp(+x) is not constructible in DEML. DEML is a proper subset of EML in expressive power.",
+
+  "key_identity": {
+    "statement": "deml(1, deml(x, 1)) = 1/e + x",
+    "algebraic_proof": "exp(-1) - ln(exp(-x) - ln(1)) = exp(-1) - ln(exp(-x)) = exp(-1) - (-x) = 1/e + x",
+    "verified_numerically": true,
+    "significance": "DEML can recover x with a positive constant offset 1/e. This is the only linear-in-x term DEML generates. It always has slope +1, never -1."
+  },
+
+  "exhaustive_search": {
+    "target_neg_x": {
+      "found": false,
+      "trees_checked": 861952,
+      "max_N_searched": 17,
+      "closest_error": 0.844806,
+      "error_trend": [4.14, 2.04, 1.93, 1.37, 1.19, 0.88, 0.88, 0.84],
+      "note": "Error not converging to 0. This is evidence of non-approximability, not just non-representability."
+    },
+    "target_exp_pos_x": {
+      "found": false,
+      "closest_error": 10.1186,
+      "note": "Far from exp(+x). No convergence."
+    },
+    "constant_zero": {
+      "found_exactly": false,
+      "best_error_at_N23": 2.99e-5,
+      "converging": true,
+      "note": "0 appears to be in the DEML closure as a limit (rapidly converging). Not exactly representable by a finite tree."
+    }
+  },
+
+  "structural_proof": {
+    "key_lemma": "For any DEML tree T over {1, x}: the linear component of T(x) has slope in {0, +1} only.",
+    "proof": [
+      "Case 1: x in left branch only. T = deml(f(x), c) = exp(-f(x)) - ln(c). The exp(-f(x)) term decays exponentially. Slope is negative and approaches 0.",
+      "Case 2: x in right branch via deml(c, deml(x,1)). By the key identity, this equals exp(-c) + x. Slope = +1 regardless of c.",
+      "Case 3: Composition of Case 1 and 2. The linear component always has slope +1 (from Case 2 terms) or is a decaying correction.",
+      "Consequence: No DEML tree has slope -1 at any x. Therefore neg(x) = -x is not DEML-constructible.",
+      "Corollary: exp(+x) = deml(neg(x), 1) is not DEML-constructible."
+    ],
+    "additional_observation": "deml(x + 1/e, 1) = exp(-1/e) * exp(-x). Feeding the linear output back into the left branch produces exponential DECAY, not exponential growth. This is the structural trap: positive slopes loop back to decaying functions."
+  },
+
+  "deml_closure_characterization": {
+    "what_deml_generates": [
+      "exp(-x) [1 node: deml(x, 1)]",
+      "x + K for any DEML-constructible constant K [3 nodes: deml(K, deml(x,1))]",
+      "exp(-exp(-x)) and similar iterated-exponential-decay functions",
+      "ln(x) + K via deml(K, x) = exp(-K) - ln(x), giving -ln(x) + constant",
+      "Compositions of the above"
+    ],
+    "what_deml_cannot_generate": [
+      "neg(x) = -x",
+      "exp(+x)",
+      "Any function with super-linear growth",
+      "add(x, y) = x + y [requires neg for the general case]",
+      "mul(x, y) = x * y [requires exp(+x) and ln]"
+    ]
+  },
+
+  "theorem_statement": "THEOREM (DEML Incompleteness): The DEML operator deml(x,y) = exp(-x) - ln(y) with terminal 1 is strictly less expressive than EML. Specifically, exp(+x) is not DEML-constructible, and neg(x) = -x is not DEML-constructible. Proof: structural (slope argument) + exhaustive verification to N=17 nodes (861,952 trees).",
+
+  "r2_revised_scope": "R2 no longer proves DEML completeness. R2 should instead: (1) formalize the DEML incompleteness theorem with a clean proof, (2) characterize the DEML closure precisely, (3) identify what minimal extension of DEML achieves completeness.",
+
+  "r3_scope_unchanged": "R3 (DEML-aware BEST routing) is still valid. DEML adds exp(-x) as a 1-node primitive. The routing update is an engineering result, not a completeness claim."
+}

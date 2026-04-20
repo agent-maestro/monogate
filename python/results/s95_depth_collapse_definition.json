@@ -1,0 +1,17 @@
+============================================================
+S95 — Precise Definition of Depth Collapse
+============================================================
+
+collapse(f) = depth_R(f) - depth_C(f) >= 0
+
+  exp_x       : depth_R=1, depth_C=1, collapse=0
+  sin_x       : depth_R=3, depth_C=3, collapse=0
+  cos_x       : depth_R=3, depth_C=3, collapse=0
+  arctan_x    : depth_R=3, depth_C=1 or 3, collapse=2 iff i in EML_1 else 0
+  x_sq        : depth_R=2, depth_C=2, collapse=0
+  abs_x       : depth_R=2, depth_C=2, collapse=0
+
+Key theorem: For arctan(x): collapse(arctan) = 2 iff i is constructible from EML_1. More gene...
+Implication: T_i (i not constructible) => arctan has no depth collapse => EML-3 is stable
+
+Results: D:\monogate\python\results\s95_depth_collapse_definition.json

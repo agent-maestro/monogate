@@ -1,0 +1,39 @@
+{
+  "session": "R3",
+  "title": "DEML-Aware BEST Router",
+  "date": "2026-04-19",
+  "author": "Arturo R. Almaguer",
+  "classification": "PROPOSITION",
+  "prerequisite": "R1 proved DEML is incomplete. R3 scope is: what does DEML add to BEST routing within its provable range?",
+
+  "key_addition": {
+    "operation": "exp(-x)",
+    "old_best_nodes": 10,
+    "new_best_nodes": 1,
+    "operator": "DEML",
+    "tree": "deml(x, 1)",
+    "saving_nodes": 9,
+    "saving_pct": 90
+  },
+
+  "benchmarks": {
+    "exp_neg_x": { "best_deml": 1, "old_best": 10, "save": 9, "save_pct": 90 },
+    "boltzmann_exp_neg_E_over_kT": { "best_deml": 2, "old_best": 11, "save": 9, "save_pct": 82 },
+    "gaussian_exp_neg_x2_over_2": { "best_deml": 5, "old_best": 14, "save": 9, "save_pct": 64 },
+    "damped_exp_neg_ax": { "best_deml": 8, "old_best": 17, "save": 9, "save_pct": 53 }
+  },
+
+  "updated_best_table": {
+    "note": "Only new/changed rows. All others unchanged.",
+    "rows": [
+      { "op": "exp(-x)", "eml": 10, "deml": 1, "edl": null, "exl": null, "winner": "DEML" }
+    ]
+  },
+
+  "unchanged_routes": ["exp(x)", "ln(x)", "neg(x)", "add", "sub", "mul", "div", "pow", "recip"],
+  "reason_unchanged": "DEML is incomplete for positive-exponent functions. EML/EDL/EXL remain optimal for those.",
+
+  "scope_note": "The DEML dispatch table addition stays in the PRIVATE repo. The theorem (DEML is incomplete) is public. The routing optimization is private.",
+
+  "patent_note": "This update extends the BEST routing algorithm. The dispatch table change is patent-candidate material — not to be published in the public blog."
+}
