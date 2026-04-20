@@ -1,0 +1,118 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="T19: Why You Can't Build i from 1"
+  description="The strict i-unconstructibility theorem: starting from 1 and the EML operator, the imaginary unit cannot be constructed under principal-branch semantics."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>theorem</span>
+    <span>4 min read</span>
+  </div>
+
+  <h1>T19: Why You Can't Build i from 1</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    The imaginary unit is not reachable from the grammar &#123;eml, 1&#125; under strict real semantics.
+    Here is the proof and the limit of how close you can get.
+  </p>
+
+  <div class="divider"></div>
+
+  <h2>The question</h2>
+
+  <p>
+    The EML grammar starts with the constant 1 and the binary operator
+    <code>eml(x, y) = exp(x) − ln(y)</code>.
+    Can finite tree composition of this grammar produce the imaginary unit
+    <code>i = √(−1)</code>?
+  </p>
+
+  <p>
+    The answer depends on the semantics of <code>ln</code>.
+    Under the <strong>strict principal-branch convention</strong> — where
+    <code>ln</code> is defined only for positive real inputs and returns a real output — the
+    answer is provably no.
+  </p>
+
+  <h2>The proof (three lines)</h2>
+
+  <ol>
+    <li>
+      <code>eml(x, y) = exp(x) − ln(y)</code> takes two inputs.
+      Starting from <code>&#123;1&#125;</code>, every input to every node is
+      a positive real number (since 1 &gt; 0, exp maps reals to positive reals, and
+      we only pass positive inputs to ln).
+    </li>
+    <li>
+      Under principal-branch ln, every intermediate value is a real number.
+      <code>exp</code> of a real is real. Subtraction of reals is real.
+    </li>
+    <li>
+      <code>i</code> is not real. ∎
+    </li>
+  </ol>
+
+  <p>
+    There is no way around this under strict semantics: the grammar is closed over the
+    positive reals when initialized with <code>&#123;1&#125;</code>.
+  </p>
+
+  <h2>Lean verification</h2>
+
+  <p>
+    This theorem is formalized in <code>StrictBarrier.lean</code> with 0 sorries.
+    The key lemma: given initial values in ℝ<sub>+</sub>, every EML tree value stays in ℝ<sub>+</sub>.
+    The proof proceeds by structural induction on the tree.
+  </p>
+
+  <h2>The extended grammar question</h2>
+
+  <p>
+    What if we relax the semantics and allow <code>ln</code> to accept negative real inputs,
+    extending via the complex logarithm? Then complex values enter the grammar for the
+    first time at depth 5.
+  </p>
+
+  <p>
+    All depth-5 values with nonzero imaginary parts have
+    <strong>Im = −π exactly</strong>. The imaginary axis is approached, but from the wrong
+    direction and pinned to a fixed value.
+  </p>
+
+  <p>
+    At depth 6, the imaginary parts diversify. The closest known approach to Im = 1
+    is <code>0.99999524</code> — a gap of 4.76 × 10⁻⁶. This is not a rounding error;
+    it is a transcendental obstruction. See the
+    <a href="/blog/near-miss">near-miss post</a> for the full analysis
+    and the <a href="/blog/depth-6-phase-transition">depth-6 phase transition post</a>
+    for the structural picture.
+  </p>
+
+  <h2>Reproduce</h2>
+
+  <p>The Python package always returns a float from real inputs:</p>
+
+  <pre><code>python -c "from monogate import eml; print(type(eml(1, 1)))"
+# &lt;class 'float'&gt; — always real under strict semantics</code></pre>
+
+  <div class="divider"></div>
+
+  <h3>Cite this work</h3>
+
+  <blockquote>
+    Almaguer, A.R. (2026). "T19: Why You Can't Build i from 1."
+    <em>monogate research blog.</em>
+    https://monogate.org/blog/i-unconstructibility
+  </blockquote>
+
+  <h3>License</h3>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    CC BY 4.0 — free to share and adapt with attribution. ·
+    Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
+  </p>
+</Base>

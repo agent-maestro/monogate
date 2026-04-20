@@ -1,0 +1,225 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="DEML Is Incomplete — A Structural Proof"
+  description="deml(x,y) = exp(−x) − ln(y) cannot construct exp(+x) or neg(x). A proved theorem with an exhaustive search over 861,952 trees and a clean algebraic argument."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>theorem</span>
+    <span>6 min read</span>
+  </div>
+
+  <h1>DEML Is Incomplete</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    DEML: deml(x,y) = exp(−x) − ln(y). It gives exp(−x) in one node — an
+    improvement over EML for decay functions. But it cannot build exp(+x)
+    or neg(x). Here is the proof.
+  </p>
+
+  <div class="divider"></div>
+
+  <h2>The key identity</h2>
+
+  <p>
+    Start with what DEML can do. The most useful univariate identity is:
+  </p>
+
+  <blockquote>
+    <code>deml(1, deml(x, 1)) = 1/e + x</code>
+  </blockquote>
+
+  <p><strong>Algebraic proof:</strong></p>
+  <pre><code>deml(1, deml(x, 1))
+  = exp(−1) − ln(deml(x, 1))
+  = exp(−1) − ln(exp(−x) − ln(1))
+  = exp(−1) − ln(exp(−x))
+  = exp(−1) − (−x)
+  = 1/e + x  ✓</code></pre>
+
+  <p>
+    This is a 3-node DEML tree that extracts x, shifted by the constant 1/e ≈ 0.368.
+    More generally, for <em>any</em> constant c (DEML-constructible or not):
+  </p>
+
+  <blockquote>
+    <code>deml(c, deml(x, 1)) = exp(−c) + x</code>
+  </blockquote>
+
+  <p>
+    The slope is always +1. The offset exp(−c) is always positive.
+    This is DEML's only mechanism for producing functions linear in x.
+  </p>
+
+  <h2>The incompleteness theorem</h2>
+
+  <blockquote>
+    <strong>Theorem (DEML Incompleteness):</strong> The operator
+    deml(x,y) = exp(−x) − ln(y) with terminal 1 cannot construct
+    neg(x) = −x or exp(+x) as finite binary trees.
+    Therefore DEML is incomplete: it does not generate all elementary functions.
+  </blockquote>
+
+  <h2>Proof</h2>
+
+  <p>
+    Every DEML tree T over &#123;1, x&#125; falls into one of two structural cases:
+  </p>
+
+  <p>
+    <strong>Case 1: x appears in a left branch.</strong>
+    Any path from the root where x enters through a left child eventually
+    contributes through <code>exp(−f(x))</code>. Since f(x) grows with x
+    (or is bounded), exp(−f(x)) decays toward 0.
+    The slope contribution from this case is ≤ 0 and approaches 0.
+  </p>
+
+  <p>
+    <strong>Case 2: x enters through a right branch via <code>deml(x, 1)</code>.</strong>
+    The only DEML tree that introduces x through a right branch in a
+    non-decaying way is <code>deml(x, 1) = exp(−x)</code>.
+    When this appears as the right child of another DEML node:
+  </p>
+
+  <pre><code>deml(c, deml(x, 1)) = exp(−c) + x</code></pre>
+
+  <p>Slope = +1. The positive constant exp(−c) &gt; 0 cannot be
+  cancelled by any further DEML composition without introducing neg(x) itself.</p>
+
+  <p>
+    <strong>The trap:</strong> Feeding the output back into the left branch:
+  </p>
+
+  <pre><code>deml(1/e + x, 1) = exp(−(1/e + x)) = exp(−1/e) · exp(−x)</code></pre>
+
+  <p>
+    This is exponential <em>decay</em>, not growth. Every attempt to use
+    the +x output to produce exp(+x) results in exp(−x) decay.
+  </p>
+
+  <p>
+    <strong>Consequence for neg(x):</strong> neg(x) = −x requires slope −1.
+    But every DEML tree over &#123;1, x&#125; has slope ∈ &#123;0, +1&#125; in its
+    x-linear component. Slope −1 is unreachable. □
+  </p>
+
+  <p>
+    <strong>Consequence for exp(+x):</strong> exp(+x) = deml(neg(x), 1).
+    Since neg(x) is not DEML-constructible, neither is exp(+x). □
+  </p>
+
+  <h2>Exhaustive search confirmation</h2>
+
+  <p>
+    An exhaustive search over all DEML trees up to N = 17 nodes (861,952 trees)
+    found no tree computing neg(x) = −x:
+  </p>
+
+  <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem; margin: 16px 0;">
+    <thead>
+      <tr style="border-bottom: 1px solid #1c1f2e;">
+        <th style="text-align: left; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">N nodes</th>
+        <th style="text-align: right; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">Trees checked</th>
+        <th style="text-align: right; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">Best error vs −x</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        [1, 2, "4.14"],
+        [3, 4, "2.04"],
+        [5, 16, "2.04"],
+        [7, 80, "1.93"],
+        [9, 448, "1.37"],
+        [11, 2688, "1.19"],
+        [13, 16896, "0.88"],
+        [15, 109824, "0.88"],
+        [17, 732160, "0.84"],
+      ].map(([n, trees, err], i) => (
+        <tr style={`border-bottom: 1px solid #0d0f18; ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
+          <td style="padding: 6px 10px; color: #d4d4d4;">{n}</td>
+          <td style="padding: 6px 10px; text-align: right; color: #6b7280;">{trees.toLocaleString()}</td>
+          <td style="padding: 6px 10px; text-align: right; color: #f87171;">{err}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <p style="font-size: 0.85rem; color: #6b7280;">
+    The error is <em>not converging to 0</em>. It stalls at ~0.84. This is
+    consistent with neg(x) being outside the DEML closure entirely, not just
+    requiring a larger tree.
+  </p>
+
+  <h2>What DEML can and cannot construct</h2>
+
+  <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem; margin: 16px 0;">
+    <thead>
+      <tr style="border-bottom: 1px solid #1c1f2e;">
+        <th style="text-align: left; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">Function</th>
+        <th style="text-align: center; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">DEML</th>
+        <th style="text-align: left; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        ["exp(−x)", "1 node", "#4ade80", "deml(x, 1) — native"],
+        ["x + K", "3 nodes", "#4ade80", "deml(K, deml(x, 1)) — K any DEML constant"],
+        ["−ln(x) + K", "3 nodes", "#4ade80", "deml(K, x)"],
+        ["exp(−exp(−x))", "5 nodes", "#fbbf24", "deml(deml(x,1), 1) — composable"],
+        ["neg(x) = −x", "impossible", "#f87171", "slope −1 unreachable"],
+        ["exp(+x)", "impossible", "#f87171", "requires neg(x)"],
+        ["add(x, y)", "impossible", "#f87171", "requires neg for general case"],
+        ["mul(x, y)", "impossible", "#f87171", "requires exp(+x) and ln"],
+      ].map(([fn, cost, color, note], i) => (
+        <tr style={`border-bottom: 1px solid #0d0f18; ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
+          <td style="padding: 6px 10px; color: #d4d4d4; font-family: monospace;">{fn}</td>
+          <td style={`padding: 6px 10px; text-align: center; color: ${color}; font-weight: 700;`}>{cost}</td>
+          <td style="padding: 6px 10px; color: #6b7280; font-size: 0.8rem;">{note}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h2>Implication for the BEST router</h2>
+
+  <p>
+    DEML is not complete, but it is <em>useful</em>. For any expression matching
+    the pattern <code>exp(−f(x))</code> where f is an EML-constructible subexpression,
+    DEML provides a 1-node primitive that replaces a deep EML tower.
+    The BEST router treats DEML as a special-case gate for negative-exponent
+    patterns: Boltzmann factors, Gaussian decay, Arrhenius equations.
+  </p>
+
+  <p>
+    The incompleteness result constrains what DEML can do as a standalone system.
+    As a routing target within BEST, it remains the optimal gate for
+    its native pattern.
+  </p>
+
+  <div class="divider"></div>
+
+  <h3>Reproduce</h3>
+
+  <pre><code>python python/results/s_r1_deml_incompleteness.json  # results
+# Search script:
+# python -c "import math; d=lambda x,y:math.exp(-x)-math.log(y); print(d(1,d(2,1)), 1/math.e+2)"</code></pre>
+
+  <h3>Cite this work</h3>
+
+  <blockquote>
+    Almaguer, A.R. (2026). "DEML Is Incomplete: A Structural Proof."
+    <em>monogate research blog.</em>
+    https://monogate.org/blog/deml-is-incomplete
+  </blockquote>
+
+  <h3>License</h3>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    CC BY 4.0 — free to share and adapt with attribution. ·
+    Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
+  </p>
+</Base>

@@ -1,0 +1,130 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="The Pumping Lemma for EML Trees"
+  description="A depth-k EML tree has at most 2^k zeros. But in practice, trees have O(1) zeros. The gap between the theoretical bound and observation suggests a tighter conjecture."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>conjecture</span>
+    <span>5 min read</span>
+  </div>
+
+  <h1>The Pumping Lemma for EML Trees</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    How many zeros can a depth-k EML tree have? The theoretical bound is 2<sup>k</sup>.
+    The observed bound is roughly O(k). The gap is enormous, and closing it would
+    strengthen the Infinite Zeros Barrier.
+  </p>
+
+  <div class="divider"></div>
+
+  <h2>The theoretical bound</h2>
+
+  <p>
+    <strong>Theorem (EML Pumping Lemma):</strong> Every depth-k real EML tree has at most
+    2<sup>k</sup> real zeros on any bounded interval.
+  </p>
+
+  <p>The proof is by induction on depth:</p>
+
+  <p>
+    <strong>Base case (k = 1).</strong>
+    A depth-1 tree is <code>eml(x, c) = exp(x) − c</code> for some constant c.
+    <code>exp</code> is strictly monotone, so this has at most 1 zero. 1 ≤ 2<sup>1</sup>. ✓
+  </p>
+
+  <p>
+    <strong>Inductive step.</strong>
+    Suppose every depth-(k−1) tree has at most 2<sup>k−1</sup> zeros.
+    A depth-k tree is <code>T = eml(f, g) = exp(f) − g</code>, where f and g are
+    depth-(k−1) trees.
+    <code>T(x) = 0</code> iff <code>exp(f(x)) = g(x)</code>.
+    Both <code>exp(f)</code> and <code>g</code> are real-analytic.
+    By a Rolle's theorem argument on the difference, the zero count of
+    <code>exp(f) − g</code> is bounded by the sum of zero counts of their derivatives,
+    which satisfies the recurrence zeros(k) ≤ 2 · zeros(k−1), giving zeros(k) ≤ 2<sup>k</sup>. ∎
+  </p>
+
+  <h2>The observed bound</h2>
+
+  <p>
+    In the exhaustive N=12 search (1,704,034,304 trees), zero counts were recorded
+    for every tree evaluated. The observed distribution:
+  </p>
+
+  <ul>
+    <li>~95% of trees: 0 zeros on [−π, π]</li>
+    <li>~4.9% of trees: 1 zero</li>
+    <li>&lt; 0.1% of trees: 2 or more zeros</li>
+    <li>Maximum observed: O(k) zeros for depth-k trees</li>
+  </ul>
+
+  <p>
+    The theoretical bound of 2<sup>k</sup> = 4096 for k = 12 is never approached.
+    The actual maximum across 1.7 billion trees is in single digits.
+  </p>
+
+  <h2>The conjecture</h2>
+
+  <blockquote>
+    <strong>Conjectured tight bound:</strong> Every depth-k real EML tree has at most O(k)
+    zeros on any bounded interval — linear in depth, not exponential.
+  </blockquote>
+
+  <p>
+    This is currently unproved. It has strong computational support from the N=12 search.
+    If true, it would be a significantly stronger version of the Infinite Zeros Barrier:
+    not just "finitely many zeros" but "at most linearly many."
+  </p>
+
+  <p>
+    sin(x) has infinitely many zeros, so it would be excluded not just by the
+    "finite zeros" argument but by the tighter "linear in depth" argument too.
+  </p>
+
+  <h2>Proof strategy</h2>
+
+  <p>
+    A natural approach: trace zero-counting through EML composition more carefully.
+    The Rolle's theorem bound in the inductive step counts zeros of the derivative,
+    which is itself a ratio of EML trees (log-differentation). If derivative trees
+    have O(k−1) zeros rather than 2<sup>k−1</sup>, the bound tightens to O(k).
+  </p>
+
+  <p>
+    The challenge: the derivative of an EML tree is not itself a simple EML tree.
+    It involves quotients and sums that require careful treatment. The conjecture
+    is stated with strong evidence but the proof remains open.
+  </p>
+
+  <h2>Why it matters</h2>
+
+  <p>
+    A proved O(k) bound would let us say something more precise about the complexity
+    cost of approximating high-zero-count functions. It would also constrain what
+    kinds of functions can appear at each depth level — making the EML depth hierarchy
+    tighter and more useful as a classification tool.
+  </p>
+
+  <div class="divider"></div>
+
+  <h3>Cite this work</h3>
+
+  <blockquote>
+    Almaguer, A.R. (2026). "The Pumping Lemma for EML Trees."
+    <em>monogate research blog.</em>
+    https://monogate.org/blog/pumping-lemma
+  </blockquote>
+
+  <h3>License</h3>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    CC BY 4.0 — free to share and adapt with attribution. ·
+    Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
+  </p>
+</Base>

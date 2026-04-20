@@ -1,0 +1,111 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="The Depth-6 Phase Transition"
+  description="At depth 5, all complex EML values have Im = −π exactly. At depth 6, imaginary parts explode and 0.99999524 appears. A structural phase transition in the EML closure."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>observation</span>
+    <span>6 min read</span>
+  </div>
+
+  <h1>The Depth-6 Phase Transition</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    The EML closure of &#123;1&#125; stays real through depth 4. At depth 5, complex values appear —
+    all with Im = −π. At depth 6, everything changes.
+  </p>
+
+  <div class="divider"></div>
+
+  <h2>The experiment</h2>
+
+  <p>
+    Starting from the terminal set &#123;1&#125; and the EML operator under extended complex semantics
+    (where <code>ln</code> of a negative real returns a complex value via the principal branch),
+    we enumerated all EML tree values at each depth level.
+  </p>
+
+  <h2>Depths 1–4: all real</h2>
+
+  <p>
+    At depths 1 through 4, every value produced by the EML closure of &#123;1&#125; is real.
+    The grammar generates <em>e</em>, <em>e<sup>e</sup></em>, various compositions of
+    exp and ln — all positive reals. No imaginary parts.
+  </p>
+
+  <h2>Depth 5: first complex values</h2>
+
+  <p>
+    At depth 5, complex values appear for the first time. But they are remarkably constrained:
+    <strong>every complex value at depth 5 has Im = −π exactly.</strong>
+  </p>
+
+  <p>
+    This is not a coincidence. The principal-branch logarithm gives
+    <code>ln(−r) = ln(r) + iπ</code> for r &gt; 0. The first time a depth-5 subtraction
+    produces a negative real argument to ln, the imaginary part locks at −π.
+    All other depth-5 paths through the grammar land on the same structural value.
+  </p>
+
+  <h2>Depth 6: the phase transition</h2>
+
+  <p>
+    At depth 6, the imaginary parts diversify dramatically. Dozens of distinct imaginary
+    values appear. The structural bound Im = −π that held for depth ≤ 5 breaks.
+  </p>
+
+  <p>
+    The most notable new value: <strong>Im = 0.99999524</strong> —
+    within 4.76 × 10⁻⁶ of 1. This is the nearest approach to Im = 1 (i.e., to constructing
+    <em>i</em>) found in the depth-6 closure. The gap does not close at depth 7 or 8;
+    see the <a href="/blog/near-miss">near-miss post</a> for the structural obstruction.
+  </p>
+
+  <p>
+    A second obstruction route approaches π/2 from below, with a gap of 9.75 × 10⁻⁶.
+    Two independent transcendental obstructions are active simultaneously.
+  </p>
+
+  <h2>Why this matters</h2>
+
+  <p>
+    The depth-6 phase transition shows that the EML grammar has <em>discrete structural
+    changes</em> at specific depths — not a smooth progression. The jump from
+    "all Im = −π" to "Im values everywhere" is not gradual. It is a combinatorial
+    transition triggered by new tree shapes becoming available at depth 6.
+  </p>
+
+  <p>
+    This is evidence for the more general claim that EML complexity is genuinely stratified:
+    each depth level has qualitatively different expressive power, not just quantitatively
+    more nodes.
+  </p>
+
+  <h2>Reproduce</h2>
+
+  <pre><code>python experiments/complex_closure_depth6.py
+# Enumerates EML closure from {1} through depth 6
+# Prints depth-by-depth summary of imaginary values</code></pre>
+
+  <div class="divider"></div>
+
+  <h3>Cite this work</h3>
+
+  <blockquote>
+    Almaguer, A.R. (2026). "The Depth-6 Phase Transition."
+    <em>monogate research blog.</em>
+    https://monogate.org/blog/depth-6-phase-transition
+  </blockquote>
+
+  <h3>License</h3>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    CC BY 4.0 — free to share and adapt with attribution. ·
+    Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
+  </p>
+</Base>

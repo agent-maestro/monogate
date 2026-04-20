@@ -1,17 +1,9 @@
 import { useState, useMemo } from "react";
 import BestCalc from "./components/BestCalc.jsx";
-import OptimizeTab from "./components/OptimizeTab.jsx";
-import ExprTreeTab from "./components/ExprTreeTab.jsx";
-import SinExplorer from "./components/SinExplorer.jsx";
-import TransformerDemo from "./components/TransformerDemo.jsx";
-import NeRFOptimizerTab from "./components/NeRFOptimizerTab.jsx";
 import LandingPage from "./components/LandingPage.jsx";
 import AttractorViz from "./components/AttractorViz.jsx";
-import ResearchTab from "./components/ResearchTab.jsx";
-import LeaderboardTab from "./components/LeaderboardTab.jsx";
-import AnalogRenaissanceTab from "./components/AnalogRenaissanceTab.jsx";
-import EMLFourierTab from "./components/EMLFourierTab.jsx";
-import FourierBarriersTab from "./components/FourierBarriersTab.jsx";
+import BenchmarkTab from "./components/BenchmarkTab.jsx";
+import ExprTreeTab from "./components/ExprTreeTab.jsx";
 import { op, exp, ln, E, ZERO, sub, neg, add, mul, div, pow, recip,
          BEST, sin_best, cos_best, pow_exl, div_edl, ln_exl } from "./eml.js";
 const deml = (x, y) => Math.exp(-x) - Math.log(y);
@@ -176,7 +168,10 @@ export default function App() {
   const [xVal,       setXVal]       = useState(1.0);
   const [customExpr, setCustomExpr] = useState("pow(x, 3)");
   const [customX,    setCustomX]    = useState(2.0);
-  const [tab,        setTab]        = useState("calc"); // verify | table | sandbox | tree | best | calc
+  const [tab,        setTab]        = useState(() => {
+    const p = new URLSearchParams(window.location.search);
+    return p.get("tab") ?? "calc";
+  });
   // Show landing on first visit; bypass if URL has params (deep links still work)
   const [showLanding, setShowLanding] = useState(() => {
     const p = new URLSearchParams(window.location.search);
@@ -300,8 +295,8 @@ export default function App() {
           </div>
           <div style={{ display:"flex", gap:4, flexWrap:"wrap", alignItems:"center" }}>
             {[
-              { label:"⊞ Challenges ↗", href:"https://challenge.monogate.dev" },
-              { label:"Theorems ↗", href:"https://challenge.monogate.dev/theorems" },
+              { label:"⊞ Challenges ↗", href:"https://monogate.dev/challenge" },
+              { label:"Theorems ↗", href:"https://monogate.org/theorems" },
             ].map(({ label, href }) => (
               <a
                 key={label}
@@ -320,21 +315,16 @@ export default function App() {
                 {label}
               </a>
             ))}
-            {["verify","table","sandbox","tree","best","calc","opt","viz","sinex","demo","nerf","attractor","research","leaderboard","deml","frontiers","explorer","quantum","analog","fourier","barriers"].map(t => {
+            {["calc","verify","table","tree","best","sandbox","deml","attractor","benchmarks"].map(t => {
               const isCalc  = t === "calc";
-              const isOpt   = t === "opt";
-              const isHighlit = isCalc || isOpt || t === "viz" || t === "sinex" || t === "demo"
-                || t === "nerf" || t === "attractor" || t === "research" || t === "leaderboard"
-                || t === "deml" || t === "frontiers" || t === "explorer" || t === "quantum"
-                || t === "analog" || t === "fourier" || t === "barriers";
+              const isBench = t === "benchmarks";
+              const isHighlit = isCalc || isBench || t === "attractor" || t === "deml";
               const isActive = tab === t;
               const LABELS = {
-                calc: "✦ calc", opt: "⚙ opt",
-                viz: "✦ viz", sinex: "sin↗", demo: "⚡ demo", nerf: "⬡ nerf",
-                attractor: "⊛ attractor", research: "🔬 research", leaderboard: "🏆 board",
-                deml: "⊖ DEML", frontiers: "📊 frontiers", explorer: "🔭 explorer",
-                quantum: "⚛ quantum", analog: "⚡ analog", fourier: "🎵 fourier",
-                barriers: "🔒 barriers",
+                calc: "✦ calc",
+                attractor: "⊛ attractor",
+                deml: "⊖ DEML",
+                benchmarks: "▶ bench",
               };
               return (
                 <button key={t} onClick={() => setTab(t)} style={{
@@ -544,25 +534,26 @@ export default function App() {
             ))}
             {/* Open challenges + BEST Taylor results */}
             {[
-              { name:"sin x", note:"Taylor via BEST: 63n (8 terms, err<7.7e-7)", nodes:"63*", status:"taylor", onClick:()=>setTab("best") },
-              { name:"cos x", note:"Taylor via BEST: 54n (8 terms, err<4.2e-6)", nodes:"54*", status:"taylor", onClick:()=>setTab("best") },
+              { name:"sin x", note:"PROVED IMPOSSIBLE over ℝ (T01 Infinite Zeros Barrier). Taylor via BEST: 63n.", nodes:"63*", status:"impossible", onClick:null },
+              { name:"cos x", note:"PROVED IMPOSSIBLE over ℝ (T01 Infinite Zeros Barrier). Taylor via BEST: 54n.", nodes:"54*", status:"impossible", onClick:null },
               { name:"tan x", note:"sin/cos ratio — composable", nodes:"~120*", status:"open", onClick:null },
               { name:"π",     note:"no closed-form EML expression", nodes:"?", status:"open", onClick:null },
-              { name:"i",     note:"open under strict grammar", nodes:"?", status:"open", onClick:null },
+              { name:"i (strict)", note:"T19: proved unreachable from {eml,1} under principal-branch semantics. Lean-verified.", nodes:"—", status:"impossible", onClick:null },
+              { name:"i (extended)", note:"Closest approach: 0.99999524 at depth 6. Open under relaxed semantics.", nodes:"?", status:"open", onClick:null },
             ].map(({name,note,nodes,status,onClick},i) => (
               <div key={name} onClick={onClick || undefined} style={{
                 display:"grid", gridTemplateColumns:"1.2fr 2fr 0.6fr 0.6fr 0.8fr",
                 padding:"9px 14px", fontSize:11, alignItems:"center",
-                borderBottom: i<4 ? `1px solid ${C.border}` : "none",
+                borderBottom: i<5 ? `1px solid ${C.border}` : "none",
                 background: "rgba(78,81,104,0.06)",
                 cursor: onClick ? "pointer" : "default",
               }}>
-                <div style={{ color: status==="taylor" ? C.accent : C.muted }}>{name}</div>
-                <div style={{ color: status==="taylor" ? C.green : C.muted, fontSize:9 }}>{note}</div>
-                <div style={{ color: status==="taylor" ? C.accent : C.muted, fontSize:9 }}>{nodes}</div>
+                <div style={{ color: status==="impossible" ? C.red : C.muted }}>{name}</div>
+                <div style={{ color: status==="impossible" ? "#f87171" : C.muted, fontSize:9 }}>{note}</div>
+                <div style={{ color: status==="impossible" ? C.red : C.muted, fontSize:9 }}>{nodes}</div>
                 <div style={{ color:C.muted, fontSize:9 }}>—</div>
-                <div style={{ fontSize:9, color: status==="taylor" ? C.green : C.muted }}>
-                  {status==="taylor" ? "~ Taylor" : "? open"}
+                <div style={{ fontSize:9, color: status==="impossible" ? C.red : C.muted }}>
+                  {status==="impossible" ? "✗ proved" : "? open"}
                 </div>
               </div>
             ))}
@@ -779,6 +770,7 @@ export default function App() {
         const cosErr  = cosVal !== null ? Math.abs(cosVal - cosRef) : null;
 
         const ROUTING = [
+          { op:"exp_neg",via:"DEML",nodes:1,  eml:10, formula:"deml(x, 1) — 1-node native (R1 result)" },
           { op:"ln",    via:"EXL", nodes:1,  eml:3,  formula:"exl(0, x)" },
           { op:"pow",   via:"EXL", nodes:3,  eml:15, formula:"exl(exl(exl(0,n),x),e)" },
           { op:"div",   via:"EDL", nodes:1,  eml:15, formula:"edl(ln(x),exp(y))" },
@@ -792,15 +784,16 @@ export default function App() {
         const totalBest = ROUTING.reduce((s, r) => s + r.nodes, 0);
         const totalEml  = ROUTING.reduce((s, r) => s + r.eml, 0);
 
-        const VIA_COL = { EXL: C.blue, EDL: "#b08af5", EML: C.accent };
+        const VIA_COL = { EXL: C.blue, EDL: "#b08af5", EML: C.accent, DEML: "#2dd4bf" };
 
         return (
           <div>
             <div style={{ fontSize:10, color:C.muted, marginBottom:16, lineHeight:1.8 }}>
-              <b style={{ color:C.accent }}>BEST</b> routes each operation to whichever operator (EML/EDL/EXL)
+              <b style={{ color:C.accent }}>BEST</b> routes each operation to whichever operator (EML/EDL/EXL/DEML)
               uses fewest nodes. Total: <b style={{ color:C.accent }}>{totalBest}</b> nodes vs{" "}
               <b style={{ color:C.muted }}>{totalEml}</b> all-EML — saves{" "}
               <b style={{ color:C.green }}>{totalEml - totalBest} ({Math.round(100*(totalEml-totalBest)/totalEml)}%)</b>.
+              DEML added for exp_neg (R1: DEML is incomplete but exp(−x) is its native 1-node output).
             </div>
 
             {/* Routing table */}
@@ -913,61 +906,40 @@ export default function App() {
       {/* ── TAB: CALC ── */}
       {tab === "calc" && <BestCalc />}
 
-      {/* ── TAB: OPT ── */}
-      {tab === "opt" && <OptimizeTab />}
-
-      {/* ── TAB: VIZ ── */}
-      {tab === "viz" && <ExprTreeTab />}
-
-      {/* ── TAB: SINEX ── */}
-      {tab === "sinex" && <SinExplorer onLoadCalc={(expr) => {
-        if (expr) {
-          const p = new URLSearchParams(window.location.search);
-          p.set("expr", encodeURIComponent(expr));
-          p.set("mode", "best");
-          window.history.replaceState(null, "", "?" + p.toString());
-        }
-        setTab("calc");
-      }} />}
-
-      {/* ── TAB: DEMO ── */}
-      {tab === "demo" && <TransformerDemo />}
-
-      {/* ── TAB: NERF ── */}
-      {tab === "nerf" && <NeRFOptimizerTab />}
+      {/* ── TAB: BENCHMARKS ── */}
+      {tab === "benchmarks" && <BenchmarkTab />}
 
       {/* ── TAB: ATTRACTOR ── */}
-      {tab === "attractor"    && <AttractorViz />}
-      {tab === "research"     && <ResearchTab />}
-      {tab === "leaderboard"  && <LeaderboardTab />}
-      {tab === "analog"       && <AnalogRenaissanceTab />}
-      {tab === "fourier"      && <EMLFourierTab />}
-      {tab === "barriers"     && <FourierBarriersTab />}
+      {tab === "attractor" && <AttractorViz />}
 
-      {/* ── FEATURED DEMOS ── */}
+      {/* ── TAB: FRACTAL ── */}
+
+      {/* ── TAB: SYNTH ── */}
+
+      {/* ── FEATURED ── */}
       <div style={{ marginTop:28, borderTop:`1px solid ${C.border}`, paddingTop:20 }}>
         <div style={{ fontSize:11, fontWeight:700, color:C.text, marginBottom:12 }}>
-          Featured Demos
+          Featured
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10 }}>
           {[
             {
-              tab: "viz", label: "✦ viz",
-              title: "Expression Tree",
-              desc: "See any math expression as a tree, colored by which EML/EDL/EXL gate handles each operation.",
+              tab: "tree", label: "✦ tree",
+              title: "Expression Trees",
+              desc: "Type any math expression, watch it decompose into EML nodes.",
               badge: "interactive",
             },
             {
-              tab: "sinex", label: "sin↗",
-              title: "sin(x) Explorer",
-              desc: "2–20 Taylor terms: watch BEST routing hold a 74% node reduction at every accuracy level.",
-              badge: "chart",
+              tab: "best", label: "best",
+              title: "BEST Routing",
+              desc: "See how hybrid routing cuts node count by 52–74%.",
+              badge: "benchmark",
             },
             {
-              tab: "demo", label: "⚡ demo",
-              title: "Transformer Demo",
-              desc: "Live JS activation timing + Python FFN benchmark from experiment_10. 3.26× speedup for sin.",
-              badge: "benchmark",
+              tab: "attractor", label: "⊛ attractor",
+              title: "The Phantom",
+              desc: "Watch gradient descent converge to the wrong answer — then fix it.",
+              badge: "experiment",
             },
           ].map(({ tab: t, label, title, desc, badge }) => (
             <button key={t} onClick={() => setTab(t)} style={{
@@ -1169,8 +1141,9 @@ export default function App() {
               <code style={{ color:C.blue }}>deml(x, y) = exp(−x) − ln(y)</code>
               {" "}is the dual of EML. While EML natively represents eˣ in 1 node,
               DEML natively represents <code style={{ color:C.blue }}>e^(−x)</code> in 1 node —
-              breaking the <strong style={{ color:C.text }}>negative-exponent barrier</strong> that
-              blocks 14/15 physics laws from EML representation.
+              breaking the <strong style={{ color:C.text }}>negative-exponent barrier</strong>.
+              In a census of 15 common physics functional forms, 14 require exp(−x) which
+              standard EML cannot represent in 1 node.
             </div>
           </div>
 
@@ -1186,9 +1159,9 @@ export default function App() {
             </div>
             <div style={{ fontSize:10, color:C.muted, lineHeight:1.8 }}>
               This is the structural mirror of EML's <code>eml(x,1) = exp(x)</code>.
-              Together, EML + DEML give both exp(x) and exp(−x) as 1-node primitives —
-              making Boltzmann factors, Gaussian decay, and Fermi-Dirac distributions
-              natively reachable.
+              In BEST routing, EML handles exp(+x) (1 node) and DEML handles exp(−x) (1 node) —
+              making Boltzmann factors and Gaussian decay natively reachable without
+              a tower construction. DEML alone is incomplete (cannot express exp(+x)).
             </div>
           </div>
 
@@ -1266,18 +1239,13 @@ export default function App() {
 val = exp_neg_deml(1.0)  # → e^(-1) ≈ 0.3679
 
 # Full DEML gate
-val2 = DEML.func(2.0, 1.0)  # → exp(-2)
-
-# Physics census with DEML
-from monogate.frontiers.deml_census import run_deml_census
-results = run_deml_census(n_simulations=500)`}
+val2 = DEML.func(2.0, 1.0)  # → exp(-2)`}
             </pre>
           </div>
         </div>
       )}
 
-      {/* ── TAB: FRONTIERS ── */}
-      {tab === "frontiers" && (
+      {false && (
         <div>
           <div style={{ fontSize:14, fontWeight:700, color:C.accent, marginBottom:14 }}>
             Research Frontiers (Sessions 6–9)
@@ -1360,8 +1328,8 @@ results = run_deml_census(n_simulations=500)`}
         </div>
       )}
 
-      {/* ── TAB: EXPLORER (Mathematical Explorer) ── */}
-      {tab === "explorer" && (
+      {/* ── TAB: EXPLORER (removed) ── */}
+      {false && (
         <div>
           <div style={{ fontSize:14, fontWeight:700, color:C.accent, marginBottom:6 }}>
             Mathematical Explorer
@@ -1460,8 +1428,8 @@ catalog = prover.catalog  # list of verified identities`}
         </div>
       )}
 
-      {/* ── TAB: QUANTUM ── */}
-      {tab === "quantum" && (
+      {/* ── TAB: QUANTUM (removed) ── */}
+      {false && (
         <div>
           <div style={{ fontSize:12, fontWeight:700, color:C.accent, marginBottom:4 }}>
             Quantum EML — Matrix Gates and Thermodynamics
@@ -1572,8 +1540,8 @@ I_AB = quantum_mutual_info(rho_bell, 2, 2)  # = 2*ln(2)`}
       <div style={{ marginTop:20, paddingTop:14, borderTop:`1px solid ${C.border}`,
         fontSize:9, color:C.muted, display:"flex", justifyContent:"space-between",
         flexWrap:"wrap", gap:6 }}>
-        <span>Odrzywołek (2026) · arXiv:2603.21852v2 · CC BY 4.0</span>
-        <span>github.com/almaguer1986/monogate</span>
+        <span>Odrzywołek (2026) · arXiv:2603.21852 · CC BY 4.0</span>
+        <span>Research by Arturo R. Almaguer · github.com/almaguer1986/monogate</span>
       </div>
     </div>
   );

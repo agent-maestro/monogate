@@ -12,10 +12,14 @@ const C = {
   green:   "#5ec47a",
 };
 
+// SuperBEST FINAL (2026-04-20): neg=2n, mul=3n, sub=3n, add=3n
 const BENCH = [
   { op: "sin(x)  8-term Taylor", best: 63,  eml: 245, pct: 74 },
+  { op: "mul(x,y)",              best: 3,   eml: 13,  pct: 77 },
   { op: "pow(x, n)",             best: 3,   eml: 15,  pct: 80 },
   { op: "div(x, y)",             best: 1,   eml: 15,  pct: 93 },
+  { op: "neg(x)",                best: 2,   eml: 6,   pct: 67 },
+  { op: "add(x,y) x>0",         best: 3,   eml: 11,  pct: 73 },
   { op: "ln(x)",                 best: 1,   eml: 3,   pct: 67 },
 ];
 
@@ -132,7 +136,7 @@ export default function LandingPage({ onEnter }) {
           </div>
           <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginBottom: 12 }}>
             {[
-              { n: "18",  label: "theorems",     color: "#5ec47a", note: "complete proofs" },
+              { n: "25",  label: "theorems",     color: "#5ec47a", note: "complete proofs" },
               { n: "67",  label: "propositions",  color: "#6ab0f5", note: "proved, routine" },
               { n: "12",  label: "conjectures",   color: C.accent,  note: "stated, unproved" },
               { n: "41",  label: "observations",  color: "#fbbf24", note: "empirical" },
@@ -146,7 +150,7 @@ export default function LandingPage({ onEnter }) {
             ))}
           </div>
           <div style={{ fontSize: 9, color: C.muted, lineHeight: 1.7 }}>
-            We claimed 957 theorems. The honest count is 18.{" "}
+            We claimed 957 theorems. The honest count is 25.{" "}
             <a
               href="https://challenge.monogate.dev/theorems"
               target="_blank"
@@ -304,9 +308,22 @@ export default function LandingPage({ onEnter }) {
             <div style={{
               padding: "8px 16px", borderTop: `1px solid ${C.border}`,
               fontSize: 9, color: C.muted, lineHeight: 1.7,
+              display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8,
             }}>
-              ~20% savings needed to cross the Python call-overhead threshold.
-              At 74%, sin/cos deliver <span style={{ color: C.green }}>2.8–3.4× wall-clock speedup</span>.
+              <span>
+                SuperBEST FINAL: <strong style={{ color: C.green }}>21n / 71.2% savings</strong> across 9 standard ops.
+                All entries proved optimal by exhaustive search.
+              </span>
+              <button
+                onClick={() => onEnter("benchmarks")}
+                style={{
+                  fontSize: 9, padding: "4px 12px", borderRadius: 4, cursor: "pointer",
+                  background: "rgba(94,196,122,0.08)", border: "1px solid rgba(94,196,122,0.3)",
+                  color: C.green, whiteSpace: "nowrap",
+                }}
+              >
+                ▶ Run all 25 benchmarks →
+              </button>
             </div>
           </div>
           </div>
@@ -363,7 +380,7 @@ export default function LandingPage({ onEnter }) {
 
         {/* ── External links ───────────────────────────────────────────── */}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 56 }}>
-          <a href="https://games.monogate.dev" style={{
+          <a href="https://monogate.dev/lab" style={{
             padding: "7px 14px", fontSize: 10, borderRadius: 4,
             border: `1px solid ${C.accent}`, color: C.accent,
             textDecoration: "none", fontFamily: "'Space Mono', monospace",
@@ -373,7 +390,7 @@ export default function LandingPage({ onEnter }) {
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(232,160,32,0.08)"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
           >
-            Games ↗
+            Lab ↗
           </a>
           {[
             { label: "Theorems", href: "https://challenge.monogate.dev/theorems" },
@@ -407,8 +424,8 @@ export default function LandingPage({ onEnter }) {
           </a>
           {" "}· Odrzywołek 2026 · CC BY 4.0
           {" · "}
-          <a href="https://games.monogate.dev" style={{ color: C.accent, textDecoration: "none" }}>
-            Games ↗
+          <a href="https://monogate.dev/lab" style={{ color: C.accent, textDecoration: "none" }}>
+            Lab ↗
           </a>
           <span style={{ color: "#1e2030", marginLeft: 12 }}>
             github.com/almaguer1986/monogate

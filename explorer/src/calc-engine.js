@@ -30,16 +30,17 @@ function cos_eml_taylor(x) {
 }
 
 // ── Node costs and operator labels per mode ────────────────────────────────────
+// SuperBEST FINAL (2026-04-20): neg=2n, mul=3n, sub=3n, add=3n
 export const NODE_COSTS = {
-  best: { sin:63, cos:63, exp:1, ln:1, pow:3, mul:7, div:1, add:11, sub:5, neg:6, sqrt:3, abs:9 },
-  eml:  { sin:245, cos:245, exp:1, ln:3, pow:15, mul:13, div:15, add:11, sub:5, neg:9, sqrt:15, abs:9 },
+  best: { sin:63, cos:63, exp:1, ln:1, pow:3, mul:3, div:1, add:3, sub:3, neg:2, sqrt:3, abs:6 },
+  eml:  { sin:245, cos:245, exp:1, ln:3, pow:15, mul:13, div:15, add:11, sub:5, neg:6, sqrt:15, abs:9 },
   exl:  { ln:1, pow:3, sqrt:3 },
-  edl:  { div:1, mul:7, neg:6 },
+  edl:  { div:1, mul:3, neg:2 },
 };
 
 export const OP_SOURCE_BEST = {
   sin:"EXL", cos:"EXL", exp:"EML", ln:"EXL", pow:"EXL",
-  mul:"EDL", div:"EDL", add:"EML", sub:"EML", neg:"EDL", sqrt:"EXL", abs:"EML",
+  mul:"EXL", div:"EDL", add:"EAL", sub:"EML", neg:"EXL", sqrt:"EXL", abs:"EXL",
 };
 
 function getOpLabel(name, mode) {

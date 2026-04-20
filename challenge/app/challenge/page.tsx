@@ -303,7 +303,7 @@ export default async function HomePage() {
         display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 10,
         fontSize: 10, color: C.muted,
       }}>
-        <span>Odrzywołek (2026) · arXiv:2603.21852v2 · CC BY 4.0 · <a href="https://games.monogate.dev" style={{ color: C.muted }}>Games ↗</a></span>
+        <span>Odrzywołek (2026) · arXiv:2603.21852v2 · CC BY 4.0 · <a href="https://monogate.dev/lab" style={{ color: C.muted }}>Games ↗</a></span>
         <div style={{ display: "flex", gap: 14 }}>
           {[
             { href: "https://explorer.monogate.dev", label: "Explorer" },

@@ -1,0 +1,119 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="The Phantom Attractor Is Not Real"
+  description="EML gradient descent converges to ~3.17 on 40/40 seeds when training to find π. The attractor is a float64 artifact, not a mathematical constant."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>observation</span>
+    <span>6 min read</span>
+  </div>
+
+  <h1>The Phantom Attractor Is Not Real</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    A spurious minimum at ~3.17 traps EML gradient descent on 40/40 seeds when targeting π.
+    PSLQ found no relation to any known constant. It vanishes at higher precision.
+    It was float64 arithmetic lying.
+  </p>
+
+  <div class="divider"></div>
+
+  <h2>The setup</h2>
+
+  <p>
+    We trained a small EML tree to represent the constant π ≈ 3.14159265… using
+    gradient descent on mean squared error. Standard initialization, standard Adam optimizer.
+    The result was surprising.
+  </p>
+
+  <h2>The mystery</h2>
+
+  <p>
+    On 40 out of 40 random seeds, gradient descent converged to approximately
+    <strong>3.171…</strong> — not π. The convergence was clean and consistent.
+    The value was reproducible. It looked like a mathematical constant.
+  </p>
+
+  <p>
+    We ran a 320-digit PSLQ integer-relation search against a library of known constants:
+    π, e, φ, ln 2, ζ(3), Catalan's constant, Apéry's constant, and dozens more.
+    <strong>No relation found.</strong> The attractor value has no known algebraic or
+    transcendental characterization.
+  </p>
+
+  <h2>The diagnosis</h2>
+
+  <p>
+    <strong>The gradient is not zero there.</strong> We computed ∇L numerically at the attractor
+    and analytically: ∇L ≠ 0. It is not a local minimum. It is not a saddle point.
+    It is a region where the gradient is very small but nonzero — and where
+    float64 arithmetic rounds the update to zero before the optimizer can escape.
+  </p>
+
+  <p>
+    The <strong>Lyapunov exponent</strong> of the loss landscape near the attractor
+    is λ ≈ 13.5 — highly chaotic. Trajectories that should diverge from the attractor
+    are numerically trapped by floating-point rounding before they can.
+  </p>
+
+  <p>
+    At 15+ decimal places of float precision (using Python's <code>mpmath</code>),
+    the attractor vanishes completely. Gradient descent finds π on 40/40 seeds.
+  </p>
+
+  <h2>The fix</h2>
+
+  <p>
+    The engineering fix: add a complexity penalty with coefficient λ<sub>crit</sub>.
+    At λ = 0 (no regularization): 0% of seeds reach π.
+    At λ = 0.001: 100% of seeds reach π.
+    This is a <strong>sharp phase transition</strong> — not a gradual improvement.
+    Below the critical value, the attractor dominates. Above it, the landscape
+    changes enough that gradient descent escapes.
+  </p>
+
+  <h2>The lesson</h2>
+
+  <p>
+    What looks deep might be float64 lying. Before concluding that you've found a
+    new mathematical object:
+  </p>
+  <ol>
+    <li>Verify that ∇L = 0 (is it actually a critical point?)</li>
+    <li>Run PSLQ against known constants</li>
+    <li>Check at higher precision (mpmath, Decimal, or exact arithmetic)</li>
+    <li>Test if regularization makes it disappear</li>
+  </ol>
+
+  <p>In this case, all four checks pointed the same direction: artifact, not mathematics.</p>
+
+  <h2>Reproduce</h2>
+
+  <pre><code>python experiments/phantom_attractor_escape.py --dps 60
+# Shows attractor at float64, then disappears at 60-digit precision
+
+python experiments/phantom_phase_transition.py --seeds 40
+# Phase transition: 0% convergence at lambda=0, 100% at lambda=0.001</code></pre>
+
+  <div class="divider"></div>
+
+  <h3>Cite this work</h3>
+
+  <blockquote>
+    Almaguer, A.R. (2026). "The Phantom Attractor Is Not Real."
+    <em>monogate research blog.</em>
+    https://monogate.org/blog/phantom-attractor
+  </blockquote>
+
+  <h3>License</h3>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    CC BY 4.0 — free to share and adapt with attribution. ·
+    Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
+  </p>
+</Base>

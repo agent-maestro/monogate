@@ -1,0 +1,141 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="The EML Complexity Census: 23 Functions Classified by Depth"
+  description="A census of 23 elementary functions classified by minimum EML approximation depth. What is proved, what is computational, and what is still open."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>observation</span>
+    <span>7 min read</span>
+  </div>
+
+  <h1>The EML Complexity Census</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    23 functions classified by their minimum EML approximation depth. Three categories:
+    proved, computational observation, and still open.
+  </p>
+
+  <div class="divider"></div>
+
+  <h2>What "EML depth" means</h2>
+
+  <p>
+    The EML depth of a function f is the minimum number of EML nodes in any tree that
+    computes f exactly (or, for transcendental functions with no exact representation,
+    the minimum depth of trees that approximate f to arbitrary precision in
+    the sense of the <a href="/blog/weierstrass-theorem">EML Weierstrass theorem</a>).
+  </p>
+
+  <p>
+    A depth of ∞ means no finite EML tree can equal the function even in the limit —
+    equivalently, the function requires an infinite sequence of increasingly deep trees.
+    This is the case for non-analytic functions like |sin(x)| and for functions with
+    non-analytic kinks.
+  </p>
+
+  <h2>The census table</h2>
+
+  <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem; margin: 16px 0;">
+    <thead>
+      <tr style="border-bottom: 1px solid #1c1f2e;">
+        <th style="text-align: left; padding: 8px 10px; color: #6b7280; font-size: 0.75rem;">Function</th>
+        <th style="text-align: center; padding: 8px 10px; color: #6b7280; font-size: 0.75rem;">EML depth</th>
+        <th style="text-align: left; padding: 8px 10px; color: #6b7280; font-size: 0.75rem;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        ["integers, rationals", "0", "proved", "Constants. No EML nodes needed."],
+        ["exp(x)", "1", "proved", "eml(x, 1) = exp(x). One node."],
+        ["eˣ (constant e)", "1", "proved", "eml(1, 1) = e. One node."],
+        ["ln(x)", "2", "proved", "4-node construction proved (§12)."],
+        ["√x", "2", "proved", "x^(1/2) = exp(ln(x)/2). EML-2."],
+        ["xⁿ (integer n)", "2", "proved", "exp(n·ln(x)). EML-2."],
+        ["sinh(x)", "3", "proved", "(exp(x) − exp(−x))/2. EML-3."],
+        ["cosh(x)", "3", "proved", "(exp(x) + exp(−x))/2. EML-3."],
+        ["tanh(x)", "3", "proved", "(e^2x − 1)/(e^2x + 1). EML-3."],
+        ["sin(x) over ℂ", "1", "proved", "Im(eml(ix, 1)) = sin(x). T03."],
+        ["sin(x) over ℝ", "∞", "proved", "T01: infinite zeros barrier."],
+        ["cos(x) over ℝ", "∞", "proved", "Same barrier as sin(x)."],
+        ["erf(x)", "3", "computational", "Depth-3 approximation reaches ε < 10⁻⁶."],
+        ["lgamma(x)", "3", "computational", "Stirling-based. Depth-3 sufficient."],
+        ["Gamma(x)", "3", "computational", "Via lgamma. Depth-3."],
+        ["Fourier series (finite)", "3", "proved", "Finite sum of sin/cos. EML-3."],
+        ["wave equation ψ = Ae^(ikx)", "3", "proved", "eml(ikx, 1) = exp(ikx). EML-1 over ℂ."],
+        ["|sin(x)|", "∞", "proved", "Non-analytic kinks survive over ℂ too."],
+        ["|x|", "∞", "proved", "Non-analytic at 0 in all domains."],
+        ["sawtooth wave", "∞", "proved", "Non-smooth, Gibbs phenomenon."],
+        ["Heaviside H(x)", "∞", "proved", "Discontinuous at 0."],
+        ["floor ⌊x⌋", "∞", "proved", "Countably infinite discontinuities."],
+        ["sin(sin(x))", "?", "open", "Convergence is slow. Current search: depth ≤ 4."],
+      ].map(([fn, depth, status, note], i) => (
+        <tr style={`border-bottom: 1px solid #0d0f18; ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
+          <td style="padding: 8px 10px; color: #d4d4d4;">{fn}</td>
+          <td style={`padding: 8px 10px; text-align: center; font-weight: 700; color: ${depth === '∞' ? '#fbbf24' : depth === '?' ? '#6b7280' : depth === '0' ? '#4a4d62' : depth === '1' ? '#06b6d4' : depth === '2' ? '#a78bfa' : '#ec4899'};`}>{depth}</td>
+          <td style={`padding: 8px 10px; color: ${status === 'proved' ? '#4ade80' : status === 'computational' ? '#fbbf24' : status === 'open' ? '#f87171' : '#6b7280'}; font-size: 0.8rem;`}>{status}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <p style="font-size: 0.85rem; color: #6b7280;">
+    <em>Proved</em>: formal proof exists. <em>Computational</em>: exhaustive or deep search confirms depth, no formal proof.
+    <em>Open</em>: depth unknown, active question.
+  </p>
+
+  <h2>The open question: EML-4</h2>
+
+  <p>
+    The EML depth hierarchy so far has strata at 0, 1, 2, 3, and ∞. Whether there exist
+    functions requiring exactly depth 4 — that is, functions approximable to arbitrary
+    precision at depth 4 but not depth 3 — is currently unknown.
+  </p>
+
+  <p>
+    Candidates include <code>sin(sin(x))</code>, <code>exp(sin(x))</code>, and related
+    compositions of EML-3 functions. Current dictionary search (depth ≤ 4) has not confirmed
+    whether these require depth 4 or whether depth 3 is sufficient with the right tree structure.
+  </p>
+
+  <h2>Grammar comparison: G1, G2, G3</h2>
+
+  <p>
+    The EML complexity census applies to grammar G1 (EML only). Grammar G2 adds DEML
+    (<code>deml(x,y) = exp(−x) − ln(y)</code>). Grammar G3 adds EXL
+    (<code>exl(x,y) = exp(x) · ln(y)</code>).
+  </p>
+
+  <p>
+    <strong>Key result:</strong> G3 = G1 in closure at depth ≥ 3. DEML and EXL add efficiency
+    (fewer nodes for specific primitives) but not expressiveness. The depth classification of
+    every function is the same across G1, G2, and G3.
+  </p>
+
+  <h2>Reproduce</h2>
+
+  <pre><code>python experiments/complexity_census.py
+# Prints depth classifications for all 23 functions
+# Flags proved vs. computational vs. open</code></pre>
+
+  <div class="divider"></div>
+
+  <h3>Cite this work</h3>
+
+  <blockquote>
+    Almaguer, A.R. (2026). "The EML Complexity Census: 23 Functions Classified by Depth."
+    <em>monogate research blog.</em>
+    https://monogate.org/blog/complexity-census
+  </blockquote>
+
+  <h3>License</h3>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    CC BY 4.0 — free to share and adapt with attribution. ·
+    Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
+  </p>
+</Base>

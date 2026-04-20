@@ -36,8 +36,8 @@ const SECTIONS = [
     tag: "challenge",
   },
   {
-    href: "/play",
-    label: "Play",
+    href: "/lab",
+    label: "Lab",
     desc: "Games and interactive experiments built on the EML grammar.",
     color: C.green,
     tag: "games",
@@ -62,7 +62,7 @@ export default function LandingPage() {
           {[
             { href: "/explorer", label: "Explorer" },
             { href: "/challenge", label: "Challenge" },
-            { href: "/play", label: "Play" },
+            { href: "/lab", label: "Lab" },
             { href: "/docs", label: "Docs" },
             { href: "https://monogate.org", label: "Research ↗", external: true },
           ].map(({ href, label, external }) => (

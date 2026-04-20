@@ -2,6 +2,21 @@
 import Base from '../../layouts/Base.astro';
 
 const posts = [
+  { href: '/blog/fourier-beats-taylor', title: 'Fourier Beats Taylor by 100x in EML Node Count', tag: 'theorem', date: '2026-04-19', desc: 'sin(x) costs 101 nodes as an 8-term Taylor series in BEST routing. The same function is 1 complex EML node via Fourier/Euler. The 100x gap validates the games\' sound design.' },
+  { href: '/blog/eml-no-fixed-points', title: 'The EML Self-Map Has No Fixed Points', tag: 'theorem', date: '2026-04-19', desc: 'exp(x)−ln(x) > x for all x > 0, with minimum gap 1.648629. The EML self-map diverges catastrophically. Among 8 operators, only EML and LEX have no real fixed points.' },
+  { href: '/blog/mul-gap-closed', title: 'We Found a Faster Multiplication: 4 Nodes Instead of 7', tag: 'theorem', date: '2026-04-19', desc: 'The EAL bridge identity eal(ln(a), exp(b)) = a+b enables a 4-node mixed mul tree. Exhaustive search confirms optimality. Also: mixed add drops from 11n to 3n.' },
+  { href: '/blog/completeness-trichotomy', title: 'The Completeness Trichotomy: EML, EMN, and Everyone Else', tag: 'theorem', date: '2026-04-19', desc: 'Three completeness classes for exp-ln gates: exactly complete (EML), approximately complete (EMN), incomplete (all others). Two new theorems close the EMN question.' },
+  { href: '/blog/eml-closure-density', title: 'Is the EML Closure Dense in ℂ?', tag: 'conjecture', date: '2026-04-19', desc: 'We tested 20 random complex targets. All approached within depth 6. π appears as an Im-part at depth 7. Strong evidence for density — not yet proved.' },
+  { href: '/blog/tight-zeros-bound', title: 'The Tight Zeros Bound', tag: 'theorem', date: '2026-04-19', desc: 'A depth-k EML tree has at most 2k+2 real zeros. Computationally the true max is just 2 for all k from 3 to 6. Strengthens the Infinite Zeros Barrier from qualitative to quantitative.' },
+  { href: '/blog/operator-zoo', title: 'The Operator Zoo: Which exp-ln Gates Are Complete?', tag: 'theorem', date: '2026-04-19', desc: 'Eight operators classified. Six incomplete. One exactly complete (EML). One approximately complete (EMN): converges to any elementary function but cannot compute ln(x) exactly.' },
+  { href: '/blog/deml-is-incomplete', title: 'DEML Is Incomplete', tag: 'theorem', date: '2026-04-19', desc: 'deml(x,y) = exp(−x) − ln(y) cannot construct exp(+x) or neg(x). Structural proof + exhaustive search over 861,952 trees.' },
+  { href: '/blog/pumping-lemma', title: 'The Pumping Lemma for EML Trees', tag: 'conjecture', date: '2026-04-19', desc: 'Depth-k trees have at most 2^k zeros (proved). Observed maximum is O(k). The gap suggests a tighter bound — still open.' },
+  { href: '/blog/complexity-census', title: 'The EML Complexity Census', tag: 'observation', date: '2026-04-19', desc: '23 elementary functions classified by minimum EML approximation depth. What is proved, what is computational, and what is still open.' },
+  { href: '/blog/depth-6-phase-transition', title: 'The Depth-6 Phase Transition', tag: 'observation', date: '2026-04-19', desc: 'At depth 5, all complex EML values have Im = −π exactly. At depth 6, imaginary parts explode. A structural phase transition.' },
+  { href: '/blog/negative-exponent', title: 'exp(−x) and the Five-Operator Barrier', tag: 'observation', date: '2026-04-19', desc: 'exp(−x) is blocked for 1-node EML across five operator families. DEML breaks through: deml(x,1) = exp(−x) exactly.' },
+  { href: '/blog/phantom-attractor', title: 'The Phantom Attractor Is Not Real', tag: 'observation', date: '2026-04-19', desc: 'EML gradient descent converges to ~3.17 on 40/40 seeds when targeting π. PSLQ found no relation. It vanishes at higher precision.' },
+  { href: '/blog/weierstrass-theorem', title: 'The EML Weierstrass Theorem', tag: 'theorem', date: '2026-04-19', desc: 'EML trees are dense in C([a,b]). Any continuous function can be approximated to arbitrary precision — but not always represented exactly.' },
+  { href: '/blog/i-unconstructibility', title: 'T19: Why You Can\'t Build i from 1', tag: 'theorem', date: '2026-04-19', desc: 'Under strict principal-branch semantics, i is unreachable from {eml, 1}. Lean-verified. At depth 6, the closest approach is 0.99999524.' },
   { href: '/blog/infinite-zeros-barrier', title: 'The Infinite Zeros Barrier', tag: 'theorem', date: '2026-04-19', desc: 'Why sin(x) cannot be expressed as a finite real EML tree.' },
   { href: '/blog/near-miss', title: '0.99999524: The Near-Miss', tag: 'research', date: '2026-04-19', desc: 'How close can an EML tree get to i? A gap of 4.76×10⁻⁶ and the transcendental obstruction.' },
   { href: '/blog/euler-formula-is-eml', title: "Euler's Formula Is the EML Operator", tag: 'exposition', date: '2026-04-19', desc: 'eml(ix, 1) = exp(ix). One node. The deepest identity in mathematics.' },
@@ -10,22 +25,32 @@ const posts = [
 ];
 
 const tagColors: Record<string, string> = {
-  theorem: '#4ade80',
-  research: '#a78bfa',
-  exposition: '#06b6d4',
+  theorem:     '#4ade80',
+  conjecture:  '#f87171',
+  observation: '#fbbf24',
+  research:    '#a78bfa',
+  exposition:  '#06b6d4',
   engineering: '#fbbf24',
-  meta: '#f87171',
+  meta:        '#f87171',
 };
+
+const tagOrder = ['theorem', 'conjecture', 'observation', 'exposition', 'engineering', 'research', 'meta'];
 ---
 
 <Base title="Blog — monogate.org" description="Research blog on the EML operator: theorems, proofs, near-misses, and open problems.">
   <h1>Research Blog</h1>
-  <p style="color: #6b7280; margin-bottom: 40px;">
+  <p style="color: #6b7280; margin-bottom: 12px;">
     Findings from the EML operator research program.
     <a href="/">← Back to monogate.org</a>
   </p>
 
-  <div style="display: flex; flex-direction: column; gap: 20px;">
+  <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px;">
+    {tagOrder.map(tag => (
+      <span style={`font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: ${tagColors[tag]}; background: ${tagColors[tag]}15; border: 1px solid ${tagColors[tag]}30; border-radius: 3px; padding: 2px 8px;`}>{tag}</span>
+    ))}
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px;">
     {posts.map(p => (
       <a href={p.href} style="display: block; border: 1px solid #1c1f2e; border-radius: 8px; padding: 18px 22px; text-decoration: none; color: inherit; background: #0d0f18;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px;">

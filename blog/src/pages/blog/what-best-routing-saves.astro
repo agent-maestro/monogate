@@ -15,7 +15,12 @@ import Base from '../../layouts/Base.astro';
 
   <h1>What BEST Routing Actually Saves</h1>
   <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
-    Empirical speedups from hybrid EML/EDL/EXL dispatch. The numbers, honestly reported.
+    Empirical speedups from hybrid EML/EDL/EXL/EAL dispatch. The numbers, honestly reported.
+    Updated 2026-04-20 with SuperBEST FINAL table (neg=2n, mul=3n, sub=3n).
+    <br />
+    <a href="https://monogate.dev/explorer?tab=benchmarks" style="color: #4ade80;">
+      → Run the benchmark suite yourself (instant, no login)
+    </a>
   </p>
 
   <div class="divider"></div>
@@ -54,13 +59,16 @@ import Base from '../../layouts/Base.astro';
       </thead>
       <tbody>
         {[
-          ['exp(x)', 1, 1, 0],
-          ['ln(x)', 4, 1, 75],
-          ['x + y', 11, 11, 0],
-          ['x × y', 13, 7, 46],
-          ['x ÷ y', 15, 1, 93],
-          ['x²', 9, 5, 44],
-          ['sin(x) over ℂ', 108, 1, 99],
+          ['exp(x)',        1,   1,  0],
+          ['ln(x)',         3,   1, 67],
+          ['neg(x)',        6,   2, 67],
+          ['x + y (x>0)',  11,   3, 73],
+          ['x − y (x>0)',   5,   3, 40],
+          ['x × y (x>0)',  13,   3, 77],
+          ['x ÷ y',        15,   1, 93],
+          ['x^n (x>0)',    15,   3, 80],
+          ['recip(x)',      5,   2, 60],
+          ['sin(x)',       245, 63, 74],
         ].map(([fn, pure, best, pct]) => (
           <tr style="border-bottom: 1px solid #1c1f2e12;">
             <td style="padding: 8px 12px; color: #d4d4d4;">{fn}</td>
@@ -74,9 +82,12 @@ import Base from '../../layouts/Base.astro';
   </div>
 
   <p>
-    The big wins are ln(x) (75% savings via EXL), division (93% savings via EDL), and
-    complex sin (99% via CBEST). Addition has no savings — it genuinely costs 11 nodes
-    no matter which operator you use.
+    The big wins are div (93% via EDL), mul (77% via EXL), pow (80% via EXL), and
+    add/neg (67–73% via EAL/EXL). The SuperBEST FINAL table (2026-04-20) achieves
+    <strong>71.2% total savings</strong> across 9 standard arithmetic operations — 21 nodes
+    vs 73 naive. All entries proved optimal by exhaustive search.
+    Addition for general x,y∈ℝ still costs 11n (EML is the only capable operator);
+    the 3n entry applies when x&gt;0.
   </p>
 
   <h2>Wall-clock speedups</h2>

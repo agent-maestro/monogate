@@ -33,7 +33,7 @@ export default function DocsPage() {
           {[
             { href: "/explorer", label: "Explorer" },
             { href: "/challenge", label: "Challenge" },
-            { href: "/play", label: "Play" },
+            { href: "/lab", label: "Lab" },
             { href: "/docs", label: "Docs", active: true },
             { href: "https://monogate.org", label: "Research ↗", external: true },
           ].map(({ href, label, active, external }) => (

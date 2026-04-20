@@ -58,7 +58,7 @@ const MODES = [
 ];
 
 const MODE_DESC = {
-  best: "Routes each op to its optimal operator — 52% fewer nodes on average",
+  best: "Routes each op to its optimal operator — 71.2% fewer nodes on average (SuperBEST FINAL)",
   eml:  "Pure EML — exp(x)−ln(y) for every node",
   exl:  "EXL only — exp(x)·ln(y) — excels at ln and pow, incomplete for add/sub",
   edl:  "EDL only — exp(x)/ln(y) — excels at div and mul, requires e as constant",

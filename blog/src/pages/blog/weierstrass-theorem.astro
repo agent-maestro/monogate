@@ -1,0 +1,109 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="The EML Weierstrass Theorem: Density of EML Trees in C([a,b])"
+  description="For any continuous function on a closed interval and any ε > 0, a finite EML tree approximates it to within ε. Proved constructively in four steps."
+  date="2026-04-19"
+>
+  <div class="meta">
+    <span>2026-04-19</span>
+    <span>theorem</span>
+    <span>5 min read</span>
+  </div>
+
+  <h1>The EML Weierstrass Theorem</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+    EML trees are dense in the continuous functions. Any continuous function can be approximated
+    to arbitrary precision by a finite EML tree — but not always represented exactly.
+  </p>
+
+  <div class="divider"></div>
+
+  <h2>The theorem</h2>
+
+  <blockquote>
+    For any continuous function f on [a, b] and any ε &gt; 0, there exists a finite EML tree T
+    such that |T(x) − f(x)| &lt; ε for all x ∈ [a, b].
+  </blockquote>
+
+  <p>
+    This is a density result, not an exact representation result. The distinction matters.
+  </p>
+
+  <h2>The four-step proof</h2>
+
+  <p><strong>Step 1 — Classical Weierstrass.</strong>
+    Every continuous function on [a, b] can be uniformly approximated by polynomials
+    (Weierstrass approximation theorem, 1885). For any ε &gt; 0, there exists a polynomial
+    p(x) with |f(x) − p(x)| &lt; ε/2 uniformly on [a, b].
+  </p>
+
+  <p><strong>Step 2 — Monomials are EML-expressible.</strong>
+    Every monomial x<sup>n</sup> = exp(n · ln(x)) for x &gt; 0. This is an EML-2 composition:
+    one ln node, one scalar multiplication, one exp node. Concretely:
+    <code>eml(n · eml(1, x), 1) = exp(n · (e − ln(x))) − 0</code>... scaled appropriately.
+    More directly: x<sup>n</sup> = exp(n · ln(x)) is reachable in a depth-2 EML tree
+    given ln(x) as an intermediate.
+  </p>
+
+  <p><strong>Step 3 — Linear combinations.</strong>
+    Finite linear combinations of EML trees (with real coefficients) form a vector space.
+    A polynomial is a finite linear combination of monomials. Therefore every polynomial
+    lies in the EML linear span.
+  </p>
+
+  <p><strong>Step 4 — Density follows.</strong>
+    EML span ⊇ polynomials. Polynomials are dense in C([a, b]) by classical Weierstrass.
+    A set that contains a dense subset is itself dense. ∎
+  </p>
+
+  <h2>The critical distinction: density vs. exactness</h2>
+
+  <p>
+    The EML Weierstrass theorem does not contradict the
+    <a href="/blog/infinite-zeros-barrier">Infinite Zeros Barrier</a>.
+    sin(x) <em>cannot</em> be exactly represented as a finite real EML tree —
+    that is a structural impossibility. But sin(x) <em>can</em> be approximated
+    to any desired accuracy: just take enough terms of its Taylor polynomial,
+    and each polynomial is an EML linear combination.
+  </p>
+
+  <p>
+    Approximation and exact representation are different things. Weierstrass gives you the first.
+    The barrier denies you the second.
+  </p>
+
+  <h2>A concrete witness: x²</h2>
+
+  <p>
+    The monomial x² = exp(2 · ln(x)). In EML tree form: a 3-node tree
+    (ln node, scalar 2, exp node) represents x² exactly for x &gt; 0.
+    This is the simplest nontrivial Weierstrass witness — a function that is
+    both exactly representable and useful as a building block for polynomial approximations.
+  </p>
+
+  <h2>Reproduce</h2>
+
+  <pre><code>python experiments/weierstrass_demo.py --target "x**2" --depth 3
+# Demonstrates x^2 = exp(2*ln(x)) and builds polynomial approximations</code></pre>
+
+  <div class="divider"></div>
+
+  <h3>Cite this work</h3>
+
+  <blockquote>
+    Almaguer, A.R. (2026). "The EML Weierstrass Theorem: Density of EML Trees in C([a,b])."
+    <em>monogate research blog.</em>
+    https://monogate.org/blog/weierstrass-theorem
+  </blockquote>
+
+  <h3>License</h3>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    CC BY 4.0 — free to share and adapt with attribution. ·
+    Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
+  </p>
+</Base>

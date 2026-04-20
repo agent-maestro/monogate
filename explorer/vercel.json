@@ -1,8 +1,9 @@
 {
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "redirects": [
-    { "source": "/games", "destination": "https://games.monogate.dev", "permanent": false }
+    { "source": "/explorer", "destination": "/explorer/index.html" },
+    { "source": "/explorer/:path*", "destination": "/explorer/index.html" },
+    { "source": "/benchmarks", "destination": "/explorer/index.html" },
+    { "source": "/benchmarks/:path*", "destination": "/explorer/index.html" }
   ]
 }
