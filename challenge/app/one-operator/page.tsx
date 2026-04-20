@@ -47,7 +47,7 @@ function ExpDemo() {
   return (
     <div style={{ padding: "16px 20px", borderRadius: 12, background: "rgba(6,182,212,0.04)", border: "1px solid rgba(6,182,212,0.1)", margin: "16px 0" }}>
       <div style={{ fontSize: 11, fontWeight: 600, color: "#06B6D4", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>One node. That&apos;s all.</div>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: "center" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
         <span style={{ fontFamily: "monospace", color: "#06B6D4", fontSize: 15 }}>eml(</span>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 140 }}>
           <input type="range" min="-2" max="4" step="0.1" value={x} onChange={e => setX(Number(e.target.value))}
@@ -245,7 +245,7 @@ export default function OneOperator() {
 
       <div style={{ textAlign: "center", marginBottom: 40 }}>
         <a href="/" style={{ fontSize: 11, letterSpacing: 4, textTransform: "uppercase", color: "#A78BFA", fontWeight: 600, fontFamily: "monospace", marginBottom: 8, display: "block", textDecoration: "none" }}>monogate</a>
-        <h1 style={{ fontSize: 42, fontWeight: 400, margin: "0 0 8px", lineHeight: 1.2, letterSpacing: -1, color: "#d4d4d4" }}>One Operator</h1>
+        <h1 style={{ fontSize: "clamp(28px, 8vw, 42px)", fontWeight: 400, margin: "0 0 8px", lineHeight: 1.2, letterSpacing: -1, color: "#d4d4d4" }}>One Operator</h1>
         <p style={{ fontSize: 16, color: "#6b7280", fontStyle: "italic", margin: 0 }}>
           How a single equation generates all elementary functions
         </p>
@@ -361,7 +361,7 @@ export default function OneOperator() {
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 30 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 30 }}>
         {[
           { label: "Try the lab", href: "https://monogate.dev/lab", color: "#EC4899", desc: "Interactive experiments" },
           { label: "Read the paper", href: "https://arxiv.org/abs/2603.21852", color: "#06B6D4", desc: "Odrzywołek 2026" },
@@ -370,6 +370,7 @@ export default function OneOperator() {
           <a key={door.label} href={door.href} target="_blank" rel="noopener noreferrer" style={{
             display: "block", padding: "16px 14px", borderRadius: 12, textDecoration: "none",
             textAlign: "center", background: `${door.color}06`, border: `1.5px solid ${door.color}20`,
+            flex: "1 1 140px",
           }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: door.color, fontFamily: "monospace" }}>{door.label}</div>
             <div style={{ fontSize: 11, color: "#999", marginTop: 4, fontFamily: "monospace" }}>{door.desc}</div>
