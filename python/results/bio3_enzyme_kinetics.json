@@ -1,0 +1,195 @@
+{
+  "session": "Bio3",
+  "title": "SuperBEST v3 Cost Analysis — Biology Block 3: Enzyme Kinetics",
+  "date": "2026-04-20",
+  "superBEST_v3_routing_table": {
+    "exp(x)": 1,
+    "ln(x)": 1,
+    "neg(x)": 2,
+    "recip(x)": 2,
+    "mul(x,y)": 2,
+    "sub(x,y)": 2,
+    "add(x,y)": 3,
+    "pow(x,n)": 3,
+    "terminal_parameter": 0
+  },
+  "key_observation": "All six basic enzyme-kinetics equations are RATIONAL functions — no exp or ln appear anywhere. Primitives used are: add, mul, recip (implementing division as mul·recip). Division a/b is computed as mul(a, recip(b)), costing 2 (recip) + 2 (mul) = 4 nodes.",
+  "division_decomposition": {
+    "note": "SuperBEST has no 'div' primitive. Division a/b = mul(a, recip(b)).",
+    "cost": "recip(b)=2 + mul(a, recip(b))=2 → total 4 nodes per division"
+  },
+  "equations": [
+    {
+      "id": 1,
+      "name": "Michaelis-Menten",
+      "formula": "v = Vmax·[S] / (Km + [S])",
+      "type": "rational — no exp, no ln",
+      "operator_tree": {
+        "step1": "add(Km, [S])          → cost 3",
+        "step2": "mul(Vmax, [S])         → cost 2",
+        "step3": "recip(add(Km,[S]))     → cost 2  (enables division)",
+        "step4": "mul(Vmax·[S], recip(denom)) → cost 2"
+      },
+      "primitives_used": ["add", "mul", "recip"],
+      "primitives_NOT_used": ["exp", "ln", "neg", "sub", "pow"],
+      "total_operator_nodes": 9,
+      "breakdown": "add(3) + mul(2) + recip(2) + mul(2) = 9",
+      "terminals": ["Vmax", "[S]", "Km"],
+      "notes": "Canonical rational function. The denominator add costs 3; each mul costs 2; recip for division costs 2. Result: 9 nodes."
+    },
+    {
+      "id": 2,
+      "name": "Lineweaver-Burk (double reciprocal)",
+      "formula": "1/v = (Km/Vmax)·(1/[S]) + 1/Vmax",
+      "type": "rational — no exp, no ln",
+      "operator_tree": {
+        "step1": "recip([S])                        → cost 2",
+        "step2": "recip(Vmax)                       → cost 2  (used in both terms)",
+        "step3": "mul(Km, recip(Vmax))              → cost 2  (gives Km/Vmax)",
+        "step4": "mul(Km/Vmax, recip([S]))          → cost 2  (first term)",
+        "step5": "add(mul_result, recip(Vmax))      → cost 3"
+      },
+      "primitives_used": ["recip", "mul", "add"],
+      "primitives_NOT_used": ["exp", "ln", "neg", "sub", "pow"],
+      "total_operator_nodes": 11,
+      "breakdown": "recip(2) + recip(2) + mul(2) + mul(2) + add(3) = 11",
+      "terminals": ["Km", "Vmax", "[S]"],
+      "notes": "Two reciprocals needed ([S] and Vmax). Vmax reciprocal is shared across both terms. Add at the end costs 3. Total 11 nodes.",
+      "optimization_note": "If recip(Vmax) is computed once and reused (DAG sharing), the logical cost stays 11 but tree size is 11; with DAG the shared node is counted once."
+    },
+    {
+      "id": 3,
+      "name": "Competitive inhibition",
+      "formula": "v = Vmax·[S] / (Km·(1 + [I]/Ki) + [S])",
+      "type": "rational — no exp, no ln",
+      "operator_tree": {
+        "step1": "recip(Ki)                         → cost 2",
+        "step2": "mul([I], recip(Ki))               → cost 2  ([I]/Ki)",
+        "step3": "add(1, [I]/Ki)                    → cost 3  (1 + [I]/Ki = α)",
+        "step4": "mul(Km, α)                        → cost 2  (Km·α)",
+        "step5": "add(Km·α, [S])                   → cost 3  (full denominator)",
+        "step6": "mul(Vmax, [S])                    → cost 2  (numerator)",
+        "step7": "recip(denom)                      → cost 2",
+        "step8": "mul(numerator, recip(denom))      → cost 2"
+      },
+      "primitives_used": ["recip", "mul", "add"],
+      "primitives_NOT_used": ["exp", "ln", "neg", "sub", "pow"],
+      "total_operator_nodes": 18,
+      "breakdown": "recip(2) + mul(2) + add(3) + mul(2) + add(3) + mul(2) + recip(2) + mul(2) = 18",
+      "terminals": ["Vmax", "[S]", "Km", "[I]", "Ki", "1"],
+      "notes": "The inhibition factor α = 1 + [I]/Ki adds a recip+mul+add sub-tree (7 nodes) on top of base Michaelis-Menten. '1' can be a free terminal (cost 0)."
+    },
+    {
+      "id": 4,
+      "name": "Uncompetitive inhibition",
+      "formula": "v = Vmax·[S] / (Km + [S]·(1 + [I]/Ki))",
+      "type": "rational — no exp, no ln",
+      "operator_tree": {
+        "step1": "recip(Ki)                         → cost 2",
+        "step2": "mul([I], recip(Ki))               → cost 2  ([I]/Ki)",
+        "step3": "add(1, [I]/Ki)                    → cost 3  (1 + [I]/Ki = α')",
+        "step4": "mul([S], α')                      → cost 2  ([S]·α')",
+        "step5": "add(Km, [S]·α')                  → cost 3  (full denominator)",
+        "step6": "mul(Vmax, [S])                    → cost 2  (numerator)",
+        "step7": "recip(denom)                      → cost 2",
+        "step8": "mul(numerator, recip(denom))      → cost 2"
+      },
+      "primitives_used": ["recip", "mul", "add"],
+      "primitives_NOT_used": ["exp", "ln", "neg", "sub", "pow"],
+      "total_operator_nodes": 18,
+      "breakdown": "recip(2) + mul(2) + add(3) + mul(2) + add(3) + mul(2) + recip(2) + mul(2) = 18",
+      "terminals": ["Vmax", "[S]", "Km", "[I]", "Ki", "1"],
+      "notes": "Structurally isomorphic to competitive inhibition — same cost 18. The only difference is whether α multiplies Km (competitive) or [S] (uncompetitive); the operator count is identical."
+    },
+    {
+      "id": 5,
+      "name": "Mixed inhibition (general)",
+      "formula": "v = Vmax·[S] / (α·Km + α'·[S])   where α = 1+[I]/Ki, α' = 1+[I]/Ki'",
+      "type": "rational — no exp, no ln",
+      "operator_tree": {
+        "alpha_subtree": {
+          "step1": "recip(Ki)                       → cost 2",
+          "step2": "mul([I], recip(Ki))             → cost 2",
+          "step3": "add(1, [I]/Ki)                  → cost 3  (α)"
+        },
+        "alpha_prime_subtree": {
+          "step4": "recip(Ki_prime)                 → cost 2",
+          "step5": "mul([I], recip(Ki'))            → cost 2",
+          "step6": "add(1, [I]/Ki')                 → cost 3  (α')"
+        },
+        "denominator": {
+          "step7": "mul(α, Km)                      → cost 2  (α·Km)",
+          "step8": "mul(α', [S])                    → cost 2  (α'·[S])",
+          "step9": "add(α·Km, α'·[S])              → cost 3  (denom)"
+        },
+        "numerator_and_division": {
+          "step10": "mul(Vmax, [S])                 → cost 2  (numerator)",
+          "step11": "recip(denom)                   → cost 2",
+          "step12": "mul(numerator, recip(denom))   → cost 2"
+        }
+      },
+      "primitives_used": ["recip", "mul", "add"],
+      "primitives_NOT_used": ["exp", "ln", "neg", "sub", "pow"],
+      "total_operator_nodes": 27,
+      "breakdown": "alpha: recip(2)+mul(2)+add(3)=7 | alpha_prime: recip(2)+mul(2)+add(3)=7 | denom: mul(2)+mul(2)+add(3)=7 | division: mul(2)+recip(2)+mul(2)=6 | total=27",
+      "terminals": ["Vmax", "[S]", "Km", "[I]", "Ki", "Ki_prime", "1"],
+      "notes": "[I] appears in both α and α' sub-trees but is a shared terminal (cost 0 each time in a DAG). '1' is a free terminal shared across both add(1,…) steps. Two separate Ki constants (Ki and Ki') each need their own recip."
+    },
+    {
+      "id": 6,
+      "name": "Enzyme turnover",
+      "formula": "kcat = Vmax / [E]total",
+      "type": "rational — trivial division",
+      "operator_tree": {
+        "step1": "recip([E]total)                   → cost 2",
+        "step2": "mul(Vmax, recip([E]total))        → cost 2"
+      },
+      "primitives_used": ["recip", "mul"],
+      "primitives_NOT_used": ["exp", "ln", "neg", "sub", "add", "pow"],
+      "total_operator_nodes": 4,
+      "breakdown": "recip(2) + mul(2) = 4",
+      "terminals": ["Vmax", "[E]total"],
+      "notes": "Minimal rational expression. If [E]total is absorbed into Vmax as a pre-scaled constant (i.e., kcat is itself a free terminal), cost = 0. Otherwise 4 nodes."
+    },
+    {
+      "id": 7,
+      "name": "Specificity constant efficiency",
+      "formula": "kcat / Km",
+      "type": "rational — trivial division",
+      "operator_tree": {
+        "step1": "recip(Km)                         → cost 2",
+        "step2": "mul(kcat, recip(Km))              → cost 2"
+      },
+      "primitives_used": ["recip", "mul"],
+      "primitives_NOT_used": ["exp", "ln", "neg", "sub", "add", "pow"],
+      "total_operator_nodes": 4,
+      "breakdown": "recip(2) + mul(2) = 4",
+      "alternatives": {
+        "if_both_terminals": "0 operator nodes — ratio is itself a free parameter",
+        "if_kcat_from_eq6": "kcat already costs 4 nodes; then add recip(Km)+mul = 4 more → 8 total from raw Vmax/[E]total/Km"
+      },
+      "terminals": ["kcat", "Km"],
+      "notes": "If kcat and Km are both free terminals (parameters known from fitting), cost is 4. If kcat must be derived from Vmax/[E]total first, total cost from raw inputs is 8."
+    }
+  ],
+  "summary_table": [
+    {"equation": "Michaelis-Menten",          "operator_nodes": 9,  "primitives": "add, mul, recip"},
+    {"equation": "Lineweaver-Burk",           "operator_nodes": 11, "primitives": "recip, mul, add"},
+    {"equation": "Competitive inhibition",    "operator_nodes": 18, "primitives": "recip, mul, add"},
+    {"equation": "Uncompetitive inhibition",  "operator_nodes": 18, "primitives": "recip, mul, add"},
+    {"equation": "Mixed inhibition",          "operator_nodes": 27, "primitives": "recip, mul, add"},
+    {"equation": "Enzyme turnover (kcat)",    "operator_nodes": 4,  "primitives": "recip, mul"},
+    {"equation": "Specificity constant",      "operator_nodes": 4,  "primitives": "recip, mul"}
+  ],
+  "cross_cutting_findings": {
+    "no_exp_or_ln": "None of the seven equations use exp or ln. All are rational functions composed entirely of polynomial numerators and denominators.",
+    "primitives_never_needed": ["exp", "ln", "neg", "sub", "pow"],
+    "primitives_always_needed": ["mul", "recip"],
+    "primitive_add_needed_when": "Any sum appears in the denominator or as part of an inhibition factor. Pure-division expressions (eq6, eq7) need no add.",
+    "division_cost": "Each division adds 4 nodes (recip=2 + mul=2). This is the dominant structural cost driver.",
+    "inhibition_factor_cost": "Each inhibition factor α = 1+[I]/Ki costs 7 nodes (recip+mul+add). Mixed inhibition has two such factors, explaining its high cost of 27.",
+    "michaelis_menten_is_minimal_rational": "v = Vmax·[S]/(Km+[S]) achieves enzyme rate as a rational function with just 9 nodes — the minimum for a biologically meaningful saturating curve.",
+    "lineweaver_burk_inversion_penalty": "Taking double reciprocals adds 2 extra recip nodes (one for 1/v implicit, one for 1/[S]) and reorganizes the tree, increasing cost from 9 to 11 — a small penalty for linearization.",
+    "shared_terminals_are_free": "Parameters like [I] or '1' appearing multiple times in the tree are free terminals each time — no additional node cost for reuse."
+  }
+}

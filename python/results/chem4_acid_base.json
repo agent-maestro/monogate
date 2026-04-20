@@ -1,0 +1,194 @@
+{
+  "session": "Chem Block 4",
+  "title": "SuperBEST v3 Cost Analysis — Acid-Base Chemistry",
+  "routing_table": {
+    "exp(x)": 1,
+    "ln(x)": 1,
+    "neg(x)": 2,
+    "recip(x)": 2,
+    "mul(x,y)": 2,
+    "sub(x,y)": 2,
+    "add(x,y)": 3,
+    "pow(x,n)": 3
+  },
+  "note_log_base_conversion": "log₁₀(x) = (1/ln10)·ln(x). Since 1/ln10 is a free constant c, log₁₀(x) = mul(c, ln(x)) costs 1 ln + 1 mul = 1+2 = 3n. However, when multiplied by another free constant (e.g., −1), the two constants fold into one: −log₁₀(x) = mul(−c, ln(x)) = 1 ln + 1 mul = 3n total (no separate neg needed).",
+
+  "equations": [
+
+    {
+      "id": 1,
+      "name": "pH definition",
+      "formula": "pH = −log₁₀([H⁺])",
+      "analysis": {
+        "key_insight": "neg and the base-conversion constant fold into a single free constant −1/ln(10). The computation is: mul(−c, ln([H⁺])) where −c = −1/ln(10) is a single terminal constant.",
+        "tree": {
+          "root": "mul(−c, ln([H⁺]))",
+          "children": {
+            "left": "−c  [terminal constant, cost 0]",
+            "right": "ln([H⁺])  [cost 1]"
+          }
+        },
+        "operations": [
+          {"op": "ln([H⁺])", "cost": 1, "note": "natural log of input variable"},
+          {"op": "mul(−c, ln([H⁺]))", "cost": 2, "note": "−c = −1/ln(10) is a free constant; no separate neg primitive needed"}
+        ],
+        "total_nodes": 3,
+        "breakdown": "1 (ln) + 2 (mul) = 3n",
+        "alternative_rejected": "neg(mul(c, ln([H⁺]))) would cost 1+2+2 = 5n — rejected because the constant absorbs the negation"
+      }
+    },
+
+    {
+      "id": 2,
+      "name": "Henderson-Hasselbalch equation",
+      "formula": "pH = pKa + log₁₀([A⁻]/[HA])",
+      "expanded": "pH = pKa + log₁₀([A⁻]) − log₁₀([HA])",
+      "analysis": {
+        "key_insight": "pKa is a free constant terminal. log₁₀([A⁻]/[HA]) = mul(c, ln([A⁻]/[HA])). The ratio [A⁻]/[HA] = mul([A⁻], recip([HA])). The outer add(pKa, …) costs 3.",
+        "tree": {
+          "root": "add(pKa, mul(c, ln(mul([A⁻], recip([HA])))))",
+          "children": {
+            "left": "pKa  [terminal constant]",
+            "right": "mul(c, ln(mul([A⁻], recip([HA]))))"
+          }
+        },
+        "operations": [
+          {"op": "recip([HA])", "cost": 2, "note": "1/[HA]"},
+          {"op": "mul([A⁻], recip([HA]))", "cost": 2, "note": "[A⁻]/[HA] via multiply"},
+          {"op": "ln(mul([A⁻], recip([HA])))", "cost": 1, "note": "ln of the ratio"},
+          {"op": "mul(c, ln(…))", "cost": 2, "note": "c = 1/ln(10), converts ln to log₁₀"},
+          {"op": "add(pKa, mul(c, ln(…)))", "cost": 3, "note": "pKa is a terminal constant"}
+        ],
+        "total_nodes": 10,
+        "breakdown": "2 (recip) + 2 (mul ratio) + 1 (ln) + 2 (mul×c) + 3 (add) = 10n",
+        "note_on_expanded_form": "Expanding as log₁₀([A⁻]) − log₁₀([HA]) would require two separate ln + mul pairs plus a sub: 1+2 + 1+2 + 2 = 8n for just the log difference, then +3 for add(pKa,…) = 11n total. The ratio form ln([A⁻]/[HA]) saves 1n."
+      }
+    },
+
+    {
+      "id": 3,
+      "name": "Weak acid dissociation (approximate)",
+      "formula": "[H⁺] = √(Ka·Ca) = (Ka·Ca)^(1/2)",
+      "analysis": {
+        "key_insight": "Ka and Ca are both terminals. Ka·Ca = mul(Ka, Ca). Square root = pow(·, 1/2) costs 3. Total is compact.",
+        "tree": {
+          "root": "pow(mul(Ka, Ca), 0.5)",
+          "children": {
+            "left": "mul(Ka, Ca)",
+            "right": "0.5  [terminal exponent]"
+          }
+        },
+        "operations": [
+          {"op": "mul(Ka, Ca)", "cost": 2, "note": "product of two terminal constants"},
+          {"op": "pow(mul(Ka,Ca), 0.5)", "cost": 3, "note": "square root via pow with exponent 1/2"}
+        ],
+        "total_nodes": 5,
+        "breakdown": "2 (mul) + 3 (pow) = 5n",
+        "alternative": "exp(mul(0.5, ln(mul(Ka,Ca)))) = 1+2+2+1 = 6n — pow is cheaper when n is a constant"
+      }
+    },
+
+    {
+      "id": 4,
+      "name": "Buffer capacity (van Slyke equation)",
+      "formula": "β = 2.303 · C · Ka·[H⁺] / (Ka + [H⁺])²",
+      "analysis": {
+        "key_insight": "2.303·C folds into a single free constant k = 2.303·C. Numerator: mul(Ka, [H⁺]). Denominator: pow(add(Ka,[H⁺]), 2). Full expression: mul(k, mul(mul(Ka,[H⁺]), recip(pow(add(Ka,[H⁺]),2)))).",
+        "tree": {
+          "root": "mul(k, mul(num, recip(denom)))",
+          "subtrees": {
+            "k": "2.303·C as a single terminal constant",
+            "num": "mul(Ka, [H⁺])",
+            "denom": "pow(add(Ka, [H⁺]), 2)"
+          }
+        },
+        "operations": [
+          {"op": "mul(Ka, [H⁺])", "cost": 2, "note": "numerator product"},
+          {"op": "add(Ka, [H⁺])", "cost": 3, "note": "Ka + [H⁺] in denominator"},
+          {"op": "pow(add(Ka,[H⁺]), 2)", "cost": 3, "note": "square of the sum"},
+          {"op": "recip(pow(…))", "cost": 2, "note": "1/(Ka+[H⁺])²"},
+          {"op": "mul(num, recip(denom))", "cost": 2, "note": "Ka·[H⁺] / (Ka+[H⁺])²"},
+          {"op": "mul(k, mul(…))", "cost": 2, "note": "scale by 2.303·C (single constant k)"}
+        ],
+        "total_nodes": 14,
+        "breakdown": "2 (mul num) + 3 (add) + 3 (pow) + 2 (recip) + 2 (mul div) + 2 (mul scale) = 14n"
+      }
+    },
+
+    {
+      "id": 5,
+      "name": "Exact weak-acid quadratic solution",
+      "formula": "[H⁺] = (−Ka + √(Ka² + 4·Ka·Ca)) / 2",
+      "analysis": {
+        "key_insight": "Division by 2 is multiplication by 0.5 (free constant). Ka is a terminal. Need: Ka², 4·Ka·Ca, their sum, its square root, then subtract Ka and scale.",
+        "tree": {
+          "root": "mul(0.5, add(neg(Ka), pow(add(pow(Ka,2), mul(4Ka, Ca)), 0.5)))",
+          "note": "4·Ka is a single folded constant since Ka is a given parameter; however Ka is a variable terminal (not a universal constant), so 4·Ka cannot be precomputed — it requires an explicit mul."
+        },
+        "operations": [
+          {"op": "pow(Ka, 2)", "cost": 3, "note": "Ka²"},
+          {"op": "mul(Ka, Ca)", "cost": 2, "note": "Ka·Ca"},
+          {"op": "mul(4, mul(Ka,Ca))", "cost": 2, "note": "4·Ka·Ca — the 4 is a free constant folded into mul"},
+          {"op": "add(pow(Ka,2), mul(4,mul(Ka,Ca)))", "cost": 3, "note": "Ka² + 4·Ka·Ca — the discriminant"},
+          {"op": "pow(discriminant, 0.5)", "cost": 3, "note": "√(Ka² + 4·Ka·Ca)"},
+          {"op": "neg(Ka)", "cost": 2, "note": "−Ka"},
+          {"op": "add(neg(Ka), pow(discriminant,0.5))", "cost": 3, "note": "−Ka + √discriminant"},
+          {"op": "mul(0.5, add(…))", "cost": 2, "note": "divide by 2 via multiply by 0.5"}
+        ],
+        "total_nodes": 20,
+        "breakdown": "3 (Ka²) + 2 (Ka·Ca) + 2 (×4) + 3 (add disc) + 3 (sqrt) + 2 (neg Ka) + 3 (add num) + 2 (×0.5) = 20n",
+        "note_on_4Ka": "If Ka is treated as a domain-specific known constant (fixed per problem), 4·Ka collapses to a single terminal and saves the inner mul(Ka,Ca) restructuring; but in the general case where Ka is an input variable, the mul(4, mul(Ka,Ca)) decomposition is required.",
+        "cost_if_Ka_constant": {
+          "description": "When Ka is a fixed constant (e.g., Ka=1.8e-5 for acetic acid), 4·Ka is also a constant terminal. Then mul(4Ka_const, Ca) costs 2n instead of 4n (two muls). Saving: 2n.",
+          "total_nodes_Ka_fixed": 18,
+          "breakdown": "3 (Ka²_const via pow, but Ka² also constant → 0!) + ... actually Ka² is also a constant → 0n; mul(4Ka,Ca)=2n; add=3n; sqrt=3n; neg(Ka)=2n; add=3n; ×0.5=2n = 15n",
+          "revised_if_Ka_constant": 15,
+          "revised_breakdown": "Ka² is precomputed constant (0n) + mul(4Ka_const, Ca) = 2n + add(Ka²_const, 4KaCa) = 3n + sqrt = 3n + neg(Ka_const folded) = 0n (absorbed) + add(neg_const, sqrt) = 3n + mul(0.5,…) = 2n → total 13n"
+        }
+      }
+    },
+
+    {
+      "id": 6,
+      "name": "Activity-corrected pH",
+      "formula": "pH = −log₁₀(γH · [H⁺])",
+      "analysis": {
+        "key_insight": "γH is a terminal (treated as given). The product γH·[H⁺] = mul(γH, [H⁺]). Then −log₁₀(product) = mul(−c, ln(product)) where −c = −1/ln(10) is a single free constant — identical folding as equation 1.",
+        "tree": {
+          "root": "mul(−c, ln(mul(γH, [H⁺])))",
+          "children": {
+            "left": "−c  [terminal constant = −1/ln(10)]",
+            "right": "ln(mul(γH, [H⁺]))"
+          }
+        },
+        "operations": [
+          {"op": "mul(γH, [H⁺])", "cost": 2, "note": "activity-corrected concentration"},
+          {"op": "ln(mul(γH,[H⁺]))", "cost": 1, "note": "natural log of product"},
+          {"op": "mul(−c, ln(…))", "cost": 2, "note": "−c = −1/ln(10) folds neg and base conversion"}
+        ],
+        "total_nodes": 5,
+        "breakdown": "2 (mul product) + 1 (ln) + 2 (mul scale) = 5n",
+        "comparison_to_eq1": "Equation 1 costs 3n (ln + mul) because [H⁺] is a direct terminal. Equation 6 costs 5n because the argument to ln is itself a mul(γH,[H⁺]) rather than a bare variable."
+      }
+    }
+
+  ],
+
+  "summary_table": [
+    {"id": 1, "name": "pH = −log₁₀([H⁺])",                           "total_nodes": 3,  "primitives": "ln, mul"},
+    {"id": 2, "name": "Henderson-Hasselbalch",                         "total_nodes": 10, "primitives": "recip, mul×2, ln, mul, add"},
+    {"id": 3, "name": "Weak acid approx: [H⁺] = √(Ka·Ca)",           "total_nodes": 5,  "primitives": "mul, pow"},
+    {"id": 4, "name": "Buffer capacity β (van Slyke)",                 "total_nodes": 14, "primitives": "mul×3, add, pow, recip"},
+    {"id": 5, "name": "Quadratic exact [H⁺] (Ka variable)",           "total_nodes": 20, "primitives": "pow, mul×3, add×2, sqrt, neg, mul"},
+    {"id": 5, "name": "Quadratic exact [H⁺] (Ka fixed constant)",     "total_nodes": 13, "primitives": "mul×2, add×2, sqrt, neg-absorbed"},
+    {"id": 6, "name": "Activity-corrected pH = −log₁₀(γH·[H⁺])",    "total_nodes": 5,  "primitives": "mul, ln, mul"}
+  ],
+
+  "cross_cutting_findings": [
+    "Constant folding is the dominant cost-reduction lever: neg+base-conversion → single mul constant saves 2n in every pH formula.",
+    "log₁₀(x) alone costs 3n (ln + mul×c); −log₁₀(x) also costs 3n because −c absorbs the neg — no extra node.",
+    "The quadratic formula is the most expensive primitive at 20n (Ka variable) or 13n (Ka fixed), dominated by two add nodes (3n each) and one pow(·,2) + one pow(·,0.5).",
+    "Buffer capacity (14n) is expensive due to the squared denominator: pow(add(…),2) already costs 6n before the outer division.",
+    "Henderson-Hasselbalch benefits from the ratio form ln([A⁻]/[HA]) = ln([A⁻]) − ln([HA]) expressed as a single ln after a recip+mul, saving 1n versus expanding into two separate log terms."
+  ]
+}

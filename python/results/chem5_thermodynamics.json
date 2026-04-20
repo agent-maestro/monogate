@@ -1,0 +1,170 @@
+{
+  "session": "Chem5",
+  "block": "Chemistry Block 5: Thermodynamics",
+  "routing_table_version": "SuperBEST v3",
+  "routing_table": {
+    "exp(x)": 1,
+    "ln(x)": 1,
+    "neg(x)": 2,
+    "recip(x)": 2,
+    "mul(x,y)": 2,
+    "sub(x,y)": 2,
+    "add(x,y)": 3,
+    "pow(x,n)": 3,
+    "parameters_and_constants": 0
+  },
+  "equations": [
+    {
+      "id": 1,
+      "name": "Gibbs free energy",
+      "formula": "ΔG = ΔH − T·ΔS",
+      "expression_tree": "sub(ΔH, mul(T, ΔS))",
+      "node_breakdown": [
+        { "op": "mul(T, ΔS)", "cost": 2, "note": "T and ΔS are free parameters" },
+        { "op": "sub(ΔH, mul(T,ΔS))", "cost": 2, "note": "T33 rule: sub(x,y) = 2 nodes" }
+      ],
+      "total_nodes": 4,
+      "notes": "Minimal linear form. With T33, sub(x,y) costs 2 nodes as listed in the routing table."
+    },
+    {
+      "id": 2,
+      "name": "Standard Gibbs from equilibrium constant",
+      "formula": "ΔG° = −RT·ln(K)",
+      "expression_tree": "neg(mul(mul(R, T), ln(K)))",
+      "node_breakdown": [
+        { "op": "ln(K)", "cost": 1, "note": "K is a free parameter" },
+        { "op": "mul(R, T)", "cost": 2, "note": "R is a constant (free), T is a free parameter" },
+        { "op": "mul(mul(R,T), ln(K))", "cost": 2 },
+        { "op": "neg(...)", "cost": 2 }
+      ],
+      "total_nodes": 7,
+      "notes": "R is a scalar constant and is free; mul(R,T) still costs 2 because T is a variable. neg is required to represent the minus sign — cannot be absorbed into a constant here since it negates the entire product."
+    },
+    {
+      "id": 3,
+      "name": "Gibbs with reaction quotient",
+      "formula": "ΔG = ΔG° + RT·ln(Q)",
+      "expression_tree": "add(ΔG°, mul(mul(R, T), ln(Q)))",
+      "node_breakdown": [
+        { "op": "ln(Q)", "cost": 1, "note": "Q is a free parameter" },
+        { "op": "mul(R, T)", "cost": 2 },
+        { "op": "mul(mul(R,T), ln(Q))", "cost": 2 },
+        { "op": "add(ΔG°, mul(...))", "cost": 3, "note": "add costs 3; ΔG° is free" }
+      ],
+      "total_nodes": 8,
+      "notes": "One node more than Eq 2 because addition costs 3 vs negation's 2. ΔG° treated as a free parameter (known constant in a given context)."
+    },
+    {
+      "id": 4,
+      "name": "van't Hoff equation (integrated form)",
+      "formula": "ln(K₂/K₁) = −(ΔH°/R) · (1/T₂ − 1/T₁)",
+      "expression_tree": {
+        "lhs": "ln(mul(K₂, recip(K₁)))",
+        "rhs": "mul(neg(mul(ΔH°, recip_R_const)), sub(recip(T₂), recip(T₁)))"
+      },
+      "node_breakdown_rhs": [
+        { "op": "recip(T₂)", "cost": 2 },
+        { "op": "recip(T₁)", "cost": 2 },
+        { "op": "sub(recip(T₂), recip(T₁))", "cost": 2 },
+        { "op": "mul(ΔH°, 1/R)", "cost": 2, "note": "1/R is a numeric constant (free); mul of ΔH° by that constant costs 2" },
+        { "op": "neg(mul(ΔH°, 1/R))", "cost": 2 },
+        { "op": "mul(neg(...), sub(...))", "cost": 2 }
+      ],
+      "node_breakdown_lhs": [
+        { "op": "recip(K₁)", "cost": 2 },
+        { "op": "mul(K₂, recip(K₁))", "cost": 2 },
+        { "op": "ln(mul(K₂, recip(K₁)))", "cost": 1 }
+      ],
+      "total_nodes_rhs_only": 12,
+      "total_nodes_full_equation": 17,
+      "notes": "1/R is a numeric constant (free terminal). RHS alone: 12 nodes. If the LHS ln(K₂/K₁) is also treated as a computed expression (not a directly observable primitive), add 5 nodes for a full-equation cost of 17. Conventional analysis counts RHS only = 12."
+    },
+    {
+      "id": 5,
+      "name": "Clausius-Clapeyron equation",
+      "formula": "ln(P₂/P₁) = −(ΔHvap/R) · (1/T₂ − 1/T₁)",
+      "expression_tree": {
+        "rhs": "mul(neg(mul(ΔHvap, 1/R_const)), sub(recip(T₂), recip(T₁)))"
+      },
+      "node_breakdown_rhs": [
+        { "op": "recip(T₂)", "cost": 2 },
+        { "op": "recip(T₁)", "cost": 2 },
+        { "op": "sub(recip(T₂), recip(T₁))", "cost": 2 },
+        { "op": "mul(ΔHvap, 1/R)", "cost": 2, "note": "1/R is a constant (free)" },
+        { "op": "neg(mul(ΔHvap, 1/R))", "cost": 2 },
+        { "op": "mul(neg(...), sub(...))", "cost": 2 }
+      ],
+      "total_nodes_rhs_only": 12,
+      "total_nodes_full_equation": 17,
+      "notes": "Structurally identical to van't Hoff integrated form (Eq 4). Same tree topology, different physical parameters (ΔHvap vs ΔH°, P vs K). Full-equation cost is also 17 if LHS ln(P₂/P₁) is counted."
+    },
+    {
+      "id": 6,
+      "name": "Entropy of mixing (2-component)",
+      "formula": "ΔSmix = −R · (x₁·ln(x₁) + x₂·ln(x₂))",
+      "expression_tree": "neg(mul(R, add(mul(x₁, ln(x₁)), mul(x₂, ln(x₂)))))",
+      "node_breakdown": [
+        { "op": "ln(x₁)", "cost": 1 },
+        { "op": "mul(x₁, ln(x₁))", "cost": 2 },
+        { "op": "ln(x₂)", "cost": 1 },
+        { "op": "mul(x₂, ln(x₂))", "cost": 2 },
+        { "op": "add(mul(x₁,ln(x₁)), mul(x₂,ln(x₂)))", "cost": 3 },
+        { "op": "mul(R, add(...))", "cost": 2, "note": "R is a constant (free); mul still costs 2" },
+        { "op": "neg(mul(R, add(...)))", "cost": 2 }
+      ],
+      "total_nodes": 13,
+      "notes": "The xᵢ·ln(xᵢ) pattern repeats twice, one per component. The add node (cost 3) is the most expensive single operation. An n-component generalization would add 3 + 2*ln + 2*mul per additional component (plus add nodes to chain the sum)."
+    },
+    {
+      "id": 7,
+      "name": "Arrhenius in terms of Gibbs (Form 1)",
+      "formula": "k = A · exp(−ΔG‡/RT)",
+      "expression_tree": "mul(A, exp(neg(mul(ΔG‡, recip(mul(R, T))))))",
+      "node_breakdown": [
+        { "op": "mul(R, T)", "cost": 2 },
+        { "op": "recip(mul(R, T))", "cost": 2, "note": "recip applied to RT" },
+        { "op": "mul(ΔG‡, recip(RT))", "cost": 2, "note": "computes ΔG‡/RT" },
+        { "op": "neg(mul(ΔG‡, recip(RT)))", "cost": 2 },
+        { "op": "exp(neg(...))", "cost": 1 },
+        { "op": "mul(A, exp(...))", "cost": 2, "note": "A is a free parameter (pre-exponential factor)" }
+      ],
+      "total_nodes": 11,
+      "notes": "Single exp node. ΔG‡ is treated as a single free parameter (activation Gibbs energy)."
+    },
+    {
+      "id": 8,
+      "name": "Arrhenius in terms of Gibbs (Form 2)",
+      "formula": "k = A · exp(−ΔH‡/RT) · exp(ΔS‡/R)",
+      "expression_tree": "mul(A, mul(exp(neg(mul(ΔH‡, recip(mul(R,T))))), exp(mul(ΔS‡, recip_R_const))))",
+      "node_breakdown": [
+        { "op": "mul(R, T)", "cost": 2 },
+        { "op": "recip(mul(R, T))", "cost": 2 },
+        { "op": "mul(ΔH‡, recip(RT))", "cost": 2, "note": "computes ΔH‡/RT" },
+        { "op": "neg(mul(ΔH‡, recip(RT)))", "cost": 2 },
+        { "op": "exp(neg(...))", "cost": 1, "note": "first exp node" },
+        { "op": "mul(ΔS‡, 1/R)", "cost": 2, "note": "1/R is a constant (free); computes ΔS‡/R" },
+        { "op": "exp(mul(ΔS‡, 1/R))", "cost": 1, "note": "second exp node" },
+        { "op": "mul(exp1, exp2)", "cost": 2 },
+        { "op": "mul(A, mul(exp1,exp2))", "cost": 2 }
+      ],
+      "total_nodes": 16,
+      "notes": "Two exp nodes vs one in Form 1. Splitting ΔG‡ = ΔH‡ − TΔS‡ adds 5 nodes (second exp + extra mul for ΔS‡/R + two outer muls). Form 2 costs 16 vs Form 1 costs 11 — a difference of 5 nodes for the thermodynamic decomposition."
+    }
+  ],
+  "summary_table": [
+    { "id": 1, "name": "Gibbs free energy", "formula": "ΔG = ΔH − T·ΔS", "nodes": 4 },
+    { "id": 2, "name": "Standard Gibbs from K", "formula": "ΔG° = −RT·ln(K)", "nodes": 7 },
+    { "id": 3, "name": "Gibbs with Q", "formula": "ΔG = ΔG° + RT·ln(Q)", "nodes": 8 },
+    { "id": 4, "name": "van't Hoff integrated (RHS only)", "formula": "ln(K₂/K₁) = −(ΔH°/R)(1/T₂−1/T₁)", "nodes_rhs": 12, "nodes_full": 17 },
+    { "id": 5, "name": "Clausius-Clapeyron (RHS only)", "formula": "ln(P₂/P₁) = −(ΔHvap/R)(1/T₂−1/T₁)", "nodes_rhs": 12, "nodes_full": 17 },
+    { "id": 6, "name": "Entropy of mixing (2-component)", "formula": "ΔSmix = −R(x₁ln x₁ + x₂ln x₂)", "nodes": 13 },
+    { "id": 7, "name": "Arrhenius-Gibbs Form 1", "formula": "k = A·exp(−ΔG‡/RT)", "nodes": 11 },
+    { "id": 8, "name": "Arrhenius-Gibbs Form 2", "formula": "k = A·exp(−ΔH‡/RT)·exp(ΔS‡/R)", "nodes": 16 }
+  ],
+  "cross_equation_notes": {
+    "eq4_eq5_isomorphism": "van't Hoff (Eq 4) and Clausius-Clapeyron (Eq 5) are structurally identical — same tree topology, same node count (RHS: 12, full: 17). They differ only in the physical domain of parameters.",
+    "eq7_form_comparison": "Arrhenius Form 2 costs 5 more nodes than Form 1 (16 vs 11). The extra cost comes from: a second exp node (+1), mul(ΔS‡, 1/R) (+2), and two additional outer mul nodes to chain the products (+2).",
+    "lhs_treatment": "For equations where the LHS is itself a non-trivial expression (ln(K₂/K₁), ln(P₂/P₁)), the conventional SuperBEST analysis counts the RHS expression tree only. The full-equation cost (LHS + RHS) is provided separately for completeness.",
+    "constant_absorption": "Scalar physical constants (R, and 1/R as its reciprocal) are treated as free terminals. mul(parameter, constant) still costs 2 because one operand is a variable."
+  }
+}

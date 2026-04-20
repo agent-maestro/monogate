@@ -1,0 +1,234 @@
+{
+  "session": "monogate SuperBEST cost analysis — Chemistry Block 2: Statistical Mechanics",
+  "routing_table": {
+    "exp(x)": 1,
+    "ln(x)": 1,
+    "neg(x)": 2,
+    "recip(x)": 2,
+    "mul(x,y)": 2,
+    "sub(x,y)": 2,
+    "add(x,y)": 3,
+    "pow(x,n)": 3,
+    "constants_and_parameters": 0
+  },
+  "equations": [
+    {
+      "id": 1,
+      "name": "Boltzmann Factor",
+      "expression": "P(E) = exp(−E / kBT) / Z",
+      "superBEST_routing": "mul(exp(mul(neg(E), recip(mul(kB,T)))), recip(Z))",
+      "operations": [
+        {"op": "mul(kB, T)",                    "cost": 2, "note": "compose kBT from free terminals"},
+        {"op": "recip(mul(kB,T))",               "cost": 2, "note": "1/kBT"},
+        {"op": "neg(E)",                         "cost": 2, "note": "-E"},
+        {"op": "mul(neg(E), recip(kBT))",        "cost": 2, "note": "-E/kBT"},
+        {"op": "exp(-E/kBT)",                    "cost": 1, "note": "Boltzmann factor numerator"},
+        {"op": "recip(Z)",                       "cost": 2, "note": "1/Z — Z is a terminal"},
+        {"op": "mul(exp(...), recip(Z))",        "cost": 2, "note": "divide by partition function"}
+      ],
+      "total_nodes": 13,
+      "notes": "Z treated as a free terminal. kBT composed from free terminals kB and T. neg cheaper than sub(0,E) for same cost; division implemented as mul+recip."
+    },
+    {
+      "id": 2,
+      "name": "Boltzmann Distribution (two states)",
+      "expression": "P(Ei)/P(Ej) = exp(−(Ei − Ej) / kBT)",
+      "superBEST_routing": "exp(mul(neg(sub(Ei,Ej)), recip(mul(kB,T))))",
+      "operations": [
+        {"op": "sub(Ei, Ej)",                    "cost": 2, "note": "energy difference"},
+        {"op": "neg(sub(Ei,Ej))",                "cost": 2, "note": "negate difference"},
+        {"op": "mul(kB, T)",                     "cost": 2, "note": "compose kBT"},
+        {"op": "recip(mul(kB,T))",               "cost": 2, "note": "1/kBT"},
+        {"op": "mul(neg_diff, recip_kBT)",       "cost": 2, "note": "−(Ei−Ej)/kBT"},
+        {"op": "exp(...)",                        "cost": 1, "note": "ratio of Boltzmann factors"}
+      ],
+      "total_nodes": 11,
+      "notes": "The ratio P(Ei)/P(Ej) reduces analytically to a single exp; no additional division node needed. Efficient structure exploits the cancellation of Z in numerator and denominator."
+    },
+    {
+      "id": 3,
+      "name": "Partition Function — 2-level system",
+      "expression": "Z = exp(−E1/kBT) + exp(−E2/kBT)",
+      "superBEST_routing": "add(exp(mul(neg(E1), recip(mul(kB,T)))), exp(mul(neg(E2), recip(mul(kB,T)))))",
+      "operations": [
+        {"op": "mul(kB, T)",                    "cost": 2, "note": "shared kBT — counted once"},
+        {"op": "recip(mul(kB,T))",              "cost": 2, "note": "shared 1/kBT — counted once"},
+        {"op": "neg(E1)",                       "cost": 2},
+        {"op": "mul(neg(E1), recip(kBT))",     "cost": 2, "note": "−E1/kBT"},
+        {"op": "exp(−E1/kBT)",                 "cost": 1},
+        {"op": "neg(E2)",                       "cost": 2},
+        {"op": "mul(neg(E2), recip(kBT))",     "cost": 2, "note": "−E2/kBT; recip(kBT) shared"},
+        {"op": "exp(−E2/kBT)",                 "cost": 1},
+        {"op": "add(exp1, exp2)",               "cost": 3}
+      ],
+      "total_nodes": 17,
+      "notes": "recip(kBT) and mul(kB,T) are shared sub-expressions between the two Boltzmann terms, counted once. add is the most expensive single primitive here (3 nodes). Scales as 2N−1 add nodes + 7 per level for N levels."
+    },
+    {
+      "id": 4,
+      "name": "Maxwell-Boltzmann Speed Distribution",
+      "expression": "f(v) = 4π·(m/2πkBT)^(3/2)·v²·exp(−mv²/2kBT)",
+      "superBEST_routing": "mul(mul(mul(4π, pow(mul(m, recip(mul(2π, mul(kB,T)))), 3/2)), pow(v,2)), exp(mul(neg(mul(m, pow(v,2))), recip(mul(2, mul(kB,T))))))",
+      "operations": [
+        {
+          "group": "Part A — (m/2πkBT)^(3/2)",
+          "ops": [
+            {"op": "mul(kB, T)",                       "cost": 2, "note": "shared across Parts A and C"},
+            {"op": "mul(2π, mul(kB,T))",               "cost": 2, "note": "2π treated as free constant"},
+            {"op": "recip(2πkBT)",                     "cost": 2},
+            {"op": "mul(m, recip(2πkBT))",             "cost": 2},
+            {"op": "pow(m/2πkBT, 3/2)",                "cost": 3}
+          ],
+          "subtotal": 11
+        },
+        {
+          "group": "Part B — v²",
+          "ops": [
+            {"op": "pow(v, 2)",                        "cost": 3, "note": "shared with Part C"}
+          ],
+          "subtotal": 3
+        },
+        {
+          "group": "Part C — exp(−mv²/2kBT)",
+          "ops": [
+            {"op": "mul(m, pow(v,2))",                 "cost": 2, "note": "pow(v,2) shared from Part B"},
+            {"op": "mul(2, mul(kB,T))",                "cost": 2, "note": "2kBT; mul(kB,T) shared from Part A"},
+            {"op": "recip(2kBT)",                      "cost": 2},
+            {"op": "neg(mv²)",                         "cost": 2},
+            {"op": "mul(neg(mv²), recip(2kBT))",      "cost": 2},
+            {"op": "exp(−mv²/2kBT)",                  "cost": 1}
+          ],
+          "subtotal": 11
+        },
+        {
+          "group": "Assembly — 4π · A · v² · exp",
+          "ops": [
+            {"op": "mul(4π, pow_result)",              "cost": 2, "note": "4π is free constant"},
+            {"op": "mul(prev, pow(v,2))",              "cost": 2, "note": "v² shared"},
+            {"op": "mul(prev, exp(...))",              "cost": 2}
+          ],
+          "subtotal": 6
+        }
+      ],
+      "shared_subexpressions": [
+        "mul(kB,T) — used in Part A denominator and Part C denominator",
+        "pow(v,2) — used in Part B and Part C numerator"
+      ],
+      "total_nodes": 31,
+      "notes": "Most complex equation in this block. Two shared sub-expressions (kBT, v²) save 4 nodes vs naive evaluation. 4π and 2π treated as free constants. The 3/2 power is the most expensive single step in isolation."
+    },
+    {
+      "id": 5,
+      "name": "Entropy (Boltzmann)",
+      "expression": "S = kB · ln(Ω)",
+      "superBEST_routing": "mul(kB, ln(Ω))",
+      "operations": [
+        {"op": "ln(Ω)",          "cost": 1},
+        {"op": "mul(kB, ln(Ω))", "cost": 2}
+      ],
+      "total_nodes": 3,
+      "notes": "Simplest equation in this block. kB and Ω are free terminals. Linear chain: ln → mul."
+    },
+    {
+      "id": 6,
+      "name": "Helmholtz Free Energy",
+      "expression": "A = −kBT · ln(Z)",
+      "superBEST_routing": "neg(mul(mul(kB,T), ln(Z)))",
+      "operations": [
+        {"op": "mul(kB, T)",              "cost": 2},
+        {"op": "ln(Z)",                   "cost": 1, "note": "Z is a terminal"},
+        {"op": "mul(kBT, ln(Z))",         "cost": 2},
+        {"op": "neg(mul(kBT, ln(Z)))",    "cost": 2}
+      ],
+      "total_nodes": 7,
+      "notes": "Z treated as a free terminal. neg applied at the outermost level. Note structural similarity to Entropy: both use ln; here the argument is Z (partition function) instead of Ω."
+    },
+    {
+      "id": 7,
+      "name": "Average Energy — 2-level system",
+      "expression": "⟨E⟩ = [E1·exp(−βE1) + E2·exp(−βE2)] / Z",
+      "superBEST_routing": "mul(add(mul(E1,exp(neg(mul(β,E1)))), mul(E2,exp(neg(mul(β,E2))))), recip(Z))",
+      "operations": [
+        {"op": "mul(β, E1)",               "cost": 2, "note": "β = 1/kBT is a free terminal"},
+        {"op": "neg(mul(β,E1))",           "cost": 2, "note": "−βE1"},
+        {"op": "exp(−βE1)",               "cost": 1},
+        {"op": "mul(E1, exp(−βE1))",      "cost": 2},
+        {"op": "mul(β, E2)",               "cost": 2},
+        {"op": "neg(mul(β,E2))",           "cost": 2, "note": "−βE2"},
+        {"op": "exp(−βE2)",               "cost": 1},
+        {"op": "mul(E2, exp(−βE2))",      "cost": 2},
+        {"op": "add(term1, term2)",        "cost": 3},
+        {"op": "recip(Z)",                 "cost": 2, "note": "Z is a terminal"},
+        {"op": "mul(numerator, recip(Z))", "cost": 2}
+      ],
+      "total_nodes": 21,
+      "notes": "β = 1/kBT given as a free terminal — no cost for computing β. Z is also a free terminal. Structure is symmetric between the two energy levels. The add node (3) is the most expensive single primitive here."
+    }
+  ],
+  "summary_table": [
+    {
+      "equation": "1. Boltzmann Factor",
+      "expression": "exp(−E/kBT) / Z",
+      "primitives": ["mul", "recip", "neg", "mul", "exp", "recip", "mul"],
+      "node_count": 13,
+      "notes": "Z as terminal; division via mul+recip"
+    },
+    {
+      "equation": "2. Boltzmann Distribution (two states)",
+      "expression": "exp(−(Ei−Ej)/kBT)",
+      "primitives": ["sub", "neg", "mul", "recip", "mul", "exp"],
+      "node_count": 11,
+      "notes": "Z cancels analytically; ratio reduces to single exp"
+    },
+    {
+      "equation": "3. Partition Function (2-level)",
+      "expression": "exp(−E1/kBT) + exp(−E2/kBT)",
+      "primitives": ["mul", "recip", "neg", "mul", "exp", "neg", "mul", "exp", "add"],
+      "node_count": 17,
+      "notes": "kBT and recip(kBT) shared across both terms"
+    },
+    {
+      "equation": "4. Maxwell-Boltzmann Speed Distribution",
+      "expression": "4π·(m/2πkBT)^(3/2)·v²·exp(−mv²/2kBT)",
+      "primitives": ["mul", "mul", "recip", "mul", "pow", "pow", "mul", "mul", "recip", "neg", "mul", "exp", "mul", "mul", "mul"],
+      "node_count": 31,
+      "notes": "Most complex; kBT and v² shared across sub-expressions"
+    },
+    {
+      "equation": "5. Entropy (Boltzmann)",
+      "expression": "kB · ln(Ω)",
+      "primitives": ["ln", "mul"],
+      "node_count": 3,
+      "notes": "Simplest equation in block; pure linear chain"
+    },
+    {
+      "equation": "6. Helmholtz Free Energy",
+      "expression": "−kBT · ln(Z)",
+      "primitives": ["mul", "ln", "mul", "neg"],
+      "node_count": 7,
+      "notes": "Z as terminal; neg at outermost level"
+    },
+    {
+      "equation": "7. Average Energy (2-level)",
+      "expression": "[E1·exp(−βE1) + E2·exp(−βE2)] / Z",
+      "primitives": ["mul", "neg", "exp", "mul", "mul", "neg", "exp", "mul", "add", "recip", "mul"],
+      "node_count": 21,
+      "notes": "β as free terminal saves recip+mul(kB,T); symmetric structure"
+    }
+  ],
+  "block_summary": {
+    "total_nodes_all_equations": 103,
+    "range": {"min": 3, "max": 31},
+    "simplest": "5. Entropy (Boltzmann) — 3 nodes",
+    "most_complex": "4. Maxwell-Boltzmann Speed Distribution — 31 nodes",
+    "key_observations": [
+      "Shared sub-expressions (kBT, v²) are critical for cost reduction in complex equations",
+      "Z treated as a terminal eliminates partition function computation cost from Eqs 1, 6, 7",
+      "β treated as a free terminal in Eq 7 saves 4 nodes vs computing 1/kBT inline",
+      "add(x,y) at cost 3 is the most expensive primitive used; appears in Eqs 3 and 7",
+      "pow(x,n) at cost 3 appears only in Eq 4 (twice); makes MB distribution the most expensive",
+      "Eqs 1 and 2 differ by 2 nodes: Eq 2 avoids a recip(Z) because Z cancels in the ratio",
+      "The neg primitive (cost 2) is uniformly used for sign-flip; no cheaper alternative exists in the routing table"
+    ]
+  }
+}

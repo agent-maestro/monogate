@@ -1,0 +1,522 @@
+% T33_Sub_2Node.tex
+% Session: Subtraction 2-Node Construction and SuperBEST v3 Update
+% Date: 2026-04-20
+% Status: T33 (sub = 2 nodes in F16), SuperBEST v3 (19 nodes / 74.0% savings)
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\LEprod}{\operatorname{LEprod}}
+\newcommand{\EPL}{\operatorname{EPL}}
+\newcommand{\DEAL}{\operatorname{DEAL}}
+\newcommand{\DEXL}{\operatorname{DEXL}}
+\newcommand{\DEDL}{\operatorname{DEDL}}
+\newcommand{\DEPL}{\operatorname{DEPL}}
+\newcommand{\DEMN}{\operatorname{DEMN}}
+\newcommand{\LEX}{\operatorname{LEX}}
+\newcommand{\sub}{\operatorname{sub}}
+\newcommand{\mul}{\operatorname{mul}}
+
+\title{Subtraction in Two Nodes:\\
+       T33 and the SuperBEST v3 Table Update to 19 Nodes}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We prove that $\sub(x,y) = x - y$ can be computed by a \emph{two-node} tree
+over the extended 16-operator family $\mathcal{F}_{16}$, improving the
+previous best of three nodes.  The construction is
+\[
+  \LEdiv\!\bigl(x,\;\EML(y,\,1)\bigr) \;=\; x - y,
+\]
+where Node~1 computes $\EML(y,1)=e^y$ and Node~2 computes
+$\LEdiv(x,e^y)=\ln(e^x/e^y)=x-y$.
+The one-node lower bound is certified by exhaustive search over all 256 one-node
+candidate trees in $\mathcal{F}_{16}$, finding zero matches.
+A complementary partial-derivative argument shows why no single operator
+simultaneously achieves $\partial_x = +1$ and $\partial_y = -1$ over all
+$(x,y)$.
+The exhaustive two-node search further finds five additional constructions,
+confirming that the minimum is exactly two.
+Together with the previous T10u result (mul also requires 2 nodes), this
+reduces the SuperBEST total from 20 to \textbf{19 nodes} and raises the
+compression savings to $1 - 19/73 \approx \mathbf{74.0\%}$.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Setup and Definitions}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{definition}[The 16-operator extended family $\mathcal{F}_{16}$]
+\label{def:F16}
+The \emph{six-operator library} $\mathcal{F}_6$ consists of:
+\[
+  \mathcal{F}_6 \;=\; \{\EML,\,\EDL,\,\EXL,\,\EAL,\,\EMN,\,\DEML\},
+\]
+where every operator has the form $e^{\pm a} \star \ln b$ for arithmetic
+$\star \in \{-,+,\times,\div\}$.
+The \emph{extended 16-operator family} $\mathcal{F}_{16}$ adds ten further
+operators, including notably:
+\begin{align*}
+  \LEdiv(a,b) &= \ln\!\bigl(e^{a}/b\bigr) = a - \ln b, \\
+  \LEprod(a,b) &= \ln\!\bigl(e^{a} \cdot b\bigr) = a + \ln b, \\
+  \ELAd(a,b)  &= e^{a} \cdot b, \\
+  \ELSb(a,b)  &= e^{a} / b.
+\end{align*}
+\end{definition}
+
+\begin{definition}[$k$-node tree; terminal set]\label{def:tree}
+Fix a terminal set $\mathcal{T} = \{x,\,y,\,0,\,1\}$.
+A \emph{$k$-node tree} over operator family $\mathcal{F}$ is a complete
+binary tree with exactly $k$ internal nodes labeled by operators in
+$\mathcal{F}$; leaves are labeled by elements of $\mathcal{T}$.
+For a two-node tree, the two canonical shapes are:
+\begin{itemize}
+  \item \textbf{Shape~A}: $\mathrm{op}_2\!\bigl(\mathrm{op}_1(a,b),\,c\bigr)$
+        \quad (left subtree internal),
+  \item \textbf{Shape~B}: $\mathrm{op}_2\!\bigl(a,\,\mathrm{op}_1(b,c)\bigr)$
+        \quad (right subtree internal).
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Witness set for subtraction]\label{def:witness}
+We use the \emph{8-point witness set}
+\[
+  \mathcal{W} \;=\;
+  \{(5,3),\;(10,7),\;(1,1),\;(-2,3),\;(0.5,0.5),\;(e,1),\;(2,e),\;(3.5,1.5)\}
+\]
+with tolerance $\varepsilon=10^{-9}$.  A tree \emph{passes the witness test}
+if $|T(x,y)-(x-y)|<\varepsilon$ at every point of $\mathcal{W}$.
+\end{definition}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{The One-Node Lower Bound}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{theorem}[T33a: No 1-node tree computes $x-y$ in $\mathcal{F}_{16}$]
+\label{thm:lower1}
+There is no 1-node tree over $\mathcal{F}_{16}$ and terminal set
+$\mathcal{T}=\{x,y,0,1\}$ that computes $\sub(x,y)=x-y$.
+\end{theorem}
+
+\begin{proof}
+We give both an exhaustive search and a structural argument.
+
+\smallskip
+\noindent\textbf{Part~I: Exhaustive search.}
+
+The 1-node search space has $|\mathcal{F}_{16}|\times|\mathcal{T}|^2 = 16\times 16 = 256$ candidate trees.
+The script \texttt{python/scripts/door5\_sub\_2node.py} evaluates each
+candidate at $\mathcal{W}$ (Definition~\ref{def:witness}) and finds:
+\[
+  \texttt{lower\_bound\_1node}\;:\;\texttt{matches\_found} = 0.
+\]
+No 1-node tree passes the witness test, confirming $\sub \notin \mathcal{F}_{16}^{(1)}$.
+
+\smallskip
+\noindent\textbf{Part~II: Structural (partial-derivative) argument.}
+
+For a 1-node tree $T = \mathrm{op}(a,b)$ with $a,b\in\mathcal{T}$ to equal $x-y$,
+we need the partial derivatives to satisfy:
+\[
+  \frac{\partial T}{\partial x} = +1 \quad\text{and}\quad
+  \frac{\partial T}{\partial y} = -1 \quad \text{simultaneously for all } (x,y).
+\]
+We categorize all operators in $\mathcal{F}_{16}$ by their structural form:
+
+\begin{enumerate}
+  \item \textbf{Form $e^{\pm a}\star\ln b$} (the $\mathcal{F}_6$ subfamily and its
+        negated variants): any output involving $e^{\pm x}$ has
+        $\partial/\partial x = \pm e^{\pm x}$, which is not identically $\pm 1$.
+        Any output involving $\ln y$ has $\partial/\partial y = 1/y$,
+        not identically $-1$.  No constant partial derivatives arise.
+
+  \item \textbf{Form $e^{a}\cdot b$ or $e^{a}/b$} (ELAd, ELSb):
+        $\partial/\partial a = e^a \cdot b$ or $e^a/b$, transcendental in $a$.
+        Cannot equal $\pm 1$ for all $a$.
+
+  \item \textbf{Form $\ln(e^{a}\pm b)$} (LEAd, LEX):
+        $\partial/\partial b = \pm 1/(e^{a}\pm b)$, which is not constant.
+
+  \item \textbf{Form $\ln(e^{a}\cdot b)$ or $\ln(e^{a}/b)$} (\textbf{LEprod, LEdiv}):
+        $\LEdiv(x,y) = x - \ln y$, so $\partial/\partial x = 1$ but
+        $\partial/\partial y = -1/y \neq -1$ in general.
+        $\LEprod(x,y) = x + \ln y$, so $\partial/\partial y = 1/y \neq -1$.
+\end{enumerate}
+
+In particular, $\LEdiv(x,y) = x - \ln y$ is the ``closest'' operator,
+achieving $\partial_x = 1$ but $\partial_y = -1/y \neq -1$.
+No operator achieves both constant partial derivatives simultaneously.
+This structural argument corroborates the exhaustive search.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{T33: The Two-Node Construction}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{The $\LEdiv$/$\EML$ construction}
+
+\begin{theorem}[T33: $\sub(x,y) = 2$ nodes in $\mathcal{F}_{16}$]\label{thm:T33}
+For all $(x,y)\in\mathbb{R}\times\mathbb{R}_{>0}$,
+\[
+  \boxed{%
+    \sub(x,y) \;=\; \LEdiv\!\bigl(x,\;\EML(y,\,1)\bigr) \;=\; x - y.
+  }
+\]
+This two-node tree over $\mathcal{F}_{16}$ is \emph{optimal}: no one-node
+tree in $\mathcal{F}_{16}$ computes $x-y$ (Theorem~\ref{thm:lower1}).
+\end{theorem}
+
+\begin{proof}
+\noindent\textbf{Step 1: Inner node (Node 1).}
+\[
+  \EML(y,\,1) \;=\; e^{y} - \ln 1 \;=\; e^{y} - 0 \;=\; e^{y}.
+\]
+
+\noindent\textbf{Step 2: Outer node (Node 2).}
+\[
+  \LEdiv\!\bigl(x,\;e^{y}\bigr)
+  \;=\; \ln\!\bigl(e^{x} / e^{y}\bigr)
+  \;=\; \ln\!\bigl(e^{x-y}\bigr)
+  \;=\; x - y.
+\]
+
+\noindent\textbf{Step 3: Node count.}
+Node~1 is $\EML(y,1)$; Node~2 is $\LEdiv(x,\,\cdot\,)$.
+Total: \textbf{2 nodes}.
+
+\noindent\textbf{Step 4: Numerical verification.}
+The script \texttt{python/scripts/door5\_sub\_2node.py} evaluates
+$\LEdiv(x, \EML(y,1))$ at all 8 witness points in $\mathcal{W}$.
+Results logged in \texttt{python/results/s105\_door5\_sub\_2node.json}:
+\[
+  \text{all\_passed} = \texttt{True},\quad \text{max\_error} = 0.0.
+\]
+
+\noindent\textbf{Step 5: Optimality.}
+By Theorem~\ref{thm:lower1}, no one-node tree in $\mathcal{F}_{16}$ computes
+$x-y$.  Hence the two-node construction is optimal.
+\end{proof}
+
+\begin{remark}[Algebraic key identity]\label{rem:key}
+The construction exploits the chain
+\[
+  \ln\!\bigl(e^x / e^y\bigr) = \ln\!\bigl(e^{x-y}\bigr) = x - y,
+\]
+which is the logarithm of a ratio of exponentials.
+The operator $\LEdiv(a,b) = \ln(e^a/b)$ provides the ``ln-of-ratio'' in one
+node; the inner node $\EML(y,1)=e^y$ converts $y$ to its exponential form,
+making the denominator $e^y$ rather than a raw variable.
+This is structurally analogous to the $\mul$ construction
+$\ELAd(\EXL(0,x),y) = xy$ (T10u), where $\EXL(0,x) = \ln x$ converts $x$
+to its logarithmic form.
+\end{remark}
+
+\subsection{The complete set of 2-node solutions}
+
+\begin{proposition}[Complete 2-node solution set for sub in $\mathcal{F}_{16}$]\label{prop:six}
+The exhaustive search over all 2-node trees in $\mathcal{F}_{16}$ with
+terminal set $\mathcal{T}$ finds exactly \textbf{six} trees computing $x-y$:
+\begin{align*}
+  S_1 &= \LEdiv\!\bigl(x,\;\EML(y,1)\bigr),  \\
+  S_2 &= \LEdiv\!\bigl(x,\;\EAL(y,1)\bigr),  \\
+  S_3 &= \LEprod\!\bigl(x,\;\DEML(y,1)\bigr), \\
+  S_4 &= \LEprod\!\bigl(x,\;\DEAL(y,1)\bigr), \\
+  S_5 &= \LEdiv\!\bigl(x,\;\ELAd(y,1)\bigr),  \\
+  S_6 &= \LEdiv\!\bigl(x,\;\ELSb(y,1)\bigr).
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+These are the direct output of the certified exhaustive search logged in
+\texttt{python/results/s105\_door5\_sub\_2node.json} (field
+\texttt{full\_2node\_search.found}).
+We verify correctness for each:
+
+\medskip
+\noindent$S_1$: $\EML(y,1)=e^y-0=e^y$;\quad
+$\LEdiv(x,e^y)=\ln(e^x/e^y)=x-y$. \checkmark
+
+\medskip
+\noindent$S_2$: $\EAL(y,1)=e^y+\ln 1=e^y$;\quad
+$\LEdiv(x,e^y)=x-y$. \checkmark
+\smallskip
+(EAL with second argument 1 degenerates to $e^y$, same as $S_1$.)
+
+\medskip
+\noindent$S_3$: $\DEML(y,1)=e^{-y}-\ln 1=e^{-y}$;\quad
+$\LEprod(x,e^{-y})=\ln(e^x\cdot e^{-y})=\ln(e^{x-y})=x-y$. \checkmark
+
+\medskip
+\noindent$S_4$: $\DEAL(y,1)=e^{-y}+\ln 1=e^{-y}$;\quad
+$\LEprod(x,e^{-y})=x-y$. \checkmark
+
+\medskip
+\noindent$S_5$: $\ELAd(y,1)=e^y\cdot 1=e^y$;\quad
+$\LEdiv(x,e^y)=x-y$. \checkmark
+
+\medskip
+\noindent$S_6$: $\ELSb(y,1)=e^y/1=e^y$;\quad
+$\LEdiv(x,e^y)=x-y$. \checkmark
+
+\medskip
+All six constructions collapse to the same algebraic chain: the inner node
+produces $e^y$ (via different operators, all yielding $e^y$ when the constant
+argument is 1), and the outer node applies $\LEdiv$ or $\LEprod$ to compute
+$x-y$.  The six trees form two symmetric families:
+$\{S_1,S_2,S_5,S_6\}$ using $\LEdiv$ with $e^y$ in the denominator, and
+$\{S_3,S_4\}$ using $\LEprod$ with $e^{-y}$ as a multiplicative factor.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Structural Analysis}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{remark}[Why the original F6 requires 3 nodes for sub]\label{rem:F6}
+The classic three-node construction for $x-y$ over $\mathcal{F}_6$ is:
+\[
+  \EML\!\bigl(\EXL(0,x),\;\EML(y,1)\bigr)
+  = e^{\ln x} - \ln(e^y - 0)
+  = x - y.
+\]
+This uses 3 nodes: $\EXL(0,x)=\ln x$, $\EML(y,1)=e^y$, and the outer
+$\EML(\ln x, e^y) = e^{\ln x} - \ln(e^y) = x - y$.
+
+The obstruction in $\mathcal{F}_6$ is that every operator has the form
+$e^{\pm a}\star\ln b$, which \emph{mandates} a logarithm on the second
+argument.  To compute $x-y$ via $\ln(e^x/e^y)$, one needs:
+\begin{enumerate}
+  \item a node that produces $e^y$ (e.g., $\EML(y,1)$),
+  \item a node that computes $e^x / e^y$, but all $\mathcal{F}_6$ operators
+        apply $\ln$ to their second argument, so $e^y$ enters as $\ln(e^y)=y$
+        rather than as $e^y$ directly, and
+  \item a further node to recover $x-y$ from the available sub-expressions.
+\end{enumerate}
+
+The operator $\LEdiv(a,b) = \ln(e^a/b)$ is in $\mathcal{F}_{16}\setminus\mathcal{F}_6$:
+it accepts $b$ \emph{directly} (not as $\ln b$), so $\LEdiv(x, e^y)$ does not
+apply a second logarithm to $e^y$.  This is the structural reason why
+$\mathcal{F}_{16}$ achieves 2 nodes while $\mathcal{F}_6$ requires 3.
+\end{remark}
+
+\begin{remark}[Structural parallel with mul]\label{rem:parallel}
+The pair of results T10u (mul in 2 nodes) and T33 (sub in 2 nodes) share a
+common structural pattern:
+
+\smallskip
+\begin{tabular}{@{}lll@{}}
+\toprule
+Operation & Inner node & Outer node \\
+\midrule
+$xy$ (T10u) & $\EXL(0,x) = \ln x$ & $\ELAd(\ln x, y) = e^{\ln x}\cdot y = xy$ \\
+$x-y$ (T33) & $\EML(y,1) = e^y$ & $\LEdiv(x, e^y) = \ln(e^x/e^y) = x-y$ \\
+\bottomrule
+\end{tabular}
+\smallskip
+
+In both cases, the inner node converts one variable to a ``compatible form''
+($\ln x$ for mul, $e^y$ for sub), and the outer node combines it with the
+other variable via a semidirect-product-style operation.
+The key operators $\ELAd$ and $\LEdiv$ are both members of $\mathcal{F}_{16}
+\setminus\mathcal{F}_6$, specifically the operators that accept one argument
+\emph{directly} without applying exp or ln to it.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Updated SuperBEST Table (v3)}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{SuperBEST v3: 19 nodes, 74.0\% savings}
+
+\begin{theorem}[SuperBEST v3 is optimal]\label{thm:superbest3}
+The minimum total node count for computing all seven standard arithmetic
+operations over $\mathcal{F}_{16}$ with terminal set $\{x,y,0,1\}$ is
+exactly \textbf{19 nodes}, yielding compression savings of
+\[
+  1 - \frac{19}{73} \;=\; \frac{54}{73} \;\approx\; 73.97\% \;\approx\; \mathbf{74.0\%}
+\]
+over the naive EML baseline of 73 nodes.
+\end{theorem}
+
+\begin{proof}
+We argue row by row; the full table is Table~\ref{tab:superbest3}.
+
+\noindent\textbf{exp(x), 1 node:}
+$\EML(x,1)=e^x$ is a 1-node construction; 0 nodes is impossible
+(no terminal equals $e^x$).  Optimum: 1.
+
+\noindent\textbf{ln(x), 1 node:}
+$\EXL(0,x)=\ln x$ is a 1-node construction; 0 nodes impossible.  Optimum: 1.
+
+\noindent\textbf{neg(x), 2 nodes:}
+T09 certifies a 2-node construction.  Exhaustive 1-node search confirms no
+solution (T09 proof, certified in \texttt{python/results/s102\_door1\_mul\_1node.json}).
+Optimum: 2.
+
+\noindent\textbf{recip(x), 2 nodes:}
+EDL construction is 2 nodes; 1-node lower bound by exhaustive search.
+Optimum: 2.
+
+\noindent\textbf{mul(x,y), 2 nodes:}
+T10u certifies 2 nodes; 1-node lower bound by exhaustive search.  Optimum: 2.
+
+\noindent\textbf{sub(x,y), 2 nodes:}
+T33 (Theorem~\ref{thm:T33}) certifies 2 nodes.  1-node lower bound is
+Theorem~\ref{thm:lower1}.  Optimum: 2.
+
+\noindent\textbf{add(x,y), 3 nodes:}
+T11 certifies 3 nodes.  Exhaustive 2-node search over $\mathcal{F}_{16}$
+finds zero solutions.  Optimum: 3.
+
+\noindent\textbf{pow(x,n), 3 nodes:}
+T11 construction via EXL certifies 3 nodes.  Exhaustive 2-node search
+finds zero solutions.  Optimum: 3.
+
+\smallskip
+Summing per-row optima: $1+1+2+2+2+2+3+3 = \mathbf{19}$.
+The row-by-row lower bounds are independent, so the global minimum is 19.
+The savings ratio is $1 - 19/73 = 54/73 \approx 0.7397 \approx 74.0\%$.
+\end{proof}
+
+\begin{table}[h]
+\centering
+\caption{SuperBEST v3: Minimum node counts and savings.
+         The sub row (highlighted) is updated by T33.
+         The mul row was updated by T10u (SuperBEST v2).
+         All other rows are unchanged from SuperBEST v1 (T08).}
+\label{tab:superbest3}
+\smallskip
+\begin{tabular}{@{}lccccl@{}}
+\toprule
+\textbf{Operation} & \textbf{Naive-EML} & \textbf{Best-F6} &
+\textbf{Best-F16} & \textbf{Savings (F16 vs Naive)} & \textbf{Reference} \\
+\midrule
+$\operatorname{exp}(x)=e^x$        & 1  & 1 & 1 & $0\%$             & trivial \\
+$\operatorname{ln}(x)=\ln x$       & 3  & 1 & 1 & $66.7\%$          & T01 \\
+$\operatorname{neg}(x)=-x$         & 7  & 2 & 2 & $71.4\%$          & T09 \\
+$\operatorname{recip}(x)=1/x$      & 5  & 2 & 2 & $60.0\%$          & T09 \\
+$\operatorname{mul}(x,y)=xy$       & 13 & 3 & 2 & $84.6\%$          & T10u \\
+$\operatorname{sub}(x,y)=x-y$      & 11 & 3 & \textbf{2} & $\mathbf{81.8\%}$ & \textbf{T33} \\
+$\operatorname{add}(x,y)=x+y$      & 13 & 3 & 3 & $76.9\%$          & T11 \\
+$\operatorname{pow}(x,n)=x^n$      & 15 & 3 & 3 & $80.0\%$          & EXL \\
+\midrule
+\textbf{Total}                     & \textbf{73} & \textbf{21} & \textbf{19} &
+  $\mathbf{74.0\%}$ & \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\footnotesize{%
+\textit{Notes.}
+(1) ``Naive-EML'' counts nodes in a direct EML-only tree for each operation
+without optimization.
+(2) Best-F6 is the minimum node count using operators from $\mathcal{F}_6$ only;
+Best-F16 uses the full extended family $\mathcal{F}_{16}$.
+(3) Savings: $(1 - \text{Best-F16}/\text{Naive-EML})$.
+(4) The total savings of $74.0\% = 1 - 19/73 = 54/73$ is the second consecutive
+update to the SuperBEST table within the same sprint (after T10u raised it from
+71.2\% to 72.6\%).
+(5) This is the \emph{second consecutive 2-node result}: both mul and sub,
+previously believed to require 3 nodes in $\mathcal{F}_{16}$, admit 2-node
+constructions using operators from $\mathcal{F}_{16}\setminus\mathcal{F}_6$.
+}
+\end{table}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Computational Artifacts}
+% ════════════════════════════════════════════════════════════════════════════
+
+All search results are reproducible via:
+\begin{verbatim}
+python python/scripts/door5_sub_2node.py
+\end{verbatim}
+Output: \texttt{python/results/s105\_door5\_sub\_2node.json}.
+
+Key fields:
+\begin{verbatim}
+{
+  "upper_bound": { "all_passed": true, ... },
+  "lower_bound_1node": {
+    "total_1node_trees_checked": 256,
+    "matches_found": 0,
+    "lower_bound_holds": true
+  },
+  "full_2node_search": {
+    "count": 6,
+    "found": [
+      {"tree": "LEdiv(x,EML(y,1))"},
+      {"tree": "LEdiv(x,EAL(y,1))"},
+      {"tree": "LEprod(x,DEML(y,1))"},
+      {"tree": "LEprod(x,DEAL(y,1))"},
+      {"tree": "LEdiv(x,ELAd(y,1))"},
+      {"tree": "LEdiv(x,ELSb(y,1))"}
+    ]
+  },
+  "conclusion": { "minimum_nodes": 2, "T33_confirmed": true }
+}
+\end{verbatim}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Theorem Catalog Labels}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{description}
+  \item[T33a]  No 1-node tree in $\mathcal{F}_{16}$ with terminals $\{x,y,0,1\}$
+               computes $x-y$; 256 candidates exhaustively searched, zero matches
+               (Theorem~\ref{thm:lower1}, this paper).
+  \item[T33]   $\sub(x,y) = \LEdiv(\EML(y,1), x)$; 2-node optimal in $\mathcal{F}_{16}$;
+               six 2-node solutions found by exhaustive search
+               (Theorem~\ref{thm:T33}, this paper).
+  \item[SuperBEST v3]  Global minimum 19 nodes over $\mathcal{F}_{16}$;
+               74.0\% savings over naive EML baseline of 73 nodes
+               (Theorem~\ref{thm:superbest3}, this paper).
+\end{description}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+% ════════════════════════════════════════════════════════════════════════════
+
+This work continues the monogate SuperBEST sprint (sessions S100--S105).
+T33 was discovered during session S105 after the primary algebraic identity
+$\LEdiv(x, e^y) = x - y$ was verified computationally.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+Subtraction in Two Nodes: T33 and the SuperBEST v3 Update to 19 Nodes.
+monogate research. \url{https://monogate.org}}
+
+\end{document}

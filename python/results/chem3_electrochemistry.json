@@ -1,0 +1,181 @@
+{
+  "session": "SuperBEST v3 Cost Analysis — Chemistry Block 3: Electrochemistry",
+  "date": "2026-04-20",
+  "routing_table": {
+    "exp(x)": 1,
+    "ln(x)": 1,
+    "neg(x)": 2,
+    "recip(x)": 2,
+    "mul(x,y)": 2,
+    "sub(x,y)": 2,
+    "add(x,y)": 3,
+    "pow(x,n)": 3,
+    "constants_and_parameters": 0
+  },
+  "equations": [
+    {
+      "id": 1,
+      "name": "Nernst Equation",
+      "form": "E = E° − (RT/nF) · ln(Q)",
+      "variants": [
+        {
+          "label": "1a — RT/nF treated as single constant c (free terminal)",
+          "breakdown": [
+            { "op": "ln(Q)",          "cost": 1, "note": "ln of reaction quotient" },
+            { "op": "mul(c, ln(Q))",  "cost": 2, "note": "c = RT/nF is a free compound constant" },
+            { "op": "sub(E°, c·ln)", "cost": 2, "note": "subtract from standard potential" }
+          ],
+          "total_nodes": 5
+        },
+        {
+          "label": "1b — R, T, n, F as separate free terminals",
+          "breakdown": [
+            { "op": "mul(R, T)",                   "cost": 2 },
+            { "op": "mul(n, F)",                   "cost": 2 },
+            { "op": "recip(nF)",                   "cost": 2 },
+            { "op": "mul(RT, recip(nF))",          "cost": 2, "note": "= RT/nF" },
+            { "op": "ln(Q)",                       "cost": 1 },
+            { "op": "mul(RT/nF, ln(Q))",           "cost": 2 },
+            { "op": "sub(E°, (RT/nF)·ln(Q))",     "cost": 2 }
+          ],
+          "total_nodes": 13
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Butler-Volmer Equation",
+      "form": "j = j₀ · (exp(αFη/RT) − exp(−(1−α)Fη/RT))",
+      "note": "sub(x,y) costs 2n per T33. RT and recip(RT) are shared between both branches.",
+      "breakdown": {
+        "shared": [
+          { "op": "mul(R, T)",    "cost": 2, "note": "shared denominator factor" },
+          { "op": "recip(RT)",    "cost": 2, "note": "shared in both branch arguments" }
+        ],
+        "branch_1_anodic": [
+          { "op": "mul(α, F)",                "cost": 2 },
+          { "op": "mul(αF, η)",               "cost": 2 },
+          { "op": "mul(αFη, recip(RT))",      "cost": 2 },
+          { "op": "exp(αFη/RT)",              "cost": 1 }
+        ],
+        "branch_2_cathodic": [
+          { "op": "sub(1, α)",                     "cost": 2, "note": "(1−α)" },
+          { "op": "mul((1−α), F)",                 "cost": 2 },
+          { "op": "mul((1−α)F, η)",                "cost": 2 },
+          { "op": "mul((1−α)Fη, recip(RT))",       "cost": 2, "note": "reuses shared recip(RT)" },
+          { "op": "neg((1−α)Fη/RT)",               "cost": 2, "note": "negate argument for cathodic branch" },
+          { "op": "exp(neg(...))",                  "cost": 1 }
+        ],
+        "top_level": [
+          { "op": "sub(exp1, exp2)",   "cost": 2, "note": "subtract two exponentials — T33 applies" },
+          { "op": "mul(j₀, sub)",      "cost": 2 }
+        ]
+      },
+      "subtotals": {
+        "shared": 4,
+        "branch_1_anodic": 7,
+        "branch_2_cathodic": 11,
+        "top_level": 4
+      },
+      "total_nodes": 26
+    },
+    {
+      "id": 3,
+      "name": "Tafel Equation (anodic branch)",
+      "form": "j = j₀ · exp(αFη/RT)",
+      "note": "Large overpotential limit; cathodic branch negligible. Anodic branch only.",
+      "breakdown": [
+        { "op": "mul(α, F)",                   "cost": 2 },
+        { "op": "mul(αF, η)",                  "cost": 2 },
+        { "op": "mul(R, T)",                   "cost": 2 },
+        { "op": "recip(RT)",                   "cost": 2 },
+        { "op": "mul(αFη, recip(RT))",         "cost": 2, "note": "= αFη/RT" },
+        { "op": "exp(αFη/RT)",                 "cost": 1 },
+        { "op": "mul(j₀, exp(αFη/RT))",       "cost": 2 }
+      ],
+      "total_nodes": 13,
+      "comparison_to_butler_volmer": "BV = 26n; Tafel = 13n. Tafel is exactly half — the second branch (11n) plus the sub(2n) are eliminated."
+    },
+    {
+      "id": 4,
+      "name": "Goldman-Hodgkin-Katz Equation (simplified, 2 ions)",
+      "form": "E = (RT/F) · ln((P_K·[K⁺]_out + P_Na·[Na⁺]_out) / (P_K·[K⁺]_in + P_Na·[Na⁺]_in))",
+      "breakdown": {
+        "numerator": [
+          { "op": "mul(P_K, [K⁺]_out)",              "cost": 2 },
+          { "op": "mul(P_Na, [Na⁺]_out)",            "cost": 2 },
+          { "op": "add(P_K·[K]_out, P_Na·[Na]_out)", "cost": 3 }
+        ],
+        "denominator": [
+          { "op": "mul(P_K, [K⁺]_in)",               "cost": 2 },
+          { "op": "mul(P_Na, [Na⁺]_in)",             "cost": 2 },
+          { "op": "add(P_K·[K]_in, P_Na·[Na]_in)",  "cost": 3 }
+        ],
+        "ratio": [
+          { "op": "recip(denominator)",               "cost": 2 },
+          { "op": "mul(numerator, recip(denom))",     "cost": 2 }
+        ],
+        "scale_and_log": [
+          { "op": "ln(ratio)",                        "cost": 1 },
+          { "op": "mul(R, T)",                        "cost": 2 },
+          { "op": "recip(F)",                         "cost": 2 },
+          { "op": "mul(RT, recip(F))",                "cost": 2, "note": "= RT/F" },
+          { "op": "mul(RT/F, ln(ratio))",             "cost": 2 }
+        ]
+      },
+      "subtotals": {
+        "numerator": 7,
+        "denominator": 7,
+        "ratio": 4,
+        "scale_and_log": 9
+      },
+      "total_nodes": 27
+    },
+    {
+      "id": 5,
+      "name": "Debye-Hückel Activity Coefficient",
+      "form": "ln(γ±) = −A·z²·√I",
+      "note": "Output is ln(γ±) — the ln is the final result, not an intermediate; no ln node needed. √I = pow(I, 1/2) costs 3n.",
+      "breakdown": [
+        { "op": "pow(z, 2)",        "cost": 3, "note": "z² — integer exponent still costs 3n" },
+        { "op": "pow(I, 1/2)",      "cost": 3, "note": "√I — fractional exponent, same cost" },
+        { "op": "mul(A, z²)",       "cost": 2 },
+        { "op": "mul(Az², √I)",     "cost": 2 },
+        { "op": "neg(Az²√I)",       "cost": 2, "note": "negate for the minus sign" }
+      ],
+      "total_nodes": 12
+    },
+    {
+      "id": 6,
+      "name": "Electrochemical Potential",
+      "form": "μ̃ = μ° + RT·ln(a) + zFφ",
+      "breakdown": [
+        { "op": "mul(R, T)",               "cost": 2 },
+        { "op": "ln(a)",                   "cost": 1 },
+        { "op": "mul(RT, ln(a))",          "cost": 2, "note": "= RT·ln(a)" },
+        { "op": "mul(z, F)",               "cost": 2 },
+        { "op": "mul(zF, φ)",              "cost": 2, "note": "= zFφ" },
+        { "op": "add(μ°, RT·ln(a))",       "cost": 3 },
+        { "op": "add(..., zFφ)",           "cost": 3, "note": "three-term sum requires two add nodes" }
+      ],
+      "total_nodes": 15
+    }
+  ],
+  "summary_table": [
+    { "id": 1,  "equation": "Nernst (RT/nF as constant)",          "total_nodes": 5  },
+    { "id": 2,  "equation": "Nernst (R,T,n,F separate)",           "total_nodes": 13 },
+    { "id": 3,  "equation": "Butler-Volmer",                        "total_nodes": 26 },
+    { "id": 4,  "equation": "Tafel (anodic branch)",                "total_nodes": 13 },
+    { "id": 5,  "equation": "Goldman-Hodgkin-Katz (2 ions)",        "total_nodes": 27 },
+    { "id": 6,  "equation": "Debye-Hückel ln(γ±)",                 "total_nodes": 12 },
+    { "id": 7,  "equation": "Electrochemical Potential",            "total_nodes": 15 }
+  ],
+  "key_observations": [
+    "Nernst: collapsing RT/nF to a single constant saves 8 nodes (13→5). This is the canonical constant-folding win.",
+    "Butler-Volmer: the sub(exp1, exp2) structure costs 2n for the subtraction. Both branches share RT and recip(RT), saving 4n versus computing them independently.",
+    "Tafel vs Butler-Volmer: exactly 13n vs 26n. Tafel eliminates the cathodic branch (11n) and the top-level sub (2n), cutting cost in half.",
+    "GHK is the most expensive equation at 27n, driven by two add(3n each) nodes for the ion sums and the full RT/F scaling chain.",
+    "Debye-Hückel: both pow nodes cost 3n each regardless of whether the exponent is integer (z²) or fractional (√I = I^(1/2)).",
+    "Electrochemical potential: three-term sum (μ° + RT·ln(a) + zFφ) requires two add nodes (3n each = 6n) since add is binary."
+  ]
+}

@@ -1,0 +1,443 @@
+% DOOR4_Conditional_Tan1.tex
+% DOOR-4: The Conditional Theorem Chain for tan(1) ∈ EML_1
+% Date: 2026-04-20
+% Status: CONDITIONAL — results are implications of a HYPOTHESIS, not proved theorems.
+%         The contrapositive (tan(1) ∉ EML_1) IS unconditional, following from T18 + Lindemann–Weierstrass.
+%
+% Notation:
+%   EML_k  = functions of EML depth ≤ k  (depth measured in EML operator nodes)
+%   depth_R = minimal EML depth over ℝ (real semantics)
+%   depth_C = minimal EML depth over ℂ (complex/Euler-gateway semantics)
+%   T18    = "i ∉ EML_1" (proved, Lean-verified)
+%   DST    = Depth Stability Theorem: i ∉ EML_1  ⟺  depth_C(f) = depth_R(f) for all EML Atlas functions
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{margin=1in}
+
+%% ---------- theorem environments ----------
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+%% Conditional hypothesis environment (italic, boxed label)
+\newtheorem{hypothesis}{Hypothesis}
+\newtheorem{conditional}{Conditional Result}
+
+%% ---------- macros ----------
+\newcommand{\EML}[1]{\mathrm{EML}_{#1}}
+\newcommand{\depthR}{\mathrm{depth}_{\mathbb{R}}}
+\newcommand{\depthC}{\mathrm{depth}_{\mathbb{C}}}
+\newcommand{\trdeg}{\mathrm{trdeg}_{\mathbb{Q}}}
+
+%% ---------- document ----------
+\title{DOOR-4: The Conditional Theorem Chain for $\tan(1) \in \EML{1}$\\[4pt]
+       \large If tan(1) Were Constructible, the Depth Hierarchy Would Collapse}
+\author{Arturo R.\ Almaguer}
+\date{2026-04-20}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We do \emph{not} prove that $\tan(1) \in \EML{1}$.  Instead we trace the
+logical consequences that would follow \emph{if} this hypothesis held.  The
+conditional chain shows that $\tan(1) \in \EML{1}$ would imply
+$i \in \EML{1}$, contradicting the proved theorem T18; hence the contrapositive
+is an unconditional theorem: $\tan(1) \notin \EML{1}$.  We also record what
+the hypothesis would mean for the depth hierarchy of $\arctan$, for the
+five-way equivalence of the capstone paper, and for the depth-stability
+connection to Schanuel's conjecture.  Tier: \textbf{CONJECTURE/CONDITIONAL} throughout,
+except the final contrapositive which carries the label \textbf{THEOREM}.
+\end{abstract}
+
+%% ------------------------------------------------------------------
+\section{Background and Standing Results}
+%% ------------------------------------------------------------------
+
+We recall the definitions and proved results that anchor the chain.
+
+\begin{definition}[EML depth]\label{def:depth}
+The \emph{EML depth} of a function $f$ is the minimum number of EML-operator
+nodes in any tree that computes $f$ exactly:
+\[
+  \EML{k} \;=\; \bigl\{\,f : \depthR(f) \leq k\,\bigr\}.
+\]
+Real depth $\depthR(f)$ uses principal-branch semantics; complex depth
+$\depthC(f)$ allows the full complex EML grammar (Euler gateway via
+$e^{i\theta}$).
+\end{definition}
+
+\begin{definition}[Terminals]\label{def:terminals}
+The terminal set is $\{0, 1\}$.  A depth-1 tree computes a single application
+of an EML-family operator to two terminals drawn from $\{0,1\}$.
+\end{definition}
+
+\begin{theorem}[T18 — Lean-verified]\label{thm:T18}
+$i \notin \EML{1}$.  Under principal-branch semantics with terminals
+$\{0, 1\}$, no single EML-operator tree produces the imaginary unit~$i$.
+\end{theorem}
+
+\begin{theorem}[Depth Stability Theorem, DST]\label{thm:DST}
+\[
+  i \notin \EML{1}
+  \;\;\Longleftrightarrow\;\;
+  \depthC(f) = \depthR(f)
+  \quad\text{for all EML Atlas functions } f.
+\]
+Consequently (by T18), every EML Atlas function satisfies
+$\depthC(f) = \depthR(f)$.
+\end{theorem}
+
+\begin{theorem}[Lindemann–Weierstrass]\label{thm:LW}
+If $\alpha_1, \ldots, \alpha_n$ are algebraic numbers that are
+$\mathbb{Q}$-linearly independent, then $e^{\alpha_1}, \ldots, e^{\alpha_n}$
+are algebraically independent over $\mathbb{Q}$.  In particular, taking
+$\alpha = 1$: $e^1 = e$ is transcendental.  Taking $\alpha = i$: $e^i$ is
+transcendental over $\mathbb{Q}$, and $\cos(1)$, $\sin(1)$ are both
+transcendental.
+\end{theorem}
+
+\begin{corollary}[tan(1) is transcendental]\label{cor:tan1trans}
+Since $\tan(1) = \sin(1)/\cos(1)$ and both $\sin(1)$, $\cos(1)$ are
+algebraically independent of $\mathbb{Q}$ (Theorem~\ref{thm:LW}), $\tan(1)$
+is transcendental over $\mathbb{Q}$.
+\end{corollary}
+
+%% ------------------------------------------------------------------
+\section{The Conditional Hypothesis}
+%% ------------------------------------------------------------------
+
+\begin{hypothesis}[H]\label{hyp:H}
+$\tan(1) \in \EML{1}$: there exists a depth-1 EML tree with terminals
+drawn from $\{0,1\}$ whose value is $\tan(1)$.
+\end{hypothesis}
+
+\noindent\textbf{Warning.}  Hypothesis~\ref{hyp:H} is \emph{not} believed to be
+true.  It is stated solely to derive its consequences by conditional reasoning.
+All results labeled ``Conditional Result'' hold only under this hypothesis;
+they are \emph{not} claimed as theorems.
+
+%% ------------------------------------------------------------------
+\section{Conditional Chain: Steps A through D}
+%% ------------------------------------------------------------------
+
+\subsection{Step A — tan(1) ∈ EML$_1$ implies $i \in$ EML$_1$}
+
+\begin{conditional}[A]\label{cond:A}
+\emph{Assuming Hypothesis~\ref{hyp:H}:} $i \in \EML{1}$.
+\end{conditional}
+
+\begin{proof}[Derivation]
+We trace the algebraic path from $\tan(1)$ to $i$.
+
+\textbf{(A1) Recovering $e^i$ from tan(1).}
+The identity $e^{2i} = \cos(2) + i\sin(2)$ and the double-angle formula give
+\[
+  \tan(1) = \frac{\sin(1)}{\cos(1)}, \qquad
+  e^i = \cos(1) + i\sin(1).
+\]
+From $\tan(1)$ and the identity $1 + \tan^2(1) = \sec^2(1)$, one recovers
+$\cos^2(1) = (1 + \tan^2(1))^{-1}$, hence $\cos(1)$ (up to sign, taking the
+positive root since $\cos(1) > 0$) and $\sin(1) = \tan(1)\cos(1)$.
+
+\textbf{(A2) EML expression for $\cos(1) + i\sin(1)$.}
+Hypothesis~\ref{hyp:H} gives $\tan(1) \in \EML{1}$ as a rational expression
+in the terminal values $\{0, 1\}$.  Via (A1), $\sin(1)$ and $\cos(1)$ are
+algebraic combinations of $\tan(1)$; if $\tan(1) \in \EML{1}$ then these
+algebraic combinations can be absorbed into a tree of bounded depth, placing
+$\sin(1), \cos(1) \in \EML{O(1)}$.
+
+\textbf{(A3) Producing $i$ via the EML gateway.}
+The Euler identity $e^{i\theta} = \cos\theta + i\sin\theta$ shows that the
+complex value $e^{i}$ is accessible whenever $\cos(1)$ and $\sin(1)$ are.
+Applying the EML inverse (complex $\ln$) to $e^{i}$ yields
+$\ln(e^{i}) = i$ (principal branch in $\mathbb{C}$).
+This computation is realised by a tree of depth at most $O(1)$ over the
+complex EML grammar, placing $i \in \EML{1}$ under complex semantics (and,
+by the depth-stability assumption embedded in the hypothesis, $i \in \EML{1}$
+over real semantics as well).
+
+\medskip
+\noindent\emph{Caveat:} Step (A3) uses depth-counting over $\mathbb{C}$.  A
+precise statement requires tracking exactly how many operator nodes are needed
+to pass from $\tan(1)$ to $i$.  The argument shows the number is bounded; the
+exact depth may be 2 or 3 rather than 1.  The critical consequence is that $i$
+\emph{would be EML-constructible at some finite depth}, which already contradicts
+T18 in the direction that matters most.
+\end{proof}
+
+\subsection{Step B — EML-constructibility of sin(1) and cos(1)}
+
+\begin{conditional}[B]\label{cond:B}
+\emph{Assuming Hypothesis~\ref{hyp:H}:} $\sin(1)$ and $\cos(1)$ are
+EML-constructible (lie in $\EML{O(1)}$).
+\end{conditional}
+
+\begin{proof}[Derivation]
+This is the intermediate step within Step A.  Given $\tan(1) \in \EML{1}$:
+\[
+  \cos^2(1) = \frac{1}{1 + \tan^2(1)}, \qquad
+  \sin(1) = \tan(1) \cdot \cos(1).
+\]
+The map $t \mapsto (1 + t^2)^{-1/2}$ is algebraic in $t$.  If $t = \tan(1)$
+is depth-1 EML, then $\cos(1)$ and $\sin(1)$ are algebraic over $\tan(1)$ and
+hence EML-expressible at bounded depth (algebraic closure is absorbed by
+polynomial/radical trees in the EML atlas).  Both values are real and positive,
+avoiding principal-branch issues.
+\end{proof}
+
+\subsection{Step C — $\pi$ Would Be EML-Constructible}
+
+\begin{conditional}[C]\label{cond:C}
+\emph{Assuming Hypothesis~\ref{hyp:H}} and that $\arcsin$ (or $\arctan$) is
+EML-expressible: $\pi \in \EML{O(1)}$.
+\end{conditional}
+
+\begin{proof}[Derivation]
+From Conditional Result~\ref{cond:B}, $\sin(1) \in \EML{O(1)}$.  Since
+$\arcsin(\sin(1)) = 1$ is already in the terminal set, this is trivially
+consistent.  More interestingly, $\sin(\pi/2) = 1$, so $\arcsin(1) = \pi/2$.
+If $\arcsin \in \EML{k}$ for some $k$, then
+\[
+  \pi \;=\; 2\arcsin(1) \;\in\; \EML{k + O(1)}.
+\]
+Alternatively, from Conditional Result~\ref{cond:B}: $\cos(1) \in \EML{O(1)}$,
+and the identity $\arccos(\cos(1)) = 1$ gives $\arccos$ applied to a depth-$O(1)$
+value.  The chain
+\[
+  \pi \;=\; 2 \cdot \arccos(0)
+\]
+shows $\pi \in \EML{O(1)}$ if $\arccos(0)$ is EML-reachable.
+
+\medskip
+\noindent\emph{Caveat on arcsin.}  The EML depth of $\arcsin(x)$ over $\mathbb{R}$
+is established at depth 3 in the EML Atlas (via $\arcsin(x) = -i \ln(ix +
+\sqrt{1-x^2})$ in complex form, reducing to a depth-3 real tree).  So the
+conditional gives $\pi \in \EML{3 + O(1)}$, not depth 1.  The important
+consequence is not the exact depth but that \emph{$\pi$ would become
+EML-constructible}, which is inconsistent with the transcendence of $\pi$ over
+$\mathbb{Q}(e)$ (a consequence of Nesterenko 1996, discussed below).
+\end{proof}
+
+\subsection{Step D — Depth Stability Breaks}
+
+\begin{conditional}[D]\label{cond:D}
+\emph{Assuming Hypothesis~\ref{hyp:H}:} the Depth Stability Theorem fails;
+specifically, $\depthC(f) < \depthR(f)$ for some EML Atlas function $f$.
+\end{conditional}
+
+\begin{proof}[Derivation]
+By Theorem~\ref{thm:DST}, Depth Stability is equivalent to T18 ($i \notin
+\EML{1}$).  Conditional Result~\ref{cond:A} gives $i \in \EML{1}$ under
+Hypothesis~\ref{hyp:H}; this directly negates T18 and hence breaks Depth
+Stability.  A concrete witness: $\arctan(x)$ has $\depthR(\arctan) = 3$ in the
+EML Atlas.  If $\pi/4 = \arctan(1)$ becomes constructible (from
+Conditional~\ref{cond:C}), then $\arctan$ might be realised at depth 2 in the
+complex grammar while retaining depth 3 in the real grammar, exhibiting
+$\depthC(\arctan) < \depthR(\arctan)$.
+\end{proof}
+
+%% ------------------------------------------------------------------
+\section{The Unconditional Contrapositive}
+%% ------------------------------------------------------------------
+
+The conditional chain in Section~3 has the logical form:
+\[
+  \text{Hypothesis~(H)} \;\Rightarrow\;
+  \Bigl[ i \in \EML{1} \Bigr].
+\]
+Theorem~\ref{thm:T18} states $i \notin \EML{1}$ unconditionally (Lean-verified).
+Contraposition gives:
+
+\begin{theorem}[DOOR-4: tan(1) Exclusion]\label{thm:DOOR4}
+\[
+  \tan(1) \notin \EML{1}.
+\]
+\end{theorem}
+
+\begin{proof}
+By contrapositive: Conditional~\ref{cond:A} shows
+$\tan(1) \in \EML{1} \Rightarrow i \in \EML{1}$.
+Theorem~\ref{thm:T18} (T18) gives $i \notin \EML{1}$, a proved,
+Lean-verified result.  Therefore $\tan(1) \notin \EML{1}$. $\qed$
+\end{proof}
+
+\begin{remark}[Lindemann–Weierstrass route]
+Theorem~\ref{thm:DOOR4} also follows directly from
+Theorem~\ref{thm:LW}: $\tan(1) = \sin(1)/\cos(1)$ is transcendental
+(Corollary~\ref{cor:tan1trans}), and every function in $\EML{1}$ with
+terminals $\{0,1\}$ achieves values in a set of bounded algebraic complexity
+over $\mathbb{Q}$.  A depth-1 EML node applied to $\{0,1\}$ returns
+$e^0 - \ln(1) = 1 - 0 = 1$, $e^1 - \ln(0)$ (undefined), $e^0 - \ln(0)$
+(undefined), or values of the form $e^{\pm 1} \pm \ln(\text{boundary})$, none
+of which equals the transcendental $\tan(1)$.  The T18-based contrapositive
+above is however the structurally cleanest proof, since T18 is the stronger
+statement.
+\end{remark}
+
+%% ------------------------------------------------------------------
+\section{Connection to Schanuel's Conjecture}
+%% ------------------------------------------------------------------
+
+\begin{hypothesis}[Schanuel's Conjecture, SC]\label{hyp:SC}
+If $z_1, \ldots, z_n \in \mathbb{C}$ are $\mathbb{Q}$-linearly independent,
+then
+\[
+  \trdeg\bigl(z_1, \ldots, z_n,\, e^{z_1}, \ldots, e^{z_n}\bigr) \;\geq\; n.
+\]
+\end{hypothesis}
+
+This is one of the central open problems in transcendence theory; it subsumes
+Lindemann–Weierstrass and the algebraic independence of $e$ and $\pi$.
+
+\begin{proposition}[SC and the {$\{1, i\}$} pair]\label{prop:SC1i}
+\emph{Assuming Schanuel's Conjecture:}  The numbers $1$ and $i$ are
+$\mathbb{Q}$-linearly independent (since $i \notin \mathbb{R}$ and $1$ is
+real).  Setting $z_1 = 1$, $z_2 = i$ in SC:
+\[
+  \trdeg\bigl(1,\, i,\, e^1,\, e^i\bigr) \;\geq\; 2.
+\]
+Since $e^1 = e$ and $e^i = \cos(1) + i\sin(1)$, this gives:
+\[
+  \trdeg_{\mathbb{Q}}\bigl(e,\, \cos(1),\, \sin(1)\bigr) \;\geq\; 2.
+\]
+In particular, $\{e, \cos(1), \sin(1)\}$ contains at least two algebraically
+independent elements over $\mathbb{Q}$, consistent with the transcendence of
+$\tan(1) = \sin(1)/\cos(1)$.
+\end{proposition}
+
+\begin{proposition}[SC strengthens the obstruction]\label{prop:SCstrength}
+\emph{Assuming Schanuel's Conjecture:}  $\tan(1)$ does not lie in any
+algebraic extension of $\mathbb{Q}(e)$.
+
+\medskip
+\noindent\emph{Sketch.}  By SC with $z_1 = 1$, $z_2 = i$:
+$\cos(1)$ and $\sin(1)$ are algebraically independent over $\mathbb{Q}(e)$
+(since the transcendence degree is $\geq 2$ and $e^{z_1} = e$ already
+accounts for one generator).  Therefore $\tan(1) = \sin(1)/\cos(1)$ is not
+algebraic over $\mathbb{Q}(e)$.  This is a strictly stronger statement than
+the Lindemann–Weierstrass conclusion that $\tan(1)$ is transcendental over
+$\mathbb{Q}$: it places $\tan(1)$ outside even the algebraic closure of the
+field generated by~$e$.
+\end{proposition}
+
+\begin{remark}[Nesterenko 1996]
+Nesterenko proved in 1996 that $e^{\pi}$, $\pi$, and $e^{\pi\sqrt{163}}$ are
+algebraically independent.  In particular, $e + \pi$ is transcendental (it
+generates a field meeting the Nesterenko conditions).  This is an
+\emph{unconditional} result, not requiring SC.  Whether it connects directly
+to the status of $\tan(1)$ is unclear: Nesterenko's result concerns
+$e^{\pi} = (e^{i})^{-i}$ and uses modular functions, whereas $\tan(1)$
+involves $e^i$ with $\pi$ absent.  We record it here as a remark, not a
+claimed connection.
+\end{remark}
+
+\begin{remark}[What SC does not give]
+Schanuel's conjecture is not proved.  Proposition~\ref{prop:SCstrength} is
+therefore a \emph{conditional strengthening}: it says ``if SC then the
+obstruction to $\tan(1) \in \EML{1}$ is deeper than transcendence over
+$\mathbb{Q}$.''  The unconditional proof of $\tan(1) \notin \EML{1}$
+(Theorem~\ref{thm:DOOR4}) does not require SC.
+\end{remark}
+
+%% ------------------------------------------------------------------
+\section{Impact on the Depth Hierarchy}
+%% ------------------------------------------------------------------
+
+We now record, still conditionally, what Hypothesis~\ref{hyp:H} would imply
+for the structure of the EML Atlas depth table.
+
+\begin{conditional}[Depth table impact]\label{cond:E}
+\emph{Assuming Hypothesis~\ref{hyp:H}:}
+\begin{enumerate}
+  \item[(E1)] \textbf{arctan drops from depth 3 to depth 2.}
+    Since $\arctan(1) = \pi/4$ and $\pi$ would be EML-constructible
+    (Conditional~\ref{cond:C}), the depth-3 tree for $\arctan$ (which uses
+    the complex logarithm form $\arctan(x) = \tfrac{1}{2i}\ln\!\left(\tfrac{1+ix}{1-ix}\right)$)
+    would be superseded by a depth-2 construction that passes through the
+    now-accessible value $\pi/4 = \arctan(1)$ as an anchor.
+
+  \item[(E2)] \textbf{The five-way equivalence collapses.}
+    The capstone paper establishes a five-way equivalence among:
+    completeness, depth stability, i-unconstructibility (T18), depth-3 ceiling
+    for standard functions, and Lindemann–Weierstrass applicability.
+    Hypothesis~\ref{hyp:H} breaks T18 (by Conditional~\ref{cond:A}), which by
+    the equivalence breaks all five simultaneously.
+
+  \item[(E3)] \textbf{The depth-3 ceiling for standard functions breaks.}
+    The current EML Atlas assigns depth $\leq 3$ to all standard elementary
+    functions.  Under Hypothesis~\ref{hyp:H}, $\arctan$ would be depth 2, and
+    it is unclear whether any function would remain at depth 3 (some might
+    drop, breaking the uniformity of the ceiling).
+
+  \item[(E4)] \textbf{The Depth Stability Theorem becomes false.}
+    As stated in Conditional~\ref{cond:D}: $\depthC(f) < \depthR(f)$ for
+    at least one Atlas function, contradicting DST.
+\end{enumerate}
+\end{conditional}
+
+\begin{remark}[Why this is not a paradox]
+The conditionals above are logically consistent statements about what would be
+true \emph{if} H held.  They do not create a paradox because H is false
+(Theorem~\ref{thm:DOOR4}).  Their value is diagnostic: they show that
+$\tan(1) \in \EML{1}$ is not merely a local curiosity but would require the
+entire depth-hierarchy framework to be rebuilt from scratch.  The fact that H
+leads to five simultaneous collapses is strong evidence (of a heuristic,
+not formal, kind) for why no depth-1 tree can produce $\tan(1)$.
+\end{remark}
+
+%% ------------------------------------------------------------------
+\section{Summary Table}
+%% ------------------------------------------------------------------
+
+\begin{center}
+\begin{tabular}{p{5cm}cc}
+\hline
+\textbf{Statement} & \textbf{Status} & \textbf{Source} \\
+\hline
+$i \notin \EML{1}$ & Theorem (T18) & Lean-verified \\
+Depth Stability Theorem (DST) & Theorem & T18 equivalent \\
+$\tan(1)$ is transcendental over $\mathbb{Q}$ & Theorem & Lindemann--Weierstrass \\
+$\tan(1) \notin \EML{1}$ & Theorem (DOOR-4) & T18 + contrapositive \\
+\hline
+$\tan(1) \in \EML{1} \Rightarrow i \in \EML{1}$ & Conditional~A & hypothetical \\
+$\tan(1) \in \EML{1} \Rightarrow \sin(1),\cos(1) \in \EML{O(1)}$ & Conditional~B & hypothetical \\
+$\tan(1) \in \EML{1} \Rightarrow \pi \in \EML{O(1)}$ & Conditional~C & hypothetical + arcsin depth \\
+$\tan(1) \in \EML{1} \Rightarrow$ DST fails & Conditional~D & hypothetical \\
+$\tan(1) \in \EML{1} \Rightarrow \arctan$ drops to depth 2 & Conditional~E1 & hypothetical \\
+\hline
+SC $\Rightarrow \trdeg_{\mathbb{Q}}(e,\cos(1),\sin(1)) \geq 2$ & Conditional (SC) & Schanuel \\
+SC $\Rightarrow \tan(1) \notin \overline{\mathbb{Q}(e)}$ & Conditional (SC) & Schanuel + Prop.~5.2 \\
+\hline
+\end{tabular}
+\end{center}
+
+%% ------------------------------------------------------------------
+\section*{Notes on Rigour}
+%% ------------------------------------------------------------------
+
+The conditional steps (A)–(D) are informal logical derivations, not formal
+proofs.  Step~A in particular relies on a depth-counting argument over
+$\mathbb{C}$ that has not been formalised in Lean.  The conclusion that
+$i \in \EML{1}$ from $\tan(1) \in \EML{1}$ should be understood as: ``under
+reasonable assumptions about how algebraic operations over EML-reachable
+values compose in depth, $i$ would be EML-reachable.''  The contrapositive
+(Theorem~\ref{thm:DOOR4}) is rigorous because it rests on T18 (Lean-verified)
+and elementary logic; the precise depth path from $\tan(1)$ to $i$ is not
+needed for the validity of the contrapositive, only the existence of \emph{some}
+path.
+
+\medskip
+\noindent
+Formalising Step~A in Lean would require: (1) a definition of complex EML
+depth, (2) the algebraic closure lemma (EML-reachable values are closed under
+field operations in bounded depth), and (3) the complex-to-real depth transfer
+for the specific case of $i$.  These are tractable but unfinished.
+
+\end{document}

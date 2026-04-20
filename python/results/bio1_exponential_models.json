@@ -1,0 +1,223 @@
+{
+  "session": "Bio Block 1",
+  "title": "SuperBEST v3 Cost Analysis — Biology Block 1: Exponential Models",
+  "routing_table": {
+    "exp(x)": 1,
+    "ln(x)": 1,
+    "neg(x)": 2,
+    "recip(x)": 2,
+    "mul(x,y)": 2,
+    "sub(x,y)": 2,
+    "add(x,y)": 3,
+    "pow(x,n)": 3,
+    "terminals (parameters)": 0
+  },
+  "equations": {
+    "eq1_exponential_growth": {
+      "name": "Exponential population growth",
+      "formula": "N(t) = N\u2080 \u00b7 exp(r\u00b7t)",
+      "tree": {
+        "root": "mul(N\u2080, exp(mul(r, t)))",
+        "steps": [
+          "mul(r, t)         \u2192 2 nodes  [inner product]",
+          "exp(r\u00b7t)          \u2192 1 node",
+          "mul(N\u2080, exp(\u00b7))   \u2192 2 nodes  [outer scale]"
+        ]
+      },
+      "node_count": 5,
+      "node_breakdown": {"inner_mul": 2, "exp": 1, "outer_mul": 2},
+      "canonical_form": "N\u2080 \u00b7 exp(r\u00b7t)",
+      "notes": "Standard exponential growth. Three operators: mul, exp, mul."
+    },
+    "eq2_exponential_decay": {
+      "name": "Exponential decay",
+      "formula": "N(t) = N\u2080 \u00b7 exp(\u2212\u03bb\u00b7t)",
+      "tree": {
+        "root": "mul(N\u2080, exp(neg(mul(\u03bb, t))))",
+        "steps": [
+          "mul(\u03bb, t)          \u2192 2 nodes  [inner product]",
+          "neg(\u03bb\u00b7t)           \u2192 2 nodes  [negate]",
+          "exp(\u2212\u03bb\u00b7t)          \u2192 1 node",
+          "mul(N\u2080, exp(\u00b7))    \u2192 2 nodes  [outer scale]"
+        ]
+      },
+      "node_count": 7,
+      "node_breakdown": {"inner_mul": 2, "neg": 2, "exp": 1, "outer_mul": 2},
+      "canonical_form": "N\u2080 \u00b7 exp(\u2212\u03bb\u00b7t)",
+      "notes": "Growth plus one negation operator (cost 2). Costs 2 more nodes than Eq 1 solely due to the sign flip."
+    },
+    "eq3_radioactive_decay": {
+      "name": "Radioactive decay",
+      "formula": "N(t) = N\u2080 \u00b7 exp(\u2212\u03bb\u00b7t)",
+      "tree": {
+        "root": "mul(N\u2080, exp(neg(mul(\u03bb, t))))",
+        "steps": [
+          "mul(\u03bb, t)          \u2192 2 nodes",
+          "neg(\u03bb\u00b7t)           \u2192 2 nodes",
+          "exp(\u2212\u03bb\u00b7t)          \u2192 1 node",
+          "mul(N\u2080, exp(\u00b7))    \u2192 2 nodes"
+        ]
+      },
+      "node_count": 7,
+      "node_breakdown": {"inner_mul": 2, "neg": 2, "exp": 1, "outer_mul": 2},
+      "structural_identity_with": "eq2_exponential_decay",
+      "canonical_form": "N\u2080 \u00b7 exp(\u2212\u03bb\u00b7t)",
+      "notes": "STRUCTURALLY IDENTICAL to Eq 2. Same operator tree, different parameter names (\u03bb vs r with negation). Node count identical: 7. This is a domain rename, not a distinct computation."
+    },
+    "eq4_doubling_time": {
+      "name": "Doubling time",
+      "formula": "t\u2082 = ln(2) / r",
+      "tree": {
+        "root": "mul(ln2_const, recip(r))",
+        "steps": [
+          "ln(2)             \u2192 0 nodes  [mathematical constant \u2014 free terminal]",
+          "recip(r)          \u2192 2 nodes  [division by r]",
+          "mul(ln2, recip(r))\u2192 2 nodes  [scale by constant]"
+        ]
+      },
+      "node_count": 4,
+      "node_breakdown": {"ln2_constant": 0, "recip": 2, "mul": 2},
+      "canonical_form": "ln(2) / r",
+      "notes": "ln(2) \u2248 0.6931 is a free constant terminal. Only two operators needed: recip + mul. The informal '0 nodes' in the problem statement refers to no complex subexpressions beyond the ratio of two terminals \u2014 the actual SuperBEST cost is 4 (recip + mul are still operators)."
+    },
+    "eq5_half_life": {
+      "name": "Half-life",
+      "formula": "t\u00bd = ln(2) / \u03bb",
+      "tree": {
+        "root": "mul(ln2_const, recip(\u03bb))",
+        "steps": [
+          "ln(2)              \u2192 0 nodes  [free constant terminal]",
+          "recip(\u03bb)           \u2192 2 nodes",
+          "mul(ln2, recip(\u03bb)) \u2192 2 nodes"
+        ]
+      },
+      "node_count": 4,
+      "node_breakdown": {"ln2_constant": 0, "recip": 2, "mul": 2},
+      "structural_identity_with": "eq4_doubling_time",
+      "canonical_form": "ln(2) / \u03bb",
+      "notes": "STRUCTURALLY IDENTICAL to Eq 4 (doubling time). Parameter \u03bb vs r, same operator tree. Node count: 4."
+    },
+    "eq6_carbon14_dating": {
+      "name": "Carbon-14 dating",
+      "formula": "t = ln(N\u2080/N) / \u03bb = (ln(N\u2080) \u2212 ln(N)) / \u03bb",
+      "tree_option_A": {
+        "description": "Direct ratio: ln(N\u2080/N) / \u03bb",
+        "steps": [
+          "recip(N)              \u2192 2 nodes",
+          "mul(N\u2080, recip(N))     \u2192 2 nodes  [compute N\u2080/N]",
+          "ln(N\u2080/N)              \u2192 1 node",
+          "recip(\u03bb)              \u2192 2 nodes",
+          "mul(ln_result, recip(\u03bb)) \u2192 2 nodes"
+        ],
+        "node_count": 9
+      },
+      "tree_option_B": {
+        "description": "Log difference: (ln(N\u2080) \u2212 ln(N)) / \u03bb  [optimal]",
+        "steps": [
+          "ln(N\u2080)                \u2192 1 node",
+          "ln(N)                 \u2192 1 node",
+          "sub(ln(N\u2080), ln(N))   \u2192 2 nodes  [log subtraction = log ratio]",
+          "recip(\u03bb)              \u2192 2 nodes",
+          "mul(sub_result, recip(\u03bb)) \u2192 2 nodes"
+        ],
+        "node_count": 8
+      },
+      "node_count": 8,
+      "optimal_tree": "option_B",
+      "node_breakdown": {"ln_N0": 1, "ln_N": 1, "sub": 2, "recip_lambda": 2, "mul": 2},
+      "canonical_form": "(ln(N\u2080) \u2212 ln(N)) / \u03bb",
+      "notes": "Two viable trees. Option B (log difference) saves 1 node vs Option A (direct ratio). The sub operator costs 2, same as recip, but avoids an extra recip+mul pair for the inner division. Best cost: 8 nodes."
+    },
+    "eq7_continuous_compounding": {
+      "name": "Continuous compounding (finance/biology)",
+      "formula": "V(t) = V\u2080 \u00b7 exp(r\u00b7t)",
+      "tree": {
+        "root": "mul(V\u2080, exp(mul(r, t)))",
+        "steps": [
+          "mul(r, t)          \u2192 2 nodes",
+          "exp(r\u00b7t)           \u2192 1 node",
+          "mul(V\u2080, exp(\u00b7))    \u2192 2 nodes"
+        ]
+      },
+      "node_count": 5,
+      "node_breakdown": {"inner_mul": 2, "exp": 1, "outer_mul": 2},
+      "structural_identity_with": "eq1_exponential_growth",
+      "canonical_form": "V\u2080 \u00b7 exp(r\u00b7t)",
+      "notes": "STRUCTURALLY IDENTICAL to Eq 1 (exponential population growth). Domain label changes (V\u2080 vs N\u2080, financial vs biological context) but operator tree is the same. Node count: 5."
+    },
+    "eq8_cell_growth_rate": {
+      "name": "Cell growth rate from doubling time",
+      "formula": "r = ln(2) / t_d",
+      "tree": {
+        "root": "mul(ln2_const, recip(t_d))",
+        "steps": [
+          "ln(2)                \u2192 0 nodes  [free constant terminal]",
+          "recip(t_d)           \u2192 2 nodes",
+          "mul(ln2, recip(t_d)) \u2192 2 nodes"
+        ]
+      },
+      "node_count": 4,
+      "node_breakdown": {"ln2_constant": 0, "recip": 2, "mul": 2},
+      "structural_identity_with": ["eq4_doubling_time", "eq5_half_life"],
+      "canonical_form": "ln(2) / t_d",
+      "notes": "STRUCTURALLY IDENTICAL to Eq 4 and Eq 5. Same operator tree, just solving for r instead of t. Node count: 4."
+    }
+  },
+  "summary_table": [
+    {"eq": 1, "name": "Exponential population growth",      "formula": "N\u2080\u00b7exp(r\u00b7t)",             "nodes": 5, "identity_class": "A: growth"},
+    {"eq": 2, "name": "Exponential decay",                  "formula": "N\u2080\u00b7exp(\u2212\u03bb\u00b7t)",            "nodes": 7, "identity_class": "B: decay"},
+    {"eq": 3, "name": "Radioactive decay",                  "formula": "N\u2080\u00b7exp(\u2212\u03bb\u00b7t)",            "nodes": 7, "identity_class": "B: decay  [= Eq 2]"},
+    {"eq": 4, "name": "Doubling time",                      "formula": "ln(2)/r",                "nodes": 4, "identity_class": "C: log-ratio"},
+    {"eq": 5, "name": "Half-life",                          "formula": "ln(2)/\u03bb",               "nodes": 4, "identity_class": "C: log-ratio  [= Eq 4]"},
+    {"eq": 6, "name": "Carbon-14 dating",                   "formula": "(ln(N\u2080)\u2212ln(N))/\u03bb",       "nodes": 8, "identity_class": "D: log-difference-ratio"},
+    {"eq": 7, "name": "Continuous compounding",             "formula": "V\u2080\u00b7exp(r\u00b7t)",             "nodes": 5, "identity_class": "A: growth  [= Eq 1]"},
+    {"eq": 8, "name": "Cell growth rate from doubling time","formula": "ln(2)/t_d",              "nodes": 4, "identity_class": "C: log-ratio  [= Eq 4, 5]"}
+  ],
+  "structural_identity_classes": {
+    "class_A_growth": {
+      "canonical": "X\u2080 \u00b7 exp(r\u00b7t)",
+      "node_count": 5,
+      "members": ["eq1 (population growth)", "eq7 (continuous compounding)"],
+      "tree": "mul(X\u2080, exp(mul(r, t)))",
+      "insight": "Positive-exponent exponential. Two multiplications + one exp = 5 nodes. The most basic exponential template."
+    },
+    "class_B_decay": {
+      "canonical": "X\u2080 \u00b7 exp(\u2212\u03bb\u00b7t)",
+      "node_count": 7,
+      "members": ["eq2 (exponential decay)", "eq3 (radioactive decay)"],
+      "tree": "mul(X\u2080, exp(neg(mul(\u03bb, t))))",
+      "insight": "Decay = growth + negation. The neg operator costs 2 extra nodes. Radioactive and biological decay are computationally identical \u2014 different physical domains, same operator tree.",
+      "cost_delta_from_class_A": "+2 (one neg operator)"
+    },
+    "class_C_log_ratio": {
+      "canonical": "ln(2) / p",
+      "node_count": 4,
+      "members": ["eq4 (doubling time)", "eq5 (half-life)", "eq8 (cell growth rate)"],
+      "tree": "mul(ln2_const, recip(p))",
+      "insight": "Ratio of a free constant to a free parameter. Cheapest non-trivial formula: only recip + mul. ln(2) contributes 0 nodes as a mathematical constant terminal. Three biology/biophysics formulas collapse to this single 4-node template."
+    },
+    "class_D_log_difference_ratio": {
+      "canonical": "(ln(A) \u2212 ln(B)) / p",
+      "node_count": 8,
+      "members": ["eq6 (carbon-14 dating)"],
+      "tree": "mul(sub(ln(A), ln(B)), recip(p))",
+      "insight": "Most complex formula in this block. Requires two log evaluations, a subtraction, a reciprocal, and a multiplication. Optimal tree uses log-difference (sub) rather than log-of-ratio (which would cost 9 nodes via inner recip+mul for A/B). The sub operator at cost 2 is the same price as recip, making log-difference the winner."
+    }
+  },
+  "key_observations": [
+    "All 8 equations reduce to 4 distinct operator tree templates (classes A, B, C, D).",
+    "Growth vs decay differ by exactly 2 nodes: one neg operator (cost 2). This is the minimal computational signature of sign direction in an exponent.",
+    "Three apparently different biological formulas (doubling time, half-life, cell growth rate) are computationally identical 4-node trees \u2014 they are the same computation.",
+    "Eqs 1 and 7 (population growth vs compound interest) are structurally identical: biology and finance share the same 5-node template.",
+    "Eqs 2 and 3 (exponential decay vs radioactive decay) are structurally identical: same tree across physical domains.",
+    "Carbon-14 dating (Eq 6) is the only formula requiring two log evaluations; it is the costliest at 8 nodes. Optimal via log-difference (sub), not log-of-ratio (inner mul+recip would cost 9).",
+    "The informal '0 nodes' comment in Eqs 4 and 8 means no complex nested subexpressions \u2014 the actual SuperBEST count is 4 (recip + mul are real operator nodes).",
+    "Node range across this block: 4 (min, class C) to 8 (max, class D). A narrow spread of 4 nodes across all 8 biology equations \u2014 exponential models are structurally simple."
+  ],
+  "cost_range": {
+    "minimum": 4,
+    "maximum": 8,
+    "spread": 4,
+    "mean": 5.5
+  }
+}

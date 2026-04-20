@@ -1,0 +1,286 @@
+{
+  "session": "Bio4",
+  "title": "SuperBEST v3 Cost Analysis — Biology Block 4: Cooperative Binding Models",
+  "routing_table": {
+    "exp(x)": 1,
+    "ln(x)": 1,
+    "neg(x)": 2,
+    "recip(x)": 2,
+    "mul(x,y)": 2,
+    "sub(x,y)": 2,
+    "add(x,y)": 3,
+    "pow(x,n)": 3,
+    "note": "Parameters are free terminals (cost 0). Variables are free terminals (cost 0)."
+  },
+  "equations": [
+    {
+      "id": 1,
+      "name": "Hill equation",
+      "formula": "v = Vmax * [S]^n / (K^n + [S]^n)",
+      "description": "General Hill equation with Hill coefficient n (integer >= 1). Vmax, K, n are parameters.",
+      "operations": [
+        {"op": "pow([S], n)", "count": 1, "unit_cost": 3, "subtotal": 3, "note": "[S]^n in numerator"},
+        {"op": "pow(K, n)", "count": 1, "unit_cost": 3, "subtotal": 3, "note": "K^n in denominator"},
+        {"op": "add(K^n, [S]^n)", "count": 1, "unit_cost": 3, "subtotal": 3, "note": "denominator sum"},
+        {"op": "mul(Vmax, [S]^n)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "numerator product"},
+        {"op": "recip(K^n + [S]^n)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "division via reciprocal"},
+        {"op": "mul(Vmax*[S]^n, recip(...))", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "final multiply"}
+      ],
+      "total_cost": 15,
+      "cost_formula": "3 + 3 + 3 + 2 + 2 + 2 = 15",
+      "dominant_term": "Two pow(x,n) calls at cost 3 each = 6 total. Fixed overhead = 9.",
+      "notes": [
+        "This is purely algebraic — no exp or ln needed.",
+        "pow([S],n) can share the computed value in numerator and denominator sum, so only 2 distinct pow calls.",
+        "If n=1 (Michaelis-Menten): pow degenerates to identity (cost 0 each), total drops to 15 - 6 = 9.",
+        "Cost is independent of n because pow(x,n) costs 3 regardless of n value."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Hill equation — fractional saturation",
+      "formula": "theta = [L]^n / (Kd + [L]^n)",
+      "description": "Fractional saturation form. Kd = dissociation constant, [L] = ligand concentration. Vmax removed (normalised to 1).",
+      "operations": [
+        {"op": "pow([L], n)", "count": 1, "unit_cost": 3, "subtotal": 3, "note": "[L]^n — used in both numerator and denominator"},
+        {"op": "add(Kd, [L]^n)", "count": 1, "unit_cost": 3, "subtotal": 3, "note": "denominator"},
+        {"op": "recip(Kd + [L]^n)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "division"},
+        {"op": "mul([L]^n, recip(...))", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "final product"}
+      ],
+      "total_cost": 10,
+      "cost_formula": "3 + 3 + 2 + 2 = 10",
+      "savings_vs_eq1": 5,
+      "dominant_term": "Single pow([L],n) = 3. Overhead = 7.",
+      "notes": [
+        "Kd does NOT need a pow: Kd is a parameter, it absorbs K^n directly (Kd already is K^n in the dissociation sense).",
+        "Only one pow call needed — [L]^n shared between numerator and denominator sum.",
+        "This is the minimal Hill form; Eq 1 adds Vmax scaling (+5 cost).",
+        "n=1 special case: pow degenerates, cost drops to 10 - 3 = 7."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Hill equation — linearized (Hill plot)",
+      "formula": "log10(theta / (1 - theta)) = n * log10([S]) - log10(K)",
+      "description": "Linearized Hill equation. log10 = ln / ln(10) so log10(x) = ln(x) * recip(ln(10)). ln(10) is a constant parameter.",
+      "log10_cost_analysis": {
+        "log10(x)": "ln(x) [cost 1] * recip(ln10_const) [cost 2] * mul [cost 2] = 5, BUT ln10 is a fixed parameter so recip(ln10) is also a parameter = cost 0. Thus log10(x) = ln(x) * param = ln[1] + mul[2] = 3.",
+        "simplified": "log10(x) costs 3 (one ln + one mul by constant 1/ln10)"
+      },
+      "operations": [
+        {"op": "sub(1_param, theta_inner)", "count": 0, "unit_cost": 2, "subtotal": 0, "note": "theta itself must be computed; if theta is an input variable it is free"},
+        {"op": "sub(1, theta)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "compute (1 - theta)"},
+        {"op": "recip(1 - theta)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "theta / (1-theta) = theta * recip(1-theta)"},
+        {"op": "mul(theta, recip(1-theta))", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "odds ratio theta/(1-theta)"},
+        {"op": "ln(theta/(1-theta))", "count": 1, "unit_cost": 1, "subtotal": 1, "note": "log of odds — part of log10"},
+        {"op": "mul(ln(...), inv_ln10_param)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "converts ln to log10; 1/ln10 is a free parameter"},
+        {"op": "ln([S])", "count": 1, "unit_cost": 1, "subtotal": 1, "note": "log10([S]) numerator ln part"},
+        {"op": "mul(ln([S]), inv_ln10_param)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "log10([S])"},
+        {"op": "mul(n_param, log10([S]))", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "n * log10([S]); n is a free parameter"},
+        {"op": "ln(K_param)", "count": 0, "unit_cost": 1, "subtotal": 0, "note": "log10(K) — K is a parameter, so ln(K)/ln(10) can be folded into a single parameter constant; cost 0"},
+        {"op": "sub(n*log10([S]), log10K_param)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "final subtraction; log10(K) absorbed into parameter"}
+      ],
+      "total_cost": 16,
+      "cost_formula": "sub(1-theta)[2] + recip[2] + mul(odds)[2] + ln(odds)[1] + mul(to_log10)[2] + ln([S])[1] + mul(to_log10)[2] + mul(n*)[2] + sub(final)[2] = 16",
+      "notes": [
+        "ln(K) is absorbed into a free parameter (log10(K) = constant), saving 3 cost.",
+        "1/ln(10) is a free parameter constant — no recip node needed at runtime.",
+        "The dominant cost is the log10 conversions (2 ln calls + 2 mul calls = 6) plus the odds ratio computation (2+2=4).",
+        "No pow() node needed — the linearized form replaces [S]^n with n*log([S]).",
+        "This is cheaper than the algebraic form when n is large: algebraic form costs 15 fixed; linearized costs 16 fixed but avoids pow(x,n).",
+        "For n >= 2 the algebraic form is cheaper (15 vs 16). For large n the algebraic form stays at 15 while linearized stays at 16 — linearized never wins on cost alone.",
+        "Linearized form is used for graphical analysis (Hill plot), not cost minimization."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Two-site binding (non-cooperative)",
+      "formula": "theta = (K1*[L] + 2*K1*K2*[L]^2) / (2*(1 + K1*[L] + K1*K2*[L]^2))",
+      "description": "Two sequential binding sites with microscopic constants K1, K2. Factor of 2 absorbed into parameters where possible.",
+      "parameter_folding": {
+        "A": "K1 — free parameter",
+        "B": "K1*K2 — product is a single free parameter (call it K12)",
+        "C": "2*K1*K2 — 2*K12 = another free parameter (call it K12_2)",
+        "D": "2 in denominator — free parameter"
+      },
+      "operations": [
+        {"op": "pow([L], 2)", "count": 1, "unit_cost": 3, "subtotal": 3, "note": "[L]^2 shared across numerator and denominator"},
+        {"op": "mul(K1_param, [L])", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "K1*[L] term"},
+        {"op": "mul(K12_2_param, [L]^2)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "2*K1*K2*[L]^2 — coefficient absorbed into parameter"},
+        {"op": "add(K1*[L], 2K12*[L]^2)", "count": 1, "unit_cost": 3, "subtotal": 3, "note": "numerator sum"},
+        {"op": "mul(K12_param, [L]^2)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "K1*K2*[L]^2 in denominator — reuse [L]^2"},
+        {"op": "add(K1*[L], K12*[L]^2)", "count": 1, "unit_cost": 3, "subtotal": 3, "note": "inner denominator sum (without 1+)"},
+        {"op": "add(1_param, inner_denom)", "count": 1, "unit_cost": 3, "subtotal": 3, "note": "1 + K1*[L] + K1*K2*[L]^2"},
+        {"op": "mul(2_param, denom_inner)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "multiply by 2 — OR absorb 2 into parameter K1,K12 redefinition"},
+        {"op": "recip(denominator)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "division"},
+        {"op": "mul(numerator, recip)", "count": 1, "unit_cost": 2, "subtotal": 2, "note": "final product"}
+      ],
+      "total_cost": 24,
+      "cost_formula": "pow[3] + mul[2] + mul[2] + add[3] + mul[2] + add[3] + add[3] + mul[2] + recip[2] + mul[2] = 24",
+      "optimized_cost": 22,
+      "optimization_note": "The factor of 2 in denominator can be absorbed into parameter redefinitions (K1' = K1/2, K12' = K12/2), eliminating one mul node. Also, the two mul(K_param, [L]^2) in numerator and denominator can be merged if coefficient ratio is absorbed into a single parameter. Minimum: 22.",
+      "notes": [
+        "pow([L],2) = 3 is the dominant single node. Only one pow call since [L]^2 is reused.",
+        "The coefficient 2 in numerator (2*K1*K2) is absorbed into parameter K12_2 = 2*K12, saving one mul node.",
+        "Three add nodes are unavoidable — the polynomial has three distinct terms in the denominator.",
+        "This is considerably more expensive than the n=2 Hill form (cost 10) because it tracks two separate binding constants K1 and K2.",
+        "The Hill form is a collapsed version of this that assumes K_eff = (K1*K2)^(1/2) and uses only one pow."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "MWC model (Monod-Wyman-Changeux) — n=2 case",
+      "formula_general": "theta = (alpha*(1+alpha)^(n-1) + L*alpha*c*(1+alpha*c)^(n-1)) / ((1+alpha)^n + L*(1+alpha*c)^n)",
+      "formula_n2": "theta = (alpha*(1+alpha) + L*alpha*c*(1+alpha*c)) / ((1+alpha)^2 + L*(1+alpha*c)^2)",
+      "substitutions": {
+        "alpha": "[L]/KR  — KR is a free parameter, so alpha = [L]*recip(KR)",
+        "c": "KR/KT — free parameter (ratio of two constants)",
+        "L": "allosteric constant — free parameter",
+        "alpha_c": "alpha * c = [L]*c/KR — or define beta = [L]/KT as free expression"
+      },
+      "n2_intermediate_costs": {
+        "alpha_computation": {
+          "op": "mul([L], recip_KR_param)",
+          "cost": 2,
+          "note": "recip(KR) is a fixed parameter = 0 cost; mul costs 2"
+        },
+        "alpha_c_computation": {
+          "op": "mul(alpha, c_param)",
+          "cost": 2,
+          "note": "c = KR/KT is a free parameter"
+        },
+        "one_plus_alpha": {
+          "op": "add(1_param, alpha)",
+          "cost": 3
+        },
+        "one_plus_alpha_c": {
+          "op": "add(1_param, alpha_c)",
+          "cost": 3
+        },
+        "pow_one_plus_alpha_2": {
+          "op": "pow(1+alpha, 2)",
+          "cost": 3,
+          "note": "denominator (1+alpha)^2"
+        },
+        "pow_one_plus_alpha_c_2": {
+          "op": "pow(1+alpha_c, 2)",
+          "cost": 3,
+          "note": "denominator (1+alpha*c)^2"
+        },
+        "num_term1": {
+          "breakdown": "alpha*(1+alpha) = mul(alpha, 1+alpha)",
+          "cost": 2
+        },
+        "num_term2_inner": {
+          "breakdown": "L*alpha*c = mul(L_param, alpha_c) [already computed]",
+          "cost": 2,
+          "note": "L is free parameter; mul(L, alpha_c)"
+        },
+        "num_term2": {
+          "breakdown": "L*alpha*c*(1+alpha*c) = mul(L_alpha_c, 1+alpha_c)",
+          "cost": 2
+        },
+        "num_add": {
+          "op": "add(term1_num, term2_num)",
+          "cost": 3
+        },
+        "denom_term2": {
+          "breakdown": "L*(1+alpha*c)^2 = mul(L_param, pow(1+alpha_c,2))",
+          "cost": 2
+        },
+        "denom_add": {
+          "op": "add(pow(1+alpha,2), L*(1+alpha_c)^2)",
+          "cost": 3
+        },
+        "recip_denom": {
+          "op": "recip(denominator)",
+          "cost": 2
+        },
+        "final_mul": {
+          "op": "mul(numerator, recip)",
+          "cost": 2
+        }
+      },
+      "operation_list": [
+        {"op": "mul([L], recip_KR)", "cost": 2, "note": "alpha = [L]/KR"},
+        {"op": "mul(alpha, c_param)", "cost": 2, "note": "alpha*c"},
+        {"op": "add(1, alpha)", "cost": 3, "note": "1+alpha"},
+        {"op": "add(1, alpha_c)", "cost": 3, "note": "1+alpha*c"},
+        {"op": "pow(1+alpha, 2)", "cost": 3, "note": "denominator first term base"},
+        {"op": "pow(1+alpha_c, 2)", "cost": 3, "note": "denominator second term base"},
+        {"op": "mul(alpha, 1+alpha)", "cost": 2, "note": "numerator term 1"},
+        {"op": "mul(L_param, alpha_c)", "cost": 2, "note": "L*alpha*c"},
+        {"op": "mul(L_alpha_c, 1+alpha_c)", "cost": 2, "note": "numerator term 2"},
+        {"op": "add(num_t1, num_t2)", "cost": 3, "note": "numerator sum"},
+        {"op": "mul(L_param, pow_1+alpha_c_2)", "cost": 2, "note": "L*(1+alpha*c)^2"},
+        {"op": "add(pow_1+alpha_2, L*(1+alpha_c)^2)", "cost": 3, "note": "denominator sum"},
+        {"op": "recip(denominator)", "cost": 2, "note": "division"},
+        {"op": "mul(numerator, recip)", "cost": 2, "note": "final result"}
+      ],
+      "total_cost": 34,
+      "cost_formula": "2+2+3+3+3+3+2+2+2+3+2+3+2+2 = 34",
+      "notes": [
+        "n=2 is the explicit hemoglobin-like case (two subunit MWC).",
+        "The two pow(x,2) calls each cost 3, total 6 for the pow nodes.",
+        "Four add nodes (cost 3 each = 12) dominate the overhead.",
+        "alpha and alpha*c can share the mul(alpha,c) result — no redundant computation.",
+        "The (1+alpha) and (1+alpha*c) intermediate values are each used twice (in pow and in numerator mul), so no repeat computation is needed.",
+        "For general n: replace pow(x,2) with pow(x,n) [still cost 3 each] and add (1+alpha)^(n-1) and (1+alpha_c)^(n-1) separately. General-n cost = 34 + 2*pow_extra = 34 (pow costs are the same regardless of n). The n-1 exponent terms require additional pow calls: +3 each => general-n MWC = 34 + 6 = 40.",
+        "General n MWC cost breakdown: same 14 ops but pow(x,n) and pow(x,n-1) needed separately — adds 2 more pow nodes = +6 => 40 total."
+      ],
+      "general_n_cost": 40,
+      "general_n_note": "For general n: need pow(x,n) and pow(x,n-1) for both (1+alpha) and (1+alpha*c) branches — 4 pow nodes vs 2 for n=2. Extra cost: +6. Total: 40."
+    },
+    {
+      "id": 6,
+      "name": "Oxygen-hemoglobin dissociation (Hill form)",
+      "formula": "SaO2 = pO2^n / (P50^n + pO2^n)",
+      "description": "Hill equation applied to hemoglobin-O2 binding. n ≈ 2.7 (non-integer). P50 = half-saturation pressure.",
+      "non_integer_n_note": "n ≈ 2.7 is non-integer. In SuperBEST v3, pow(x, n) costs 3 regardless of whether n is integer or real — n is treated as a free parameter terminal.",
+      "operations": [
+        {"op": "pow(pO2, n_param)", "cost": 3, "note": "pO2^n; n=2.7 is a free parameter — cost 3"},
+        {"op": "pow(P50_param, n_param)", "cost": 3, "note": "P50^n; P50 is a parameter, n is a parameter — pow of two parameters costs 3"},
+        {"op": "add(P50^n, pO2^n)", "cost": 3, "note": "denominator"},
+        {"op": "recip(P50^n + pO2^n)", "cost": 2, "note": "division"},
+        {"op": "mul(pO2^n, recip(...))", "cost": 2, "note": "final product"}
+      ],
+      "total_cost": 13,
+      "cost_formula": "3 + 3 + 3 + 2 + 2 = 13",
+      "notes": [
+        "Structurally identical to Eq 2 (fractional saturation Hill) but with P50 as a named parameter for the half-saturation point.",
+        "P50^n: since P50 is a fixed parameter, pow(P50,n) with fixed n could be collapsed to a single parameter at evaluation time. However, if n is a trainable parameter, pow(P50,n) costs 3.",
+        "If P50^n is treated as a single fused parameter constant, cost drops to 10 (same as Eq 2).",
+        "Non-integer n (2.7) does NOT change the SuperBEST node cost — pow(x,n) costs 3 for any n.",
+        "For the biologically relevant n=2.7, this is the standard clinical approximation formula.",
+        "Minimum cost (P50^n fused to param): 10. Standard cost (both pow active): 13."
+      ],
+      "cost_if_P50n_fused": 10
+    }
+  ],
+  "summary_table": [
+    {"id": 1, "name": "Hill equation (general)", "formula": "Vmax*[S]^n/(K^n+[S]^n)", "cost": 15, "pow_nodes": 2, "exp_ln_nodes": 0},
+    {"id": 2, "name": "Hill — fractional saturation", "formula": "[L]^n/(Kd+[L]^n)", "cost": 10, "pow_nodes": 1, "exp_ln_nodes": 0},
+    {"id": 3, "name": "Hill — linearized (Hill plot)", "formula": "log(theta/(1-theta))=n*log([S])-log(K)", "cost": 16, "pow_nodes": 0, "exp_ln_nodes": 2},
+    {"id": 4, "name": "Two-site binding (non-cooperative)", "formula": "(K1*[L]+2K1K2*[L]^2)/(2*(1+K1*[L]+K1K2*[L]^2))", "cost": 24, "optimized_cost": 22, "pow_nodes": 1, "exp_ln_nodes": 0},
+    {"id": 5, "name": "MWC model (n=2)", "formula": "MWC two-state, n=2", "cost": 34, "pow_nodes": 2, "exp_ln_nodes": 0},
+    {"id": 5, "name": "MWC model (general n)", "formula": "MWC two-state, general n", "cost": 40, "pow_nodes": 4, "exp_ln_nodes": 0},
+    {"id": 6, "name": "Hemoglobin-O2 Hill (n=2.7)", "formula": "pO2^n/(P50^n+pO2^n)", "cost": 13, "optimized_cost": 10, "pow_nodes": 2, "exp_ln_nodes": 0}
+  ],
+  "cross_cutting_observations": [
+    "All Hill-family equations are purely algebraic — no exp() or ln() nodes except in the linearized (log-log) form.",
+    "pow(x,n) at cost 3 is the dominant atomic operation in all cooperative binding models.",
+    "The linearized Hill form (Eq 3) replaces pow with ln — trading cost-3 pow nodes for cost-1 ln nodes, but requires extra mul nodes for log10 conversion, resulting in comparable total cost.",
+    "The minimal Hill form (Eq 2, fractional saturation) achieves cost 10 with a single pow node — the cheapest cooperative binding expression.",
+    "MWC (Eq 5) is the most expensive due to its two-branch allosteric structure requiring parallel pow chains and multiple add nodes.",
+    "Two-site non-cooperative binding (Eq 4) is cheaper than MWC but more expensive than the collapsed Hill form, reflecting the trade-off between mechanistic detail and representational economy.",
+    "For integer n, pow(x,n) can in principle be computed by repeated multiplication: n-1 mul nodes at cost 2 each. For n=2: 1 mul = cost 2 (cheaper than pow cost 3). For n=3: 2 muls = cost 4 > pow cost 3. So for n=2 only, manual squaring beats the pow primitive.",
+    "n=2 optimization: replace pow(x,2) with mul(x,x) [cost 2 vs 3]. Equations with n=2 save 1 cost per pow node replaced."
+  ],
+  "n2_optimization_impact": {
+    "eq1_n2": {"original": 15, "optimized": 13, "saving": 2, "note": "Both pow([S],2) and pow(K,2) replaced by mul"},
+    "eq2_n2": {"original": 10, "optimized": 9, "saving": 1, "note": "Single pow([L],2) replaced by mul"},
+    "eq4_n2": {"original": 24, "optimized": 22, "saving": 2, "note": "pow([L],2) replaced; plus coefficient absorption"},
+    "eq5_n2": {"original": 34, "optimized": 30, "saving": 4, "note": "Both pow(1+alpha,2) and pow(1+alpha_c,2) replaced by mul"},
+    "eq6_n_noninteger": {"original": 13, "optimized": "N/A", "note": "n=2.7 is non-integer — cannot use repeated mul; pow primitive required"}
+  }
+}

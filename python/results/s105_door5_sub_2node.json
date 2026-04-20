@@ -1,0 +1,220 @@
+{
+  "theorem": "T33",
+  "claim": "sub(x,y) = x-y requires exactly 2 nodes in the 16-operator family F16",
+  "upper_bound": {
+    "construction": "LEdiv(x, EML(y,1)) = x - y",
+    "all_passed": true,
+    "test_points": [
+      {
+        "x": 5.0,
+        "y": 3.0,
+        "eml_y_1": 20.0855369232,
+        "LEdiv_x_eml_y_1": 2.0,
+        "target_x_minus_y": 2.0,
+        "error": 0.0,
+        "passed": true
+      },
+      {
+        "x": 10.0,
+        "y": 7.0,
+        "eml_y_1": 1096.6331584285,
+        "LEdiv_x_eml_y_1": 3.0,
+        "target_x_minus_y": 3.0,
+        "error": 0.0,
+        "passed": true
+      },
+      {
+        "x": 1.0,
+        "y": 1.0,
+        "eml_y_1": 2.7182818285,
+        "LEdiv_x_eml_y_1": 0.0,
+        "target_x_minus_y": 0.0,
+        "error": 0.0,
+        "passed": true
+      },
+      {
+        "x": -2.0,
+        "y": 3.0,
+        "eml_y_1": 20.0855369232,
+        "LEdiv_x_eml_y_1": -5.0,
+        "target_x_minus_y": -5.0,
+        "error": 0.0,
+        "passed": true
+      },
+      {
+        "x": 0.5,
+        "y": 0.5,
+        "eml_y_1": 1.6487212707,
+        "LEdiv_x_eml_y_1": 0.0,
+        "target_x_minus_y": 0.0,
+        "error": 0.0,
+        "passed": true
+      },
+      {
+        "x": 2.718281828459045,
+        "y": 1.0,
+        "eml_y_1": 2.7182818285,
+        "LEdiv_x_eml_y_1": 1.7182818285,
+        "target_x_minus_y": 1.7182818285,
+        "error": 0.0,
+        "passed": true
+      },
+      {
+        "x": 2.0,
+        "y": 2.718281828459045,
+        "eml_y_1": 15.1542622415,
+        "LEdiv_x_eml_y_1": -0.7182818285,
+        "target_x_minus_y": -0.7182818285,
+        "error": 0.0,
+        "passed": true
+      },
+      {
+        "x": 3.5,
+        "y": 1.5,
+        "eml_y_1": 4.4816890703,
+        "LEdiv_x_eml_y_1": 2.0,
+        "target_x_minus_y": 2.0,
+        "error": 0.0,
+        "passed": true
+      }
+    ],
+    "algebraic_proof": {
+      "step1": "EML(y,1) = exp(y) - ln(1) = exp(y) - 0 = exp(y)",
+      "step2": "LEdiv(x, exp(y)) = ln(exp(x)/exp(y)) = ln(exp(x-y)) = x-y",
+      "conclusion": "LEdiv(x, EML(y,1)) = x - y  [exact, no approximation]"
+    }
+  },
+  "exhaustive_outer_exp_y_second": {
+    "description": "All 16 ops as outer, inner=EML(y,1)=exp(y) as 2nd arg",
+    "found": [
+      {
+        "outer_op": "LEdiv",
+        "inner": "EML(y,1)=exp(y)",
+        "shape": "op(x, exp(y))",
+        "matched": true,
+        "sample_value_at_5_3": 2.0,
+        "target_at_5_3": 2.0
+      }
+    ],
+    "count": 1
+  },
+  "exhaustive_outer_exp_x_first": {
+    "description": "All 16 ops with exp(x) as 1st or 2nd arg",
+    "found": [
+      {
+        "outer_op": "EMN",
+        "first_arg": "ln(y)",
+        "second_arg": "exp(x)",
+        "shape": "EMN(ln(y), exp(x))",
+        "matched": true,
+        "note": "2-node construction via exp(x) as inner (swapped)"
+      }
+    ],
+    "count": 1
+  },
+  "full_2node_search": {
+    "description": "Full exhaustive 2-node search over F16, both shapes",
+    "terminals": [
+      "x",
+      "y",
+      "0",
+      "1"
+    ],
+    "operators": [
+      "EML",
+      "EAL",
+      "EXL",
+      "EDL",
+      "EMN",
+      "DEML",
+      "DEAL",
+      "DEXL",
+      "DEDL",
+      "DEMN",
+      "ELAd",
+      "ELSb",
+      "LEAd",
+      "LEdiv",
+      "LEprod",
+      "EPL"
+    ],
+    "shapes": [
+      "A: op2(op1(a,b),c)",
+      "B: op2(a,op1(b,c))"
+    ],
+    "found": [
+      {
+        "shape": "B",
+        "tree": "LEdiv(x,EML(y,1))",
+        "op1": "EML",
+        "op2": "LEdiv",
+        "a": "x",
+        "b": "y",
+        "c": "1"
+      },
+      {
+        "shape": "B",
+        "tree": "LEdiv(x,EAL(y,1))",
+        "op1": "EAL",
+        "op2": "LEdiv",
+        "a": "x",
+        "b": "y",
+        "c": "1"
+      },
+      {
+        "shape": "B",
+        "tree": "LEprod(x,DEML(y,1))",
+        "op1": "DEML",
+        "op2": "LEprod",
+        "a": "x",
+        "b": "y",
+        "c": "1"
+      },
+      {
+        "shape": "B",
+        "tree": "LEprod(x,DEAL(y,1))",
+        "op1": "DEAL",
+        "op2": "LEprod",
+        "a": "x",
+        "b": "y",
+        "c": "1"
+      },
+      {
+        "shape": "B",
+        "tree": "LEdiv(x,ELAd(y,1))",
+        "op1": "ELAd",
+        "op2": "LEdiv",
+        "a": "x",
+        "b": "y",
+        "c": "1"
+      },
+      {
+        "shape": "B",
+        "tree": "LEdiv(x,ELSb(y,1))",
+        "op1": "ELSb",
+        "op2": "LEdiv",
+        "a": "x",
+        "b": "y",
+        "c": "1"
+      }
+    ],
+    "count": 6
+  },
+  "lower_bound_1node": {
+    "total_1node_trees_checked": 256,
+    "matches_found": 0,
+    "matches": [],
+    "lower_bound_holds": true,
+    "derivative_argument": "For op(x,y) to equal x-y we need d/dx=+1 and d/dy=-1 simultaneously. For operators of the form exp(pm x) * h(y) or ln(exp(x) op y), d/dx involves exp(x) [transcendental, not constant 1] unless domain-cancelled. No F16 operator achieves constant partial derivatives (+1 in x, -1 in y) simultaneously over all (x,y)."
+  },
+  "conclusion": {
+    "minimum_nodes": 2,
+    "optimal_construction": "LEdiv(x, EML(y,1))",
+    "algebraic_chain": [
+      "EML(y,1) = exp(y) - ln(1) = exp(y)",
+      "LEdiv(x, exp(y)) = ln(exp(x)/exp(y)) = ln(exp(x-y)) = x-y"
+    ],
+    "node_count": 2,
+    "T33_confirmed": true
+  }
+}

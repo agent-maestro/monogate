@@ -1,0 +1,269 @@
+{
+  "session": "Bio5",
+  "title": "SuperBEST v3 Cost Analysis — Biology Block 5: Spectroscopy, Membrane Potential, Pharmacokinetics",
+  "date": "2026-04-20",
+  "superBEST_v3_routing_table": {
+    "exp(x)": 1,
+    "ln(x)": 1,
+    "neg(x)": 2,
+    "recip(x)": 2,
+    "mul(x,y)": 2,
+    "sub(x,y)": 2,
+    "add(x,y)": 3,
+    "pow(x,n)": 3,
+    "terminal_parameter": 0
+  },
+  "division_decomposition": {
+    "note": "SuperBEST has no 'div' primitive. Division a/b = mul(a, recip(b)).",
+    "cost": "recip(b)=2 + mul(a, recip(b))=2 → total 4 nodes per division"
+  },
+  "log_base_10_decomposition": {
+    "note": "SuperBEST has no log10 primitive. log10(x) = ln(x)/ln(10) = mul(ln(x), recip(ln(10))).",
+    "cost": "ln(x)=1 + ln(10)=1 (constant terminal) + recip(ln10)=2 + mul(ln_x, recip_ln10)=2 → 6 nodes",
+    "with_negation": "−log10(x) adds neg=2 → 8 nodes total"
+  },
+  "equations": [
+    {
+      "id": 1,
+      "name": "Beer-Lambert law — Absorbance form",
+      "formula": "A = ε·c·l",
+      "type": "pure product — no exp, no ln",
+      "operator_tree": {
+        "step1": "mul(ε, c)           → cost 2",
+        "step2": "mul(ε·c, l)         → cost 2"
+      },
+      "primitives_used": ["mul"],
+      "primitives_NOT_used": ["exp", "ln", "neg", "recip", "sub", "add", "pow"],
+      "total_operator_nodes": 4,
+      "breakdown": "mul(2) + mul(2) = 4",
+      "terminals": ["ε", "c", "l"],
+      "notes": "Trivial triple product. Three mul-chained gives 2+2=4 nodes. No division, no transcendental functions."
+    },
+    {
+      "id": 2,
+      "name": "Beer-Lambert law — Transmittance form",
+      "formula": "T = exp(−ε·c·l)",
+      "type": "exponential of a negated product",
+      "operator_tree": {
+        "step1": "mul(ε, c)           → cost 2",
+        "step2": "mul(ε·c, l)         → cost 2  (builds εcl)",
+        "step3": "neg(εcl)            → cost 2  (produces −εcl)",
+        "step4": "exp(−εcl)           → cost 1"
+      },
+      "primitives_used": ["mul", "neg", "exp"],
+      "primitives_NOT_used": ["ln", "recip", "sub", "add", "pow"],
+      "total_operator_nodes": 7,
+      "breakdown": "mul(2) + mul(2) + neg(2) + exp(1) = 7",
+      "terminals": ["ε", "c", "l"],
+      "notes": "The exponent −εcl is built with two mul nodes and one neg. The outer exp costs just 1 node. Total 7 nodes."
+    },
+    {
+      "id": 3,
+      "name": "Beer-Lambert law — Absorbance from transmittance",
+      "formula": "A = −log₁₀(T) = −ln(T) / ln(10)",
+      "type": "logarithm with change of base, then negation",
+      "operator_tree": {
+        "step1": "ln(T)               → cost 1",
+        "step2": "ln(10)              → cost 1  (10 is a numeric constant terminal, cost 0; ln of it costs 1)",
+        "step3": "recip(ln(10))       → cost 2  (implements division by ln(10))",
+        "step4": "mul(ln(T), recip(ln10)) → cost 2  (gives ln(T)/ln(10) = log10(T))",
+        "step5": "neg(log10(T))       → cost 2  (gives −log10(T) = A)"
+      },
+      "primitives_used": ["ln", "recip", "mul", "neg"],
+      "primitives_NOT_used": ["exp", "sub", "add", "pow"],
+      "total_operator_nodes": 8,
+      "breakdown": "ln(1) + ln(1) + recip(2) + mul(2) + neg(2) = 8",
+      "terminals": ["T", "10"],
+      "notes": "No native log10 primitive in SuperBEST v3. Change-of-base: log10(T)=ln(T)/ln(10). The constant ln(10)≈2.3026 can be pre-folded as a free scalar terminal, reducing to: ln(T)=1 + recip(ln10_const)=2 + mul=2 + neg=2 = 7 nodes. Full tree with explicit ln(10) costs 8.",
+      "optimization": "If ln(10) is pre-computed as a constant terminal (free), cost reduces to 7 nodes: ln(1)+recip(2)+mul(2)+neg(2)."
+    },
+    {
+      "id": 4,
+      "name": "Nernst equation (single ion)",
+      "formula": "E = (RT/zF) · ln([ion]_out / [ion]_in)",
+      "type": "scaled log-ratio",
+      "operator_tree": {
+        "step1": "ln([ion]_out)                          → cost 1",
+        "step2": "ln([ion]_in)                           → cost 1",
+        "step3": "sub(ln([ion]_out), ln([ion]_in))       → cost 2  (= ln([ion]_out/[ion]_in) by log identity)",
+        "step4": "mul(RT_zF, sub_result)                 → cost 2  (RT/zF is a free composite constant)"
+      },
+      "primitives_used": ["ln", "sub", "mul"],
+      "primitives_NOT_used": ["exp", "neg", "recip", "add", "pow"],
+      "total_operator_nodes": 6,
+      "breakdown": "ln(1) + ln(1) + sub(2) + mul(2) = 6",
+      "terminals": ["[ion]_out", "[ion]_in", "RT/zF"],
+      "notes": "The log-ratio identity ln(a/b) = ln(a) − ln(b) replaces a division with a sub, saving the 4-node recip+mul division cost. RT/zF is treated as a single free parameter (temperature, valence, and Faraday's constant absorbed). Total 6 nodes is minimal for a log-ratio expression.",
+      "key_insight": "Using sub(ln_out, ln_in) instead of ln(recip+mul) saves 2 nodes: sub=2 vs recip(2)+mul(2)=4."
+    },
+    {
+      "id": 5,
+      "name": "Goldman-Hodgkin-Katz equation (3-ion: K⁺, Na⁺, Cl⁻)",
+      "formula": "Vm = (RT/F) · ln((PK[K]o + PNa[Na]o + PCl[Cl]i) / (PK[K]i + PNa[Na]i + PCl[Cl]o))",
+      "type": "scaled log of a weighted-sum ratio",
+      "operator_tree": {
+        "numerator_subtree": {
+          "step1": "mul(PK,  [K]o)                       → cost 2",
+          "step2": "mul(PNa, [Na]o)                      → cost 2",
+          "step3": "mul(PCl, [Cl]i)                      → cost 2",
+          "step4": "add(term1, term2)                    → cost 3  (first add)",
+          "step5": "add(prev_add, term3)                 → cost 3  (second add → numerator)",
+          "subtotal": "2+2+2+3+3 = 12 nodes"
+        },
+        "denominator_subtree": {
+          "step6":  "mul(PK,  [K]i)                      → cost 2",
+          "step7":  "mul(PNa, [Na]i)                     → cost 2",
+          "step8":  "mul(PCl, [Cl]o)                     → cost 2",
+          "step9":  "add(term1, term2)                   → cost 3",
+          "step10": "add(prev_add, term3)                → cost 3  (denominator)",
+          "subtotal": "2+2+2+3+3 = 12 nodes"
+        },
+        "ratio_and_log": {
+          "step11": "recip(denominator)                  → cost 2",
+          "step12": "mul(numerator, recip(denom))        → cost 2  (= num/denom ratio)",
+          "step13": "ln(ratio)                           → cost 1",
+          "subtotal": "2+2+1 = 5 nodes"
+        },
+        "scaling": {
+          "step14": "mul(RT_F, ln_result)                → cost 2  (RT/F is a free constant)",
+          "subtotal": "2 nodes"
+        }
+      },
+      "primitives_used": ["mul", "add", "recip", "ln"],
+      "primitives_NOT_used": ["exp", "neg", "sub", "pow"],
+      "total_operator_nodes": 31,
+      "breakdown": "numerator(12) + denominator(12) + ratio+ln(5) + scaling(2) = 31",
+      "terminals": ["PK", "PNa", "PCl", "[K]o", "[K]i", "[Na]o", "[Na]i", "[Cl]i", "[Cl]o", "RT/F"],
+      "notes": "Each of the three ion terms requires a mul for the permeability-weighted concentration. Each weighted-sum (numerator and denominator) requires 2 add nodes for 3 terms. Division is a recip+mul = 4 nodes. The outer ln costs 1. RT/F is a free parameter.",
+      "add_count_explanation": "For N terms, N−1 add nodes are needed. With 3 terms: 2 adds per side = 4 adds total, each costing 3 nodes → 12 nodes just for the additions across both sides.",
+      "log_ratio_alternative": "Could use sub(ln(numer_ratio_terms)…) but the numerator/denominator are sums, not products, so the sub(ln,ln) shortcut from Nernst does NOT apply here. Division is required."
+    },
+    {
+      "id": 6,
+      "name": "One-compartment pharmacokinetics",
+      "formula": "C(t) = C₀ · exp(−k_el · t)",
+      "type": "exponential decay — same structure as radioactive decay",
+      "operator_tree": {
+        "step1": "mul(k_el, t)         → cost 2  (build k_el·t)",
+        "step2": "neg(k_el·t)          → cost 2  (−k_el·t)",
+        "step3": "exp(−k_el·t)         → cost 1",
+        "step4": "mul(C₀, exp_result)  → cost 2  (scale by initial concentration)"
+      },
+      "primitives_used": ["mul", "neg", "exp"],
+      "primitives_NOT_used": ["ln", "recip", "sub", "add", "pow"],
+      "total_operator_nodes": 7,
+      "breakdown": "mul(2) + neg(2) + exp(1) + mul(2) = 7",
+      "terminals": ["C₀", "k_el", "t"],
+      "notes": "Structurally identical to the transmittance form of Beer-Lambert (eq 2). The elimination rate constant k_el plays the same role as εcl. Cost is 7 nodes regardless of whether the exponent is scalar (1 mul) or a product of two variables (2 muls).",
+      "alternative": "If −k_el is pre-absorbed as a single free parameter k_neg, cost becomes: mul(k_neg,t)=2 + exp=1 + mul(C₀,exp)=2 = 5 nodes."
+    },
+    {
+      "id": 7,
+      "name": "Two-compartment pharmacokinetics",
+      "formula": "C(t) = A·exp(−α·t) + B·exp(−β·t)",
+      "type": "bi-exponential — sum of two exponential decay terms",
+      "operator_tree": {
+        "term1_subtree": {
+          "step1": "mul(α, t)           → cost 2",
+          "step2": "neg(α·t)            → cost 2",
+          "step3": "exp(−α·t)           → cost 1",
+          "step4": "mul(A, exp_result)  → cost 2",
+          "subtotal": "7 nodes"
+        },
+        "term2_subtree": {
+          "step5": "mul(β, t)           → cost 2",
+          "step6": "neg(β·t)            → cost 2",
+          "step7": "exp(−β·t)           → cost 1",
+          "step8": "mul(B, exp_result)  → cost 2",
+          "subtotal": "7 nodes"
+        },
+        "combination": {
+          "step9": "add(term1, term2)   → cost 3"
+        }
+      },
+      "primitives_used": ["mul", "neg", "exp", "add"],
+      "primitives_NOT_used": ["ln", "recip", "sub", "pow"],
+      "total_operator_nodes": 17,
+      "breakdown": "term1(7) + term2(7) + add(3) = 17",
+      "terminals": ["A", "B", "α", "β", "t"],
+      "notes": "Two independent one-compartment decay subtrees (each 7 nodes) joined by a single add (3 nodes). The variable t is a shared terminal used in both subtrees — free each time (DAG). α and β are the macro-rate constants (combinations of micro-rate constants k12, k21, k10). A and B are pre-fit amplitude constants.",
+      "comparison_to_eq6": "Two-compartment cost (17) = 2 × one-compartment cost (7) + add (3). The add premium reflects the bi-exponential superposition."
+    },
+    {
+      "id": 8,
+      "name": "Hill equation / Dose-response",
+      "formula": "E = Emax · Cⁿ / (EC₅₀ⁿ + Cⁿ)",
+      "type": "rational function with power terms",
+      "operator_tree": {
+        "shared_power": {
+          "step1": "pow(C, n)                           → cost 3  (shared via DAG in numerator and denominator)"
+        },
+        "denominator": {
+          "step2": "pow(EC₅₀, n)                        → cost 3",
+          "step3": "add(EC₅₀ⁿ, Cⁿ)                     → cost 3"
+        },
+        "numerator": {
+          "step4": "mul(Emax, Cⁿ)                       → cost 2  (Cⁿ reused from step1)"
+        },
+        "division": {
+          "step5": "recip(denom)                        → cost 2",
+          "step6": "mul(Emax·Cⁿ, recip(denom))          → cost 2"
+        }
+      },
+      "primitives_used": ["pow", "add", "mul", "recip"],
+      "primitives_NOT_used": ["exp", "ln", "neg", "sub"],
+      "total_operator_nodes": 15,
+      "breakdown": "pow(C,n)=3 + pow(EC50,n)=3 + add(3) + mul(2) + recip(2) + mul(2) = 15",
+      "terminals": ["Emax", "C", "n", "EC₅₀"],
+      "dag_note": "pow(C,n) appears in both numerator (as Emax·Cⁿ) and denominator (as EC₅₀ⁿ+Cⁿ). With DAG sharing, it is computed once (3 nodes) and referenced twice — no extra cost for the second use.",
+      "notes": "The two pow nodes (one for C, one for EC₅₀) each cost 3. The denominator add costs 3. Two mul + one recip handle the rational structure. Total 15 nodes with DAG."
+    },
+    {
+      "id": 9,
+      "name": "Fick's first law of diffusion",
+      "formula": "J = −D · (dC/dx)",
+      "type": "negated product — dC/dx treated as a terminal gradient",
+      "operator_tree": {
+        "step1": "mul(D, dC_dx)        → cost 2  (D is diffusion coefficient, dC/dx is concentration gradient terminal)",
+        "step2": "neg(D · dC_dx)       → cost 2  (applies the sign convention J flows down gradient)"
+      },
+      "primitives_used": ["mul", "neg"],
+      "primitives_NOT_used": ["exp", "ln", "recip", "sub", "add", "pow"],
+      "total_operator_nodes": 4,
+      "breakdown": "mul(2) + neg(2) = 4",
+      "terminals": ["D", "dC/dx"],
+      "notes": "dC/dx (the concentration gradient) is treated as a pre-computed terminal — it is either measured directly or computed in a separate numerical step outside the algebraic expression tree. The law itself is just a scaled negation: J = −D·(dC/dx). Cost matches Beer-Lambert absorbance form (eq 1) plus one neg.",
+      "alternative": "If the negative sign is absorbed into a signed diffusion coefficient D_neg = −D (free terminal), cost is just mul(D_neg, dC_dx) = 2 nodes."
+    }
+  ],
+  "summary_table": [
+    {"id": 1, "equation": "Beer-Lambert (absorbance A=εcl)",             "operator_nodes": 4,  "primitives": "mul"},
+    {"id": 2, "equation": "Beer-Lambert (transmittance T=exp(−εcl))",   "operator_nodes": 7,  "primitives": "mul, neg, exp"},
+    {"id": 3, "equation": "Beer-Lambert (A=−log10(T))",                 "operator_nodes": 8,  "primitives": "ln, recip, mul, neg"},
+    {"id": 4, "equation": "Nernst equation (single ion)",                "operator_nodes": 6,  "primitives": "ln, sub, mul"},
+    {"id": 5, "equation": "Goldman-Hodgkin-Katz (3-ion)",                "operator_nodes": 31, "primitives": "mul, add, recip, ln"},
+    {"id": 6, "equation": "One-compartment pharmacokinetics",            "operator_nodes": 7,  "primitives": "mul, neg, exp"},
+    {"id": 7, "equation": "Two-compartment pharmacokinetics",            "operator_nodes": 17, "primitives": "mul, neg, exp, add"},
+    {"id": 8, "equation": "Hill / dose-response equation",              "operator_nodes": 15, "primitives": "pow, add, mul, recip"},
+    {"id": 9, "equation": "Fick's first law",                            "operator_nodes": 4,  "primitives": "mul, neg"}
+  ],
+  "cross_cutting_findings": {
+    "cost_range": "4 nodes (Beer-Lambert absorbance, Fick's law) to 31 nodes (Goldman-Hodgkin-Katz 3-ion)",
+    "structural_archetypes": {
+      "pure_product": "A=εcl and J=−D·dC/dx — 4 nodes each. Simplest possible. Adding neg costs +2.",
+      "exponential_decay": "T=exp(−εcl) and C(t)=C₀exp(−k_el·t) — both 7 nodes. Canonical form: mul+mul+neg+exp.",
+      "log_ratio_scaled": "Nernst — 6 nodes. The sub(ln_a, ln_b) identity avoids a 4-node division, saving 2 nodes over naïve ln(a/b) via recip+mul.",
+      "rational_with_powers": "Hill equation — 15 nodes. Two pow nodes dominate; DAG sharing of Cⁿ is essential.",
+      "bi_exponential": "Two-compartment PK — 17 nodes = 2×7 + 3 (add). Linear superposition of exponentials adds exactly one add(3) per extra term.",
+      "sum_of_products_ratio": "GHK 3-ion — 31 nodes. Dominant cost: 4 mul nodes for permeability-weighted concentrations + 4 add nodes for weighted sums = 6×2+4×3=24 nodes just for numerator+denominator; division+ln+scaling add 7 more."
+    },
+    "log_ratio_identity_benefit": "Nernst uses sub(ln_out, ln_in) = 2 nodes instead of ln(recip(in)+mul) = 5 nodes for ln(out/in). This saves 3 nodes. The identity applies only when the ratio argument is itself a ratio of simple terminals, NOT a sum (GHK cannot use this shortcut).",
+    "ghk_vs_nernst_cost_ratio": "GHK (31) / Nernst (6) ≈ 5.2×. The explosion comes from the weighted sums in numerator and denominator — each sum of 3 terms costs 12 nodes (3 mul + 2 add), compared to the 2 free terminals in the Nernst log-ratio.",
+    "add_node_as_dominant_cost_driver_in_GHK": "Each add costs 3 nodes — the most expensive primitive per operation. GHK has 4 add nodes (2 per side) = 12 nodes from adds alone. Reducing ion count to 2 ions would eliminate 2 adds (−6 nodes) and 2 muls (−4 nodes), reducing GHK to 21 nodes.",
+    "neg_vs_sub": "neg(x) costs 2 nodes; sub(a,b) costs 2 nodes. For a single negation use neg; for a difference use sub. Both are equal cost.",
+    "pow_cost": "pow(x,n) at 3 nodes is the most expensive single-argument operator — more expensive than exp(1) or ln(1). The Hill equation pays 6 nodes just for the two power terms.",
+    "exp_is_cheapest_transcendental": "exp costs only 1 node — cheaper than neg(2), recip(2), or pow(3). The expensive part of exponential-decay expressions is building the exponent (mul+neg), not the exp itself.",
+    "compartment_model_scaling": "An N-compartment model with N exponential terms costs 7N + 3(N−1) = 10N−3 nodes: N decay subtrees plus N−1 add nodes chaining them.",
+    "primitives_never_used_in_this_block": ["pow used only in Hill; no equation uses both pow and exp simultaneously"]
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "session": "Bio2",
+  "title": "SuperBEST v3 Cost Analysis — Biology Block 2: Population Growth Models",
+  "routing_table": {
+    "exp(x)": 1,
+    "ln(x)": 1,
+    "neg(x)": 2,
+    "recip(x)": 2,
+    "mul(x,y)": 2,
+    "sub(x,y)": 2,
+    "add(x,y)": 3,
+    "pow(x,n)": 3,
+    "terminals": 0
+  },
+  "note_on_compound_constants": "Parameters (K, r, N0, t, t0, lambda, R0, lx, mx) are free terminals (cost 0). Compound constants formed purely from parameters (e.g. C=(K-N0)/N0, C1=(R0-1)/K) are also treated as free terminals when noted. Both costs are given where relevant.",
+  "equations": [
+    {
+      "id": 1,
+      "name": "Logistic growth (standard form)",
+      "formula": "N(t) = K / (1 + C*exp(-r*t))",
+      "formula_full": "N(t) = K / (1 + ((K-N0)/N0) * exp(-r*t))",
+      "note_on_C": "C = (K-N0)/N0 treated as a free compound constant terminal",
+      "structural_motif": "sigmoid: 1/(1+exp(-x)) scaled by K, with C*exp replacing bare exp",
+      "tree_breakdown": [
+        {"step": "r*t",            "op": "mul",   "cost": 2, "running": 2},
+        {"step": "neg(r*t)",       "op": "neg",   "cost": 2, "running": 4},
+        {"step": "exp(-r*t)",      "op": "exp",   "cost": 1, "running": 5},
+        {"step": "C*exp(-r*t)",    "op": "mul",   "cost": 2, "running": 7},
+        {"step": "1+C*exp(-r*t)",  "op": "add",   "cost": 3, "running": 10},
+        {"step": "recip(denom)",   "op": "recip", "cost": 2, "running": 12},
+        {"step": "K*recip(denom)", "op": "mul",   "cost": 2, "running": 14}
+      ],
+      "total_cost_with_C_terminal": 14,
+      "total_cost_without_collapse": {
+        "extra_for_C": {
+          "note": "C=(K-N0)/N0 without collapsing: sub(K,N0)=2, recip(N0)=2, mul=2 → 6 extra nodes",
+          "extra_nodes": 6
+        },
+        "total": 20
+      },
+      "sigmoid_motif_cost": {
+        "description": "Core sigmoid 1/(1+exp(-x)) where x=r*t",
+        "nodes": [
+          {"op": "neg(x)",       "cost": 2},
+          {"op": "exp(-x)",      "cost": 1},
+          {"op": "add(1,exp)",   "cost": 3},
+          {"op": "recip(denom)", "cost": 2}
+        ],
+        "subtotal": 8,
+        "note": "Then mul(K, sigmoid)=2 and mul(r,t)=2 and mul(C,exp)=2 brings total to 14"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Logistic growth (sigmoid/inflection form)",
+      "formula": "N(t) = K / (1 + exp(-r*(t-t0)))",
+      "note": "t0 is the inflection point time; no compound constant needed",
+      "structural_motif": "pure sigmoid 1/(1+exp(-r*(t-t0))) scaled by K",
+      "tree_breakdown": [
+        {"step": "t-t0",           "op": "sub",   "cost": 2, "running": 2},
+        {"step": "r*(t-t0)",       "op": "mul",   "cost": 2, "running": 4},
+        {"step": "neg(r*(t-t0))",  "op": "neg",   "cost": 2, "running": 6},
+        {"step": "exp(-r*(t-t0))", "op": "exp",   "cost": 1, "running": 7},
+        {"step": "1+exp(...)",     "op": "add",   "cost": 3, "running": 10},
+        {"step": "recip(denom)",   "op": "recip", "cost": 2, "running": 12},
+        {"step": "K*recip(denom)", "op": "mul",   "cost": 2, "running": 14}
+      ],
+      "total_cost": 14,
+      "comparison_to_eq1": "Same total cost (14) as standard form with C terminal. Structural difference: sub(t,t0) replaces the C-scaling of exp — both forms pay the same node count."
+    },
+    {
+      "id": 3,
+      "name": "Gompertz growth model",
+      "formula": "N(t) = K * exp(-exp(-r*(t-t0)))",
+      "note": "Nested exp: outer exp applied to negated inner exp. Double-exp depth = 2.",
+      "structural_motif": "double-nested exp, no add node — cheaper than logistic despite nesting",
+      "tree_breakdown": [
+        {"step": "t-t0",                   "op": "sub",   "cost": 2, "running": 2},
+        {"step": "r*(t-t0)",               "op": "mul",   "cost": 2, "running": 4},
+        {"step": "neg(r*(t-t0))",          "op": "neg",   "cost": 2, "running": 6},
+        {"step": "exp_inner(-r*(t-t0))",   "op": "exp",   "cost": 1, "running": 7},
+        {"step": "neg(exp_inner)",         "op": "neg",   "cost": 2, "running": 9},
+        {"step": "exp_outer(-exp_inner)",  "op": "exp",   "cost": 1, "running": 10},
+        {"step": "K * exp_outer",          "op": "mul",   "cost": 2, "running": 12}
+      ],
+      "total_cost": 12,
+      "exp_nesting_depth": 2,
+      "exp_stack": ["exp_inner = exp(-r*(t-t0))", "exp_outer = exp(-exp_inner)"],
+      "key_finding": "Gompertz costs 12 vs logistic 14 — saving 2 nodes because the (1+...) add+recip construction (cost 5) is replaced by a second neg+exp pair (cost 3). The nested exp is NOT more expensive; it's structurally leaner."
+    },
+    {
+      "id": 4,
+      "name": "Malthus model (discrete)",
+      "formula": "N_{t+1} = lambda * N_t",
+      "note": "Purely multiplicative — single primitive",
+      "tree_breakdown": [
+        {"step": "lambda * N_t", "op": "mul", "cost": 2, "running": 2}
+      ],
+      "total_cost": 2,
+      "key_finding": "Trivially the cheapest model. Linear (in log space) population dynamics require only one mul node."
+    },
+    {
+      "id": 5,
+      "name": "Beverton-Holt model",
+      "formula": "N_{t+1} = R0*N_t / (1 + (R0-1)/K * N_t)",
+      "note_on_C1": "C1 = (R0-1)/K can be treated as a compound constant terminal",
+      "tree_breakdown_with_C1": [
+        {"step": "C1 * N_t",        "op": "mul",   "cost": 2, "running": 2},
+        {"step": "1 + C1*N_t",      "op": "add",   "cost": 3, "running": 5},
+        {"step": "recip(denom)",    "op": "recip", "cost": 2, "running": 7},
+        {"step": "R0 * N_t",        "op": "mul",   "cost": 2, "running": 9},
+        {"step": "(R0*N_t)*recip",  "op": "mul",   "cost": 2, "running": 11}
+      ],
+      "total_cost_with_C1_terminal": 11,
+      "tree_breakdown_without_collapse": {
+        "extra_for_C1": {
+          "steps": [
+            {"step": "R0-1",      "op": "sub",   "cost": 2},
+            {"step": "recip(K)",  "op": "recip", "cost": 2},
+            {"step": "(R0-1)*recip(K)", "op": "mul", "cost": 2}
+          ],
+          "extra_nodes": 6
+        },
+        "total": 17
+      },
+      "structural_note": "Beverton-Holt shares the (1+a*N) denominator structure with logistic but lacks the exp — it is an algebraic (rational) model. The sigmoid motif is absent."
+    },
+    {
+      "id": 6,
+      "name": "Net reproductive rate (3-age-class)",
+      "formula": "R0 = l1*m1 + l2*m2 + l3*m3",
+      "tree_breakdown": [
+        {"step": "l1 * m1",         "op": "mul", "cost": 2, "running": 2},
+        {"step": "l2 * m2",         "op": "mul", "cost": 2, "running": 4},
+        {"step": "l3 * m3",         "op": "mul", "cost": 2, "running": 6},
+        {"step": "(l1m1)+(l2m2)",   "op": "add", "cost": 3, "running": 9},
+        {"step": "(...)+(l3m3)",    "op": "add", "cost": 3, "running": 12}
+      ],
+      "total_cost": 12,
+      "general_formula": {
+        "description": "For an n-age-class model: cost = n*mul(2) + (n-1)*add(3) = 2n + 3(n-1) = 5n - 3",
+        "n3_check": "5*3 - 3 = 12 ✓",
+        "examples": [
+          {"n": 2, "cost": 7},
+          {"n": 3, "cost": 12},
+          {"n": 4, "cost": 17},
+          {"n": 5, "cost": 22}
+        ]
+      }
+    }
+  ],
+  "summary_table": [
+    {"id": 1, "name": "Logistic growth (standard, C terminal)", "total_cost": 14},
+    {"id": 1, "name": "Logistic growth (standard, no collapse)", "total_cost": 20},
+    {"id": 2, "name": "Logistic growth (sigmoid/inflection form)", "total_cost": 14},
+    {"id": 3, "name": "Gompertz growth model", "total_cost": 12},
+    {"id": 4, "name": "Malthus model (discrete)", "total_cost": 2},
+    {"id": 5, "name": "Beverton-Holt (C1 terminal)", "total_cost": 11},
+    {"id": 5, "name": "Beverton-Holt (no collapse)", "total_cost": 17},
+    {"id": 6, "name": "Net reproductive rate (3-age-class)", "total_cost": 12}
+  ],
+  "cross_model_findings": {
+    "sigmoid_motif": {
+      "description": "The sigmoid core 1/(1+exp(-x)) appears in Eq1 and Eq2. Its node cost is neg(2)+exp(1)+add(3)+recip(2) = 8 nodes, making it the most expensive sub-structure across all models.",
+      "models_containing_it": [1, 2]
+    },
+    "double_exp_cheaper_than_sigmoid_plus_recip": "Gompertz (12 nodes) beats both logistic forms (14 nodes). The nested exp construction neg(2)+exp(1) costs only 3 nodes for the outer layer, while the logistic (1+...)+recip costs 5 nodes for the denominator closing. Net savings: 2 nodes.",
+    "exp_nesting_depth": {
+      "malthus": 0,
+      "beverton_holt": 0,
+      "net_reproductive_rate": 0,
+      "logistic_standard": 1,
+      "logistic_sigmoid": 1,
+      "gompertz": 2
+    },
+    "cost_ranking_ascending": [
+      {"model": "Malthus (discrete)", "cost": 2},
+      {"model": "Beverton-Holt (C1 terminal)", "cost": 11},
+      {"model": "Gompertz", "cost": 12},
+      {"model": "Net reproductive rate (n=3)", "cost": 12},
+      {"model": "Logistic (standard, C terminal)", "cost": 14},
+      {"model": "Logistic (sigmoid form)", "cost": 14},
+      {"model": "Beverton-Holt (no collapse)", "cost": 17},
+      {"model": "Logistic (standard, no collapse)", "cost": 20}
+    ]
+  }
+}

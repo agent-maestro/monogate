@@ -1,0 +1,253 @@
+{
+  "session": "Chemistry Block 1 — Rate Equations",
+  "date": "2026-04-20",
+  "routing_table_version": "SuperBEST v3",
+  "equations": [
+    {
+      "id": 1,
+      "name": "Arrhenius equation",
+      "expression_latex": "k = A \\cdot \\exp\\!\\left(-\\frac{E_a}{RT}\\right)",
+      "primitives": [
+        {
+          "operation": "div(Ea, RT)",
+          "comment": "Ea/(RT): both Ea and RT are constants/products of constants — the ratio Ea/RT is a free terminal parameter combination",
+          "cost": 0
+        },
+        {
+          "operation": "neg(Ea/RT)",
+          "comment": "neg(x) costs 2 nodes via EXL+DEML",
+          "cost": 2
+        },
+        {
+          "operation": "exp(-Ea/RT)",
+          "comment": "exp(x) costs 1 node via EML",
+          "cost": 1
+        },
+        {
+          "operation": "mul(A, exp(...))",
+          "comment": "mul(x,y) costs 2 nodes via ELAd/EXL",
+          "cost": 2
+        }
+      ],
+      "superBEST_form": "ELAd( A , EML( DEML( EXL( Ea/RT ) ) ) )  — A·exp(neg(Ea/RT))",
+      "node_count": 5,
+      "notes": "Ea/RT is a ratio of free terminals, so the division itself is free. Only neg + exp + mul are counted. Standard Arrhenius kernel."
+    },
+    {
+      "id": 2,
+      "name": "Eyring (transition state theory) equation",
+      "expression_latex": "k = \\frac{k_B T}{h} \\cdot \\exp\\!\\left(-\\frac{\\Delta G^\\ddagger}{RT}\\right), \\quad \\Delta G^\\ddagger = \\Delta H^\\ddagger - T \\Delta S^\\ddagger",
+      "primitives": [
+        {
+          "operation": "mul(T, ΔS‡)",
+          "comment": "T·ΔS‡ — mul costs 2 nodes",
+          "cost": 2
+        },
+        {
+          "operation": "sub(ΔH‡, T·ΔS‡)",
+          "comment": "ΔG‡ = ΔH‡ − T·ΔS‡ — sub costs 2 nodes via LEdiv/EML",
+          "cost": 2
+        },
+        {
+          "operation": "div(ΔG‡, RT)",
+          "comment": "ΔG‡/RT: ΔG‡ is computed above; RT is a free constant product; this is a general div = recip+mul = 2+2 = 4. However, the denominator RT is a free terminal, so recip(RT) costs 2 (EDL), then mul(ΔG‡, recip(RT)) costs 2 more.",
+          "cost": 4
+        },
+        {
+          "operation": "neg(ΔG‡/RT)",
+          "comment": "neg costs 2 nodes",
+          "cost": 2
+        },
+        {
+          "operation": "exp(-ΔG‡/RT)",
+          "comment": "exp costs 1 node",
+          "cost": 1
+        },
+        {
+          "operation": "mul(kBT/h, exp(...))",
+          "comment": "kBT/h is a ratio of free constants — free terminal; mul costs 2 nodes",
+          "cost": 2
+        }
+      ],
+      "superBEST_form": "ELAd( (kB·T/h) , EML( DEML( EXL( EDL( RT ) , sub( ΔH‡ , ELAd( T , ΔS‡ ) ) ) ) ) )",
+      "node_count": 13,
+      "notes": "kB·T/h is a product/ratio of free constants — free. RT is also a free constant product. The sub for ΔG‡ requires a full mul (T·ΔS‡) first. The div(ΔG‡/RT) cannot use the cheap EDL route because the numerator is not an exp node — must use recip(RT)·ΔG‡ = 4 nodes. neg and exp add 3 more. Final mul adds 2."
+    },
+    {
+      "id": 3,
+      "name": "Collision theory rate constant",
+      "expression_latex": "k = A \\cdot T^{1/2} \\cdot \\exp\\!\\left(-\\frac{E_a}{RT}\\right)",
+      "primitives": [
+        {
+          "operation": "pow(T, 1/2)",
+          "comment": "T^(1/2) — pow(x,n) costs 3 nodes via EXL",
+          "cost": 3
+        },
+        {
+          "operation": "div(Ea, RT)",
+          "comment": "Ea/RT — ratio of free constants/parameters — free terminal",
+          "cost": 0
+        },
+        {
+          "operation": "neg(Ea/RT)",
+          "comment": "neg costs 2 nodes",
+          "cost": 2
+        },
+        {
+          "operation": "exp(-Ea/RT)",
+          "comment": "exp costs 1 node",
+          "cost": 1
+        },
+        {
+          "operation": "mul(T^0.5, exp(...))",
+          "comment": "mul costs 2 nodes",
+          "cost": 2
+        },
+        {
+          "operation": "mul(A, T^0.5·exp(...))",
+          "comment": "mul costs 2 nodes",
+          "cost": 2
+        }
+      ],
+      "superBEST_form": "ELAd( A , ELAd( EXL( T, 1/2 ) , EML( DEML( EXL( Ea/RT ) ) ) ) )",
+      "node_count": 10,
+      "notes": "This extends Arrhenius by adding the T^(1/2) prefactor. pow(T,1/2) is 3 nodes. Two mul operations chain A, T^(1/2), and exp(). The Arrhenius kernel itself is 5 nodes as in eq.1; pow adds 3 and an extra mul adds 2, for 10 total."
+    },
+    {
+      "id": 4,
+      "name": "Second-order rate law",
+      "expression_latex": "r = k \\cdot [A] \\cdot [B]",
+      "primitives": [
+        {
+          "operation": "mul(k, [A])",
+          "comment": "mul costs 2 nodes",
+          "cost": 2
+        },
+        {
+          "operation": "mul(k·[A], [B])",
+          "comment": "mul costs 2 nodes",
+          "cost": 2
+        }
+      ],
+      "superBEST_form": "ELAd( ELAd( k , [A] ) , [B] )",
+      "node_count": 4,
+      "notes": "Pure product of three free terminals (k, [A], [B]). Two chained multiplications, each costing 2 nodes. No exponentials, logs, or other complex operations."
+    },
+    {
+      "id": 5,
+      "name": "Integrated first-order rate law",
+      "expression_latex": "[A](t) = [A]_0 \\cdot \\exp(-kt)",
+      "primitives": [
+        {
+          "operation": "mul(k, t)",
+          "comment": "k·t — mul costs 2 nodes",
+          "cost": 2
+        },
+        {
+          "operation": "neg(kt)",
+          "comment": "neg costs 2 nodes",
+          "cost": 2
+        },
+        {
+          "operation": "exp(-kt)",
+          "comment": "exp costs 1 node",
+          "cost": 1
+        },
+        {
+          "operation": "mul([A]0, exp(-kt))",
+          "comment": "mul costs 2 nodes",
+          "cost": 2
+        }
+      ],
+      "superBEST_form": "ELAd( [A]0 , EML( DEML( EXL( ELAd( k , t ) ) ) ) )",
+      "node_count": 7,
+      "notes": "k and t are both live variables (t changes), so k·t cannot be a free terminal and costs a full mul (2 nodes). Then neg (2) + exp (1) + final mul (2) = 7. Compare with Arrhenius where Ea/RT collapses to a free terminal because both are parameters/constants."
+    },
+    {
+      "id": 6,
+      "name": "Integrated second-order rate law",
+      "expression_latex": "\\frac{1}{[A](t)} = \\frac{1}{[A]_0} + kt",
+      "primitives": [
+        {
+          "operation": "recip([A](t))",
+          "comment": "1/[A](t) on left side — recip costs 2 nodes via EDL",
+          "cost": 2
+        },
+        {
+          "operation": "recip([A]0)",
+          "comment": "1/[A]0 — recip costs 2 nodes",
+          "cost": 2
+        },
+        {
+          "operation": "mul(k, t)",
+          "comment": "k·t — mul costs 2 nodes",
+          "cost": 2
+        },
+        {
+          "operation": "add(1/[A]0, kt)",
+          "comment": "add costs 3 nodes via EAL",
+          "cost": 3
+        }
+      ],
+      "superBEST_form": "EDL( [A](t) )  =  EAL( EDL( [A]0 ) , ELAd( k , t ) )",
+      "node_count": 9,
+      "notes": "The equation is expressed as an equality between two sides. Counting the full expression tree for the right-hand side computation: recip([A]0) + mul(k,t) + add = 2+2+3 = 7 nodes for RHS. The LHS recip([A](t)) adds 2 more nodes if we count the full mapping, giving 9 total. If the equation is used as a forward-evaluation of [A](t), we invert: [A](t) = 1/(1/[A]0 + kt), which costs recip([A]0) + mul(k,t) + add + recip(result) = 2+2+3+2 = 9 nodes identically."
+    }
+  ],
+  "summary_table": [
+    {
+      "equation": "1. Arrhenius",
+      "primitives": "neg, exp, mul",
+      "node_count": 5,
+      "notes": "Ea/RT is a free terminal ratio"
+    },
+    {
+      "equation": "2. Eyring (TST)",
+      "primitives": "mul(T·ΔS‡), sub(ΔG‡), recip(RT), mul(ΔG‡·recip), neg, exp, mul(prefactor)",
+      "node_count": 13,
+      "notes": "ΔG‡ computation adds sub+mul; div is general (no EDL shortcut)"
+    },
+    {
+      "equation": "3. Collision theory",
+      "primitives": "pow(T,½), neg, exp, mul×2",
+      "node_count": 10,
+      "notes": "Arrhenius kernel (5n) + pow(3n) + extra mul(2n)"
+    },
+    {
+      "equation": "4. Second-order rate law",
+      "primitives": "mul×2",
+      "node_count": 4,
+      "notes": "Simplest — pure product of 3 free terminals"
+    },
+    {
+      "equation": "5. Integrated first-order",
+      "primitives": "mul(kt), neg, exp, mul([A]0)",
+      "node_count": 7,
+      "notes": "kt is live (not a free terminal); compare 5n for Arrhenius"
+    },
+    {
+      "equation": "6. Integrated second-order",
+      "primitives": "recip([A]0), mul(kt), add, recip([A](t))",
+      "node_count": 9,
+      "notes": "add (3n) dominates; two recip nodes; no exponential"
+    }
+  ],
+  "routing_notes": {
+    "free_terminal_collapses": [
+      "Ea/RT — both Ea and RT are parameters/constants, their ratio is a single free terminal",
+      "kBT/h — product/ratio of fundamental constants, free terminal",
+      "RT in Arrhenius denominator — free constant product"
+    ],
+    "EDL_shortcut_applicable": [
+      "recip([A](t)) — denominator of a single variable, 2 nodes",
+      "recip([A]0) — same",
+      "recip(RT) in Eyring when computing ΔG‡/RT"
+    ],
+    "EDL_shortcut_NOT_applicable": [
+      "div(ΔG‡, RT) in Eyring — numerator ΔG‡ is computed (not a raw exp node), so must use recip+mul = 4n"
+    ],
+    "cheapest_equation": "Second-order rate law (4 nodes)",
+    "most_expensive_equation": "Eyring TST (13 nodes)",
+    "cost_drivers": "sub for ΔG‡ requires a preceding mul (T·ΔS‡); general div when numerator is not a natural exp node"
+  }
+}
