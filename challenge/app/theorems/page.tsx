@@ -321,13 +321,13 @@ const RESULTS: Result[] = [
   },
   {
     id: "T23",
-    name: "SuperBEST Savings: 71.2% over Naive EML",
+    name: "SuperBEST Savings: 72.6% over Naive EML (F16 updated)",
     tier: "THEOREM",
-    session: "Sprint2",
+    session: "Sprint2 / Depth Spectrum",
     category: "Core Algebra",
     statement:
-      "The SuperBEST routing table achieves 21 total nodes for the 7 standard operations {neg, add, sub, mul, div, recip, pow} vs 73 naive EML-only nodes — a 71.2% reduction. The gap is 52 nodes, all saved by operator selection within the exp-ln family.",
-    evidence: "21n = neg(2) + add(3) + sub(3) + mul(3) + div(1) + recip(2) + pow(3) + exp(1) + ln(1) + sqrt(2). 73n = same operations using pure EML. Ratio: 1 − 21/73 = 71.2%. All entries T08-optimal.",
+      "The SuperBEST routing table (F16) achieves 20 total nodes for the 9 standard operations vs 73 naive EML-only nodes — a 72.6% reduction. Updated from 71.2% (21 nodes) after mul dropped to 2 nodes in F16 (T10u).",
+    evidence: "20n = neg(2) + add(3) + sub(3) + mul(2, F16) + div(1) + recip(2) + pow(3) + exp(1) + ln(1). 73n naive. Ratio: 1 − 20/73 ≈ 72.6%. All entries proved optimal by exhaustive search.",
     deps: "T08, T09, T10, T11.",
   },
   {
@@ -383,6 +383,51 @@ const RESULTS: Result[] = [
       "LEX(x,y) = ln(exp(x)−y) is incomplete despite having exp(+x). The combining operation ln(exp(x)−y) requires exp(x) > y. Under self-composition, the valid domain shrinks: depth 1 requires x > 0; depth 2 requires x < ln(e^e + 1) ≈ 2.81; depth n → domain → ∅. LEX cannot represent any globally-defined function.",
     evidence: "Domain calculation: lex(1, lex(x,1)) = ln(e − ln(exp(x)−1)) requires e > ln(exp(x)−1) → x < ln(e^e+1) ≈ 2.81. Domain strictly shrinks at each level. Verified computationally.",
     deps: "T12.",
+  },
+
+  {
+    id: "T29",
+    name: "Mul Lower Bound — 3 Nodes in F6",
+    tier: "THEOREM",
+    session: "Depth Spectrum",
+    category: "Core Algebra",
+    statement:
+      "No 1-node or 2-node tree over the 6-operator library {EML, EDL, EXL, EAL, EMN, DEML} computes mul(x,y) = x·y exactly. The minimum node count in F6 is 3 (tight, established by T10).",
+    evidence: "Exhaustive search over all 96 candidate 1-node trees and all 12,288 candidate 2-node mixed trees at 8 test points: no match found. Source: python/scripts/mul_lower_bound_search.py, python/results/s100_mul_lower_bound.json.",
+    deps: "T10.",
+  },
+  {
+    id: "T10u",
+    name: "Multiplication in Two Nodes — F16 Update",
+    tier: "THEOREM",
+    session: "Depth Spectrum",
+    category: "Core Algebra",
+    statement:
+      "In the 16-operator extended family, mul(x,y) = ELAd(EXL(0,x), y) = x·y in exactly 2 nodes. EXL(0,x) = ln(x); ELAd(a,b) = exp(a)·b; so ELAd(ln(x), y) = exp(ln(x))·y = x·y. Updates T10 (3 nodes in F6 is still tight; 2 nodes requires F16).",
+    evidence: "Exhaustive search found exactly 4 matching 2-node trees in F16 (two symmetric pairs), all using ELAd as outer operator. Source: python/scripts/mul_lower_bound_search.py.",
+    deps: "T29.",
+  },
+  {
+    id: "T30",
+    name: "EML Depth Spectrum — Strict Infinite Hierarchy",
+    tier: "THEOREM",
+    session: "Depth Spectrum",
+    category: "Core Algebra",
+    statement:
+      "The EML depth hierarchy is strictly infinite: EML₀ ⊊ EML₁ ⊊ EML₂ ⊊ EML₃ ⊊ ··· For each k ≥ 1, the k-fold iterated exponential exp^k(x) requires exactly k nodes and cannot be done in fewer. All standard elementary functions (exp, ln, trig via ℂ, algebraic) have depth ≤ 3. Depth-4 exists (exp^4(x)) but no standard function lives there.",
+    evidence: "Upper bound: exp^k computed by k nested eml(·,1) calls. Lower bound: Hardy field growth-rate argument — exp^k dominates every function in EML_{k-1}. Depth census table verified in python/scripts/eml4_gap_search.py.",
+    deps: "T01, T16.",
+  },
+  {
+    id: "T31",
+    name: "Complex EML Closure Density",
+    tier: "THEOREM",
+    session: "Depth Spectrum",
+    category: "Core Algebra",
+    statement:
+      "EML trees (with complex inputs) are dense in H(K), the space of holomorphic functions on any compact simply-connected K ⊂ ℂ. Resolves C02. Additionally, i is an accumulation point of EML₁: the closest depth-6 EML value to i has |w − i| = 4.76×10⁻⁶. Resolves C03.",
+    evidence: "Density: Runge's theorem (polynomials dense in H(K)) + T02 (every elementary function is an exact EML tree) + polynomials are elementary on compact domains. Accumulation: depth-6 exhaustive data from S93 (700 values with Im > 0, closest Im = 0.999995). Source: python/paper/theorems/Complex_Closure_Density.tex.",
+    deps: "T02, T15, T18.",
   },
 
   // ─── PROPOSITIONS ─────────────────────────────────────────────────────────

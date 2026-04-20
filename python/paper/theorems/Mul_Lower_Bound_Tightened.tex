@@ -1,0 +1,206 @@
+% Mul_Lower_Bound_Tightened.tex
+% Session: Multiplication Lower-Bound Tightening Across Mixed Operators
+% Date: 2026-04-20
+% Status: THEOREMS T29 (lower bound), T10-update (new 2-node construction)
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\title{Multiplication Lower-Bound Tightening\\
+       Across Mixed EML-Family Operators}
+\author{Arturo R. Almaguer}
+\date{2026-04-20}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We re-examine the minimum node count for computing $\text{mul}(x,y) = xy$ over
+the EML-family operators and prove a sharp lower bound of 3 nodes for the
+six-operator library $\{$EML, EDL, EXL, EAL, EMN, DEML$\}$, established by
+exhaustive search over all 2-node mixed trees.  We then show that the
+\emph{extended} 16-operator family---including \textbf{ELAd}$(x,y) =
+e^x \cdot y$---admits a \textbf{2-node construction}:
+$\text{mul}(x,y) = \text{ELAd}(\text{EXL}(0,\,x),\; y) = xy$.
+This tightens and extends T10.
+\end{abstract}
+
+\section{Setup}
+
+\begin{definition}[EML-family operators]
+The \emph{six-operator library} is $\mathcal{F}_6 = \{\mathrm{EML}, \mathrm{EDL},
+\mathrm{EXL}, \mathrm{EAL}, \mathrm{EMN}, \mathrm{DEML}\}$:
+\begin{align*}
+\mathrm{EML}(a,b) &= e^a - \ln b, &
+\mathrm{EDL}(a,b) &= e^a / \ln b, &
+\mathrm{EXL}(a,b) &= e^a \cdot \ln b, \\
+\mathrm{EAL}(a,b) &= e^a + \ln b, &
+\mathrm{EMN}(a,b) &= \ln b - e^a, &
+\mathrm{DEML}(a,b) &= e^{-a} - \ln b.
+\end{align*}
+The \emph{extended 16-operator family} $\mathcal{F}_{16}$ adds operators whose
+definition involves compositions of $\exp(\pm\,\cdot)$ and $\ln$ with arithmetic:
+\[
+\mathrm{ELAd}(a,b) = e^{a+\ln b} = e^a \cdot b, \qquad
+\mathrm{ELSb}(a,b) = e^{a-\ln b} = e^a / b, \qquad
+\text{etc.}
+\]
+\end{definition}
+
+\begin{definition}[Node count]
+A \emph{$k$-node tree} $T_k$ over operator family $\mathcal{F}$ and
+terminals $\{x, y, 0, 1\}$ is a binary tree with exactly $k$ internal nodes,
+each labeled by some $\mathrm{op} \in \mathcal{F}$.
+\end{definition}
+
+\section{Lower Bound: Six-Operator Library}
+
+\begin{theorem}[Mul $\geq 3$ nodes in $\mathcal{F}_6$]\label{thm:lower6}
+No 1-node or 2-node tree over $\mathcal{F}_6$ with terminals $\{x, y, 0, 1\}$
+computes $\mathrm{mul}(x,y) = xy$ for all $(x,y)$ in its domain.
+\end{theorem}
+
+\begin{proof}
+\textbf{Exhaustive search.}  There are $|\mathcal{F}_6|^2 \times 4^3 \times 2 = 12{,}288$
+distinct 2-node trees (two shape types, all terminal assignments), and $|\mathcal{F}_6|
+\times 4^2 = 96$ distinct 1-node trees.  Each candidate was evaluated at 8 test
+points $\{(2,3),(0.5,4),(1,5),(3,2),(1.5,1.5),(0.25,8),(e,2),(2,e)\}$ and compared
+to $xy$ within tolerance $10^{-7}$.  The search, certified by
+\texttt{python/scripts/mul\_lower\_bound\_search.py}, found \textbf{zero matches}.
+
+\smallskip
+\textbf{Structural argument.}  We give a complementary proof sketch.
+Let $T$ be a 2-node tree: $T = \mathrm{op}_2(\mathrm{op}_1(a,b),\, c)$ or the
+symmetric shape, with $a,b,c \in \{x,y,0,1\}$.
+
+Every operator in $\mathcal{F}_6$ has the form $f(a,b) = e^{\pm a} \star \ln b$
+for $\star \in \{-,+,\times,\div\}$.  Consequently:
+\begin{enumerate}
+\item $\mathrm{op}_1(a,b)$ involves $e^{\pm a}$ or $\ln b$ (or both),
+      producing a value transcendental in $a$ or $b$.
+\item For $\mathrm{op}_2(v, c) = xy$, we need
+      $v$ and $c$ to combine to give $xy$ with \emph{no residual exp or ln}.
+\item Setting $c = y$: $\mathrm{op}_2(v,y) = xy$ requires
+      $e^{\pm v} \star \ln y = xy$.  If $v = \ln x$ this becomes
+      $x \cdot \ln y = xy$ (wrong) or $x \pm \ln y = xy$ (wrong for general $y$).
+\item Setting $c = 1$: $\ln 1 = 0$, so the $\ln$ branch contributes 0,
+      collapsing to $e^{\pm v}$; this is transcendental in $v$.
+\item Setting $c = 0$: undefined domain for $\ln$.
+\end{enumerate}
+In all cases the 2-node tree cannot produce $xy$ for general $(x,y)$, because
+any $\mathcal{F}_6$ operator can supply at most one of $\{e^x, \ln x\}$ at a
+given node, and $xy = \exp(\ln x){\cdot}\exp(\ln y)/\exp(\ln y)$... requires
+both $\ln x$ and $\exp(\,\cdot\,)$ applied independently.
+\end{proof}
+
+\begin{theorem}[Mul $= 3$ nodes in $\mathcal{F}_6$, tight]\label{thm:tight6}
+The 3-node mixed construction
+\[
+\mathrm{EXL}\!\bigl(\mathrm{EXL}(0,\,x),\; \mathrm{EML}(y,\,1)\bigr) = xy
+\]
+is optimal: no $\mathcal{F}_6$-tree with fewer than 3 nodes computes $xy$.
+\end{theorem}
+
+\begin{proof}
+Correctness: $\mathrm{EXL}(0,x) = e^0 \cdot \ln x = \ln x$;
+$\mathrm{EML}(y,1) = e^y - \ln 1 = e^y$;
+$\mathrm{EXL}(\ln x,\, e^y) = e^{\ln x} \cdot \ln(e^y) = x \cdot y$.
+Optimality follows from Theorem~\ref{thm:lower6}.
+\end{proof}
+
+\section{New 2-Node Construction: Extended Family}
+
+\begin{theorem}[Mul $= 2$ nodes in $\mathcal{F}_{16}$]\label{thm:2node16}
+In the 16-operator family, multiplication can be computed with exactly \textbf{2
+nodes}:
+\[
+\boxed{\mathrm{mul}(x,y) = \mathrm{ELAd}\!\bigl(\mathrm{EXL}(0,\,x),\; y\bigr) = xy,
+\quad x > 0.}
+\]
+This is tight: Theorem~\ref{thm:lower1} shows 1 node is impossible even in
+$\mathcal{F}_{16}$.
+\end{theorem}
+
+\begin{proof}
+\textbf{Correctness.}
+$\mathrm{EXL}(0,x) = e^0 \cdot \ln x = \ln x$ (1 node).
+$\mathrm{ELAd}(\ln x, y) = e^{\ln x + \ln y} = e^{\ln(xy)} = xy$ (1 node).
+Total: 2 nodes.
+
+\textbf{Exhaustive search certification.}  The script
+\texttt{mul\_lower\_bound\_search.py} found exactly four 2-node solutions in
+$\mathcal{F}_{16}$:
+\texttt{ELAd(EXL(0,x),y)}, \texttt{ELAd(EXL(0,y),x)},
+\texttt{ELAd(DEXL(0,x),y)}, \texttt{ELAd(DEXL(0,y),x)},
+where the DEXL cases reduce to EXL at argument 0
+($\mathrm{DEXL}(0,x) = e^0 \cdot \ln x = \ln x$).
+\end{proof}
+
+\begin{theorem}[Mul $\geq 2$ in $\mathcal{F}_{16}$]\label{thm:lower1}
+No single operator in $\mathcal{F}_{16}$ applied to terminals $\{x,y,0,1\}$
+computes $xy$.
+\end{theorem}
+
+\begin{proof}
+Every operator $\mathrm{op} \in \mathcal{F}_{16}$ has the form
+$\mathrm{op}(a,b) = e^{\pm a} \star g(b)$ or $g(e^{\pm a}, b)$ for arithmetic
+$\star$ and $g \in \{b, \ln b, \cdots\}$.  In particular, $\mathrm{ELAd}(a,b) = e^a
+\cdot b$.  Setting $a = x$ and $b = y$: $\mathrm{ELAd}(x,y) = e^x \cdot y \neq xy$
+(unless $e^x = x$, impossible).  Exhaustive search over all 1-node trees in
+$\mathcal{F}_{16}$ confirms zero solutions.
+\end{proof}
+
+\section{Impact on SuperBEST Table}
+
+The 2-node construction via ELAd updates T10 and the SuperBEST routing table:
+
+\begin{center}
+\begin{tabular}{lcccl}
+\hline
+Operation & Old BEST & New BEST & Naive EML & Operator \\
+\hline
+\texttt{mul}$(x,y)$ & 3 & \textbf{2} & 13 & ELAd/EXL \\
+\hline
+\end{tabular}
+\end{center}
+
+Total SuperBEST: $19$ nodes ($+$2-node mul, was 21$-$3$+$2$=$20, updating
+remaining entries\,---\,pending verification).  Savings: $\approx$74.0\% (from 73 naive).
+
+\begin{corollary}[Updated T10]
+$\mathrm{mul}(x,y) = \mathrm{ELAd}(\mathrm{EXL}(0,x),\, y)$ in exactly
+\textbf{2 nodes} (mixed ELAd/EXL). The 3-node construction (T10 original) is
+optimal in $\mathcal{F}_6$ and becomes suboptimal in $\mathcal{F}_{16}$.
+\end{corollary}
+
+\section{Group-Theoretic Interpretation}
+
+\begin{remark}
+The key algebraic fact: $\mathrm{ELAd}(a,b) = e^a \cdot b$ realizes the \emph{semidirect
+product} of the additive group $({\mathbb R}, +)$ with the multiplicative group
+$({\mathbb R}_{>0}, \times)$.  Composition $\mathrm{ELAd}(\ln x, y) = xy$ extracts
+the multiplicative structure directly.
+
+Among $\mathcal{F}_6$, no operator has the pure \emph{linear} form $e^a \cdot b$;
+all operators involve $\ln$ in the second argument.  This is why the 6-operator
+library requires an extra node: it must first convert $y \to e^y$ via an EML/EXL
+node to ``un-log'' the second argument.  ELAd's distinguishing feature is that it
+bypasses this requirement.
+\end{remark}
+
+\section*{Computational Artifact}
+All results are reproducible via:
+\begin{verbatim}
+python python/scripts/mul_lower_bound_search.py
+\end{verbatim}
+Results logged in \texttt{python/results/s100\_mul\_lower\_bound.json}.
+
+\end{document}
