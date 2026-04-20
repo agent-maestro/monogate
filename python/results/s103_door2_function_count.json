@@ -1,0 +1,264 @@
+{
+  "study": "DOOR-2: Functional Distinctness Count for EML-family Trees",
+  "terminals": [
+    "1",
+    "x"
+  ],
+  "depth_definition": "number of operator nodes (not tree height)",
+  "equivalence_method": "numeric agreement at 20 points in (0.1, 5.0); symbolic fallback only for both-None-signature pairs",
+  "operators": {
+    "EML": {
+      "operator": "EML",
+      "depth_results": {
+        "0": {
+          "count": 2,
+          "expressions": [
+            "1",
+            "x"
+          ]
+        },
+        "1": {
+          "new_distinct_count": 4,
+          "cumulative_count": 6,
+          "sample_new_expressions": [
+            "E",
+            "E - log(x)",
+            "exp(x)",
+            "exp(x) - log(x)"
+          ]
+        },
+        "2": {
+          "new_distinct_count": 32,
+          "cumulative_count": 38,
+          "sample_new_expressions": [
+            "-1 + E",
+            "E - log(E - log(x))",
+            "E - x",
+            "E - log(exp(x) - log(x))",
+            "exp(x) - 1",
+            "exp(x) - log(E - log(x))",
+            "-x + exp(x)",
+            "exp(x) - log(exp(x) - log(x))",
+            "exp(E)",
+            "-log(x) + exp(E)",
+            "-1 + exp(E)",
+            "-log(E - log(x)) + exp(E)"
+          ]
+        },
+        "3": {
+          "new_distinct_count": 1406,
+          "cumulative_count": 1444,
+          "sample_new_expressions": [
+            "E - log(-1 + E)",
+            "E - log(E - log(E - log(x)))",
+            "E - log(E - x)",
+            "E - log(E - log(exp(x) - log(x)))",
+            "E - log(exp(x) - 1)",
+            "E - log(exp(x) - log(E - log(x)))",
+            "E - log(-x + exp(x))",
+            "E - log(exp(x) - log(exp(x) - log(x)))",
+            "0",
+            "E - log(-log(x) + exp(E))",
+            "E - log(-1 + exp(E))",
+            "E - log(-log(E - log(x)) + exp(E))"
+          ]
+        }
+      },
+      "final_cumulative": 1444
+    },
+    "EXL": {
+      "operator": "EXL",
+      "depth_results": {
+        "0": {
+          "count": 2,
+          "expressions": [
+            "1",
+            "x"
+          ]
+        },
+        "1": {
+          "new_distinct_count": 3,
+          "cumulative_count": 5,
+          "sample_new_expressions": [
+            "0",
+            "E*log(x)",
+            "exp(x)*log(x)"
+          ]
+        },
+        "2": {
+          "new_distinct_count": 18,
+          "cumulative_count": 23,
+          "sample_new_expressions": [
+            "zoo",
+            "E*log(E*log(x))",
+            "E*log(exp(x)*log(x))",
+            "zoo",
+            "exp(x)*log(E*log(x))",
+            "exp(x)*log(exp(x)*log(x))",
+            "log(x)",
+            "zoo",
+            "log(E*log(x))",
+            "log(exp(x)*log(x))",
+            "x**E*log(x)",
+            "zoo"
+          ]
+        },
+        "3": {
+          "new_distinct_count": 497,
+          "cumulative_count": 520,
+          "sample_new_expressions": [
+            "zoo",
+            "zoo",
+            "E*log(E*log(E*log(x)))",
+            "E*log(E*log(exp(x)*log(x)))",
+            "zoo",
+            "E*log(exp(x)*log(E*log(x)))",
+            "E*log(exp(x)*log(exp(x)*log(x)))",
+            "E*log(log(x))",
+            "zoo",
+            "E*log(log(E*log(x)))",
+            "E*log(log(exp(x)*log(x)))",
+            "E*log(x**E*log(x))"
+          ]
+        }
+      },
+      "final_cumulative": 520
+    },
+    "EAL": {
+      "operator": "EAL",
+      "depth_results": {
+        "0": {
+          "count": 2,
+          "expressions": [
+            "1",
+            "x"
+          ]
+        },
+        "1": {
+          "new_distinct_count": 4,
+          "cumulative_count": 6,
+          "sample_new_expressions": [
+            "E",
+            "log(x) + E",
+            "exp(x)",
+            "exp(x) + log(x)"
+          ]
+        },
+        "2": {
+          "new_distinct_count": 32,
+          "cumulative_count": 38,
+          "sample_new_expressions": [
+            "1 + E",
+            "log(log(x) + E) + E",
+            "x + E",
+            "log(exp(x) + log(x)) + E",
+            "exp(x) + 1",
+            "exp(x) + log(log(x) + E)",
+            "x + exp(x)",
+            "exp(x) + log(exp(x) + log(x))",
+            "exp(E)",
+            "log(x) + exp(E)",
+            "1 + exp(E)",
+            "log(log(x) + E) + exp(E)"
+          ]
+        },
+        "3": {
+          "new_distinct_count": 1406,
+          "cumulative_count": 1444,
+          "sample_new_expressions": [
+            "log(1 + E) + E",
+            "log(log(log(x) + E) + E) + E",
+            "log(x + E) + E",
+            "log(log(exp(x) + log(x)) + E) + E",
+            "log(exp(x) + 1) + E",
+            "log(exp(x) + log(log(x) + E)) + E",
+            "log(x + exp(x)) + E",
+            "log(exp(x) + log(exp(x) + log(x))) + E",
+            "2*E",
+            "log(log(x) + exp(E)) + E",
+            "E + log(1 + exp(E))",
+            "log(log(log(x) + E) + exp(E)) + E"
+          ]
+        }
+      },
+      "final_cumulative": 1444
+    }
+  },
+  "growth_summary": {
+    "EML": {
+      "new_at_each_depth": [
+        2,
+        4,
+        32,
+        1406
+      ],
+      "cumulative_at_each_depth": [
+        2,
+        6,
+        38,
+        1444
+      ],
+      "growth_analysis": {
+        "growth_type": "super-exponential (accelerating)",
+        "depth_to_depth_ratios": [
+          2.0,
+          8.0,
+          43.938
+        ],
+        "avg_ratio": 17.979,
+        "catalan_match": false
+      }
+    },
+    "EXL": {
+      "new_at_each_depth": [
+        2,
+        3,
+        18,
+        497
+      ],
+      "cumulative_at_each_depth": [
+        2,
+        5,
+        23,
+        520
+      ],
+      "growth_analysis": {
+        "growth_type": "super-exponential (accelerating)",
+        "depth_to_depth_ratios": [
+          1.5,
+          6.0,
+          27.611
+        ],
+        "avg_ratio": 11.704,
+        "catalan_match": false
+      }
+    },
+    "EAL": {
+      "new_at_each_depth": [
+        2,
+        4,
+        32,
+        1406
+      ],
+      "cumulative_at_each_depth": [
+        2,
+        6,
+        38,
+        1444
+      ],
+      "growth_analysis": {
+        "growth_type": "super-exponential (accelerating)",
+        "depth_to_depth_ratios": [
+          2.0,
+          8.0,
+          43.938
+        ],
+        "avg_ratio": 17.979,
+        "catalan_match": false
+      }
+    }
+  },
+  "combinatorial_equivalences": [
+    "EML and EAL identical new-per-depth: [2, 4, 32, 1406]"
+  ]
+}
