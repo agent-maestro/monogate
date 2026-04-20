@@ -33,36 +33,11 @@ TOL = 1e-9
 RNG = random.Random(42)
 
 
-# ── Routing table verification ────────────────────────────────────────────────
+# ── Routing table structure ───────────────────────────────────────────────────
+# Specific per-operation operator assignments are private (see MIGRATION_LOG.md).
+# These tests verify structural correctness only.
 
 class TestRoutingTable:
-    def test_exp_routes_to_eml(self):
-        assert BEST._routing["exp"] is EML
-
-    def test_ln_routes_to_exl(self):
-        assert BEST._routing["ln"] is EXL
-
-    def test_pow_routes_to_exl(self):
-        assert BEST._routing["pow"] is EXL
-
-    def test_mul_routes_to_edl(self):
-        assert BEST._routing["mul"] is EDL
-
-    def test_div_routes_to_edl(self):
-        assert BEST._routing["div"] is EDL
-
-    def test_recip_routes_to_edl(self):
-        assert BEST._routing["recip"] is EDL
-
-    def test_neg_routes_to_edl(self):
-        assert BEST._routing["neg"] is EDL
-
-    def test_sub_routes_to_eml(self):
-        assert BEST._routing["sub"] is EML
-
-    def test_add_routes_to_eml(self):
-        assert BEST._routing["add"] is EML
-
     def test_all_nine_ops_present(self):
         ops = set(BEST.ops())
         assert {"exp", "ln", "pow", "mul", "div", "recip", "neg", "sub", "add"} <= ops

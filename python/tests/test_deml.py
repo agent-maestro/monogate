@@ -150,3 +150,21 @@ class TestDEMLCensus:
         )
         assert results["n_combined_native"] >= results["n_eml_native"]
         assert results["n_combined_native"] >= results["n_deml_native"]
+
+
+# ── Part N+1: BEST exp_neg capability ────────────────────────────────────────
+
+class TestBESTExpNeg:
+    def test_deml_exp_neg_accuracy(self):
+        """DEML.exp_neg(x) = deml(x,1) should match exp(-x) to 1e-14."""
+        from monogate.core import DEML
+        for x in [-2.0, -1.0, 0.0, 0.5, 1.0, 2.0, math.pi]:
+            got = DEML.exp_neg(x)
+            expected = math.exp(-x)
+            assert abs(got - expected) < 1e-14, f"exp_neg({x}): got {got}, expected {expected}"
+
+    def test_best_exp_neg_node_cost(self):
+        """_NODE_COSTS must record DEML=1, EML=10 for exp_neg."""
+        from monogate.core import _NODE_COSTS
+        assert _NODE_COSTS["exp_neg"]["DEML"] == 1
+        assert _NODE_COSTS["exp_neg"]["EML"] == 10

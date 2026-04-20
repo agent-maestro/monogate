@@ -58,7 +58,7 @@ from .core import (
     compare_op,
 )
 
-__version__ = "2.1.6"
+__version__ = "2.2.0"
 
 __all__ = [
     "op",
@@ -454,3 +454,10 @@ __all__ += [
     "EMLCausalModel",
     "verify_causal_identity",
 ]
+
+from .diff import diff, node_count, leaf, eml_node, diff_info  # noqa: F401
+
+__all__ += ["diff", "node_count", "leaf", "eml_node", "diff_info"]
+
+from .superbest import superbest_cost, superbest_operator, superbest_construction, route_expression, superbest_summary
+__all__ += ['superbest_cost', 'superbest_operator', 'superbest_construction', 'route_expression', 'superbest_summary']

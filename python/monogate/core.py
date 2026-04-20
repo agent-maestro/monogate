@@ -931,6 +931,13 @@ EMN.register('ln_shift', lambda x: _emn_func(0j, x))           # ln(x) − 1
 # EXL: exp-times-ln gate.  1-node exp, 1-node ln, 3-node power.
 EXL.register('pow', pow_exl)
 
+# DEML: exp(-x) is the 1-node native.  Register it as a named operation so
+# BEST can route exp_neg → DEML instead of the 10-node EML tower.
+DEML.register('exp_neg', lambda x: _deml_func(x, 1.0 + 0j))    # deml(x,1) = exp(-x)
+
+# EML fallback for exp_neg (neg_eml 9 nodes + exp 1 node = 10 nodes total).
+EML.register('exp_neg',  lambda x: cmath.exp(-x))
+
 # EAL: exp-plus-ln gate.  1-node exp, no finite ln.
 # No arithmetic operations can be built purely from EAL over the reals.
 
@@ -985,8 +992,9 @@ DEML._meta = {
 
 # Known node costs for each (op_name, base_operator_name) pair.
 _NODE_COSTS: dict[str, dict[str, int]] = {
-    'exp':   {'EML': 1,  'EDL': 1,  'EXL': 1,  'EAL': 1},
-    'ln':    {'EML': 3,  'EDL': 3,  'EXL': 1},
+    'exp':     {'EML': 1,  'EDL': 1,  'EXL': 1,  'EAL': 1},
+    'exp_neg': {'EML': 10, 'DEML': 1},   # DEML native (1n) vs EML neg+exp tower (10n)
+    'ln':      {'EML': 3,  'EDL': 3,  'EXL': 1},
     'pow':   {'EML': 15, 'EDL': 11, 'EXL': 3},
     'mul':   {'EML': 13, 'EDL': 7},
     'div':   {'EML': 15, 'EDL': 1},
@@ -1368,21 +1376,28 @@ class HybridOperator:
 BEST: HybridOperator  # forward declaration; defined after all operators are set up
 
 
+_BEST_OP_REGISTRY: dict[str, 'Operator'] = {}  # populated after all Operators exist
+
+
 def _make_best() -> HybridOperator:
-    return HybridOperator(
-        name="BEST",
-        routing={
-            'exp':   EML,
-            'ln':    EXL,
-            'pow':   EXL,
-            'mul':   EDL,
-            'div':   EDL,
-            'recip': EDL,
-            'neg':   EDL,
-            'sub':   EML,
-            'add':   EML,
-        },
-    )
+    from monogate._routing_loader import _load_routing_names
+
+    names = _load_routing_names()
+    if names is not None:
+        routing = {
+            op: _BEST_OP_REGISTRY[name]
+            for op, name in names.items()
+            if name in _BEST_OP_REGISTRY
+        }
+    else:
+        # No private routing config available. EML is complete and handles all
+        # standard operations correctly, though not at minimum node count.
+        # Provide _routing.pkl or set MONOGATE_ROUTING for full performance.
+        _all_ops = ('exp', 'ln', 'pow', 'mul', 'div', 'recip', 'neg', 'sub', 'add')
+        routing = {op: EML for op in _all_ops}
+
+    return HybridOperator(name="BEST", routing=routing)
 
 
+_BEST_OP_REGISTRY.update({'EML': EML, 'EDL': EDL, 'EXL': EXL, 'DEML': DEML, 'EAL': EAL})
 BEST = _make_best()
