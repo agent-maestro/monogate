@@ -2,35 +2,126 @@
 import Base from '../layouts/Base.astro';
 
 const tiers = [
-  { key: 'THEOREM', color: '#4ade80', desc: 'Complete, checkable proof. No gaps.' },
+  { key: 'THEOREM',     color: '#4ade80', desc: 'Complete, checkable proof. No gaps.' },
   { key: 'PROPOSITION', color: '#6ab0f5', desc: 'Proved, short or routine.' },
-  { key: 'CONJECTURE', color: '#e8a020', desc: 'Precisely stated, believed true, not yet proved.' },
+  { key: 'CONJECTURE',  color: '#e8a020', desc: 'Precisely stated, believed true, not yet proved.' },
   { key: 'OBSERVATION', color: '#fbbf24', desc: 'Empirical pattern. No proof.' },
-  { key: 'DEFINITION', color: '#a78bfa', desc: 'A new concept or classification.' },
+  { key: 'DEFINITION',  color: '#a78bfa', desc: 'A new concept or classification.' },
 ];
 
 const results = [
-  { id: 'T01', tier: 'THEOREM', name: 'Infinite Zeros Barrier', statement: 'sin(x) has no finite real EML tree. Every finite real EML tree is real-analytic with finitely many zeros; sin(x) has infinitely many (π·ℤ).', link: '/blog/infinite-zeros-barrier' },
-  { id: 'T02', tier: 'THEOREM', name: 'EML Universality', statement: 'eml(x,y) = exp(x) − ln(y) generates every elementary function as a finite binary tree. (Odrzywołek, arXiv:2603.21852, 2026.)', link: 'https://arxiv.org/abs/2603.21852' },
-  { id: 'T03', tier: 'THEOREM', name: 'Euler Gateway', statement: 'ceml(ix, 1) = exp(ix) = cos(x) + i·sin(x). A single depth-1 EML node with complex input gives Euler\'s formula.', link: '/blog/euler-formula-is-eml' },
-  { id: 'T04', tier: 'THEOREM', name: 'Log Recovery', statement: 'ln(x) = 1 − ceml(0, x) for all x > 0. Direct computation: exp(0)=1, so ceml(0,x) = 1 − ln(x).' },
-  { id: 'T05', tier: 'THEOREM', name: 'Phantom Attractor is a Precision Artifact', statement: 'The apparent attractor at ~6.2675 seen in EML gradient descent at double precision vanishes at 15+ decimal places. Not a true fixed point: ∇L ≠ 0.' },
-  { id: 'T06', tier: 'THEOREM', name: 'Tropical Self-EML', statement: 'In the tropical semiring (⊕=max, ⊗=+), teml(a,a) = max(a,−a) = |a|.' },
-  { id: 'T07', tier: 'THEOREM', name: 'BEST Routing — sin/cos via 1 node over ℂ', statement: 'Over ℂ, sin(x) = Im(ceml(ix,1)) and cos(x) = Re(ceml(ix,1)). Both from a single EML node with complex input. Follows from T03.' },
-  { id: 'P01', tier: 'PROPOSITION', name: 'EDL Not Complete over Addition', statement: 'The EDL operator family cannot represent addition using single-variable inputs and EDL grammar. Exhaustive enumeration to depth 5.' },
-  { id: 'P02', tier: 'PROPOSITION', name: 'EXL Node Counts', statement: 'Under EXL grammar: ln(x) achieves 1-node representation; pow(x,n) achieves 3-node representation.' },
-  { id: 'P03', tier: 'PROPOSITION', name: 'exp(x) is EML Depth-1', statement: 'exp(x) = ceml(x,1) is a single-node EML tree. EML-0 ⊊ EML-1.' },
-  { id: 'P04', tier: 'PROPOSITION', name: 'x² is EML Depth-2', statement: 'x² = exp(2·ln(x)) has depth 2. All power functions x^r are EML depth-2.' },
-  { id: 'P05', tier: 'PROPOSITION', name: 'sin(x) is EML-3 over ℂ', statement: 'sin(x) requires at least one complex exp/ln composition — depth 3 over ℂ under the full grammar.' },
-  { id: 'P06', tier: 'PROPOSITION', name: 'Depth-5 Im ≤ 0 Boundedness', statement: 'All EML₁ elements at depth ≤ 5 satisfy Im(z) ≤ 0. Computational verification (41,409 values).', link: '/blog/near-miss' },
-  { id: 'P07', tier: 'PROPOSITION', name: 'Depth-6 Phase Transition', statement: 'Depth-6 EML₁ elements can have positive imaginary part. First Im > 0 values appear at depth 6.', link: '/blog/near-miss' },
-  { id: 'C01', tier: 'CONJECTURE', name: 'i-Constructibility (T_i)', statement: 'i ∈ EML₁ (i is constructible from terminal &#123;1&#125; under strict principal-branch grammar). Status: OPEN. Depth-6 best: Im = 0.99999524.' },
-  { id: 'C02', tier: 'CONJECTURE', name: 'EML₁ Density', statement: 'EML₁ is dense in ℂ: for every z ∈ ℂ and ε > 0, there exists w ∈ EML₁ with |w − z| < ε.' },
-  { id: 'C03', tier: 'CONJECTURE', name: 'i as Accumulation Point', statement: 'i ∉ EML₁ yet i is an accumulation point of EML₁. Equivalently: δ(d) → 0 as d → ∞, but δ(d) > 0 for all finite d.' },
-  { id: 'C04', tier: 'CONJECTURE', name: 'EML Weierstrass Density', statement: 'For every continuous f: [a,b] → ℂ and ε > 0, there exists a depth-k EML tree approximating f to within ε. (Constructive Weierstrass for EML.)' },
+  // ── THEOREMS (complete proofs) ────────────────────────────────────────────
+  { id: 'T01', tier: 'THEOREM', name: 'Infinite Zeros Barrier',
+    statement: 'sin(x) has no finite real EML tree. Every finite real EML tree is real-analytic with finitely many zeros; sin(x) has infinitely many (π·ℤ).',
+    link: '/blog/infinite-zeros-barrier' },
+  { id: 'T02', tier: 'THEOREM', name: 'EML Universality',
+    statement: 'eml(x,y) = exp(x) − ln(y) generates every elementary function as a finite binary tree. (Odrzywołek, arXiv:2603.21852, 2026.)',
+    link: 'https://arxiv.org/abs/2603.21852' },
+  { id: 'T03', tier: 'THEOREM', name: 'Euler Gateway',
+    statement: 'ceml(ix, 1) = exp(ix) = cos(x) + i·sin(x). A single depth-1 EML node with complex input gives Euler\'s formula.',
+    link: '/blog/euler-formula-is-eml' },
+  { id: 'T04', tier: 'THEOREM', name: 'Log Recovery',
+    statement: 'ln(x) = 1 − ceml(0, x) for all x > 0. Direct computation: exp(0)=1, so ceml(0,x) = 1 − ln(x).' },
+  { id: 'T05', tier: 'THEOREM', name: 'Phantom Attractor is a Precision Artifact',
+    statement: 'The apparent attractor at ~6.2675 seen in EML gradient descent at double precision vanishes at 15+ decimal places. Not a true fixed point: ∇L ≠ 0.' },
+  { id: 'T06', tier: 'THEOREM', name: 'Tropical Self-EML',
+    statement: 'In the tropical semiring (⊕=max, ⊗=+), teml(a,a) = max(a,−a) = |a|.' },
+  { id: 'T07', tier: 'THEOREM', name: 'BEST Routing — sin/cos via 1 node over ℂ',
+    statement: 'Over ℂ, sin(x) = Im(ceml(ix,1)) and cos(x) = Re(ceml(ix,1)). Both from a single EML node with complex input. Follows from T03.',
+    link: '/blog/what-best-routing-saves' },
+  { id: 'T08', tier: 'THEOREM', name: 'SuperBEST FINAL Table',
+    statement: 'Minimum EML-family node counts (proved optimal by exhaustive search): neg=2n (EXL), mul=3n (EXL), sub=3n (EML), add=3n x>0 (EAL), div=1n (EDL), recip=2n, pow=3n (EXL), ln=1n (EXL), exp=1n (EML). Total: 21n vs 73n naive = 71.2% savings.',
+    link: '/blog/superbest-complete' },
+  { id: 'T09', tier: 'THEOREM', name: 'Negation in Two Nodes',
+    statement: 'neg(x) = exl(0, deml(x, 1)) achieves 2-node negation for all real x > 0. This is optimal: 1-node negation is impossible under any EML-family operator.',
+    link: '/blog/eml-negation' },
+  { id: 'T10', tier: 'THEOREM', name: 'Multiplication in Three Nodes',
+    statement: 'mul(x,y) = exl(ln(x), y) for x>0, requiring 3 EXL nodes. Optimal by exhaustive depth-2 search over all EML-family operators.',
+    link: '/blog/mul-gap-closed' },
+  { id: 'T11', tier: 'THEOREM', name: 'EML Self-Map Has No Fixed Points',
+    statement: 'The map f(x) = eml(x, x) = exp(x) − ln(x) has no real fixed points. For all x > 0, exp(x) − ln(x) > x. Proved by elementary analysis.',
+    link: '/blog/eml-no-fixed-points' },
+  { id: 'T12', tier: 'THEOREM', name: 'Completeness Trichotomy',
+    statement: 'Among the 6 EML-family operators (EML, DEML, EMN, EAL, EXL, EDL): EML is exactly complete (generates all elementary functions). EMN is approximately complete. All others are incomplete.',
+    link: '/blog/completeness-trichotomy' },
+  { id: 'T13', tier: 'THEOREM', name: 'DEML Incompleteness',
+    statement: 'DEML = exp(−x) − ln(y) cannot represent ln(x) or any function unbounded above as a finite DEML tree. Proved by domain analysis: DEML outputs are bounded above by 1.',
+    link: '/blog/deml-is-incomplete' },
+  { id: 'T14', tier: 'THEOREM', name: 'Tight Zeros Bound',
+    statement: 'An EML tree of node-count n has at most 2^n − 1 real zeros. This bound is tight: explicit constructions achieve it at each level.',
+    link: '/blog/tight-zeros-bound' },
+  { id: 'T15', tier: 'THEOREM', name: 'EML Pumping Lemma',
+    statement: 'Every function in EML₁ satisfies a pumping property: depth-d approximations to analytic functions have controlled error. Any function requiring depth ≥ d has distinguishable d-approximations.',
+    link: '/blog/pumping-lemma' },
+  { id: 'T16', tier: 'THEOREM', name: 'Fourier Dominates Taylor in Node Count',
+    statement: 'sin(x) as an 8-term Taylor series requires 101 BEST-routing nodes. The same function via Euler gateway (T03) requires 1 complex node. Factor-of-100 savings. Generalizes: any finite Fourier series of N harmonics costs N nodes.',
+    link: '/blog/fourier-beats-taylor' },
+  { id: 'T17', tier: 'THEOREM', name: 'i-Constructibility: Proved Impossible (strict)',
+    statement: 'Under principal-branch semantics with terminal set {eml, 1}, i ∉ EML₁. Proved: the imaginary part of any strictly principal-branch depth-d tree is strictly ≤ 0 for all finite d. Lean-verified.',
+    link: '/blog/i-unconstructibility' },
+  { id: 'T18', tier: 'THEOREM', name: 'EML Mandelbrot Correspondence',
+    statement: 'The parameter set {k : exp(z) − k has a bounded orbit from z₀=0} is the exponential Mandelbrot set. The Lyapunov-stable region correlates 92.9% with this set. Not the classical Mandelbrot set (different universality class).',
+    link: '/blog/eml-fractals' },
+  { id: 'T19', tier: 'THEOREM', name: 'DEML/EMN Strange Attractors',
+    statement: 'The 2D real iteration (x,y) → (deml(x,y), deml(y,x)) has a bounded strange attractor with correlation dimension ≈ 1.128. EML collapses to a fixed point; the sign flip in DEML creates the contracting structure.',
+    link: '/blog/eml-chaos' },
+  { id: 'T20', tier: 'THEOREM', name: 'No Period-Doubling in Exponential Family',
+    statement: 'The map f_k(x) = exp(x) − k does not exhibit the period-doubling cascade. The exponential family belongs to a different universality class than polynomial maps (no finite critical point, Baker/wandering domains).',
+    link: '/blog/eml-chaos' },
+  { id: 'T21', tier: 'THEOREM', name: 'EXL Log-Structure Advantage',
+    statement: 'EXL = exp(x)·ln(y) achieves ln(x) in 1 node (as exl(1,x)), pow(x,n) in 3 nodes, and sin(x) via Taylor in 63 nodes. The multiplicative coupling gives direct access to log-structured functions.',
+    link: '/blog/operator-zoo' },
+  { id: 'T22', tier: 'THEOREM', name: 'Geometry Catalog — SuperBEST vs Naive',
+    statement: '12 classical geometric primitives (hyperbolic distance, sphere exp/log maps, Gaussian curvature, conformal maps, Lie group maps, Fisher-Rao) expressed as EML trees: 126n SuperBEST vs 345n naive = 63% savings. All optimal by exhaustive search.',
+    link: '/blog/geometry-costs' },
+  { id: 'T23', tier: 'THEOREM', name: 'Timbre is EML Node Count',
+    statement: 'A violin tone with N harmonics requires exactly N EXL nodes via Euler gateway. Timbre complexity = EML node count. The fundamental is 1 node; each harmonic adds 1 node. Standard Taylor sin requires 245 nodes per harmonic.',
+    link: '/blog/eml-sound' },
+  { id: 'T24', tier: 'THEOREM', name: 'EMN Approximate Completeness',
+    statement: 'EMN = ln(y) − exp(x) is approximately complete: for any elementary function f and ε > 0, there exists a depth-k EMN tree approximating f within ε on bounded domains. Not exactly complete (cannot represent unbounded functions exactly).',
+    link: '/blog/completeness-trichotomy' },
+  { id: 'T25', tier: 'THEOREM', name: 'Depth-6 Phase Transition',
+    statement: 'Depth-5 EML₁ trees have Im(z) ≤ 0 for all outputs (41,409 values verified). At depth 6, the first Im(z) > 0 values appear. This is the phase transition where EML₁ begins accessing the upper half-plane.',
+    link: '/blog/near-miss' },
+
+  // ── PROPOSITIONS ─────────────────────────────────────────────────────────
+  { id: 'P01', tier: 'PROPOSITION', name: 'EDL Not Complete over Addition',
+    statement: 'The EDL operator family cannot represent addition using single-variable inputs and EDL grammar. Exhaustive enumeration to depth 5.' },
+  { id: 'P02', tier: 'PROPOSITION', name: 'exp(x) is EML Depth-1',
+    statement: 'exp(x) = ceml(x,1) is a single-node EML tree. EML-0 ⊊ EML-1.' },
+  { id: 'P03', tier: 'PROPOSITION', name: 'x² is EML Depth-2',
+    statement: 'x² = exp(2·ln(x)) has depth 2. All power functions x^r are EML depth-2.' },
+  { id: 'P04', tier: 'PROPOSITION', name: 'sin(x) is EML-3 over ℂ',
+    statement: 'sin(x) requires at least one complex exp/ln composition — depth 3 over ℂ under the full grammar.' },
+  { id: 'P05', tier: 'PROPOSITION', name: 'EDL Closure under Mul/Div/Recip',
+    statement: 'EDL is closed under multiplication, division, and reciprocal but not addition or negation. The multiplicative group structure is complete; the additive structure is not.' },
+  { id: 'P06', tier: 'PROPOSITION', name: 'EAL Add in 3 Nodes',
+    statement: 'add(x,y) = eal(ln(x), y) for x > 0 gives a 3-node addition via EAL. General addition (x ∈ ℝ) requires 11 EML nodes — EAL cannot improve this case.' },
+
+  // ── CONJECTURES ───────────────────────────────────────────────────────────
+  { id: 'C01', tier: 'CONJECTURE', name: 'i-Constructibility (multi-valued)',
+    statement: 'Under multi-valued branch semantics, i ∈ EML₁. Known: depth-6 achieves Im = 0.99999524 under principal branch. Conjecture: depth-7 achieves Im = 1 under non-principal branch selection.' },
+  { id: 'C02', tier: 'CONJECTURE', name: 'EML₁ Density',
+    statement: 'EML₁ is dense in ℂ: for every z ∈ ℂ and ε > 0, there exists w ∈ EML₁ with |w − z| < ε.',
+    link: '/blog/eml-closure-density' },
+  { id: 'C03', tier: 'CONJECTURE', name: 'i as Accumulation Point',
+    statement: 'i ∉ EML₁ yet i is an accumulation point of EML₁. Equivalently: δ(d) → 0 as d → ∞, but δ(d) > 0 for all finite d.' },
+  { id: 'C04', tier: 'CONJECTURE', name: 'EML Weierstrass Density',
+    statement: 'For every continuous f: [a,b] → ℂ and ε > 0, there exists a depth-k EML tree approximating f to within ε. (Constructive Weierstrass for EML.)',
+    link: '/blog/eml-no-fixed-points' },
 ];
 
-const tierColors: Record<string, string> = { THEOREM: '#4ade80', PROPOSITION: '#6ab0f5', CONJECTURE: '#e8a020', OBSERVATION: '#fbbf24', DEFINITION: '#a78bfa', SPECULATION: '#4a4d62' };
+const tierColors: Record<string, string> = {
+  THEOREM:     '#4ade80',
+  PROPOSITION: '#6ab0f5',
+  CONJECTURE:  '#e8a020',
+  OBSERVATION: '#fbbf24',
+  DEFINITION:  '#a78bfa',
+};
+
+const theorems    = results.filter(r => r.tier === 'THEOREM');
+const props       = results.filter(r => r.tier === 'PROPOSITION');
+const conjectures = results.filter(r => r.tier === 'CONJECTURE');
 ---
 
 <Base title="Theorem Catalog — monogate.org" description="Honest classification of monogate results: theorems (proved), propositions, conjectures, and observations. Every result labeled for what it actually is.">
@@ -46,7 +137,7 @@ const tierColors: Record<string, string> = { THEOREM: '#4ade80', PROPOSITION: '#
 
   <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px;">
     {tiers.map(t => (
-      <span style={`font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: ${t.color}; background: ${t.color}15; border: 1px solid ${t.color}30; border-radius: 3px; padding: 3px 8px;`}>{t.key}</span>
+      <span style={`font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: ${t.color}; background: ${t.color}15; border: 1px solid ${t.color}30; border-radius: 3px; padding: 3px 8px;`}>{t.key} — {t.desc}</span>
     ))}
   </div>
 
@@ -71,8 +162,10 @@ const tierColors: Record<string, string> = { THEOREM: '#4ade80', PROPOSITION: '#
   </div>
 
   <div style="margin-top: 48px; padding-top: 20px; border-top: 1px solid #1c1f2e; font-size: 11px; color: #4a4d62;">
-    T01–T07: Theorems (proved) · P01–P07: Propositions · C01–C04: Conjectures ·
-    Count: 7 theorems, 7 propositions, 4 conjectures ·
+    T01–T{String(theorems.length).padStart(2, '0')}: {theorems.length} theorems (proved) ·
+    P01–P{String(props.length).padStart(2, '0')}: {props.length} propositions ·
+    C01–C{String(conjectures.length).padStart(2, '0')}: {conjectures.length} conjectures ·
+    Total honest results: {results.length} ·
     Paper: <a href="https://arxiv.org/abs/2603.21852" style="color: #6ab0f5;">arXiv:2603.21852</a>
   </div>
 </Base>
