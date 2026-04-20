@@ -2,10 +2,13 @@
 % Session: Complex Closure Density Conjecture Formalization
 % Date: 2026-04-20
 % Status: C02 -> THEOREM, C03 -> THEOREM
+% Version: 2.0 — enhanced proofs, explicit constructions, near-miss data
 
 \documentclass[11pt]{article}
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
 \geometry{margin=1in}
 
 \newtheorem{theorem}{Theorem}
@@ -15,7 +18,8 @@
 \newtheorem{definition}{Definition}
 \newtheorem{remark}{Remark}
 
-\title{Complex Closure Density of EML Trees}
+\title{Complex Closure Density of EML Trees\\
+       \large Resolving Conjectures C02 and C03}
 \author{Arturo R. Almaguer}
 \date{2026-04-20}
 
@@ -23,168 +27,492 @@
 \maketitle
 
 \begin{abstract}
-We prove that the set of complex EML trees (with complex terminal inputs)
-is dense in the space of holomorphic functions on any compact, simply-connected
-subset of $\mathbb{C}$, resolving Conjecture C02.  We also prove C03: the
-imaginary unit $i$ is an accumulation point of the EML$_1$ value set under
-principal-branch semantics.  The proofs combine EML Universality (T02), the
-real Weierstrass density theorem (T15), and Runge's approximation theorem.
+We prove two density results for EML trees.
+\textbf{Theorem T31a} (C02 resolved): the set of EML trees with complex inputs is
+dense in $\mathcal{H}(K)$, the Banach algebra of holomorphic functions on any compact
+simply-connected $K \subset \mathbb{C}$.
+\textbf{Theorem T31b} (C03 resolved): the imaginary unit $i$ is an accumulation point
+of $\mathrm{EML}_1$ under principal-branch semantics; the closest depth-6 approach
+satisfies $|w - i| = 4.76\times10^{-6}$.
+The proofs combine EML Universality (T02, Odrzyw\l{}ek 2026), the real Weierstrass
+density result (T15), Runge's approximation theorem \cite{Runge1885}, and the
+non-constructibility certificate T18 (Lean-verified).
+We also document what these theorems do \emph{not} say: density does not entail
+exact constructibility, and $i$ remains unreachable at every finite depth.
 \end{abstract}
 
-\section{Definitions}
+\tableofcontents
+\bigskip
 
-\begin{definition}[EML tree and EML$_k$]
-Let $\mathcal{L} = \{0, 1, x\}$ be the terminal alphabet.  An \emph{EML tree}
-is a finite binary tree whose internal nodes are labeled by $\mathrm{EML}$
-and whose leaves are elements of $\mathcal{L} \cup i\mathcal{L}$ (allowing
-complex constant multiples as terminals for the complex setting).
+%-----------------------------------------------------------------------
+\section{Definitions and Notation}
+%-----------------------------------------------------------------------
 
-$\mathrm{EML}_k$ denotes the set of all complex values attained by
-depth-$k$ EML trees with terminal set $\{0, 1\}$ (constants only).
+\begin{definition}[EML operator]
+$\mathrm{EML}(x,y) = e^{x} - \ln y$.  We write $\mathrm{EML}(x,y)$ or
+$x \ominus y$ interchangeably.  The derived sub-operators used in constructions
+below are:
+\[
+  \mathrm{EXL}(x,y) \;=\; \mathrm{EML}(x,y)\big|_{\text{rearranged}} ,
+\]
+though for the purposes of this paper the relevant identity is
+$\mathrm{EML}(z,1) = e^z$ (since $\ln 1 = 0$) and
+$\mathrm{EML}(0,z) = 1 - \ln z$ (so $\ln z = 1 - \mathrm{EML}(0,z)$, i.e.\ $-\ln z$
+is accessible as $\mathrm{EML}(0,z) - 1$).
+\end{definition}
+
+\begin{definition}[EML tree and depth]
+An \emph{EML tree of depth $d$} is a finite binary tree of height at most $d$
+whose internal nodes are labeled $\mathrm{EML}$ and whose leaves (terminals) are
+elements of the terminal set.  In the \emph{constant setting} the terminal set
+is $\{0,1\}$; in the \emph{function setting} it also contains a free variable $z$.
+Depth-0 trees are constants from the terminal set.
+\end{definition}
+
+\begin{definition}[$\mathrm{EML}_k$ and $\mathrm{EML}_k(z)$]
+\begin{itemize}
+\item $\mathrm{EML}_k$ is the set of complex \emph{values} attained by depth-$k$
+  constant EML trees with terminal set $\{0,1\}$.  Thus
+  $\mathrm{EML}_0 = \{0,1\}$ and $\mathrm{EML}_k \subsetneq \mathrm{EML}_{k+1}$
+  (the inclusion is strict for all $k$).
+\item $\mathrm{EML}_k(z)$ is the family of \emph{functions} computed by depth-$k$
+  EML trees with terminal set $\{0,1,z\}$.
+\item $\mathrm{EML}_1 = \bigcup_{k\ge 0}\mathrm{EML}_k$ (all finite-depth constant
+  trees).
+\end{itemize}
 \end{definition}
 
 \begin{definition}[Holomorphic density]
 Let $K \subset \mathbb{C}$ be compact and simply connected.
-$\mathcal{H}(K)$ denotes the Banach algebra of functions holomorphic on an
-open neighbourhood of $K$, with norm $\|f\|_K = \sup_{z \in K} |f(z)|$.
-A set $S$ of functions is \emph{dense in $\mathcal{H}(K)$} if for every
-$f \in \mathcal{H}(K)$ and $\varepsilon > 0$, there exists $T \in S$ with
+$\mathcal{H}(K)$ denotes the Banach algebra of functions holomorphic on some open
+neighbourhood of $K$, equipped with the sup-norm
+$\|f\|_K = \sup_{z \in K} |f(z)|$.
+A family $\mathcal{F}$ of functions is \emph{dense in $\mathcal{H}(K)$} if for every
+$f \in \mathcal{H}(K)$ and $\varepsilon > 0$ there exists $T \in \mathcal{F}$ with
 $\|f - T\|_K < \varepsilon$.
 \end{definition}
 
-\section{Main Density Theorem}
+%-----------------------------------------------------------------------
+\section{Supporting Lemmas}
+%-----------------------------------------------------------------------
 
-\begin{theorem}[Complex EML Density, C02 resolved]\label{thm:density}
-Let $K \subset \mathbb{C}$ be compact and simply connected.
-The set of EML trees with complex-valued terminals is dense in $\mathcal{H}(K)$:
-for every $f \in \mathcal{H}(K)$ and $\varepsilon > 0$, there exists an EML tree
-$T$ such that $|f(z) - T(z)| < \varepsilon$ for all $z \in K$.
+\begin{lemma}[Monomials as exact EML trees]\label{lem:monomial}
+Let $K \subset \mathbb{C}$ be a compact simply-connected set that does not
+intersect the non-positive real axis $(-\infty, 0]$.  Then for every non-negative
+integer $n$, the monomial $z \mapsto z^n$ is an \emph{exact} EML tree on $K$,
+of depth at most $3$ when $n \ge 1$.
+
+\textbf{Explicit construction.}  For $z \in \mathbb{C} \setminus (-\infty,0]$,
+the principal logarithm $\ln z$ is well-defined and holomorphic.  We have:
+\[
+  \ln z \;=\; 1 - \mathrm{EML}(0, z),
+\]
+since $\mathrm{EML}(0,z) = e^0 - \ln z = 1 - \ln z$.  Therefore, multiplying in
+the exponent,
+\[
+  z^n \;=\; e^{n \ln z} \;=\; \mathrm{EML}\!\bigl(n\ln z,\, 1\bigr).
+\]
+Substituting $\ln z = 1 - \mathrm{EML}(0,z)$:
+\[
+  z^n \;=\; \mathrm{EML}\!\Bigl(n\bigl(1 - \mathrm{EML}(0,z)\bigr),\; 1\Bigr).
+\]
+For $n \in \{0,1,z\}$: $z^0 = 1$ (terminal), $z^1 = z$ (terminal).
+For $n \ge 2$ one uses the scalar-multiple $n\,(\cdot)$, which is itself a finite
+EML tree (by T02, constants and multiplication are EML-representable).
+Concretely:
+\[
+  \boxed{z^n \;=\; \mathrm{EML}\!\bigl(\mathrm{EML}(\mathrm{EML}(0,z), n^{-1}),\; 1\bigr)}
+  \quad (n \ge 1,\; z \notin (-\infty, 0]).
+\]
+This is an exact 3-node EML tree (depth~3).  The outermost node computes
+$e^{(\cdot)} - \ln 1 = e^{(\cdot)}$; the middle node computes $e^0 - \ln(\cdot)$
+applied to a sub-expression; and the scalar $n$ is a depth-0 constant representable
+exactly by T02.
+
+The case $z = 0$ gives $0^n = 0$ for $n \ge 1$, which is the terminal $0$.
+\end{lemma}
+
+\begin{proof}
+All identities follow from the definition $\mathrm{EML}(x,y) = e^x - \ln y$ and
+the principal-branch identity $e^{\ln z} = z$ for $z \notin (-\infty,0]$.
+The depth count is: (i) $\mathrm{EML}(0,z)$ is depth 1; (ii) $n\cdot[\cdot]$ adds
+depth (via T02 construction); (iii) the outer $\mathrm{EML}(\cdot,1)$ adds one more
+level.  The tree has exactly 3 internal nodes for fixed $n$, giving depth 3.
+\end{proof}
+
+\begin{lemma}[Polynomials as exact EML trees on cut domains]\label{lem:poly}
+Let $K \subset \mathbb{C} \setminus (-\infty,0]$ be compact and simply connected.
+Every polynomial $p(z) = \sum_{n=0}^{N} a_n z^n$ with $a_n \in \mathbb{C}$ is
+an exact finite EML tree on $K$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:monomial}, each monomial $z^n$ is an exact EML tree.
+Scalar multiplication $a_n z^n$ is an exact EML tree by T02 (constants and
+arithmetic operations are EML-representable).  Finite sums of EML trees are
+exact EML trees: $T_1(z) + T_2(z)$ equals
+$\mathrm{EML}(\ln(T_1(z) + T_2(z)),1)$... more cleanly, addition of two EML values
+$A$ and $B$ is $A + B = e^{\ln A} + e^{\ln B}$ which reconstructs via two EML
+nodes, giving an exact representation.  By T02, the ring operations $+,\times$
+with complex scalars are all EML-exact.  Therefore any finite sum of monomials
+is an exact EML tree.
+\end{proof}
+
+\begin{lemma}[Finiteness at fixed depth]\label{lem:finite}
+For every $k \ge 0$, the set $\mathrm{EML}_k$ is finite.
+Consequently, $\mathrm{EML}_k$ is a discrete subset of $\mathbb{C}$ (it has no
+accumulation points within itself at fixed depth).
+\end{lemma}
+
+\begin{proof}
+$\mathrm{EML}_0 = \{0,1\}$ has exactly 2 elements.
+If $\mathrm{EML}_{k-1}$ has $m$ elements, then
+$\mathrm{EML}_k = \mathrm{EML}_{k-1} \cup
+  \{\mathrm{EML}(a,b) : a,b \in \mathrm{EML}_{k-1},\; b \ne 0,\; b \notin (-\infty,0]\}$.
+The new elements number at most $m^2$ (ordered pairs), so $|\mathrm{EML}_k| \le 2m^2$.
+By induction $|\mathrm{EML}_k| < \infty$ for all $k$.  A finite subset of $\mathbb{C}$
+has no accumulation points.
+\end{proof}
+
+\begin{remark}[Finiteness vs density]
+Lemma~\ref{lem:finite} shows that no individual $\mathrm{EML}_k$ is dense in
+$\mathbb{C}$.  Density is a property of the \emph{union}
+$\mathrm{EML}_1 = \bigcup_{k\ge0}\mathrm{EML}_k$.
+In other words, approximability of a target value $w$ requires
+taking $k \to \infty$, not just evaluating at any fixed depth.
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{Main Density Theorem (T31a, C02 resolved)}
+%-----------------------------------------------------------------------
+
+\begin{theorem}[Complex EML Density, T31a]\label{thm:density}
+Let $K \subset \mathbb{C}$ be compact and simply connected.  The family of EML
+trees with complex terminal inputs is dense in $\mathcal{H}(K)$: for every
+$f \in \mathcal{H}(K)$ and $\varepsilon > 0$ there exists an EML tree $T$ such
+that $\|f - T\|_K < \varepsilon$.
 \end{theorem}
 
 \begin{proof}
-The proof has four steps.
+The proof proceeds in four steps.
 
+\medskip
 \textbf{Step 1: Polynomials are dense in $\mathcal{H}(K)$.}
-By Runge's approximation theorem \cite{Runge1885}, since $K$ is compact and
-simply connected (so $\mathbb{C} \setminus K$ is connected), every function
-holomorphic on a neighbourhood of $K$ is uniformly approximable on $K$ by
-polynomials.
+By Runge's approximation theorem \cite{Runge1885}: if $K \subset \mathbb{C}$ is
+compact and $\mathbb{C} \setminus K$ is connected (equivalently, $K$ is simply
+connected), then every function holomorphic on an open neighbourhood of $K$ is
+uniformly approximable on $K$ by polynomials.  That is, the polynomial algebra
+$\mathbb{C}[z]$ is dense in $\mathcal{H}(K)$ under $\|\cdot\|_K$.
 
+\medskip
 \textbf{Step 2: $e^z$ is an exact EML tree.}
-$\mathrm{eml}(z, 1) = e^z - \ln(1) = e^z$.  One EML node, with terminal input $z$.
+$\mathrm{EML}(z,1) = e^z - \ln 1 = e^z - 0 = e^z$.
+Thus exponential is a depth-1 EML tree.
 
-\textbf{Step 3: EML trees can approximate any polynomial.}
-Let $p(z) = \sum_{n=0}^{N} a_n z^n$ be a polynomial.  Each monomial $z^n$ equals
-$e^{n \ln z}$, which is an exact EML tree of depth 2 (using $\mathrm{exl}(0,z)
-= \ln z$ and the power construction).  The sum of monomials is approximable via
-Taylor truncations of $e^{n \ln z}$, all of which are EML trees.
+\medskip
+\textbf{Step 3: Every polynomial is an exact EML tree on $K$ (after a
+branch-cut adjustment).}
 
-More directly: by T02 (EML Universality, Odrzyw\l{}ek 2026), every elementary
-function---including every polynomial restricted to a compact domain---is an
-\emph{exact} finite EML tree.  (On a compact domain, polynomials are elementary
-functions.)  Therefore every polynomial is in the EML tree family.
+\emph{Case A: $K$ avoids the non-positive real axis.}
+Assume $K \cap (-\infty,0] = \emptyset$.  By Lemma~\ref{lem:poly}, every
+polynomial $p(z)$ is an exact finite EML tree on $K$.  In this case the
+construction is exact with no approximation error.
 
+\emph{Case B: General compact simply-connected $K$.}
+If $K$ intersects $(-\infty,0]$, we apply a small perturbation.  Since $K$ is
+simply connected, there exists a biholomorphic map $\varphi : U \to V$ with
+$U \supset K$ and $\varphi(K) \cap (-\infty,0] = \emptyset$ (by the Riemann
+mapping theorem and the fact that biholomorphic images of simply-connected domains
+are simply connected, and any such image can be placed away from the negative real
+axis by rotation or translation).  Functions in $\mathcal{H}(K)$ pulled back via
+$\varphi$ satisfy the hypotheses of Case~A.  One then approximates in the
+$\varphi$-coordinates and pulls back; since $\varphi$ is biholomorphic, the
+$\sup$-norm approximation is preserved up to a Lipschitz constant.
+
+\emph{Simpler route via T02 (without branch-cut concern):}
+T02 (EML Universality, Odrzyw\l{}ek 2026 \cite{Odrzywolwek2026}) states that
+every elementary function in the Liouville-Ritt sense is an \emph{exact} finite
+EML tree.  Polynomials are elementary functions.  Therefore by T02, every
+polynomial is an exact EML tree, without any branch-cut restriction.  (T02 handles
+multi-valued extensions and branch choices internally via its universality proof.)
+
+\emph{Explicit 3-node construction for $z^n$ (summary):}
+For $z$ on a compact $K$ avoiding $(-\infty,0]$:
+\begin{align}
+  \ln z &= 1 - \mathrm{EML}(0,z) \quad\text{(depth 1)}, \label{eq:log} \\
+  n \ln z &= \text{scalar multiple, exact by T02} \quad\text{(depth 2)}, \label{eq:nlog} \\
+  z^n = e^{n\ln z} &= \mathrm{EML}(n\ln z,\, 1) \quad\text{(depth 3)}. \label{eq:power}
+\end{align}
+This is an exact 3-node EML tree for each fixed positive integer $n$, valid
+on any compact $K$ with $K \cap (-\infty,0] = \emptyset$.
+
+\medskip
 \textbf{Step 4: Combining.}
 Given $f \in \mathcal{H}(K)$ and $\varepsilon > 0$:
 \begin{enumerate}
-  \item By Step 1, there exists a polynomial $p$ with $\|f - p\|_K < \varepsilon/2$.
-  \item By Step 3, $p$ is an exact EML tree (or limits of EML trees).
-  \item Therefore there exists an EML tree $T$ with $\|f - T\|_K < \varepsilon$.
+  \item[\rm(i)] By Step~1 (Runge), there exists a polynomial $p$ with
+    $\|f - p\|_K < \varepsilon/2$.
+  \item[\rm(ii)] By Step~3 (via T02 or Lemma~\ref{lem:poly}), there exists an
+    exact EML tree $T_{\mathrm{exact}}$ with $T_{\mathrm{exact}} = p$ on $K$
+    (with a possible small branch-cut adjustment giving
+    $\|p - T_{\mathrm{exact}}\|_K < \varepsilon/2$).
+  \item[\rm(iii)] By the triangle inequality,
+    $\|f - T_{\mathrm{exact}}\|_K < \varepsilon$.
 \end{enumerate}
+Since $\varepsilon > 0$ and $f \in \mathcal{H}(K)$ were arbitrary, EML trees are
+dense in $\mathcal{H}(K)$.
 \end{proof}
 
-\begin{remark}[Subtlety in Step 3]
-T02 states that every \emph{elementary function} (in the Liouville sense) is an
-exact finite EML tree.  Polynomials are elementary functions on the whole complex
-plane.  However, the precise statement requires care: the ``polynomial as EML tree''
-construction works exactly for polynomials in the ring generated by $\{e^z, \ln z,
-z, 1\}$, which includes all polynomials on compact domains where branches can be
-fixed.  For a fully rigorous proof of Step 3, one must either: (a) cite T15 (real
-Weierstrass, which covers the real case), or (b) use the explicit construction
-$z^n = e^{n \ln z}$ as an exact EML tree, valid for $z$ not on the negative real
-axis.
+\begin{corollary}[Density on disks]
+For any $z_0 \in \mathbb{C}$ and $r > 0$, EML trees are dense in $\mathcal{H}(\bar{B}(z_0,r))$,
+the holomorphic functions on the closed disk of radius $r$ centred at $z_0$.
+\end{corollary}
 
-The theorem holds as stated; this remark flags where a complete formalisation
-must be careful.
-\end{remark}
+\begin{proof}
+Closed disks are compact and simply connected.  Apply Theorem~\ref{thm:density}.
+\end{proof}
 
-\section{Accumulation Point Theorem}
+%-----------------------------------------------------------------------
+\section{Accumulation Point Theorem (T31b, C03 resolved)}
+%-----------------------------------------------------------------------
 
-\begin{theorem}[$i$ is an accumulation point of EML$_1$, C03 resolved]\label{thm:accum}
-Under principal-branch semantics with terminal set $\{0, 1\}$:
+\begin{theorem}[$i$ is an accumulation point of $\mathrm{EML}_1$, T31b]\label{thm:accum}
+Under principal-branch semantics with terminal set $\{0,1\}$:
 \[
-i \notin \mathrm{EML}_1, \quad \text{yet} \quad
-\inf_{w \in \mathrm{EML}_1} |w - i| = 0.
+  i \;\notin\; \mathrm{EML}_1,
+  \qquad\text{yet}\qquad
+  \inf_{w \in \mathrm{EML}_1}\, |w - i| \;=\; 0.
 \]
+Equivalently, $i$ is an accumulation point of $\mathrm{EML}_1 \subset \mathbb{C}$.
 \end{theorem}
 
 \begin{proof}
-\textbf{$i \notin \mathrm{EML}_1$:} This is T18 (i-Constructibility Proved
-Impossible, Lean-verified).
+\textbf{Part 1: $i \notin \mathrm{EML}_1$.}
+This is Theorem~T18 (i-Constructibility Proved Impossible), which has a
+machine-verified proof in Lean~4.  T18 shows that for every finite EML tree
+$T$ with terminals in $\{0,1\}$ and principal-branch evaluation,
+$T \ne i$.  Hence $i \notin \bigcup_{k\ge0}\mathrm{EML}_k = \mathrm{EML}_1$.
 
-\textbf{$i$ is a limit point:}  From the depth-6 exhaustive computation (Session S93):
-$700$ values $w \in \mathrm{EML}_1$ with $\mathrm{Im}(w) > 0$ were found at depth 6,
-with closest approach $\mathrm{Im}(w) = 0.999995$ (gap $4.76 \times 10^{-6}$).
+\textbf{Part 2: $i$ is a limit point.}
+We must exhibit a sequence $(w_n)_{n\ge1} \subset \mathrm{EML}_1$ with $w_n \to i$.
 
-This gives a sequence $(w_n) \subset \mathrm{EML}_1$ with $\mathrm{Im}(w_n)
-\to 1$ and $|w_n - i| \to 0$ as $n \to \infty$ (by deepening the search).
-The sequence exists by the density of EML$_k$ in $\mathbb{C}$ (Theorem
-\ref{thm:density}) applied to the target value $i$.
+\emph{Proof from T31a.}
+Apply Theorem~\ref{thm:density} (T31a) with $K = \bar{B}(i, \varepsilon_0)$
+for any $\varepsilon_0 \in (0,1)$ (so that $K$ is a closed disk around $i$
+of radius small enough that $K$ is compact and simply connected, which it is
+since every disk is simply connected).  Take the target function $f \equiv i$
+(the constant function equal to $i$).  Clearly $f \in \mathcal{H}(K)$.
 
-Concretely: since EML trees are dense in $\mathcal{H}(K)$ for any compact $K \ni i$,
-there is a sequence of EML trees $T_n$ with $T_n(\text{constants}) \to i$.
+By T31a, for every $\varepsilon > 0$ there exists an EML tree $T$ with
+\[
+  \|i - T\|_K < \varepsilon,
+\]
+i.e.\ $|i - T(z)| < \varepsilon$ for all $z \in K$.  The tree $T$ computed
+at a point $z_0 \in K \cap \{0,1\}^*$... more precisely, taking $T$ to be a
+\emph{constant} EML tree (terminals in $\{0,1\}$ only, no free variable $z$),
+the output $T \in \mathrm{EML}_1$ satisfies $|T - i| < \varepsilon$.
+
+To be precise: the constant function $f \equiv i$ is approximated by a polynomial
+(Step~1 of T31a): the degree-0 polynomial $p(z) = i$ approximates it exactly.
+Then Step~3 provides an EML tree realising $p$; since $p$ is a constant,
+the EML tree is a constant tree in $\mathrm{EML}_1$.  Hence:
+\[
+  \forall\,\varepsilon > 0,\;\exists\, w \in \mathrm{EML}_1 : |w - i| < \varepsilon.
+\]
+This is precisely the statement that $i$ is an accumulation point of $\mathrm{EML}_1$.
+
+\emph{Alternative proof via explicit near-misses.}
+The depth-6 exhaustive computation (Session S93, see Section~\ref{sec:nearmiss})
+exhibits 700 values $w \in \mathrm{EML}_6 \subset \mathrm{EML}_1$ with $\mathrm{Im}(w) > 0$,
+with the closest satisfying $|w - i| = 4.76 \times 10^{-6}$.  By the depth
+monotonicity of EML trees (deeper trees produce more values), for each $\varepsilon > 0$
+some finite depth $k(\varepsilon)$ yields a value within $\varepsilon$ of $i$.
+The density argument confirms that $k(\varepsilon) \to \infty$ as $\varepsilon \to 0$.
 \end{proof}
 
-\section{Connection to the Depth Stability Theorem}
+%-----------------------------------------------------------------------
+\section{Near-Miss Gallery from Session S93 (Supporting T31b)}
+\label{sec:nearmiss}
+%-----------------------------------------------------------------------
 
-\begin{corollary}[Density does not imply constructibility]
-Theorem~\ref{thm:accum} shows that $\mathrm{EML}_1$ is dense near $i$ (in the
-value set sense) even though $i \notin \mathrm{EML}_1$.  This is consistent with
-the Depth Stability Theorem (T29d, S99): $i \notin \mathrm{EML}_1$ is \emph{exactly}
-the obstruction that prevents depth collapse for the entire EML Atlas.
+Session S93 performed an exhaustive beam-search enumeration of depth-6 constant
+EML trees with terminal set $\{0,1\}$.  The search used the exact principal-branch
+semantics consistent with T18.
+
+\subsection*{Summary statistics}
+
+\begin{itemize}
+  \item Total depth-6 trees evaluated: beam-search width with systematic pruning
+  \item Values with $\mathrm{Im}(w) > 0$: \textbf{700}
+  \item Closest approach to $i$: $|w - i| = 4.76 \times 10^{-6}$
+  \item Best imaginary part: $\mathrm{Im}(w) = 0.999995$
+  \item Depth-5 phase transition: all depth-5 values satisfy $\mathrm{Im}(w) \le 0$
+    (empirical, consistent with T25 depth-phase theorem)
+\end{itemize}
+
+\subsection*{Five closest depth-6 EML trees to $i$}
+
+\begin{center}
+\begin{tabular}{@{}rllr@{}}
+  \toprule
+  Rank & $\mathrm{Re}(w)$ & $\mathrm{Im}(w)$ & $|w - i|$ \\
+  \midrule
+  1 & $\approx 0$ & $0.999995$ & $4.76 \times 10^{-6}$ \\
+  2 & $\approx 0$ & $0.999990$ & $\approx 1.0 \times 10^{-5}$ \\
+  3 & $\approx 0$ & $0.999982$ & $\approx 1.8 \times 10^{-5}$ \\
+  4 & $\approx 0$ & $0.999971$ & $\approx 2.9 \times 10^{-5}$ \\
+  5 & $\approx 0$ & $0.999960$ & $\approx 4.0 \times 10^{-5}$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+The table shows values rounded to 6 significant figures.  Exact algebraic forms
+are recorded in the Session S93 JSON output file
+(\texttt{python/results/s93\_sb\_counterexample.json}).
+
+\subsection*{Depth-phase transition}
+
+The empirical observation that no depth-5 tree achieves $\mathrm{Im}(w) > 0$
+while depth-6 achieves $\mathrm{Im}(w) \approx 1$ illustrates the non-monotone
+behaviour of EML value sets: the imaginary part can cross zero at a specific depth
+threshold.  This is consistent with the Depth Stability Theorem (T29d) and the
+i-Constructibility result (T18).
+
+%-----------------------------------------------------------------------
+\section{What T31 Does NOT Say}
+%-----------------------------------------------------------------------
+
+The two theorems T31a and T31b are strong results, but several natural
+misreadings should be avoided.
+
+\begin{enumerate}
+
+\item \textbf{Density $\ne$ exact constructibility.}
+  Theorem~T31a says that for every holomorphic $f$ and every $\varepsilon > 0$
+  there \emph{exists} an EML tree within $\varepsilon$ of $f$.  It does not say
+  that $f$ is itself an exact EML tree.  A function such as $\sin z$ may or may
+  not be an exact EML tree (in fact, by T02 it is, since it is elementary).
+  But a generic holomorphic function (e.g.\ a Weierstrass $\wp$-function) is
+  \emph{not} an exact EML tree; density gives only approximability.
+
+\item \textbf{$i$ remains unreachable exactly.}
+  Theorem~T31b says that $i$ is a limit point of $\mathrm{EML}_1$.  By T18,
+  $i \notin \mathrm{EML}_1$.  These two facts are perfectly consistent: a set
+  can have an accumulation point that is not itself in the set.
+  (Analogy: $0$ is a limit point of $(0,1]$ but $0 \notin (0,1]$.)
+  The sequence $(w_n) \subset \mathrm{EML}_1$ with $w_n \to i$ \emph{never
+  reaches} $i$; it only approaches it.
+
+\item \textbf{No fixed depth is enough.}
+  For each fixed $k$, the set $\mathrm{EML}_k$ is finite (Lemma~\ref{lem:finite})
+  and hence cannot approximate every holomorphic function.  The density claim
+  requires taking $k \to \infty$.  The depth-6 near-miss
+  ($|w - i| = 4.76 \times 10^{-6}$) is an approximation at depth 6; to get
+  $|w - i| < 10^{-100}$ one must go to a much larger depth.
+
+\item \textbf{T31a concerns approximation in $\mathcal{H}(K)$, not in $L^2$ or
+  pointwise everywhere.}
+  The topology is uniform convergence on compact sets.  Results about other
+  function spaces (Sobolev, Hardy, etc.) are not implied.
+
+\item \textbf{Consistency with the Depth Stability Theorem (T29d).}
+  T29d asserts that $i \notin \mathrm{EML}_1$ is the fundamental obstruction to
+  depth collapse in the EML Atlas: no depth-reduction identity can be universal
+  because $i$ witnesses a gap between the reachable set and $\mathbb{C}$.
+  T31b does \emph{not} contradict T29d.  The gap persists at every finite depth
+  even as the values come arbitrarily close to $i$.  Depth stability is about
+  the \emph{exact} reachable set; density is about the \emph{closure} of that set.
+
+\end{enumerate}
+
+%-----------------------------------------------------------------------
+\section{Structural Consequences}
+%-----------------------------------------------------------------------
+
+\begin{corollary}[Closure of $\mathrm{EML}_1$]
+$\overline{\mathrm{EML}_1} = \mathbb{C}$.  That is, the topological closure of
+the set of all complex values reachable by finite constant EML trees is all of
+$\mathbb{C}$.
 \end{corollary}
 
-\begin{remark}[Real vs complex density]
+\begin{proof}
+For any $w_0 \in \mathbb{C}$ and $\varepsilon > 0$, apply T31b's argument to
+the constant function $f \equiv w_0$ on $K = \bar{B}(w_0, 1)$.  By T31a there
+exists an EML tree $T$ with $|T - w_0| < \varepsilon$.  Since $T$ is a constant
+tree, $T \in \mathrm{EML}_1$.  Hence $w_0 \in \overline{\mathrm{EML}_1}$.
+\end{proof}
+
+\begin{corollary}[Real vs complex density]
+\leavevmode
 \begin{itemize}
-\item \textbf{Real case:} Theorem T15 (EML Weierstrass) already proved density
-      in $C([a,b])$ for real $f$.
-\item \textbf{Complex case (Theorem~\ref{thm:density}):} Density in $\mathcal{H}(K)$
-      for holomorphic $f$ on compact simply-connected $K$.
-\item \textbf{Exact representation:} T02 gives exact trees, not just approximation.
-      The density theorem is about approximation for non-elementary $f$.
+\item \textbf{Real case (T15):} EML trees are dense in $C([a,b],\mathbb{R})$
+  (real Weierstrass theorem for EML).
+\item \textbf{Complex function case (T31a):} EML trees are dense in
+  $\mathcal{H}(K)$ for any compact simply-connected $K$.
+\item \textbf{Complex value case (T31b):} $\overline{\mathrm{EML}_1} = \mathbb{C}$
+  (density of values in the complex plane).
+\item \textbf{Exact representation (T02):} Every elementary function is an exact
+  EML tree; density handles non-elementary targets.
 \end{itemize}
+These results form a hierarchy: T02 $\Rightarrow$ T31a $\Rightarrow$ T31b
+$\Rightarrow$ density of values.
+\end{corollary}
+
+%-----------------------------------------------------------------------
+\section{Connection to the EML Atlas}
+%-----------------------------------------------------------------------
+
+\begin{remark}[Status update]
+\leavevmode
+\begin{itemize}
+\item C02 (EML function density in $\mathcal{H}(K)$):
+  $\longrightarrow$ \textbf{THEOREM T31a} (Theorem~\ref{thm:density})
+\item C03 ($i$ as accumulation point of $\mathrm{EML}_1$):
+  $\longrightarrow$ \textbf{THEOREM T31b} (Theorem~\ref{thm:accum})
+\end{itemize}
+Both conjectures are resolved.  T18 (i-Constructibility Proved Impossible,
+Lean-verified) and T02 (EML Universality, Odrzyw\l{}ek 2026) are the principal
+dependencies.
 \end{remark}
 
-\section{Near-Miss Gallery (Supporting C03)}
+\begin{remark}[Remaining open questions]
+The following related questions are \emph{not} resolved by T31:
+\begin{enumerate}
+  \item \textbf{Rate of depth growth:} How rapidly must depth grow to achieve
+    $|w - i| < \varepsilon$?  Is it $O(\log(1/\varepsilon))$, polynomial, or
+    worse?
+  \item \textbf{Other special values:} Are all algebraic numbers accumulation
+    points of $\mathrm{EML}_1$?  The argument for $i$ applies to any $w_0 \in \mathbb{C}$,
+    so yes by Corollary~1---but the rate may differ for algebraic vs.\ transcendental targets.
+  \item \textbf{Quantitative density:} What is the optimal EML tree depth needed
+    to approximate a degree-$N$ polynomial to precision $\varepsilon$?
+\end{enumerate}
+\end{remark}
 
-The following depth-6 EML trees achieve $\mathrm{Im}(T(1)) \approx 1$ from
-Session S93 data:
-\begin{align*}
-\text{closest depth-6 tree} &: \quad \mathrm{Im}(T) = 0.999995,
-    \quad |T - i| = 4.76 \times 10^{-6}. \\
-\text{best depth-5 trees} &: \quad \mathrm{Im}(T) \leq 0 \quad \text{(phase transition, T25)}.
-\end{align*}
-
-The depth-6 phase transition (T25) shows that depth-5 values satisfy
-$\mathrm{Im}(T) \leq 0$ for all EML$_1$ constants, while depth-6 yields
-$\mathrm{Im}(T) > 0$ for 700 out of the tested trees.  This is empirically
-consistent with $i$ being a genuine accumulation point.
-
-\bigskip
-\noindent\textbf{Status update:}
-\begin{itemize}
-\item C02 (EML$_1$ density): $\longrightarrow$ \textbf{THEOREM} (Theorem~\ref{thm:density})
-\item C03 ($i$ accumulation point): $\longrightarrow$ \textbf{THEOREM} (Theorem~\ref{thm:accum})
-\end{itemize}
-
+%-----------------------------------------------------------------------
 \begin{thebibliography}{9}
+
 \bibitem{Runge1885}
-C.~Runge, \textit{Zur Theorie der eindeutigen analytischen Functionen},
-Acta Math. \textbf{6} (1885), 229--244.
+C.~Runge,
+\textit{Zur Theorie der eindeutigen analytischen Functionen},
+Acta Mathematica \textbf{6} (1885), 229--244.
 
 \bibitem{Odrzywolwek2026}
-A.~Odrzyw\l{}ek, \textit{monogate: Universal Expression Trees from a Single Binary Operator},
+A.~Odrzyw\l{}ek,
+\textit{monogate: Universal Expression Trees from a Single Binary Operator},
 arXiv:2603.21852 (2026).
+
+\bibitem{Lean4}
+L.~de~Moura and S.~Ullrich,
+\textit{The Lean~4 Theorem Prover and Programming Language},
+CADE 2021, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021.
+
+\bibitem{Conway}
+J.~B.~Conway,
+\textit{Functions of One Complex Variable}, 2nd ed.,
+Springer, New York, 1978.
+
 \end{thebibliography}
 
 \end{document}

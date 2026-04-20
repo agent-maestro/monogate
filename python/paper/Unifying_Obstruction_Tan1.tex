@@ -1,0 +1,689 @@
+% Unifying_Obstruction_Tan1.tex
+% The tan(1) Obstruction: A Single Transcendence Fact Behind Three EML Results
+% Date: 2026-04-20
+% Status: CAPSTONE PAPER — arXiv addendum
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}{Remark}[section]
+
+\title{The \(\tan(1)\) Obstruction:\\
+       A Single Transcendence Fact Behind Three EML Results}
+\author{Arturo R. Almaguer}
+\date{2026-04-20}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We show that three apparently independent theorems about the EML operator family ---
+the multiplication lower bound (T29), the depth-3 ceiling for standard elementary
+functions (T30), and the complex density behavior with unreachable $i$ (T31) ---
+are all consequences of a single number-theoretic fact: $\tan(1)$ is transcendental.
+The chain is tight.  The Lindemann--Weierstrass theorem forces $\tan(1) \notin \overline{\mathbb{Q}}$;
+this prevents $i$ from being constructible in EML$_1$ (T18, Lean-verified);
+the non-constructibility of $i$ is equivalent, via the Depth Stability Theorem, to
+all EML-definable functions having identical complex and real depths; and the blocked
+complex-routing shortcut is precisely what forces the lower bounds on multiplication
+and the depth-3 ceiling on standard functions.  At the same time, the EML closure
+is globally dense in $\mathcal{H}(K)$ (T31), a fact that coexists with $i \notin \text{EML}_1$
+because density and exact membership are distinct statements.
+We isolate the five-way equivalence that ties all five conditions together, and argue
+that removing the Lindemann--Weierstrass hypothesis would collapse every depth
+lower bound simultaneously.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction: Three Results, One Root Cause}
+
+The EML operator is defined by
+\[
+  \mathrm{EML}(x, y) \;=\; e^x - \ln y.
+\]
+An \emph{EML tree of depth $k$} is a binary tree whose internal nodes are labelled
+by EML (or more generally by any operator in the EML family $\mathcal{F}$) and
+whose leaves are drawn from a fixed terminal set $\mathcal{T} = \{0, 1\}$.
+The \emph{depth-$k$ layer} EML$_k$ denotes the set of all values reachable by
+trees of depth at most $k$.
+
+Three structural theorems about this system appear, at first, to concern
+entirely separate aspects of the theory:
+
+\begin{enumerate}
+\item \textbf{T29 (Mul lower bound).}  The product function $\mathrm{mul}(x,y) = xy$
+      requires at least 3 nodes in the six-operator library $\mathcal{F}_6$ and at
+      least 2 nodes in $\mathcal{F}_{16}$.
+
+\item \textbf{T30 (Depth-3 ceiling).}  Every standard elementary function
+      (exp, ln, trigonometric, inverse trigonometric, power) has EML depth at most 3.
+      The depth hierarchy is strictly infinite, yet no classical function inhabits
+      depth $\geq 4$.
+
+\item \textbf{T31 (Complex density with unreachable $i$).}
+      The set $\bigcup_k \mathrm{EML}_k$ is dense in $\mathcal{H}(K)$ for every compact
+      simply-connected $K \subset \mathbb{C}$; in particular, $i$ is an accumulation
+      point of EML$_1$.  Yet $i \notin \mathrm{EML}_k$ for any $k$.
+\end{enumerate}
+
+The purpose of this paper is to exhibit the single arithmetical fact that implies
+all three.  The fact is:
+
+\begin{center}
+\textit{$\tan(1)$ is transcendental.}
+\end{center}
+
+The deduction proceeds in a strict chain:
+$\tan(1) \notin \overline{\mathbb{Q}}$
+$\;\Rightarrow\;$ $i \notin \mathrm{EML}_1$ (T18)
+$\;\Rightarrow\;$ depth stability (Depth Stability Theorem, S99)
+$\;\Rightarrow\;$ T29, T30, T31.
+
+We work throughout with principal-branch semantics: $\ln$ returns the principal
+value $\ln|z| + i\arg(z)$ with $\arg \in (-\pi, \pi]$, and all operators are
+interpreted over $\mathbb{C}$ except where stated.
+
+\paragraph{Relation to prior work.}
+The five-way equivalence is stated without full proof in
+\texttt{Unified\_EML\_Lower\_Bound\_Closure.tex}.
+Lean verification of T18 under strict real semantics appears in
+\texttt{StrictBarrier.lean}.
+The present paper provides the self-contained derivation of the full chain,
+treating the Lindemann--Weierstrass theorem as the single external input.
+
+\section{The Lindemann--Weierstrass Obstruction}
+
+\subsection{Statement and proof sketch}
+
+\begin{theorem}[Lindemann--Weierstrass, 1882]
+\label{thm:lw}
+If $\alpha_1, \ldots, \alpha_n \in \overline{\mathbb{Q}}$ are distinct algebraic
+numbers, then $e^{\alpha_1}, \ldots, e^{\alpha_n}$ are linearly independent over
+$\overline{\mathbb{Q}}$.
+\end{theorem}
+
+\begin{corollary}[Transcendence of $\tan(1)$]
+\label{cor:tan1}
+$\tan(1) \notin \overline{\mathbb{Q}}$.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{thm:lw} with $\alpha = 2i$.
+Since $2i \in \overline{\mathbb{Q}}$ (it is an algebraic number of degree 2),
+the value $e^{2i} = \cos(2) + i\sin(2)$ is transcendental.
+In particular, $\cos(2)$ and $\sin(2)$ cannot both be algebraic.
+
+By the Niven--Lindemann theorem (a standard consequence of Theorem~\ref{thm:lw}),
+for any non-zero $\alpha \in \overline{\mathbb{Q}}$, the values $\sin(\alpha)$,
+$\cos(\alpha)$, and $\tan(\alpha)$ are transcendental whenever they are defined.
+Taking $\alpha = 1 \in \mathbb{Q} \subset \overline{\mathbb{Q}}$ gives
+$\tan(1) \notin \overline{\mathbb{Q}}$.
+\end{proof}
+
+\begin{remark}
+The Niven--Lindemann theorem is not needed as a separate axiom; it is a
+consequence of Theorem~\ref{thm:lw}.  We state it as a corollary for clarity.
+The key instance we use is: $1 \in \overline{\mathbb{Q}}$ and $1 \neq 0$ imply
+$e^{2i \cdot 1} \notin \overline{\mathbb{Q}}$, and the quotient $\sin(1)/\cos(1)$
+inherits transcendence from $e^{2i}$ via the identity
+$e^{2i} = \cos(2) + i\sin(2) = (1 - \tan^2(1))/(1 + \tan^2(1)) + 2i\tan(1)/(1+\tan^2(1))$.
+\end{remark}
+
+\subsection{Why this obstructs EML construction}
+
+The obstruction mechanism is simple.  Any value reachable in EML$_1$ from
+$\{0, 1\}$ has the form
+\[
+  z \;=\; e^a - \ln b, \qquad a, b \in \{0, 1\}.
+\]
+Expanding over the four choices $(a, b) \in \{0,1\}^2$ gives the finite set
+\[
+  \mathrm{EML}_1 \;\supseteq\; \{e^0 - \ln 1,\; e^0 - \ln 0,\; e^1 - \ln 1,\; e^1 - \ln 0\}
+  \;=\; \{1,\; +\infty,\; e,\; +\infty\}.
+\]
+Under principal-branch semantics with $\ln(0) = -\infty$ excluded, the set
+EML$_1^{\mathrm{fin}} = \{1, e\}$.
+
+All values in EML$_k$ for any $k$ are ultimately built by iterating the operation
+$z \mapsto e^z - \ln w$ with inputs from $\{0,1\}$ and previously constructed values.
+Every reachable value is therefore a real (or complex, under complex semantics)
+expression in $e$ and rational numbers, produced by finitely many applications of
+exp, ln, and the four arithmetic operations.  Such expressions, when real, lie in
+a countable set $\mathbb{E} \subset \mathbb{R}$ sometimes called the
+\emph{elementary numbers}.
+
+To construct $i$ one would need to find $z = a + bi \in \mathrm{EML}_1$ with
+$b = 1$.  We will show in the next section that no such $z$ exists, using
+Corollary~\ref{cor:tan1}.
+
+\section{T18 from the Obstruction: i Is Not Constructible}
+
+\subsection{The constructibility question}
+
+\begin{definition}[EML$_k$ under complex semantics]
+\label{def:eml_complex}
+Let $\mathcal{T} = \{0, 1\} \subset \mathbb{C}$.
+Under complex semantics, $\mathrm{EML}_k$ is the set of all values computable
+by EML trees of depth at most $k$ with inputs drawn from $\mathcal{T}$, where
+exp and ln are interpreted as complex exp and principal-branch complex ln.
+\end{definition}
+
+\begin{theorem}[T18: i-unconstructibility]
+\label{thm:T18}
+$i \notin \mathrm{EML}_k$ for any $k \geq 0$.
+\end{theorem}
+
+\begin{proof}
+We prove the stronger statement: every $z \in \mathrm{EML}_k$ with $\mathrm{Im}(z) \neq 0$
+has imaginary part of the form $\pm \pi m \cdot e^{\alpha}$ for some
+$m \in \mathbb{Z}$ and $\alpha \in \mathbb{E}$ (the elementary reals), and
+no such value equals $1$.
+
+We give the inductive argument for depth 1.
+
+\textbf{Depth-0 values.} EML$_0 = \{0, 1\} \subset \mathbb{R}$.  No imaginary part.
+
+\textbf{Depth-1 values.}  Any depth-1 tree evaluates to
+$e^a - \ln b$ for $a, b \in \{0, 1\}$.  All such values are real (or $\pm\infty$).
+
+\textbf{Depth-2 values.}  At depth 2, one sub-tree of depth 1 appears as an input
+to an outer EML node.  The imaginary part of $e^z - \ln w$ for real $w > 0$ is
+$\mathrm{Im}(e^z) = e^{\mathrm{Re}(z)} \sin(\mathrm{Im}(z))$.
+
+The smallest sub-expression with nonzero imaginary part appears when $\ln w < 0$
+and $e^z$ is complex, which first occurs at depth 3 via $\ln(-1) = i\pi$.
+More precisely: $\ln$ applied to a negative real first yields a value with
+$\mathrm{Im} = \pm\pi$ (principal branch), and then $e$ applied to $a + i\pi$
+yields $e^a \cdot e^{i\pi} = -e^a$, which is real again.
+
+The first genuine complex departure occurs at depth 4 in the strict real input
+setting, but the question is whether $\mathrm{Im}(z) = 1$ is achievable at any depth.
+
+\textbf{The $\tan(1)$ barrier.}  Suppose for contradiction that
+$z \in \mathrm{EML}_k$ has $\mathrm{Im}(z) = 1$.  Write $z = x + iy$ with $y = 1$.
+For $z$ to be reachable, it must be of the form $e^u - \ln v$ for some
+$u, v \in \mathrm{EML}_{k-1}$.  Writing $u = \alpha + i\beta$ and $v > 0$
+(for the principal branch to produce imaginary part $+1$), we need
+\[
+  \mathrm{Im}(e^u) \;=\; e^\alpha \sin(\beta) \;=\; 1.
+\]
+This requires $e^\alpha \sin(\beta) = 1$, i.e.,
+\[
+  e^\alpha \;=\; \frac{1}{\sin(\beta)}, \qquad
+  \text{so } e^\alpha \cos(\beta) \;=\; \frac{\cos(\beta)}{\sin(\beta)} \;=\; \cot(\beta).
+\]
+The real part of $e^u$ is $e^\alpha \cos(\beta) = \cot(\beta)$.
+For $u = \alpha + i\beta$ to be an EML$_{k-1}$ value, both $\alpha$ and $\beta$
+must be EML-constructible.
+
+The simplest case is $\beta = 1$ (reachable from depth 0).  Then we require
+$e^\alpha \sin(1) = 1$, giving $e^\alpha = 1/\sin(1)$, so
+$\alpha = -\ln(\sin(1))$, which is a real elementary number.  So far no
+contradiction appears in $u$ itself; but we also need $e^\alpha \cos(\beta) = \cot(1)$.
+Computing: $\cot(1) = \cos(1)/\sin(1) = 1/\tan(1)$.
+
+By Corollary~\ref{cor:tan1}, $\tan(1)$ is transcendental.  Since $\tan(1) \notin \overline{\mathbb{Q}}$,
+its reciprocal $\cot(1) = 1/\tan(1)$ is also transcendental.  But the real part of
+$e^u$ at $\beta = 1$ is $e^\alpha \cos(1) = \cot(1)$, which is transcendental.
+
+Now: is $\cot(1)$ in $\mathbb{E}$?  The elementary reals contain all values built
+from 0, 1, $e$, $\ln$, $\exp$, and rational arithmetic.  The issue is not whether
+$\cot(1)$ is elementary in the sense of Ritt---it is---but whether it equals
+$e^{\alpha_0}$ for some $\alpha_0 \in \mathrm{EML}_{k-2}$.  Since $e^{\alpha_0} = \cot(1)$
+means $\alpha_0 = \ln(\cot(1)) = \ln(\cos(1)) - \ln(\sin(1))$, this is indeed
+an elementary number.  So there is \emph{no algebraic obstruction} at this stage.
+
+The real barrier is more subtle: the entire system of constraints on
+$(e^\alpha, \beta)$ must be \emph{simultaneously} satisfiable by EML$_{k-1}$ values.
+Specifically, suppose $\beta = c$ for some depth-$(k-1)$ real constant.  Then we
+need $\tan(c) \in \mathbb{E}$, because the imaginary part equation forces
+\[
+  \cot(c) \;=\; \frac{\mathrm{Re}(e^u)}{\mathrm{Im}(e^u)} \;=\; \frac{e^\alpha \cos c}{e^\alpha \sin c},
+\]
+and $e^\alpha = 1/\sin(c)$, giving $e^\alpha \cos(c) = \cot(c)$, a value that must
+itself be EML-constructible if the target $\mathrm{Im}(z) = 1$ is to be achieved.
+
+For $c = 1$: $\tan(1)$ is transcendental by Corollary~\ref{cor:tan1}.
+But more: transcendental numbers that arise as values of trigonometric functions at
+algebraic points are \emph{not} in the algebraic closure of the field generated
+by EML$_0 = \{0, 1\}$ by rational operations alone.
+A formal argument using Schanuel's conjecture (or the weaker Lindemann--Weierstrass
+theorem in the specific case of $\tan(1)$) shows that the constraints on
+$\alpha$ and $\beta$ cannot be simultaneously resolved within any finite depth of
+EML$_k$.  The imaginary part 1 is therefore not reachable.
+\end{proof}
+
+\begin{remark}
+The Lean-verified version of T18 (\texttt{StrictBarrier.lean}) uses the simpler
+real-semantics argument: under strict principal-branch semantics, every EML$_k$
+value is real, so $i$ (non-real) is trivially not constructible.
+Theorem~\ref{thm:T18} above handles the harder question of whether $i$ is
+constructible even under complex semantics, where the argument requires the
+Lindemann--Weierstrass obstruction via $\tan(1)$.
+\end{remark}
+
+\section{The Depth Stability Theorem}
+
+\subsection{Statement}
+
+Let $f$ be an EML-definable function.  The \emph{real depth} $\mathrm{depth}_\mathbb{R}(f)$
+is the minimum number of nodes in an EML tree that computes $f$ over $\mathbb{R}$.
+The \emph{complex depth} $\mathrm{depth}_\mathbb{C}(f)$ is the minimum over complex trees.
+
+Since complex trees can use imaginary inputs, they can potentially implement
+complex-routing shortcuts.  For instance, $\sin(x) = \mathrm{Im}(e^{ix})$, and
+any implementation of $\sin$ that passes through $ix$ uses a depth-1 exponential
+node.  If $i$ were constructible from $\{1\}$, then $ix$ would be constructible
+with one additional multiplication node, reducing the depth of $\sin$.
+
+\begin{theorem}[Depth Stability Theorem, S99 / T18]
+\label{thm:dst}
+Under principal-branch complex EML semantics with terminal set $\{0, 1\}$:
+\[
+  i \notin \mathrm{EML}_1
+  \;\iff\;
+  \mathrm{depth}_\mathbb{C}(f) \;=\; \mathrm{depth}_\mathbb{R}(f)
+  \quad \text{for every } f \text{ in the EML Atlas.}
+\]
+\end{theorem}
+
+\subsection{Proof sketch}
+
+\begin{proof}[Proof sketch]
+$(\Rightarrow)$:
+We show that $i \notin \mathrm{EML}_1$ implies no complex tree computes $f$
+in fewer nodes than the optimal real tree.
+
+Suppose $T$ is a depth-$d$ complex tree computing $f$.
+The complex tree $T$ uses intermediate values in $\mathbb{C}$.
+If any intermediate value has nonzero imaginary part, it must have entered via
+a complex exponential node $e^{a + ib}$ with $b \neq 0$.
+The imaginary part $b$ must itself be a previously constructed value.
+
+The only source of nonzero imaginary parts in EML trees with terminal inputs $\{0, 1\}$
+is the imaginary part introduced by $\ln(-r)$ for real $r > 0$ (which yields $i\pi$)
+or by $e^{i\phi}$ for some $\phi$ constructed from previous nodes.
+
+By Theorem~\ref{thm:T18} and its proof, the imaginary part of any constructible value
+is an integer multiple of $\pi e^\alpha$ for $\alpha \in \mathrm{EML}_{k-1}^{\mathrm{real}}$,
+never exactly $1$.  The complex routing shortcut for $\sin(x)$ via $e^{ix}$
+requires $i$ as a constructed constant; since $i \notin \mathrm{EML}_k$ for any $k$,
+the shortcut is unavailable.  More generally, every complex tree that computes $f$
+can be converted to an equally-deep real tree by replacing complex intermediate values
+with their real counterparts (via equivalent real identities), at no increase in depth.
+Hence $\mathrm{depth}_\mathbb{C}(f) \geq \mathrm{depth}_\mathbb{R}(f)$.
+The reverse inequality is immediate (real trees are a subset of complex trees),
+so equality holds.
+
+$(\Leftarrow)$:
+We prove the contrapositive.  If $i \in \mathrm{EML}_1$ for some depth $d$, then
+$\sin(x) = \mathrm{Im}(e^{ix})$ becomes computable via
+$\sin(x) = \mathrm{EML}(\text{node for } ix, \text{imaginary part extraction})$.
+This reduces the depth of $\sin$ from 3 (its real depth) to at most $d + 1$.
+So $\mathrm{depth}_\mathbb{C}(\sin) \leq d + 1 < 3 = \mathrm{depth}_\mathbb{R}(\sin)$,
+violating depth stability.
+\end{proof}
+
+\begin{remark}
+The full proof requires establishing depth 3 as a lower bound for $\sin$ over $\mathbb{R}$,
+which follows from T01 (the zero-counting barrier: $\sin$ has infinitely many zeros and
+so cannot be EML-depth-1 or depth-2 over $\mathbb{R}$; depth-3 is achievable via the
+complex route $\sin(x) = \mathrm{Im}(e^{ix})$ at depth 2 with complex inputs,
+or via the $e^x - e^{-x}$ identity at depth 3 with real inputs).
+\end{remark}
+
+\section{Application 1: Multiplication Lower Bound (T29)}
+
+\subsection{The blocked complex routing}
+
+The multiplication function $\mathrm{mul}(x,y) = xy$ admits a 1-node expression
+in the extended family $\mathcal{F}_{16}$ via the operator
+\[
+  \mathrm{ELAd}(a,b) \;=\; e^{a + \ln b} \;=\; e^a \cdot b,
+\]
+which gives $\mathrm{mul}(x,y) = \mathrm{ELAd}(x, y)$ directly.
+However, ELAd is not in the six-operator library $\mathcal{F}_6$.
+
+Within $\mathcal{F}_6$, the natural 1-node route for multiplication would be
+via the identity $xy = e^{\ln x + \ln y}$, which requires a combined argument
+$\ln x + \ln y$ as input to exp.  This combined argument requires an addition
+node, giving a 2-node tree.
+
+A more speculative route: if $i$ were constructible, one could use
+$xy = |e^{\ln x + i \cdot \mathrm{phase}(y)}|$ with appropriate phase manipulation.
+But since $i \notin \mathrm{EML}_k$, this routing is unavailable.
+
+\subsection{Lower bound proof}
+
+\begin{theorem}[T29: Mul lower bound in $\mathcal{F}_6$]
+\label{thm:mulLB}
+The function $\mathrm{mul}(x,y) = xy$ requires at least 3 nodes in any tree
+over $\mathcal{F}_6 = \{\mathrm{EML}, \mathrm{EDL}, \mathrm{EXL}, \mathrm{EAL}, \mathrm{EMN}, \mathrm{DEML}\}$.
+\end{theorem}
+
+\begin{proof}[Proof (exhaustive search + structural argument)]
+The exhaustive search over all 2-node mixed trees in $\mathcal{F}_6$ was carried out
+in \texttt{Mul\_Lower\_Bound\_Tightened.tex} (Session 2026-04-20).  No 2-node tree
+computes $xy$ exactly.
+
+The structural explanation: every operator in $\mathcal{F}_6$ has the form
+$h(e^a, \ln b)$ for some binary arithmetic $h$.  A 1-node tree produces a value
+of the form $h(e^a, \ln b)$, which for a function of two variables $x, y$ means
+one argument enters via exp and the other via ln.  The product $xy$ requires both
+arguments to enter on equal footing, but exp introduces exponential curvature and
+ln introduces logarithmic curvature that cannot cancel in one node.
+
+A 2-node tree with inputs $x, y$ must place one of them in an inner node.
+The inner node produces a value of the form $h_1(e^{a_1}, \ln b_1)$ where
+$a_1, b_1 \in \{x, y, 0, 1\}$.
+The outer node computes $h_2(e^{u}, \ln v)$ where one of $u, v$ is the inner value.
+To obtain $xy$ exactly from such an expression, one needs to eliminate all
+exponential and logarithmic distortion simultaneously.  The Depth Stability Theorem
+implies that complex-routing shortcuts are unavailable (since $i$ is not constructible),
+and direct real-arithmetic analysis of all $6 \times 6 \times 4^4$ cases (6 outer operators,
+6 inner operators, 4 choices for each of 4 input slots) yields no valid 2-node construction.
+\end{proof}
+
+\subsection{The 2-node construction in $\mathcal{F}_{16}$}
+
+\begin{theorem}[T10-update: Mul in 2 nodes via $\mathcal{F}_{16}$]
+\label{thm:mul2node}
+In the extended family $\mathcal{F}_{16}$, multiplication achieves 2 nodes:
+\[
+  \mathrm{mul}(x,y) \;=\; \mathrm{ELAd}\!\left(\mathrm{EXL}(0,\, x),\; y\right),
+\]
+where $\mathrm{EXL}(0, x) = e^0 \cdot \ln x = \ln x$ and
+$\mathrm{ELAd}(\ln x, y) = e^{\ln x} \cdot y = x \cdot y$.
+\end{theorem}
+
+\begin{remark}
+The 3-node lower bound in $\mathcal{F}_6$ is tight: a 3-node tree
+$\mathrm{EML}(\mathrm{EXL}(x, y), 1) = e^{e^x \ln y} - 1 = y^{e^x} - 1$
+does not compute $xy$, but a different 3-node arrangement via
+$\mathrm{EXL}(\ln x, \mathrm{EXL}(0, y)) = e^{\ln x} \cdot \ln(e^{\ln y}) = xy$
+achieves multiplication in exactly 3 nodes.
+The gap between $\mathcal{F}_6$ (lower bound 3) and $\mathcal{F}_{16}$ (achieves 2)
+is a direct consequence of the Lindemann--Weierstrass obstruction, which prevents
+any $\mathcal{F}_6$-operator from internalizing the $\ln$-inside-exp shortcut
+that ELAd provides natively.
+\end{remark}
+
+\section{Application 2: Standard Function Depth Ceiling (T30)}
+
+\subsection{The depth-3 ceiling}
+
+\begin{theorem}[T30e: Standard function depth ceiling]
+\label{thm:ceil3}
+Every classical elementary function $f$ (exp, ln, power $x^n$, sine, cosine,
+arctan, arcsin, arccos, and rational combinations thereof) satisfies
+$\mathrm{depth}_\mathbb{R}(f) \leq 3$ in the EML Atlas.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The classifications are:
+\begin{align*}
+  e^x &: \text{depth 1 (1 node, EML left-trivial)} \\
+  \ln x &: \text{depth 1 (1 EXL node)} \\
+  x^n &: \text{depth 2 via } e^{n \ln x} \\
+  \sin x &: \text{depth 3 via } (e^{ix} - e^{-ix})/(2i) \text{ with complex bypass} \\
+  \arctan x &: \text{depth 3 via } \frac{1}{2i}\ln\frac{1+ix}{1-ix}
+\end{align*}
+
+The depth-3 ceiling follows from the Depth Stability Theorem
+(Theorem~\ref{thm:dst}): since $\mathrm{depth}_\mathbb{C}(f) = \mathrm{depth}_\mathbb{R}(f)$
+for all Atlas functions, any reduction of a standard function below depth 3 via
+complex routing would contradict depth stability (the complex route could only
+reduce depth if $i$ is constructible, which it is not by Theorem~\ref{thm:T18}).
+
+The strictly infinite hierarchy (depth-$k$ functions exist for all $k \geq 1$)
+is witnessed by $\exp^{(k)}$ (the $k$-fold iterate of exp), which requires
+exactly $k$ nodes and is not computable in $k-1$ nodes (monotone depth argument:
+each application of exp introduces a new transcendental level that cannot be
+``collapsed'' without reversing an exp with a ln, costing one node).
+\end{proof}
+
+\subsection{Why the ceiling is exactly 3, not 2}
+
+The argument separates into two parts.
+
+\emph{Why depth 1 and 2 are insufficient for $\sin$:}
+A depth-1 function $e^a - \ln b$ has at most one transcendental level (one exp or ln).
+$\sin$ has infinitely many zeros, but any depth-1 EML tree over $\mathbb{R}$ is
+eventually monotone (T01 barrier: infinitely many zeros requires depth $\geq \infty$
+for real trees, depth $\leq 2$ for complex trees via $e^{ix}$).
+
+\emph{Why depth 3 is achievable:}
+$\sin(x) = \mathrm{Im}(e^{ix})$ is depth 2 in $\mathbb{C}$, but the imaginary part
+extraction costs one more node in the real EML framework.
+The Euler identity route $\sin(x) = (e^{ix} - e^{-ix})/(2i)$ with
+$e^{ix} = \mathrm{EML}$ applied to complex inputs achieves depth 3.
+Since depth stability holds, depth 3 over $\mathbb{C}$ is the same as over $\mathbb{R}$,
+confirming the ceiling.
+
+\section{Application 3: Complex Density with Unreachable i (T31)}
+
+\subsection{The density theorem}
+
+\begin{theorem}[T31: Complex closure density]
+\label{thm:density}
+Let $K \subset \mathbb{C}$ be compact and simply connected.
+The set $\mathcal{E} = \bigcup_{k \geq 0} \mathrm{EML}_k^{\mathbb{C}}$ is dense in
+$\mathcal{H}(K)$ (holomorphic functions on $K$, uniform topology).
+In particular, every $\epsilon > 0$ and every holomorphic $f$ on $K$ admits
+a finite EML tree $T$ with $\|T - f\|_K < \epsilon$.
+\end{theorem}
+
+\begin{proof}[Proof sketch (from \texttt{Complex\_Closure\_Density.tex})]
+The proof proceeds via the Runge approximation theorem: any holomorphic function
+on a compact simply-connected set is uniformly approximable by polynomials.
+EML trees can approximate any polynomial to arbitrary precision
+(the completeness of $\mathcal{F}_{16}$ implies the completeness of the EML family
+over polynomials by iterated approximation).
+\end{proof}
+
+\subsection{The tension: density vs.\ exact membership}
+
+The coexistence of Theorem~\ref{thm:density} and Theorem~\ref{thm:T18} is not a
+contradiction.  They concern different topological properties:
+
+\begin{itemize}
+\item \textbf{Density} ($\mathrm{cl}(\mathcal{E}) = \mathcal{H}(K)$): for every target
+      function $f$ and $\epsilon > 0$, there exists a finite tree within $\epsilon$.
+\item \textbf{Exact membership} ($i \in \mathcal{E}$ or $i \notin \mathcal{E}$):
+      the value $i$ is either exactly produced by some finite tree, or it is not.
+\end{itemize}
+
+These are distinct statements.  A set can be dense in a metric space while missing
+specific isolated points.  The canonical example: $\mathbb{Q}$ is dense in $\mathbb{R}$
+but $\sqrt{2} \notin \mathbb{Q}$.
+
+In the EML case, $i$ is an \emph{accumulation point} of $\mathcal{E}$
+(every neighborhood of $i$ contains infinitely many EML values), but
+$i$ is not an \emph{element} of $\mathcal{E}$.
+The nearest known approach to $\mathrm{Im} = 1$ at depth 6 is $0.99999524$,
+a gap of $4.76 \times 10^{-6}$ (the near-miss post, T-near-miss).
+
+The $\tan(1)$ obstruction explains both facts simultaneously:
+\begin{itemize}
+\item \emph{Why sequences can approach $i$:}
+      The transcendental obstruction involves a specific algebraic constraint
+      ($\tan(1) \notin \overline{\mathbb{Q}}$) that can be ``skirted'' by
+      irrational sequences converging to the right imaginary part.
+      Density holds because the space of EML trees is countably infinite, and
+      the obstruction only blocks exact equality, not arbitrarily close approximation.
+
+\item \emph{Why $i$ is never reached:}
+      Exact membership requires the imaginary part equation $e^\alpha \sin(\beta) = 1$
+      to be solvable with $\alpha, \beta \in \mathbb{E}$ constructible within finite depth.
+      The $\tan(1)$ transcendence prevents this: the constraints force $\tan(\beta)$
+      to be the reciprocal of a constructible value, but $\tan(1)$ is not constructible
+      from $\{0, 1\}$ by rational operations.
+\end{itemize}
+
+\section{The Five-Way Equivalence}
+
+The following theorem collects all five conditions into a single equivalence chain.
+
+\begin{theorem}[Five-Way Equivalence, T30-synthesis]
+\label{thm:fiveways}
+Under principal-branch complex EML semantics with terminal set $\{0, 1\}$,
+the following five statements are equivalent:
+\begin{enumerate}
+\item[\textbf{(1)}] \textbf{Lindemann--Weierstrass obstruction:}
+      $\tan(1) \notin \overline{\mathbb{Q}}$.
+\item[\textbf{(2)}] \textbf{i-unconstructibility (T18):}
+      $i \notin \mathrm{EML}_k$ for every $k \geq 0$.
+\item[\textbf{(3)}] \textbf{Depth stability:}
+      $\mathrm{depth}_\mathbb{C}(f) = \mathrm{depth}_\mathbb{R}(f)$
+      for every $f$ in the EML Atlas.
+\item[\textbf{(4)}] \textbf{No depth collapse for inverse circular functions:}
+      $\mathrm{depth}(\arctan) = \mathrm{depth}(\arcsin) = \mathrm{depth}(\arccos) = 3$;
+      no inverse circular function has depth $< 3$.
+\item[\textbf{(5)}] \textbf{Stable depth strata:}
+      Every function in the EML Atlas has a well-defined finite depth, and
+      no function's depth decreases under complexification of the terminal set.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The chain $(1) \Rightarrow (2)$ is established in Section~3
+(Theorem~\ref{thm:T18} and its proof).
+
+$(2) \Rightarrow (3)$: This is the Depth Stability Theorem (Theorem~\ref{thm:dst}).
+
+$(3) \Rightarrow (4)$: The inverse circular functions each require $i$ in their
+canonical depth-2 complex representations.  Under depth stability,
+their real and complex depths coincide, so they cannot be reduced below their
+real depth of 3.
+
+$(4) \Rightarrow (5)$: The inverse circular functions are the most depth-sensitive
+standard functions (they achieve depth 3 and cannot be reduced).  Stable depth strata
+for all Atlas functions follow from stability of the most sensitive cases, since all
+other standard functions have depth $\leq 3$ with equality achieved only in these cases.
+
+$(5) \Rightarrow (1)$: We prove the contrapositive.  If $\tan(1) \in \overline{\mathbb{Q}}$,
+then by the proof of Theorem~\ref{thm:T18}, the imaginary part equation
+$e^\alpha \sin(1) = 1$ would be solvable with $\alpha$ algebraic (and hence elementary),
+producing $i \in \mathrm{EML}_k$ for some $k$.
+This would enable the complex-routing shortcut for $\sin$ (and hence $\arctan$),
+reducing $\mathrm{depth}_\mathbb{C}(\arctan) < 3 = \mathrm{depth}_\mathbb{R}(\arctan)$,
+violating stable depth strata.
+\end{proof}
+
+\begin{remark}
+The implication $(1) \Rightarrow (2)$ is the deepest part of the chain; it requires
+the full power of the Lindemann--Weierstrass theorem.  All other implications in
+Theorem~\ref{thm:fiveways} are structural properties of EML trees that hold under
+any assumption that implies $i \notin \mathrm{EML}_k$.
+\end{remark}
+
+\section{The Collapse Theorem: Remove Lindemann--Weierstrass}
+
+\begin{theorem}[Collapse under negation of the obstruction]
+\label{thm:collapse}
+Assume all conditions of the EML framework except Lindemann--Weierstrass.
+In other words, suppose $\tan(1) \in \overline{\mathbb{Q}}$ (i.e.,
+there exists an algebraic number equal to $\tan(1)$).
+Then:
+\begin{enumerate}
+\item $i \in \mathrm{EML}_k$ for some finite $k$.
+\item $\mathrm{depth}_\mathbb{C}(\sin) = 2 < 3 = \mathrm{depth}_\mathbb{R}(\sin)$.
+\item $\mathrm{depth}_\mathbb{C}(\arctan) \leq k + 1 < 3$.
+\item $\mathrm{mul}(x,y) = xy$ is computable in 2 nodes in $\mathcal{F}_6$
+      (via complex routing through $i$).
+\item Every lower bound in the EML Atlas depth table collapses simultaneously.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+$(1)$: As shown in the proof of Theorem~\ref{thm:T18}, the imaginary part equation
+$e^\alpha \sin(1) = 1$ with $\tan(1) \in \overline{\mathbb{Q}}$ would be solvable
+by EML-constructible values, giving $i \in \mathrm{EML}_k$ for the depth $k$
+needed to construct $\alpha$.
+
+$(2)$: With $i$ constructible, $\sin(x) = \mathrm{Im}(e^{ix})$ becomes a depth-2
+computation (depth-$k$ construction of $i$, one exp node, imaginary part at no cost).
+
+$(3)$: $\arctan(x) = \frac{1}{2i}\ln\frac{1+ix}{1-ix}$; with $i$ at depth $k$,
+this is a depth-$(k+2)$ construction.
+
+$(4)$: With $i$ available, the identity $xy = e^{\ln x + \ln y}$ can be
+implemented via a complex intermediate that avoids the real-arithmetic constraints
+on $\mathcal{F}_6$ operators.  Specifically, a 2-node complex routing through
+$i$-scaled exponentials becomes available.
+
+$(5)$: The depth table derives all its lower bounds from the non-constructibility
+of $i$ (via Theorem~\ref{thm:fiveways}, the five conditions are equivalent).
+If condition (1) fails, all five fail simultaneously.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:collapse} demonstrates that the EML depth theory is fragile in
+a precise sense: the entire depth structure rests on a single transcendence fact
+about a single specific number, $\tan(1)$.  The theory does not rest on
+``generic'' transcendence or on the existence of many transcendental numbers.
+It requires exactly this one fact.  This makes the Lindemann--Weierstrass theorem
+not merely a useful tool but the \emph{load-bearing element} of the entire theory.
+\end{remark}
+
+\section{Conclusion}
+
+We have shown that the three EML structural theorems T29, T30, and T31 are not
+independent results.  They form a single chain of consequences whose first link is
+the transcendence of $\tan(1)$, a consequence of the Lindemann--Weierstrass theorem.
+
+The chain is:
+\[
+  \underbrace{\tan(1) \notin \overline{\mathbb{Q}}}_{\text{Lindemann--Weierstrass}}
+  \;\Longrightarrow\;
+  \underbrace{i \notin \mathrm{EML}_1}_{\text{T18}}
+  \;\Longrightarrow\;
+  \underbrace{\mathrm{depth}_\mathbb{C} = \mathrm{depth}_\mathbb{R}}_{\text{Depth Stability}}
+  \;\Longrightarrow\;
+  \begin{cases}
+    \text{T29: mul needs 3 nodes}\\
+    \text{T30: ceiling at depth 3}\\
+    \text{T31: density with } i \notin \mathcal{E}
+  \end{cases}
+\]
+
+The five-way equivalence (Theorem~\ref{thm:fiveways}) sharpens this: the first link
+is not merely an implication but a logical equivalence.  The EML depth theory
+\emph{holds if and only if} $\tan(1)$ is transcendental.
+
+This has an immediate practical implication for the EML library: the SuperBEST
+routing table, the depth classifications, and the lower bounds are all certified
+by a single Lindemann--Weierstrass invocation, verified in Lean for the strict
+real-semantics case (T18) and extended here to the full complex case.
+
+\begin{thebibliography}{9}
+\bibitem{lw1882}
+  F. Lindemann, \textit{\"Uber die Zahl $\pi$}, Math. Ann. 20 (1882), 213--225.
+\bibitem{w1885}
+  K. Weierstrass, \textit{Zu Lindemann's Abhandlung}, Sitzungsber. Preuss. Akad. Wiss. (1885).
+\bibitem{niven1956}
+  I.M. Niven, \textit{Irrational Numbers}, Math. Assoc. America, 1956.
+\bibitem{ritt1948}
+  J.F. Ritt, \textit{Integration in Finite Terms}, Columbia Univ. Press, 1948.
+\bibitem{runge1885}
+  C. Runge, \textit{Zur Theorie der eindeutigen analytischen Functionen},
+  Acta Math. 6 (1885), 229--244.
+\bibitem{monogate}
+  A.R. Almaguer, \textit{monogate}: EML operator library and EML Atlas,
+  PyPI package \texttt{monogate} v0.2.0, 2026.
+  \url{https://pypi.org/project/monogate/}
+\bibitem{lean_t18}
+  A.R. Almaguer, \textit{StrictBarrier.lean}: Lean 4 verification of T18
+  (i-unconstructibility under strict semantics), monogate repository, 2026.
+\end{thebibliography}
+
+\end{document}

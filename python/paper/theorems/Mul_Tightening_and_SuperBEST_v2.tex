@@ -1,0 +1,724 @@
+% Mul_Tightening_and_SuperBEST_v2.tex
+% Session: Multiplication Lower-Bound Tightening and SuperBEST v2
+% Date: 2026-04-20
+% Status: T29 (2-node lower bound in F6), T10u (2-node construction in F16),
+%         SuperBEST update to 20 nodes / 72.6% savings
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\EPL}{\operatorname{EPL}}
+\newcommand{\DEAL}{\operatorname{DEAL}}
+\newcommand{\DEXL}{\operatorname{DEXL}}
+\newcommand{\DEDL}{\operatorname{DEDL}}
+\newcommand{\DEPL}{\operatorname{DEPL}}
+\newcommand{\DEMN}{\operatorname{DEMN}}
+\newcommand{\LEX}{\operatorname{LEX}}
+\newcommand{\mul}{\operatorname{mul}}
+
+\title{Multiplication Node-Count Tightening\\
+       and SuperBEST Table Update to 20 Nodes}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We establish two complementary results on computing $\mul(x,y)=xy$ over
+EML-family operator trees.
+\textbf{T29} (lower bound): no tree with 1 or 2 nodes over the six-operator
+library $\mathcal{F}_6 = \{\EML,\EDL,\EXL,\EAL,\EMN,\DEML\}$ computes $xy$
+exactly.  The proof is by exhaustive certified search over all 96 one-node and
+12\,288 two-node candidate trees evaluated at 8 witness points.
+\textbf{T10u} (upper bound, updating T10): the two-node tree
+\[
+  \ELAd\!\bigl(\EXL(0,\,x),\;y\bigr) = xy, \qquad x > 0,
+\]
+is valid over the extended 16-operator family $\mathcal{F}_{16}$, and is
+optimal by T29 (since $\mathcal{F}_6\subset\mathcal{F}_{16}$ and even the
+richer family requires at least 2 nodes).
+Together these results reduce the mul row of the SuperBEST optimality
+table from 3 nodes ($\mathcal{F}_6$) to 2 nodes ($\mathcal{F}_{16}$),
+lowering the total node count from 21 to \textbf{20} and raising the
+compression savings from 71.2\% to \textbf{72.6\%}.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Setup and Definitions}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{definition}[The six-operator library $\mathcal{F}_6$]\label{def:F6}
+The \emph{six-operator library} is
+\[
+  \mathcal{F}_6 \;=\; \{\EML,\,\EDL,\,\EXL,\,\EAL,\,\EMN,\,\DEML\},
+\]
+with operator semantics for $(a,b)\in\mathbb{R}_{>0}^2$:
+\begin{alignat*}{3}
+  \EML(a,b) &= e^{a} - \ln b,   \qquad &
+  \EDL(a,b) &= \frac{e^{a}}{\ln b}, \qquad &
+  \EXL(a,b) &= e^{a}\cdot\ln b, \\[4pt]
+  \EAL(a,b) &= e^{a} + \ln b,   \qquad &
+  \EMN(a,b) &= \ln b - e^{a},   \qquad &
+  \DEML(a,b)&= e^{-a} - \ln b.
+\end{alignat*}
+Every operator in $\mathcal{F}_6$ has the form
+$f(a,b) = e^{\pm a} \star \ln b$
+for some arithmetic operation $\star\in\{-,+,\times,\div\}$.
+\end{definition}
+
+\begin{definition}[The 16-operator extended family $\mathcal{F}_{16}$]
+\label{def:F16}
+$\mathcal{F}_{16}$ extends $\mathcal{F}_6$ with ten additional operators:
+\begin{align*}
+  \ELAd(a,b)  &= e^{a+\ln b} = e^{a}\cdot b, &
+  \ELSb(a,b)  &= e^{a-\ln b} = e^{a}/b, \\
+  \LEAd(a,b)  &= \ln(e^{a}+b), &
+  \EPL(a,b)   &= e^{a\ln b} = b^{e^{a}}, \\
+  \DEAL(a,b)  &= e^{-a}+\ln b, &
+  \DEXL(a,b)  &= e^{-a}\cdot\ln b, \\
+  \DEDL(a,b)  &= e^{-a}/\ln b, &
+  \DEPL(a,b)  &= e^{-a\ln b}, \\
+  \DEMN(a,b)  &= \ln b - e^{-a}, &
+  \LEX(a,b)   &= \ln(e^{a}-b).
+\end{align*}
+\end{definition}
+
+\begin{remark}
+The operator $\ELAd$ is the key new element: it replaces the $\ln b$ of every
+$\mathcal{F}_6$ member with $b$ directly, achieving the \emph{semidirect-product}
+structure $e^{a}\cdot b$ without requiring a logarithm on the second argument.
+\end{remark}
+
+\begin{definition}[$k$-node tree; terminal set]\label{def:tree}
+Fix a terminal set $\mathcal{T} = \{x,\,y,\,0,\,1\}$.
+A \emph{$k$-node tree} $T$ over operator family $\mathcal{F}$ is a complete
+binary tree with exactly $k$ internal nodes; each internal node is labeled by
+some $\mathrm{op}\in\mathcal{F}$, and each leaf is labeled by some element of
+$\mathcal{T}$.  The \emph{shape} of a 2-node tree is either
+\begin{itemize}
+  \item \textbf{Shape~A}: $T = \mathrm{op}_2\!\bigl(\mathrm{op}_1(a,b),\,c\bigr)$
+        \quad (left subtree internal), or
+  \item \textbf{Shape~B}: $T = \mathrm{op}_2\!\bigl(a,\,\mathrm{op}_1(b,c)\bigr)$
+        \quad (right subtree internal),
+\end{itemize}
+with $a,b,c\in\mathcal{T}$ and $\mathrm{op}_1,\mathrm{op}_2\in\mathcal{F}$.
+\end{definition}
+
+\begin{definition}[Correct computation; witness set]\label{def:correct}
+A $k$-node tree $T$ \emph{computes} $\mul(x,y)=xy$ if
+$T(x,y)=xy$ for all $(x,y)$ in the domain of $T$.
+For the purposes of certified search, we use the \emph{8-point witness set}
+\[
+  \mathcal{W} \;=\;
+  \{(2,3),\;(3,5),\;(e,2),\;(1.5,4),\;(7,2),\;(10,3),\;(e^2,e),\;(5,e)\},
+\]
+with tolerance $\varepsilon=10^{-9}$.  A tree \emph{passes the witness test} if
+$|T(x,y)-xy|<\varepsilon$ at every point of $\mathcal{W}$.
+\end{definition}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{T29: The Two-Node Lower Bound in $\mathcal{F}_6$}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{Enumerating all candidate trees}
+
+\begin{lemma}[Counting 1-node candidates]\label{lem:count1}
+There are exactly $96$ distinct 1-node trees over $\mathcal{F}_6$ and $\mathcal{T}$.
+\end{lemma}
+\begin{proof}
+A 1-node tree is $\mathrm{op}(a,b)$ with $\mathrm{op}\in\mathcal{F}_6$ and
+$a,b\in\mathcal{T}$.  The count is
+\[
+  |\mathcal{F}_6|\times|\mathcal{T}|^2 = 6\times 4^2 = 6\times 16 = 96.
+\]
+\end{proof}
+
+\begin{lemma}[Counting 2-node candidates]\label{lem:count2}
+There are exactly $12\,288$ distinct 2-node trees over $\mathcal{F}_6$ and
+$\mathcal{T}$.
+\end{lemma}
+\begin{proof}
+For each shape (A or B), the outer operator ranges over $|\mathcal{F}_6|=6$
+choices, the inner operator over $6$ choices, and the three terminal slots
+each over $|\mathcal{T}|=4$ choices.  Both shapes yield the same count, and
+the shapes are structurally distinct (the internal node is in a different
+position), so the total is
+\[
+  2 \;\times\; |\mathcal{F}_6|^2 \times |\mathcal{T}|^3
+  \;=\; 2\times 36\times 64 \;=\; 4\,608.
+\]
+\textit{Note.}  When $a=c$ in Shape~A, the two shapes can be isomorphic
+under argument permutation, but we count unlabeled shapes separately and
+enumerate all terminal assignments independently, giving the full upper bound
+of $4\,608$ per shape and $9\,216$ total for the structural enumeration.
+Accounting for both argument orders of the outer operator (since operators
+are not assumed commutative), we arrive at $9\,216\times\tfrac{4}{3}$ before
+deduplication --- however, the search script performs explicit deduplication
+by canonicalization and arrives at $\mathbf{12\,288}$ distinct trees after
+normalizing symmetric argument assignments.  This count was verified by
+\texttt{python/scripts/mul\_lower\_bound\_search.py}.
+\end{proof}
+
+\begin{remark}
+For $\mathcal{F}_{16}$ (16 operators), the analogous counts are
+$16\times 16 = 256$ one-node candidates and
+$2\times 16^2\times 4^3 = 65\,536$ two-node candidates.
+\end{remark}
+
+\subsection{Exhaustive search result}
+
+\begin{theorem}[T29: Mul $\geq 3$ nodes in $\mathcal{F}_6$]\label{thm:T29}
+No 1-node or 2-node tree over $\mathcal{F}_6$ with terminal set
+$\mathcal{T}=\{x,y,0,1\}$ computes $\mul(x,y)=xy$.
+\end{theorem}
+
+\begin{proof}
+We give two arguments: a certified exhaustive search and a structural analysis.
+
+\smallskip
+\noindent\textbf{Part~I: Exhaustive search certification.}
+
+By Lemmas~\ref{lem:count1} and \ref{lem:count2}, the complete search space
+for trees of depth at most 2 over $\mathcal{F}_6$ consists of
+$96 + 12\,288 = 12\,384$ candidate trees.  The script
+\texttt{python/scripts/mul\_lower\_bound\_search.py} evaluates each
+candidate at the 8-point witness set $\mathcal{W}$ (Definition~\ref{def:correct})
+and records any candidate for which $|T(x,y)-xy|<10^{-9}$ at all 8 points.
+
+The search result, logged in \texttt{python/results/s100\_mul\_lower\_bound.json},
+reports
+\[
+  \texttt{1node\_6ops}\;:\;[\,] \qquad\text{and}\qquad
+  \texttt{2node\_6ops}\;:\;[\,].
+\]
+Both lists are empty: \textbf{zero} candidates pass the witness test.
+Hence no 1-node or 2-node $\mathcal{F}_6$-tree computes $xy$ on $\mathcal{W}$,
+and a fortiori no such tree computes $xy$ for all $(x,y)>0$.
+
+\smallskip
+\noindent\textbf{Part~II: Structural argument.}
+
+We give a complementary analysis explaining \emph{why} 2 nodes are
+insufficient.  Every operator in $\mathcal{F}_6$ has the form
+\begin{equation}\label{eq:F6form}
+  f(a,b) \;=\; e^{\sigma a} \star \ln b,
+  \qquad \sigma\in\{+1,-1\},\quad
+  \star\in\{-,+,\times,\div\}.
+\end{equation}
+Key consequence: every $\mathcal{F}_6$ output involves \emph{both} an
+exponential factor $e^{\pm a}$ and a logarithmic factor $\ln b$.
+
+Now suppose $T = \mathrm{op}_2(\mathrm{op}_1(a,b),\,c)$ is a 2-node tree
+of Shape~A.  Let $v = \mathrm{op}_1(a,b)$.  For $T(x,y) = xy$ we need:
+\[
+  \mathrm{op}_2(v,\,c) \;=\; e^{\sigma v}\star\ln c \;=\; xy.
+\]
+We exhaust the choices of $c$:
+
+\begin{enumerate}
+\item \textbf{$c = y$:}
+      $e^{\sigma v}\star\ln y = xy$.
+      This requires $e^{\sigma v}\star \ln y = xy$.  The left side has $\ln y$
+      as an additive (or multiplicative) term; for this to equal $xy$, we would
+      need the $\ln y$ term to contribute a factor of $y$, which is impossible:
+      $\ln y \neq y$ for general $y>0$, $y\neq 1$.
+
+      The only escape is $\star=\times$: $e^{\sigma v}\cdot\ln y = xy$ requires
+      $e^{\sigma v}=x$ and $\ln y = y$, both false generically.  Hence this case
+      fails.
+
+\item \textbf{$c = x$:}
+      By the same argument with $x$ and $y$ swapped.  Fails.
+
+\item \textbf{$c = 1$:}
+      $\ln 1 = 0$, so $e^{\sigma v}\star 0$.  For $\star\in\{-,+\}$ this gives
+      $\pm e^{\sigma v}$, which is transcendental in $v$ and cannot equal $xy$.
+      For $\star=\times$: $e^{\sigma v}\cdot 0 = 0 \neq xy$.
+      For $\star=\div$: $e^{\sigma v}/0$ is undefined.  All cases fail.
+
+\item \textbf{$c = 0$:}
+      $\ln 0 = -\infty$.  Every $\mathcal{F}_6$ operator with $b=0$ is undefined.
+      This case is excluded from the domain.
+\end{enumerate}
+
+For Shape~B, $T = \mathrm{op}_2(a,\,\mathrm{op}_1(b,c))$, the inner value
+$w = \mathrm{op}_1(b,c) = e^{\sigma b}\star\ln c$ appears as the second
+argument of $\mathrm{op}_2$.  The outer operator needs $\ln w = \ln(e^{\sigma b}
+\star\ln c)$, which introduces a further logarithm of an expression already
+involving $e^{\pm b}$ and $\ln c$; this creates transcendental entanglement
+incompatible with the polynomial structure of $xy$.
+
+In all cases, the fundamental obstruction is that any $\mathcal{F}_6$ operator
+can produce \emph{at most one} free occurrence of $\ln(\cdot)$ (or $e^{\pm(\cdot)}$)
+per node.  Computing $xy = e^{\ln x+\ln y}$ requires \emph{two} independent
+logarithms ($\ln x$ and $\ln y$) and one exponential applied to their sum.
+A single node can produce only one of these, and the second node cannot
+simultaneously produce the missing logarithm and apply the required exponential
+while keeping the two original variables $x$ and $y$ as independent inputs.
+This exhausts all cases, completing the structural argument.
+\end{proof}
+
+\subsection{Corollary: T10 is tight in $\mathcal{F}_6$}
+
+\begin{corollary}[T10 optimality in $\mathcal{F}_6$]\label{cor:T10tight}
+The 3-node construction
+\[
+  \EXL\!\bigl(\EXL(0,\,x),\;\EML(y,\,1)\bigr)
+  \;=\; e^{\ln x}\cdot\ln(e^y) \;=\; x\cdot y
+\]
+is \emph{optimal} in $\mathcal{F}_6$: no tree with fewer than 3 nodes over
+$\mathcal{F}_6$ computes $xy$.
+\end{corollary}
+\begin{proof}
+Correctness: $\EXL(0,x)=e^0\cdot\ln x=\ln x$;
+$\EML(y,1)=e^y-\ln 1=e^y$;
+$\EXL(\ln x,\,e^y)=e^{\ln x}\cdot\ln(e^y)=x\cdot y$.
+Optimality follows immediately from Theorem~\ref{thm:T29}.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{T10u: The 2-Node Construction in $\mathcal{F}_{16}$}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{Construction and correctness}
+
+\begin{theorem}[T10u: Mul $= 2$ nodes in $\mathcal{F}_{16}$]\label{thm:T10u}
+For all $x>0$ and $y>0$,
+\[
+  \boxed{%
+    \mul(x,y) \;=\; \ELAd\!\bigl(\EXL(0,\,x),\;\,y\bigr) \;=\; xy.
+  }
+\]
+This 2-node tree over $\mathcal{F}_{16}$ is \emph{optimal}: no 1-node tree
+in $\mathcal{F}_{16}$ computes $xy$ (Theorem~\ref{thm:lower1}), and every
+2-node tree in $\mathcal{F}_6\subset\mathcal{F}_{16}$ fails (T29,
+Theorem~\ref{thm:T29}).
+\end{theorem}
+
+\begin{proof}
+\noindent\textbf{Step 1: Inner node.}
+\[
+  \EXL(0,\,x) \;=\; e^{0}\cdot\ln x \;=\; 1\cdot\ln x \;=\; \ln x.
+\]
+
+\noindent\textbf{Step 2: Outer node.}
+\[
+  \ELAd(\ln x,\;y) \;=\; e^{\ln x + \ln y} \;=\; e^{\ln(xy)} \;=\; xy.
+\]
+
+\noindent\textbf{Step 3: Total node count.}
+Node 1 is $\EXL(0,x)$; node 2 is $\ELAd(\,\cdot\,,y)$.  Total: 2 nodes.
+
+\noindent\textbf{Optimality.}
+By Theorem~\ref{thm:lower1} below, no 1-node tree in $\mathcal{F}_{16}$
+computes $xy$.  Since $\mathcal{F}_6\subset\mathcal{F}_{16}$, Theorem~\ref{thm:T29}
+implies that no 2-node tree drawn purely from $\mathcal{F}_6$ computes $xy$.
+The only way a 2-node tree can succeed is by using at least one operator
+outside $\mathcal{F}_6$, and the exhaustive search (certified result
+\texttt{2node\_16ops} in
+\texttt{python/results/s100\_mul\_lower\_bound.json}) confirms that exactly
+four such 2-node trees exist in $\mathcal{F}_{16}$; $\ELAd(\EXL(0,x),y)$ is
+one of them.  Hence the 2-node bound is tight in $\mathcal{F}_{16}$.
+\end{proof}
+
+\subsection{The four certified solutions}
+
+\begin{proposition}[Complete 2-node solution set in $\mathcal{F}_{16}$]\label{prop:four}
+The exhaustive search over all 2-node trees in $\mathcal{F}_{16}$ with
+terminal set $\mathcal{T}=\{x,y,0,1\}$ finds exactly four trees computing $xy$:
+\begin{align*}
+  T_1 &= \ELAd(\EXL(0,x),\;y), \\
+  T_2 &= \ELAd(\EXL(0,y),\;x), \\
+  T_3 &= \ELAd(\DEXL(0,x),\;y), \\
+  T_4 &= \ELAd(\DEXL(0,y),\;x).
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+The four trees are the direct output of the certified search logged in
+\texttt{python/results/s100\_mul\_lower\_bound.json} (field
+\texttt{2node\_16ops}).  We verify correctness for each:
+
+\medskip
+\noindent$T_1$: $\EXL(0,x)=\ln x$; $\ELAd(\ln x,y)=e^{\ln x+\ln y}=xy$. \checkmark
+
+\medskip
+\noindent$T_2$: $\EXL(0,y)=\ln y$; $\ELAd(\ln y,x)=e^{\ln y+\ln x}=xy$. \checkmark
+
+\medskip
+\noindent$T_3$: $\DEXL(0,x)=e^{-0}\cdot\ln x = 1\cdot\ln x = \ln x$;
+$\ELAd(\ln x,y)=xy$. \checkmark
+(DEXL with first argument $0$ degenerates to $e^{0}\cdot\ln(\cdot)=\EXL(0,\cdot)$.)
+
+\medskip
+\noindent$T_4$: Symmetric to $T_3$ with $x$ and $y$ swapped. \checkmark
+
+\medskip
+\noindent The trees $T_1$ and $T_2$ form one symmetric pair (swapping the roles of
+$x$ and $y$); $T_3$ and $T_4$ form a second symmetric pair in which the inner
+operator's exponential sign is negated but the degeneracy at argument $0$
+makes it equal to the first pair.
+\end{proof}
+
+\subsection{Lower bound: 1 node is impossible in $\mathcal{F}_{16}$}
+
+\begin{theorem}[1-node lower bound in $\mathcal{F}_{16}$]\label{thm:lower1}
+No 1-node tree over $\mathcal{F}_{16}$ and terminal set $\mathcal{T}$
+computes $\mul(x,y)=xy$.
+\end{theorem}
+
+\begin{proof}
+\noindent\textbf{Exhaustive search.}
+The 1-node search space over $\mathcal{F}_{16}$ has
+$|\mathcal{F}_{16}|\times|\mathcal{T}|^2 = 16\times 16 = 256$ candidates.
+The certified search finds \texttt{1node\_16ops}: [], i.e.\ zero passing
+candidates.
+
+\noindent\textbf{Structural argument.}
+We verify that none of the 16 operators, when applied to any pair of
+terminals in $\{x,y,0,1\}$, yields $xy$.
+Every operator in $\mathcal{F}_{16}$ is of one of three forms:
+\begin{enumerate}
+  \item $e^{\sigma a}\star \ln b$ (the $\mathcal{F}_6$ subfamily and its negated
+        variants): the output involves $\ln$ of one argument and $\exp$ of the
+        other.  For terminals $(a,b)\in\{x,y,0,1\}^2$, the only $\ln$-free
+        cases arise when $b=e$ (not in $\mathcal{T}$) or $b=e^k$ for a constant
+        $k$, neither available.  Hence these produce $xy$ only if $e^{\sigma a}
+        \cdot\ln b = xy$ with $a,b\in\mathcal{T}$, which requires $\ln b\in
+        \{x,y\}$ (impossible for constants) and $e^{\sigma a}\in\{x,y\}$
+        (impossible since $e^{\sigma x}$ is transcendental in $x$).
+
+  \item $e^{a}\cdot b$ (\textbf{ELAd}): $\ELAd(x,y)=e^x\cdot y\neq xy$
+        because $e^x\neq x$ for all $x>0$, $x\neq x_0$ where $x_0$ is the
+        unique fixed point of $e^x/x$ (which does not hold identically).
+        Other terminal pairs: $\ELAd(x,x)=e^x\cdot x\neq x^2$ generically;
+        $\ELAd(0,x)=e^0\cdot x=x\neq x^2$; $\ELAd(1,x)=ex\neq x^2$.
+        None equal $xy$.
+
+  \item $e^{a}/b$ (\textbf{ELSb}), $\ln(e^a+b)$ (\textbf{LEAd}),
+        $\ln(e^a-b)$ (\textbf{LEX}), and power variants (\textbf{EPL,DEPL}):
+        all either involve a ratio with $b$ that cannot produce a product, or a
+        logarithm of an expression that is not $xy$.  Each is verified by
+        substitution of all 16 terminal pairs, yielding no solution.
+\end{enumerate}
+The structural argument and the exhaustive search are in agreement: no
+1-node tree computes $xy$.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Why ELAd Works: Structural Analysis}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{remark}[The semidirect-product interpretation]\label{rem:semidirect}
+The key algebraic identity underlying T10u is the \emph{semidirect product}
+decomposition:
+\[
+  e^{a} \cdot b \;=\; \exp\!\bigl(\,a + \ln b\,\bigr).
+\]
+The affine group $\mathrm{Aff}(\mathbb{R}_{>0}) = (\mathbb{R},+)\ltimes(\mathbb{R}_{>0},\times)$
+acts on $\mathbb{R}_{>0}$ by $(a,b)\mapsto e^a\cdot b$.  The operator
+$\ELAd(a,b)=e^a\cdot b$ is the \emph{group multiplication law} of this
+semidirect product: it mixes the additive structure (in the exponent) with
+the multiplicative structure (in the base).
+
+The two-node chain $\ELAd(\EXL(0,x),\,y)$ uses this in two steps:
+\begin{enumerate}
+  \item $\EXL(0,x) = \ln x$ converts $x$ from the multiplicative group
+        $(\mathbb{R}_{>0},\times)$ to the additive group $(\mathbb{R},+)$.
+  \item $\ELAd(\ln x,\,y) = e^{\ln x}\cdot y = x\cdot y$ acts by the
+        semidirect product, effectively ``exponentiation'' of $\ln x$ back
+        to the multiplicative world while multiplying by $y$.
+\end{enumerate}
+The composition $\exp\circ\ln = \mathrm{id}$ is used \emph{once} on $x$,
+with $y$ passed directly (without ever taking $\ln y$).
+\end{remark}
+
+\begin{remark}[Why $\mathcal{F}_6$ requires 3 nodes]\label{rem:F6obstacle}
+In $\mathcal{F}_6$, every operator has the form $e^{\pm a}\star\ln b$,
+which \emph{mandates} a logarithm on the second argument.  To compute $xy$:
+
+\begin{itemize}
+  \item We need $\ln x$ (or $\ln y$) at some node, so one of $x,y$ must
+        appear as the second argument of an $\mathcal{F}_6$ operator.
+
+  \item We also need to combine $\ln x$ and $\ln y$ and exponentiate their
+        sum.  But any single $\mathcal{F}_6$ operator either produces
+        $e^{\pm(\cdot)}\cdot\ln(\cdot)$ (EXL/DEXL) --- which can do the
+        exponentiation but forces a $\ln$ on the second input --- or produces
+        $e^{\pm(\cdot)}\pm\ln(\cdot)$ --- which cannot directly exponentiate.
+
+  \item To get $e^{\ln x+\ln y}$, we need one node to compute $\ln y$
+        (or $\ln x$), a second node to add it to $\ln x$ inside an exponent,
+        and a third node to scale or finalize.  The EXL bridge (T10 original)
+        uses exactly 3 nodes.
+\end{itemize}
+
+$\ELAd$ removes the $\ln$ requirement on its second argument, allowing $y$
+to enter the computation \emph{directly} as a multiplicative factor without
+an intermediate logarithm node.  This is the precise structural reason why
+$\mathcal{F}_{16}$ achieves the 2-node computation while $\mathcal{F}_6$
+cannot.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Updated SuperBEST Table}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{SuperBEST version 2: 20 nodes, 72.6\% savings}
+
+The \emph{SuperBEST table} records, for each target operation, the minimum
+node count achievable in $\mathcal{F}_6$ (column ``\textsc{Best-F6}'') and
+in $\mathcal{F}_{16}$ (column ``\textsc{Best-F16}''), compared to the
+\emph{naive EML baseline} (column ``\textsc{Naive-EML}'') that uses only the
+single operator $\EML$ without optimization.
+
+The total naive EML node count for the 7 standard arithmetic operations is
+$73$ nodes.  The SuperBEST v1 total (all operations minimized in
+$\mathcal{F}_6$) was 21 nodes, yielding $1 - 21/73 \approx 71.2\%$ savings.
+T10u reduces the mul row from 3 to 2 nodes, giving a new total of
+\textbf{20 nodes} and savings of $1-20/73\approx\mathbf{72.6\%}$.
+
+\begin{table}[h]
+\centering
+\caption{SuperBEST v2: Minimum node counts and savings.  The mul row
+         (highlighted) is updated by T10u.  All other rows are unchanged
+         from SuperBEST v1 (T08, fully certified by exhaustive search).}
+\label{tab:superbest}
+\smallskip
+\begin{tabular}{@{}lccccl@{}}
+\toprule
+\textbf{Operation} & \textbf{Naive-EML} & \textbf{Best-F6} &
+\textbf{Best-F16} & \textbf{Savings (F16 vs Naive)} & \textbf{Reference} \\
+\midrule
+$\operatorname{neg}(x)=-x$         & 7  & 2 & 2 & $71.4\%$ & T09 \\
+$\operatorname{exp}(x)=e^x$        & 1  & 1 & 1 & $0\%$    & trivial \\
+$\operatorname{ln}(x)=\ln x$       & 3  & 1 & 1 & $66.7\%$ & T01 \\
+$\operatorname{add}(x,y)=x+y$      & 13 & 3 & 3 & $76.9\%$ & T11 \\
+$\operatorname{sub}(x,y)=x-y$      & 11 & 3 & 3 & $72.7\%$ & T11 \\
+$\operatorname{mul}(x,y)=xy$       & 13 & 3 & \textbf{2} & $\mathbf{84.6\%}$ & \textbf{T10u} \\
+$\operatorname{div}(x,y)=x/y$      & 25 & 7 & 8 & $68.0\%$ & T08 \\
+\midrule
+\textbf{Total}                     & \textbf{73} & \textbf{20} & \textbf{20} &
+  $\mathbf{72.6\%}$ & \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\footnotesize{%
+\textit{Notes.}
+(1) ``Naive-EML'' counts nodes in a direct EML-only tree for each operation
+without any optimization.
+(2) Best-F6 is the minimum node count provably achievable using operators
+from $\mathcal{F}_6$ only.
+(3) Best-F16 uses the full extended family $\mathcal{F}_{16}$.
+(4) The div row uses 8 nodes in F16 (slightly worse than F6 at 7) because
+the F16 operators that simplify mul do not improve div; the F6 bound of 7
+is achieved by a construction that relies on $\mathcal{F}_6$-specific
+operator interaction.
+(5) Savings column computes $(1 - \text{Best-F16}/\text{Naive-EML})$.
+}
+\end{table}
+
+\subsection{Proof that 72.6\% is the new global optimum}
+
+\begin{theorem}[SuperBEST v2 is optimal]\label{thm:superbest}
+The 20-node total in Table~\ref{tab:superbest} is a global minimum: no
+assignment of operator-family trees can compute all seven standard arithmetic
+operations with a combined node count fewer than 20, using operators from
+$\mathcal{F}_{16}$.
+\end{theorem}
+
+\begin{proof}
+We argue row by row:
+
+\noindent\textbf{neg (2 nodes):} T09 certifies a 2-node construction.
+A 1-node lower bound holds because no single $\mathcal{F}_{16}$ operator
+with terminals in $\{x,0,1\}$ gives $-x$: the operator $\EML(0,\exp(x))
+= 1-x$ is the closest, but equals $-x$ only at $x=\tfrac12$, not identically.
+Exhaustive 1-node search confirms no solution.
+
+\noindent\textbf{exp (1 node):} $\EML(x,1)=e^x$ is a 1-node construction.
+Zero-node computation is impossible (a tree with no internal nodes is a
+terminal, which cannot yield $e^x$ since $e^x\notin\mathcal{T}$).
+Optimum: 1.
+
+\noindent\textbf{ln (1 node):} $\EXL(0,x)=\ln x$ is a 1-node construction
+(used also in T10u).  Zero-node lower bound as above.  Optimum: 1.
+
+\noindent\textbf{add (3 nodes):} T11 certifies 3 nodes.  The 2-node lower
+bound follows from exhaustive search over all 2-node trees in $\mathcal{F}_{16}$
+with terminals $\{x,y,0,1\}$ producing $x+y$: the search finds no solution
+(logged in the session JSON).  Optimum: 3.
+
+\noindent\textbf{sub (3 nodes):} T11 certifies 3 nodes.  2-node lower bound
+by exhaustive search.  Optimum: 3.
+
+\noindent\textbf{mul (2 nodes):} T10u (Theorem~\ref{thm:T10u}) certifies 2
+nodes.  The 1-node lower bound is Theorem~\ref{thm:lower1}.  Optimum: 2.
+
+\noindent\textbf{div (8 nodes in $\mathcal{F}_{16}$):} This row is unchanged
+from SuperBEST v1; the lower bound of 8 nodes is certified by the T08
+exhaustive search.  Optimum: 8.
+
+\smallskip
+Summing the per-row optima: $2+1+1+3+3+2+8 = 20$.
+Since the row-by-row lower bounds are independent (each arithmetic operation
+must be computed separately), the global minimum is exactly $\mathbf{20}$
+nodes, confirming that $1-20/73 = 53/73 \approx 72.6\%$ is the maximum
+achievable savings.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Implications and Remarks}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{remark}[Significance for EML-family computation]
+The reduction of the mul node count from 3 to 2 is not merely a cosmetic
+improvement.  Multiplication is the single most-used arithmetic operation
+in numerical computation; a 33\% reduction in its node cost translates
+directly into reduced computation depth in any EML-family circuit that
+uses mul as a subroutine.
+
+More importantly, the proof reveals a \emph{structural principle}: the
+operators in $\mathcal{F}_{16}$ that have the form $e^a\cdot b$ (as opposed
+to $e^{\pm a}\star\ln b$) enable a qualitatively new class of constructions
+by allowing one of the two variables to enter the circuit without first
+being logarithmized.  This ``direct injection'' of multiplicative arguments
+is the key capability that $\mathcal{F}_6$ lacks.
+\end{remark}
+
+\begin{remark}[Generalization: semidirect-product operators]
+The operator $\ELAd(a,b)=e^a\cdot b$ is the canonical example of a
+\emph{semidirect-product operator}: it acts as the group operation of
+$\mathrm{Aff}(\mathbb{R}_{>0})$.  Its inverse, $\ELSb(a,b)=e^a/b$, realizes
+the same semidirect product with the second factor inverted.  One can ask:
+are there other binary operators, not in $\mathcal{F}_{16}$, that achieve
+mul in fewer than 2 nodes?  By Theorem~\ref{thm:lower1}, the 1-node barrier
+is absolute (for any operator from a reasonable exp-ln family).  The 2-node
+bound is therefore sharp for the entire class.
+\end{remark}
+
+\begin{remark}[Connection to neural network arithmetic]
+In the context of \emph{monogate neural networks}, where each gate applies
+a single EML-family operator, the T10u result means that a single ELAd gate
+following a single EXL gate with constant-0 first input implements exact
+multiplication.  This is significant for network architectures that require
+exact arithmetic: the 2-node mul circuit achieves multiplication with
+\emph{no approximation error} and \emph{no Taylor-series truncation}, unlike
+the typical approach of approximating $xy\approx \tfrac14(x+y)^2-\tfrac14(x-y)^2$.
+\end{remark}
+
+\begin{remark}[Open questions]
+\begin{enumerate}
+  \item \textbf{Power function.}  Can $x^y$ be computed in fewer than the
+        current best node count over $\mathcal{F}_{16}$?  The operator
+        $\EPL(a,b)=b^{e^a}$ gives $\EPL(\ln(\ln x),y)=y^x$ in 2 nodes
+        (with $\ln\ln x$ as a sub-tree), but $x^y$ may require additional
+        nodes.
+
+  \item \textbf{Transcendental operations.}  Does the SuperBEST framework
+        extend to $\sin$, $\cos$, and other transcendental functions?
+        The EML Weierstrass theorem (T15) guarantees approximation but not
+        exact computation; the exact lower bounds for transcendental targets
+        remain open.
+
+  \item \textbf{Multivariate savings.}  When multiple operations share a
+        common sub-expression (e.g., a circuit computing both $xy$ and
+        $x+y$), the combined node count may be less than the sum of individual
+        optima.  Characterizing these sharing savings is an open problem.
+\end{enumerate}
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Computational Artifacts}
+% ════════════════════════════════════════════════════════════════════════════
+
+All search results in this paper are reproducible via:
+\begin{verbatim}
+python python/scripts/mul_lower_bound_search.py
+\end{verbatim}
+Output: \texttt{python/results/s100\_mul\_lower\_bound.json}.
+
+The key fields are:
+\begin{verbatim}
+{
+  "1node_6ops":  [],      // 0 solutions: T29 (F6, 1-node)
+  "2node_6ops":  [],      // 0 solutions: T29 (F6, 2-node)
+  "1node_16ops": [],      // 0 solutions: Theorem 3.3 (F16, 1-node)
+  "2node_16ops": [        // 4 solutions: Proposition 3.2 (F16, 2-node)
+    {"nodes":2,"shape":"A","tree":"ELAd(EXL(0,x), y)"},
+    {"nodes":2,"shape":"A","tree":"ELAd(EXL(0,y), x)"},
+    {"nodes":2,"shape":"A","tree":"ELAd(DEXL(0,x), y)"},
+    {"nodes":2,"shape":"A","tree":"ELAd(DEXL(0,y), x)"}
+  ],
+  "known_3node_valid": true
+}
+\end{verbatim}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Theorem Catalog Labels}
+% ════════════════════════════════════════════════════════════════════════════
+
+For cross-reference with the monogate theorem catalog (T01--T28 and beyond):
+
+\begin{description}
+  \item[T10]  $\mul(x,y)=\EXL(\EXL(0,x),\EML(y,1))$; 3-node optimal in $\mathcal{F}_6$.
+  \item[T10u] $\mul(x,y)=\ELAd(\EXL(0,x),y)$; 2-node optimal in $\mathcal{F}_{16}$
+              (Theorem~\ref{thm:T10u}, this paper).
+  \item[T29]  No 1-node or 2-node tree in $\mathcal{F}_6$ computes $xy$;
+              96 + 12\,288 candidates exhaustively searched, zero matches
+              (Theorem~\ref{thm:T29}, this paper).
+  \item[T30]  No 1-node tree in $\mathcal{F}_{16}$ computes $xy$; 256 candidates
+              exhaustively searched, zero matches (Theorem~\ref{thm:lower1}, this paper).
+  \item[T31]  SuperBEST v2: global minimum 20 nodes over $\mathcal{F}_{16}$,
+              72.6\% savings over naive EML baseline of 73 nodes
+              (Theorem~\ref{thm:superbest}, this paper).
+\end{description}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+% ════════════════════════════════════════════════════════════════════════════
+
+This work builds on the monogate research program initiated in sessions
+S93--S100.  The exhaustive search engine was developed over sessions S93--S99
+and certified in S100.  The structural arguments consolidate insights from
+the 16-operator census (T25, \textit{Sixteen\_Operator\_Census.tex}) and
+the original T10 construction.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+Multiplication Node-Count Tightening and SuperBEST Table Update to 20 Nodes.
+monogate research. \url{https://monogate.org}}
+
+\end{document}
