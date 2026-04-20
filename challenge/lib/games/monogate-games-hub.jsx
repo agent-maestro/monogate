@@ -235,7 +235,7 @@ export default function Hub() {
             <p style={{ fontSize: 14, color: "rgba(226,232,240,0.6)", lineHeight: 1.8, margin: "0 0 14px" }}>
               One binary operator generates every function on a scientific calculator.{" "}
               <span style={{ fontFamily: "var(--font-mono, monospace)", color: "#C4B5FD" }}>eml(x,y) = exp(x) − ln(y)</span>
-              {" "}— the NAND gate for continuous mathematics. 25 proved theorems. A complete census of elementary functions by EML depth.
+              {" "}— the NAND gate for continuous mathematics. 28 proved theorems. A complete census of elementary functions by EML depth.
             </p>
             <p style={{ fontSize: 14, color: "rgba(226,232,240,0.45)", lineHeight: 1.8, margin: "0 0 14px" }}>
               T01: sin(x) is unreachable in real EML — provably, structurally. 1,704,034,304 trees searched. Zero candidates.
@@ -267,7 +267,7 @@ export default function Hub() {
             { n: "1", l: "equation" },
             { n: String(expCount), l: "experiences" },
             { n: String(gameCount), l: "games" },
-            { n: "T01–T25", l: "proved" },
+            { n: "T01–T28", l: "proved" },
             { n: "23", l: "census objects" },
             { n: "∞", l: "depth" },
           ].map(s => (
@@ -375,7 +375,7 @@ export default function Hub() {
             color: "#059669", marginBottom: 12 }}>Key Results</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
             {[
-              { n: "T01–T25", l: "proved results" },
+              { n: "T01–T28", l: "proved results" },
               { n: "23", l: "EML-k census objects" },
               { n: "1.7B", l: "trees searched" },
               { n: "0", l: "sin(x) candidates" },

@@ -8,6 +8,12 @@ description: "Three completeness classes for exp-ln operators: exactly complete 
 
 # The Completeness Trichotomy
 
+> **Updated:** The full 16-operator census (T25) extends this result. The trichotomy
+> (1 complete / 1 approximate / 6 incomplete) is superseded by the
+> **Exponential Position Theorem** (T12, T26–T28): **8 complete / 1 approximate / 7 incomplete**.
+> EML was never the only complete operator — 7 others share the same structural property.
+> See [Why exp(+x) Means Complete](/blog/completeness-characterization) for the full proof.
+
 After classifying eight exp-ln operators in the Operator Zoo, one question remained open: **Is EMN complete?**
 
 EMN(x,y) = ln(y) − exp(x)

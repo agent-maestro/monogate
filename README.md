@@ -87,20 +87,24 @@ make paper            # compile preprint.tex (requires TeX Live)
 
 ---
 
-## BEST routing table
+## SuperBEST routing table (T08 — all entries exhaustive-search optimal)
 
-| Operation | BEST family | BEST nodes | EML baseline | Saving |
-|-----------|-------------|-----------|--------------|--------|
+| Operation | BEST family | BEST nodes | Naive EML | Saving |
+|-----------|-------------|-----------|-----------|--------|
 | pow | EXL | 3 | 15 | −12 |
 | div | EDL | 1 | 15 | −14 |
-| mul | EDL | 7 | 13 | −6 |
-| ln  | EXL | 1 |  3 | −2 |
+| mul | EXL | 3 | 13 | −10 |
+| ln  | EXL | 1 |  3 | −2  |
 | recip | EDL | 2 | 5 | −3 |
-| neg | EDL | 6 | 9 | −3 |
-| sub | EML | 5 | 5 | — |
-| add | EML | 11 | 11 | — |
+| neg | EXL/DEML | 2 | 9 | −7 |
+| sub | EML | 3 | 5 | −2 |
+| add | EAL | 3 | 11 | −8 |
 
-Total: **37 nodes** (BEST) vs 77 (all-EML) — **52% fewer.**
+Total: **21 nodes** (SuperBEST) vs 73 (all-EML) — **71.2% fewer.** (T23)
+
+16 exp-ln operators classified: **8 exactly complete, 1 approximately complete (EMN), 7 incomplete.** (T24–T28)
+
+Research by Arturo R. Almaguer.
 
 ---
 

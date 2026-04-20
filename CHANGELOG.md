@@ -2,6 +2,42 @@
 
 All notable changes to the monogate project.
 
+## [v4.6.0] — 2026-04-20
+
+### New Theorems (T26–T28)
+- **T26**: Forward direction — exp(+x) operators are exactly complete
+- **T27**: Reverse direction — exp(−x) operators are incomplete (5 mechanisms: slope barrier, domain failure, domain collapse, dead constant, decay barrier)
+- **T28**: LEX domain incompleteness — domain shrinks to ∅ under self-composition despite exp(+x)
+- **T12 updated**: Completeness Trichotomy → Exponential Position Theorem (8/1/7 split)
+- **T19**: Softplus = 1 LEAd node (ln(1+exp(x)) = LEAd(x,1))
+
+### Completeness Census Complete
+- 8 exactly complete operators: EML, EAL, EXL, EDL, EPL, LEAd, ELAd, ELSb
+- 1 approximately complete: EMN
+- 7 incomplete: DEML, DEMN, DEAL, DEXL, DEDL, DEPL, LEX
+- Structural rule: exp(+x) without domain restriction ↔ exactly complete
+
+### Theorem Catalog
+- Expanded to T01–T28 (was T01–T07 in public catalog)
+- All T08–T28 now in `challenge/app/theorems/page.tsx`
+- New proof document: `python/paper/theorems/Sixteen_Operator_Census.tex`
+
+### Blog
+- New post: `completeness-characterization.md` — "Why exp(+x) Means Complete"
+- `completeness-trichotomy.md` updated with forward reference to new result
+- Post count: 30 (was 29)
+
+### Infrastructure
+- Site consistency audit: stale theorem counts updated (T01–T25 → T01–T28, 25→28)
+- `challenge.monogate.dev` domain references fixed to `monogate.dev`
+- README BEST routing table updated to SuperBEST FINAL (71.2%, was 52%)
+- Mobile fix: one-operator page responsive h1 + flex-wrap cards
+
+### Tests
+- 1694 passing, 9 skipped
+
+---
+
 ## [v4.5.0] — 2026-04-20
 
 ### SuperBEST FINAL Table

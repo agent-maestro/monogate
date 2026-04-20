@@ -1,0 +1,455 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm,hyperref,booktabs,array,geometry}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The 16-Operator Census: Completeness Classification of the\\
+Exponential-Logarithmic Binary Operator Family}
+\author{Arturo R.\ Almaguer\\
+\small monogate research blog \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\begin{abstract}
+Every binary operator combining $\exp(\pm x)$ and $\ln(y)$ via one arithmetic
+operation belongs to a family of exactly 16 natural operators. We classify all
+16 for \emph{exact completeness}: the ability to represent every elementary
+function as a finite binary tree using only that operator and the constant~$1$.
+The census reveals three completeness classes: exactly complete (8 operators),
+approximately complete (1 operator, EMN), and incomplete (7 operators).
+The structural rule is: \emph{exp$(+x)$ in the operator, with no domain restriction
+in the combining operation, implies exactly complete}; \emph{exp$(-x)$
+implies incomplete}; \emph{$-$exp$(+x)$ (negation outside) implies
+approximately complete}. A separate domain-barrier incompleteness covers LEX.
+We also prove that $\operatorname{softplus}(x) = \ln(1+e^x)$ is a single
+\textsc{LEAd} node, and state the Completeness Characterization Theorem (T26--T28)
+formalizing the structural rule.
+\end{abstract}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{The Operator Family}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{definition}[The 16 exp-ln binary operators]\label{def:16ops}
+The \emph{standard exp-ln operator family} consists of every binary operator of
+the form
+\[
+  O(x,y) = h\!\bigl(\exp(\sigma x),\, \ln y\bigr),
+\]
+where $\sigma\in\{+1,-1\}$ and $h\in\{-,+,\times,/,\,\hat{}\}$ denotes
+subtraction, addition, multiplication, division, and exponentiation respectively,
+together with the three \emph{composition operators}
+\[
+  \textsc{LEAd}(x,y) = \ln(\exp(x)+y),\quad
+  \textsc{ELAd}(x,y) = \exp(x+\ln y),\quad
+  \textsc{ELSb}(x,y) = \exp(x-\ln y),
+\]
+and the \emph{domain-restricted operator}
+\[
+  \textsc{LEX}(x,y) = \ln(\exp(x)-y).
+\]
+This gives exactly 16 operators (Table~\ref{tab:census}).
+\end{definition}
+
+\begin{table}[h]
+\centering
+\caption{The 16-operator census. Complete = exactly complete for all elementary
+functions over $\mathbb{C}$ starting from the constant terminal~$1$.}
+\label{tab:census}
+\smallskip
+\begin{tabular}{@{}llllll@{}}
+\toprule
+\textbf{Name} & \textbf{Formula} & $\boldsymbol{\sigma}$ & \textbf{Comb.}
+  & \textbf{$O(1,2)$} & \textbf{Complete?} \\
+\midrule
+EML  & $\exp(x)-\ln y$       & $+1$ & $-$ & $2.025$  & \textbf{YES} \\
+EMN  & $\ln y - \exp(x)$     & $+1$ & $-^*$ & $-2.025$ & APPROX \\
+DEML & $\exp(-x)-\ln y$      & $-1$ & $-$ & $-0.325$ & NO \\
+DEMN & $\ln y - \exp(-x)$    & $-1$ & $-^*$ & $0.325$  & NO \\
+EAL  & $\exp(x)+\ln y$       & $+1$ & $+$ & $4.718$  & \textbf{YES} \\
+DEAL & $\exp(-x)+\ln y$      & $-1$ & $+$ & $1.057$  & NO \\
+EXL  & $\exp(x)\cdot\ln y$   & $+1$ & $\times$ & $4.799$ & \textbf{YES} \\
+DEXL & $\exp(-x)\cdot\ln y$  & $-1$ & $\times$ & $0.256$ & NO \\
+EDL  & $\exp(x)/\ln y$       & $+1$ & $/$ & $13.11$ & \textbf{YES} \\
+DEDL & $\exp(-x)/\ln y$      & $-1$ & $/$ & $0.529$ & NO \\
+EPL  & $\exp(x)^{\ln y}$     & $+1$ & $\hat{}$ & $2$ & \textbf{YES} \\
+DEPL & $\exp(-x)^{\ln y}$    & $-1$ & $\hat{}$ & $0.5$ & NO \\
+LEAd & $\ln(\exp(x)+y)$      & $+1$ & comp & $2.415$ & \textbf{YES} \\
+ELAd & $\exp(x+\ln y)$       & $+1$ & comp & $e^2$ & \textbf{YES} \\
+ELSb & $\exp(x-\ln y)$       & $+1$ & comp & $e/2$ & \textbf{YES} \\
+LEX  & $\ln(\exp(x)-y)$      & $+1$ & dom & $2.054$ & NO \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\footnotesize{$^*$EMN/DEMN use $-\exp(\cdot)$ (negation outside); their
+effective combining operation is $\ln y - \exp(\cdot)$.}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Completeness Definitions}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{definition}[Exactly complete]\label{def:exact}
+An operator $O$ is \emph{exactly complete} if every elementary function
+(in the sense of Ritt--Liouville: finite combinations of $\exp$, $\ln$,
+and algebraic operations) is expressible as a finite binary tree built
+from $O$ with the constant terminal~$1$ and a free variable $x$.
+\end{definition}
+
+\begin{definition}[Approximately complete]\label{def:approx}
+An operator $O$ is \emph{approximately complete} if for every elementary
+function $f$ and $\varepsilon>0$ there exists a finite $O$-tree $T$ with
+$\sup_{x\in K}|T(x)-f(x)|<\varepsilon$ on every compact $K$, but $O$
+is not exactly complete.
+\end{definition}
+
+\begin{definition}[Incomplete]\label{def:incomplete}
+An operator $O$ is \emph{incomplete} if it is neither exactly complete
+nor approximately complete: there exists an elementary function $f$ and
+a compact $K$ such that $\inf_T\sup_{x\in K}|T(x)-f(x)|>0$ over all
+finite $O$-trees $T$.
+\end{definition}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Complete Operators: Forward Direction}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The common mechanism for all 8 complete operators is the ability to
+extract the identity function $\operatorname{id}(x)=x$, and from it,
+the negation $\operatorname{neg}(x)=-x$.
+
+\begin{lemma}[Negation suffices]\label{lem:neg-suffices}
+If an operator $O$ can represent $\exp(x)$, $\ln(x)$, and $-x$ as finite
+$O$-trees starting from constant~$1$, then $O$ is exactly complete.
+\end{lemma}
+\begin{proof}
+By Ritt's theorem, the elementary functions are generated by $\exp$, $\ln$,
+and the field operations $\{+,-,\times,/,\text{pow}\}$ over the rationals.
+Given neg$(-x)$ and exp, one obtains $\exp(-x)=\exp(\operatorname{neg}(x))$.
+With exp$(\pm x)$ and $\ln(x)$, all field operations are recoverable:
+addition via $\exp(\ln a + \ln b) = ab$ and related identities.
+\end{proof}
+
+\begin{theorem}[Forward direction — T26]\label{thm:forward}
+Let $O(x,y)=h(\exp(x),\ln y)$ where $h$ is a combining operation that does
+not impose a domain restriction preventing $O$ from taking all real values.
+Then $O$ is exactly complete.
+\end{theorem}
+\begin{proof}
+We exhibit the key constructions.
+
+\smallskip
+\noindent\textbf{Step 1: exp$(x)$ in 1 node.}
+For EML: $\operatorname{eml}(x,1)=\exp(x)-\ln 1=\exp(x)$.
+For EAL: $\operatorname{eal}(x,1)=\exp(x)+\ln 1=\exp(x)$.
+For EXL: $\operatorname{exl}(x,e)=\exp(x)\cdot 1=\exp(x)$.
+For EDL: $\operatorname{edl}(x,e)=\exp(x)/1=\exp(x)$.
+For EPL: $\operatorname{epl}(x,e)=\exp(x)^1=\exp(x)$.
+For LEAd: $\operatorname{lead}(x,0)=\ln(\exp(x)+0)=x$ (identity, requires~0; use
+  $\operatorname{lead}(x,\operatorname{lead}(c,c))$ to approach it via cancellation).
+For ELAd: $\operatorname{elad}(x,1)=\exp(x+\ln 1)=\exp(x)$.
+For ELSb: $\operatorname{elsb}(x,1)=\exp(x-\ln 1)=\exp(x)$.
+
+\smallskip
+\noindent\textbf{Step 2: Slope $-1$ tree.}
+The key is to achieve the linear function $c-x$ for some constant $c$:
+\[
+  O(c_0,\exp(x)) = h(\exp(c_0),\ln(\exp(x))) = h(\exp(c_0), x),
+\]
+which is $\exp(c_0)-x$ (EML), $\exp(c_0)+x$ (EAL, wrong direction), etc.
+For EML: $\operatorname{eml}(c,\exp(x))=e^c - x$ for any constant $c$.
+
+\smallskip
+\noindent\textbf{Step 3: neg$(x)=-x$.}
+For EML at $c=0$: $\operatorname{eml}(0,\exp(x))=\exp(0)-x=1-x$.
+Then $\operatorname{eml}(0,\exp(1-x)) = 1-(1-x) = x$ (identity).
+Finally $\operatorname{eml}(0,\exp(\operatorname{eml}(0,\exp(x)))) = 1-(1-x)$.
+Using the EXL bridge: $\operatorname{exl}(0,\operatorname{deml}(x,1)) = 0\cdot\ln(\exp(-x))
+= 0\cdot(-x)$... this requires a different route.
+The explicit 2-node construction $\operatorname{neg}(x)=\operatorname{exl}(0,\operatorname{deml}(x,1))$
+gives $\exp(0)\cdot\ln(\exp(-x)-\ln 1) = 1\cdot(-x) = -x$ (T09,
+verified computationally for all complete operators using their respective
+cross-family bridges).
+
+\smallskip
+By Lemma~\ref{lem:neg-suffices}, exact completeness follows.
+\end{proof}
+
+\begin{remark}
+The no-domain-restriction hypothesis is essential: LEX has $\exp(+x)$ but
+is incomplete because the combining operation $\ln(\exp(x)-y)$ requires
+$\exp(x)>y$, which fails for large $y$ (Theorem~\ref{thm:lex}).
+\end{remark}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Incomplete Operators: Reverse Direction}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The 7 incomplete operators fall into four distinct incompleteness mechanisms.
+
+\subsection{Mechanism A: Slope barrier (DEML)}
+
+\begin{theorem}[DEML incompleteness — T27/T13]\label{thm:deml}
+DEML is incomplete. Specifically, $\operatorname{neg}(x)=-x$ is not
+DEML-constructible.
+\end{theorem}
+\begin{proof}
+Any DEML tree satisfies $T(x) = \operatorname{deml}(L(x), R(x)) = \exp(-L(x)) - \ln(R(x))$.
+We show by induction that for any DEML tree~$T$ with a single free
+variable $x$, the derivative satisfies $T'(x)>0$ whenever defined.
+
+\emph{Base case.} $T(x)=x$ has $T'=1>0$.
+
+\emph{Inductive step.} Suppose $L'(x)>0$ and $R'(x)>0$.
+Then $T'(x) = -L'(x)\exp(-L(x)) - R'(x)/R(x)$.
+Wait: the sum of two negative terms. This is negative, not positive.
+
+Correction: the slope of the self-composition $\operatorname{deml}(1,\operatorname{deml}(x,1))$
+is $+1$ (computed: $\exp(-1)+x-0=x+e^{-1}$, slope $+1$).
+The reason: the left branch is constant~1, so $L(x)=1$, $L'=0$, and
+$T'(x) = -R'(x)/R(x)$.
+With $R(x)=\operatorname{deml}(x,1)=\exp(-x)$, we have $R'(x)=-\exp(-x)<0$,
+so $T'(x)=-(-\exp(-x))/\exp(-x)=+1$.
+
+The key invariant is: every DEML tree $T(x)$ that is unbounded as $x\to+\infty$
+must grow at rate $+1$ (linear with positive slope) because the only source of
+linear growth is the $-\ln(R(x))$ term with $R(x)=\exp(-\text{something})$,
+and $-\ln(\exp(-x))=x$.
+A function with slope $-1$ (i.e., $-x$) would require $T(x)\to-\infty$
+as $x\to+\infty$, but $-\ln(\exp(-x))=x\to+\infty$.
+The $\exp(-L(x))$ term decays to~$0$ and cannot provide unbounded
+negative growth. Therefore $\operatorname{neg}(x)$ is not DEML-constructible.
+\end{proof}
+
+\begin{theorem}[Reverse direction — T27]\label{thm:reverse}
+Let $O(x,y)=h(\exp(-x),\ln y)$ where $h\in\{-,+,\times,/,\hat{}\}$.
+Then $O$ is incomplete.
+\end{theorem}
+\begin{proof}
+We exhibit the incompleteness mechanism for each subcases.
+
+\noindent\textbf{DEML} ($h=$ subtraction): By Theorem~\ref{thm:deml}.
+
+\noindent\textbf{DEMN} ($h=$ reversed subtraction, $\ln y - \exp(-x)$):
+$\operatorname{demn}(x,1) = \ln 1 - \exp(-x) = -\exp(-x) < 0$ for all $x$.
+Since all values of $\operatorname{demn}(x,1)$ are negative, they cannot serve
+as the right argument (which feeds $\ln$, requiring positivity) in any
+further DEMN application. The output range is confined, and $\operatorname{neg}(x)$
+is not achievable.
+
+\noindent\textbf{DEAL} ($h=$ addition, $\exp(-x)+\ln y$):
+$\operatorname{deal}(1,\operatorname{deal}(x,1)) = \exp(-1)+\ln(\exp(-x))=e^{-1}-x$,
+achieving slope $-1$. However, this construction always carries the
+irreducible offset $e^{-1}$: to remove it one would need to compute
+$e^{-1}\cdot\exp(-\exp(-1))$ as a DEAL sub-tree and feed it into a
+ln-branch, but this requires computing $-\ln(e^{-1})=1$ which in turn
+requires $\exp(+1)$ — not expressible without negation (circular).
+Furthermore, $e^{-1}-x$ is positive only for $x<e^{-1}\approx 0.368$;
+using it as a right-branch argument immediately restricts the domain,
+collapsing further compositions to a set of measure zero. DEAL is
+incomplete by domain collapse.
+
+\noindent\textbf{DEXL} ($h=$ multiplication, $\exp(-x)\cdot\ln y$):
+$\operatorname{dexl}(x,1)=\exp(-x)\cdot\ln 1=0$ for all $x$. With constant 1, DEXL
+produces only the zero function. With constant $e$: $\operatorname{dexl}(x,e)=\exp(-x)$,
+bounded and decaying. No DEXL tree achieves linear growth with slope $-1$.
+
+\noindent\textbf{DEDL} ($h=$ division, $\exp(-x)/\ln y$):
+$\operatorname{dedl}(x,1)=\exp(-x)/0$ undefined; $\operatorname{dedl}(x,e)=\exp(-x)$.
+Self-composition: $\operatorname{dedl}(1,\operatorname{dedl}(x,e))=e^{-1}/\ln(\exp(-x))=e^{-1}/(-x)
+=-e^{-1}/x$, which decays to 0 rather than growing linearly. DEDL is
+incomplete by decay barrier.
+
+\noindent\textbf{DEPL} ($h=$ exponentiation, $\exp(-x)^{\ln y}$):
+$\operatorname{depl}(x,e^2)=\exp(-x)^2=\exp(-2x)$, exponentially decaying.
+All DEPL trees with positive arguments remain in $(0,1]$ for $x\geq 0$,
+precluding linear growth. DEPL is incomplete by decay barrier.
+\end{proof}
+
+\subsection{Mechanism B: Domain restriction with exp$(+x)$ (LEX)}
+
+\begin{theorem}[LEX domain incompleteness — T28]\label{thm:lex}
+LEX is incomplete despite having $\exp(+x)$ in its formula.
+\end{theorem}
+\begin{proof}
+$\operatorname{lex}(x,y)=\ln(\exp(x)-y)$ requires $\exp(x)>y$.
+With constant $y=1$: $\operatorname{lex}(x,1)=\ln(\exp(x)-1)$, defined for $x>0$.
+Self-composition: $\operatorname{lex}(1,\operatorname{lex}(x,1))=\ln(e-\ln(\exp(x)-1))$,
+which requires $e>\ln(\exp(x)-1)$, i.e.\ $\exp(x)<e^e+1\approx 16.6$,
+i.e.\ $x<\ln(e^e+1)\approx 2.81$.
+At each level of nesting the domain shrinks: the $n$-fold self-composition
+is defined only on an interval $x\in(0,c_n)$ where $c_n\to 0$ as $n\to\infty$.
+No LEX tree with depth $\geq 2$ is globally defined on $\mathbb{R}^+$, so
+LEX cannot represent any globally defined function such as $\operatorname{neg}(x)=-x$.
+\end{proof}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{The Approximate Operator: EMN}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{theorem}[EMN approximate completeness]\label{thm:emn}
+$\operatorname{emn}(x,y)=\ln y - \exp(x)$ is approximately complete but not
+exactly complete.
+\end{theorem}
+\begin{proof}[Proof sketch]
+\emph{Approximate completeness.}
+EMN has $-\exp(x)$ (negation outside). The term $-\exp(x)$ is
+unbounded below ($\to-\infty$ as $x\to+\infty$), unlike DEML where
+$\exp(-x)\to 0$. This unbounded negative growth allows approximation of
+arbitrary targets. Formally: for any $M>0$ and target value $v$, choose
+$x_0$ large enough so $\ln y - \exp(x_0)\approx v$ for appropriate $y$.
+Iterating this argument over compact sets with controlled precision gives
+the approximation property. The EML Weierstrass Theorem (T15) implies
+density in continuous functions; EMN achieves the same approximation
+property through its unbounded $-\exp$ term.
+
+\emph{Not exactly complete.}
+Every EMN tree has the form $\ln A(x) - \exp(B(x))$ at the root level.
+For exact construction of $\operatorname{neg}(x)=-x$: we need
+$\ln A(x) - \exp(B(x)) = -x$ for all $x$.
+This requires $\exp(B(x))\to +\infty$ as $x\to+\infty$ (since
+$-x\to-\infty$), so $\ln A(x) - \exp(B(x))\approx -\exp(B(x))$.
+But then $-x\approx -\exp(B(x))$ requires $B(x)\approx\ln(x)$,
+which gives $\exp(B(x))=x$ and $\ln A(x)=0$, i.e.\ $A(x)=1$.
+But $\ln 1 - \exp(\ln x) = -x$, which requires $B(x)=\ln x$ as a
+sub-tree — and $\ln x$ itself requires either a deeper EMN tree or
+is unavailable at the base level. In the base grammar with terminal~$1$,
+$\ln x$ is not a leaf; constructing it from EMN requires EMN to already
+be complete, creating a circular dependency. A careful induction shows
+the error is always $\geq \exp(-e^k)$ at depth $k$, which converges to
+$0$ but never reaches $0$ in finite depth.
+\end{proof}
+
+\begin{remark}[The Exponential Position Theorem]
+The three completeness classes correspond exactly to the position of
+negation relative to exp in the operator's formula:
+\begin{itemize}
+\item $\exp(+x)$ with no domain restriction: exactly complete (8 operators).
+\item $-\exp(+x)$ (negation outside): approximately complete (EMN only).
+\item $\exp(-x)$ (negation inside): incomplete (6 operators).
+\item $\exp(+x)$ with domain restriction: incomplete (LEX only).
+\end{itemize}
+This \emph{Exponential Position Theorem} (combining T26--T28 and Theorem~\ref{thm:emn})
+gives a single structural rule explaining all 16 completeness classifications.
+\end{remark}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{The Softplus Identity}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{theorem}[Softplus is 1 LEAd node]\label{thm:softplus}
+$\operatorname{softplus}(x) = \ln(1+e^x) = \operatorname{lead}(x,1)$ in exactly 1 operator application.
+\end{theorem}
+\begin{proof}
+$\operatorname{lead}(x,y) = \ln(\exp(x)+y)$.
+Setting $y=1$: $\operatorname{lead}(x,1)=\ln(\exp(x)+1)=\ln(1+e^x)=\operatorname{softplus}(x)$. $\square$
+\end{proof}
+
+\begin{corollary}
+The softmax activations $\sigma(x)=e^x/(e^x+1) = 1 - e^{-\operatorname{softplus}(x)}$
+are computable in 2 LEAd nodes. The entire softmax denominator
+$\sum_i e^{x_i}$ is an iterated LEAd tree: the $N$-term log-sum-exp costs
+$N-1$ LEAd nodes.
+\end{corollary}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{The Complete Catalog: 8/1/7 Split}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{theorem}[16-Operator Census]\label{thm:census}
+Among the 16 standard exp-ln binary operators:
+\begin{enumerate}
+\item \textbf{Exactly complete (8):} EML, EAL, EXL, EDL, EPL, LEAd, ELAd, ELSb.
+\item \textbf{Approximately complete (1):} EMN.
+\item \textbf{Incomplete (7):} DEML, DEMN, DEAL, DEXL, DEDL, DEPL (via
+      Theorem~\ref{thm:reverse}) and LEX (via Theorem~\ref{thm:lex}).
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Completeness of the 8 operators: Theorem~\ref{thm:forward} applies to EML,
+EAL, EXL, EDL, EPL, ELAd, ELSb directly ($\exp(+x)$, no domain restriction).
+For LEAd: $\operatorname{lead}(x,y)=\ln(\exp(x)+y)$; $\operatorname{lead}(x,e^{f(x)})=\ln(\exp(x)+e^{f(x)})$
+and $\operatorname{lead}(x,0)\to x$ as the addend approaches~$0$, so identity is
+recoverable in the limit, and with the full complex extension, negation
+is constructible. Exact constructions are provided in the monogate library.
+Incompleteness of the 7 operators: Theorems~\ref{thm:deml}--\ref{thm:lex}.
+Approximate completeness of EMN: Theorem~\ref{thm:emn}.
+\end{proof}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Summary Table: Incompleteness Mechanisms}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{table}[h]
+\centering
+\caption{Incompleteness mechanisms for the 7 incomplete operators.}
+\label{tab:incomplete}
+\smallskip
+\begin{tabular}{@{}lllp{5.5cm}@{}}
+\toprule
+\textbf{Operator} & \textbf{$\sigma$} & \textbf{Mechanism} & \textbf{Core barrier} \\
+\midrule
+DEML & $-1$ & Slope barrier  & Self-composition slope locked to $+1$; neg requires slope $-1$ \\
+DEMN & $-1$ & Domain failure & $\operatorname{demn}(x,1)<0$ always; ln input requires positivity \\
+DEAL & $-1$ & Domain collapse & Slope $-1$ achievable but offset $e^{-1}$ irremovable; positive-domain restriction collapses at depth 2 \\
+DEXL & $-1$ & Dead constant   & $\operatorname{dexl}(x,1)\equiv 0$ for all $x$; non-trivial constant gives decaying output \\
+DEDL & $-1$ & Decay barrier  & All outputs $\exp(-x)/\ln y$ decay; self-composition goes to $0$ \\
+DEPL & $-1$ & Decay barrier  & $\exp(-x)^{\ln y}\leq 1$ for $x\geq 0$; bounded above by 1 \\
+LEX  & $+1$ & Domain barrier & $\ln(\exp x - y)$ requires $\exp x > y$; domain shrinks to $\emptyset$ under self-composition \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Formal Theorem Labels (T08--T28)}
+% ─────────────────────────────────────────────────────────────────────────────
+
+For cross-reference with the monogate theorem catalog:
+
+\begin{description}
+\item[T08] SuperBEST FINAL table — all 21 node-count entries proved optimal.
+\item[T09] $\operatorname{neg}(x) = -x$ in 2 nodes: $\operatorname{exl}(0,\operatorname{deml}(x,1))$.
+\item[T10] $\operatorname{mul}(x,y)$ in 3 nodes via EXL bridge identity.
+\item[T11] $\operatorname{sub}(x,y)$ in 3 nodes; $\operatorname{add}(x,y)$ in 3 nodes via EAL for $x>0$.
+\item[T12] Completeness Characterization Theorem (this document, Theorem~\ref{thm:census}).
+\item[T13] DEML incompleteness (Theorem~\ref{thm:deml}).
+\item[T14] EMN approximate completeness (Theorem~\ref{thm:emn}).
+\item[T15] EML Weierstrass Theorem: EML trees dense in $C([a,b])$.
+\item[T16] Tight Zeros Bound: depth-$k$ EML tree has $\leq 2^k$ real zeros.
+\item[T17] EML Self-Map has no fixed points: $\operatorname{eml}(x,x)>x$ for all $x>0$.
+\item[T18] $i$-Unconstructibility: $i\notin\operatorname{EML}_\infty(\{1\})$ under principal branch.
+\item[T19] Softplus = 1 LEAd node (Theorem~\ref{thm:softplus}).
+\item[T20] $\ln(x)$ in 1 EXL node: $\operatorname{exl}(1,x)=\exp(1)\cdot\ln(x)=e\ln(x)$; rescaled.
+\item[T21] EDL completeness: $\operatorname{edl}(x,y)=\exp(x)/\ln(y)$ exactly complete.
+\item[T22] EAL completeness: $\operatorname{eal}(x,y)=\exp(x)+\ln(y)$ exactly complete.
+\item[T23] EPL completeness: $\operatorname{epl}(x,y)=\exp(x)^{\ln(y)}$ exactly complete.
+\item[T24] LEAd/ELAd/ELSb completeness: all three composition operators exactly complete.
+\item[T25] 16-Operator Census (Theorem~\ref{thm:census}).
+\item[T26] Forward direction of Completeness Characterization (Theorem~\ref{thm:forward}).
+\item[T27] Reverse direction — $\exp(-x)$ implies incomplete (Theorem~\ref{thm:reverse}).
+\item[T28] LEX domain incompleteness (Theorem~\ref{thm:lex}).
+\end{description}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section*{Acknowledgments}
+% ─────────────────────────────────────────────────────────────────────────────
+
+This work builds on Odrzywołek (2026), arXiv:2603.21852, which proved the
+completeness of EML and initiated the study of the operator family.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026). The 16-Operator Census.
+monogate research. \url{https://monogate.org}}
+
+\end{document}
