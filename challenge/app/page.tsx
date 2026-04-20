@@ -38,9 +38,9 @@ const SECTIONS = [
   {
     href: "/lab",
     label: "Lab",
-    desc: "Games and interactive experiments built on the EML grammar.",
+    desc: "Interactive experiments and experiences built on the EML grammar.",
     color: C.green,
-    tag: "games",
+    tag: "lab",
   },
   {
     href: "/docs",
