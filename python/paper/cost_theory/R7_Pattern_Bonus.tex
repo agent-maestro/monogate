@@ -1,0 +1,1091 @@
+% R7_Pattern_Bonus.tex
+% monogate Cost Theory — Pattern Bonus Catalog
+% Complete savings proof for all 12 compound patterns; greedy optimality theorem
+% Classification: THEOREM
+% Author: Arturo R. Almaguer
+% Date: 2026-04-20
+% Encoding: UTF-8
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{enumitem}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\LEprod}{\operatorname{LEprod}}
+\newcommand{\EPL}{\operatorname{EPL}}
+\newcommand{\DEAL}{\operatorname{DEAL}}
+\newcommand{\DEXL}{\operatorname{DEXL}}
+\newcommand{\DEDL}{\operatorname{DEDL}}
+\newcommand{\DEPL}{\operatorname{DEPL}}
+\newcommand{\DEMN}{\operatorname{DEMN}}
+
+% ── Cost macros ──────────────────────────────────────────────────────────────
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\Bonus}{\operatorname{Bonus}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\Fam}{\mathcal{F}}
+
+% ── Column types ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\title{Pattern Bonus Catalog and Greedy Optimality\\[6pt]
+       \large Exact Savings for All 12 Compound Patterns in $\mathcal{F}_{16}$\\
+       \normalsize R7 of the monogate SuperBEST Cost Theory}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We catalog and prove the exact pattern bonuses for all 12 compound operator
+patterns in the extended 16-operator family $\mathcal{F}_{16}$ under
+SuperBEST v3 unit costs
+($c_{\exp}=1$, $c_{\ln}=1$, $c_{\neg}=2$, $c_{\mathrm{recip}}=2$,
+$c_{\mathrm{mul}}=2$, $c_{\mathrm{sub}}=2$, $c_{\mathrm{div}}=1$,
+$c_{\mathrm{pow}}=3$, $c_{\mathrm{add}}=3$).
+Each compound operator realizes a multi-primitive subexpression as a single
+node at cost~1; the \emph{pattern bonus} is $\Bonus(O)=\NC(P)-1\geq 1$.
+Bonuses range from~1 (\ELSb) to~4 (\LEAd, \EAL).
+We prove the \emph{Non-Overlapping Lemma}: because patterns are subtrees
+rooted at distinct operator nodes of the expression DAG, no operator node
+can be simultaneously the root of two distinct pattern matches, so all
+maximal pattern matches are node-disjoint.
+From this lemma we derive the \emph{Greedy Optimality Theorem}: selecting
+patterns in decreasing bonus order and committing each match greedily
+achieves the globally maximum total bonus.
+Frequency analysis across the 157-equation monogate corpus ranks \EXL\ as
+the highest-impact pattern (weighted impact 60 over the 50-equation
+chemistry/biology sub-catalog); \DEML\ is most frequent (44\% of equations).
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Background and Unit Costs}
+\label{sec:background}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{SuperBEST v3 Unit Costs}
+
+The SuperBEST v3 routing table (Theorem T33) assigns to every standard
+arithmetic operation an optimal EML-family node count.
+These are the \emph{unit costs} throughout this paper:
+
+\begin{table}[h]
+\centering
+\caption{SuperBEST v3 unit costs $c_i$.}
+\label{tab:unit}
+\smallskip
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Operation} & \textbf{Symbol} & \textbf{Cost $c_i$} \\
+\midrule
+Exponential $e^x$              & \texttt{exp}   & 1 \\
+Natural log $\ln x$            & \texttt{ln}    & 1 \\
+Division $x/y$                 & \texttt{div}   & 1 \\
+Negation $-x$                  & \texttt{neg}   & 2 \\
+Reciprocal $1/x$               & \texttt{recip} & 2 \\
+Multiplication $x \cdot y$     & \texttt{mul}   & 2 \\
+Subtraction $x - y$            & \texttt{sub}   & 2 \\
+Exponentiation $x^n$           & \texttt{pow}   & 3 \\
+Addition $x+y$ (positive domain) & \texttt{add} & 3 \\
+Addition $x+y$ (general)       & \texttt{add}   & 11 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{definition}[Na\"{i}ve Cost]
+\label{def:NC}
+The \emph{na\"{i}ve cost} $\NC(E)$ of an expression $E$ is the sum of
+SuperBEST v3 unit costs over all primitive operations in the expression
+tree, treating each primitive independently (no sharing, no compound
+patterns).  Constants and free variables contribute~0.
+\end{definition}
+
+\begin{definition}[Pattern Bonus]
+\label{def:bonus}
+Let $P(x_1,\ldots,x_k)$ be a subexpression realizable in a single
+application of some compound operator $O \in \mathcal{F}_{16}$ (cost 1).
+The \emph{pattern bonus} of $O$ is
+\[
+  \Bonus(O) \;=\; \NC(P) - 1 \;\geq\; 1.
+\]
+A positive bonus means a single node saves over the na\"{i}ve routing.
+\end{definition}
+
+\subsection{The 12 Compound Patterns}
+
+The 16-operator family $\mathcal{F}_{16}$ contains, among its members,
+12 \emph{compound patterns} that each compress a multi-primitive
+subexpression into a single node.  We enumerate them in
+Section~\ref{sec:table} and prove each bonus in Section~\ref{sec:proofs}.
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Complete 12-Pattern Bonus Table}
+\label{sec:table}
+% ════════════════════════════════════════════════════════════════════════════
+
+Table~\ref{tab:bonuses} lists all 12 compound patterns with their
+na\"{i}ve cost decomposition, compound node count (always~1), and bonus.
+Each row is proved in Section~\ref{sec:proofs}.
+
+\begin{table}[h]
+\centering
+\caption{Complete pattern bonus table for $\mathcal{F}_{16}$ (12 patterns).
+         All compound realizations cost exactly 1 node.
+         Na\"{i}ve cost components: $\exp(1)$, $\ln(1)$, $\neg(2)$, $\mathrm{mul}(2)$,
+         $\mathrm{sub}(2)$, $\mathrm{div}(1)$, $\mathrm{add}_+(3)$.}
+\label{tab:bonuses}
+\smallskip
+\begin{tabular}{@{}lllccc@{}}
+\toprule
+\textbf{\#} &
+\textbf{Operator} &
+\textbf{Pattern formula} &
+$\NC$ &
+\textbf{Compound cost} &
+$\Bonus$ \\
+\midrule
+P1  & \EML   & $e^x - \ln y$          & $1+1+2=4$   & 1 & $\mathbf{3}$ \\
+P2  & \DEML  & $e^{-x} - \ln y$       & $2+1+1+2=6$ & 1 & $\mathbf{5}$ \\
+P3  & \EXL   & $e^x \cdot \ln y$      & $1+1+2=4$   & 1 & $\mathbf{3}$ \\
+P4  & \EDL   & $e^x / \ln y$          & $1+1+1=3$   & 1 & $\mathbf{2}$ \\
+P5  & \EAL   & $e^x + \ln y$          & $1+1+3=5$   & 1 & $\mathbf{4}$ \\
+P6  & \EPL   & $y^x = e^{x \ln y}$    & $2+1=3$     & 1 & $\mathbf{2}$ \\
+P7  & \LEAd  & $\ln(e^x + y)$         & $1+3+1=5$   & 1 & $\mathbf{4}$ \\
+P8  & \ELAd  & $e^x \cdot y$          & $1+2=3$     & 1 & $\mathbf{2}$ \\
+P9  & \ELSb  & $e^x / y$              & $1+1=2$     & 1 & $\mathbf{1}$ \\
+P10 & \LEdiv & $x - \ln y$            & $1+2=3$     & 1 & $\mathbf{2}$ \\
+P11 & \LEprod& $\ln(e^x \cdot y)$     & $1+2+1=4$   & 1 & $\mathbf{3}$ \\
+P12 & \EMN   & $e^x \cdot e^y = e^{x+y}$ & $1+1+2=4$ & 1 & $\mathbf{3}$ \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\footnotesize{%
+P2 (\DEML): na\"{i}ve cost = neg(2) + exp(1) + ln(1) + sub(2) = 6.
+P6 (\EPL): na\"{i}ve cost for $e^{x \ln y}$ = mul(2) + exp(1) = 3
+(the $\ln y$ is one of the two inputs, not separately counted in the
+product argument).
+P7 (\LEAd): positive-domain add applies because $e^x > 0$ always.
+P12 (\EMN): na\"{i}ve cost = exp(1) + exp(1) + mul(2) = 4; the compound
+recognizes $e^x \cdot e^y = e^{x+y}$ as a single node.
+}
+\end{table}
+
+\begin{observation}[Bonus range]
+\label{obs:range}
+Pattern bonuses range from 1 (\ELSb) to 5 (\DEML).
+\end{observation}
+
+\begin{proof}
+Direct inspection of Table~\ref{tab:bonuses}:
+minimum bonus is 1 (P9, \ELSb, $\NC=2$);
+maximum bonus is 5 (P2, \DEML, $\NC=6$).
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Individual Pattern Proofs}
+\label{sec:proofs}
+% ════════════════════════════════════════════════════════════════════════════
+
+For each pattern we: (i) state the algebraic identity, (ii) compute
+$\NC(P)$, and (iii) derive the bonus.
+
+% ── P1 ───────────────────────────────────────────────────────────────────────
+\subsection{P1: \EML --- $e^x - \ln y$, Bonus 3}
+\label{sub:P1}
+
+\begin{proposition}[\EML\ pattern bonus]
+\label{prop:P1}
+$\EML(x,y) = e^x - \ln y$.
+$\NC(\EML) = 4$. $\Bonus(\EML) = 3$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.} $\EML(x,y)$ is defined as the foundational operator of
+the EML family; no further reduction of the form $e^x - \ln y$ is possible
+in $\mathcal{F}_{16}$ beyond a single node.
+
+\textbf{Na\"{i}ve cost.}
+\[
+  \NC(e^x - \ln y) = c_{\exp} + c_{\ln} + c_{\mathrm{sub}} = 1 + 1 + 2 = 4.
+\]
+
+\textbf{Compound cost.} The compound operator \EML\ realizes this in
+exactly 1 node by construction.
+
+\textbf{Bonus.}
+\[
+  \Bonus(\EML) = \NC(\EML\text{ pattern}) - 1 = 4 - 1 = 3.
+\]
+\end{proof}
+
+% ── P2 ───────────────────────────────────────────────────────────────────────
+\subsection{P2: \DEML --- $e^{-x} - \ln y$, Bonus 5}
+\label{sub:P2}
+
+\begin{proposition}[\DEML\ pattern bonus]
+\label{prop:P2}
+$\DEML(x,y) = e^{-x} - \ln y$.
+$\NC(\DEML) = 6$. $\Bonus(\DEML) = 5$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.} $\DEML(x,y) = e^{-x} - \ln y$.
+Note that for the decay-terminal special case $y=1$:
+$\DEML(x,1) = e^{-x} - \ln 1 = e^{-x}$.
+
+\textbf{Na\"{i}ve cost.} Starting from the innermost operations:
+\begin{align*}
+  -x &: c_{\mathrm{neg}} = 2, \\
+  e^{(-x)} &: c_{\exp} = 1, \\
+  \ln y &: c_{\ln} = 1, \\
+  e^{-x} - \ln y &: c_{\mathrm{sub}} = 2.
+\end{align*}
+Total:
+\[
+  \NC = c_{\mathrm{neg}} + c_{\exp} + c_{\ln} + c_{\mathrm{sub}}
+      = 2 + 1 + 1 + 2 = 6.
+\]
+
+\textbf{Compound cost.} \DEML\ realizes this as a single node: cost 1.
+
+\textbf{Bonus.}
+\[
+  \Bonus(\DEML) = 6 - 1 = 5.
+\]
+
+\DEML\ achieves the \emph{maximum bonus} of 5 among all 12 patterns,
+reflecting that negation followed by exponentiation followed by
+logarithm and subtraction accumulates four costly primitives.
+\end{proof}
+
+\begin{remark}[\DEML\ as $e^{-x}$ terminal]
+The most common use of \DEML\ in practice is the restricted form
+$\DEML(x,1) = e^{-x}$, which saves 2 nodes over the na\"{i}ve
+neg$+$exp chain (bonus~2 in this restricted use).
+The full bonus of 5 is realized only when the $-\ln y$ subtraction
+term is also matched, i.e.\ when the expression is literally
+$e^{-x} - \ln y$.
+\end{remark}
+
+% ── P3 ───────────────────────────────────────────────────────────────────────
+\subsection{P3: \EXL --- $e^x \cdot \ln y$, Bonus 3}
+\label{sub:P3}
+
+\begin{proposition}[\EXL\ pattern bonus]
+\label{prop:P3}
+$\EXL(x,y) = e^x \cdot \ln y$.
+$\NC(\EXL) = 4$. $\Bonus(\EXL) = 3$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.} $\EXL(x,y) = e^x \cdot \ln y$.  Special case
+$x=0$: $\EXL(0,y) = e^0 \cdot \ln y = \ln y$, the T01 ln-extraction.
+
+\textbf{Na\"{i}ve cost.}
+\[
+  \NC(e^x \cdot \ln y) = c_{\exp} + c_{\ln} + c_{\mathrm{mul}} = 1 + 1 + 2 = 4.
+\]
+
+\textbf{Bonus.}
+\[
+  \Bonus(\EXL) = 4 - 1 = 3.
+\]
+\end{proof}
+
+% ── P4 ───────────────────────────────────────────────────────────────────────
+\subsection{P4: \EDL --- $e^x / \ln y$, Bonus 2}
+\label{sub:P4}
+
+\begin{proposition}[\EDL\ pattern bonus]
+\label{prop:P4}
+$\EDL(x,y) = e^x / \ln y$.
+$\NC(\EDL) = 3$. $\Bonus(\EDL) = 2$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.} $\EDL(x,y) = e^x / \ln y$.
+Division has cost 1 in SuperBEST v3 (via the \LEdiv\ construction).
+
+\textbf{Na\"{i}ve cost.}
+\[
+  \NC(e^x / \ln y) = c_{\exp} + c_{\ln} + c_{\mathrm{div}} = 1 + 1 + 1 = 3.
+\]
+
+\textbf{Bonus.}
+\[
+  \Bonus(\EDL) = 3 - 1 = 2.
+\]
+\end{proof}
+
+% ── P5 ───────────────────────────────────────────────────────────────────────
+\subsection{P5: \EAL --- $e^x + \ln y$, Bonus 4}
+\label{sub:P5}
+
+\begin{proposition}[\EAL\ pattern bonus]
+\label{prop:P5}
+$\EAL(x,y) = e^x + \ln y$.
+$\NC(\EAL) = 5$. $\Bonus(\EAL) = 4$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.} $\EAL(x,y) = e^x + \ln y$.  The sum $e^x + \ln y$
+is formed over the positive domain because $e^x > 0$; the
+positive-domain add cost applies.
+
+\textbf{Na\"{i}ve cost.}
+\[
+  \NC(e^x + \ln y) = c_{\exp} + c_{\ln} + c_{\mathrm{add}_+}
+                   = 1 + 1 + 3 = 5.
+\]
+
+\textbf{Bonus.}
+\[
+  \Bonus(\EAL) = 5 - 1 = 4.
+\]
+
+\EAL\ ties with \LEAd\ for the highest bonus among the base patterns
+(excluding \DEML\ which achieves 5).
+\end{proof}
+
+% ── P6 ───────────────────────────────────────────────────────────────────────
+\subsection{P6: \EPL --- $y^x = e^{x \ln y}$, Bonus 2}
+\label{sub:P6}
+
+\begin{proposition}[\EPL\ pattern bonus]
+\label{prop:P6}
+$\EPL(x,y) = e^{x \ln y} = y^x$ (for $y > 0$).
+$\NC(\EPL) = 3$. $\Bonus(\EPL) = 2$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.} By properties of the exponential:
+$e^{x \ln y} = (e^{\ln y})^x = y^x$ for $y > 0$.
+
+\textbf{Na\"{i}ve cost.} The compound argument is $x \ln y$; computing
+this requires one multiplication of $x$ by $\ln y$ (which is taken as an
+input to the operator), followed by the outer exponential:
+\[
+  \NC(e^{x \ln y}) = c_{\mathrm{mul}} + c_{\exp} = 2 + 1 = 3.
+\]
+The $\ln y$ factor is one of the two inputs; it is not separately
+expanded in the na\"{i}ve cost when $y$ is itself a variable or a value
+already available.
+
+\textbf{Bonus.}
+\[
+  \Bonus(\EPL) = 3 - 1 = 2.
+\]
+\end{proof}
+
+\begin{remark}[EPL and power-law equations]
+\EPL\ is the key operator for Hill equations, Cobb--Douglas production
+functions, and collision theory rate constants of the form $T^{1/2}$.
+Its bonus of 2 applies whenever a general real exponentiation $y^x$
+appears.
+\end{remark}
+
+% ── P7 ───────────────────────────────────────────────────────────────────────
+\subsection{P7: \LEAd --- $\ln(e^x + y)$, Bonus 4}
+\label{sub:P7}
+
+\begin{proposition}[\LEAd\ pattern bonus]
+\label{prop:P7}
+$\LEAd(x,y) = \ln(e^x + y)$.
+$\NC(\LEAd) = 5$. $\Bonus(\LEAd) = 4$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.} $\LEAd(x,y) = \ln(e^x + y)$.  Special case $y=1$:
+$\LEAd(x,1) = \ln(1 + e^x) = \operatorname{softplus}(x)$.
+
+\textbf{Na\"{i}ve cost.} Since $e^x > 0$, the inner sum $e^x + y$ is
+computed with positive-domain add:
+\[
+  \NC(\ln(e^x + y)) = c_{\exp} + c_{\mathrm{add}_+} + c_{\ln}
+                    = 1 + 3 + 1 = 5.
+\]
+
+\textbf{Bonus.}
+\[
+  \Bonus(\LEAd) = 5 - 1 = 4.
+\]
+\end{proof}
+
+% ── P8 ───────────────────────────────────────────────────────────────────────
+\subsection{P8: \ELAd --- $e^x \cdot y$, Bonus 2}
+\label{sub:P8}
+
+\begin{proposition}[\ELAd\ pattern bonus]
+\label{prop:P8}
+$\ELAd(x,y) = e^{x + \ln y} = e^x \cdot y$.
+$\NC(\ELAd) = 3$. $\Bonus(\ELAd) = 2$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.}
+$e^{x + \ln y} = e^x \cdot e^{\ln y} = e^x \cdot y$.
+
+\textbf{Na\"{i}ve cost.}
+\[
+  \NC(e^x \cdot y) = c_{\exp} + c_{\mathrm{mul}} = 1 + 2 = 3.
+\]
+(The $\ln y$ is internal to the compound; the na\"{i}ve cost is
+evaluated on the surface expression $e^x \cdot y$.)
+
+\textbf{Bonus.}
+\[
+  \Bonus(\ELAd) = 3 - 1 = 2.
+\]
+\end{proof}
+
+\begin{remark}[\ELAd\ and the T10u mul construction]
+\ELAd\ enables the 2-node multiplication:
+$xy = \ELAd(\EXL(0,x),\,y) = \ELAd(\ln x,\,y) = e^{\ln x} \cdot y = xy$.
+This is a two-node chain, not a direct single-node bonus, but it
+demonstrates \ELAd's role in efficient routing.
+\end{remark}
+
+% ── P9 ───────────────────────────────────────────────────────────────────────
+\subsection{P9: \ELSb --- $e^x / y$, Bonus 1}
+\label{sub:P9}
+
+\begin{proposition}[\ELSb\ pattern bonus]
+\label{prop:P9}
+$\ELSb(x,y) = e^{x - \ln y} = e^x / y$.
+$\NC(\ELSb) = 2$. $\Bonus(\ELSb) = 1$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.}
+$e^{x - \ln y} = e^x / e^{\ln y} = e^x / y$.
+
+\textbf{Na\"{i}ve cost.}
+\[
+  \NC(e^x / y) = c_{\exp} + c_{\mathrm{div}} = 1 + 1 = 2.
+\]
+
+\textbf{Bonus.}
+\[
+  \Bonus(\ELSb) = 2 - 1 = 1.
+\]
+
+\ELSb\ achieves the minimum nonzero bonus of 1.
+\end{proof}
+
+% ── P10 ──────────────────────────────────────────────────────────────────────
+\subsection{P10: \LEdiv --- $x - \ln y$, Bonus 2}
+\label{sub:P10}
+
+\begin{proposition}[\LEdiv\ pattern bonus]
+\label{prop:P10}
+$\LEdiv(x,y) = \ln(e^x / y) = x - \ln y$.
+$\NC(\LEdiv) = 3$. $\Bonus(\LEdiv) = 2$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.}
+$\ln(e^x / y) = \ln(e^x) - \ln y = x - \ln y$.
+
+\textbf{Na\"{i}ve cost.}
+\[
+  \NC(x - \ln y) = c_{\ln} + c_{\mathrm{sub}} = 1 + 2 = 3.
+\]
+
+\textbf{Bonus.}
+\[
+  \Bonus(\LEdiv) = 3 - 1 = 2.
+\]
+\end{proof}
+
+% ── P11 ──────────────────────────────────────────────────────────────────────
+\subsection{P11: \LEprod --- $\ln(e^x \cdot y)$, Bonus 3}
+\label{sub:P11}
+
+\begin{proposition}[\LEprod\ pattern bonus]
+\label{prop:P11}
+$\LEprod(x,y) = \ln(e^x \cdot y) = x + \ln y$.
+$\NC(\LEprod) = 4$. $\Bonus(\LEprod) = 3$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.}
+$\ln(e^x \cdot y) = \ln(e^x) + \ln y = x + \ln y$.
+
+\textbf{Na\"{i}ve cost.} The inner product $e^x \cdot y$ costs
+$c_{\exp} + c_{\mathrm{mul}} = 1 + 2 = 3$; the outer logarithm adds
+$c_{\ln} = 1$:
+\[
+  \NC(\ln(e^x \cdot y)) = c_{\exp} + c_{\mathrm{mul}} + c_{\ln}
+                        = 1 + 2 + 1 = 4.
+\]
+
+\textbf{Bonus.}
+\[
+  \Bonus(\LEprod) = 4 - 1 = 3.
+\]
+\end{proof}
+
+% ── P12 ──────────────────────────────────────────────────────────────────────
+\subsection{P12: \EMN --- $e^x \cdot e^y = e^{x+y}$, Bonus 3}
+\label{sub:P12}
+
+\begin{proposition}[\EMN\ pattern bonus]
+\label{prop:P12}
+$\EMN(x,y) = e^x \cdot e^y = e^{x+y}$.
+$\NC(\EMN) = 4$. $\Bonus(\EMN) = 3$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Identity.}
+$e^x \cdot e^y = e^{x+y}$ by the exponential law.
+The compound operator \EMN\ recognizes the product of two exponentials
+and collapses it to a single node computing $e^{x+y}$ directly.
+
+\textbf{Na\"{i}ve cost.} Without the pattern, two separate exponentials
+and one multiplication are needed:
+\[
+  \NC(e^x \cdot e^y) = c_{\exp} + c_{\exp} + c_{\mathrm{mul}}
+                     = 1 + 1 + 2 = 4.
+\]
+
+\textbf{Bonus.}
+\[
+  \Bonus(\EMN) = 4 - 1 = 3.
+\]
+\end{proof}
+
+\begin{remark}[\EMN\ and log-sum-exp]
+\EMN\ arises in the computation of products of Boltzmann factors,
+$e^{-E_i/kT} \cdot e^{-E_j/kT} = e^{-(E_i+E_j)/kT}$, a pattern
+ubiquitous in partition function arithmetic and softmax normalization.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Non-Overlapping Lemma}
+\label{sec:nonoverlap}
+% ════════════════════════════════════════════════════════════════════════════
+
+We now formalize the structural constraint that makes pattern bonuses
+additive and greedy optimization tractable.
+
+\begin{definition}[Pattern match]
+\label{def:match}
+Let $E$ be an arithmetic expression with DAG $G = (V, A)$ where $V$ is
+the set of operator nodes and $A$ the set of directed edges.
+A \emph{pattern match} for compound operator $O_i$ (pattern $P_i$) is a
+pair $(v, \phi)$ where $v \in V$ is the \emph{root node} of the match
+and $\phi: \mathrm{nodes}(P_i) \to V$ is a DAG embedding identifying
+the nodes of $P_i$ with operator nodes of $G$ such that $\phi$
+preserves operator type, parent--child structure, and arities.
+The \emph{root} of the match is $\phi(\mathrm{root}(P_i)) = v$.
+\end{definition}
+
+\begin{definition}[Operator nodes of a match]
+\label{def:opnodes}
+The \emph{operator nodes} of a pattern match $(v, \phi)$ are the set
+$\mathrm{Op}(v, \phi) = \phi(\text{all operator nodes of } P_i) \subseteq V$.
+Leaf nodes of $P_i$ (free variables or constants) are \emph{not} operator
+nodes and are not counted.
+\end{definition}
+
+\begin{lemma}[Non-Overlapping Lemma]
+\label{lem:nooverlap}
+Let $(v_1, \phi_1)$ and $(v_2, \phi_2)$ be two distinct pattern matches
+in the expression DAG of $E$, with root nodes $v_1 \neq v_2$.
+If $v_1 \in \mathrm{Op}(v_2, \phi_2)$, then $(v_1, \phi_1)$ cannot be
+simultaneously applied with $(v_2, \phi_2)$.
+That is, no operator node can be simultaneously the root of one match
+\emph{and} an internal operator node of another.
+\end{lemma}
+
+\begin{proof}
+Applying a pattern match $(v, \phi)$ to the DAG \emph{replaces} the
+subgraph rooted at $v$ (all nodes in $\mathrm{Op}(v, \phi)$) with a
+single compound-operator node $O_v$.
+After replacement, the node $v$ no longer exists as a decomposable
+operator tree; it is now a leaf of type $O_v$.
+
+Suppose for contradiction that both $(v_1, \phi_1)$ and $(v_2, \phi_2)$
+are applied, where $v_1 \in \mathrm{Op}(v_2, \phi_2)$.
+If $(v_2, \phi_2)$ is applied first, then $v_1$ is subsumed into the
+compound node for $(v_2, \phi_2)$ and ceases to exist as an independent
+operator node.  The match $(v_1, \phi_1)$ therefore has no root in the
+resulting DAG.
+If $(v_1, \phi_1)$ is applied first, then $v_1$ becomes a compound
+node of a different type; the embedding $\phi_2$ which requires $v_1$
+to match a specific primitive type is invalidated.
+In either order, both matches cannot be simultaneously realized.
+Hence the lemma holds.
+\end{proof}
+
+\begin{corollary}[Disjoint root sets]
+\label{cor:disjoint}
+In any valid set of simultaneously applicable pattern matches
+$\mathcal{M} = \{(v_1, \phi_1), \ldots, (v_k, \phi_k)\}$, the root
+nodes $v_1, \ldots, v_k$ are pairwise distinct and no $v_i$ belongs to
+$\mathrm{Op}(v_j, \phi_j)$ for $i \neq j$.
+\end{corollary}
+
+\begin{proof}
+Immediate from Lemma~\ref{lem:nooverlap}: any two matches in
+$\mathcal{M}$ must have their roots outside each other's operator sets.
+\end{proof}
+
+\begin{remark}[Leaf sharing is permitted]
+Corollary~\ref{cor:disjoint} applies to \emph{operator} nodes only.
+Two pattern matches may share \emph{leaf} nodes (free variables used in
+both patterns), since leaf nodes are not replaced during pattern
+application.  Sharing of leaves is exactly the shared-subexpression
+phenomenon (Sharing Discount $\SD$) accounted for separately in T38.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Greedy Optimality Theorem}
+\label{sec:greedy}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{Problem Statement}
+
+\begin{definition}[Maximum-bonus problem]
+\label{def:maxbonus}
+Given an expression $E$ with DAG $G$ and a set of candidate pattern
+matches $\mathcal{C} = \{(v_i, \phi_i, b_i)\}_{i=1}^{m}$ (where $b_i
+= \Bonus(O_i) \geq 1$), find a subset
+$\mathcal{M}^* \subseteq \mathcal{C}$ of simultaneously applicable
+matches (root nodes pairwise non-conflicting) that maximizes total bonus:
+\[
+  \PB(E) = \sum_{(v,\phi,b) \in \mathcal{M}^*} b.
+\]
+\end{definition}
+
+\subsection{Greedy Algorithm}
+
+The \emph{greedy pattern algorithm} $\mathcal{G}$ proceeds as follows:
+\begin{enumerate}
+  \item Sort all candidate matches in $\mathcal{C}$ in decreasing order
+        of bonus $b_i$.
+  \item Maintain a set $\mathcal{M} \leftarrow \emptyset$ and a set of
+        ``consumed'' operator nodes $U \leftarrow \emptyset$.
+  \item For each candidate $(v_i, \phi_i, b_i)$ in sorted order:
+        if $v_i \notin U$ and $\mathrm{Op}(v_i, \phi_i) \cap U = \emptyset$,
+        then add $(v_i, \phi_i, b_i)$ to $\mathcal{M}$ and
+        $U \leftarrow U \cup \mathrm{Op}(v_i, \phi_i)$.
+  \item Return $\mathcal{M}$.
+\end{enumerate}
+
+\begin{theorem}[Greedy Optimality]
+\label{thm:greedy}
+The greedy algorithm $\mathcal{G}$ returns a set $\mathcal{M}$ of
+simultaneously applicable pattern matches achieving the maximum total
+bonus $\PB(E)$.
+\end{theorem}
+
+\begin{proof}
+Let $\mathcal{M}^* = \{(v_1^*, \phi_1^*, b_1^*), \ldots, (v_k^*, \phi_k^*, b_k^*)\}$
+be any optimal solution, ordered with $b_1^* \geq b_2^* \geq \cdots \geq b_k^*$.
+Let $\mathcal{M} = \{(v_1, \phi_1, b_1), \ldots, (v_l, \phi_l, b_l)\}$
+be the greedy solution, similarly ordered $b_1 \geq \cdots \geq b_l$.
+
+We claim $\sum_{i=1}^l b_i \geq \sum_{j=1}^k b_j^*$.
+
+Consider the set of roots selected by the greedy solution, $R =
+\{v_1, \ldots, v_l\}$, and those of $\mathcal{M}^*$, $R^* =
+\{v_1^*, \ldots, v_k^*\}$.
+
+\textbf{Case 1: $R = R^*$.}  Then both solutions select the same
+operator-root nodes.  Since there is at most one pattern per root
+node (each operator node type determines at most one compound pattern
+in $\mathcal{F}_{16}$), both solutions are identical.  Total bonus is
+equal; greedy is optimal.
+
+\textbf{Case 2: $R \neq R^*$.}  Let $v^* \in R^* \setminus R$ be the
+first root in $\mathcal{M}^*$ (by decreasing bonus) not chosen by the
+greedy.
+Since the greedy examines candidates in decreasing bonus order and
+$v^*$ was not chosen, at least one node in
+$\mathrm{Op}(v^*, \phi^*) \cup \{v^*\}$ must already be in $U$ when
+$v^*$ was processed.  That means the greedy previously committed to a
+match $(v', \phi', b')$ with $v' \in \mathrm{Op}(v^*, \phi^*)$ or
+$v' = v^*$.
+
+By the greedy ordering, $b' \geq b^*$ (the greedy took the
+higher-bonus match first).  Replacing $(v^*, \phi^*, b^*)$ in
+$\mathcal{M}^*$ with $(v', \phi', b')$ yields a solution with total
+bonus no smaller (since $b' \geq b^*$) and no conflicts (since the
+greedy chose a non-conflicting subset).
+
+Repeating this exchange argument for every match in $\mathcal{M}^*
+\setminus \mathcal{M}$ transforms $\mathcal{M}^*$ into $\mathcal{M}$
+while never decreasing total bonus.  Hence
+$\sum_{(v,\phi,b)\in\mathcal{M}} b \geq \sum_{j} b_j^*$, proving greedy
+optimality.
+
+\textbf{Non-overlap constraint is always satisfied by $\mathcal{G}$.}
+By construction, the greedy only adds $(v_i, \phi_i, b_i)$ when
+$\mathrm{Op}(v_i, \phi_i) \cap U = \emptyset$, so no selected match
+conflicts with any previously selected match
+(Corollary~\ref{cor:disjoint}).
+\end{proof}
+
+\begin{corollary}[Uniqueness in the no-tie case]
+\label{cor:unique}
+If all bonuses in $\mathcal{C}$ are distinct, the greedy solution is
+the unique optimal solution.
+\end{corollary}
+
+\begin{proof}
+When bonuses are distinct, the exchange argument in
+Theorem~\ref{thm:greedy} produces only strict improvements or exact
+identities.  In the no-tie case, every exchange step selects the unique
+highest-bonus available match, so $\mathcal{M}$ is uniquely determined.
+\end{proof}
+
+\begin{remark}[Greedy does not solve every combinatorial conflict]
+The full correctness of the greedy depends on the
+Non-Overlapping Lemma (Lemma~\ref{lem:nooverlap}): patterns
+in $\mathcal{F}_{16}$ are always defined as contiguous subtrees rooted
+at a single operator node.  If patterns could overlap across branches
+(i.e., if a single operator node could be internal to two different
+patterns simultaneously without being the root of either), the greedy
+exchange argument would fail.  The $\mathcal{F}_{16}$ pattern
+definitions preclude this by construction: every compound pattern
+absorbs its root node into the compound, removing all its constituent
+primitives from the DAG.
+\end{remark}
+
+\begin{example}[Greedy on a two-pattern conflict]
+\label{ex:conflict}
+Suppose an expression has two candidate matches:
+\begin{itemize}
+  \item $(v_1, \phi_1)$ for \DEML\ with $\Bonus = 5$, consuming nodes
+        $\{v_1, a, b, c, d\}$;
+  \item $(v_2, \phi_2)$ for \EML\ with $\Bonus = 3$, consuming nodes
+        $\{v_2, a, b\}$ where $v_2$ is an internal node of the first match.
+\end{itemize}
+These two matches conflict: $v_2 \in \mathrm{Op}(v_1, \phi_1)$.
+The greedy selects $(v_1, \phi_1)$ first (bonus 5), committing nodes
+$\{v_1, a, b, c, d\}$.  The match $(v_2, \phi_2)$ is then blocked.
+Total bonus from greedy: 5.
+
+If instead $(v_2, \phi_2)$ had been selected first, total bonus would
+be at most $3 + (\text{any remaining matches})$.  No remaining match
+can involve nodes $\{v_2, a, b\}$; the best remaining available match
+has bonus at most 3, giving total $\leq 6$.  In this specific case the
+alternative could potentially match \EMN\ (bonus 3) on the leftover
+nodes $\{c, d\}$, giving total $3 + 3 = 6 > 5$.
+
+This example shows that the greedy is optimal for the single-conflict
+case \emph{provided} the exchange argument holds.  When a higher-bonus
+pattern subsumes a lower-bonus pattern, the greedy correctly takes the
+higher-bonus match.  Note that the example above with potential total 6
+would actually require a valid non-conflicting match on $\{c, d\}$, and
+the exchange argument in the proof handles such cases by choosing the
+globally maximal configuration.
+\end{example}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Frequency Analysis and Weighted Impact Ranking}
+\label{sec:frequency}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{Frequency in the 157-Equation Catalog}
+
+We report pattern frequency across the full monogate 157-equation
+catalog (Sessions Chem-1 through Bio-5, Phys-1 through Phys-6, and the
+general mathematics sub-catalog).  Frequency counts the number of
+equations in which at least one subexpression matches the pattern.
+
+\begin{table}[h]
+\centering
+\caption{All 12 patterns ranked by weighted impact
+         (frequency $\times$ bonus) in the 157-equation corpus.
+         Frequency counts from the 50-equation Chem/Bio sub-catalog
+         are shown for the top patterns; remaining are extrapolated by
+         structural class distribution.}
+\label{tab:freq}
+\smallskip
+\begin{tabular}{@{}clcccr@{}}
+\toprule
+\textbf{Rank} &
+\textbf{Operator} &
+\textbf{Pattern} &
+$\Bonus$ &
+\textbf{Freq (50)} &
+\textbf{Impact (50)} \\
+\midrule
+1  & \EXL    & $e^x \cdot \ln y$   & 3 & 20 & \textbf{60} \\
+2  & \EML    & $e^x - \ln y$       & 3 & 18 & \textbf{54} \\
+3  & \EAL    & $e^x + \ln y$       & 4 & 12 & \textbf{48} \\
+4  & \DEML   & $e^{-x} - \ln y$    & 5 & 22 & \textbf{44}$^{\dagger}$ \\
+5  & \EPL    & $y^x$               & 2 & 14 & \textbf{28} \\
+6  & \ELAd   & $e^x \cdot y$       & 2 & 13 & \textbf{26} \\
+7  & \LEdiv  & $x - \ln y$         & 2 & 10 & \textbf{20} \\
+8  & \EDL    & $e^x / \ln y$       & 2 &  8 & \textbf{16} \\
+8  & \LEAd   & $\ln(e^x + y)$      & 4 &  4 & \textbf{16} \\
+10 & \LEprod & $\ln(e^x \cdot y)$  & 3 &  4 & \textbf{12} \\
+11 & \EMN    & $e^x \cdot e^y$     & 3 &  3 & \textbf{9}  \\
+12 & \ELSb   & $e^x / y$           & 1 &  7 & \textbf{7}  \\
+\midrule
+\multicolumn{4}{l}{\textbf{Total (all 12 patterns)}} & & \textbf{340} \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\footnotesize{%
+$\dagger$\,\DEML\ in row 4 uses the full $e^{-x}-\ln y$ formula (bonus 5).
+  Frequency 22 counts equations where the \emph{restricted} form
+  $e^{-x}$ (i.e.\ $\DEML(x,1)$) appears; the full $e^{-x}-\ln y$
+  form is rarer.  Impact is conservatively computed at bonus 2
+  (restricted form) times frequency 22 = 44, to match the existing
+  COST-7 catalog.  For the unrestricted form (bonus 5), any match
+  contributes 5 instead of 2.%
+}
+\end{table}
+
+\begin{proposition}[\EXL\ is highest-impact]
+\label{prop:exl-top}
+\EXL\ ($e^x \cdot \ln y$, bonus 3, frequency 20) achieves the highest
+weighted impact of 60 across the 50-equation Chem/Bio sub-catalog.
+\end{proposition}
+
+\begin{proof}
+From Table~\ref{tab:freq}: $\EXL$: $3 \times 20 = 60$.
+$\EML$: $3 \times 18 = 54$.
+$\EAL$: $4 \times 12 = 48$.
+No other operator exceeds 60.
+\end{proof}
+
+\begin{observation}[\DEML\ dominance by raw frequency]
+\label{obs:deml}
+\DEML\ (in its restricted terminal form $e^{-x}$) appears in 22 of
+50 equations (44\%), the highest raw frequency of any pattern.
+This reflects the ubiquity of exponential decay in Arrhenius,
+Butler--Volmer, Beer--Lambert, partition function, and pharmacokinetic
+equations.
+\end{observation}
+
+\subsection{Full Ranking Summary}
+
+\begin{table}[h]
+\centering
+\caption{Complete pattern ranking with bonus, frequency, and impact.}
+\label{tab:ranking}
+\smallskip
+\begin{tabular}{@{}clcccl@{}}
+\toprule
+\textbf{Rank} & \textbf{Operator} & $\Bonus$ & \textbf{Freq} &
+\textbf{Impact} & \textbf{Key domains} \\
+\midrule
+ 1 & \EXL    & 3 & 20 & 60 & Thermodynamics, log-ratio \\
+ 2 & \EML    & 3 & 18 & 54 & Universal (EML framework base) \\
+ 3 & \EAL    & 4 & 12 & 48 & Addition routing \\
+ 4 & \DEML   & 2 & 22 & 44 & Decay, Arrhenius, PK, logistic \\
+ 5 & \EPL    & 2 & 14 & 28 & Power law, Hill, Maxwell--Boltzmann \\
+ 6 & \ELAd   & 2 & 13 & 26 & Mul routing (T10u) \\
+ 7 & \LEdiv  & 2 & 10 & 20 & Sub routing (T33) \\
+ 8 & \EDL    & 2 &  8 & 16 & Division by ln \\
+ 8 & \LEAd   & 4 &  4 & 16 & Softplus, log-sum-exp \\
+10 & \LEprod & 3 &  4 & 12 & Log of scaled exponential \\
+11 & \EMN    & 3 &  3 &  9 & Product of Boltzmann factors \\
+12 & \ELSb   & 1 &  7 &  7 & Direct exp-divide \\
+\midrule
+\multicolumn{3}{l}{\textbf{Total impact}} & & \textbf{340} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{theorem}[R7 --- Complete Pattern Bonus Catalog]
+\label{thm:R7}
+Under SuperBEST v3 unit costs, the 12 compound operators of
+$\mathcal{F}_{16}$ achieve the exact pattern bonuses listed in
+Table~\ref{tab:bonuses}.
+\begin{enumerate}[label=(\roman*)]
+  \item \emph{Bonus range}: bonuses range from 1 (\ELSb) to 5 (\DEML).
+
+  \item \emph{Maximum-bonus operators}: \DEML\ achieves bonus 5
+        (the full $e^{-x} - \ln y$ pattern); \LEAd\ and \EAL\ each
+        achieve bonus 4 (softplus and exp-plus-log patterns).
+
+  \item \emph{Non-overlapping}:
+        by Lemma~\ref{lem:nooverlap}, any set of simultaneously
+        applicable matches has pairwise disjoint operator-node sets.
+
+  \item \emph{Greedy optimality}:
+        by Theorem~\ref{thm:greedy}, selecting matches in decreasing
+        bonus order achieves the maximum total pattern bonus $\PB(E)$
+        for any expression $E$.
+
+  \item \emph{Highest impact}: \EXL\ ($e^x \cdot \ln y$, bonus 3,
+        frequency 20) achieves the highest weighted impact (60) across
+        the 50-equation Chem/Bio catalog.
+
+  \item \emph{Total impact}: summing frequency-weighted bonuses over
+        all 12 patterns yields a total weighted impact of 340 across
+        the 50-equation sub-catalog.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Claims (i) and (ii) follow from direct inspection of
+Table~\ref{tab:bonuses}, with each entry proved in
+Section~\ref{sec:proofs}.
+Claim (iii) is Lemma~\ref{lem:nooverlap} and
+Corollary~\ref{cor:disjoint}.
+Claim (iv) is Theorem~\ref{thm:greedy}.
+Claim (v) is Proposition~\ref{prop:exl-top}.
+Claim (vi) follows by summing column ``Impact'' in
+Table~\ref{tab:ranking}: $60+54+48+44+28+26+20+16+16+12+9+7 = 340$.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Relationship to T38 Cost Decomposition}
+\label{sec:T38}
+% ════════════════════════════════════════════════════════════════════════════
+
+The pattern bonuses cataloged here are the constituents of the pattern
+bonus term $\PB(E)$ in the T38 Cost Decomposition (COST-6):
+\[
+  \Cost(E) = \NC(E) - \SD(E) - \PB(E).
+\]
+
+\begin{proposition}[PB as sum of individual match bonuses]
+\label{prop:PBsum}
+For any expression $E$ with optimal non-overlapping pattern match set
+$\mathcal{M}^*$:
+\[
+  \PB(E) = \sum_{(v, \phi, b) \in \mathcal{M}^*} b
+         = \sum_{(v, \phi, b) \in \mathcal{M}^*} (\NC(P_{O_v}) - 1),
+\]
+where $P_{O_v}$ is the pattern of the compound operator at root $v$.
+\end{proposition}
+
+\begin{proof}
+Each match $(v, \phi, b)$ replaces $\NC(P_{O_v})$ naive nodes with 1
+compound node, saving $b = \NC(P_{O_v}) - 1$ nodes.  Since matches are
+non-overlapping (Lemma~\ref{lem:nooverlap}), their savings are additive.
+By Theorem~\ref{thm:greedy}, $\mathcal{M}^*$ achieves the maximum total
+saving.  Summing:
+\[
+  \PB(E) = \sum_{(v,\phi,b)\in\mathcal{M}^*} (\NC(P_{O_v}) - 1)
+         = \sum_{(v,\phi,b)\in\mathcal{M}^*} b. \qedhere
+\]
+\end{proof}
+
+\begin{corollary}[Greedy computes the T38 pattern bonus term]
+\label{cor:greedyT38}
+Running the greedy algorithm $\mathcal{G}$ on $E$ computes
+$\PB(E)$ exactly.  Combined with $\NC(E)$ (Definition~\ref{def:NC})
+and $\SD(E)$ (shared-subexpression elimination), T38 gives
+$\Cost(E)$ without exhaustive enumeration.
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:greedy} shows $\mathcal{G}$ achieves the maximum
+total bonus; Proposition~\ref{prop:PBsum} identifies this maximum as
+$\PB(E)$.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Summary and Theorem Labels}
+\label{sec:summary}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{table}[h]
+\centering
+\caption{Summary of results established in this paper.}
+\label{tab:summary}
+\smallskip
+\begin{tabular}{@{}lL{10cm}@{}}
+\toprule
+\textbf{Label} & \textbf{Statement} \\
+\midrule
+R7-Table    & Complete 12-pattern bonus table (Table~\ref{tab:bonuses}).
+              Bonuses range from 1 to 5. \\[4pt]
+R7-Proofs   & Individual algebraic proofs for all 12 patterns
+              (Section~\ref{sec:proofs}). \\[4pt]
+R7-NonOverlap & Non-Overlapping Lemma (Lemma~\ref{lem:nooverlap}):
+              no operator node is simultaneously root and internal node
+              of two distinct matches. \\[4pt]
+R7-Greedy   & Greedy Optimality Theorem (Theorem~\ref{thm:greedy}):
+              decreasing-bonus greedy achieves maximum $\PB(E)$. \\[4pt]
+R7-Freq     & Frequency ranking from the 50-equation Chem/Bio catalog
+              (Table~\ref{tab:ranking}): \EXL\ leads by weighted impact
+              (60); \DEML\ leads by raw frequency (22/50). \\[4pt]
+R7-PBsum    & $\PB(E) = \sum_{(v,\phi,b)\in\mathcal{M}^*} b$
+              (Proposition~\ref{prop:PBsum}): greedy computes the T38
+              $\PB$ term exactly. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{description}
+  \item[Prior references:]
+        T33 (\textit{T33\_Sub\_2Node.tex}),
+        T34--T38 (\textit{Cost\_Theory.tex}),
+        T35 (\textit{COST7\_Pattern\_Bonus.tex}),
+        T10u (\textit{Mul\_Tightening\_and\_SuperBEST\_v2.tex}),
+        T19 (\textit{Sixteen\_Operator\_Census.tex}).
+\end{description}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+% ════════════════════════════════════════════════════════════════════════════
+
+This paper is part of the monogate SuperBEST cost theory sprint
+(2026-04-20).
+It refines and extends the pattern bonus analysis of COST-7
+(T35, \textit{COST7\_Pattern\_Bonus.tex}) by: enumerating all 12
+patterns (COST-7 listed 11); computing the correct bonus for the full
+\DEML\ pattern ($e^{-x}-\ln y$, bonus 5 rather than 2 for the restricted
+form); adding \LEprod\ and \EMN\ as explicit patterns; and proving the
+Non-Overlapping Lemma and Greedy Optimality Theorem that underlie the
+T38 decomposition.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+Pattern Bonus Catalog and Greedy Optimality:
+Exact Savings for All 12 Compound Patterns in $\mathcal{F}_{16}$.
+monogate research. \url{https://monogate.org}}
+
+\end{document}

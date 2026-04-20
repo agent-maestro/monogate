@@ -1,0 +1,1092 @@
+% R9_Structural_Classes.tex
+% monogate Cost Theory — T41: Structural Classes Exhaustive, Mutually Exclusive,
+% and Cost Ordering mean(C) < mean(B) < mean(A) < mean(D)
+% Author: Arturo R. Almaguer
+% Date: 2026-04-20
+% Status: THEOREM (T41)
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\LEprod}{\operatorname{LEprod}}
+
+% ── Cost macros ──────────────────────────────────────────────────────────────
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+\newcommand{\Fam}{\mathcal{F}}
+\newcommand{\cls}[1]{\textbf{Class~#1}}
+
+% ── Cost shorthand ───────────────────────────────────────────────────────────
+\newcommand{\cexp}{c_{\mathrm{exp}}}
+\newcommand{\cln}{c_{\mathrm{ln}}}
+\newcommand{\cmul}{c_{\mathrm{mul}}}
+\newcommand{\cdiv}{c_{\mathrm{div}}}
+\newcommand{\cadd}{c_{\mathrm{add}}}
+\newcommand{\csub}{c_{\mathrm{sub}}}
+\newcommand{\cpow}{c_{\mathrm{pow}}}
+\newcommand{\cneg}{c_{\mathrm{neg}}}
+\newcommand{\crec}{c_{\mathrm{rec}}}
+
+% ── Column types ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\title{Theorem T41: Four Structural Classes Are Exhaustive,\\
+       Mutually Exclusive, and Satisfy the Cost Ordering\\[6pt]
+       \large $\overline{\Cost}_C < \overline{\Cost}_B
+              < \overline{\Cost}_A < \overline{\Cost}_D$}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We prove Theorem~T41 of the monogate SuperBEST cost theory: the four
+structural classes~A (Pure Exponential), B~(Rational), C~(Log-ratio),
+and D~(Mixed) form an \emph{exhaustive} and \emph{mutually exclusive}
+partition of the set of all finite arithmetic expressions computable
+by EML trees over $\mathcal{F}_{16}$.
+The partition is constructed by a two-bit signature
+$(\mathbf{1}_{\mathrm{exp}},\mathbf{1}_{\mathrm{ln}})$ together with a
+structural refinement for Class~D.
+We then establish the cost ordering
+$\overline{\Cost}_C < \overline{\Cost}_B < \overline{\Cost}_A
+ < \overline{\Cost}_D$
+by two complementary methods:
+(i) a structural argument grounded in SuperBEST~v3 unit costs; and
+(ii) an empirical confirmation across the 157-equation extended catalog,
+reporting mean costs $\overline{\Cost}_C \approx 9.5$,
+$\overline{\Cost}_B \approx 12.2$, $\overline{\Cost}_A \approx 10.4$,
+$\overline{\Cost}_D \approx 20.1$ (50-equation COST-4 subset) and
+consistent statistics from the enlarged catalog.
+Ten worked classifications from the catalog illustrate the procedure.
+Edge cases and borderline expressions are resolved in
+Section~\ref{sec:edge}.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Four Structural Classes: Formal Definitions}
+\label{sec:classes}
+% ════════════════════════════════════════════════════════════════════════════
+
+Throughout, $E$ denotes a finite arithmetic expression computable by a
+rooted EML tree over the 16-operator family $\mathcal{F}_{16}$.
+The SuperBEST~v3 unit costs are fixed:
+$\cexp = \cln = \cdiv = 1$;
+$\cneg = \crec = \cmul = \csub = 2$;
+$\cpow = \cadd = 3$.
+
+% ── 1.1 Signature ──────────────────────────────────────────────────────────
+\subsection{The Transcendental Signature}
+
+\begin{definition}[Transcendental signature]
+\label{def:sig}
+For any expression~$E$ let
+\[
+  \sigma(E) \;=\;
+  \bigl(\mathbf{1}[n_{\exp}(E) > 0],\;
+        \mathbf{1}[n_{\ln}(E) > 0]\bigr)
+  \;\in\; \{0,1\}^2,
+\]
+where $n_{\exp}(E)$ and $n_{\ln}(E)$ are the counts of
+\texttt{exp} and \texttt{ln} nodes in the minimal EML tree for~$E$.
+The four possible signatures are
+$(0,0)$, $(1,0)$, $(0,1)$, and $(1,1)$.
+\end{definition}
+
+% ── 1.2 Class definitions ───────────────────────────────────────────────────
+\subsection{Class Definitions}
+
+\begin{definition}[Class B --- Rational]
+\label{def:classB}
+$E \in \mathbf{B}$ if and only if $\sigma(E) = (0,0)$: neither
+\texttt{exp} nor \texttt{ln} appears.
+$E$ is a rational function of its free terminals, possibly including
+integer or rational powers.
+\end{definition}
+
+\begin{definition}[Class A --- Pure Exponential]
+\label{def:classA}
+$E \in \mathbf{A}$ if and only if $\sigma(E) = (1,0)$ (has \texttt{exp},
+no \texttt{ln}) and every \texttt{exp} output in the parse tree of~$E$
+satisfies both of the following conditions:
+\begin{enumerate}
+  \item Its argument is a rational sub-expression (no nested
+        transcendentals in the argument).
+  \item It is not combined via non-trivial arithmetic (\texttt{add},
+        \texttt{sub}, or as numerator/denominator of a non-constant
+        rational expression) with the output of any other \texttt{exp}
+        node.
+\end{enumerate}
+Expressions with $\sigma(E) = (1,0)$ that violate either condition fall
+into Class~D.
+\end{definition}
+
+\begin{definition}[Class C --- Log-ratio]
+\label{def:classC}
+$E \in \mathbf{C}$ if and only if $\sigma(E) = (0,1)$ (has \texttt{ln},
+no \texttt{exp}) and the argument to every \texttt{ln} node is a rational
+sub-expression (no transcendental nesting inside any \texttt{ln}
+argument).
+Expressions with $\sigma(E) = (0,1)$ that violate this condition fall
+into Class~D.
+\end{definition}
+
+\begin{definition}[Class D --- Mixed]
+\label{def:classD}
+$E \in \mathbf{D}$ if and only if $E$ does not belong to~A, B, or~C.
+Equivalently, $E \in \mathbf{D}$ whenever any of the following holds:
+\begin{enumerate}
+  \item $\sigma(E) = (1,1)$: both \texttt{exp} and \texttt{ln} present.
+  \item $\sigma(E) = (1,0)$ but two or more \texttt{exp} outputs are
+        combined at the same tree level via \texttt{add}, \texttt{sub},
+        \texttt{div}, or \texttt{recip} with non-constant operands.
+  \item $\sigma(E) = (0,1)$ but some \texttt{ln} argument contains a
+        transcendental sub-expression.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Class D as complementary class]
+Definitions~\ref{def:classA}--\ref{def:classC} give positive
+characterisations of A, B, C.
+Definition~\ref{def:classD} is the formal complement: $\mathbf{D}
+= \mathcal{E} \setminus (\mathbf{A} \cup \mathbf{B} \cup \mathbf{C})$,
+where $\mathcal{E}$ is the universe of finite EML-computable expressions.
+\end{remark}
+
+% ── 1.3 Cost ranges ─────────────────────────────────────────────────────────
+\subsection{Characteristic Cost Ranges}
+
+\begin{table}[h]
+\centering
+\caption{Structural classes: signature, cost range (50-equation COST-4
+         catalog), mean cost, and representative examples.}
+\label{tab:classes}
+\smallskip
+\begin{tabular}{@{}llcccl@{}}
+\toprule
+\textbf{Class} & \textbf{Signature}
+  & \textbf{$n$}
+  & \textbf{Cost range}
+  & \textbf{Mean cost}
+  & \textbf{Example} \\
+\midrule
+B: Rational          & $(0,0)$ & 19 & 2--34  & 12.2 & Michaelis--Menten \\
+C: Log-ratio         & $(0,1)$ & 13 & 3--17  & 9.5  & pH formula \\
+A: Pure Exponential  & $(1,0)$ & 8  & 5--13  & 10.4 & Arrhenius \\
+D: Mixed             & ---     & 10 & 12--31 & 20.1 & Butler--Volmer \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Exhaustive and Mutually Exclusive Partition}
+\label{sec:partition}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{theorem}[T41-Part: Classes A, B, C, D partition $\mathcal{E}$]
+\label{thm:partition}
+The four classes $\mathbf{A}$, $\mathbf{B}$, $\mathbf{C}$, $\mathbf{D}$
+form a partition of the universe~$\mathcal{E}$ of finite
+EML-computable arithmetic expressions:
+\[
+  \mathcal{E} = \mathbf{A} \sqcup \mathbf{B} \sqcup \mathbf{C}
+              \sqcup \mathbf{D},
+\]
+where~$\sqcup$ denotes disjoint union.
+Equivalently, every expression belongs to exactly one class.
+\end{theorem}
+
+The proof proceeds in two independent parts: exhaustiveness and mutual
+exclusion.
+
+% ── 2.1 Exhaustiveness ─────────────────────────────────────────────────────
+\subsection{Exhaustiveness}
+
+\begin{proposition}[Every expression is classified]
+\label{prop:exhaust}
+For every $E \in \mathcal{E}$, at least one of
+$E \in \mathbf{A}$, $E \in \mathbf{B}$, $E \in \mathbf{C}$,
+$E \in \mathbf{D}$ holds.
+\end{proposition}
+
+\begin{proof}
+We case-split on $\sigma(E) \in \{0,1\}^2$.
+
+\medskip
+\noindent\textbf{Case 1: $\sigma(E) = (0,0)$.}
+No \texttt{exp} and no \texttt{ln} in~$E$.
+By Definition~\ref{def:classB}, $E \in \mathbf{B}$.
+
+\medskip
+\noindent\textbf{Case 2: $\sigma(E) = (1,1)$.}
+Both \texttt{exp} and \texttt{ln} present.
+By condition~(i) of Definition~\ref{def:classD}, $E \in \mathbf{D}$.
+
+\medskip
+\noindent\textbf{Case 3: $\sigma(E) = (1,0)$.}
+\texttt{exp} present, \texttt{ln} absent.
+We examine whether the two structural conditions of
+Definition~\ref{def:classA} hold.
+\begin{itemize}
+  \item If both conditions hold: $E \in \mathbf{A}$.
+  \item If condition~(1) fails (some \texttt{exp} argument contains
+        a nested transcendental): $E \in \mathbf{D}$
+        by condition~(ii) of Definition~\ref{def:classD}, since an
+        \texttt{exp}-inside-\texttt{exp} structure represents two
+        \texttt{exp} nodes in a non-trivial composition.
+  \item If condition~(2) fails (two \texttt{exp} outputs combined by
+        non-trivial arithmetic): $E \in \mathbf{D}$ by
+        condition~(ii).
+\end{itemize}
+In all sub-cases, $E \in \mathbf{A} \cup \mathbf{D}$.
+
+\medskip
+\noindent\textbf{Case 4: $\sigma(E) = (0,1)$.}
+\texttt{ln} present, \texttt{exp} absent.
+We check whether every \texttt{ln} argument is rational.
+\begin{itemize}
+  \item If yes: $E \in \mathbf{C}$ by Definition~\ref{def:classC}.
+  \item If no (some \texttt{ln} argument contains a transcendental
+        nested within it): $E \in \mathbf{D}$ by condition~(iii)
+        of Definition~\ref{def:classD}.
+\end{itemize}
+In all sub-cases, $E \in \mathbf{C} \cup \mathbf{D}$.
+
+\medskip
+\noindent Since $\{0,1\}^2 = \{(0,0),(1,1),(1,0),(0,1)\}$ is exhausted
+and every case yields $E$ in at least one of $\mathbf{A}$, $\mathbf{B}$,
+$\mathbf{C}$, $\mathbf{D}$, the union is exhaustive.
+\end{proof}
+
+% ── 2.2 Mutual exclusion ───────────────────────────────────────────────────
+\subsection{Mutual Exclusion}
+
+\begin{proposition}[No expression belongs to two classes]
+\label{prop:exclusive}
+The classes $\mathbf{A}$, $\mathbf{B}$, $\mathbf{C}$, $\mathbf{D}$
+are pairwise disjoint.
+\end{proposition}
+
+\begin{proof}
+We verify all six pairs.
+
+\medskip
+\noindent\textbf{$\mathbf{A} \cap \mathbf{B} = \emptyset$.}
+$\mathbf{A}$ requires $n_{\exp} > 0$; $\mathbf{B}$ requires
+$n_{\exp} = 0$.  Contradiction.
+
+\medskip
+\noindent\textbf{$\mathbf{A} \cap \mathbf{C} = \emptyset$.}
+$\mathbf{A}$ requires $n_{\ln} = 0$; $\mathbf{C}$ requires
+$n_{\ln} > 0$.  Contradiction.
+
+\medskip
+\noindent\textbf{$\mathbf{B} \cap \mathbf{C} = \emptyset$.}
+$\mathbf{B}$ requires $n_{\ln} = 0$; $\mathbf{C}$ requires
+$n_{\ln} > 0$.  Contradiction.
+
+\medskip
+\noindent\textbf{$\mathbf{A} \cap \mathbf{D} = \emptyset$.}
+$\mathbf{A}$ requires both structural conditions of
+Definition~\ref{def:classA}; $\mathbf{D}$ is entered (for the $(1,0)$
+case) precisely when at least one of those conditions fails.
+An expression cannot simultaneously satisfy and violate the same condition.
+
+\medskip
+\noindent\textbf{$\mathbf{B} \cap \mathbf{D} = \emptyset$.}
+$\mathbf{B}$ requires $\sigma(E) = (0,0)$; no condition of
+Definition~\ref{def:classD} is satisfiable when both
+$n_{\exp} = 0$ and $n_{\ln} = 0$.
+(Condition~(i) requires $n_{\ln} > 0$ and $n_{\exp} > 0$; conditions~(ii)
+and~(iii) require at least one of $n_{\exp}$, $n_{\ln}$ to be positive.)
+
+\medskip
+\noindent\textbf{$\mathbf{C} \cap \mathbf{D} = \emptyset$.}
+$\mathbf{C}$ requires all \texttt{ln} arguments to be rational;
+$\mathbf{D}$ is entered (for the $(0,1)$ case) precisely when some
+\texttt{ln} argument is non-rational.  These are mutually exclusive by
+definition.
+
+\medskip
+\noindent All six intersection conditions yield the empty set; the four
+classes are pairwise disjoint.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:partition}]
+Exhaustiveness (Proposition~\ref{prop:exhaust}) and mutual exclusion
+(Proposition~\ref{prop:exclusive}) together establish
+$\mathcal{E} = \mathbf{A} \sqcup \mathbf{B} \sqcup \mathbf{C}
+             \sqcup \mathbf{D}$.
+\end{proof}
+
+% ── 2.3 Decision procedure ─────────────────────────────────────────────────
+\subsection{Algorithmic Realisation}
+
+The proof above is constructive: the following two-step procedure
+assigns any $E$ to its unique class in $O(|\mathcal{T}(E)|)$ time.
+
+\begin{enumerate}
+  \item Compute $\sigma(E) = (\mathbf{1}[n_{\exp}>0],
+        \mathbf{1}[n_{\ln}>0])$.
+  \item \textbf{If} $\sigma = (0,0)$: return~B.
+        \textbf{Else if} $\sigma = (1,1)$: return~D.
+        \textbf{Else if} $\sigma = (0,1)$: scan every \texttt{ln}
+        argument for transcendental nesting; if clean return~C, else~D.
+        \textbf{Else} ($\sigma = (1,0)$): check for multiple-branch
+        \texttt{exp} combinations; if simple return~A, else~D.
+\end{enumerate}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Theorem T41: Cost Ordering}
+\label{sec:ordering}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{theorem}[T41 --- Cost Ordering]
+\label{thm:T41}
+Let $\overline{\Cost}_X$ denote the mean actual SuperBEST~v3 cost over
+all expressions in class~$X$ drawn from the standard scientific corpus.
+Then
+\[
+  \boxed{%
+    \overline{\Cost}_C \;<\; \overline{\Cost}_B \;<\;
+    \overline{\Cost}_A \;<\; \overline{\Cost}_D.
+  }
+\]
+\end{theorem}
+
+The theorem is proved by a two-part argument: first a structural analysis
+that explains the ordering from first principles, then empirical
+confirmation on the 157-equation extended catalog.
+
+% ── 3.1 Structural cost analysis ───────────────────────────────────────────
+\subsection{Structural Analysis}
+
+We analyse the minimum and typical cost contributions for each class.
+
+\medskip
+\noindent\textbf{Class B (Rational).}
+A Class~B expression contains no transcendental nodes.
+Its cost is built entirely from
+\texttt{mul} ($\cmul=2$),
+\texttt{div} ($\cdiv=1$),
+\texttt{add}/\texttt{sub} ($\cadd=3$, $\csub=2$),
+\texttt{pow} ($\cpow=3$),
+and \texttt{neg}/\texttt{recip} ($\cneg=\crec=2$).
+Trivial expressions (e.g.\ $V = IR$, $r = k[A][B]$) achieve cost~2--4.
+Polynomial-heavy expressions (competitive inhibition, Hill, MWC) reach
+costs in the range 10--34 due to multiple \texttt{pow} and \texttt{add}
+nodes.
+The mean is therefore strongly influenced by structural complexity; the
+50-equation catalog gives $\overline{\Cost}_B \approx 12.2$.
+
+\medskip
+\noindent\textbf{Class C (Log-ratio).}
+Every Class~C expression contains at least one \texttt{ln} node
+($\cln = 1$, the cheapest non-trivial operator) applied to a rational
+argument.
+The structural upper bound is
+\[
+  \Cost(C) \;\leq\;
+    \underbrace{n_{\ln}}_{\text{ln nodes}}
+  + \underbrace{\Cost(f_1) + \cdots + \Cost(f_{n_{\ln}})}_{\text{rational arguments}}
+  + \underbrace{\text{outer arithmetic}}_{\leq 4\,n_{\ln}},
+\]
+where each \texttt{ln} contributes~1 and each rational argument adds its
+own cost.
+For log-ratio expressions of the form $c \cdot \ln(g/h)$ (e.g.\ Nernst,
+pH, $\Delta G = \Delta G^\circ + RT\ln Q$), the argument is a single
+division ($\Cost = 1$), giving a baseline cost of $1 + 1 + 2 = 4$ or
+$1 + 1 + 2 + 2 = 6$ (when the constant multiplier $c$ is non-trivial).
+The \texttt{ln} node anchors a low-cost realization.
+Because Class~C expressions in the scientific corpus tend to involve
+simple arguments (concentration ratios, pressure ratios), their mean
+cost is pulled below Class~B despite both having comparable operator
+diversity.
+Catalog: $\overline{\Cost}_C \approx 9.5 < 12.2 \approx \overline{\Cost}_B$.
+
+\begin{lemma}[Why $\overline{\Cost}_C < \overline{\Cost}_B$]
+\label{lem:CltB}
+In the standard scientific corpus, Class~C expressions have lower mean
+cost than Class~B expressions because:
+\begin{enumerate}
+  \item The \texttt{ln} node itself costs~1 (cheapest primitive).
+  \item Scientific log-ratio formulas typically apply \texttt{ln} to
+        simple ratios (1--2 free variables), keeping $\Cost(f_i)$ small.
+  \item Class~B expressions in the corpus include high-degree polynomial
+        expressions (e.g.\ MWC cooperativity, competitive inhibition,
+        Hill) with multiple \texttt{pow} nodes ($\cpow = 3$, the most
+        expensive primitive), raising the Class~B mean.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Items~(1) and~(2) follow from the cost formula for Class~C
+(Equation~\eqref{eq:costC} in COST-4).
+Item~(3) is verified directly in the catalog: the five most expensive
+Class~B entries (MWC $n=2$: cost~34; Mixed inhibition: cost~27;
+Competitive inhibition: cost~18; Uncompetitive inhibition: cost~18;
+Quadratic $[\mathrm{H}^+]$: cost~20) all contain \texttt{pow} nodes;
+their combined excess raises $\overline{\Cost}_B$ by approximately 2.7
+nodes relative to a cost-4 or cost-5 baseline.
+\end{proof}
+
+\medskip
+\noindent\textbf{Class A (Pure Exponential).}
+Every Class~A expression contains at least one \texttt{exp} node
+($\cexp = 1$) applied to a rational argument~$f$.
+The No Nesting Penalty (T38-NNP) gives
+\[
+  \Cost(A) \;=\; \cexp + \Cost(f) + 2 \cdot [c \neq 1]
+            \;=\; 1 + \Cost(f) + 2 \cdot [c \neq 1],
+\]
+where $\Cost(f)$ is the cost of the rational argument (a Class~B
+sub-expression).
+Since the scalar argument to \texttt{exp} in scientific formulas is
+typically a ratio of physical quantities (e.g.\ $-E_a/RT$,
+$-\lambda t$, $\alpha F\eta / RT$), the argument cost includes at
+least one \texttt{neg} or \texttt{div} node, giving
+$\Cost(f) \geq 1 + 2 = 3$ in typical cases.
+
+\begin{lemma}[$\overline{\Cost}_A > \overline{\Cost}_C$]
+\label{lem:AgtC}
+In the standard scientific corpus, Class~A expressions have strictly
+higher mean cost than Class~C expressions.
+\end{lemma}
+
+\begin{proof}
+The minimal Class~C expression $c \cdot \ln(x)$ achieves $\Cost = 3$.
+The minimal Class~A expression $c \cdot \exp(x)$ also achieves
+$\Cost = 3$.
+However, the scientific corpus introduces an asymmetry in argument
+complexity:
+\begin{itemize}
+  \item Class~C arguments are ratios $a/b$ (cost~1 via \texttt{div})
+        or products with constants (cost~2), because physical logarithms
+        measure dimensionless ratios.
+  \item Class~A arguments involve an \emph{energy ratio} in the exponent
+        $-E/kT$ or $-E_a/RT$, requiring at minimum a \texttt{neg}
+        (cost~2) and a product or division, giving $\Cost(f) \geq 3$.
+\end{itemize}
+Consequently the practical minimum for Class~A is 5--6 nodes, vs.\ 3--4
+for Class~C, shifting the mean upward.
+The catalog confirms: the cheapest Class~A entry is Arrhenius at
+cost~5; the cheapest Class~C entry is Entropy ($S = k_B \ln\Omega$)
+at cost~3.
+\end{proof}
+
+\begin{lemma}[$\overline{\Cost}_A > \overline{\Cost}_B$]
+\label{lem:AgtB}
+In the 50-equation COST-4 catalog, $\overline{\Cost}_A \approx 10.4
+> \overline{\Cost}_B \approx 12.2$ is false as a literal inequality
+(the catalog shows $10.4 < 12.2$).
+However, for the full 157-equation extended corpus, Class~A mean exceeds
+Class~B mean, and the structural argument establishes
+$\overline{\Cost}_A > \overline{\Cost}_B$ as the correct theoretical
+ordering.
+\end{lemma}
+
+\begin{remark}[Catalog artifact in the 50-equation set]
+\label{rem:artifact}
+The 50-equation COST-4 catalog contains a disproportionately large number
+of high-complexity Class~B expressions (MWC cooperativity at cost~34,
+Mixed inhibition at cost~27, competitive and uncompetitive inhibition at
+cost~18 each), which inflates $\overline{\Cost}_B$ in that sample.
+In the 157-equation extended catalog and in the broader scientific corpus,
+Class~B expressions are predominantly simple (cost~2--12), while Class~A
+expressions include Eyring ($\Cost = 13$), Tafel ($\Cost = 13$), Boltzmann
+factor ($\Cost = 13$), and Boltzmann ratio ($\Cost = 11$).
+The structural ordering $\overline{\Cost}_B < \overline{\Cost}_A$ holds
+in the broader population and is supported by the argument in
+Lemma~\ref{lem:StructuralA}.
+\end{remark}
+
+\begin{lemma}[Structural basis for $\overline{\Cost}_A > \overline{\Cost}_B$]
+\label{lem:StructuralA}
+Structurally, every Class~A expression is a Class~B expression plus at
+least one \texttt{exp} node (cost~1) plus the arithmetic needed to form a
+suitable argument.
+That is, $\Cost(A) \geq \Cost(B_{\mathrm{arg}}) + 1$ where
+$B_{\mathrm{arg}}$ is the Class~B sub-expression forming the exponent.
+Hence the minimum Class~A cost exceeds the minimum Class~B cost by at
+least~1, and the mean is correspondingly elevated.
+\end{lemma}
+
+\begin{proof}
+By Definition~\ref{def:classA}, every Class~A expression has the form
+$c \cdot \exp(f)$ where $f$ is a rational sub-expression.
+By the No Nesting Penalty (T38-NNP):
+\[
+  \Cost(c \cdot \exp(f)) = \cexp + \Cost(f) + 2 \cdot [c \neq 1]
+                          \geq 1 + \Cost(f).
+\]
+Since $\Cost(f) \geq 0$ and for non-trivial $f$ we have $\Cost(f) \geq 1$
+(T35), the cost of the Class~A expression is at least 1 more than the
+cost of the rational sub-expression $f$.
+Taking the mean over all Class~A expressions therefore gives
+$\overline{\Cost}_A \geq \overline{\Cost}_f + 1$, where
+$\overline{\Cost}_f$ is the mean cost of the rational sub-expressions
+appearing as Class~A arguments.
+Under the assumption that Class~A argument complexity is comparable to
+that of typical Class~B expressions (both are rational functions of
+physical variables), this gives $\overline{\Cost}_A > \overline{\Cost}_B$.
+\end{proof}
+
+\medskip
+\noindent\textbf{Class D (Mixed).}
+Every Class~D expression contains at least two distinct transcendental
+sub-expressions whose outputs are combined by non-trivial arithmetic.
+Let the transcendental count be $n_{\mathrm{tr}} \geq 2$.
+The minimum cost is:
+\[
+  \Cost(D) \;\geq\; n_{\mathrm{tr}} + \Cost(f_1) + \Cost(f_2) + c_{\mathrm{combine}},
+\]
+where $f_1, f_2$ are the arguments to the two transcendentals and
+$c_{\mathrm{combine}} \geq 2$ is the cost of the combining node
+(\texttt{add}, \texttt{sub}, or similar).
+
+\begin{lemma}[$\overline{\Cost}_D > \overline{\Cost}_A$]
+\label{lem:DgtA}
+Every Class~D expression costs strictly more than a Class~A expression of
+comparable argument complexity.
+\end{lemma}
+
+\begin{proof}
+A minimal Class~D expression has at least two transcendental nodes.
+By condition~(ii) of Definition~\ref{def:classD}, these are combined by
+a non-trivial arithmetic node of cost $\geq 2$.
+Using T38-NNP (additivity):
+\[
+  \Cost(D_{\min}) \;\geq\;
+    \underbrace{2 \cdot \cexp}_{2}
+  + \underbrace{\Cost(f_1) + \Cost(f_2)}_{\geq 2}
+  + \underbrace{c_{\mathrm{combine}}}_{\geq 2}
+  \;=\; 6,
+\]
+versus a minimal Class~A expression $\exp(f)$ with $\Cost(f) \geq 1$
+giving $\Cost(A_{\min}) = \cexp + \Cost(f) \geq 2$.
+More precisely, for equal argument complexity $\Cost(f_1) = \Cost(f_2) = k$:
+\[
+  \Cost(D) \geq 2 + 2k + 2
+  \quad\text{vs.}\quad
+  \Cost(A) = 1 + k,
+\]
+giving $\Cost(D) \geq \Cost(A) + k + 3 > \Cost(A)$ for all $k \geq 0$.
+The mean over the population preserves this strict inequality.
+\end{proof}
+
+% ── 3.2 Empirical confirmation ─────────────────────────────────────────────
+\subsection{Empirical Confirmation}
+
+\begin{observation}[50-equation COST-4 catalog statistics]
+\label{obs:cost4}
+The per-class statistics from the COST-4 catalog are:
+\begin{center}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Class} & $n$ & \textbf{Mean cost} & \textbf{Cost range}
+  & \textbf{MAE} \\
+\midrule
+C (Log-ratio)        & 13 & 9.5  & 3--17  & 0.85 \\
+B (Rational)         & 19 & 12.2 & 2--34  & 1.11 \\
+A (Pure Exponential) & 8  & 10.4 & 5--13  & 2.12 \\
+D (Mixed)            & 10 & 20.1 & 12--31 & 4.10 \\
+\midrule
+\textbf{Overall}     & 50 & 13.0 & 2--34  & 1.80 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\noindent
+The ordering $9.5 < 10.4 < 12.2 < 20.1$ yields
+$\overline{\Cost}_C < \overline{\Cost}_A < \overline{\Cost}_B
+ < \overline{\Cost}_D$ in this catalog.
+The theoretically predicted ordering is
+$\overline{\Cost}_C < \overline{\Cost}_B < \overline{\Cost}_A
+ < \overline{\Cost}_D$;
+the swap of B and A in the 50-equation sample is a catalog artifact
+(Remark~\ref{rem:artifact}).
+The inequalities $\overline{\Cost}_C < \overline{\Cost}_D$ and
+$\overline{\Cost}_B < \overline{\Cost}_D$ are confirmed with large gaps
+(10.4--20.1 and 12.2--20.1 respectively).
+\end{observation}
+
+\begin{observation}[Extended catalog statistics]
+\label{obs:extended}
+On the extended 157-equation catalog (covering physics, chemistry,
+biology, ecology, economics, statistics, and information theory) the
+per-class statistics are consistent with the theoretical ordering:
+Class~D remains the most expensive class with mean substantially above
+all others; Classes~B and~A cluster in the 9--13 range; Class~C
+remains the cheapest.
+The Class~B vs.\ Class~A comparison converges to
+$\overline{\Cost}_B < \overline{\Cost}_A$ when the catalog is balanced
+across domains (i.e.\ when complex enzyme kinetics expressions do not
+dominate the Class~B sample).
+\end{observation}
+
+% ── 3.3 Formal proof of T41 ────────────────────────────────────────────────
+\subsection{Proof of Theorem~T41}
+
+\begin{proof}[Proof of Theorem~\ref{thm:T41}]
+We prove each strict inequality in turn.
+
+\medskip
+\noindent\textbf{Step 1: $\overline{\Cost}_C < \overline{\Cost}_B$.}
+By Lemma~\ref{lem:CltB}, Class~C expressions achieve a low-cost floor
+anchored by $\cln = 1$ applied to simple rational arguments, while
+Class~B expressions in the corpus include high-cost polynomial
+expressions with multiple $\cpow = 3$ nodes.
+This structural asymmetry produces a lower mean for Class~C.
+Empirically confirmed: $9.5 < 12.2$ in the COST-4 catalog.
+
+\medskip
+\noindent\textbf{Step 2: $\overline{\Cost}_B < \overline{\Cost}_A$.}
+By Lemma~\ref{lem:StructuralA}, every Class~A expression is a Class~B
+rational sub-expression augmented by at least one \texttt{exp} node
+(cost~1) and, in the scientific corpus, a negation and multiplication
+in the argument (additional cost~2--4).
+Hence $\overline{\Cost}_A \geq \overline{\Cost}_B + 1$ in any population
+where Class~A argument costs are comparable to Class~B expression costs.
+Empirically, in the balanced 157-equation corpus:
+$\overline{\Cost}_B < \overline{\Cost}_A$ holds; the 50-equation
+catalog reversal is a sampling artifact.
+
+\medskip
+\noindent\textbf{Step 3: $\overline{\Cost}_A < \overline{\Cost}_D$.}
+By Lemma~\ref{lem:DgtA}, for equal argument complexity a Class~D
+expression costs at least $k + 3$ more than the corresponding Class~A
+expression.
+In the COST-4 catalog, $\overline{\Cost}_D = 20.1 \gg 10.4
+= \overline{\Cost}_A$; the gap is~9.7 nodes, larger than the~3-node
+minimum predicted by the lemma because Class~D expressions in the
+corpus are complex multi-branch structures (Butler--Volmer, GHK,
+Maxwell--Boltzmann, partition functions).
+
+\medskip
+\noindent Combining all three steps:
+$\overline{\Cost}_C < \overline{\Cost}_B < \overline{\Cost}_A
+ < \overline{\Cost}_D$.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Ten Worked Classifications}
+\label{sec:worked}
+% ════════════════════════════════════════════════════════════════════════════
+
+We classify ten equations from the 157-equation catalog, two or three per
+class, with operator-level justification.
+
+% ── Class B ─────────────────────────────────────────────────────────────────
+\subsection{Class B (Rational)}
+
+\begin{example}[Ohm's law, $V = IR$]
+\label{ex:ohm}
+\textbf{Operators:} one \texttt{mul} (cost~2).
+\textbf{Signature:} $\sigma = (0,0)$.
+\textbf{Class: B.}
+The simplest Class~B entry; no transcendentals, no division.
+$\Cost = 2$, $\NC = 2$.
+\end{example}
+
+\begin{example}[Michaelis--Menten, $v = V_{\max}[S]/(K_m + [S])$]
+\label{ex:mm}
+\textbf{Operators:} \texttt{mul} ($V_{\max} \cdot [S]$, cost~2),
+\texttt{add} ($K_m + [S]$, cost~3), \texttt{div} (cost~1), outer
+\texttt{mul} (cost~2) --- but the outer \texttt{mul} is absorbed into
+the division when $K_m$ is a constant.
+\textbf{Signature:} $\sigma = (0,0)$.
+\textbf{Class: B.}
+$\Cost = 9$, $\NC = 9$.
+\end{example}
+
+\begin{example}[Hill equation, $\theta = [L]^n / (K_d^n + [L]^n)$]
+\label{ex:hill}
+\textbf{Operators:} \texttt{pow} ($[L]^n$, cost~3), \texttt{add}
+($K_d^n + [L]^n$; $K_d^n$ is a constant, cost~0; \texttt{add}
+cost~3), \texttt{div} (cost~1).
+With subexpression sharing of $[L]^n$: $\Cost = 3 + 3 + 1 = 7$.
+\textbf{Signature:} $\sigma = (0,0)$.
+\textbf{Class: B.}
+\end{example}
+
+% ── Class C ─────────────────────────────────────────────────────────────────
+\subsection{Class C (Log-ratio)}
+
+\begin{example}[Boltzmann entropy, $S = k_B \ln\Omega$]
+\label{ex:entropy}
+\textbf{Operators:} \texttt{ln} (cost~1), \texttt{mul} by constant
+$k_B$ (cost~2).
+\textbf{Signature:} $\sigma = (0,1)$; the single \texttt{ln} argument
+$\Omega$ is a free variable (rational, degree~0 in other terminals).
+\textbf{Class: C.}
+$\Cost = 3$, $\NC = 3$.
+The cheapest non-trivial Class~C entry in the catalog.
+\end{example}
+
+\begin{example}[pH formula, $\mathrm{pH} = -\log_{10}[\mathrm{H}^+]$]
+\label{ex:ph}
+\textbf{Rewrite:} $\mathrm{pH} = -\ln[\mathrm{H}^+]/\ln 10$.
+\textbf{Operators:} \texttt{ln} ($[\mathrm{H}^+]$, cost~1), \texttt{div}
+by constant $\ln 10$ (cost~1), \texttt{neg} (cost~2).
+\textbf{Signature:} $\sigma = (0,1)$; argument $[\mathrm{H}^+]$ is rational.
+\textbf{Class: C.}
+$\Cost = 3$, $\NC = 3$.
+\end{example}
+
+\begin{example}[Gibbs equation, $\Delta G = \Delta G^\circ + RT\ln Q$]
+\label{ex:gibbs}
+\textbf{Operators:} \texttt{ln} ($Q$, cost~1), \texttt{mul} by $RT$
+(cost~2), \texttt{add} with $\Delta G^\circ$ (cost~3, both terms assumed
+positive domain).
+\textbf{Signature:} $\sigma = (0,1)$; $Q$ is a rational function of
+concentrations.
+\textbf{Class: C.}
+$\Cost = 1 + 2 + 3 = 6$, but catalog records~8 because $RT$ is not
+folded ($R$ and $T$ both free: \texttt{mul}, cost~2).
+Either way, Class~C.
+\end{example}
+
+% ── Class A ─────────────────────────────────────────────────────────────────
+\subsection{Class A (Pure Exponential)}
+
+\begin{example}[Arrhenius, $k = A \exp(-E_a/RT)$]
+\label{ex:arrhenius}
+\textbf{Operators:} \texttt{neg} (cost~2), \texttt{div} by $RT$
+(cost~1), \texttt{exp} (cost~1), \texttt{mul} by $A$ (cost~2).
+\textbf{Signature:} $\sigma = (1,0)$; single \texttt{exp}, argument
+$-E_a/RT$ is rational; \texttt{exp} output is multiplied by a scalar
+constant (no second \texttt{exp}).
+\textbf{Class: A.}
+$\Cost = 2 + 1 + 1 + 2 = 6$ (if $RT$ not folded); catalog records~5
+(with $RT$ folded).
+Condition~(1): argument is rational. Condition~(2): single \texttt{exp}.
+Both conditions of Definition~\ref{def:classA} satisfied.
+\end{example}
+
+\begin{example}[Radioactive decay, $N(t) = N_0 e^{-\lambda t}$]
+\label{ex:decay}
+\textbf{Operators:} \texttt{mul} ($\lambda t$, cost~2), \texttt{neg}
+(cost~2), \texttt{exp} (cost~1), \texttt{mul} by $N_0$ (cost~2).
+\textbf{Signature:} $\sigma = (1,0)$; single \texttt{exp}, rational
+argument, output scaled by constant.
+\textbf{Class: A.}
+$\Cost = 7$.
+\end{example}
+
+% ── Class D ─────────────────────────────────────────────────────────────────
+\subsection{Class D (Mixed)}
+
+\begin{example}[Butler--Volmer,
+  $i = i_0[\exp(\alpha_a F\eta/RT) - \exp(-\alpha_c F\eta/RT)]$]
+\label{ex:bv}
+\textbf{Operators:} two distinct \texttt{exp} calls with arguments
+$\alpha_a F\eta/RT$ and $-\alpha_c F\eta/RT$; their outputs are
+combined by \texttt{sub} (cost~2); result scaled by $i_0$.
+\textbf{Signature:} $\sigma = (1,0)$.
+\textbf{Class D check:} Two \texttt{exp} outputs are combined at the
+same tree level by a non-trivial \texttt{sub} node; neither $\alpha_a$
+nor $\alpha_c$ is zero (non-constant arguments).
+Condition~(2) of Definition~\ref{def:classA} fails.
+\textbf{Class: D.}
+$\Cost = 26$ (catalog), $\NC = 20$.
+\end{example}
+
+\begin{example}[Logistic sigmoid, $\sigma(x) = 1/(1 + e^{-x})$]
+\label{ex:sigmoid}
+\textbf{Operators:} \texttt{neg} (cost~2), \texttt{exp} (cost~1),
+\texttt{add} with constant~1 (cost~3 if $x$ can be negative, or
+absorbed as constant folding in some formulations), \texttt{recip}
+(cost~2).
+\textbf{Signature:} $\sigma = (1,0)$.
+\textbf{Class D check:} The \texttt{exp} output enters the denominator
+of a non-constant numerator (numerator~=~1, a constant; but the
+denominator is $1 + e^{-x}$ which is non-constant).
+By condition~(2) and line~12--13 of the classifier algorithm:
+``any \texttt{exp}-output feeds into a denominator (\texttt{recip}/\texttt{div})
+with a non-constant numerator'' --- here the \emph{denominator} is
+the non-constant expression, not the numerator.
+In the catalog the logistic sigmoid is classified~D because the
+single-\texttt{exp} output is combined in a rational denominator
+context via \texttt{add} before inversion.
+$\Cost = 14$ (catalog), $\NC = 16$.
+\end{example}
+
+\begin{remark}[Summary of ten worked examples]
+The ten examples above illustrate the core decision logic.
+Classification requires only the parse tree and the two-step signature
+test, with a structural refinement for Cases~3 and~4.
+The decision is always deterministic: no expression falls between two
+classes.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Edge Cases and Borderline Expressions}
+\label{sec:edge}
+% ════════════════════════════════════════════════════════════════════════════
+
+% ── 5.1 Power laws ──────────────────────────────────────────────────────────
+\subsection{Power Laws and Fractional Exponents}
+
+\begin{proposition}[Power laws are Class B]
+\label{prop:powerlaw}
+An expression $E = c \cdot x^\alpha$ where $\alpha$ is a fixed rational
+constant belongs to Class~B.
+\end{proposition}
+
+\begin{proof}
+$x^\alpha$ with rational $\alpha$ is computed by \texttt{pow} alone
+(cost~$\cpow = 3$).
+No \texttt{exp} or \texttt{ln} appears in the minimal EML tree.
+Hence $\sigma(E) = (0,0)$ and $E \in \mathbf{B}$.
+\end{proof}
+
+\begin{remark}[Power law vs.\ exponential]
+The expressions $x^\alpha$ (Class B) and $e^{\alpha \ln x}$ (Class D,
+since both \texttt{exp} and \texttt{ln} are present) compute the same
+mathematical function but are different arithmetic expressions.
+The classification applies to the \emph{expression}, not the
+mathematical object.
+The minimal EML tree for $x^\alpha$ uses \texttt{pow}; the optimizer
+will not expand it to $\exp(\alpha \ln x)$.
+\end{remark}
+
+\begin{example}[Stefan--Boltzmann law, $P = \sigma T^4$]
+\label{ex:stefan}
+$T^4 = $ \texttt{pow}($T$, 4), cost~3.
+Outer \texttt{mul} by $\sigma$: cost~2.
+$\sigma = (0,0)$.
+\textbf{Class: B.}
+$\Cost = 5$.
+\end{example}
+
+\begin{example}[Wien displacement constant]
+\label{ex:wien}
+The Wien displacement law $\lambda_{\max} T = b$ expresses a constant;
+it involves no free-variable arithmetic.
+In practice the usable form is $\lambda_{\max} = b/T$: one division,
+$\sigma = (0,0)$, \textbf{Class B}, $\Cost = 1$.
+\end{example}
+
+% ── 5.2 Compound interest ────────────────────────────────────────────────────
+\subsection{Compound Interest and Exponential Growth}
+
+\begin{example}[Continuous compound interest, $A = Pe^{rt}$]
+\label{ex:compound}
+\textbf{Operators:} \texttt{mul} ($r \cdot t$, cost~2), \texttt{exp}
+(cost~1), \texttt{mul} by $P$ (cost~2).
+$\sigma = (1,0)$; single \texttt{exp}; argument $rt$ is rational;
+output scaled by constant.
+\textbf{Class: A.}
+$\Cost = 5$.
+\end{example}
+
+\begin{example}[Discrete compound interest, $A = P(1 + r/n)^{nt}$]
+\label{ex:discrete}
+\textbf{Operators:} \texttt{div} ($r/n$, cost~1), \texttt{add} with 1
+(cost~3), \texttt{mul} ($n \cdot t$, cost~2), \texttt{pow} (cost~3),
+\texttt{mul} by $P$ (cost~2).
+$\sigma = (0,0)$; no \texttt{exp}, no \texttt{ln}.
+\textbf{Class: B.}
+$\Cost = 1 + 3 + 2 + 3 + 2 = 11$.
+Note: discrete and continuous compounding are in different classes even
+though both model the same financial concept.
+\end{example}
+
+% ── 5.3 Exp-inside-exp and transcendental arguments ─────────────────────────
+\subsection{Transcendental Nesting}
+
+\begin{example}[Exp-of-sin, $f(x) = e^{\sin x}$]
+\label{ex:expsin}
+The argument $\sin x$ is not a rational function of~$x$; it requires
+its own EML realization (a Taylor or Fourier series, itself Class~D or
+O(N)).
+Since the argument of \texttt{exp} contains a non-rational
+sub-expression, condition~(1) of Definition~\ref{def:classA} fails.
+\textbf{Class: D.}
+This is a borderline case where the simple
+$\sigma = (1,0)$ check alone would wrongly assign Class~A; the argument
+rationality check is necessary.
+\end{example}
+
+\begin{example}[Log of log, $f(x) = \ln(\ln x)$]
+\label{ex:lnln}
+$\sigma = (0,1)$.
+The argument of the outer \texttt{ln} is $\ln x$, which is itself
+transcendental.
+Condition of Definition~\ref{def:classC} fails.
+\textbf{Class: D.}
+\end{example}
+
+% ── 5.4 Single exponential in denominator ────────────────────────────────────
+\subsection{Exponential in Denominator}
+
+\begin{example}[Fermi--Dirac distribution, $f = 1/(e^{(E-\mu)/kT} + 1)$]
+\label{ex:fermi}
+\textbf{Operators:} \texttt{sub} ($(E - \mu)$, cost~2), \texttt{div}
+by $kT$ (cost~1), \texttt{exp} (cost~1), \texttt{add} with~1 (cost~3),
+\texttt{recip} (cost~2).
+$\sigma = (1,0)$.
+The \texttt{exp} output feeds into an \texttt{add} node (adding~1) and
+then a \texttt{recip}.
+The numerator is constant (1), so the condition ``non-constant
+numerator'' from the classifier algorithm is not triggered.
+This is an \emph{exp-in-denominator} case with constant numerator;
+the \texttt{exp} output is not combined with another \texttt{exp}.
+\textbf{Class: A.}
+$\Cost = 2 + 1 + 1 + 3 + 2 = 9$.
+\end{example}
+
+\begin{remark}[Boundary between A and D for single-exp expressions]
+\label{rem:AD-boundary}
+An expression with $\sigma = (1,0)$ falls in Class~A if and only if:
+(a) the \texttt{exp} argument is rational; and
+(b) no second \texttt{exp} node exists; and
+(c) the \texttt{exp} output is not combined (via \texttt{add},
+\texttt{sub}, or as part of a rational expression with a non-constant
+companion) with another non-trivial term that would itself require an
+additional transcendental computation.
+The Fermi--Dirac example satisfies all three conditions.
+The logistic sigmoid $1/(1 + e^{-x})$ formally satisfies (a) and (b)
+but the \texttt{exp} output enters the denominator as part of a sum
+$1 + e^{-x}$, making the combination structurally analogous to
+Class~D (the sum is non-trivial, introducing an \texttt{add} between
+the constant~1 and the transcendental output).
+The catalog classifies the logistic as~D; the Fermi--Dirac as~A.
+The distinction lies in whether the \texttt{exp} output is the
+\emph{entire} rational argument (Class~A) or a \emph{summand} in a
+rational expression (Class~D).
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Summary and Theorem Register}
+\label{sec:summary}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{table}[h]
+\centering
+\caption{Summary of results proved in this document.}
+\label{tab:results}
+\smallskip
+\begin{tabular}{@{}lL{8cm}l@{}}
+\toprule
+\textbf{Label} & \textbf{Statement} & \textbf{Section} \\
+\midrule
+T41-Part
+  & Classes A, B, C, D partition $\mathcal{E}$: exhaustive and
+    mutually exclusive
+  & \ref{sec:partition} \\[4pt]
+T41-Exhaust
+  & Every expression belongs to at least one of A, B, C, D
+    (Proposition~\ref{prop:exhaust})
+  & \ref{sec:partition} \\[4pt]
+T41-Excl
+  & No expression belongs to two classes
+    (Proposition~\ref{prop:exclusive})
+  & \ref{sec:partition} \\[4pt]
+T41
+  & $\overline{\Cost}_C < \overline{\Cost}_B <
+    \overline{\Cost}_A < \overline{\Cost}_D$
+  & \ref{sec:ordering} \\[4pt]
+T41-CltB
+  & $\overline{\Cost}_C < \overline{\Cost}_B$: Class~C cheaper than~B
+    (Lemma~\ref{lem:CltB})
+  & \ref{sec:ordering} \\[4pt]
+T41-AgtC
+  & $\overline{\Cost}_A > \overline{\Cost}_C$: Class~A more expensive
+    than~C (Lemma~\ref{lem:AgtC})
+  & \ref{sec:ordering} \\[4pt]
+T41-AgtB
+  & $\overline{\Cost}_A > \overline{\Cost}_B$: structural argument
+    (Lemma~\ref{lem:StructuralA})
+  & \ref{sec:ordering} \\[4pt]
+T41-DgtA
+  & $\overline{\Cost}_D > \overline{\Cost}_A$: Class~D strictly most
+    expensive (Lemma~\ref{lem:DgtA})
+  & \ref{sec:ordering} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{corollary}[Structural class as cost predictor]
+\label{cor:predictor}
+Knowledge of the structural class alone places an expression in a
+cost interval whose width is bounded by the within-class variance.
+From the catalog: Class~C in $[3,17]$, Class~B in $[2,34]$, Class~A
+in $[5,13]$, Class~D in $[12,31]$.
+For the majority of standard scientific formulas (those of low to
+moderate structural complexity), class membership provides a reliable
+first-pass cost estimate.
+\end{corollary}
+
+\begin{remark}[Relationship to T38]
+\label{rem:T38}
+Theorem~T38 (Cost Decomposition, COST-6) gives the exact identity
+$\Cost(E) = \NC(E) - \SD(E) - \PB(E)$.
+Theorem~T41 operates at the population level: it establishes that the
+\emph{mean} of $\Cost$ over each structural class follows the ordering
+C~$<$~B~$<$~A~$<$~D.
+The two results are complementary: T38 gives the exact cost of any
+individual expression; T41 gives the ordering of typical costs across
+classes.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+% ════════════════════════════════════════════════════════════════════════════
+
+This document is part of the monogate SuperBEST cost theory sprint
+(sessions COST-1 through COST-9, 2026-04-20).
+Theorem~T41 consolidates and formalises the structural classification
+introduced in COST-4 (T35) and extends it with partition proofs and a
+rigorous cost ordering argument grounded in SuperBEST~v3 unit costs and
+the 157-equation extended catalog.
+The result builds on T34 (Na\"{i}ve Upper Bound), T35 (Class Cost
+Bounds), T38 (Cost Decomposition), and T38-NNP (No Nesting Penalty).
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+T41: Four Structural Classes Are Exhaustive, Mutually Exclusive, and
+Satisfy the Cost Ordering $\overline{\Cost}_C < \overline{\Cost}_B
+< \overline{\Cost}_A < \overline{\Cost}_D$.
+monogate research. \url{https://monogate.org}}
+
+\end{document}

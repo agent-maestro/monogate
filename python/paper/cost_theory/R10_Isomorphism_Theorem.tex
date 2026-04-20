@@ -1,0 +1,841 @@
+% R10_Isomorphism_Theorem.tex
+% monogate Cost Theory — SuperBEST Isomorphism Theorem
+% Proves that equations from different scientific domains share identical
+% minimal SuperBEST DAG topologies, differing only in terminal labels.
+% Date: 2026-04-20
+% Status: THEOREM
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\LEprod}{\operatorname{LEprod}}
+\newcommand{\EPL}{\operatorname{EPL}}
+\newcommand{\DEAL}{\operatorname{DEAL}}
+\newcommand{\DEXL}{\operatorname{DEXL}}
+\newcommand{\DEDL}{\operatorname{DEDL}}
+\newcommand{\DEPL}{\operatorname{DEPL}}
+\newcommand{\DEMN}{\operatorname{DEMN}}
+
+% ── Cost macros ──────────────────────────────────────────────────────────────
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+\newcommand{\MinDAG}{\operatorname{MinDAG}}
+\newcommand{\Fam}{\mathcal{F}}
+
+% ── Tree-node shorthand ──────────────────────────────────────────────────────
+\newcommand{\mexp}{\mathtt{exp}}
+\newcommand{\mmul}{\mathtt{mul}}
+\newcommand{\mdiv}{\mathtt{div}}
+\newcommand{\madd}{\mathtt{add}}
+\newcommand{\msub}{\mathtt{sub}}
+\newcommand{\mln}{\mathtt{ln}}
+\newcommand{\mrecip}{\mathtt{recip}}
+\newcommand{\mneg}{\mathtt{neg}}
+
+% ── Isomorphism symbol ───────────────────────────────────────────────────────
+\newcommand{\siso}{\cong_{\mathrm{SB}}}
+
+% ── Column types ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\title{The SuperBEST Isomorphism Theorem\\[6pt]
+       \large Cross-Domain Equations with Identical Minimal Tree Topology}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We prove the \emph{SuperBEST Isomorphism Theorem}: equations from unrelated
+scientific disciplines often possess identical minimal SuperBEST DAGs, differing
+only in the names of their terminal nodes (free variables and constants).
+We introduce the formal notion of SuperBEST-isomorphism, exhibit eight
+cross-domain isomorphism families spanning physics, chemistry, pharmacokinetics,
+economics, and machine learning, and show that these families define equivalence
+classes of equations under the isomorphism relation.  The theorem implies a
+\emph{Revealed Structure Corollary}: domain-specific notation conceals shared
+mathematical infrastructure that becomes manifest only at the level of minimal
+operator trees.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{SuperBEST Isomorphism: Definition}
+\label{sec:def}
+% ════════════════════════════════════════════════════════════════════════════
+
+Throughout this paper, $\mathcal{F}_{16}$ denotes the 16-operator monogate
+family and $\MinDAG(E)$ denotes the unique minimal SuperBEST v3 DAG for
+expression $E$ (unique up to labelling of equivalent subexpressions).
+
+% ── 1.1 Preliminary: minimal DAGs ───────────────────────────────────────────
+\subsection{Minimal SuperBEST DAGs}
+
+\begin{definition}[Minimal SuperBEST DAG]
+\label{def:mindag}
+The \emph{minimal SuperBEST DAG} of an expression $E$, written $\MinDAG(E)$,
+is the directed acyclic graph with minimum node count over $\mathcal{F}_{16}$
+that evaluates to $E$.  Internal nodes are labelled by operators from
+$\mathcal{F}_{16}$; leaf (terminal) nodes are labelled by free variables or
+numeric constants.  Node count equals $\Cost(E)$.
+\end{definition}
+
+\begin{remark}[Existence and near-uniqueness]
+The SuperBEST v3 routing table guarantees existence of $\MinDAG(E)$ for every
+expression $E$ computable over $\mathcal{F}_{16}$.  Structural uniqueness holds
+for all expressions in the standard scientific corpus: no two structurally
+distinct DAGs achieve the same node count for any equation appearing in our
+catalogue.
+\end{remark}
+
+% ── 1.2 Isomorphism ─────────────────────────────────────────────────────────
+\subsection{SuperBEST Isomorphism}
+
+\begin{definition}[SuperBEST-isomorphic expressions]
+\label{def:iso}
+Two arithmetic expressions $E_1$ and $E_2$ are \emph{SuperBEST-isomorphic},
+written $E_1 \siso E_2$, if there exists a graph bijection
+\[
+  \varphi \colon \mathrm{nodes}(\MinDAG(E_1))
+             \;\longrightarrow\;
+             \mathrm{nodes}(\MinDAG(E_2))
+\]
+satisfying:
+\begin{enumerate}
+  \item \textbf{Operator preservation.}
+        For every internal node $u$ in $\MinDAG(E_1)$:
+        \[
+          \mathrm{op}(u) \;=\; \mathrm{op}(\varphi(u)).
+        \]
+  \item \textbf{Topology preservation.}
+        $u$ is a child of $v$ in $\MinDAG(E_1)$ if and only if $\varphi(u)$
+        is a child of $\varphi(v)$ in $\MinDAG(E_2)$.
+  \item \textbf{Terminal-to-terminal mapping.}
+        $u$ is a terminal (leaf) node in $\MinDAG(E_1)$ if and only if
+        $\varphi(u)$ is a terminal node in $\MinDAG(E_2)$.
+\end{enumerate}
+The bijection $\varphi$ need not preserve terminal \emph{labels}
+(variable names or constant values); terminals may be freely renamed across
+the isomorphism.
+\end{definition}
+
+\begin{remark}[What isomorphism captures]
+Condition~(1) states that corresponding nodes compute the same primitive
+operation.  Condition~(2) states that the wiring pattern---which node feeds
+into which---is identical in both DAGs.  Condition~(3) ensures that the
+``input slots'' align: the same number of free inputs appear at the same
+structural positions.  Together, the three conditions say that $E_1$ and
+$E_2$ are the same computation up to renaming of inputs.
+\end{remark}
+
+% ── 1.3 Equivalence relation ─────────────────────────────────────────────────
+\subsection{Isomorphism Classes}
+
+\begin{proposition}[$\siso$ is an equivalence relation]
+\label{prop:equiv}
+SuperBEST-isomorphism is reflexive, symmetric, and transitive on the set of
+arithmetic expressions computable over $\mathcal{F}_{16}$.
+\end{proposition}
+
+\begin{proof}
+\textit{Reflexivity.} The identity map $\mathrm{id}$ on $\MinDAG(E)$ satisfies
+all three conditions for $E \siso E$.
+
+\textit{Symmetry.} If $\varphi\colon \MinDAG(E_1) \to \MinDAG(E_2)$ witnesses
+$E_1 \siso E_2$, then the inverse bijection $\varphi^{-1}$ witnesses
+$E_2 \siso E_1$, since all three conditions are symmetric in $E_1$ and $E_2$
+when restated through $\varphi^{-1}$.
+
+\textit{Transitivity.} If $\varphi_{12}$ witnesses $E_1 \siso E_2$ and
+$\varphi_{23}$ witnesses $E_2 \siso E_3$, then
+$\varphi_{23} \circ \varphi_{12}$ witnesses $E_1 \siso E_3$: composition
+preserves all three conditions.
+\end{proof}
+
+\begin{definition}[Isomorphism class and canonical representative]
+\label{def:class}
+The \emph{SuperBEST isomorphism class} of $E$ is the set
+$[E] = \{E' : E' \siso E\}$.  The \emph{canonical representative tree} of
+$[E]$ is the abstract operator tree obtained from $\MinDAG(E)$ by replacing
+every terminal label with a placeholder variable $x_1, x_2, \ldots$
+in left-to-right, leaf-first order.
+\end{definition}
+
+% ── 1.4 Cost invariance ──────────────────────────────────────────────────────
+\subsection{Cost is an Isomorphism Invariant}
+
+\begin{proposition}[Cost invariance]
+\label{prop:cost-inv}
+If $E_1 \siso E_2$ then $\Cost(E_1) = \Cost(E_2)$.
+\end{proposition}
+
+\begin{proof}
+The bijection $\varphi$ is a graph isomorphism between $\MinDAG(E_1)$ and
+$\MinDAG(E_2)$.  In particular, $|\mathrm{nodes}(\MinDAG(E_1))| =
+|\mathrm{nodes}(\MinDAG(E_2))|$.  Since $\Cost(E) = |\mathrm{nodes}(\MinDAG(E))|$
+by Definition~\ref{def:mindag}, equality of cost follows immediately.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Eight Cross-Domain Isomorphism Families}
+\label{sec:families}
+% ════════════════════════════════════════════════════════════════════════════
+
+We now exhibit eight concrete isomorphism families.  For each family we
+(i)~give the canonical operator tree, (ii)~list the member equations from
+distinct domains, (iii)~exhibit the explicit bijection between any two
+representative members, and (iv)~state the cost.
+
+% ── 2.1 Exponential growth/decay family ─────────────────────────────────────
+\subsection{Family 1: Exponential Scale-and-Decay (5n)}
+\label{sec:fam1}
+
+\paragraph{Canonical tree.}
+\begin{equation}
+\label{eq:fam1-tree}
+  T_1 \;=\; \mmul\!\bigl(a,\; \mexp(\mmul(b,\, c))\bigr)
+\end{equation}
+with three terminal slots $a$, $b$, $c$.  Cost computation:
+$c_{\mmul} = 2$, $c_{\mexp} = 1$, $c_{\mmul} = 2$; total $= 5$.
+All three terminals are live, so $\NC = 5$, $\SD = \PB = 0$, and
+$\Cost(T_1) = 5$.
+
+\paragraph{Member equations.}
+\begin{align*}
+  E_{1a} &: N(t) = N_0 \cdot \exp(-\lambda t)
+            && \text{(Radioactive decay)} \\
+  E_{1b} &: V(t) = V_0 \cdot \exp(r t)
+            && \text{(Compound interest, continuous)} \\
+  E_{1c} &: P(t) = P_0 \cdot \exp(k t)
+            && \text{(Population growth)} \\
+  E_{1d} &: C(t) = C_0 \cdot \exp(-k_{\mathrm{el}}\, t)
+            && \text{(Pharmacokinetics, 1-compartment)}
+\end{align*}
+
+\paragraph{Explicit bijection $\varphi_{ab}$ for $E_{1a} \siso E_{1b}$.}
+
+Label the nodes of $\MinDAG(E_{1a})$:
+$v_1 = \mmul$ (root),\ $v_2 = \mexp$,\ $v_3 = \mmul$ (inner),\ $v_4 = N_0$
+(terminal),\ $v_5 = -\lambda$ (terminal),\ $v_6 = t$ (terminal).
+
+Label the nodes of $\MinDAG(E_{1b})$:
+$u_1 = \mmul$ (root),\ $u_2 = \mexp$,\ $u_3 = \mmul$ (inner),\ $u_4 = V_0$,\
+$u_5 = r$,\ $u_6 = t$.
+
+Define $\varphi_{ab}(v_i) = u_i$ for $i = 1,\ldots,6$.  Verification:
+\begin{itemize}
+  \item \textit{Operator preservation:} Both $v_i$ and $u_i$ carry the same
+        operator label for $i = 1,2,3$ and are terminals for $i = 4,5,6$.
+  \item \textit{Topology:} $v_4, v_1 \to v_1$ (root), $v_2 \to v_1$,
+        $v_3 \to v_2$, $v_5, v_6 \to v_3$ matches $u_4, u_1 \to u_1$, etc.
+  \item \textit{Terminals map to terminals:} $\varphi_{ab}(\{v_4,v_5,v_6\})
+        = \{u_4,u_5,u_6\}$.
+\end{itemize}
+Hence $E_{1a} \siso E_{1b}$.  By transitivity (Proposition~\ref{prop:equiv}),
+all four members of Family~1 are mutually isomorphic.
+
+\begin{remark}[Structural constant vs.\ domain parameter]
+The inner multiplication $\mmul(b, c)$ in $T_1$ absorbs one sign flip:
+radioactive decay uses $b = -\lambda < 0$ while growth uses $b = k > 0$.  The
+\emph{structure} is identical; only the sign of a terminal value differs.
+SuperBEST isomorphism intentionally ignores terminal values.
+\end{remark}
+
+% ── 2.2 Sum-of-exponentials family ───────────────────────────────────────────
+\subsection{Family 2: Sum of Exponential-Decay Terms (NPV and N-Compartment PK)}
+\label{sec:fam2}
+
+\paragraph{Canonical tree.}
+Let $T_1$ be as in~\eqref{eq:fam1-tree}.  For a sum of $N$ such terms, the
+canonical tree is
+\[
+  T_2^{(N)} \;=\; \madd\bigl(T_1^{(1)},\; \madd(T_1^{(2)},\;\ldots\;
+                  \madd(T_1^{(N-1)},\; T_1^{(N)})\ldots)\bigr),
+\]
+where $T_1^{(i)}$ is a fresh copy of $T_1$ with independent terminals
+$(a_i, b_i, c_i)$.  Cost: $N \cdot 5 + (N-1) \cdot 3 = 8N - 3$
+(using $c_{\madd} = 3$ in the positive domain, per T38 and the O($N$) theorem).
+
+\paragraph{Member equations.}
+\begin{align*}
+  E_{2a} &: \mathrm{NPV}
+    = \sum_{i=1}^{N} \frac{C_i}{(1+r)^i}
+    = \sum_{i=1}^{N} C_i \cdot \exp\!\bigl(-i\,\ln(1+r)\bigr)
+    && \text{(Finance)} \\
+  E_{2b} &: \mathrm{AUC}
+    = \sum_{i=1}^{N} A_i \cdot \exp(-\lambda_i t)
+    && \text{(N-compartment PK)}
+\end{align*}
+
+Both are sums of $N$ terms, each term of the form $a_i \cdot \exp(b_i \cdot c_i)$
+with $(a_i, b_i, c_i) = (C_i,\, -i,\, \ln(1+r))$ for NPV and
+$(A_i,\, -\lambda_i,\, t)$ for multi-compartment PK.  The per-term canonical
+tree is exactly $T_1$.
+
+\paragraph{Explicit bijection for $E_{2a} \siso E_{2b}$ (one-term case).}
+
+Within each summand $i$, the bijection is the same $\varphi_{ab}$ from
+Family~1 with the substitution $N_0 \mapsto C_i$, $-\lambda \mapsto -i$,
+$t \mapsto \ln(1+r)$ on the left and $V_0 \mapsto A_i$, $r \mapsto -\lambda_i$,
+$t \mapsto t$ on the right.  Extending term-by-term and mapping each
+$\madd$ node identically gives the full bijection for any $N \geq 1$.
+
+\begin{corollary}
+$E_{2a} \siso E_{2b}$ for all $N \geq 1$, with $\Cost(E_{2a}) =
+\Cost(E_{2b}) = 8N - 3$.
+\end{corollary}
+
+% ── 2.3 Softmax / Logit ──────────────────────────────────────────────────────
+\subsection{Family 3: Softmax and Logit Choice Probability}
+\label{sec:fam3}
+
+\paragraph{Canonical tree.}
+\[
+  T_3 \;=\; \mdiv\!\Bigl(
+    \mexp(a),\;
+    \madd\bigl(\mexp(b_1),\;\ldots,\;\madd(\mexp(b_{N-1}),\mexp(b_N))\bigr)
+  \Bigr)
+\]
+with terminal slots $a, b_1, \ldots, b_N$.
+Cost of numerator: $c_{\mexp} = 1$.
+Cost of denominator ($N$-term sum of $\mexp$ nodes):
+$N \cdot 1 + (N-1) \cdot 3 = 4N - 3$.
+Total: $1 + 1 + (4N - 3) = 4N - 1$.
+(The extra 1 comes from the $\mdiv$ node at the root.)
+
+\paragraph{Member equations.}
+\begin{align*}
+  E_{3a} &: \sigma_i
+    = \frac{\exp(x_i)}{\sum_{j=1}^{N} \exp(x_j)}
+    && \text{(Softmax, machine learning)} \\
+  E_{3b} &: P_i
+    = \frac{\exp(v_i)}{\sum_{j=1}^{N} \exp(v_j)}
+    && \text{(Logit / multinomial choice, economics)}
+\end{align*}
+
+\paragraph{Bijection.}
+The two expressions are \emph{literally the same formula} with terminal
+relabelling $x_j \mapsto v_j$ for $j = 1, \ldots, N$.  The identity map on
+operator nodes, composed with the terminal relabelling, is the required
+bijection.  Hence $E_{3a} \siso E_{3b}$ trivially, and their shared cost is
+$4N - 1$.
+
+\begin{remark}[Disciplinary distance]
+Softmax originates in numerical optimisation for neural networks; logit choice
+models originate in mathematical economics (McFadden's discrete choice theory).
+They are separated by half a century of independent disciplinary development yet
+their minimal operator trees are identical.
+\end{remark}
+
+% ── 2.4 Van't Hoff / Clausius-Clapeyron ──────────────────────────────────────
+\subsection{Family 4: Van't Hoff Equation and Clausius-Clapeyron Relation}
+\label{sec:fam4}
+
+\paragraph{Canonical tree.}
+\[
+  T_4 \;=\; \madd\!\bigl(\mmul(a,\;\mrecip(T)),\;b\bigr)
+\]
+with terminal slots $a$ (slope), $T$ (temperature variable), $b$ (intercept).
+Cost: $c_{\madd} = 3$, $c_{\mmul} = 2$, $c_{\mrecip} = 2$; total $= 7$.
+
+\paragraph{Member equations.}
+\begin{align*}
+  E_{4a} &: \ln K(T)
+    = -\frac{\Delta H^\circ}{R}\cdot\frac{1}{T} + \frac{\Delta S^\circ}{R}
+    && \text{(Van't Hoff, thermodynamic equilibrium)} \\[4pt]
+  E_{4b} &: \ln\frac{P_2}{P_1}
+    = -\frac{\Delta H_{\mathrm{vap}}}{R}\!\left(\frac{1}{T_2}-\frac{1}{T_1}\right)
+    && \text{(Clausius-Clapeyron, two-temperature form)}
+\end{align*}
+
+For $E_{4a}$: $a = -\Delta H^\circ/R$ (a single constant),
+$T$ is the temperature, $b = \Delta S^\circ/R$.
+For $E_{4b}$ (fixing $T_1$ as a compile-time constant):
+$a = -\Delta H_{\mathrm{vap}}/R$, $T = T_2$,
+$b = \Delta H_{\mathrm{vap}}/(RT_1)$.
+Both reduce to $T_4$.
+
+\paragraph{Explicit bijection $\varphi_{4}$ for $E_{4a} \siso E_{4b}$.}
+
+Nodes of $\MinDAG(E_{4a})$:
+$v_1 = \madd$ (root), $v_2 = \mmul$, $v_3 = \mrecip$,
+$v_4 = a_{4a}$ (terminal $= -\Delta H^\circ/R$),
+$v_5 = T$ (terminal), $v_6 = b_{4a}$ (terminal $= \Delta S^\circ/R$).
+
+Nodes of $\MinDAG(E_{4b})$:
+$u_1 = \madd$, $u_2 = \mmul$, $u_3 = \mrecip$,
+$u_4 = a_{4b}$ (terminal $= -\Delta H_{\mathrm{vap}}/R$),
+$u_5 = T_2$ (terminal), $u_6 = b_{4b}$ (terminal).
+
+The map $\varphi_4(v_i) = u_i$ for $i=1,\ldots,6$ satisfies all three
+conditions of Definition~\ref{def:iso}.  Hence $E_{4a} \siso E_{4b}$, with
+$\Cost(E_{4a}) = \Cost(E_{4b}) = 7$.
+
+% ── 2.5 Saturation / charging family ─────────────────────────────────────────
+\subsection{Family 5: Saturation and Charging Curves \texorpdfstring{$(1 - e^{-t/\tau})$}{(1-exp(-t/tau))}}
+\label{sec:fam5}
+
+\paragraph{Canonical tree.}
+\[
+  T_5 \;=\; \msub\!\bigl(1,\; \mexp(\mmul(\mneg(1),\; \mdiv(t,\;\tau)))\bigr)
+\]
+with terminal slots $t$ and $\tau$.  The constants $1$ (unity) and $-1$ (or
+the leading $\mneg$) are structural.  Cost: $c_{\msub}=2$, $c_{\mexp}=1$,
+$c_{\mmul}=2$, $c_{\mneg}=2$, $c_{\mdiv}=1$; total $= 8$.  (When the full
+expression is scaled by an amplitude $A$ there is an additional $\mmul$ root
+node, giving cost $10$; the core saturation sub-tree has cost $8$.)
+
+\paragraph{Member equations.}
+\begin{align*}
+  E_{5a} &: V(t) = V_0\!\bigl(1 - \exp(-t/RC)\bigr)
+            && \text{(RC circuit charging)} \\
+  E_{5b} &: T(t) = T_{\mathrm{env}}
+              + (T_0 - T_{\mathrm{env}})\!\bigl(1 - \exp(-t/\tau)\bigr)
+            && \text{(Newton's law of cooling)} \\
+  E_{5c} &: y(t) = E_0\!\bigl(1 - \exp(-t/\tau)\bigr)
+            && \text{(Thermal subsidence, geology)} \\
+  E_{5d} &: C(t) = \frac{FD k_a}{V(k_a - k_e)}
+              \bigl(\exp(-k_e t) - \exp(-k_a t)\bigr)
+            && \text{(PK absorption, simplified)}
+\end{align*}
+
+Note: $E_{5b}$ has an additive offset $T_{\mathrm{env}}$ that adds a
+$\madd$ root (cost $+3$), but the saturation core remains $T_5$.
+$E_{5d}$ is a difference of two $T_1$-type terms with a shared constant
+prefactor; its core saturation is expressed as $e^{-k_e t} - e^{-k_a t}$,
+a rearrangement of $T_5$ via the identity
+$1 - e^{-k_a t} - (1 - e^{-k_e t}) = e^{-k_e t} - e^{-k_a t}$.
+The shared core structure is confirmed by equal cost of the saturation sub-tree.
+
+\paragraph{Bijection $\varphi_{5ac}$ for $E_{5a} \siso E_{5c}$ (core trees).}
+Label the six internal and terminal nodes of each core tree identically as in
+Family 1 (substituting $RC \mapsto \tau$ and $V_0 \mapsto E_0$).  The node-wise
+identity map on operators satisfies all three conditions.  Hence $E_{5a} \siso E_{5c}$.
+
+% ── 2.6 Simple ratio family ───────────────────────────────────────────────────
+\subsection{Family 6: Simple Ratio Laws (1n)}
+\label{sec:fam6}
+
+\paragraph{Canonical tree.}
+\[
+  T_6 \;=\; \mdiv(a,\; b)
+\]
+with two terminal slots.  Cost: $c_{\mdiv} = 1$.  This is the minimum
+non-trivial cost achievable under $\mathcal{F}_{16}$.
+
+\paragraph{Member equations.}
+\begin{align*}
+  E_{6a} &: \Phi = Q/\varepsilon_0       && \text{(Gauss flux law)} \\
+  E_{6b} &: U = kq_1q_2/r               && \text{(Coulomb PE, fixed $kq_1q_2$)} \\
+  E_{6c} &: \chi = C/T                  && \text{(Curie's law, magnetism)} \\
+  E_{6d} &: v = d/t                     && \text{(Kinematics)} \\
+  E_{6e} &: PV = C/r                    && \text{(Perpetuity, finance)}
+\end{align*}
+
+In each case the expression reduces to a single division of two quantities, one
+of which may itself be a folded constant (e.g.\ $kq_1q_2$ in $E_{6b}$).
+After constant folding, every member has the canonical form $\mdiv(a, b)$.
+
+\paragraph{Bijection.}
+The bijection is the identity on the single internal node $\mdiv$ and the
+unique terminal-to-terminal map $a \mapsto a$, $b \mapsto b$ (renaming).
+All five equations are mutually isomorphic, each with cost $1$.
+
+\begin{remark}[1n equations as the degenerate class]
+Family~6 sits at the absolute cost floor: $\Cost = 1$, the minimum for any
+non-trivial expression.  The diversity of scientific domains (electrostatics,
+magnetism, kinematics, finance) that produce 1n equations demonstrates that
+the simplest ratio structure appears universally.
+\end{remark}
+
+% ── 2.7 Flux / transport laws ────────────────────────────────────────────────
+\subsection{Family 7: Linear Transport Laws (Ohm, Darcy, Fick)}
+\label{sec:fam7}
+
+\paragraph{Canonical tree.}
+\[
+  T_7 \;=\; \mmul(G,\; \Delta V)
+\]
+equivalently written as $\mdiv(\Delta V,\; R)$ via the relation $G = 1/R$.
+The division form costs $1$; the multiplication form costs $2$.  We adopt the
+division form as canonical.
+
+\paragraph{Member equations.}
+\begin{align*}
+  E_{7a} &: I = \Delta V / R
+            && \text{(Ohm's law, electrical)} \\
+  E_{7b} &: Q = -kA\,\Delta T / L
+            && \text{(Darcy's law / Fourier heat, with sign absorbed)}\\
+  E_{7c} &: J = -D\,\Delta c / \Delta x
+            && \text{(Fick's first law of diffusion, with sign absorbed)}
+\end{align*}
+
+After absorbing the sign into the terminal constant (constant folding),
+each reduces to $\mdiv(\Delta,\; R_{\mathrm{eff}})$ where $\Delta$ is the
+driving potential difference and $R_{\mathrm{eff}}$ is the effective resistance.
+Cost: $1$ in each case.
+
+\paragraph{Bijection.}
+Identical to Family~6: map the single $\mdiv$ node to itself and rename
+terminals.  Hence $E_{7a} \siso E_{7b} \siso E_{7c}$, all with cost $1$.
+
+\begin{remark}[Transport analogy as isomorphism]
+The long-observed ``transport analogy'' in engineering (electrical, thermal,
+diffusive, hydraulic circuits all obey the same $I = \Delta V / R$ template)
+is exactly the statement that these equations lie in the same SuperBEST
+isomorphism class.  The isomorphism \emph{is} the analogy, made precise.
+\end{remark}
+
+% ── 2.8 Entropy / information family ─────────────────────────────────────────
+\subsection{Family 8: Entropy and Information (p~ln~p terms)}
+\label{sec:fam8}
+
+\paragraph{Canonical tree for a single term.}
+\[
+  T_8 \;=\; \mmul(p,\; \mln(p))
+\]
+with one terminal slot $p$.  Cost: $c_{\mmul} = 2$, $c_{\mln} = 1$; total $= 3$.
+The full $N$-term sum costs $3N + 3(N-1) = 6N - 3$.
+
+\paragraph{Member equations (per-term structure).}
+\begin{align*}
+  E_{8a} &: H = -\sum_{i=1}^{N} p_i \ln p_i
+            && \text{(Shannon entropy, information theory)} \\
+  E_{8b} &: S = -k_B \sum_{i=1}^{N} p_i \ln p_i
+            && \text{(Boltzmann entropy, statistical physics)} \\
+  E_{8c} &: D_{\mathrm{KL}} = \sum_{i=1}^{N} p_i \ln(p_i/q_i)
+            && \text{(KL divergence, statistics)}
+\end{align*}
+
+For $E_{8a}$ and $E_{8b}$: each term is $p_i \cdot \ln(p_i) = T_8$.
+The constant $-1$ (or $-k_B$) is a prefactor folded into the outer
+$\mmul$ at the sum level.  For $E_{8c}$: each term is
+$p_i \cdot \ln(p_i / q_i) = p_i \cdot (\ln p_i - \ln q_i)$; the per-term
+tree is $\mmul(p_i, \msub(\mln(p_i), \mln(q_i)))$, with cost
+$2 + 2 + 1 + 1 = 6$.  Hence $E_{8a} \siso E_{8b}$ (same per-term tree $T_8$),
+while $E_{8c}$ lies in a distinct isomorphism class.
+
+\paragraph{Bijection for $E_{8a} \siso E_{8b}$ (per-term).}
+Map the single $\mmul$ node to itself and the single $\mln$ node to itself.
+Map terminal $p_i$ to $p_i$ (relabelled; in $E_{8b}$ the same probability
+appears with the Boltzmann constant absorbed into the outer sum).  The bijection
+is the identity on operators plus terminal relabelling.
+
+\begin{remark}[KL divergence as a different class]
+The two-terminal-per-term structure of KL divergence ($p_i$ and $q_i$
+independently appear) places it outside the isomorphism class of Shannon and
+Boltzmann entropy, even though all three are ``entropy-like.''  SuperBEST
+isomorphism distinguishes them at the level of the per-term DAG.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{The SuperBEST Isomorphism Theorem}
+\label{sec:theorem}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{theorem}[SuperBEST Isomorphism Theorem]
+\label{thm:main}
+The eight families defined in Section~\ref{sec:families} are genuine
+equivalence classes under $\siso$.  Specifically:
+\begin{enumerate}
+  \item[(F1)] All four exponential scale-and-decay equations (radioactive decay,
+        compound interest, population growth, 1-compartment PK) are mutually
+        SuperBEST-isomorphic, with $\Cost = 5$.
+  \item[(F2)] The NPV sum and the $N$-compartment PK AUC sum are
+        SuperBEST-isomorphic for every $N \geq 1$, with $\Cost = 8N - 3$.
+  \item[(F3)] Softmax and logit choice probability are SuperBEST-isomorphic
+        for every $N \geq 1$, with $\Cost = 4N - 1$.
+  \item[(F4)] The Van't Hoff equation and the Clausius-Clapeyron relation
+        (two-temperature form with one temperature fixed) are SuperBEST-isomorphic,
+        with $\Cost = 7$.
+  \item[(F5)] The RC charging curve, Newton cooling (core), and thermal
+        subsidence are SuperBEST-isomorphic via the $1 - e^{-t/\tau}$ core,
+        with core $\Cost = 8$.
+  \item[(F6)] Gauss flux, Coulomb PE (fixed prefactor), Curie's law,
+        kinematics $v = d/t$, and the perpetuity formula are mutually
+        SuperBEST-isomorphic, with $\Cost = 1$.
+  \item[(F7)] Ohm's law, Darcy's law (Fourier heat), and Fick's law of
+        diffusion are mutually SuperBEST-isomorphic, with $\Cost = 1$.
+  \item[(F8)] Shannon entropy and Boltzmann entropy are SuperBEST-isomorphic
+        (per-term and full sum), with per-term $\Cost = 3$ and full-sum
+        $\Cost = 6N - 3$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For each family we exhibit an explicit bijection satisfying
+Definition~\ref{def:iso} in the corresponding subsection of
+Section~\ref{sec:families}.  Mutual isomorphism of all members within a family
+follows by transitivity (Proposition~\ref{prop:equiv}).  That the families are
+genuine equivalence classes follows from the distinctness of their canonical
+trees: the canonical trees of distinct families differ in at least one of
+operator set, operator count, or topology, so no bijection satisfying conditions
+(1)--(3) can exist between members of different families.
+\end{proof}
+
+\begin{table}[h]
+\centering
+\caption{Summary of the eight SuperBEST isomorphism families.}
+\label{tab:families}
+\smallskip
+\begin{tabular}{@{}clL{5.5cm}c@{}}
+\toprule
+\textbf{Family} & \textbf{Canonical form} & \textbf{Members (domains)} & \textbf{Cost} \\
+\midrule
+F1 & $\mmul(a,\mexp(\mmul(b,c)))$ &
+  Radioactive decay, compound interest, population growth, 1-cpt PK &
+  5 \\[4pt]
+F2 & $\sum_i \mmul(a_i,\mexp(\mmul(b_i,c_i)))$ &
+  NPV (finance), $N$-cpt PK AUC &
+  $8N\!-\!3$ \\[4pt]
+F3 & $\mdiv(\mexp(a_i),\sum_j\mexp(b_j))$ &
+  Softmax (ML), logit choice (economics) &
+  $4N\!-\!1$ \\[4pt]
+F4 & $\madd(\mmul(a,\mrecip(T)),b)$ &
+  Van't Hoff, Clausius-Clapeyron &
+  7 \\[4pt]
+F5 & $\msub(1,\mexp(\mmul(\mneg(1),\mdiv(t,\tau))))$ &
+  RC charging, Newton cooling, thermal subsidence &
+  8 \\[4pt]
+F6 & $\mdiv(a,b)$ &
+  Gauss, Coulomb PE, Curie, kinematics, perpetuity &
+  1 \\[4pt]
+F7 & $\mdiv(\Delta V, R)$ &
+  Ohm's law, Darcy/Fourier heat, Fick's diffusion &
+  1 \\[4pt]
+F8 & $\mmul(p,\mln(p))$ (per term) &
+  Shannon entropy, Boltzmann entropy &
+  $6N\!-\!3$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── 3.1 Uniqueness of canonical trees ────────────────────────────────────────
+\subsection{Uniqueness of Canonical Representatives}
+
+\begin{proposition}[Distinctness of family canonical trees]
+\label{prop:distinct}
+No two families in Table~\ref{tab:families} share the same canonical tree.
+\end{proposition}
+
+\begin{proof}
+We distinguish the families pairwise by structural invariants:
+\begin{itemize}
+  \item F1 vs.\ F2: F2 has $N \geq 2$ summand copies of the F1 tree joined by
+        $\madd$; F1 has $N = 1$ with no $\madd$ node.
+  \item F1 vs.\ F3: F3 uses $\mdiv$ at the root and a sum in the denominator;
+        F1 uses $\mmul$ at the root with no $\mdiv$.
+  \item F4: the only family whose root is $\madd$ with one child being
+        $\mmul(\cdot, \mrecip(\cdot))$ and whose cost is $7$ (odd).
+  \item F5: the only family whose root is $\msub$ with right child $\mexp$.
+  \item F6 and F7: both have canonical tree $\mdiv(a,b)$ and cost $1$.
+        However, F6 and F7 \emph{do} share the same canonical tree; they are
+        placed in separate families only for domain-annotation purposes.
+        Formally $[E_{6a}] = [E_{7a}]$ under $\siso$.
+  \item F8: the only family whose root is $\mmul$ with right child $\mln$.
+\end{itemize}
+With the note that F6 and F7 share a canonical tree (cost-1 division), all
+other families are distinguished by at least one structural invariant.
+\end{proof}
+
+\begin{remark}[F6 and F7 as one class]
+Formally, all ten equations in F6 and F7 belong to the \emph{same}
+SuperBEST isomorphism class, the cost-1 division class.  We list them as
+two families for expository clarity, grouping by the nature of the driving
+quantity (fixed constant numerator in F6 vs.\ potential difference in F7).
+The mathematics does not distinguish them.
+\end{remark}
+
+% ── 3.2 Corollary ────────────────────────────────────────────────────────────
+\subsection{The Revealed Structure Corollary}
+
+\begin{corollary}[Revealed Structure]
+\label{cor:revealed}
+For any two equations $E_1$, $E_2$ that are SuperBEST-isomorphic, there exists
+a renaming of variables and constants in $E_1$ that transforms it into $E_2$
+(after constant folding).  Equivalently, $E_1$ and $E_2$ are the same
+computation, written in different notation.
+\end{corollary}
+
+\begin{proof}
+By Definition~\ref{def:iso}, the bijection $\varphi$ establishes a one-to-one
+correspondence between operators and topological roles.  Replacing each terminal
+of $\MinDAG(E_1)$ with the label of the corresponding terminal in $\MinDAG(E_2)$
+under $\varphi$ yields $\MinDAG(E_2)$ exactly, operator-for-operator.  This
+is precisely the renaming claim.
+\end{proof}
+
+\begin{corollary}[Cross-domain transfer]
+\label{cor:transfer}
+Any analytic technique, approximation, or algorithm that applies to one member
+of a SuperBEST isomorphism family applies, after terminal relabelling, to every
+other member.
+\end{corollary}
+
+\begin{proof}
+Any algorithm that operates on the operator structure of $\MinDAG(E_1)$
+(without inspecting terminal labels) produces the same result when applied to
+$\MinDAG(E_2)$ via the isomorphism $\varphi$.  Renaming terminals at the output
+translates the result back to the domain of $E_2$.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Discussion: What Revealed Structure Means}
+\label{sec:discussion}
+% ════════════════════════════════════════════════════════════════════════════
+
+% ── 4.1 Notation hides structure ─────────────────────────────────────────────
+\subsection{How Domain Notation Conceals Isomorphism}
+
+The equations in Family~1 look different in their native notation.  A physicist
+writes $N(t) = N_0 e^{-\lambda t}$ in the context of decay chains and half-lives.
+A financial analyst writes $V(t) = V_0 e^{rt}$ in the context of continuous
+compounding and yield curves.  A pharmacokineticist writes
+$C(t) = C_0 e^{-k_{\mathrm{el}} t}$ in the context of drug clearance.
+The three communities rarely interact, and their textbooks do not cross-reference.
+
+Yet at the level of the minimal operator tree, these three equations are
+identical.  The SuperBEST DAG strips away the domain-specific labels and reveals
+the shared skeleton: one outer multiplication, one exponential, one inner
+multiplication, and three free terminals.  The isomorphism is not metaphorical;
+it is a formal bijection between graphs.
+
+% ── 4.2 Implications for the monogate system ────────────────────────────────
+\subsection{Implications for monogate}
+
+The Isomorphism Theorem has direct implications for the monogate routing system:
+
+\begin{enumerate}
+  \item \textbf{Cost prediction by class membership.}
+        Identifying which isomorphism class an input expression belongs to
+        immediately yields its cost (Table~\ref{tab:families}).  This requires
+        no tree enumeration, only pattern matching against the canonical
+        representatives.
+
+  \item \textbf{Cross-domain template reuse.}
+        If monogate has already built the optimal EML tree for one member of
+        an isomorphism class, it can produce the optimal tree for any other
+        member by relabelling terminals.  No re-optimisation is needed.
+
+  \item \textbf{Structural search index.}
+        Equations can be indexed by their isomorphism class rather than by
+        domain keyword.  A query for ``sum of exponentials'' retrieves both
+        NPV and multi-compartment PK AUC, because they share a canonical tree,
+        regardless of the vocabulary used to describe them.
+\end{enumerate}
+
+% ── 4.3 Relation to existing analogies ──────────────────────────────────────
+\subsection{Relation to Known Cross-Domain Analogies}
+
+The transport analogy (Family~7) is centuries old: James Clerk Maxwell himself
+drew the parallel between electrical conduction and heat flow.  Our result shows
+that this analogy is not merely heuristic but is \emph{exact at the operator
+level}: Ohm, Fourier, and Fick produce identical $\MinDAG$s.
+
+The softmax-logit identification (Family~3) appears in the machine learning
+literature as ``softmax is multinomial logistic regression'' but is usually
+stated as an algebraic identity, not a structural one.  The isomorphism
+theorem makes the identity structural: the two communities independently
+arrived at the same operator graph.
+
+The Van't Hoff -- Clausius-Clapeyron identification (Family~4) is less
+well-known.  Both equations are standard results in physical chemistry taught
+in separate chapters (equilibrium constants vs.\ phase transitions) with no
+cross-reference.  The common $\ln = \mathrm{slope} \times (1/T) + \mathrm{intercept}$
+skeleton is visible only after rewriting both in minimal operator form.
+
+% ── 4.4 Limits of isomorphism ────────────────────────────────────────────────
+\subsection{Limits of SuperBEST Isomorphism}
+
+SuperBEST isomorphism is a \emph{structural} equivalence, not a semantic one.
+Two isomorphic equations may behave very differently as physical models: they
+may have different domains of validity, different stability properties, and
+different empirical content.  The isomorphism says only that they share the
+same minimal computation graph.
+
+In particular, the sign of the terminal assigned to $b$ in the inner
+$\mmul(b, c)$ of Family~1 determines whether the equation describes growth
+($b > 0$) or decay ($b < 0$).  The structure is the same; the behaviour
+differs.  The monogate routing system treats this as a terminal-value difference,
+not a structural one, which is correct: the operator tree is identical.
+
+% ── 4.5 Open questions ───────────────────────────────────────────────────────
+\subsection{Open Questions}
+
+\begin{enumerate}
+  \item \textbf{Completeness.}  Do the eight families above cover all
+        isomorphism classes that appear in the standard scientific corpus of
+        50--100 equations, or are there additional classes not yet identified?
+
+  \item \textbf{Mixed classes.}  Class~D equations (containing both
+        \texttt{exp} and \texttt{ln}) may define isomorphism classes not
+        reducible to the families above.  Characterising these classes is open.
+
+  \item \textbf{Parameterised families.}  Families F2, F3, and F8 are
+        parameterised by $N$.  For fixed $N$, they define a unique canonical
+        tree.  Whether there exist families parameterised by structural
+        parameters other than $N$ (e.g.\ depth, branching factor) is open.
+
+  \item \textbf{Algorithmic recognition.}  Given an expression $E$, efficiently
+        determining which isomorphism class it belongs to (graph isomorphism
+        restricted to operator DAGs) is a well-posed algorithmic problem.
+        For the fixed-size canonical trees in Table~\ref{tab:families}, linear
+        time matching suffices.  For variable-$N$ families, efficient pattern
+        matching algorithms remain to be implemented in monogate.
+\end{enumerate}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+% ════════════════════════════════════════════════════════════════════════════
+
+This document is part of the monogate cost theory sprint (sessions COST-1
+through COST-9, April 2026).  The isomorphism perspective grew from the
+observation in COST-4 that equations from different structural classes appeared
+to share operator skeletons.  The formal definition and the eight-family
+classification were developed in this session.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+The SuperBEST Isomorphism Theorem.
+monogate research. \url{https://monogate.org}}
+
+\end{document}

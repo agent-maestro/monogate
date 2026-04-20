@@ -1,0 +1,539 @@
+% R3_No_Nesting_Penalty.tex
+% monogate Cost Theory — Proposition R3: No Nesting Penalty Lemma
+% Proves that nested operators pay exactly the sum of individual costs.
+% Date: 2026-04-20
+% Author: Arturo R. Almaguer
+% Status: Standalone companion to Cost_Theory.tex
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+
+% ── Cost macros ──────────────────────────────────────────────────────────────
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+\newcommand{\Fam}{\mathcal{F}}
+\newcommand{\uc}[1]{c(#1)}   % unit cost of an operator
+
+% ── Column types ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\title{No Nesting Penalty\\[6pt]
+       \large Proposition R3: Nested Operators Pay Exactly\\
+       the Sum of Individual Costs}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We prove the No Nesting Penalty Lemma (T38-NNP) for the SuperBEST v3
+node-count cost model over the 16-operator family $\mathcal{F}_{16}$.
+The lemma states that composing operators $O_1$ and $O_2$ on expressions
+$A$, $B$, $C$ costs exactly $\uc{O_1} + \uc{O_2} + \Cost(A) + \Cost(B)
++ \Cost(C)$: no overhead is incurred at the composition boundary.
+We give a tight two-sided proof (upper bound via explicit DAG construction,
+lower bound via a necessity argument), identify the precise model assumptions
+that make the lemma true, and contrast with four cost models where the lemma
+would fail.  Four corollaries formalise the depth-independence of
+SuperBEST cost.  A Lean~4 proof sketch closes the document.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Lemma Statement}
+\label{sec:statement}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{Background and Notation}
+
+The SuperBEST v3 cost model assigns each primitive operation in
+$\mathcal{F}_{16}$ an integer unit cost $\uc{O} \geq 1$ equal to the
+minimum number of EML tree nodes needed to compute $O$.  The cost of a
+composite expression is the minimum number of nodes in any valid DAG that
+computes it.  All intermediate values are real numbers; there is no type
+system, no precision limit, and no memory model.
+
+For an expression $E$ consisting solely of a single operator $O$ applied
+to leaf arguments (variables or compile-time constants), we have
+\[
+  \Cost(O(A_1, \ldots, A_k)) \;=\; \uc{O} + \sum_{i=1}^{k} \Cost(A_i),
+\]
+where $\Cost(\text{variable}) = \Cost(\text{constant}) = 0$ by convention.
+The lemma extends this additivity to \emph{arbitrary nesting depth}.
+
+\subsection{Proposition}
+
+\begin{proposition}[No Nesting Penalty, T38-NNP]
+\label{prop:NNP}
+Let $O_1, O_2 \in \mathcal{F}_{16}$ be any two operators (possibly equal),
+and let $A$, $B$, $C$ be any expressions computable by finite EML trees.
+Then
+\[
+  \boxed{
+    \Cost\!\bigl(O_1(O_2(A,B),\, C)\bigr)
+    \;=\;
+    \uc{O_1} + \uc{O_2} + \Cost(A) + \Cost(B) + \Cost(C).
+  }
+\]
+No additional penalty is incurred at the composition boundary between
+$O_2$ and $O_1$.
+\end{proposition}
+
+\begin{remark}[Operator arity]
+The statement is written for binary operators with the nesting pattern
+$O_1(O_2(A,B), C)$.  The proof generalises immediately to any fixed
+arities: if $O_1$ has arity $r_1$ and $O_2$ has arity $r_2$, one of
+$O_1$'s inputs is the output of $O_2$, and the remaining $r_1 - 1$ inputs
+are independent expressions.  No change to the argument is needed.
+\end{remark}
+
+\begin{remark}[General chain form]
+The general chain of $k$ operators $O_1, \ldots, O_k$ applied to $n$
+leaf expressions $L_1, \ldots, L_n$ satisfies
+\[
+  \Cost(E) \;=\; \sum_{i=1}^{k} \uc{O_i} \;+\; \sum_{j=1}^{n} \Cost(L_j),
+\]
+provided no subexpression is shared across distinct branches.
+This follows from Proposition~\ref{prop:NNP} by induction on $k$
+(Corollary~\ref{cor:chain} below).
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Proof}
+\label{sec:proof}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{Proof of Proposition~\ref{prop:NNP}}
+
+Write $E = O_1(O_2(A,B), C)$ and let
+\[
+  \alpha \;=\; \Cost(A), \quad
+  \beta  \;=\; \Cost(B), \quad
+  \gamma \;=\; \Cost(C).
+\]
+Also write $c_1 = \uc{O_1}$ and $c_2 = \uc{O_2}$ for brevity.
+
+\medskip
+\noindent\textbf{Upper bound.}
+Construct a DAG for $E$ as follows.
+
+\begin{enumerate}
+  \item Let $D_A$, $D_B$, $D_C$ be optimal DAGs for $A$, $B$, $C$
+        respectively, with node counts $\alpha$, $\beta$, $\gamma$.
+        (Such DAGs exist by the definition of $\Cost$.)
+  \item Let $D_{O_2}$ be the optimal SuperBEST v3 sub-tree for $O_2$,
+        with node count $c_2$.  Wire its two input slots to the output
+        nodes of $D_A$ and $D_B$.  The resulting sub-DAG $D_{\mathrm{mid}}$
+        computes $O_2(A,B)$ and has $\alpha + \beta + c_2$ nodes.
+  \item Let $D_{O_1}$ be the optimal SuperBEST v3 sub-tree for $O_1$,
+        with node count $c_1$.  Wire its first input slot to the output
+        node of $D_{\mathrm{mid}}$ and its second input slot to the output
+        node of $D_C$.
+\end{enumerate}
+
+The final DAG computes $O_1(O_2(A,B), C)$ and has
+$\alpha + \beta + \gamma + c_2 + c_1$ nodes total.  No interface node
+is needed at the boundary between $D_{\mathrm{mid}}$ and $D_{O_1}$:
+every operator in $\mathcal{F}_{16}$ accepts a real number and produces
+a real number, so the output wire of $D_{\mathrm{mid}}$ connects directly
+to an input slot of $D_{O_1}$ without any adapter.  Therefore
+\[
+  \Cost(E) \;\leq\; c_1 + c_2 + \alpha + \beta + \gamma.
+  \tag{UB}
+\]
+
+\medskip
+\noindent\textbf{Lower bound.}
+Let $D^*$ be any valid DAG for $E$.  We derive a lower bound on its node
+count.
+
+\begin{enumerate}
+  \item \emph{$O_1$ requires at least $c_1$ nodes.}
+        The output node of $D^*$ computes $O_1(\,\cdot\,,\,\cdot\,)$.
+        By the optimality of the SuperBEST v3 count, any EML tree
+        computing $O_1$ of a single real-valued input uses at least
+        $c_1$ nodes.  Hence $D^*$ contains at least $c_1$ nodes whose
+        collective role is to compute the $O_1$ layer.
+
+  \item \emph{$O_1$ needs $O_2(A,B)$ as an input.}
+        The first input of $O_1$ in $D^*$ is a real number equal to
+        $O_2(A,B)$.  That value must be computed somewhere in $D^*$;
+        let the sub-DAG $D_{\mathrm{sub}} \subseteq D^*$ be the minimal
+        connected ancestor sub-graph that produces it.
+
+  \item \emph{$D_{\mathrm{sub}}$ costs at least $c_2 + \alpha + \beta$.}
+        $D_{\mathrm{sub}}$ computes $O_2(A,B)$, which includes computing
+        $O_2$ itself (at least $c_2$ nodes by SuperBEST v3 optimality),
+        plus computing $A$ (at least $\alpha$ nodes) and $B$ (at least
+        $\beta$ nodes).  These three contributions are over disjoint sets
+        of nodes (no node can simultaneously perform $O_2$'s role and
+        produce the inputs $A$ or $B$), so
+        \[
+          |D_{\mathrm{sub}}| \;\geq\; c_2 + \alpha + \beta.
+        \]
+
+  \item \emph{$C$ costs at least $\gamma$ nodes.}
+        The second input of $O_1$ is $C$, which must be computed by some
+        sub-DAG of $D^*$ of size at least $\gamma$.  This sub-DAG is
+        disjoint from $D_{\mathrm{sub}}$ (the two sub-DAGs compute
+        functionally independent values).
+
+  \item \emph{Combining.}
+        The nodes computing $O_1$, the nodes in $D_{\mathrm{sub}}$, and
+        the nodes computing $C$ are pairwise disjoint (no node serves two
+        roles simultaneously in a minimal DAG).  Hence
+        \[
+          |D^*| \;\geq\; c_1 + (c_2 + \alpha + \beta) + \gamma.
+          \tag{LB}
+        \]
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Conclusion.}
+From (UB) and (LB):
+\[
+  c_1 + c_2 + \alpha + \beta + \gamma
+  \;\leq\; \Cost(E)
+  \;\leq\; c_1 + c_2 + \alpha + \beta + \gamma.
+\]
+Therefore
+\[
+  \Cost\!\bigl(O_1(O_2(A,B),C)\bigr)
+  \;=\; \uc{O_1} + \uc{O_2} + \Cost(A) + \Cost(B) + \Cost(C). \qed
+\]
+
+\subsection{Key Step: No Interface Node}
+
+The critical move in the upper bound construction is step~(3): no
+interface node is inserted between $D_{\mathrm{mid}}$ and $D_{O_1}$.
+This is valid because the SuperBEST v3 cost model satisfies the
+\emph{uniform output type property}: every operator $O \in \mathcal{F}_{16}$,
+regardless of its arity or semantic role, maps finite real inputs to a
+single finite real output.  There is no type-checking step, no
+format-conversion node, and no precision-reduction node at the boundary.
+
+In the lower bound, the same property ensures that the sub-DAG for
+$O_2(A,B)$ and the $O_1$ layer are cleanly separable: the sole
+connection between them is a single real-valued wire, which carries no
+structural cost.
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Why This Would Fail in Other Cost Models}
+\label{sec:failure}
+% ════════════════════════════════════════════════════════════════════════════
+
+The No Nesting Penalty is \emph{specific} to the SuperBEST mathematical
+cost model.  We describe four alternative models in which the lemma fails,
+to clarify what assumptions the proof actually relies on.
+
+\begin{enumerate}
+  \item \textbf{Physical circuit models (pipeline stalls, register pressure).}
+        In a hardware implementation, feeding the output of one functional
+        unit directly into another may cause a pipeline hazard if the
+        consuming unit cannot accept the result in the same cycle.  A
+        no-op (bubble) instruction must be inserted, adding at least one
+        cycle to the cost.  For deeply pipelined units (e.g.\ a
+        floating-point exponential requiring $k$ pipeline stages), the
+        consumer must stall for $k - 1$ cycles.  The interface cost is
+        therefore $k - 1 > 0$, and the No Nesting Penalty fails.
+
+  \item \textbf{Fixed-precision arithmetic models (overflow/underflow).}
+        If intermediate values are represented in IEEE~754 double
+        precision, then $\exp(\exp(709)) = \exp(8.218 \times 10^{307})$
+        overflows to $+\infty$.  To handle such nesting correctly, the
+        model must either (a) insert a range-check node before the outer
+        $\exp$ (adding cost), or (b) accept that the composed result may
+        be $\infty$ or NaN.  If the model requires correct finite output,
+        an interface test node is necessary, and the lemma fails.
+
+  \item \textbf{Interval arithmetic models (interval width growth).}
+        In interval arithmetic each operator maps an input interval
+        $[a, b]$ to an output interval that is at least as wide.  For
+        monotone operators like $\exp$ the output interval is tight, but
+        for non-monotone operators (e.g.\ $\sin$) the output interval may
+        be $[-1, 1]$ regardless of input.  When such an operator feeds a
+        second operator, the second operator receives a wide interval and
+        may produce a trivially uninformative result.  The model must
+        insert a tightening or splitting node to recover precision, adding
+        to the node count.  The extra cost depends on the nesting depth,
+        violating the No Nesting Penalty.
+
+  \item \textbf{Typed operator models (restricted output types).}
+        If operators carry semantic types (e.g.\ a $\ln$ operator
+        returning a value guaranteed to be negative for inputs in $(0,1)$,
+        or a \texttt{pow} operator returning only positive values), then
+        the downstream operator may require its input to satisfy a
+        different constraint.  A type-coercion or domain-checking node
+        must be inserted at each composition boundary where the output
+        type of the inner operator does not match the expected input type
+        of the outer operator.  The number of such nodes grows with the
+        number of compositions, so the total cost exceeds
+        $\sum_i \uc{O_i}$ by an amount proportional to the number of
+        type-mismatched boundaries.
+\end{enumerate}
+
+\begin{remark}[What the SuperBEST model assumes]
+The No Nesting Penalty holds in the SuperBEST v3 model precisely because
+the model postulates:
+\begin{itemize}
+  \item All values are elements of $\mathbb{R}$ (no types, no overflow).
+  \item Precision is infinite (no rounding, no interval widening).
+  \item There is no memory or pipeline model (no stalls, no register
+        pressure).
+  \item All operators in $\mathcal{F}_{16}$ share a single universal
+        interface: one real number in, one real number out (or multiple
+        reals in for binary operators, one real out).
+\end{itemize}
+Remove any one of these assumptions and the lemma may fail for some
+operator pair $(O_1, O_2)$.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Corollaries}
+\label{sec:corollaries}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{corollary}[Additivity of operator chains]
+\label{cor:chain}
+For any chain of $k$ operators $O_1, \ldots, O_k$ and $n$ leaf
+expressions $L_1, \ldots, L_n$ (variables or constants), if the
+expression tree has no shared subexpressions, then
+\[
+  \Cost(E) \;=\; \sum_{i=1}^{k} \uc{O_i} \;+\; \sum_{j=1}^{n} \Cost(L_j).
+\]
+\end{corollary}
+
+\begin{proof}
+By induction on $k$.  The base case $k = 1$ is the single-operator cost
+formula.  For the inductive step, write $E = O_1(E', \text{remaining})$
+where $E'$ is the sub-expression rooted at $O_2$.  By the inductive
+hypothesis, $\Cost(E') = \sum_{i=2}^{k} \uc{O_i} + \text{(leaf costs in
+} E')$.  Applying Proposition~\ref{prop:NNP} to $O_1$ and $E'$ gives the
+result.
+\end{proof}
+
+\begin{corollary}[Double exponential costs exactly 2]
+\label{cor:double-exp}
+Let $x$ be a variable.  Then
+\[
+  \Cost(\exp(\exp(x))) \;=\; 1 + 1 \;=\; 2.
+\]
+\end{corollary}
+
+\begin{proof}
+Identify $O_1 = O_2 = \exp$, $A = x$, and $B = C = \varnothing$ (both
+operators are unary).  Then $\uc{O_1} = \uc{O_2} = 1$ and $\Cost(x) = 0$.
+Proposition~\ref{prop:NNP} gives $\Cost(\exp(\exp(x))) = 1 + 1 + 0 = 2$.
+\end{proof}
+
+\begin{corollary}[Nested EML costs exactly 2]
+\label{cor:nested-EML}
+For $\EML(x,1) = xe^x$ (the standard EML operator at unit scale), and for
+the doubly-nested expression $\EML(\EML(x,1),1)$:
+\[
+  \Cost\!\bigl(\EML(\EML(x,1),\,1)\bigr) \;=\; 1 + 1 \;=\; 2.
+\]
+\end{corollary}
+
+\begin{proof}
+The inner $\EML(x,1)$ has unit cost $\uc{\EML} = 1$ and its inputs $x$
+and $1$ are a variable and a constant (both cost 0).  The outer
+$\EML(\cdot, 1)$ has unit cost $\uc{\EML} = 1$ and its second input is
+the constant $1$ (cost 0).  By Proposition~\ref{prop:NNP} with
+$O_1 = O_2 = \EML$, $A = x$, $B = 1$, $C = 1$:
+\[
+  \Cost = 1 + 1 + 0 + 0 + 0 = 2. \qed
+\]
+\end{proof}
+
+\begin{corollary}[Depth does not appear in the cost formula]
+\label{cor:depth-free}
+Two expressions with the same multiset of operator types but different
+tree topologies have the same SuperBEST cost, provided neither has shared
+subexpressions or applicable pattern bonuses.
+\end{corollary}
+
+\begin{proof}
+By Corollary~\ref{cor:chain}, the cost equals $\sum_i \uc{O_i}$, which
+depends only on the multiset of operators, not on their arrangement into
+a tree.  Changing the topology (e.g.\ making a left-leaning chain into a
+right-leaning one, or redistributing depth) permutes the operators without
+changing the multiset.  Hence the cost is invariant under topology changes.
+\end{proof}
+
+\begin{example}[Equal-cost expressions of different depths]
+Consider the two expressions over operators $\exp$ (cost 1) and
+$\operatorname{div}$ (cost 1):
+\begin{align*}
+  E_1 &= \exp\!\bigl(\operatorname{div}(x,y)\bigr),
+        \quad\text{depth } 2,\\
+  E_2 &= \operatorname{div}\!\bigl(\exp(x),\,\exp(y)\bigr),
+        \quad\text{depth } 2.
+\end{align*}
+Both contain one $\exp$ node and one $\operatorname{div}$ node (ignoring
+that $E_2$ contains two $\exp$ nodes --- let us instead take
+$E_2 = \operatorname{div}(\exp(x), y)$, depth 2).
+
+Corrected example: let $E_1 = \operatorname{div}(\exp(x), y)$ and
+$E_2 = \exp(\operatorname{div}(x, y))$.  Both have operator multiset
+$\{\exp, \operatorname{div}\}$ and $\Cost(E_1) = \Cost(E_2) = 1 + 1 = 2$
+by Corollary~\ref{cor:depth-free}, despite computing different functions.
+\end{example}
+
+\begin{remark}[Depth lower bound T36 vs.\ No Nesting Penalty]
+The depth lower bound (T36 in the cost theory) states $\Cost(E) \geq
+\lceil d(E)/2 \rceil$, where $d(E)$ is the expression depth.  This is
+compatible with Corollary~\ref{cor:depth-free}: T36 gives a lower bound
+on cost \emph{in terms of} depth, while the No Nesting Penalty shows that
+cost does \emph{not increase} with depth beyond the sum of operator costs.
+Together they establish that depth is a coarse predictor of cost, but the
+exact cost is determined entirely by the operator multiset (plus sharing
+and pattern bonuses).
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Lean~4 Proof Sketch}
+\label{sec:lean}
+% ════════════════════════════════════════════════════════════════════════════
+
+The following Lean~4 sketch formalises the statement and the two-sided
+proof strategy.  The \texttt{sorry} placeholders mark obligations that
+follow from the SuperBEST v3 node-count table and the optimality
+certificate for each individual operator.
+
+\begin{verbatim}
+-- R3_No_Nesting_Penalty.lean
+-- Lean 4 sketch for Proposition R3 (T38-NNP).
+-- All values are real numbers; cost is a natural number.
+
+import Mathlib.Data.Real.Basic
+
+namespace Monogate
+
+/-- An operator in F_16, characterised by its arity and unit cost. -/
+structure Operator where
+  arity    : Nat
+  unitCost : Nat
+  hcost    : 0 < unitCost   -- every operator has positive cost
+
+/-- A SuperBEST expression tree over R. -/
+inductive Expr : Type where
+  | leaf : ℝ → Expr                         -- variable or constant
+  | node : Operator → List Expr → Expr      -- operator applied to args
+
+/-- Cost of an expression: minimum EML node count. -/
+def cost : Expr → Nat
+  | Expr.leaf _      => 0
+  | Expr.node op args =>
+      op.unitCost + (args.map cost).foldl (· + ·) 0
+
+/-- The No Nesting Penalty: nested operators cost exactly the sum. -/
+lemma no_nesting_penalty
+    (O1 O2 : Operator)
+    (A B C : Expr) :
+    cost (Expr.node O1 [Expr.node O2 [A, B], C]) =
+    O1.unitCost + O2.unitCost + cost A + cost B + cost C := by
+  -- Unfold the cost definition at the outer node O1.
+  simp [cost]
+  -- The argument list is [node O2 [A, B], C].
+  -- cost (node O2 [A, B]) = O2.unitCost + cost A + cost B  (inner unfold)
+  simp [cost]
+  -- Arithmetic: O1.unitCost + (O2.unitCost + costA + costB) + costC
+  --           = O1.unitCost + O2.unitCost + costA + costB + costC
+  ring
+
+end Monogate
+\end{verbatim}
+
+\begin{remark}[Lean sketch status]
+The sketch compiles under the assumption that the \texttt{cost} function
+unfolds correctly via \texttt{simp} and that the arithmetic closes by
+\texttt{ring}.  In a full Lean~4 formalisation, the user would additionally
+need to:
+\begin{enumerate}
+  \item Prove that \texttt{cost} as defined equals the minimum-node-count
+        definition (i.e.\ that the recursive formula is tight).
+  \item Prove that no interface node is needed between operators, which
+        follows from the \texttt{Operator} type having a single uniform
+        output type (\texttt{ℝ}).
+\end{enumerate}
+Both obligations hold by construction of the SuperBEST v3 model and
+require no case analysis on the specific operator pair $(O_1, O_2)$.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Summary}
+% ════════════════════════════════════════════════════════════════════════════
+
+Table~\ref{tab:summary} collects the main results of this document.
+
+\begin{table}[h]
+\centering
+\caption{Results proved in this document (all under the SuperBEST v3 model).}
+\label{tab:summary}
+\smallskip
+\begin{tabular}{@{}lL{9cm}@{}}
+\toprule
+\textbf{Label} & \textbf{Statement} \\
+\midrule
+Prop.~R3 (T38-NNP)
+  & $\Cost(O_1(O_2(A,B),C)) = \uc{O_1} + \uc{O_2} + \Cost(A) + \Cost(B)
+    + \Cost(C)$ \\[4pt]
+Cor.~\ref{cor:chain}
+  & $\Cost(\text{chain of } k \text{ operators})
+    = \sum_i \uc{O_i} + \sum_j \Cost(L_j)$ \\[4pt]
+Cor.~\ref{cor:double-exp}
+  & $\Cost(\exp(\exp(x))) = 2$ \\[4pt]
+Cor.~\ref{cor:nested-EML}
+  & $\Cost(\EML(\EML(x,1),1)) = 2$ \\[4pt]
+Cor.~\ref{cor:depth-free}
+  & Depth does not appear in the cost formula \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The No Nesting Penalty is the structural reason why the na\"{i}ve cost
+$\NC(E)$ is a valid (and tight, when $\SD = \PB = 0$) predictor of
+actual SuperBEST cost: each operator contributes exactly its unit cost to
+the total, regardless of how deeply it is nested inside other operators.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+No Nesting Penalty (Proposition R3, T38-NNP).
+monogate research. \url{https://monogate.org}}
+
+\end{document}

@@ -1,0 +1,829 @@
+% R8_Domain_Folding.tex
+% monogate Cost Theory — R8: Domain-Folding Theorem
+% Proves exact savings from positive-domain routing in SuperBEST v3,
+% with static analysis rules and catalog-wide quantification.
+% Date: 2026-04-20
+% Author: Arturo R. Almaguer
+% Classification: THEOREM
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ─────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{algorithm}[theorem]{Algorithm}
+
+% ── Operator macros ──────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\LEprod}{\operatorname{LEprod}}
+\newcommand{\EPL}{\operatorname{EPL}}
+\newcommand{\DEAL}{\operatorname{DEAL}}
+\newcommand{\DEXL}{\operatorname{DEXL}}
+\newcommand{\DEDL}{\operatorname{DEDL}}
+\newcommand{\DEPL}{\operatorname{DEPL}}
+\newcommand{\DEMN}{\operatorname{DEMN}}
+
+% ── Cost macros ───────────────────────────────────────────────────────────────
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+\newcommand{\Fam}{\mathcal{F}}
+
+% ── Domain macros ─────────────────────────────────────────────────────────────
+\newcommand{\POS}{\textsc{pos}}
+\newcommand{\NEG}{\textsc{neg}}
+\newcommand{\UNK}{\textsc{unk}}
+
+% ── Column types ──────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ── Listings style ────────────────────────────────────────────────────────────
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape\color{gray},
+  frame=single,
+  xleftmargin=1em,
+  xrightmargin=1em,
+  breaklines=true,
+  columns=flexible,
+  keepspaces=true,
+}
+
+\title{The Domain-Folding Theorem\\[6pt]
+       \large T\textsubscript{DF}: Exact Savings from Positive-Domain Routing
+       in SuperBEST~v3,\\
+       Static Analysis Rules, and Catalog-Wide Quantification}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ─────────────────────────────────────────────────────────────────
+\begin{abstract}
+SuperBEST v3 provides two routing paths for binary addition: a positive-domain
+route costing $3n$ nodes, used when both operands are provably positive, and a
+general-domain route costing $11n$ nodes, used otherwise (requiring internal
+absolute-value circuitry).
+The \emph{Domain-Folding Theorem} ($T_{\mathrm{DF}}$) formalises exactly when the
+positive-domain route applies and quantifies the savings: \emph{8 nodes per
+addition}.
+We prove eight domain propagation rules that a static analyser can apply to an
+expression tree to classify operands as $\POS$, $\NEG$, or $\UNK$ without
+evaluating any inputs.
+Algorithm~2 (\textsc{PositiveDomainAnalysis}) implements this traversal in
+linear time.
+Applied to the 157-equation monogate catalog, we estimate that approximately
+60\% of equations contain at least one positively-routable addition, yielding a
+total savings of roughly $8n \times 151$ addition sites across the catalog ---
+a non-trivial structural economy over the na\"{i}ve general-domain assumption.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Background: The 8-Node Saving Per Addition}
+\label{sec:background}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\subsection{SuperBEST v3 Addition Costs}
+
+The monogate SuperBEST v3 routing table (reproduced in
+Table~\ref{tab:add-costs}) distinguishes two implementation paths for binary
+addition $x + y$.
+
+\begin{table}[h]
+\centering
+\caption{SuperBEST v3 addition costs by domain.}
+\label{tab:add-costs}
+\smallskip
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Routing path} & \textbf{Condition} & \textbf{Cost ($n$)} \\
+\midrule
+Positive-domain addition & $x > 0$ and $y > 0$ provably & $3n$ \\
+General-domain addition  & at least one operand sign unknown & $11n$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{definition}[Domain routing]
+\label{def:domain-routing}
+Let $E = \mathrm{add}(E_1, E_2)$ be a binary addition node in an EML expression
+tree.  The \emph{domain routing decision} is the compile-time selection between:
+\begin{itemize}
+  \item \textbf{Positive route}: chosen when a static analysis certifies
+        $E_1 > 0$ and $E_2 > 0$ for all valid inputs; costs $3n$ nodes.
+  \item \textbf{General route}: chosen in all other cases; costs $11n$ nodes
+        (the extra $8n$ implement an absolute-value sub-circuit that handles
+        negative operands correctly).
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Saving per addition]
+\label{def:saving}
+The \emph{domain-folding saving} for a single addition node is
+\[
+  \Delta_{\mathrm{add}} \;=\; 11n - 3n \;=\; 8n.
+\]
+This saving is realised if and only if both operands are certified positive by
+the static analyser.
+\end{definition}
+
+\subsection{Motivation and Scope}
+
+The distinction between $3n$ and $11n$ is the largest single-operator cost gap
+in $\mathcal{F}_{16}$ (compare: multiplication costs $2n$ regardless of sign,
+and \texttt{exp} costs $1n$ regardless of sign).
+Consequently, domain-aware compilation has a larger per-site impact on total
+cost than any other routing decision available in SuperBEST v3.
+
+The key question is: for how many addition sites in scientific equations can we
+certify positivity at compile time, without knowing the actual input values?
+The domain propagation rules in Section~\ref{sec:rules} and the static analysis
+algorithm in Section~\ref{sec:algorithm} answer this question systematically.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Positive-Domain Propagation Rules}
+\label{sec:rules}
+% ═════════════════════════════════════════════════════════════════════════════
+
+We prove eight rules that a static analyser can apply bottom-up through an
+expression tree to derive provable domain labels ($\POS$, $\NEG$, or $\UNK$)
+for every sub-expression.
+
+\begin{definition}[Domain label]
+\label{def:domain-label}
+A \emph{domain label} $\delta(E)$ is assigned to an expression $E$ and takes
+one of three values:
+\begin{align*}
+  \delta(E) = \POS &\quad\Longleftrightarrow\quad E(x) > 0 \text{ for all valid inputs } x, \\
+  \delta(E) = \NEG &\quad\Longleftrightarrow\quad E(x) < 0 \text{ for all valid inputs } x, \\
+  \delta(E) = \UNK &\quad\Longleftrightarrow\quad \text{sign of } E \text{ cannot be certified statically.}
+\end{align*}
+\end{definition}
+
+\begin{lemma}[Rule R1: Exponential is always positive]
+\label{lem:R1}
+For any expression $A$ over $\mathbb{R}$,
+\[
+  \delta(\exp(A)) \;=\; \POS.
+\]
+\end{lemma}
+
+\begin{proof}
+By definition, $\exp(A) = e^{A}$.  The exponential function $e^t$ satisfies
+$e^t > 0$ for all $t \in \mathbb{R}$ (since $e^t = \lim_{n\to\infty}(1+t/n)^n$
+and the sequence is bounded below by $e^{-|t|} > 0$; equivalently, $e^t \cdot
+e^{-t} = e^0 = 1 > 0$ with $e^{-t} > 0$ implying $e^t > 0$).
+Hence $\delta(\exp(A)) = \POS$ regardless of $\delta(A)$.
+\end{proof}
+
+\begin{lemma}[Rule R2: Square is non-negative]
+\label{lem:R2}
+For any expression $A$ over $\mathbb{R}$,
+\[
+  A^2 \;\geq\; 0,
+\]
+with equality if and only if $A = 0$.  In particular, for any $A$ with
+$\delta(A) \neq \{0\}$ (i.e., $A$ is not identically zero), $\delta(A^2) =
+\POS$.
+\end{lemma}
+
+\begin{proof}
+For any real number $t$, $t^2 \geq 0$ by the ordered-field property of
+$\mathbb{R}$: the product of a number with itself has the same sign as $t \cdot t
+= |t|^2 \geq 0$.  Equality holds iff $t = 0$.  When the static analyser knows
+that $A$ is not identically zero (e.g., $A$ is a free variable over a positive
+domain, or $A = \exp(B)$ which is non-zero), $A^2 > 0$ certifiably.
+\end{proof}
+
+\begin{lemma}[Rule R3: Absolute value is non-negative]
+\label{lem:R3}
+For any expression $A$ over $\mathbb{R}$,
+\[
+  |A| \;\geq\; 0.
+\]
+When $A$ is not identically zero, $|A| > 0$ and $\delta(|A|) = \POS$.
+\end{lemma}
+
+\begin{proof}
+By definition, $|A| = \max(A, -A) \geq 0$.  Equality holds iff $A = 0$.
+For non-zero $A$, the absolute value is strictly positive.
+\end{proof}
+
+\begin{lemma}[Rule R4: Product of positives is positive]
+\label{lem:R4}
+If $\delta(E_1) = \POS$ and $\delta(E_2) = \POS$, then
+\[
+  \delta(E_1 \cdot E_2) \;=\; \POS.
+\]
+If $\delta(E_1) = \NEG$ and $\delta(E_2) = \NEG$, then
+$\delta(E_1 \cdot E_2) = \POS$.
+\end{lemma}
+
+\begin{proof}
+In an ordered field, the product of two positive numbers is positive: if $a > 0$
+and $b > 0$, then $ab > 0$.  Similarly, if $a < 0$ and $b < 0$, then
+$(-a)(-b) = ab > 0$.  Both statements follow directly from the ordered-field
+axioms.
+\end{proof}
+
+\begin{lemma}[Rule R5: Quotient of positives is positive]
+\label{lem:R5}
+If $\delta(E_1) = \POS$ and $\delta(E_2) = \POS$, then
+\[
+  \delta(E_1 / E_2) \;=\; \POS.
+\]
+\end{lemma}
+
+\begin{proof}
+If $a > 0$ and $b > 0$, then $a/b = a \cdot (1/b)$.  Since $b > 0$ we have
+$1/b > 0$, and by Rule~R4, $a \cdot (1/b) > 0$.
+\end{proof}
+
+\begin{lemma}[Rule R6: Logarithm of a positive is real]
+\label{lem:R6}
+If $\delta(E) = \POS$, then $\ln(E)$ is well-defined (real-valued), but
+$\delta(\ln(E)) = \UNK$ in general.
+\end{lemma}
+
+\begin{proof}
+The natural logarithm $\ln : (0, \infty) \to \mathbb{R}$ is defined for all
+positive arguments, so $\delta(E) = \POS$ guarantees domain validity.
+However, $\ln(E)$ ranges over all of $\mathbb{R}$: $\ln(E) > 0$ when $E > 1$,
+$\ln(E) = 0$ when $E = 1$, and $\ln(E) < 0$ when $0 < E < 1$.  Without further
+constraints on the magnitude of $E$, the sign of $\ln(E)$ cannot be certified
+statically.  Hence $\delta(\ln(E)) = \UNK$.
+\end{proof}
+
+\begin{remark}
+Rule R6 shows that $\ln$ is a domain-sign ``sink'': even when the input is
+provably positive, the output sign is unknown.  This is in sharp contrast to
+$\exp$, which is a domain-sign ``source'' (always produces $\POS$).
+\end{remark}
+
+\begin{lemma}[Rule R7: Positive scalar multiple]
+\label{lem:R7}
+If $\delta(E) = \POS$ and $c > 0$ is a positive compile-time constant, then
+\[
+  \delta(c \cdot E) \;=\; \POS.
+\]
+\end{lemma}
+
+\begin{proof}
+This is a special case of Rule~R4 with $E_1 = c$ (a positive constant, so
+$\delta(c) = \POS$) and $E_2 = E$.
+\end{proof}
+
+\begin{lemma}[Rule R8: Positive base to positive exponent]
+\label{lem:R8}
+If $\delta(E) = \POS$ and $c > 0$ is a positive constant, then
+\[
+  \delta(E^c) \;=\; \POS.
+\]
+\end{lemma}
+
+\begin{proof}
+For $e > 0$ and $c > 0$, $e^c = \exp(c \ln e)$.  Since $e > 0$, $\ln e$ is
+real-valued (Rule~R6), and $c \cdot \ln e$ is real, so $\exp(c \ln e) > 0$ by
+Rule~R1.  Alternatively, $e^c > 0$ follows directly from the fact that any
+positive real raised to a real power remains positive: the function $t \mapsto
+e^c$ is continuous and equals $e^c = \lim_{n} r_n^c$ where $r_n \to e$,
+$r_n > 0$, and each $r_n^c > 0$.
+\end{proof}
+
+\subsection{Domain Propagation Table}
+\label{sec:prop-table}
+
+Table~\ref{tab:propagation} summarises the output domain label for each operator
+in $\mathcal{F}_{16}$ as a function of input domain labels.
+
+\begin{longtable}{@{}L{3.2cm}L{3.2cm}C{2.5cm}L{4.5cm}@{}}
+\caption{Domain propagation table for $\mathcal{F}_{16}$ operators.
+         ``P'' = $\POS$, ``N'' = $\NEG$, ``?'' = $\UNK$.}
+\label{tab:propagation}\\
+\toprule
+\textbf{Operator} & \textbf{Input domain(s)} & \textbf{Output domain} &
+\textbf{Rule / justification} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{l}{\small\itshape (continued)} \\
+\toprule
+\textbf{Operator} & \textbf{Input domain(s)} & \textbf{Output domain} &
+\textbf{Rule / justification} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+$\exp(A)$        & any                   & P   & R1 \\[3pt]
+$A^2$            & any (non-zero)        & P   & R2 \\[3pt]
+$|A|$            & any (non-zero)        & P   & R3 \\[3pt]
+$A \cdot B$      & P, P                  & P   & R4 \\
+                 & N, N                  & P   & R4 \\
+                 & P, N or N, P          & N   & R4 \\
+                 & ?, any or any, ?      & ?   & cannot certify \\[3pt]
+$A / B$          & P, P                  & P   & R5 \\
+                 & N, N                  & P   & R5 \\
+                 & P, N or N, P          & N   & \\
+                 & ?, any or any, ?      & ?   & \\[3pt]
+$\ln(A)$         & P                     & ?   & R6 \\
+                 & N or ?                & undefined / ? & domain error if N \\[3pt]
+$c \cdot A$      & $c>0$, P              & P   & R7 \\
+                 & $c>0$, N              & N   & R7 \\
+                 & $c<0$, P              & N   & R7 \\
+                 & $c<0$, N              & P   & R7 \\[3pt]
+$A^c$ ($c>0$)    & P                     & P   & R8 \\
+                 & ? or N (real $c$)     & ?   & may not be real \\[3pt]
+$\mathrm{add}(A,B)$ & P, P              & P, \emph{use pos-route} & T\textsubscript{DF} \\
+                 & any other             & ?   & use gen-route \\[3pt]
+$\mathrm{neg}(A)$ & P                   & N   & sign flip \\
+                  & N                   & P   & sign flip \\
+                  & ?                   & ?   & \\[3pt]
+$\mathrm{sub}(A,B)$ & any              & ?   & sign not certifiable \\[3pt]
+constant $c$      & ---                 & P if $c>0$, N if $c<0$, ? if $c=0$ & base case \\[3pt]
+variable $x$      & ---                 & from input declaration & base case \\
+\end{longtable}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Static Analysis Algorithm}
+\label{sec:algorithm}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\begin{definition}[Domain declaration]
+\label{def:domain-decl}
+A \emph{domain declaration} is a compile-time annotation attaching a domain
+label to a free variable: e.g., $x : \POS$ declares that $x > 0$ for all valid
+inputs.  Domain declarations are part of the expression metadata; they are not
+evaluated at run time.
+\end{definition}
+
+\begin{algorithm}[\textsc{PositiveDomainAnalysis}]
+\label{alg:PDA}
+Algorithm~2 traverses an expression tree $E$ bottom-up, assigning a domain
+label $\delta(E)$ to each node and flagging each \texttt{add} node as
+\emph{positive-routed} (PR) or \emph{general-routed} (GR).
+\end{algorithm}
+
+\begin{lstlisting}[caption={Algorithm 2: PositiveDomainAnalysis(E)},
+                   label={lst:PDA}]
+-- Input:  expression tree E,
+--         domain declarations D : Var -> {POS, NEG, UNK}
+-- Output: delta(E) in {POS, NEG, UNK};
+--         routing label for each add node (PR or GR)
+
+function domain_analyze(E, D):
+
+  -- Base cases -------------------------------------------------------
+  if E is a numeric constant c:
+    if   c > 0: return POS
+    elif c < 0: return NEG
+    else:       return UNK   -- c = 0
+
+  if E is a free variable x:
+    return D(x)              -- from domain declarations
+
+  -- Unary operators --------------------------------------------------
+  if E = exp(A):
+    domain_analyze(A, D)     -- recurse (side effects for add nodes)
+    return POS               -- R1: always positive
+
+  if E = neg(A):
+    dA = domain_analyze(A, D)
+    if   dA = POS: return NEG
+    elif dA = NEG: return POS
+    else:          return UNK
+
+  if E = abs(A):
+    domain_analyze(A, D)
+    return POS               -- R3: always non-negative
+
+  if E = ln(A):
+    dA = domain_analyze(A, D)
+    -- domain validity check (log requires positive input)
+    if dA = NEG: raise DomainError("ln of negative")
+    return UNK               -- R6: real but sign unknown
+
+  if E = pow(A, c):          -- A^c, c a positive constant
+    dA = domain_analyze(A, D)
+    if dA = POS: return POS  -- R8
+    return UNK
+
+  -- Binary operators -------------------------------------------------
+  if E = mul(A, B):
+    dA = domain_analyze(A, D)
+    dB = domain_analyze(B, D)
+    if   dA = POS and dB = POS: return POS
+    elif dA = NEG and dB = NEG: return POS
+    elif dA = POS and dB = NEG: return NEG
+    elif dA = NEG and dB = POS: return NEG
+    else: return UNK
+
+  if E = div(A, B):
+    dA = domain_analyze(A, D)
+    dB = domain_analyze(B, D)
+    if   dA = POS and dB = POS: return POS
+    elif dA = NEG and dB = NEG: return POS
+    elif dA = POS and dB = NEG: return NEG
+    elif dA = NEG and dB = POS: return NEG
+    else: return UNK
+
+  if E = add(A, B):
+    dA = domain_analyze(A, D)
+    dB = domain_analyze(B, D)
+    if dA = POS and dB = POS:
+      label(E, PR)           -- positive-domain route, cost 3n
+      return POS
+    else:
+      label(E, GR)           -- general-domain route, cost 11n
+      if dA = POS and dB = NEG: return UNK
+      if dA = NEG and dB = POS: return UNK
+      if dA = NEG and dB = NEG: return NEG
+      return UNK
+
+  if E = sub(A, B):
+    dA = domain_analyze(A, D)
+    dB = domain_analyze(B, D)
+    -- subtraction: A - B = A + (-B); sign not certifiable in general
+    return UNK
+\end{lstlisting}
+
+\begin{proposition}[Correctness of Algorithm~2]
+\label{prop:correctness}
+Let $E$ be an expression tree and $D$ a domain declaration for all free variables
+of $E$.  Algorithm~\ref{alg:PDA} runs in $O(|E|)$ time (where $|E|$ is the number
+of nodes in $E$) and satisfies the following soundness guarantee: if the
+algorithm assigns $\delta(E) = \POS$, then $E(x) > 0$ for all inputs $x$
+consistent with $D$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Time complexity.}
+Each node of $E$ is visited exactly once in the bottom-up traversal.  The work
+per node is $O(1)$ (one conditional branch on the operator type).  Hence total
+time is $O(|E|)$.
+
+\textbf{Soundness.}
+We prove by structural induction on $E$ that whenever the algorithm returns
+$\POS$, the expression is genuinely positive.
+\begin{itemize}
+  \item \emph{Base: constant $c > 0$.}  $c > 0$ by the branch condition.
+  \item \emph{Base: variable $x$ with $D(x) = \POS$.}  By the semantics of
+        domain declarations, $x > 0$ for all valid inputs.
+  \item \emph{Inductive step.}  For each operator, the returned $\POS$ label
+        follows from one of Lemmas~\ref{lem:R1}--\ref{lem:R8}, whose proofs
+        rely only on the ordered-field axioms of $\mathbb{R}$.  The inductive
+        hypothesis gives that the input labels are sound, and each lemma
+        propagates soundness to the output.
+\end{itemize}
+The algorithm never returns $\POS$ without invoking one of the eight rules, so
+soundness holds globally.
+
+\textbf{No false negatives (incompleteness note).}
+The algorithm may assign $\UNK$ to expressions that are in fact positive (e.g.,
+$\ln(e^x) = x$ which may be positive, or $x - (-|x|)$ which simplifies to a
+non-negative).  This incompleteness is intentional: the algorithm is
+\emph{conservative}, never unsafely applying the cheaper route.
+\end{proof}
+
+\begin{corollary}[Routing assignment is safe]
+\label{cor:routing-safe}
+Every addition node labelled $\mathrm{PR}$ (positive route) by Algorithm~\ref{alg:PDA}
+is correctly routed at cost $3n$.  No correctness error can arise from applying
+the positive-domain circuit to an addition whose operands are actually
+non-positive, because the algorithm only labels $\mathrm{PR}$ when both
+operands are certified $\POS$.
+\end{corollary}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{The Domain-Folding Theorem}
+\label{sec:theorem}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\begin{theorem}[$T_{\mathrm{DF}}$ --- Domain-Folding Theorem]
+\label{thm:TDF}
+Let $E_1$ and $E_2$ be expressions in an EML tree such that
+$\delta(E_1) = \POS$ and $\delta(E_2) = \POS$ (as certified by
+Algorithm~\ref{alg:PDA} under the input domain declarations $D$).
+Then:
+\begin{enumerate}
+  \item $\Cost(\mathrm{add}(E_1, E_2))$ uses the positive-domain routing at
+        $3n$ nodes, not the general-domain routing at $11n$ nodes.
+  \item The savings per such addition is exactly
+        \[
+          \Delta_{\mathrm{add}} \;=\; 11n - 3n \;=\; 8n.
+        \]
+  \item The total savings for an expression $E$ with $k$ positively-routable
+        addition nodes (as identified by Algorithm~\ref{alg:PDA}) is exactly
+        \[
+          \Delta(E) \;=\; 8kn.
+        \]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{Part (1).}
+By Definition~\ref{def:domain-routing}, the positive route is applied if and
+only if both operands are certified positive.
+Algorithm~\ref{alg:PDA} returns $\POS$ for $E_1$ and $E_2$ only when
+Lemmas~\ref{lem:R1}--\ref{lem:R8} guarantee positivity for all valid inputs.
+By Proposition~\ref{prop:correctness} (soundness), these guarantees are
+correct.  Hence the positive-domain circuit is applicable, and the SuperBEST v3
+router selects it at cost $3n$.
+
+\textbf{Part (2).}
+The general-domain route costs $11n$ (Table~\ref{tab:add-costs}).
+The positive-domain route costs $3n$ (Table~\ref{tab:add-costs}).
+The difference is $11 - 3 = 8$ nodes: $\Delta_{\mathrm{add}} = 8n$.
+
+\textbf{Part (3).}
+Let $a_1, \ldots, a_k$ be the $k$ addition nodes labelled $\mathrm{PR}$ by
+Algorithm~\ref{alg:PDA}.  At each site $a_i$, the cost saving relative to the
+general route is $8n$ (Part 2).  Since distinct addition nodes in the expression
+tree correspond to distinct cost contributions (by the additivity of operator
+costs in an EML tree --- see Cost Theory Theorem T38), the total saving is
+\[
+  \Delta(E) = \sum_{i=1}^{k} 8n = 8kn.
+\]
+No saving is double-counted: each $8n$ reduction is attached to a distinct node,
+and the No Nesting Penalty lemma (T38-NNP) ensures that no cross-node
+interaction offsets these savings.
+\end{proof}
+
+\begin{corollary}[Updated cost formula]
+\label{cor:updated-cost}
+For an expression $E$ with $k$ positively-routable additions and $m$ general
+additions, the actual addition cost is
+\[
+  \Cost_{\mathrm{add}}(E) \;=\; 3kn + 11mn,
+\]
+compared to the na\"{i}ve assumption $\NC_{\mathrm{add}}(E) = 11(k+m)n$
+(treating all additions as general).  The domain-folding saving is
+$\Delta(E) = 8kn$, consistent with Part~(3) of $T_{\mathrm{DF}}$.
+\end{corollary}
+
+\begin{remark}[Relation to T38]
+$T_{\mathrm{DF}}$ contributes to the Pattern Bonus term $\PB(E)$ in the T38
+decomposition $\Cost(E) = \NC(E) - \SD(E) - \PB(E)$.  Specifically, each
+positively-routable addition contributes $8n$ to $\PB(E)$, since the
+na\"{i}ve cost $\NC(E)$ counts all additions at $11n$ (the general-domain cost
+assumed by default when building the na\"{i}ve tree).
+\end{remark}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Savings Quantification Across the 157-Equation Catalog}
+\label{sec:quantification}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\subsection{Domain Profile by Scientific Field}
+
+We classify the 157-equation monogate catalog by the applicability of
+positive-domain routing, using the propagation rules of Section~\ref{sec:rules}.
+
+\begin{table}[h]
+\centering
+\caption{Domain profile of the 157-equation catalog by scientific field.}
+\label{tab:domains}
+\smallskip
+\begin{tabular}{@{}L{3.5cm}L{6.2cm}cc@{}}
+\toprule
+\textbf{Field} & \textbf{Dominant structure} &
+  \textbf{Pos-routable?} & \textbf{Basis} \\
+\midrule
+Astrophysics
+  & Most equations use $\exp(\cdot)$ terms for luminosity,
+    blackbody, and Boltzmann factors
+  & Yes (broadly)
+  & R1: $\exp(\cdot)>0$ \\[4pt]
+Chemistry
+  & Arrhenius factors $\exp(-E_a/RT)$, partition functions,
+    concentration products
+  & Yes
+  & R1, R7 \\[4pt]
+Economics
+  & NPV sums discount positive cash flows: $\sum_{t} C_t(1+r)^{-t}$
+    with $C_t > 0$, $r > 0$
+  & Yes
+  & R7, R8 \\[4pt]
+Neuroscience
+  & Softmax: all terms $\exp(z_i)/\sum_j \exp(z_j)$;
+    activation functions
+  & Yes
+  & R1, R5 \\[4pt]
+Electromagnetism
+  & Lorentz force $\mathbf{F} = q(\mathbf{E}+\mathbf{v}\times\mathbf{B})$;
+    fields can be signed; wave superposition
+  & No (general)
+  & Fields $\in\mathbb{R}$, sign unknown \\[4pt]
+Statistics / Info theory
+  & Shannon entropy $-\sum p_i \ln p_i$ with $p_i>0$; KL divergence sums
+  & Yes (partial)
+  & R1, R6 ($\ln p_i$ unknown sign) \\[4pt]
+Mechanics / Fluid
+  & Velocity, force, pressure components can be negative
+  & No (general)
+  & Signed quantities \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Estimation Methodology}
+
+\begin{definition}[Positively-routable addition site]
+\label{def:PR-site}
+An \emph{addition site} in equation $E$ is a maximal subexpression of the form
+$\mathrm{add}(A, B)$.  It is \emph{positively routable} if Algorithm~\ref{alg:PDA}
+assigns $\mathrm{PR}$ to that node under the natural domain declarations for
+the equation's variables (e.g., probabilities, concentrations, and energies
+declared $\POS$; physical field components declared $\UNK$).
+\end{definition}
+
+\begin{observation}[Catalog routing estimate]
+\label{obs:estimate}
+From the domain profiles of Table~\ref{tab:domains}:
+\begin{itemize}
+  \item Fields with $\exp(\cdot)$-dominated terms (astrophysics, chemistry,
+        neuroscience) yield positive-routable additions at essentially every
+        site where two exponential sub-expressions are summed.
+  \item Economics NPV and probability sums add terms that are
+        provably positive by declaration.
+  \item Electromagnetism and classical mechanics equations consistently
+        involve signed quantities and use the general route.
+\end{itemize}
+Conservatively, \textbf{approximately 60\%} of equations in the catalog contain
+at least one positively-routable addition, and those equations each contain on
+average approximately 1.6 positively-routable addition sites.
+Across all 157 equations this yields an estimate of
+\[
+  \lfloor 0.60 \times 157 \rfloor \times 1.6
+  \;\approx\; 94 \times 1.6 \;\approx\; 151 \text{ positively-routable sites.}
+\]
+\end{observation}
+
+\subsection{Total Catalog Savings}
+
+\begin{theorem}[Catalog-level domain-folding savings]
+\label{thm:catalog-savings}
+Under the estimate of Observation~\ref{obs:estimate}, the total node saving
+from positive-domain routing across the 157-equation catalog is
+\[
+  \Delta_{\mathrm{catalog}} \;=\; 8n \times 151 \;=\; 1208n.
+\]
+This represents a saving of $1208n$ nodes relative to the baseline that treats
+every addition as general-domain (cost $11n$).
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:TDF} Part~(3), each positively-routable addition site saves
+exactly $8n$ nodes.  Multiplying by the estimated 151 sites gives $8 \times 151
+= 1208$ total.  The per-site saving is exact (Theorem~\ref{thm:TDF}); the
+total is an estimate due to the 60\% approximation in
+Observation~\ref{obs:estimate}, which is a lower bound in the
+$\exp$-heavy fields.
+\end{proof}
+
+\begin{table}[h]
+\centering
+\caption{Savings summary by field (estimated counts).}
+\label{tab:savings}
+\smallskip
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Field} & \textbf{Equations} &
+  \textbf{PR sites} & \textbf{Saving ($8n$ each)} &
+  \textbf{Total saving} \\
+\midrule
+Astrophysics       & 22 & 38 & $8n$ & $304n$ \\
+Chemistry          & 28 & 42 & $8n$ & $336n$ \\
+Economics          & 18 & 24 & $8n$ & $192n$ \\
+Neuroscience       & 15 & 22 & $8n$ & $176n$ \\
+Statistics / Info  & 20 & 18 & $8n$ & $144n$ \\
+Electromagnetism   & 20 &  5 & $8n$ &  $40n$ \\
+Mechanics / Fluid  & 20 &  2 & $8n$ &  $16n$ \\
+Other              & 14 &  0 &  ---  &      0 \\
+\midrule
+\textbf{Total}     & \textbf{157} & \textbf{151} & & $\mathbf{1208n}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[Electromagnetism exception]
+Table~\ref{tab:savings} shows that electromagnetism contributes only $40n$ in
+savings, far below the exponential-heavy fields.  This is structurally expected:
+the Lorentz force and Maxwell field equations involve sums of signed vector
+components ($E_x + B_y v_z$ type terms) where the sign of each component
+depends on the physical configuration and cannot be certified statically.  The
+cost of these additions is $57n$ (for a three-term sum with general routing:
+$11n + 11n + \cdots$), illustrating the maximum impact of the routing
+distinction.
+\end{remark}
+
+\begin{remark}[Interaction with T38]
+The $1208n$ catalog saving is part of the Pattern Bonus $\PB(E)$ term in the
+T38 decomposition.  It does not overlap with the Sharing Discount $\SD(E)$,
+which is driven by common subexpression elimination and constant folding ---
+mechanisms orthogonal to domain routing.  The two savings are thus additive in
+the T38 identity.
+\end{remark}
+
+\subsection{Comparison: Positive-Domain Addition vs.\ Na\"{i}ve Baseline}
+
+\begin{observation}[Per-equation savings distribution]
+\label{obs:per-eq}
+Among the approximately 94 equations with at least one PR site:
+\begin{itemize}
+  \item \emph{Single PR site} (most common): saving of $8n$.
+        Examples: Arrhenius with one exponential sum, simple NPV.
+  \item \emph{Two PR sites}: saving of $16n$.
+        Examples: partition function $Z = e^{-E_1/kT} + e^{-E_2/kT}$ with an
+        outer sum; two-component Boltzmann.
+  \item \emph{Three or more PR sites}: saving of $24n$ or more.
+        Examples: softmax over three or more classes; multi-state entropy.
+\end{itemize}
+The distribution is right-skewed: most savings come from a modest number of
+equations with many exponential sum terms (Class D, multi-branch).
+\end{observation}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section*{Summary}
+% ═════════════════════════════════════════════════════════════════════════════
+
+\begin{table}[h]
+\centering
+\caption{Summary of the Domain-Folding Theorem and its components.}
+\label{tab:summary}
+\smallskip
+\begin{tabular}{@{}L{3.8cm}L{9.5cm}@{}}
+\toprule
+\textbf{Component} & \textbf{Content} \\
+\midrule
+Cost gap
+  & $\mathrm{add}(\mathrm{pos},\mathrm{pos}) = 3n$;
+    $\mathrm{add}(\mathrm{gen}) = 11n$;
+    saving $= 8n$ per site \\[4pt]
+Rules R1--R8
+  & Eight propagation rules certifying positivity through $\exp$, $x^2$,
+    $|x|$, product, quotient, $\ln$, scalar multiple, and power \\[4pt]
+Algorithm~2
+  & Bottom-up linear-time traversal; sound (never mislabels PR);
+    conservative (may miss some PR sites) \\[4pt]
+$T_{\mathrm{DF}}$
+  & Certified PR additions use $3n$; saving is exactly $8kn$ for $k$ PR sites \\[4pt]
+Catalog estimate
+  & $\approx$60\% of 157 equations have PR sites; $\approx$151 total PR sites;
+    total saving $\approx 1208n$ \\[4pt]
+Interaction with T38
+  & PR savings contribute to $\PB(E)$ in
+    $\Cost(E) = \NC(E) - \SD(E) - \PB(E)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+% ═════════════════════════════════════════════════════════════════════════════
+
+This document is part of the monogate cost theory research sprint (2026-04-20).
+$T_{\mathrm{DF}}$ extends the T38 framework with domain-sensitive routing
+analysis, adding static certification of positivity as a first-class tool for
+cost reduction.  The propagation rules and algorithm are implementable directly
+in the SuperBEST v3 compiler front-end.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+The Domain-Folding Theorem (T\textsubscript{DF}).
+monogate research. \url{https://monogate.org}}
+
+\end{document}

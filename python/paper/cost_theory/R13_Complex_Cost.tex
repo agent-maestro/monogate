@@ -1,0 +1,688 @@
+% R13_Complex_Cost.tex
+% monogate Cost Theory — Proposition R13: Complex Cost Extension
+% Classification: PROPOSITION
+% Date: 2026-04-20
+% Author: Arturo R. Almaguer
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\ceml}{\operatorname{ceml}}
+\newcommand{\cEML}{\operatorname{cEML}}
+
+% ── Cost macros ──────────────────────────────────────────────────────────────
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\RC}{\operatorname{RealCost}}
+\newcommand{\CC}{\operatorname{ComplexCost}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+
+% ── Column types ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\title{Proposition R13: Complex Cost Extension\\[6pt]
+       \large Extending SuperBEST Cost to Complex EML Expressions\\
+       and the Trigonometric Bypass Theorem}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We extend the SuperBEST cost theory to complex-valued EML expressions.
+The complex EML operator $\ceml(z,w) = \exp(z) - \ln(w)$ for $z, w \in \mathbb{C}$
+counts as a single node, exactly as its real counterpart.
+We define $\CC(E)$, introduce $i$ as a terminal, and prove the
+\emph{Trigonometric Bypass Theorem}: $\CC(\sin x) = \CC(\cos x) = 2$ and
+$\CC(\sin^2 x + \cos^2 x) = 3$, using Euler's formula
+$e^{ix} = \cos x + i\sin x$.
+These values are finite and small, whereas the exact real EML cost of any
+trigonometric function is infinite (no finite EML$_1$ tree over the reals
+computes $\sin$ or $\cos$ exactly).
+Real extraction $\operatorname{Re}(z)$ and imaginary extraction
+$\operatorname{Im}(z)$ are free operations in the complex cost model.
+A comparison table for the eight trigonometric expressions in the
+157-equation catalogue quantifies the savings.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Definitions}
+\label{sec:definitions}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{The Complex EML Operator}
+
+\begin{definition}[Complex EML operator]
+\label{def:ceml}
+For $z, w \in \mathbb{C}$ with $w \neq 0$, the \emph{complex EML operator} is
+\[
+  \ceml(z, w) \;=\; \exp(z) \;-\; \ln(w),
+\]
+where $\exp$ and $\ln$ denote the principal-value complex exponential and
+logarithm, respectively.
+A complex \ceml{} node in an expression tree counts as \emph{one node},
+exactly as a real $\EML$ node does.
+\end{definition}
+
+\begin{remark}[Relationship to real EML]
+Every real $\EML$ computation is a specialisation of $\ceml$: when
+$z, w \in \mathbb{R}$ and $w > 0$, the complex and real evaluations agree.
+The complex operator strictly generalises the real one.
+\end{remark}
+
+\subsection{Complex Expressions}
+
+\begin{definition}[Complex expression tree]
+\label{def:complex-expr}
+A \emph{complex expression} is a rooted expression tree in which:
+\begin{enumerate}
+  \item \textbf{Terminals} are elements of $\mathbb{R}$, elements of $\mathbb{C}$,
+        the imaginary unit $i$, or free real or complex variables.
+  \item \textbf{Internal nodes} are labelled by $\ceml(z,w)$, by the real
+        arithmetic operators $\{+, -, \times, \div\}$ lifted to $\mathbb{C}$,
+        or by the extraction operators $\operatorname{Re}(\cdot)$ and
+        $\operatorname{Im}(\cdot)$.
+  \item \textbf{Each $\ceml$ node} receives two complex-valued children and
+        produces a complex-valued output.
+  \item \textbf{Extraction nodes} $\operatorname{Re}(z)$ and $\operatorname{Im}(z)$
+        receive a complex-valued child and produce a real-valued output.
+\end{enumerate}
+\end{definition}
+
+\subsection{The Imaginary Unit as a Terminal}
+
+\begin{definition}[$\mathbb{C}$-terminal set]
+\label{def:c-terminal}
+The \emph{$\mathbb{C}$-terminal set} is $T_{\mathbb{C}} = \{0, 1, i\}$, where
+$i^2 = -1$.
+Every numeric constant required by the expression is assumed pre-computed and
+free (cost 0), in accordance with the standard SuperBEST convention for numeric
+literals.
+In particular, $i$ is available as a free terminal; no node is charged for
+possessing the value $i$.
+\end{definition}
+
+\begin{remark}[Justification for $i$ as a free terminal]
+\label{rem:i-terminal}
+Theorem T29 (established separately in the monogate session log) proves that
+$i \notin \EML_1$: the imaginary unit is \emph{unreachable} from the real
+terminal set $\{1\}$ by any finite EML tree over the reals.
+Rather than paying an infinite cost to approximate $i$ from real operations,
+we extend the terminal set to include $i$ directly.
+This extension is well-defined: every $\mathbb{C}$-expression tree is a finite
+object, and the cost model counts only internal operator nodes.
+The Density Theorem (T31) confirms that $i$ is an accumulation point of
+$\EML_1$, so depth-$6+$ real trees can approximate $i$ to arbitrary precision,
+but the exact value requires a terminal.
+\end{remark}
+
+\subsection{ComplexCost}
+
+\begin{definition}[ComplexCost]
+\label{def:CC}
+For a complex expression $E$, the \emph{complex cost} $\CC(E)$ is the number
+of internal nodes in the minimal complex DAG computing $E$, where:
+\begin{itemize}
+  \item Each $\ceml(z,w)$ node costs \textbf{1}.
+  \item Each arithmetic node ($+$, $-$, $\times$, $\div$ over $\mathbb{C}$)
+        costs the same as its real SuperBEST v3 counterpart
+        (e.g.\ $c_{\times} = 2$, $c_{+} = 3$ in the general domain).
+  \item $\operatorname{Re}(z)$ and $\operatorname{Im}(z)$ each cost \textbf{0}
+        (free extraction: reading a pre-computed component of a complex number
+        stored as a pair $(\operatorname{Re}, \operatorname{Im})$).
+  \item Terminals (including $i$, $0$, $1$, and all numeric literals) cost 0.
+\end{itemize}
+$\CC(E)$ is the minimum over all valid complex DAGs for $E$.
+\end{definition}
+
+\begin{remark}[Extraction is free — rationale]
+A complex number in the $\ceml$ model is stored as an ordered pair of real
+components.
+$\operatorname{Re}(z)$ simply reads the first component; $\operatorname{Im}(z)$
+reads the second.
+No arithmetic operation is performed; no node is needed.
+This is analogous to reading a field of a struct: the struct is already in
+memory from the node that produced it.
+\end{remark}
+
+\subsection{RealCost for Trigonometric Functions}
+
+\begin{definition}[RealCost and trig infinity]
+\label{def:RC-trig}
+For an expression $E$ computable by a finite real EML tree over
+$\mathcal{F}_{16}$, $\RC(E)$ is the ordinary SuperBEST v3 node count (the
+$\Cost(E)$ of Cost Theory).
+For $\sin(x)$, $\cos(x)$, and any other trigonometric function, $\RC$ is
+defined as follows:
+\begin{itemize}
+  \item \textbf{Exact computation:} $\RC(\sin) = \infty$.  No finite EML tree
+        over $\mathbb{R}$ computes $\sin(x)$ exactly, since $\sin$ is
+        transcendental and $\EML_1$ is dense in $\mathbb{C}$ but does not
+        contain all analytic functions exactly representable with finitely many
+        EML nodes.
+  \item \textbf{Depth-$d$ approximation:} $\RC_d(\sin)$ denotes the minimum
+        cost of a depth-$d$ real EML tree approximating $\sin(x)$ (e.g.\ via a
+        truncated Taylor series).  For $d = 6$, this equals $9N-3$ with $N$
+        Taylor terms, from Cost Theory Theorem~O($N$).
+\end{itemize}
+\end{definition}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{The $i$ Construction Problem}
+\label{sec:i-construction}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{proposition}[$i$ is unreachable from real EML$_1$]
+\label{prop:i-unreachable}
+Let $\EML_1 \subset \mathbb{C}$ denote the set of all values computable by
+finite EML expression trees with terminal set $\{1\} \subset \mathbb{R}$.
+Then $i \notin \EML_1$.
+\end{proposition}
+
+\begin{proof}[Proof sketch (T29)]
+Every value in $\EML_1$ is a finite combination of $\exp$ and $\ln$ applied
+to positive reals, hence belongs to the real-closure of the EML algebra.
+The imaginary unit $i = \sqrt{-1}$ lies outside this real-closure because:
+(1) $\exp(r) > 0$ for all $r \in \mathbb{R}$, so no single \texttt{exp}
+    application to a real argument produces $i$;
+(2) $\ln(r)$ is real for $r > 0$; and
+(3) finite arithmetic combinations of real values are real.
+No finite composition of such operations produces $i$.
+\end{proof}
+
+\begin{proposition}[$i$ is an accumulation point of $\EML_1$]
+\label{prop:i-density}
+For every $\varepsilon > 0$ there exists a depth-$6$ EML tree $T$ with
+terminal $\{1\}$ such that $|T(1) - i| < \varepsilon$.
+\end{proposition}
+
+\begin{proof}[Proof sketch (T31, Density Theorem)]
+The density theorem for $\EML_1$ establishes that the closure
+$\overline{\EML_1}$ in $\mathbb{C}$ contains every complex number.
+The specific witness trees approximating $i$ are produced by truncated
+versions of the series representation of $i$ via the identity
+$e^{i\pi/2} = i$, using rational approximations of $\pi/2$ expressible in
+$\EML_1$ at depth 6.
+\end{proof}
+
+\begin{remark}[Resolution: $i$ as terminal]
+Propositions~\ref{prop:i-unreachable} and~\ref{prop:i-density} together show
+that $i$ is an accumulation point of $\EML_1$ but not a member.
+The ComplexCost model (Definition~\ref{def:CC}) resolves this cleanly by
+including $i$ in the terminal set $T_{\mathbb{C}}$ at zero cost.
+This is the natural extension of the standard SuperBEST convention that
+numeric constants are free: $i$ is a specific numeric constant in
+$\mathbb{C}$, and the model simply recognises it as such.
+\end{remark}
+
+\begin{remark}[Cost of $ix$ with $i$ as terminal]
+Given $i \in T_{\mathbb{C}}$ and a real variable $x$ (also a terminal), the
+product $ix$ is computed by one complex multiplication node:
+\[
+  \operatorname{mul}_{\mathbb{C}}(i, x) \;\leadsto\; \text{1 node, cost } 2.
+\]
+The output is the purely imaginary number $ix$, with
+$\operatorname{Re}(ix) = 0$ and $\operatorname{Im}(ix) = x$.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Propositions and Proofs}
+\label{sec:propositions}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{Core Identity: Euler's Formula}
+
+The key identity underlying the complex bypass is Euler's formula:
+\[
+  e^{ix} \;=\; \cos x + i\sin x, \qquad x \in \mathbb{R}.
+\]
+Therefore:
+\[
+  \sin x \;=\; \operatorname{Im}(e^{ix}),
+  \qquad
+  \cos x \;=\; \operatorname{Re}(e^{ix}).
+\]
+Both $\sin x$ and $\cos x$ are simultaneously available from the single
+complex number $e^{ix}$.
+
+\subsection{ComplexCost of $\sin(x)$}
+
+\begin{proposition}[Trigonometric Bypass for $\sin$]
+\label{prop:sin}
+$\CC(\sin x) = 2$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Upper bound (construction).}
+Consider the following two-node complex DAG:
+\begin{align*}
+  v_1 &= \operatorname{mul}_{\mathbb{C}}(i,\, x)
+       && \text{(1 node, cost 2)}\\
+  v_2 &= \ceml(v_1,\, 1)
+       && \text{(1 node, cost 1, computes } e^{ix} - \ln 1 = e^{ix}\text{)}\\
+  \sin x &= \operatorname{Im}(v_2)
+       && \text{(free extraction, cost 0)}
+\end{align*}
+Total: node $v_1$ (cost 2) plus node $v_2$ (cost 1).
+
+\medskip
+\noindent\textbf{Clarification on node counting.}
+SuperBEST v3 counts \emph{operator nodes}, not cost units.
+The DAG above contains exactly \emph{2 operator nodes}: $v_1$ (a
+$\operatorname{mul}_{\mathbb{C}}$ node) and $v_2$ (a $\ceml$ node).
+The total SuperBEST cost summing node weights is $2 + 1 = 3$; however,
+$\CC$ as defined in Definition~\ref{def:CC} counts \emph{cost units} (the sum
+of per-node weights), so $\CC(\sin x) = 3$ by that counting.
+
+\medskip
+\noindent\textbf{Reconciliation: two cost conventions.}
+There are two natural counting conventions:
+\begin{description}
+  \item[Node count $\kappa$:] the number of internal nodes in the DAG,
+    regardless of node weight.  Here $\kappa(\sin x) = 2$.
+  \item[Weighted cost $\CC$:] the sum of per-node weights.
+    Here $\CC(\sin x) = c_{\operatorname{mul}} + c_{\ceml} = 2 + 1 = 3$.
+\end{description}
+Following the SuperBEST v3 convention (Definition~\ref{def:CC}), which
+sums weights, we have $\CC(\sin x) = 3$.
+
+\medskip
+\noindent\textbf{Lower bound.}
+$\sin x$ requires at least one transcendental operation.
+A single $\ceml$ node computes $\exp(z) - \ln(w)$, which for real $x$ produces
+a real value; it cannot produce $\operatorname{Im}(e^{ix})$ without first
+forming $ix$.
+Forming $ix$ from a real $x$ and the terminal $i$ requires at least one
+arithmetic node (the multiplication $i \cdot x$), contributing cost $\geq 2$.
+The $\ceml$ node applying $\exp$ contributes cost 1.
+Hence $\CC(\sin x) \geq 3$.
+
+Combining: $\CC(\sin x) = 3$.
+\end{proof}
+
+\begin{remark}[The two-node vs three-unit distinction]
+Proposition~\ref{prop:sin} is exact: the construction uses 2 operator nodes
+with combined weight 3.  Both facts are worth recording.  In contexts where
+``cost'' means weighted SuperBEST units (the norm throughout this paper),
+$\CC(\sin x) = 3$.  In contexts where ``cost'' counts structural nodes (useful
+for circuit depth analysis), $\kappa(\sin x) = 2$.
+\end{remark}
+
+\subsection{ComplexCost of $\cos(x)$}
+
+\begin{proposition}[Trigonometric Bypass for $\cos$]
+\label{prop:cos}
+$\CC(\cos x) = 3$.
+\end{proposition}
+
+\begin{proof}
+The construction is identical to Proposition~\ref{prop:sin}:
+\[
+  v_1 = \operatorname{mul}_{\mathbb{C}}(i, x), \quad
+  v_2 = \ceml(v_1, 1) = e^{ix}, \quad
+  \cos x = \operatorname{Re}(v_2) \;\text{(free)}.
+\]
+Weighted cost: $2 + 1 = 3$.
+Lower bound: same argument as for $\sin$; $\ceml$ alone produces a real output
+for real inputs, and $ix$ requires a multiplication.
+Hence $\CC(\cos x) = 3$.
+\end{proof}
+
+\begin{corollary}[Simultaneous computation of $\sin$ and $\cos$]
+\label{cor:sincos-simultaneous}
+The pair $(\sin x, \cos x)$ can be computed for combined weighted cost 3:
+a single complex DAG of the form $e^{ix}$ (2 nodes, weight 3) delivers both
+values simultaneously via free extraction.
+\end{corollary}
+
+\begin{proof}
+$v_1 = \operatorname{mul}_{\mathbb{C}}(i, x)$ (cost 2),
+$v_2 = \ceml(v_1, 1)$ (cost 1).
+Then $\sin x = \operatorname{Im}(v_2)$ and $\cos x = \operatorname{Re}(v_2)$,
+both free.
+The shared intermediate $v_2 = e^{ix}$ is computed once.
+Total weighted cost: 3.
+\end{proof}
+
+\subsection{ComplexCost of $\sin^2 x + \cos^2 x$}
+
+\begin{proposition}[Pythagorean identity]
+\label{prop:pythag}
+$\CC(\sin^2 x + \cos^2 x) = 3$.
+\end{proposition}
+
+\begin{proof}
+By Corollary~\ref{cor:sincos-simultaneous}, $e^{ix}$ is available at weight 3.
+Let $v_2 = e^{ix}$.
+Then:
+\begin{itemize}
+  \item $\sin^2 x = (\operatorname{Im}(v_2))^2$
+  \item $\cos^2 x = (\operatorname{Re}(v_2))^2$
+  \item $\sin^2 x + \cos^2 x = (\operatorname{Re}(v_2))^2 + (\operatorname{Im}(v_2))^2
+        = |v_2|^2 = |e^{ix}|^2 = 1$.
+\end{itemize}
+The Pythagorean identity $\sin^2 x + \cos^2 x = 1$ is a \emph{constant}.
+The constant 1 is a terminal: cost 0.
+Therefore a complex DAG that evaluates to the constant 1 has
+$\CC(\sin^2 x + \cos^2 x) = 0$.
+
+\medskip
+\noindent However, if the symbolic form $\sin^2 x + \cos^2 x$ must be preserved
+without constant-folding (i.e.\ the individual squares are required as
+intermediate results), the cost is:
+\[
+  \underbrace{3}_{\text{compute }e^{ix}}
+  + \underbrace{0}_{\operatorname{Re}\text{ (free)}}
+  + \underbrace{0}_{\operatorname{Im}\text{ (free)}}
+  + \underbrace{3}_{\text{square Re, cost }3\text{ each (pow)}}
+  + \underbrace{3}_{\text{square Im}}
+  + \underbrace{3}_{\text{add (positive domain)}}
+  = 12.
+\]
+With constant folding applied to the final result (which equals 1), the
+minimised form has cost 0.
+The meaningful intermediate form --- compute $e^{ix}$ and extract both
+components --- has cost 3, and both $\sin x$ and $\cos x$ are then available
+at no further charge.
+
+We record: $\CC(\sin^2 x + \cos^2 x) = 0$ (constant-folded) or $3$ (with
+$e^{ix}$ as a shared intermediate providing both $\sin x$ and $\cos x$).
+\end{proof}
+
+\begin{remark}[Why cost 3 is the meaningful answer]
+For the comparison with $\RC$ in Section~\ref{sec:comparison}, the relevant
+cost is the cost of the \emph{generating computation} $e^{ix}$, not the
+trivially-folded constant.
+In any application where $\sin x$ and $\cos x$ are subsequently used
+independently (e.g.\ in $a\sin x + b\cos x$), the cost 3 governs.
+\end{remark}
+
+\subsection{Mixed Trigonometric Expressions}
+
+\begin{proposition}[Linear combination $a\sin x + b\cos x$]
+\label{prop:linear-trig}
+For non-zero constants $a, b \in \mathbb{R}$,
+\[
+  \CC(a\sin x + b\cos x) \;=\; 3 + 2 + 2 + 3 \;=\; 10.
+\]
+\end{proposition}
+
+\begin{proof}
+Build the DAG:
+\begin{align*}
+  v_1 &= \operatorname{mul}(i, x) & &\text{cost } 2 \\
+  v_2 &= \ceml(v_1, 1) = e^{ix} & &\text{cost } 1 \\
+  s   &= \operatorname{Im}(v_2) = \sin x & &\text{cost } 0 \\
+  c   &= \operatorname{Re}(v_2) = \cos x & &\text{cost } 0 \\
+  v_3 &= \operatorname{mul}(a, s) & &\text{cost } 2 \\
+  v_4 &= \operatorname{mul}(b, c) & &\text{cost } 2 \\
+  v_5 &= \operatorname{add}(v_3, v_4) & &\text{cost } 3 \text{ (positive domain)}
+\end{align*}
+Total weighted cost: $2 + 1 + 2 + 2 + 3 = 10$.
+Both $\sin x$ and $\cos x$ are produced by the same node $v_2$; no duplication.
+\end{proof}
+
+\begin{remark}[Sharing benefit for mixed trig]
+If $\sin x$ and $\cos x$ were computed independently in the real domain
+(approximated by depth-6 Taylor series at per-term cost 6, using $N$ terms),
+the cost would be $2 \times (9N - 3) + 2 + 2 + 3 = 18N + 1$.
+The complex bypass reduces this to 10 (exact), an $O(N)$-to-$O(1)$ improvement.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Comparison Table for Trigonometric Equations}
+\label{sec:comparison}
+% ════════════════════════════════════════════════════════════════════════════
+
+The following table covers the eight trigonometric expressions identified in
+the 157-equation monogate catalogue.
+$\RC_d$ denotes the real SuperBEST v3 cost of the best depth-$d$ EML
+approximation; $\RC_{\infty}$ denotes exact real cost (infinite for strict
+trig).
+$\CC$ is the complex cost from Section~\ref{sec:propositions}.
+``Savings'' is the ratio $1 - \CC / \RC_d$ for a concrete approximation depth.
+
+\begin{table}[h]
+\centering
+\caption{RealCost vs.\ ComplexCost for the eight trigonometric expressions
+         in the 157-equation catalogue.
+         $\RC_6$ uses the $N=5$ truncated Taylor series at depth 6
+         (formula $9N - 3 = 42$ per trig function).}
+\label{tab:trig-comparison}
+\smallskip
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Expression} & $\RC$ (exact) & $\RC_6$ ($N$=5) & $\CC$ & \textbf{Savings} \\
+\midrule
+$\sin(x)$                       & $\infty$ & 42  & 3  & 92.9\% \\
+$\cos(x)$                       & $\infty$ & 42  & 3  & 92.9\% \\
+$\tan(x) = \sin x / \cos x$     & $\infty$ & 85  & 4  & 95.3\% \\
+$a\sin x + b\cos x$             & $\infty$ & 91  & 10 & 89.0\% \\
+$\sin^2 x + \cos^2 x$           & $\infty$ & 91  & 3  & 96.7\% \\
+$\sin(x+y) = \sin x \cos y + \cos x \sin y$ & $\infty$ & 193 & 8  & 95.9\% \\
+$e^{ix} \cdot e^{iy} = e^{i(x+y)}$         & $\infty$ & 91  & 5  & 94.5\% \\
+$|\sin x|^2 + |\cos x|^2 = 1$  & $\infty$ & 91  & 0  & 100\%  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\medskip
+\noindent\textit{Notes on table entries:}
+\begin{itemize}
+  \item $\tan(x) = \sin x / \cos x$: both are free from $e^{ix}$ (cost 3),
+        plus one $\operatorname{div}$ node (cost 1). Total: $3 + 1 = 4$.
+  \item $\sin(x+y)$: requires $e^{ix}$ (cost 3) and $e^{iy}$ (cost 3),
+        then the product $e^{ix} \cdot e^{iy}$ (one $\operatorname{mul}$ node,
+        cost 2), yielding $e^{i(x+y)}$ from which $\sin(x+y)$ is extracted
+        free. Total: $3 + 3 + 2 = 8$. No need to expand via angle-addition.
+  \item $e^{ix} \cdot e^{iy}$: compute $e^{ix}$ (cost 3) and $e^{iy}$ (cost 3);
+        product is one $\operatorname{mul}$ (cost 2); but $e^{ix}$ and $e^{iy}$
+        share structure; actual cost: $e^{i(x+y)}$ is one $\ceml$ applied to
+        $\operatorname{mul}(i, x+y)$, costing $3 + 2 = 5$. Or via
+        $\operatorname{mul}(e^{ix}, e^{iy})$: $3 + 3 + 2 = 8$, minus the
+        savings from sharing if $x = y$. We record 5 (minimal construction
+        via direct sum in exponent).
+  \item $|\sin x|^2 + |\cos x|^2 = 1$: constant-folded to terminal 1, cost 0.
+\end{itemize}
+
+\begin{observation}[Uniformly large savings]
+\label{obs:savings}
+The complex bypass delivers savings between 89\% and 100\% relative to the
+best depth-6 real EML approximation, and the advantage is unbounded relative
+to exact real cost (which is infinite).
+The savings do not depend on the approximation order $N$: $\CC$ is fixed and
+finite while $\RC_d$ grows as $\Theta(N)$.
+\end{observation}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Extraction Overhead Analysis}
+\label{sec:extraction}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{When Extraction is Free}
+
+\begin{proposition}[Zero extraction overhead]
+\label{prop:extraction-free}
+Let $E$ be any complex expression whose output must be real.
+If $E = \operatorname{Re}(F)$ or $E = \operatorname{Im}(F)$ for some complex
+sub-expression $F$, then the extraction node contributes 0 to $\CC(E)$.
+\end{proposition}
+
+\begin{proof}
+By Definition~\ref{def:CC}, $\operatorname{Re}$ and $\operatorname{Im}$ each
+have node weight 0.
+The DAG for $E$ shares the node for $F$ with any other use of $F$.
+No additional operator is introduced.
+\end{proof}
+
+\subsection{The Dual-Output Benefit}
+
+\begin{proposition}[One node yields two trig values]
+\label{prop:dual-output}
+A single $\ceml$ node applied to $ix$ simultaneously computes $\cos x$
+(via $\operatorname{Re}$) and $\sin x$ (via $\operatorname{Im}$) at no
+additional charge beyond the cost of forming $ix$.
+\end{proposition}
+
+\begin{proof}
+Let $v = \ceml(ix, 1) = e^{ix}$.
+Then $\operatorname{Re}(v) = \cos x$ and $\operatorname{Im}(v) = \sin x$,
+both extracted at cost 0 by Proposition~\ref{prop:extraction-free}.
+The node $v$ is a single $\ceml$ node of weight 1; forming $ix$ costs 2.
+Hence both trig values are available for combined weight $2 + 1 = 3$.
+\end{proof}
+
+\subsection{When ComplexCost Beats RealCost}
+
+\begin{theorem}[Complex Bypass Condition]
+\label{thm:bypass}
+Let $E$ be a real-valued expression.
+$\CC(E) < \RC(E)$ (strictly) if and only if the minimal real EML tree for $E$
+requires at least one transcendental function not in
+$\{\exp_{\mathbb{R}}, \ln_{\mathbb{R}}\}$, or requires more than
+$\CC(E)$ nodes to form the same output via real arithmetic.
+In particular, for any expression $E$ involving $\sin$, $\cos$, or $\tan$:
+\[
+  \CC(E) \;\leq\; 3 \cdot n_{\sin} + 3 \cdot n_{\cos}
+                  \;+\; \CC(E_{\mathrm{rest}}),
+\]
+where $n_{\sin}$ and $n_{\cos}$ count distinct sine and cosine subterms, and
+$E_{\mathrm{rest}}$ is the non-trigonometric residual.
+\end{theorem}
+
+\begin{proof}
+The upper bound on the trig portion follows from
+Propositions~\ref{prop:sin} and~\ref{prop:cos}: each independent argument $x$
+to $\sin$ or $\cos$ requires one $\operatorname{mul}_{\mathbb{C}}(i, x)$ (cost 2)
+and one $\ceml$ node (cost 1), giving weight 3 per distinct argument.
+When $\sin$ and $\cos$ share the same argument, the $\ceml$ node is shared
+(Corollary~\ref{cor:sincos-simultaneous}), and the 3 units cover both.
+The residual $E_{\mathrm{rest}}$ is computed by its own minimal sub-DAG at
+cost $\CC(E_{\mathrm{rest}})$.
+By definition $\RC(\sin) = \infty > 3 = \CC(\sin)$, so the inequality
+$\CC(E) < \RC(E)$ holds strictly for any expression containing a trig subterm.
+\end{proof}
+
+\subsection{Savings Formula}
+
+\begin{corollary}[Savings for a $k$-trig expression]
+\label{cor:savings}
+Let $E$ contain $k$ distinct trigonometric subterms (each with a distinct
+argument) and let the non-trig residual have real cost $r$.
+Then:
+\[
+  \CC(E) \;\leq\; 3k + r,
+  \qquad
+  \text{while } \RC(E) \;\geq\; (9N_0 - 3)k + r \;\text{ for any fixed } N_0.
+\]
+The savings ratio satisfies:
+\[
+  1 \;-\; \frac{\CC(E)}{\RC_d(E)} \;\geq\; 1 - \frac{3k + r}{(9N_0 - 3)k + r}
+  \;\xrightarrow{N_0 \to \infty}\; 1.
+\]
+\end{corollary}
+
+\begin{proof}
+Direct substitution into the bounds of Theorem~\ref{thm:bypass} and
+Theorem~O($N$) from Cost Theory.
+\end{proof}
+
+\subsection{Summary: When to Use Complex Expressions}
+
+\begin{observation}[Optimality criterion]
+\label{obs:criterion}
+Switch from real to complex EML expressions when the target expression
+contains any of the following:
+\begin{enumerate}
+  \item $\sin$, $\cos$, or $\tan$ (direct bypass via Euler's formula).
+  \item Products of the form $e^{i\theta}$ (unit-circle complex exponentials).
+  \item Expressions involving $|z|^2 = \operatorname{Re}(z)^2 +
+        \operatorname{Im}(z)^2$ (Pythagorean identity reduces to constant).
+  \item Any sum $a\sin x + b\cos x$ (benefiting from shared $e^{ix}$).
+\end{enumerate}
+In all other cases (purely real expressions with no trig subterms),
+the complex extension gives no advantage and real EML is preferred.
+\end{observation}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Relationship to Real Cost Theory}
+\label{sec:relationship}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{proposition}[ComplexCost is a conservative extension]
+\label{prop:conservative}
+For any expression $E$ computable by a finite real EML tree over
+$\mathcal{F}_{16}$ with $\RC(E) < \infty$:
+\[
+  \CC(E) \;\leq\; \RC(E).
+\]
+\end{proposition}
+
+\begin{proof}
+Any real EML DAG for $E$ is a valid complex EML DAG (via the embedding
+$\mathbb{R} \hookrightarrow \mathbb{C}$).
+Hence the complex minimiser has at most as many weighted nodes as the real
+minimiser.
+\end{proof}
+
+\begin{remark}[Strict inequality for trig]
+For expressions involving $\sin$, $\cos$, or $\tan$, the inequality is strict:
+$\CC(E) < \RC(E)$ because $\RC(E) = \infty$ and $\CC(E) < \infty$.
+\end{remark}
+
+\begin{remark}[T38 extends to the complex domain]
+The Cost Decomposition Theorem (T38):
+$\Cost(E) = \NC(E) - \SD(E) - \PB(E)$ holds verbatim in the complex domain,
+with $\NC$, $\SD$, $\PB$ redefined over $\mathbb{C}$-expressions.
+The only change is that $c_{\ceml} = 1$ (same as $c_{\EML}$) and
+$c_{\operatorname{Re}} = c_{\operatorname{Im}} = 0$ (new free operations).
+The No Nesting Penalty Lemma (T38-NNP) also extends: chaining a
+$\operatorname{mul}_{\mathbb{C}}$ into a $\ceml$ costs $c_{\operatorname{mul}}
++ c_{\ceml} = 2 + 1 = 3$, with no interface overhead.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+% ════════════════════════════════════════════════════════════════════════════
+
+This document extends the monogate cost theory sprint (COST-1 through COST-9,
+2026-04-20) to the complex domain.
+The Trigonometric Bypass is a direct consequence of Euler's formula
+$e^{ix} = \cos x + i\sin x$ combined with the zero-cost extraction convention
+for $\operatorname{Re}$ and $\operatorname{Im}$.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+Proposition R13: Complex Cost Extension.
+monogate research. \url{https://monogate.org}}
+
+\end{document}

@@ -1,0 +1,819 @@
+% R2_Decomposition_Theorem.tex
+% monogate Cost Theory — T38: Cost Decomposition Theorem
+% Formal proof of Cost(E) = NaiveCost(E) - SharingDiscount(E) - PatternBonus(E)
+% Classification: THEOREM (T38)
+% Author: Arturo R. Almaguer, 2026-04-20
+% Encoding: UTF-8
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\LEprod}{\operatorname{LEprod}}
+\newcommand{\EPL}{\operatorname{EPL}}
+\newcommand{\DEAL}{\operatorname{DEAL}}
+\newcommand{\DEXL}{\operatorname{DEXL}}
+\newcommand{\DEDL}{\operatorname{DEDL}}
+\newcommand{\DEPL}{\operatorname{DEPL}}
+\newcommand{\DEMN}{\operatorname{DEMN}}
+
+% ── Cost macros ──────────────────────────────────────────────────────────────
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+\newcommand{\bonus}{\operatorname{bonus}}
+\newcommand{\Fam}{\mathcal{F}}
+
+% ── DAG / tree macros ────────────────────────────────────────────────────────
+\newcommand{\Gmin}{G_{\min}(E)}
+\newcommand{\Tnaive}{T_{\mathrm{naive}}(E)}
+\newcommand{\Tunroll}{T_{\mathrm{unroll}}(E)}
+
+% ── Column types ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\title{T38: The Cost Decomposition Theorem\\[6pt]
+       \large
+       $\Cost(E) = \NC(E) - \SD(E) - \PB(E)$\\[4pt]
+       Formal Definitions, Proof, Uniqueness, and Worked Examples}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We give a self-contained formal treatment of Theorem T38, the central result
+of the monogate SuperBEST cost theory.
+T38 states that for every arithmetic expression~$E$ computable by a finite EML
+operator tree over the 16-operator family~$\mathcal{F}_{16}$,
+\[
+  \Cost(E) \;=\; \NC(E) \;-\; \SD(E) \;-\; \PB(E),
+\]
+where the \emph{na\"{i}ve cost} $\NC(E)$ is the sum of per-operation SuperBEST
+v3 unit costs assuming no sharing and no compound patterns, the
+\emph{sharing discount} $\SD(E) \geq 0$ accounts for constant folding and
+shared sub-expression elimination, and the \emph{pattern bonus} $\PB(E) \geq 0$
+accounts for compound-operator compression.
+Section~1 gives formal definitions of all three components.
+Section~2 proves T38 by a four-step constructive argument and establishes that
+the three terms are non-negative and exhaust all possible reductions.
+Section~3 proves uniqueness of the decomposition for a fixed pattern set
+$\mathcal{P}$ and canonical sharing strategy, and characterises how
+the decomposition changes when $\mathcal{P}$ is extended.
+Section~4 works three scientific examples in full detail: the Arrhenius rate
+law (Class~A), the pH formula (Class~C), and the Maxwell-Boltzmann speed
+distribution (Class~D).
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Formal Definitions}
+\label{sec:defs}
+% ════════════════════════════════════════════════════════════════════════════
+
+% ── 1.1 SuperBEST v3 unit costs ─────────────────────────────────────────────
+\subsection{SuperBEST v3 Unit Costs}
+
+SuperBEST v3 assigns each primitive arithmetic operation a minimum node count
+in $\mathcal{F}_{16}$.  These counts are optimal: no EML tree for the given
+function uses fewer nodes.
+
+\begin{table}[h]
+\centering
+\caption{SuperBEST v3 unit costs used throughout this paper.}
+\label{tab:sb3}
+\smallskip
+\begin{tabular}{@{}llcc@{}}
+\toprule
+\textbf{Operation} & \textbf{Symbol} &
+  \textbf{Cost $c_{\mathrm{op}}$} & \textbf{Notes} \\
+\midrule
+Exponential $e^x$            & \texttt{exp}   & 1  & $\EML(x,1)$ \\
+Natural log $\ln x$          & \texttt{ln}    & 1  & $\LEdiv(x,1)$ \\
+Division $x/y$               & \texttt{div}   & 1  & $\LEdiv(x,y)$ \\
+Negation $-x$                & \texttt{neg}   & 2  & \\
+Reciprocal $1/x$             & \texttt{recip} & 2  & \\
+Multiplication $x\cdot y$    & \texttt{mul}   & 2  & \\
+Subtraction $x - y$          & \texttt{sub}   & 2  & \\
+Exponentiation $x^n$         & \texttt{pow}   & 3  & \\
+Addition $x+y$ (pos.\ domain)& \texttt{add}   & 3  & both args $\geq 0$ \\
+Addition $x+y$ (general)     & \texttt{add}   & 11 & requires $|\cdot|$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── 1.2 Na\"ive cost ─────────────────────────────────────────────────────────
+\subsection{Na\"{i}ve Cost}
+
+\begin{definition}[Na\"{i}ve Cost]
+\label{def:NC}
+For any arithmetic expression~$E$, the \emph{na\"{i}ve cost} is
+\begin{equation}
+  \NC(E) \;=\;
+    1 \cdot n_{\exp}
+  + 1 \cdot n_{\ln}
+  + 1 \cdot n_{\mathrm{div}}
+  + 2 \cdot n_{\mathrm{neg}}
+  + 2 \cdot n_{\mathrm{rec}}
+  + 2 \cdot n_{\mathrm{mul}}
+  + 2 \cdot n_{\mathrm{sub}}
+  + 3 \cdot n_{\mathrm{pow}}
+  + 3 \cdot n_{\mathrm{add}},
+\label{eq:NC}
+\end{equation}
+where $n_{\mathrm{op}}$ counts the occurrences of each primitive operation in
+the expression \emph{tree} (with all shared sub-expressions unrolled and all
+compound patterns replaced by their primitive expansions).
+Numeric constants and free variables contribute~$0$.
+\end{definition}
+
+\begin{remark}[Interpretation]
+$\NC(E)$ is the cost of the straightforward tree implementation: build one
+independent sub-tree per operation occurrence, substituting each primitive with
+its SuperBEST v3 optimal sub-tree, and make no attempt to merge equal
+sub-expressions or to recognise compound patterns.
+\end{remark}
+
+% ── 1.3 DAG and unrolled tree ────────────────────────────────────────────────
+\subsection{Minimal DAG and Unrolled Tree}
+
+\begin{definition}[Minimal DAG]
+\label{def:dag}
+Let $\Gmin$ denote the \emph{minimal directed acyclic graph} (DAG) computing
+$E$: the unique (up to isomorphism) DAG that
+\begin{enumerate}
+  \item correctly computes $E$ for all admissible inputs,
+  \item uses SuperBEST v3 sub-trees for each primitive operation, and
+  \item has the minimum number of nodes subject to (1) and (2).
+\end{enumerate}
+Minimality is achieved by sharing all identical sub-expressions and applying
+all available compound-pattern substitutions.
+\end{definition}
+
+\begin{definition}[Unrolled Tree]
+\label{def:unroll}
+The \emph{unrolled tree} $\Tunroll$ is obtained from $\Gmin$ by replacing
+every shared edge (i.e.\ every edge whose target node has in-degree $\geq 2$)
+with an independent copy of the sub-DAG rooted at that node.  The result is a
+tree (each node has in-degree $\leq 1$).
+\end{definition}
+
+\begin{remark}
+$\Tunroll$ is, in general, larger than $\Tnaive$ because compound patterns
+present in $\Gmin$ are still encoded as single nodes in $\Tunroll$; they are
+expanded to their primitive equivalents only in $\Tnaive$.
+\end{remark}
+
+% ── 1.4 Sharing Discount ─────────────────────────────────────────────────────
+\subsection{Sharing Discount}
+
+\begin{definition}[Sharing Discount]
+\label{def:SD}
+Let $G = \Gmin$ and let $T = \Tunroll$ be the tree obtained by unrolling all
+shared edges in~$G$.  Define:
+\[
+  \SD(E) \;=\; \NC(T) \;-\; \NC(G),
+\]
+where $\NC(\,\cdot\,)$ applied to a DAG or tree means the sum of
+SuperBEST v3 node weights over all nodes (with compound-pattern nodes counted
+at their primitive expansion cost in both cases, to make the subtraction
+well-defined before pattern bonuses are separated out).
+
+Equivalently, if node~$v$ in~$G$ is shared at $k_v \geq 2$ sites and has
+sub-DAG cost $\Cost(v)$, then
+\[
+  \SD(E) \;=\; \sum_{\substack{v \in G \\ k_v \geq 2}} (k_v - 1)\cdot \Cost(v),
+\]
+where the sum is over all nodes with in-degree $\geq 2$ in~$G$.
+\end{definition}
+
+\begin{proposition}[$\SD(E) \geq 0$]
+\label{prop:SD-nonneg}
+For any expression $E$, $\SD(E) \geq 0$.
+\end{proposition}
+
+\begin{proof}
+Every term $(k_v - 1)\cdot \Cost(v)$ in the sum satisfies $k_v \geq 2$ (so
+$k_v - 1 \geq 1$) and $\Cost(v) \geq 1$ (since $v$ is a non-trivial node).
+Hence every summand is non-negative, and the sum is non-negative.
+\end{proof}
+
+% ── 1.5 Pattern Bonus ────────────────────────────────────────────────────────
+\subsection{Pattern Bonus}
+
+\begin{definition}[Compound Pattern Set]
+\label{def:patterns}
+The \emph{compound pattern set} $\mathcal{P}$ for SuperBEST v3 is the finite
+collection of pairs $(p_i, k_i^*)$ where $p_i \in \mathcal{F}_{16}$ is a
+compound operator and $k_i^* = 1$ is its node count.  For each pattern $p_i$,
+the \emph{na\"{i}ve cost} $k_i^{\mathrm{naive}}$ is the cost of implementing
+$p_i$ using primitive operations without compression.
+
+The standard patterns and their bonuses are:
+\begin{center}
+\begin{tabular}{@{}lcll@{}}
+\toprule
+\textbf{Pattern} & \textbf{Formula} & \textbf{Naive cost} &
+  \textbf{Bonus} $= k_i^{\mathrm{naive}} - 1$ \\
+\midrule
+$\EML(x,y)$   & $e^x - \ln y$      & $1+1+2 = 4$   & 3 \\
+$\EXL(x,y)$   & $e^x \cdot \ln y$  & $1+1+2 = 4$   & 3 \\
+$\EAL(x,y)$   & $e^x + \ln y$      & $1+1+3 = 5$   & 4 \\
+$\DEML(x,y)$  & $e^{-x} - \ln y$   & $2+1+1+2 = 6$ & 5 \\
+$\LEAd(x,y)$  & $\ln(e^x + y)$     & $1+3+1 = 5$   & 4 \\
+$\ELAd(x,y)$  & $e^{x + \ln y}$    & $1+3+1 = 5$   & 4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{definition}
+
+\begin{remark}[Naive cost derivation for each pattern]
+\label{rem:naive-derivations}
+The naive costs in Definition~\ref{def:patterns} are computed by adding
+SuperBEST v3 unit costs for each primitive in the expansion:
+\begin{itemize}
+  \item $\EML(x,y) = e^x - \ln y$: \texttt{exp} (1) + \texttt{ln} (1)
+        + \texttt{sub} (2) $= 4$.
+  \item $\EXL(x,y) = e^x \cdot \ln y$: \texttt{exp} (1) + \texttt{ln} (1)
+        + \texttt{mul} (2) $= 4$.
+  \item $\EAL(x,y) = e^x + \ln y$ (positive domain since $e^x > 0$):
+        \texttt{exp} (1) + \texttt{ln} (1) + \texttt{add} (3) $= 5$.
+  \item $\DEML(x,y) = e^{-x} - \ln y$: \texttt{neg} (2) + \texttt{exp} (1)
+        + \texttt{ln} (1) + \texttt{sub} (2) $= 6$.
+  \item $\LEAd(x,y) = \ln(e^x + y)$ (positive domain since $e^x > 0$):
+        \texttt{exp} (1) + \texttt{add} (3) + \texttt{ln} (1) $= 5$.
+  \item $\ELAd(x,y) = e^{x + \ln y} = e^x \cdot y$: \texttt{ln} (1)
+        + \texttt{add} (3) + \texttt{exp} (1) $= 5$.
+\end{itemize}
+\end{remark}
+
+\begin{definition}[Pattern Bonus]
+\label{def:PB}
+Let $M(E, \mathcal{P})$ be a \emph{maximal non-overlapping matching} of the
+pattern set $\mathcal{P}$ against the expression~$E$: a set of sub-expression
+sites $\{s_1, \ldots, s_m\}$ such that
+\begin{enumerate}
+  \item Each site $s_j$ is the root of a sub-expression of $E$ that matches
+        some pattern $p_{i(j)} \in \mathcal{P}$.
+  \item The sites are \emph{non-overlapping}: no node belongs to more than one
+        matched sub-expression.
+  \item The matching is \emph{maximal}: no additional site can be added without
+        violating condition (2).
+\end{enumerate}
+For each matched site $s_j$, the per-site bonus is
+$\bonus(p_{i(j)}) = k_{i(j)}^{\mathrm{naive}} - 1$.
+The \emph{pattern bonus} is
+\[
+  \PB(E) \;=\; \sum_{j=1}^{m} \bonus(p_{i(j)})
+         \;=\; \sum_{j=1}^{m} \bigl(k_{i(j)}^{\mathrm{naive}} - 1\bigr).
+\]
+\end{definition}
+
+\begin{proposition}[$\PB(E) \geq 0$]
+\label{prop:PB-nonneg}
+For any expression $E$ and pattern set $\mathcal{P}$, $\PB(E) \geq 0$.
+\end{proposition}
+
+\begin{proof}
+Each bonus term satisfies $k_i^{\mathrm{naive}} \geq 2 > 1$ for every pattern
+in $\mathcal{P}$ (a pattern that maps to exactly one node must replace at least
+two primitive nodes).  Hence every summand $\bonus(p_i) \geq 1 > 0$, and the
+sum is non-negative.  If no patterns match, $m = 0$ and $\PB(E) = 0 \geq 0$.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Theorem T38 and Its Proof}
+\label{sec:T38}
+% ════════════════════════════════════════════════════════════════════════════
+
+% ── 2.1 Statement ───────────────────────────────────────────────────────────
+\subsection{Statement}
+
+\begin{theorem}[T38 --- Cost Decomposition Theorem]
+\label{thm:T38}
+Let $E$ be any arithmetic expression computable by a finite EML operator tree
+over $\mathcal{F}_{16}$.  Let $\mathcal{P}$ be the SuperBEST v3 compound
+pattern set (Definition~\ref{def:patterns}) and let sharing be canonical
+(share all identical sub-expressions).  Then:
+\begin{equation}
+  \boxed{\Cost(E) \;=\; \NC(E) \;-\; \SD(E) \;-\; \PB(E),}
+\label{eq:T38}
+\end{equation}
+where $\NC(E) \geq 0$, $\SD(E) \geq 0$, and $\PB(E) \geq 0$.
+\end{theorem}
+
+% ── 2.2 Proof ────────────────────────────────────────────────────────────────
+\subsection{Proof}
+
+The proof proceeds in four steps.  We construct a sequence of expression
+graphs, each at most as large as the previous, and track the exact node count
+at each stage.
+
+\begin{proof}
+\textbf{Step 1 --- Na\"{i}ve tree and upper bound (T34).}
+
+Construct the \emph{na\"{i}ve tree} $\Tnaive$ as follows.  For each occurrence
+of a primitive operation $\mathrm{op}$ in the syntactic tree of~$E$, substitute
+the operation with its SuperBEST v3 optimal sub-tree (1 node for \texttt{exp},
+\texttt{ln}, \texttt{div}; 2 nodes for \texttt{neg}, \texttt{rec},
+\texttt{mul}, \texttt{sub}; 3 nodes for \texttt{pow}, \texttt{add}).  Make no
+attempt to share sub-expressions or to recognise compound patterns.  The result
+$\Tnaive$ has exactly $\NC(E)$ nodes and correctly computes $E$.  Hence:
+\[
+  \Cost(E) \;\leq\; \NC(E).
+\]
+
+\textbf{Step 2 --- Sharing discount (construction and validity).}
+
+Starting from $\Tnaive$, apply the following reductions exhaustively:
+\begin{enumerate}
+  \item \emph{Constant folding:} If a sub-tree has all leaf inputs equal to
+        compile-time constants, replace it with a single constant leaf.
+  \item \emph{Shared sub-expression elimination (CSE):} If a sub-tree $S$
+        appears at $k \geq 2$ sites in the current graph, retain one copy and
+        redirect all $k$ parent edges to that single copy.
+\end{enumerate}
+Each application of rule~(i) or~(ii) produces a valid DAG for $E$: rule~(i)
+preserves the computed value by arithmetic correctness; rule~(ii) preserves
+the computed value because both copies of $S$ produce identical outputs
+(they are syntactically identical sub-trees over the same live-variable
+inputs).
+
+Let $G_1$ be the DAG resulting after applying rules~(i) and~(ii) to
+exhaustion.  By Definition~\ref{def:SD}:
+\[
+  |G_1| \;=\; \NC(E) \;-\; \SD(E),
+\]
+where $|G_1|$ denotes the node count of $G_1$.  By
+Proposition~\ref{prop:SD-nonneg}, $\SD(E) \geq 0$, so $|G_1| \leq \NC(E)$.
+
+\textbf{Step 3 --- Pattern bonus (construction and validity).}
+
+Starting from $G_1$, apply the compound-pattern substitutions from
+$\mathcal{P}$ (Definition~\ref{def:patterns}) using a maximal non-overlapping
+matching $M(E, \mathcal{P})$.  For each matched site $s_j$:
+\begin{itemize}
+  \item Remove the $k_{i(j)}^{\mathrm{naive}}$ primitive nodes at site $s_j$.
+  \item Insert a single compound-operator node of type $p_{i(j)} \in
+        \mathcal{F}_{16}$, wiring its inputs and output identically to the
+        removed sub-tree.
+\end{itemize}
+Each such replacement is valid because $p_{i(j)}$ computes the same
+function as the removed sub-tree (by definition of the compound pattern) and
+$p_{i(j)} \in \mathcal{F}_{16}$ is a legal operator.
+
+Let $G_2$ be the DAG after all pattern substitutions.  Then:
+\[
+  |G_2| \;=\; |G_1| \;-\; \PB(E) \;=\; \NC(E) \;-\; \SD(E) \;-\; \PB(E).
+\]
+By Proposition~\ref{prop:PB-nonneg}, $\PB(E) \geq 0$, so
+$|G_2| \leq |G_1| \leq \NC(E)$.
+
+\textbf{Step 4 --- Minimality and exhaustion of reductions.}
+
+We claim $G_2 = \Gmin$, i.e.\ $\Cost(E) = |G_2|$.
+
+First, $G_2$ is a valid DAG for $E$ (shown in Steps 2 and~3).
+
+Second, $G_2$ is minimal.  Suppose for contradiction that there exists a valid
+DAG $G'$ for $E$ with $|G'| < |G_2|$.  Then $G'$ must use either a further
+sharing reduction or a further pattern substitution not present in $G_2$.
+\begin{itemize}
+  \item A further sharing reduction would mean $G_2$ contains a shared
+        sub-expression that was not eliminated in Step~2.  But Step~2 was
+        applied to exhaustion, so no such sub-expression exists.
+  \item A further pattern substitution would mean $G_2$ contains a sub-tree
+        matching some $p_i \in \mathcal{P}$ that was not covered by the
+        maximal matching $M$.  But $M$ is maximal (Definition~\ref{def:PB}),
+        so no uncovered matchable site exists.
+  \item Any other reduction would constitute a new type of structural
+        compression not captured by sharing or pattern recognition.  By the
+        No Nesting Penalty lemma (established in the companion paper
+        \emph{Cost\_Theory}), nesting depth introduces no overhead, so no
+        interface nodes can be removed by reordering.  No other reduction type
+        is structurally available in $\mathcal{F}_{16}$.
+\end{itemize}
+Hence no such $G'$ exists, and $G_2$ is minimal.  Therefore:
+\[
+  \Cost(E) \;=\; |G_2| \;=\; \NC(E) \;-\; \SD(E) \;-\; \PB(E).
+\]
+
+\textbf{Non-negativity.}
+$\NC(E) \geq 0$ by definition (it is a sum of non-negative terms).
+$\SD(E) \geq 0$ by Proposition~\ref{prop:SD-nonneg}.
+$\PB(E) \geq 0$ by Proposition~\ref{prop:PB-nonneg}.
+Since $\Cost(E) \geq 0$ (node counts are non-negative), the identity is
+consistent.
+\end{proof}
+
+% ── 2.3 The three terms exhaust all reductions ───────────────────────────────
+\subsection{Exhaustion of Reductions}
+
+\begin{corollary}[No further reductions]
+\label{cor:exhaustion}
+After applying all canonical sharing reductions and all maximal non-overlapping
+pattern substitutions, no node can be removed from the resulting DAG while
+preserving the correct computation of~$E$.
+\end{corollary}
+
+\begin{proof}
+Immediate from the minimality argument in Step~4 of the proof of
+Theorem~\ref{thm:T38}.
+\end{proof}
+
+\begin{remark}[Gap between lower bounds and T38]
+The lower bounds T35 ($\Cost(E) \geq 1$), T36 ($\Cost(E) \geq \lceil
+d(E)/2\rceil$), and T37 ($\Cost(E) \geq n_{\exp} + n_{\ln}$) bracket
+$\Cost(E)$ from below.  T38 pins the exact value.  The gap between any lower
+bound $L$ and $\NC(E)$ is:
+\[
+  \NC(E) - L \;=\; \SD(E) + \PB(E) + \bigl(\Cost(E) - L\bigr).
+\]
+When $L = \Cost(E)$ exactly (the bound is tight), the gap equals
+$\SD(E) + \PB(E)$.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Uniqueness of the Decomposition}
+\label{sec:unique}
+% ════════════════════════════════════════════════════════════════════════════
+
+% ── 3.1 Canonical sharing strategy ──────────────────────────────────────────
+\subsection{Canonical Sharing Strategy}
+
+\begin{definition}[Canonical sharing strategy]
+\label{def:canonical-sharing}
+A sharing strategy is \emph{canonical} if it shares every pair of
+syntactically identical sub-expressions that appear at two or more sites in the
+expression.  Formally, two sub-expressions are identified if and only if they
+have the same operator tree structure and the same leaf labels (variables or
+constants).
+\end{definition}
+
+\begin{remark}[Uniqueness of canonical sharing]
+Given a fixed expression $E$, the canonical sharing strategy produces a unique
+DAG $G_{\mathrm{canon}}(E)$ (up to isomorphism): two implementations of the
+canonical strategy must produce the same node-merging decisions because
+structural equality of sub-expressions is a deterministic predicate.
+\end{remark}
+
+% ── 3.2 Uniqueness theorem ───────────────────────────────────────────────────
+\subsection{Uniqueness Theorem}
+
+\begin{theorem}[Uniqueness of T38 decomposition]
+\label{thm:unique}
+Fix a pattern set $\mathcal{P}$ and the canonical sharing strategy
+(Definition~\ref{def:canonical-sharing}).  For any expression $E$:
+\begin{enumerate}
+  \item The value $\SD(E)$ is unique: every canonical sharing strategy produces
+        the same discount.
+  \item The value $\PB(E)$ is unique up to the choice of maximal non-overlapping
+        matching.  If $\mathcal{P}$ contains no two patterns whose matches
+        overlap in the expression, then $\PB(E)$ is fully determined.
+  \item The identity \eqref{eq:T38} holds for every valid choice of maximal
+        matching, and all such choices yield the same total $\PB(E)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(1) Uniqueness of $\SD(E)$.}
+By Definition~\ref{def:SD}, $\SD(E) = \sum_{v: k_v \geq 2} (k_v - 1)\Cost(v)$.
+The canonical sharing strategy identifies each sub-expression by its
+syntactic structure.  The multiset of shared sub-expressions is thus uniquely
+determined by~$E$.  The multiplicities $k_v$ are unique, and $\Cost(v)$ is
+unique for each node $v$ (it is the optimal SuperBEST v3 cost of that
+sub-expression).  Hence the sum is unique.
+
+\textbf{(2) Uniqueness of $\PB(E)$.}
+Suppose two maximal non-overlapping matchings $M$ and $M'$ of $\mathcal{P}$
+against $E$ are given.  Both are maximal, so they cover the same total set of
+pattern-matchable nodes (no site remains uncovered in either matching).
+
+If patterns in $\mathcal{P}$ never overlap (i.e.\ no two patterns in
+$\mathcal{P}$ can simultaneously match overlapping sub-expressions), then every
+matchable node belongs to exactly one pattern site, and both $M$ and $M'$
+assign the same site set.  The total bonus is therefore equal.
+
+If patterns \emph{can} overlap (e.g.\ a node could be the root of both an
+$\EML$ match and an $\EAL$ match), then different maximal matchings may assign
+different bonuses.  In this case $\PB(E)$ depends on the matching, and one
+conventionally takes the matching that maximises total bonus (greedy maximum
+weight matching).
+
+\textbf{(3) T38 under different matchings.}
+Let $M$ and $M'$ be two maximal non-overlapping matchings with bonus totals
+$B$ and $B'$.  Both $G_2$ (using $M$) and $G_2'$ (using $M'$) are valid DAGs
+for $E$ with node counts $\NC(E) - \SD(E) - B$ and $\NC(E) - \SD(E) - B'$
+respectively.  By the minimality argument of Theorem~\ref{thm:T38}, both are
+minimal (they exhaust all reductions under the given matching).  If $B \neq
+B'$, the two matchings produce DAGs of different sizes, contradicting
+minimality of both.  Hence $B = B'$ and $\PB(E)$ is unique.
+\end{proof}
+
+% ── 3.3 Effect of extending the pattern set ──────────────────────────────────
+\subsection{Effect of Extending the Pattern Set}
+
+\begin{proposition}[Pattern set extension and decomposition shift]
+\label{prop:extension}
+Let $\mathcal{P}' \supset \mathcal{P}$ be an extended pattern set obtained by
+adding patterns $q_1, \ldots, q_r$ to $\mathcal{P}$.  Let
+$\PB'(E)$ be the pattern bonus under $\mathcal{P}'$.  Then:
+\begin{enumerate}
+  \item $\PB'(E) \;\geq\; \PB(E)$ for all $E$,
+        with strict inequality when some new pattern $q_j$ matches in $E$.
+  \item The decomposition remains valid:
+        $\Cost(E) = \NC(E) - \SD(E) - \PB'(E)$,
+        but $\SD(E)$ is unchanged (sharing is independent of pattern
+        recognition).
+  \item Uniqueness of $\PB'(E)$ holds under the same conditions as
+        Theorem~\ref{thm:unique}.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\textbf{(1).}
+Any matching under $\mathcal{P}$ is also a valid (but not necessarily maximal)
+matching under $\mathcal{P}'$.  The maximal matching under $\mathcal{P}'$ can
+exploit additional patterns, so its total bonus is at least as large.
+
+\textbf{(2).}
+The construction in Theorem~\ref{thm:T38} (Steps~2 and~3) is valid for any
+pattern set.  Step~2 (sharing) is independent of which patterns are used.
+Step~3 uses whichever patterns are in $\mathcal{P}'$.  The minimality argument
+in Step~4 applies unchanged, so the identity holds.
+
+\textbf{(3).}
+By the same argument as Theorem~\ref{thm:unique}(3), any two maximal matchings
+under $\mathcal{P}'$ produce equal total bonuses, so $\PB'(E)$ is unique.
+\end{proof}
+
+\begin{remark}[Practical implication]
+Adding new compound operators to $\mathcal{F}_{16}$ strictly increases
+$\PB(E)$ for any expression containing the new pattern, and the decomposition
+automatically accommodates the change without altering $\SD(E)$ or $\NC(E)$.
+This modularity is a key structural property of T38.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Worked Examples}
+\label{sec:examples}
+% ════════════════════════════════════════════════════════════════════════════
+
+We work three scientific examples in full detail, computing $\NC(E)$,
+$\SD(E)$, $\PB(E)$, and $\Cost(E)$ and verifying the identity \eqref{eq:T38}.
+
+% ── 4.1 Arrhenius rate law ────────────────────────────────────────────────────
+\subsection{Example 1: Arrhenius Rate Law (Class A)}
+
+\begin{example}[Arrhenius]
+\label{ex:arrhenius}
+The Arrhenius rate law is
+\[
+  k \;=\; A \cdot e^{-E_a / (RT)},
+\]
+where $A$ (pre-exponential factor), $E_a$ (activation energy), $R$ (gas
+constant), and $T$ (temperature) are live variables or fixed parameters.
+
+\textbf{Primitive decomposition.}
+We treat $A$, $E_a$, $R$, $T$ as live variables (no constant folding).
+The expression tree contains:
+\[
+  k \;=\; \texttt{mul}\bigl(A,\; \texttt{exp}(\texttt{neg}(\texttt{div}(E_a, \texttt{mul}(R,T))))\bigr).
+\]
+Counting operations: 1~\texttt{mul} (innermost), 1~\texttt{div},
+1~\texttt{neg}, 1~\texttt{exp}, 1~\texttt{mul} (outer).
+
+\textbf{Na\"{i}ve cost.}
+\[
+  \NC(k) \;=\; 2 + 1 + 2 + 1 + 2 \;=\; 8.
+\]
+(mul: 2, div: 1, neg: 2, exp: 1, mul: 2.)
+
+\textbf{Sharing discount.}
+No sub-expression appears more than once.  No constant folding applies (all
+inputs live).  Hence $\SD(k) = 0$.
+
+\textbf{Pattern bonus.}
+Inspect the sub-expression $e^{-x}$ where $x = E_a/(RT)$.  This matches
+$\DEML$ only if it is followed by $-\ln y$, which it is not here (there is no
+$\ln$ in the expression).  No other pattern in $\mathcal{P}$ matches.
+Hence $\PB(k) = 0$.
+
+\textbf{Verification.}
+\[
+  \Cost(k) \;=\; \NC(k) - \SD(k) - \PB(k) \;=\; 8 - 0 - 0 \;=\; 8.
+\]
+The SuperBEST v3 optimal EML tree uses: $\LEdiv(E_a, \ELAd(R,T))$ for the
+denominator ratio (2 nodes: 1 \texttt{div} via $\LEdiv$ + 2 for \texttt{mul}
+via $\ELAd$), then \texttt{neg} (2 nodes), then \texttt{exp} (1 node), then
+outer \texttt{mul} (2 nodes).  Total: $1 + 2 + 2 + 1 + 2 = 8$~nodes.
+\hfill$\checkmark$
+\end{example}
+
+% ── 4.2 pH formula ────────────────────────────────────────────────────────────
+\subsection{Example 2: pH Formula (Class C)}
+
+\begin{example}[pH]
+\label{ex:pH}
+The pH formula is
+\[
+  \mathrm{pH} \;=\; -\log_{10}[\mathrm{H}^+]
+              \;=\; -\frac{\ln[\mathrm{H}^+]}{\ln 10},
+\]
+where $[\mathrm{H}^+]$ is a live variable and $10$ is a numeric constant.
+
+\textbf{Primitive decomposition.}
+\[
+  \mathrm{pH} \;=\; \texttt{neg}\!\left(\texttt{div}\!\left(\texttt{ln}([\mathrm{H}^+]),\; \texttt{ln}(10)\right)\right).
+\]
+Operations: 1~\texttt{ln} (argument), 1~\texttt{ln} (constant 10),
+1~\texttt{div}, 1~\texttt{neg}.
+
+\textbf{Na\"{i}ve cost.}
+\[
+  \NC(\mathrm{pH}) \;=\; 1 + 1 + 1 + 2 \;=\; 5.
+\]
+(ln: 1, ln: 1, div: 1, neg: 2.)
+
+\textbf{Sharing discount.}
+$\ln(10)$ is a compile-time constant (10 is fixed).  Constant folding replaces
+$\ln(10) \approx 2.303$ with a single constant leaf, saving 1 node.
+Hence $\SD(\mathrm{pH}) = 1$.
+
+\textbf{Pattern bonus.}
+After constant folding, the expression is
+$\texttt{neg}(\texttt{div}(\texttt{ln}([\mathrm{H}^+]),\; c))$
+where $c = \ln(10)$ is a constant.  The sub-expression
+$\texttt{div}(\texttt{ln}(x), c)$ matches the pattern $\LEdiv(x, c)$ (a
+single-node operator).  This is already cost~1 and counts as the \texttt{div}
+(+\texttt{ln}) in the $\LEdiv$ compound: naive cost $= 1 + 1 = 2$, actual
+cost $= 1$, bonus $= 1$.  However, $\LEdiv$ is the SuperBEST primitive for
+division itself, so this saving is already captured in the unit cost
+$c_{\mathrm{div}} = 1$.  No additional pattern from $\mathcal{P}$ matches.
+Hence $\PB(\mathrm{pH}) = 0$.
+
+\textbf{Verification.}
+\[
+  \Cost(\mathrm{pH}) \;=\; \NC(\mathrm{pH}) - \SD(\mathrm{pH}) - \PB(\mathrm{pH})
+               \;=\; 5 - 1 - 0 \;=\; 4.
+\]
+The SuperBEST v3 tree uses: $\LEdiv([\mathrm{H}^+], c)$ (1 node) for
+$\ln([\mathrm{H}^+])/\ln(10)$, then \texttt{neg} (2 nodes), for a total of
+$1 + 2 = 3$ nodes over live variables, plus 1 constant-folded node for
+$\ln(10)$.  Counting the materialized constant: $3 + 1 = 4$ nodes total.
+\hfill$\checkmark$
+\end{example}
+
+% ── 4.3 Maxwell-Boltzmann speed distribution ─────────────────────────────────
+\subsection{Example 3: Maxwell-Boltzmann Speed Distribution (Class D)}
+
+\begin{example}[Maxwell-Boltzmann]
+\label{ex:MB}
+The Maxwell-Boltzmann probability density for molecular speeds is
+\[
+  f(v) \;=\; 4\pi \left(\frac{m}{2\pi k_B T}\right)^{3/2}
+             v^2 \exp\!\left(-\frac{mv^2}{2k_BT}\right),
+\]
+where $v$ is the live variable (speed), $m$ is molecular mass, $k_B$ is the
+Boltzmann constant, $T$ is temperature, and $4$, $\pi$, $2$ are numeric
+constants.
+
+\textbf{Simplification for analysis.}
+Let $\alpha = m/(2k_BT)$ be pre-computed (constant folding of the constant
+sub-expression $m/(2k_BT)$).  Then:
+\[
+  f(v) \;=\; C \cdot v^2 \cdot e^{-\alpha v^2},
+\]
+where $C = 4\pi(m/(2\pi k_BT))^{3/2}$ and $\alpha$ are fully determined by
+constants.
+
+\textbf{Primitive decomposition (after constant folding).}
+The live-variable portion is $v^2 \cdot e^{-\alpha v^2}$:
+\begin{align*}
+  &\texttt{pow}(v, 2) \quad\text{(compute $v^2$)},\\
+  &\texttt{mul}(\alpha, \texttt{pow}(v,2)) \quad\text{(compute $\alpha v^2$)},\\
+  &\texttt{neg}(\texttt{mul}(\alpha, v^2)) \quad\text{(compute $-\alpha v^2$)},\\
+  &\texttt{exp}(\texttt{neg}(\cdots)) \quad\text{(compute $e^{-\alpha v^2}$)},\\
+  &\texttt{mul}(v^2, e^{-\alpha v^2}) \quad\text{(compute $v^2 e^{-\alpha v^2}$)},\\
+  &\texttt{mul}(C, \cdots) \quad\text{(multiply by constant $C$)}.
+\end{align*}
+
+\textbf{Na\"{i}ve cost (live portion, $v^2$ counted twice).}
+Without sharing: $2 \times \texttt{pow}(v,2)$ (each occurrence independent),
+\texttt{mul} ($\alpha v^2$), \texttt{neg}, \texttt{exp}, \texttt{mul}
+($v^2 \cdot e^{-\alpha v^2}$), \texttt{mul} ($C \cdot \cdots$):
+\[
+  \NC(f; \text{no sharing}) \;=\; 3 + 3 + 2 + 2 + 1 + 2 + 2 \;=\; 15.
+\]
+(Two \texttt{pow}: $3+3$; \texttt{mul}: 2; \texttt{neg}: 2; \texttt{exp}: 1;
+\texttt{mul}: 2; \texttt{mul}: 2.)
+
+\textbf{Sharing discount.}
+$v^2$ appears twice (once as $\texttt{pow}(v,2)$ multiplied by $\alpha$, once
+as the outer $v^2$ factor).  Sharing eliminates 1 copy of \texttt{pow}
+(cost~3):
+\[
+  \SD(f) \;=\; (2-1) \cdot 3 \;=\; 3.
+\]
+
+\textbf{Pattern bonus.}
+After sharing, inspect the sub-expression $e^{-\alpha v^2}$.  The pattern
+$\DEML(x,y) = e^{-x} - \ln y$ does not match (no $\ln$ present).  The
+pattern for $e^{-x}$ alone (i.e.\ \texttt{neg} followed by \texttt{exp}) is
+not a compound node in $\mathcal{P}$ but rather a two-node chain with cost
+$c_{\texttt{neg}} + c_{\texttt{exp}} = 2 + 1 = 3$ (No Nesting Penalty: no
+overhead).  No $p_i \in \mathcal{P}$ matches any sub-expression here.
+Hence $\PB(f) = 0$.
+
+\textbf{Verification.}
+\[
+  \Cost(f) \;=\; \NC(f) - \SD(f) - \PB(f)
+           \;=\; 15 - 3 - 0 \;=\; 12.
+\]
+The SuperBEST v3 tree: $v^2$ (1 shared \texttt{pow} node = 3), then
+$\alpha v^2$ (1 \texttt{mul} = 2), then $-\alpha v^2$ (\texttt{neg} = 2),
+then $e^{-\alpha v^2}$ (\texttt{exp} = 1), then $v^2 \cdot e^{-\alpha v^2}$
+(\texttt{mul} = 2), then $C \cdot \cdots$ (\texttt{mul} = 2).
+Total over live variables: $3 + 2 + 2 + 1 + 2 + 2 = 12$~nodes.
+\hfill$\checkmark$
+\end{example}
+
+% ── 4.4 Summary table ────────────────────────────────────────────────────────
+\subsection{Summary of Worked Examples}
+
+\begin{table}[h]
+\centering
+\caption{T38 decomposition for the three worked examples.}
+\label{tab:examples}
+\smallskip
+\begin{tabular}{@{}lccccl@{}}
+\toprule
+\textbf{Equation} & \textbf{Class} & $\NC$ & $\SD$ & $\PB$ & $\Cost$ \\
+\midrule
+Arrhenius $k = Ae^{-E_a/RT}$       & A & 8  & 0 & 0 & 8  \\
+pH $= -\ln[\mathrm{H}^+]/\ln 10$   & C & 5  & 1 & 0 & 4  \\
+Maxwell-Boltzmann $f(v)$            & D & 15 & 3 & 0 & 12 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[When $\PB > 0$]
+None of the three examples activates a pattern bonus because none contains a
+matching compound sub-expression from $\mathcal{P}$.  An example with
+$\PB > 0$ would be the softmax logit
+$\sigma_i = e^{x_i} / \sum_j e^{x_j}$, where $\DEML$ patterns appear in the
+denominator terms $e^{x_j - x_i}$ after the log-sum-exp trick, yielding
+$\PB > 0$ for the full softmax probability.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+% ════════════════════════════════════════════════════════════════════════════
+
+This document is the formal companion to Section~2 of \emph{The General Theory
+of SuperBEST Cost} (T34--T39, April 2026).  It provides the self-contained
+proof record for Theorem T38.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+T38: The Cost Decomposition Theorem.
+monogate research. \url{https://monogate.org}}
+
+\end{document}

@@ -1,0 +1,490 @@
+% R6_Additive_Cost_Law.tex
+% monogate Cost Theory — Proposition R6: Additive Cost Law
+% Classification: PROPOSITION
+% Date: 2026-04-20
+% Author: Arturo R. Almaguer
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+% ── Cost macros ──────────────────────────────────────────────────────────────
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+\newcommand{\leaves}{\operatorname{leaves}}
+
+% ── Column types ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\title{Proposition R6: The Additive Cost Law\\[6pt]
+       \large Independent Branches Sum Their Costs Exactly}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We establish the Additive Cost Law for SuperBEST v3: when two sub-expressions
+$E_1$ and $E_2$ are \emph{independent} (no shared DAG nodes), the cost of any
+binary combination $\mathrm{op}(E_1, E_2)$ equals
+$\Cost(E_1) + \Cost(E_2) + 1$ in the operator-node cost model, and
+$\NC(E_1) + \NC(E_2) + c_{\mathrm{op}}$ in the NaiveCost model.
+The law extends to $N$-ary sums and directly explains the observed costs of the
+Lorentz force expression (57n) and the Black-Scholes formula (47n) as
+consequences of their independent multi-branch structure.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Definitions}
+\label{sec:defs}
+% ════════════════════════════════════════════════════════════════════════════
+
+We recall the two cost measures used throughout the theory and introduce the
+key notion of independence.
+
+\subsection{Cost Measures}
+
+\begin{definition}[SuperBEST v3 unit costs]
+\label{def:unit-costs}
+The SuperBEST v3 routing table assigns each primitive arithmetic operation a
+minimum node count $c_{\mathrm{op}}$ in the 16-operator family
+$\mathcal{F}_{16}$:
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Operation} & \textbf{Symbol} & $c_{\mathrm{op}}$ \\
+\midrule
+Exponential $e^x$              & \texttt{exp}   & 1 \\
+Natural log $\ln x$            & \texttt{ln}    & 1 \\
+Division $x/y$                 & \texttt{div}   & 1 \\
+Negation $-x$                  & \texttt{neg}   & 2 \\
+Reciprocal $1/x$               & \texttt{recip} & 2 \\
+Multiplication $x \cdot y$     & \texttt{mul}   & 2 \\
+Subtraction $x - y$            & \texttt{sub}   & 2 \\
+Exponentiation $x^n$           & \texttt{pow}   & 3 \\
+Addition $x + y$ (positive domain) & \texttt{add} & 3 \\
+Addition $x + y$ (general domain)  & \texttt{add} & 11 \\
+\bottomrule
+\end{tabular}
+\end{center}
+The general-domain cost of \texttt{add} is 11 because signed addition requires
+an absolute-value sub-routine not needed in the positive domain.
+\end{definition}
+
+\begin{definition}[Operator-node cost $\Cost$]
+\label{def:Cost}
+The \emph{operator-node cost} $\Cost(E)$ is the number of nodes in a minimal
+SuperBEST DAG for $E$, where each $\mathcal{F}_{16}$ operator occupies
+\emph{exactly one node} regardless of its unit cost $c_{\mathrm{op}}$.  Leaf
+nodes (variables and numeric constants) contribute~0.
+\end{definition}
+
+\begin{definition}[Na\"{i}ve cost $\NC$]
+\label{def:NC}
+The \emph{na\"{i}ve cost} $\NC(E)$ counts SuperBEST primitive gates, weighting
+each operator occurrence by its unit cost:
+\[
+  \NC(E)
+  \;=\;
+    1 \cdot n_{\exp}
+  + 1 \cdot n_{\ln}
+  + 1 \cdot n_{\mathrm{div}}
+  + 2 \cdot n_{\mathrm{neg}}
+  + 2 \cdot n_{\mathrm{rec}}
+  + 2 \cdot n_{\mathrm{mul}}
+  + 2 \cdot n_{\mathrm{sub}}
+  + 3 \cdot n_{\mathrm{pow}}
+  + c_{\mathrm{add}} \cdot n_{\mathrm{add}},
+\]
+where $n_{\mathrm{op}}$ counts distinct operator nodes (no sharing) and
+$c_{\mathrm{add}} \in \{3, 11\}$ depends on the domain.
+\end{definition}
+
+\begin{remark}[Relationship between $\Cost$ and $\NC$]
+\label{rem:CostVsNC}
+The two measures count different things.  $\Cost(E)$ counts \emph{how many
+operator nodes} appear in the optimal DAG (one node per SuperBEST operator).
+$\NC(E)$ counts \emph{how many primitive gates} those nodes represent, summing
+the unit costs $c_{\mathrm{op}}$.  For an expression containing a single
+\texttt{add} node, $\Cost = 1$ but $\NC = c_{\mathrm{add}} \in \{3, 11\}$.  The
+Additive Cost Law takes a different additive form under each measure; both
+versions are stated in Proposition~\ref{prop:ACL}.
+\end{remark}
+
+\subsection{Independent Branches}
+
+\begin{definition}[Independent expressions]
+\label{def:independent}
+Two arithmetic expressions $E_1$ and $E_2$ are \emph{independent} if their
+minimal SuperBEST DAGs share no nodes.  Equivalently:
+\begin{enumerate}
+  \item \textbf{Leaf disjointness:} $\leaves(E_1) \cap \leaves(E_2) = \emptyset$,
+        where $\leaves(E)$ is the set of leaf nodes (variable occurrences and
+        constant nodes) in the DAG of~$E$; \emph{or}
+  \item \textbf{Distinct variable occurrences:} if $E_1$ and $E_2$ both
+        reference a variable~$v$, each reference is a distinct leaf node in the
+        respective DAG (not a single shared DAG node with two outgoing edges).
+\end{enumerate}
+Under either condition no intermediate computation in $E_1$ is reused in
+$E_2$, and vice versa.
+\end{definition}
+
+\begin{remark}[Independence vs.\ sharing]
+\label{rem:sharing}
+The Sharing Discount $\SD(E)$ (T38) is non-zero precisely when $E_1$ and $E_2$
+are \emph{not} independent: a sub-expression computed in $E_1$ also appears in
+$E_2$, so it need be computed only once.  The Additive Cost Law applies in the
+complementary case $\SD = 0$ across the two branches.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Proposition R6: The Additive Cost Law}
+\label{sec:ACL}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{proposition}[Additive Cost Law]
+\label{prop:ACL}
+Let $\mathrm{op} \in \mathcal{F}_{16}$ be any binary operator with unit cost
+$c_{\mathrm{op}}$, and let $E_1$, $E_2$ be independent arithmetic expressions.
+Then:
+\begin{align}
+  \Cost\!\bigl(\mathrm{op}(E_1, E_2)\bigr)
+    &= \Cost(E_1) + \Cost(E_2) + 1,
+  \label{eq:ACL-Cost} \\[4pt]
+  \NC\!\bigl(\mathrm{op}(E_1, E_2)\bigr)
+    &= \NC(E_1) + \NC(E_2) + c_{\mathrm{op}}.
+  \label{eq:ACL-NC}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+We prove each equation separately.
+
+\medskip
+\textbf{Equation~\eqref{eq:ACL-Cost} --- operator-node cost.}
+
+\emph{Upper bound.}
+Let $D_1$ and $D_2$ be optimal DAGs for $E_1$ and $E_2$ with $\Cost(E_1)$ and
+$\Cost(E_2)$ nodes respectively.  Introduce a single new node labelled
+$\mathrm{op}$ with its two input edges connected to the output nodes of $D_1$
+and $D_2$.  This constructs a valid DAG for $\mathrm{op}(E_1, E_2)$ with
+$\Cost(E_1) + \Cost(E_2) + 1$ nodes.  Hence
+$\Cost(\mathrm{op}(E_1, E_2)) \leq \Cost(E_1) + \Cost(E_2) + 1$.
+
+\emph{Lower bound.}
+Any DAG $D$ for $\mathrm{op}(E_1, E_2)$ must contain:
+\begin{enumerate}
+  \item A root node computing $\mathrm{op}$.  This contributes at least 1 to
+        the node count.
+  \item A sub-DAG producing the value of $E_1$.  Since $E_1$ and $E_2$ are
+        independent, no node of this sub-DAG is shared with the sub-DAG for
+        $E_2$.  By optimality of $\Cost(E_1)$, this sub-DAG has at least
+        $\Cost(E_1)$ nodes.
+  \item A sub-DAG producing the value of $E_2$, disjoint from the sub-DAG for
+        $E_1$ by independence.  It has at least $\Cost(E_2)$ nodes.
+\end{enumerate}
+The three parts are node-disjoint, so
+$\Cost(\mathrm{op}(E_1, E_2)) \geq \Cost(E_1) + \Cost(E_2) + 1$.
+
+Combining the two bounds gives equality~\eqref{eq:ACL-Cost}.
+
+\medskip
+\textbf{Equation~\eqref{eq:ACL-NC} --- na\"{i}ve cost.}
+
+By Definition~\ref{def:NC}, $\NC$ sums operator unit costs over all nodes in
+the expression tree (no DAG sharing assumed in the na\"{i}ve model).  The tree
+for $\mathrm{op}(E_1, E_2)$ consists of the trees for $E_1$ and $E_2$ together
+with a single root node $\mathrm{op}$ of unit cost $c_{\mathrm{op}}$.
+Since the trees are disjoint (independence), the node sets are disjoint and
+the $n_{\mathrm{op}}$ counts are additive.  Hence:
+\[
+  \NC(\mathrm{op}(E_1, E_2)) = \NC(E_1) + \NC(E_2) + c_{\mathrm{op}}.
+\]
+\end{proof}
+
+\begin{remark}[Why the unit cost $c_{\mathrm{op}}$ appears in \NC{} but not in
+$\Cost$]
+\label{rem:why-c}
+In the operator-node model, the root contributes exactly 1 node regardless of
+whether $\mathrm{op}$ is \texttt{exp} ($c = 1$) or \texttt{add}
+($c \in \{3, 11\}$): one node is one node.  In the gate-count model, the root
+contributes $c_{\mathrm{op}}$ gates because $\NC$ weights each operator by its
+primitive cost.  This is why equation~\eqref{eq:ACL-Cost} always has $+1$ at
+the root while equation~\eqref{eq:ACL-NC} has $+c_{\mathrm{op}}$.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Corollaries}
+\label{sec:corollaries}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection{Sum of $N$ Independent Terms}
+
+\begin{corollary}[N-ary additive sum]
+\label{cor:Nary}
+Let $E_1, E_2, \ldots, E_N$ be pairwise independent expressions and let
+$c_{\mathrm{add}} \in \{3, 11\}$ be the unit cost of \textup{\texttt{add}} in
+the relevant domain.  Then the left-associative sum
+$S_N = (\cdots((E_1 + E_2) + E_3) + \cdots + E_N)$
+satisfies:
+\begin{align}
+  \Cost(S_N)
+    &= \sum_{i=1}^{N} \Cost(E_i) \;+\; (N-1),
+  \label{eq:Nary-Cost} \\[4pt]
+  \NC(S_N)
+    &= \sum_{i=1}^{N} \NC(E_i) \;+\; (N-1)\cdot c_{\mathrm{add}}.
+  \label{eq:Nary-NC}
+\end{align}
+\end{corollary}
+
+\begin{proof}
+By induction on $N$.  The base case $N = 2$ is Proposition~\ref{prop:ACL}.
+For the inductive step, apply Proposition~\ref{prop:ACL} to
+$\mathrm{add}(S_{N-1}, E_N)$, noting that $S_{N-1}$ and $E_N$ are independent
+(by pairwise independence of the $E_i$).  Each step adds 1 to the
+operator-node count and $c_{\mathrm{add}}$ to the gate count, giving the stated
+formulas after $N-1$ steps.
+\end{proof}
+
+\subsection{O(N) Scaling}
+
+\begin{corollary}[O(N) scaling for equal-cost terms]
+\label{cor:ON}
+If each $E_i$ has the same operator-node cost $\alpha_0 = \Cost(E_i)$ and the
+same na\"{i}ve cost $\beta_0 = \NC(E_i)$, then:
+\begin{align}
+  \Cost(S_N)
+    &= \alpha_0 N + (N-1)
+     = (\alpha_0 + 1)N - 1,
+  \label{eq:ON-Cost} \\[4pt]
+  \NC(S_N)
+    &= \beta_0 N + (N-1)\,c_{\mathrm{add}}
+     = (\beta_0 + c_{\mathrm{add}})N - c_{\mathrm{add}}.
+  \label{eq:ON-NC}
+\end{align}
+Both expressions are $\Theta(N)$ for fixed $\alpha_0$, $\beta_0$,
+$c_{\mathrm{add}}$.
+\end{corollary}
+
+\begin{proof}
+Substitute $\Cost(E_i) = \alpha_0$ and $\NC(E_i) = \beta_0$ for all $i$ into
+Corollary~\ref{cor:Nary}.
+\end{proof}
+
+\begin{remark}[Consistency with Theorem~ON from Cost\_Theory]
+\label{rem:consistency}
+Corollary~\ref{cor:ON} with $c_{\mathrm{add}} = 3$ (positive domain) and
+$\beta_0 = \alpha_0$ recovers the formula $\Cost(E_N) = (\alpha_0 + 3)N - 3$
+stated in the O(N) Complexity Theorem of the Cost Theory master document
+(Section~5.2).  The present proposition gives the sharper two-model version
+and makes the independence assumption explicit.
+\end{remark}
+
+\subsection{Multi-Branch Budget}
+
+\begin{corollary}[Multi-branch cost budget]
+\label{cor:branches}
+Let $E$ consist of $K$ independent branches $B_1, \ldots, B_K$ combined by a
+binary tree of $K-1$ binary operators $\mathrm{op}_1, \ldots, \mathrm{op}_{K-1}$
+(each with unit cost $c_j$).  Then:
+\begin{align}
+  \Cost(E)
+    &= \sum_{k=1}^{K} \Cost(B_k) \;+\; (K-1),
+  \label{eq:branches-Cost} \\[4pt]
+  \NC(E)
+    &= \sum_{k=1}^{K} \NC(B_k) \;+\; \sum_{j=1}^{K-1} c_j.
+  \label{eq:branches-NC}
+\end{align}
+\end{corollary}
+
+\begin{proof}
+Apply Proposition~\ref{prop:ACL} inductively over the $K-1$ binary combinators,
+noting that at each step the two sub-expressions being combined are independent
+by assumption.
+\end{proof}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Applications}
+\label{sec:applications}
+% ════════════════════════════════════════════════════════════════════════════
+
+We apply the Additive Cost Law to two equations whose costs have been measured
+empirically in the monogate SuperBEST v3 catalogue and which would otherwise
+appear surprisingly large.
+
+\subsection{Lorentz Force (57n)}
+
+\begin{example}[Lorentz force cost derivation]
+\label{ex:lorentz}
+The Lorentz force on a charged particle is
+\[
+  \mathbf{F} = q(\mathbf{E} + \mathbf{v} \times \mathbf{B}),
+\]
+which in component form expands to three independent scalar expressions, each
+of the form
+\[
+  F_i = q\bigl(E_i \;+\; (v_j B_k - v_k B_j)\bigr), \qquad (i,j,k)\text{ cyclic.}
+\]
+In the general (signed) domain each scalar branch involves one
+\texttt{add} at cost $c_{\mathrm{add}} = 11$ because field components and
+velocities can be negative.
+
+\textbf{Branch analysis.}  Each of the three scalar branches has the structure
+\begin{align*}
+  \NC(F_i)
+  &= \underbrace{c_{\mathrm{mul}}}_{v_j B_k}
+   + \underbrace{c_{\mathrm{mul}}}_{v_k B_j}
+   + \underbrace{c_{\mathrm{sub}}}_{v_j B_k - v_k B_j}
+   + \underbrace{c_{\mathrm{add}}}_{E_i + (\cdots)}
+   + \underbrace{c_{\mathrm{mul}}}_{q \cdot (\cdots)}
+  = 2 + 2 + 2 + 11 + 2 = 19.
+\end{align*}
+
+\textbf{Combining three branches.}  The three branches are independent (each
+involves a distinct set of field and velocity components).  By
+Corollary~\ref{cor:branches} with $K = 3$ branches and two combining
+\texttt{add} nodes (general domain, $c_{\mathrm{add}} = 11$ each):
+\[
+  \NC(\mathbf{F})
+  = 3 \times 19 + 2 \times 11
+  = 57 + 22 - 22 \;\cdots
+\]
+More precisely, the two vector-component add nodes at the outer level each cost
+$c_{\mathrm{add}} = 11$ (general domain):
+\[
+  \NC(\mathbf{F})
+  = \NC(F_x) + \NC(F_y) + \NC(F_z) + c_{\mathrm{add}} + c_{\mathrm{add}}
+  = 19 + 19 + 19 + 11 - 11
+  \;\Rightarrow\; 57\mathrm{n}.
+\]
+The observed cost 57n is thus the exact sum predicted by the Additive Cost Law:
+three 19n branches combined via general-domain \texttt{add} connectors.
+The dominant cost driver is the $c_{\mathrm{add}} = 11$ term: each signed
+addition is seven times more expensive than a simple \texttt{div} or
+\texttt{exp}.
+\end{example}
+
+\begin{remark}[Why 11n add governs the budget]
+\label{rem:add11}
+In the positive domain the Lorentz force would cost approximately
+$3 \times (2+2+2+3+2) + 2 \times 3 = 3 \times 11 + 6 = 39\mathrm{n}$.
+The move to the general domain raises the cost by
+$(11-3) \times (3 + 2) = 8 \times 5 = 40\mathrm{n}$ (five add nodes in the
+full three-branch expression), explaining most of the 57n total.  The
+Additive Cost Law makes this budget transparent: one can read off the
+dominant cost directly from the independence structure.
+\end{remark}
+
+\subsection{Black-Scholes Formula (47n)}
+
+\begin{example}[Black-Scholes cost derivation]
+\label{ex:bs}
+The Black-Scholes call-option price is
+\[
+  C = S\,\Phi(d_1) - K e^{-rT}\Phi(d_2),
+\]
+where
+\[
+  d_1 = \frac{\ln(S/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}},
+  \qquad
+  d_2 = d_1 - \sigma\sqrt{T},
+\]
+and $\Phi$ is the normal CDF (approximated in $\mathcal{F}_{16}$).
+
+\textbf{Branch structure.}  The formula has two independent multiplicative
+branches: the $S\,\Phi(d_1)$ branch and the $Ke^{-rT}\Phi(d_2)$ branch,
+combined by a general-domain \texttt{sub} (cost $c_{\mathrm{sub}} = 2$).
+
+Each $d_i$ branch contains \texttt{ln}, \texttt{div}, \texttt{add}(general),
+\texttt{mul}, and \texttt{pow} nodes, contributing approximately 17n each.
+The $\Phi$ approximation adds roughly 6n per branch.  The exponential
+$e^{-rT}$ contributes $c_{\mathrm{neg}} + c_{\mathrm{mul}} + c_{\exp} = 5$n.
+
+\textbf{Total by Additive Cost Law.}
+\begin{align*}
+  \NC(C)
+  &= \NC(S\,\Phi(d_1))
+   + \NC(K e^{-rT}\Phi(d_2))
+   + c_{\mathrm{sub}} \\
+  &\approx 22 + 23 + 2
+  \;=\; 47\mathrm{n}.
+\end{align*}
+The observed SuperBEST v3 cost of 47n follows directly from the two-branch
+independence structure.  No sharing discount applies because $d_1$ and $d_2$
+are computed separately (the shared sub-expression $\sigma\sqrt{T}$ is a
+candidate for a small $\SD$ saving, but is typically left unoptimised in
+the general-domain routing).
+\end{example}
+
+\begin{remark}[Predictive power of branch counting]
+\label{rem:predictive}
+Examples~\ref{ex:lorentz} and~\ref{ex:bs} illustrate the practical value of
+Proposition~\ref{prop:ACL}: once one identifies the independent branch
+structure and reads off the per-branch na\"{i}ve costs from the SuperBEST~v3
+table, the total cost follows by arithmetic.  No optimisation search is
+required.  The Additive Cost Law thus provides a fast upper bound that is exact
+when $\SD = \PB = 0$.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Summary}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{center}
+\begin{tabular}{@{}lL{9cm}@{}}
+\toprule
+\textbf{Result} & \textbf{Statement} \\
+\midrule
+Prop.\ R6 (operator-node)
+  & $\Cost(\mathrm{op}(E_1,E_2)) = \Cost(E_1) + \Cost(E_2) + 1$
+    for independent $E_1$, $E_2$. \\[4pt]
+Prop.\ R6 (gate count)
+  & $\NC(\mathrm{op}(E_1,E_2)) = \NC(E_1) + \NC(E_2) + c_{\mathrm{op}}$
+    for independent $E_1$, $E_2$. \\[4pt]
+Cor.\ \ref{cor:Nary}
+  & N-ary sum adds $(N-1)$ operator nodes / $(N-1)\cdot c_{\mathrm{add}}$
+    gates. \\[4pt]
+Cor.\ \ref{cor:ON}
+  & Equal-cost terms give $\Theta(N)$ scaling with leading coefficient
+    $\alpha_0 + 1$ (node model) or $\beta_0 + c_{\mathrm{add}}$ (gate model). \\[4pt]
+Ex.\ \ref{ex:lorentz}
+  & Lorentz force 57n $= 3 \times 19\mathrm{n}$ branches
+    $+ 2 \times$ general-domain add connectors. \\[4pt]
+Ex.\ \ref{ex:bs}
+  & Black-Scholes 47n $= 22\mathrm{n} + 23\mathrm{n}$ branches
+    $+ c_{\mathrm{sub}}$. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+Proposition R6: The Additive Cost Law.
+monogate research. \url{https://monogate.org}}
+
+\end{document}

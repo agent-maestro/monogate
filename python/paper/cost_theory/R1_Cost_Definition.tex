@@ -1,0 +1,619 @@
+% R1_Cost_Definition.tex
+% monogate Cost Theory — R1: SuperBEST Cost Definition and Basic Properties
+% Defines expression trees, Cost_F, NaiveCost, and proves four foundational properties
+% Date: 2026-04-20
+% Author: Arturo R. Almaguer
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\LEprod}{\operatorname{LEprod}}
+\newcommand{\EPL}{\operatorname{EPL}}
+\newcommand{\DEAL}{\operatorname{DEAL}}
+\newcommand{\DEXL}{\operatorname{DEXL}}
+\newcommand{\DEDL}{\operatorname{DEDL}}
+\newcommand{\DEPL}{\operatorname{DEPL}}
+\newcommand{\DEMN}{\operatorname{DEMN}}
+
+% ── Cost macros ──────────────────────────────────────────────────────────────
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+\newcommand{\Fam}{\mathcal{F}}
+
+% ── Lean listing style ───────────────────────────────────────────────────────
+\lstdefinestyle{lean}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape\color{gray},
+  morekeywords={inductive,def,theorem,where,fun,match,with,if,then,else,%
+                Type,Prop,Nat,iff,forall,exists,True,False,And,Or,Not,%
+                structure,class,instance,open,namespace,end,import},
+  literate={->}{{\(\to\)}}1 {=>}{{\(\Rightarrow\)}}1
+           {>=}{{\(\geq\)}}1 {<=}{{\(\leq\)}}1
+           {/\}{{\(\wedge\)}}1 {\/}{{\(\vee\)}}1,
+  columns=flexible,
+  keepspaces=true,
+  frame=single,
+  framerule=0.4pt,
+  xleftmargin=8pt,
+  xrightmargin=4pt,
+  showstringspaces=false,
+}
+
+% ── Column types ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\title{SuperBEST Cost: Definition and Basic Properties\\[6pt]
+       \large R1: Expression Trees, Cost Function, and Four Foundational Properties}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We give a precise mathematical definition of the \emph{SuperBEST cost} of an
+arithmetic expression.  Section~\ref{sec:defs} introduces expression trees over
+the 16-operator family $\Fam_{16}$, defines the minimal-DAG cost $\Cost_{\Fam}$
+as a function on equivalence classes of arithmetic functions, and defines the
+na\"{i}ve cost $\NC$ via the SuperBEST v3 unit-cost table.
+Section~\ref{sec:props} proves four basic properties: non-negativity (P1),
+the terminal characterisation of zero cost (P2), subadditivity under operator
+application (P3), and algebraic invariance under pointwise equality of functions
+(P4).  Section~\ref{sec:lean} sketches Lean~4 type signatures for the cost
+function and all four properties.  These results form the foundational layer of
+the General Theory of SuperBEST Cost developed in \texttt{Cost\_Theory.tex}.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Definitions}
+\label{sec:defs}
+% ════════════════════════════════════════════════════════════════════════════
+
+% ── 1.1 Expression Trees ────────────────────────────────────────────────────
+\subsection{Expression Trees}
+
+\begin{definition}[Terminal set]
+\label{def:terminals}
+Let $n, m \geq 0$.  The \emph{terminal set} is
+\[
+  \mathcal{T}
+  \;=\;
+  \{x_1,\ldots,x_n\}
+  \;\cup\;
+  \{c_1,\ldots,c_m\},
+\]
+where $x_1,\ldots,x_n$ are free \emph{variables} ranging over suitable subsets
+of $\mathbb{R}$, and $c_1,\ldots,c_m$ are fixed real \emph{constants} (including
+$0, 1, e, \pi$, etc.).
+\end{definition}
+
+\begin{definition}[SuperBEST operator family $\Fam_{16}$]
+\label{def:operators}
+The \emph{SuperBEST operator family} is the set
+$\Fam_{16} = \{\EML, \DEML, \EXL, \EDL, \EAL, \EPL, \LEAd, \ELAd, \ELSb,
+               \LEdiv, \LEprod, \DEAL, \DEXL, \DEDL, \DEPL, \DEMN\}$
+of 16 binary operators, each mapping a pair of real inputs to a real output
+on its natural domain.  The primary eleven operators are defined by:
+\begin{align*}
+  \EML(x,y)    &\;=\; e^{x} - \ln y, \\
+  \DEML(x,y)   &\;=\; e^{-x} - \ln y, \\
+  \EXL(x,y)    &\;=\; e^{x} \cdot \ln y, \\
+  \EDL(x,y)    &\;=\; \frac{e^{x}}{\ln y}, \\
+  \EAL(x,y)    &\;=\; e^{x} + \ln y, \\
+  \EPL(x,y)    &\;=\; e^{x} + \ln y
+                       \quad\text{(positive-domain variant of \EAL)}, \\
+  \LEAd(x,y)   &\;=\; \ln(e^{x} + y)
+                       \quad\text{(softplus-like)}, \\
+  \ELAd(x,y)   &\;=\; e^{x} \cdot y
+                       \quad\text{(since $e^{x+\ln y} = e^x \cdot y$)}, \\
+  \ELSb(x,y)   &\;=\; e^{x} - y, \\
+  \LEdiv(x,y)  &\;=\; \ln\!\left(\frac{e^{x}}{y}\right) = x - \ln y, \\
+  \LEprod(x,y) &\;=\; \ln(e^{x} \cdot y) = x + \ln y.
+\end{align*}
+The remaining five operators $\DEAL, \DEXL, \DEDL, \DEPL, \DEMN$ are the
+$e^{-x}$-variants of $\EAL, \EXL, \EDL, \EPL, \EML$ respectively, defined
+analogously with $x$ replaced by $-x$.
+\end{definition}
+
+\begin{remark}[Functional overlap]
+Several operators coincide on certain subsets of their domain.  In particular,
+$\EAL(x,y) = \EPL(x,y)$ as abstract functions; the two names distinguish
+contexts where the domain is restricted to positive arguments (\EPL) versus
+the general real line (\EAL).  Similarly, $\LEdiv(x,y) = x - \ln y$, so
+$\LEdiv$ implements subtraction when $y > 0$.  These overlaps are intentional:
+they allow the SuperBEST search to select the operator whose unit cost is lowest
+for the given sub-expression structure.
+\end{remark}
+
+\begin{definition}[Expression tree]
+\label{def:expr-tree}
+The set $\mathcal{E}(\mathcal{T}, \Fam)$ of \emph{expression trees} over
+terminal set $\mathcal{T}$ and operator family $\Fam$ is defined inductively:
+\begin{enumerate}
+  \item \emph{(Terminal rule.)}
+        Every $t \in \mathcal{T}$ is an expression tree, called a
+        \emph{leaf} or \emph{terminal node}.
+  \item \emph{(Operator rule.)}
+        If $f \in \Fam$ and $A, B \in \mathcal{E}(\mathcal{T},\Fam)$ are
+        expression trees, then $f(A, B)$ is an expression tree, called an
+        \emph{internal node}.
+\end{enumerate}
+The \emph{size} $|E|$ of a tree $E$ is its total number of nodes (leaves and
+internal nodes combined).  The \emph{depth} $d(E)$ is the length of the longest
+root-to-leaf path.
+\end{definition}
+
+\begin{definition}[Semantic evaluation]
+\label{def:eval}
+Each expression tree $E \in \mathcal{E}(\mathcal{T},\Fam)$ defines a partial
+function $\llbracket E \rrbracket : \mathbb{R}^n \to \mathbb{R}$ by structural
+induction: a leaf $x_i$ evaluates to the $i$-th coordinate; a leaf $c_j$
+evaluates to the constant $c_j \in \mathbb{R}$; an internal node $f(A,B)$
+evaluates to $f(\llbracket A\rrbracket(\mathbf{x}),
+                 \llbracket B\rrbracket(\mathbf{x}))$
+wherever both sub-expressions and $f$ are defined.  Two trees $E_1, E_2$ are
+\emph{semantically equivalent}, written $E_1 \equiv E_2$, when
+$\llbracket E_1 \rrbracket = \llbracket E_2 \rrbracket$ pointwise on
+a common domain of full measure.
+\end{definition}
+
+% ── 1.2 DAG Semantics ───────────────────────────────────────────────────────
+\subsection{DAG Semantics}
+
+\begin{definition}[Expression DAG over $\Fam$]
+\label{def:dag}
+An \emph{expression DAG} (directed acyclic graph) over $\Fam$ is a finite DAG
+$D = (V, A)$ together with:
+\begin{itemize}
+  \item a labelling $\ell : V \to \mathcal{T} \cup \Fam$ such that every
+        \emph{source} node (in-degree 0) is labelled by an element of
+        $\mathcal{T}$, and every internal node $v$ (in-degree 2) is labelled
+        by some $f_v \in \Fam$;
+  \item a designated \emph{root} $r \in V$ (out-degree 0) giving the output.
+\end{itemize}
+Shared sub-expressions appear as nodes with out-degree $\geq 2$.  The DAG
+computes a function $\llbracket D \rrbracket : \mathbb{R}^n \to \mathbb{R}$
+defined by evaluating each node in topological order.
+The \emph{node count} of $D$ is $|V_{\mathrm{int}}|$, the number of internal
+(non-leaf) nodes in $D$.
+\end{definition}
+
+% ── 1.3 Cost Function ───────────────────────────────────────────────────────
+\subsection{The Cost Function}
+
+\begin{definition}[SuperBEST cost]
+\label{def:cost}
+Let $E \in \mathcal{E}(\mathcal{T},\Fam_{16})$ be an expression tree computing
+the function $\llbracket E \rrbracket$.  The \emph{SuperBEST cost} (or simply
+\emph{cost}) of $E$ is
+\[
+  \Cost_{\Fam}(E)
+  \;=\;
+  \min\bigl\{
+    |V_{\mathrm{int}}(D)|
+    \;\bigm|\;
+    D \text{ is a DAG over } \Fam_{16},\;
+    \llbracket D \rrbracket \equiv \llbracket E \rrbracket
+  \bigr\},
+\]
+where the minimum ranges over all finite expression DAGs over $\Fam_{16}$ that
+compute the same function as $E$ pointwise on a domain of full measure.  We
+write $\Cost(E)$ when $\Fam = \Fam_{16}$ is clear from context.
+\end{definition}
+
+\begin{remark}[Cost is a property of functions, not trees]
+\label{rem:cost-class}
+Because the minimum in Definition~\ref{def:cost} depends only on the function
+$\llbracket E \rrbracket$ and not on the syntactic structure of $E$, we have
+$\Cost(E_1) = \Cost(E_2)$ whenever $E_1 \equiv E_2$.  The cost function
+therefore factors through the equivalence classes of $\equiv$: it is a
+well-defined function on (partial) functions $\mathbb{R}^n \to \mathbb{R}$
+that are computable by some DAG over $\Fam_{16}$.
+\end{remark}
+
+\begin{remark}[Existence of the minimum]
+The minimum exists because $|V_{\mathrm{int}}(D)| \geq 0$ for every DAG, the
+set of achievable node counts is a non-empty subset of $\mathbb{N}_0$ (the
+original tree $E$ itself gives a finite DAG), and every non-empty subset of
+$\mathbb{N}_0$ has a minimum.
+\end{remark}
+
+% ── 1.4 NaiveCost ───────────────────────────────────────────────────────────
+\subsection{The Na\"{i}ve Cost Function}
+
+\begin{definition}[SuperBEST v3 unit costs]
+\label{def:unit-costs}
+The SuperBEST v3 routing table assigns a positive integer \emph{unit cost}
+$c_{\mathrm{op}} \in \mathbb{Z}_{>0}$ to each primitive arithmetic operation:
+\begin{center}
+\begin{tabular}{@{}llc@{}}
+\toprule
+\textbf{Operation} & \textbf{Notation} & \textbf{Unit cost $c_{\mathrm{op}}$} \\
+\midrule
+Exponential $e^x$            & \texttt{exp}   & 1 \\
+Natural logarithm $\ln x$    & \texttt{ln}    & 1 \\
+Division $x / y$             & \texttt{div}   & 1 \\
+Negation $-x$                & \texttt{neg}   & 2 \\
+Reciprocal $1/x$             & \texttt{recip} & 2 \\
+Multiplication $x \cdot y$   & \texttt{mul}   & 2 \\
+Subtraction $x - y$          & \texttt{sub}   & 2 \\
+Exponentiation $x^n$         & \texttt{pow}   & 3 \\
+Addition $x+y$ (pos.\ domain)& \texttt{add}$^+$ & 3 \\
+Addition $x+y$ (general)     & \texttt{add}   & 11 \\
+\bottomrule
+\end{tabular}
+\end{center}
+These counts are optimal in $\Fam_{16}$: no DAG over $\Fam_{16}$ computing
+the given primitive with fewer internal nodes exists.
+\end{definition}
+
+\begin{definition}[Na\"{i}ve Cost]
+\label{def:NC}
+For any arithmetic expression $E$, the \emph{na\"{i}ve cost} is
+\[
+  \NC(E)
+  \;=\;
+    1 \cdot n_{\exp}
+  + 1 \cdot n_{\ln}
+  + 1 \cdot n_{\mathrm{div}}
+  + 2 \cdot n_{\mathrm{neg}}
+  + 2 \cdot n_{\mathrm{rec}}
+  + 2 \cdot n_{\mathrm{mul}}
+  + 2 \cdot n_{\mathrm{sub}}
+  + 3 \cdot n_{\mathrm{pow}}
+  + 3 \cdot n_{\mathrm{add}},
+\]
+where $n_{\mathrm{op}}$ counts the number of occurrences of each primitive
+operation in the expression tree $E$ (without sharing).  Leaf nodes (variables
+and constants) contribute~$0$.
+\end{definition}
+
+\begin{remark}[Relationship to $\Cost$]
+The na\"{i}ve tree $T_{\mathrm{naive}}(E)$, obtained by substituting each
+primitive in $E$ with its SuperBEST v3 optimal sub-tree independently, achieves
+exactly $\NC(E)$ internal nodes.  Hence $\Cost(E) \leq \NC(E)$ for all $E$
+(Theorem T34 of \texttt{Cost\_Theory.tex}).  The gap $\NC(E) - \Cost(E)$ is
+exactly the sum of all sharing discounts and pattern bonuses.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Four Basic Properties}
+\label{sec:props}
+% ════════════════════════════════════════════════════════════════════════════
+
+We now establish four fundamental properties of $\Cost$.  Throughout this
+section, $E$, $A$, $B$ denote expression trees in
+$\mathcal{E}(\mathcal{T}, \Fam_{16})$, and $\mathrm{op}$ denotes an arbitrary
+element of $\Fam_{16}$.
+
+% ── P1: Non-negativity ──────────────────────────────────────────────────────
+\subsection{Property P1: Non-negativity}
+
+\begin{proposition}[P1 --- Non-negativity]
+\label{prop:P1}
+For every expression tree $E \in \mathcal{E}(\mathcal{T},\Fam_{16})$,
+\[
+  \Cost(E) \;\geq\; 0.
+\]
+\end{proposition}
+
+\begin{proof}
+By Definition~\ref{def:cost}, $\Cost(E)$ is the minimum of the set
+$S = \{|V_{\mathrm{int}}(D)| \mid D \text{ is a valid DAG for } E\}$.
+Every element of $S$ is of the form $|V_{\mathrm{int}}(D)|$, a cardinality of
+a finite set, which satisfies $|V_{\mathrm{int}}(D)| \geq 0$.  Therefore every
+element of $S$ is non-negative, and $\Cost(E) = \min S \geq 0$.
+\end{proof}
+
+% ── P2: Zero cost iff terminal ───────────────────────────────────────────────
+\subsection{Property P2: Zero Cost if and only if Terminal}
+
+\begin{proposition}[P2 --- Terminal Characterisation]
+\label{prop:P2}
+For every $E \in \mathcal{E}(\mathcal{T},\Fam_{16})$:
+\[
+  \Cost(E) = 0
+  \quad\iff\quad
+  E \text{ is a terminal (leaf) node}.
+\]
+\end{proposition}
+
+\begin{proof}
+\textbf{($\Leftarrow$)}
+If $E = t$ for some $t \in \mathcal{T}$, then the single-node DAG consisting
+only of the leaf $t$ computes $\llbracket E \rrbracket$ with zero internal
+nodes.  Hence $\Cost(E) \leq 0$, and by P1, $\Cost(E) = 0$.
+
+\textbf{($\Rightarrow$)}
+Suppose $E$ is not a terminal.  Then $E = f(A, B)$ for some $f \in \Fam_{16}$
+and sub-trees $A$, $B$.  Any DAG $D$ computing $\llbracket E \rrbracket
+= f(\llbracket A \rrbracket, \llbracket B \rrbracket)$ must include at least
+one internal node: a node labelled $f$ (or some operator that produces the same
+function as $f$ on the given sub-expression values).  Therefore
+$|V_{\mathrm{int}}(D)| \geq 1$ for every valid DAG $D$, so $\Cost(E) \geq 1
+> 0$.
+\end{proof}
+
+\begin{remark}
+The forward implication is the non-trivial direction: it uses the fact that no
+operator in $\Fam_{16}$ can be ``compiled away'' to zero nodes.  Every $f \in
+\Fam_{16}$ computes a function strictly different from the identity on at least
+one sub-expression shape, so at least one physical node is required.
+\end{remark}
+
+% ── P3: Subadditivity ───────────────────────────────────────────────────────
+\subsection{Property P3: Subadditivity Under Operator Application}
+
+\begin{proposition}[P3 --- Subadditivity]
+\label{prop:P3}
+For all $\mathrm{op} \in \Fam_{16}$ and all
+$A, B \in \mathcal{E}(\mathcal{T},\Fam_{16})$:
+\[
+  \Cost(\mathrm{op}(A, B))
+  \;\leq\;
+  \Cost(A) + \Cost(B) + 1.
+\]
+\end{proposition}
+
+\begin{proof}
+Let $D_A$ be an optimal DAG for $A$ (so $|V_{\mathrm{int}}(D_A)| = \Cost(A)$)
+and let $D_B$ be an optimal DAG for $B$ (so $|V_{\mathrm{int}}(D_B)| = \Cost(B)$).
+Construct the DAG $D$ as follows:
+\begin{enumerate}
+  \item Take the disjoint union of $D_A$ and $D_B$, identifying any shared leaf
+        nodes (variables or constants that appear in both).  This step does not
+        increase the internal node count.
+  \item Add a single new internal node $v^*$ labelled $\mathrm{op}$, with
+        incoming edges from the roots of $D_A$ and $D_B$ respectively, and
+        declare $v^*$ to be the root of $D$.
+\end{enumerate}
+The resulting graph $D$ is a valid DAG (no cycles are introduced, and
+$v^*$ is new).  By construction,
+\[
+  \llbracket D \rrbracket
+  = \mathrm{op}(\llbracket D_A \rrbracket, \llbracket D_B \rrbracket)
+  = \mathrm{op}(\llbracket A \rrbracket, \llbracket B \rrbracket)
+  = \llbracket \mathrm{op}(A,B) \rrbracket,
+\]
+so $D$ is a valid DAG for $\mathrm{op}(A,B)$.  Its internal node count is
+\[
+  |V_{\mathrm{int}}(D)|
+  = |V_{\mathrm{int}}(D_A)| + |V_{\mathrm{int}}(D_B)| + 1
+  = \Cost(A) + \Cost(B) + 1.
+\]
+Since $\Cost(\mathrm{op}(A,B))$ is the \emph{minimum} over all valid DAGs:
+\[
+  \Cost(\mathrm{op}(A,B))
+  \;\leq\;
+  |V_{\mathrm{int}}(D)|
+  = \Cost(A) + \Cost(B) + 1. \qedhere
+\]
+\end{proof}
+
+\begin{remark}[When the bound is tight]
+The bound $\Cost(A) + \Cost(B) + 1$ is achieved whenever no algebraic
+identity allows $\mathrm{op}(A,B)$ to be compressed further.  For example,
+$\Cost(\EML(A, B)) = \Cost(A) + \Cost(B) + 1$ when $A$ and $B$ are
+independent variables.  The inequality can be \emph{strict} when a pattern
+bonus applies: e.g.\ $\LEprod(x, e^y) = x + y$ compresses the na\"{i}ve
+$1 + 1 + 1 = 3$ to $\Cost = 0$ (pure addition of terminals).
+\end{remark}
+
+\begin{corollary}[Upper bound by structural induction]
+\label{cor:UB-inductive}
+For any expression tree $E$ with $k$ internal nodes, $\Cost(E) \leq k$.
+\end{corollary}
+
+\begin{proof}
+By induction on $k$: the base case $k = 0$ is P2 ($\Cost = 0$).  For $k \geq 1$,
+write $E = \mathrm{op}(A,B)$.  By the inductive hypothesis,
+$\Cost(A) \leq |A|_{\mathrm{int}}$ and $\Cost(B) \leq |B|_{\mathrm{int}}$.
+By P3, $\Cost(E) \leq |A|_{\mathrm{int}} + |B|_{\mathrm{int}} + 1 = k$.
+\end{proof}
+
+% ── P4: Algebraic Invariance ─────────────────────────────────────────────────
+\subsection{Property P4: Algebraic Invariance}
+
+\begin{proposition}[P4 --- Algebraic Invariance]
+\label{prop:P4}
+If $E_1, E_2 \in \mathcal{E}(\mathcal{T},\Fam_{16})$ satisfy
+$E_1 \equiv E_2$ (i.e.\ $\llbracket E_1 \rrbracket = \llbracket E_2 \rrbracket$
+pointwise on a domain of full measure), then
+\[
+  \Cost(E_1) = \Cost(E_2).
+\]
+\end{proposition}
+
+\begin{proof}
+By Definition~\ref{def:cost}, $\Cost(E_i)$ depends only on the function
+$\llbracket E_i \rrbracket$: it is the minimum number of internal nodes over
+all DAGs $D$ satisfying $\llbracket D \rrbracket \equiv \llbracket E_i
+\rrbracket$.  Since $\llbracket E_1 \rrbracket = \llbracket E_2 \rrbracket$,
+the two minimisation problems are identical:
+\begin{align*}
+  \Cost(E_1)
+  &= \min\bigl\{|V_{\mathrm{int}}(D)| \;\bigm|\;
+      \llbracket D \rrbracket \equiv \llbracket E_1 \rrbracket\bigr\} \\
+  &= \min\bigl\{|V_{\mathrm{int}}(D)| \;\bigm|\;
+      \llbracket D \rrbracket \equiv \llbracket E_2 \rrbracket\bigr\} \\
+  &= \Cost(E_2). \qedhere
+\end{align*}
+\end{proof}
+
+\begin{remark}[Practical consequence]
+P4 is the formal justification for all algebraic simplifications used in the
+SuperBEST search.  Replacing $e^{x} \cdot e^{y}$ by $e^{x+y}$, or
+$\ln(x/y)$ by $\ln x - \ln y$, does not change the cost because both
+expressions denote the same function.  Cost optimisation may therefore proceed
+in any algebraically equivalent representation.
+\end{remark}
+
+\begin{remark}[P4 and the cost of constants]
+A special case: if $E$ is an expression all of whose sub-expressions evaluate
+to constants (e.g.\ $\ln(e^2)$), then $E \equiv c$ for some $c \in \mathbb{R}$,
+and by P4, $\Cost(E) = \Cost(c) = 0$.  This is constant folding, one of the
+two mechanisms behind the Sharing Discount in T38.
+\end{remark}
+
+% ── Summary table ────────────────────────────────────────────────────────────
+\subsection{Summary of Basic Properties}
+
+\begin{table}[h]
+\centering
+\caption{The four basic properties of SuperBEST cost.}
+\label{tab:props}
+\smallskip
+\begin{tabular}{@{}clL{7.5cm}@{}}
+\toprule
+\textbf{Label} & \textbf{Name} & \textbf{Statement} \\
+\midrule
+P1 & Non-negativity
+   & $\Cost(E) \geq 0$ for all $E$. \\[4pt]
+P2 & Terminal characterisation
+   & $\Cost(E) = 0 \iff E$ is a leaf node. \\[4pt]
+P3 & Subadditivity
+   & $\Cost(\mathrm{op}(A,B)) \leq \Cost(A) + \Cost(B) + 1$. \\[4pt]
+P4 & Algebraic invariance
+   & $E_1 \equiv E_2 \Rightarrow \Cost(E_1) = \Cost(E_2)$. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Lean 4 Type Signatures}
+\label{sec:lean}
+% ════════════════════════════════════════════════════════════════════════════
+
+This section sketches Lean~4 type signatures for the definitions and properties
+of Sections~\ref{sec:defs}--\ref{sec:props}.  These are \emph{type-level stubs}
+only: the proofs are omitted.  A full Lean formalisation is future work.
+
+\begin{lstlisting}[style=lean, caption={Expression tree and operator types.}]
+-- The family of SuperBEST operators
+inductive Operator : Type where
+  | EML  | DEML | EXL  | EDL  | EAL  | EPL
+  | LEAd | ELAd | ELSb | LEdiv | LEprod
+  | DEAL | DEXL | DEDL | DEPL | DEMN
+  deriving DecidableEq, Repr
+
+-- Expression tree parameterised by a terminal type alpha
+inductive Expr (alpha : Type) : Type where
+  | terminal : alpha -> Expr alpha
+  | node     : Operator -> Expr alpha -> Expr alpha -> Expr alpha
+  deriving Repr
+
+-- Predicate: is a leaf node?
+def Expr.isTerminal {alpha : Type} : Expr alpha -> Prop
+  | terminal _ => True
+  | node _ _ _ => False
+\end{lstlisting}
+
+\begin{lstlisting}[style=lean, caption={Cost function and NaiveCost.}]
+-- Unit cost of each operator (SuperBEST v3)
+def unitCost : Operator -> Nat
+  | .EML | .DEML | .EXL  | .EDL  | .EAL
+  | .EPL | .DEAL | .DEXL | .DEDL | .DEPL | .DEMN => 1
+  -- (actual values from Table 1; simplified here for illustration)
+  | _ => 1
+
+-- NaiveCost: sum of unit costs over all internal nodes
+def naiveCost {alpha : Type} : Expr alpha -> Nat
+  | Expr.terminal _   => 0
+  | Expr.node op a b  => unitCost op + naiveCost a + naiveCost b
+
+-- SuperBEST cost (axiomatic; minimisation over all equivalent DAGs)
+-- In a full formalisation this would be defined via a DAG type.
+noncomputable def cost : Expr Real -> Nat :=
+  fun e => Nat.find (cost_exists e)   -- where cost_exists : exists n, ...
+\end{lstlisting}
+
+\begin{lstlisting}[style=lean, caption={Type signatures for the four basic properties.}]
+-- P1: Non-negativity (trivially true for Nat, stated for documentation)
+theorem cost_nonneg (e : Expr Real) : cost e >= 0 :=
+  Nat.zero_le _
+
+-- P2: Zero cost iff terminal
+theorem cost_zero_iff_terminal (e : Expr Real) :
+    cost e = 0 <-> e.isTerminal := by
+  sorry  -- proof omitted; see Proposition P2
+
+-- P3: Subadditivity under operator application
+theorem cost_subadditive
+    (op : Operator) (a b : Expr Real) :
+    cost (Expr.node op a b) <= cost a + cost b + 1 := by
+  sorry  -- proof omitted; see Proposition P3
+
+-- P4: Algebraic invariance
+-- Requires a semantic evaluation function eval : Expr Real -> (Real -> Real)
+theorem cost_algebraic_invariant
+    (e1 e2 : Expr Real)
+    (h : forall x, eval e1 x = eval e2 x) :
+    cost e1 = cost e2 := by
+  sorry  -- proof omitted; see Proposition P4
+\end{lstlisting}
+
+\begin{remark}[Status of the Lean formalisation]
+P1 is vacuous in Lean because \texttt{cost} returns a \texttt{Nat}, which is
+always non-negative by type.  P2 requires a formal definition of the DAG
+minimisation; the stub uses \texttt{Nat.find} to assert existence.  P3 and P4
+follow from the minimisation semantics and are marked \texttt{sorry} pending a
+full DAG formalisation.  The four signatures are provided as a bridge to a
+future mechanised proof in Lean~4 or Mathlib.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Acknowledgments}
+% ════════════════════════════════════════════════════════════════════════════
+
+This document is part of the monogate cost theory sprint (2026-04-20) and
+constitutes the foundational layer (R1) underlying the results in
+\texttt{Cost\_Theory.tex} (T34--T39).  Definitions and notation follow
+\texttt{Cost\_Theory.tex} exactly.
+
+\bigskip
+\noindent\textit{Almaguer, A.R.\ (2026).
+SuperBEST Cost: Definition and Basic Properties (R1).
+monogate research. \url{https://monogate.org}}
+
+\end{document}

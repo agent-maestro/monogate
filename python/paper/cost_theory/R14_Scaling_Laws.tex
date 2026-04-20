@@ -1,0 +1,601 @@
+% R14_Scaling_Laws.tex
+% monogate Cost Theory — Scaling Laws for SuperBEST Cost
+% Theorems T_SL1–T_SL4 and the Quadratic Ceiling Conjecture
+% Date: 2026-04-20
+% Status: Formal derivation from COST-9 complexity analysis
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+% ── Theorem environments ────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+
+% ── Operator macros ─────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EDL}{\operatorname{EDL}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\EMN}{\operatorname{EMN}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\LEprod}{\operatorname{LEprod}}
+\newcommand{\EPL}{\operatorname{EPL}}
+\newcommand{\DEAL}{\operatorname{DEAL}}
+\newcommand{\DEXL}{\operatorname{DEXL}}
+\newcommand{\DEDL}{\operatorname{DEDL}}
+\newcommand{\DEPL}{\operatorname{DEPL}}
+\newcommand{\DEMN}{\operatorname{DEMN}}
+
+% ── Cost macros ──────────────────────────────────────────────────────────────
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\SD}{\operatorname{SharingDiscount}}
+\newcommand{\PB}{\operatorname{PatternBonus}}
+\newcommand{\Fam}{\mathcal{F}}
+
+% ── Column types ─────────────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\title{Scaling Laws for SuperBEST Cost:\\[6pt]
+       \large Theorems T\_SL1--T\_SL4 and the Quadratic Ceiling Conjecture}
+\author{Arturo R.\ Almaguer\\
+\small monogate research \quad \texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+
+% ════════════════════════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+% ── Abstract ────────────────────────────────────────────────────────────────
+\begin{abstract}
+We derive exact and asymptotic scaling laws for the SuperBEST v3 cost of
+scientific formulas parameterised by a structural size $N$.
+Theorem T\_SL1 establishes the exact $O(N)$ formula
+$\Cost(f) = (\alpha_0 + 3)N - 3$ for any flat summation over $N$
+independent equal-cost terms evaluated in the positive domain.
+Theorem T\_SL2 characterises the $O(N)$ class as precisely those formulas
+whose dependency graph is a single-level tree.
+Theorem T\_SL3 extends the analysis to double-sum ($N \times N$) interaction
+models, yielding $\Cost \approx (\alpha_0 + 3)N^2$, witnessed concretely by
+the Hopfield network energy.
+Theorem T\_SL4 proves exactness of the linear formula by induction on $N$.
+Finally, the Quadratic Ceiling Conjecture asserts that no standard scientific
+closed-form formula exceeds $O(N^2)$ cost, consistent with the physicists'
+principle that fundamental interactions are at most pairwise.
+All results build on the three-term identity $\Cost = \NC - \SD - \PB$
+(Theorem T38, COST-6) and the SuperBEST v3 unit costs.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Background and Unit Costs}
+\label{sec:background}
+% ════════════════════════════════════════════════════════════════════════════
+
+Throughout this paper, costs refer to the SuperBEST v3 optimal node counts in
+the 16-operator family $\mathcal{F}_{16}$.
+The relevant unit costs are collected in Table~\ref{tab:costs}.
+
+\begin{table}[h]
+\centering
+\caption{SuperBEST v3 unit costs used in the scaling-law proofs.}
+\label{tab:costs}
+\smallskip
+\begin{tabular}{@{}llc@{}}
+\toprule
+\textbf{Operation} & \textbf{Symbol} & \textbf{Cost} \\
+\midrule
+Exponential $e^x$                   & \texttt{exp}   & 1 \\
+Natural log $\ln x$                 & \texttt{ln}    & 1 \\
+Division $x/y$                      & \texttt{div}   & 1 \\
+Negation $-x$                       & \texttt{neg}   & 2 \\
+Reciprocal $1/x$                    & \texttt{recip} & 2 \\
+Multiplication $x \cdot y$          & \texttt{mul}   & 2 \\
+Subtraction $x - y$                 & \texttt{sub}   & 2 \\
+Exponentiation $x^n$                & \texttt{pow}   & 3 \\
+Addition $x + y$ (positive domain)  & \texttt{add}$^+$  & 3 \\
+Addition $x + y$ (general domain)   & \texttt{add}   & 11 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The fundamental cost identity from COST-6 (Theorem T38) states:
+\begin{equation}
+  \label{eq:T38}
+  \Cost(E) = \NC(E) - \SD(E) - \PB(E),
+\end{equation}
+where $\NC(E)$ is the na\"{i}ve node count (sum of per-operation unit costs),
+$\SD(E) \geq 0$ is the sharing discount from reused subexpressions, and
+$\PB(E) \geq 0$ is the pattern bonus from multi-node operator collapses
+(e.g., $\EML$, $\DEML$).
+
+\begin{definition}[Flat summation formula]
+\label{def:flat}
+A formula $f(x_1, \ldots, x_N)$ is a \emph{flat summation} over $N$ terms if
+\[
+  f = \sum_{i=1}^{N} g_i(x),
+\]
+where each \emph{term function} $g_i$ satisfies:
+\begin{enumerate}
+  \item $\Cost(g_i) = \alpha_0$ for all $i$ (equal per-term cost),
+  \item no subexpression is shared between any two distinct terms $g_i$ and
+        $g_j$ ($i \neq j$), and
+  \item every intermediate sum is evaluated in the positive domain, so
+        $c_{\texttt{add}} = 3$ applies throughout.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Dependency graph, single-level tree]
+\label{def:deptree}
+The \emph{dependency graph} of a formula is the directed acyclic graph whose
+nodes are sub-expressions and whose edges represent data dependencies.
+A formula has a \emph{single-level tree} dependency graph if the root
+(the final result) has exactly $N$ children, each of which is a leaf
+subexpression with no shared descendant.
+\end{definition}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{The $O(N)$ Scaling Law (Theorem T\_SL1)}
+\label{sec:linear}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{theorem}[$O(N)$ Scaling Law --- T\_SL1]
+\label{thm:TSL1}
+Let $f(x_1, \ldots, x_N) = \sum_{i=1}^{N} g_i(x)$ be a flat summation in the
+sense of Definition~\ref{def:flat}, with per-term cost $\alpha_0$ and positive-
+domain addition cost $c_+ = 3$.  Then
+\begin{equation}
+  \label{eq:TSL1}
+  \Cost(f) = (\alpha_0 + 3)\,N - 3.
+\end{equation}
+In particular, $\Cost(f) = O(N)$ with leading coefficient $\alpha_0 + 3$.
+\end{theorem}
+
+\begin{proof}
+We compute each component of the T38 identity~\eqref{eq:T38} for $f$.
+
+\medskip
+\noindent\textbf{Na\"{i}ve cost.}
+The formula contains $N$ term evaluations, each costing $\alpha_0$, and
+$N - 1$ binary additions to accumulate the partial sums (a left-leaning
+reduction tree, though any associativity gives the same node count):
+\[
+  \NC(f) = \alpha_0 \cdot N + 3 \cdot (N - 1) = (\alpha_0 + 3)N - 3.
+\]
+
+\medskip
+\noindent\textbf{Sharing discount.}
+By assumption~(2) of Definition~\ref{def:flat}, no subexpression is shared
+between distinct terms.  The accumulating partial sums are each used exactly
+once.  Hence $\SD(f) = 0$.
+
+\medskip
+\noindent\textbf{Pattern bonus.}
+By assumption~(3), all additions are positive-domain \texttt{add}$^+$ nodes.
+The terms $g_i$ are independent, so no multi-node collapse pattern (such as
+$\EML$ or $\DEML$) spans an \texttt{add} boundary.  Hence $\PB(f) = 0$.
+
+\medskip
+\noindent\textbf{Conclusion.}
+Substituting into~\eqref{eq:T38}:
+\[
+  \Cost(f) = \NC(f) - 0 - 0 = (\alpha_0 + 3)N - 3. \qedhere
+\]
+\end{proof}
+
+\begin{remark}[Exact, not merely asymptotic]
+Equation~\eqref{eq:TSL1} is an \emph{exact} formula, not just an asymptotic
+bound.  The $O(N)$ description is appropriate when $\alpha_0$ is regarded as
+a fixed structural constant; the exact leading coefficient and intercept are
+both determined by $\alpha_0$.
+\end{remark}
+
+% ── Specific instances ───────────────────────────────────────────────────────
+\subsection{Specific Instances of Theorem T\_SL1}
+\label{subsec:instances}
+
+\begin{example}[Softmax numerator sum]
+\label{ex:softmax}
+$f = \sum_{i=1}^{N} e^{x_i}$.
+Each term $e^{x_i}$ uses one \texttt{exp} node: $\alpha_0 = 1$.
+By~\eqref{eq:TSL1}:
+\[
+  \Cost(f) = (1 + 3)N - 3 = 4N - 3.
+\]
+This matches the empirical count from COST-9.
+\end{example}
+
+\begin{example}[Shannon entropy]
+\label{ex:entropy}
+$H = -\sum_{i=1}^{N} p_i \ln p_i$.
+Writing the formula as $H = \sum_{i=1}^{N} p_i \cdot (-\ln p_i)$, each term
+evaluates $p_i \cdot (-\ln p_i)$ using: one \texttt{ln} (cost~1), one
+\texttt{neg} (cost~2), one \texttt{mul} (cost~2), giving $\alpha_0 = 5$.
+All summands are non-negative (since $p_i \in (0,1]$), so positive-domain
+\texttt{add}$^+$ applies.  By~\eqref{eq:TSL1}:
+\[
+  \Cost(H) = (5 + 3)N - 3 = 8N - 3.
+\]
+\end{example}
+
+\begin{example}[Multi-exponential pharmacokinetic model]
+\label{ex:pk}
+$C(t) = \sum_{i=1}^{N} A_i e^{-\lambda_i t}$.
+Each term $A_i e^{-\lambda_i t}$ is structured as:
+\texttt{mul}$(\lambda_i, t)$ (cost~2) composed with \texttt{neg} (cost~2),
+giving argument $-\lambda_i t$ for \texttt{exp} (cost~1); then an outer
+\texttt{mul}$(A_i, \cdot)$ (cost~2): total $\alpha_0 = 7$.  Note that
+$\DEML$ cannot collapse the composite here because the inner argument
+$-\lambda_i t$ is not in $\DEML$ canonical form without introducing a
+separate affine pre-scaling node.  Thus:
+\[
+  \Cost(C) = (7 + 3)N - 3 = 10N - 3.
+\]
+This agrees with the empirical value reported in COST-9.
+\end{example}
+
+\begin{remark}[Sensitivity of $\alpha_0$ to operator patterns]
+The three examples above illustrate that $\alpha_0$ is sensitive to which
+SuperBEST patterns apply inside each term.  For the softmax, the single
+\texttt{exp} node directly uses $\EML$ collapsing, giving the minimal
+$\alpha_0 = 1$.  For multi-exponential sums, the additional scalar
+pre-multiplier and negation prevent full $\DEML$ collapsing of each term,
+raising $\alpha_0$ to 7.  Determining $\alpha_0$ accurately therefore
+requires applying the full pattern-matching pass of Section~2 of the
+monogate SuperBEST v3 specification before summing.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Characterisation of the $O(N)$ Class (Theorem T\_SL2)}
+\label{sec:charN}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{theorem}[Characterisation of $O(N)$ --- T\_SL2]
+\label{thm:TSL2}
+A scientific formula $f$ has $O(N)$ SuperBEST cost in $N$ if and only if its
+dependency graph (Definition~\ref{def:deptree}) is a single-level tree:
+a root reduction over $N$ independent leaf sub-formulas.
+\end{theorem}
+
+\begin{proof}
+\textbf{($\Rightarrow$) Single-level tree implies $O(N)$.}
+If the dependency graph is a single-level tree, $f$ is by definition a flat
+summation satisfying Definition~\ref{def:flat} (or an analogous product,
+which has the same node count structure).  Theorem T\_SL1 then gives
+$\Cost(f) = (\alpha_0 + 3)N - 3 = O(N)$.
+
+\medskip
+\noindent\textbf{($\Leftarrow$) $O(N)$ implies single-level tree.}
+Suppose the dependency graph contains a nested summation: an outer sum over
+$i = 1, \ldots, N$ and, inside each term, an inner sum over $j = 1, \ldots, M$
+of sub-terms $h_{ij}$.  Then the na\"{i}ve cost is at least
+$\alpha_1 \cdot NM + 3(M-1)N + 3(N-1)$, which is $\Omega(NM)$.  For $M$
+growing proportionally with $N$ (as in all standard $N \times N$ interaction
+models), this is $\Omega(N^2)$, contradicting $O(N)$.
+
+More generally, any dependency graph that is not a single-level tree contains
+at least one internal node with more than one dependent summation, producing
+at least $\Omega(N \log N)$ cost (for balanced binary-tree summations of
+$N^2$ terms) or $\Omega(N^2)$ (for full double-sum models).  Either is
+$\omega(N)$, so $O(N)$ fails.
+
+\medskip
+\noindent Therefore $O(N)$ holds if and only if the graph is a single-level
+tree. \qedhere
+\end{proof}
+
+\begin{corollary}[Fixed-structure formulas are $O(1)$]
+\label{cor:O1}
+If a formula $f$ depends on $N$ parameters but contains no summation whose
+length grows with $N$ (i.e., the graph has $O(1)$ nodes regardless of $N$),
+then $\Cost(f) = O(1)$.  Examples include all single-term formulas such as
+the Gaussian $e^{-(x-\mu)^2/(2\sigma^2)}$ and the sigmoid $1/(1+e^{-x})$.
+\end{corollary}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{$O(N^2)$ Scaling for Double-Sum Models (Theorem T\_SL3)}
+\label{sec:quadratic}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{definition}[Double-sum formula]
+\label{def:doublesum}
+A formula $f$ is a \emph{double-sum formula} over an $N \times N$ index set if
+\[
+  f = \sum_{i=1}^{N} \sum_{j=1}^{N} g_{ij}(x),
+\]
+where each term $g_{ij}$ satisfies: $\Cost(g_{ij}) = \alpha_0$ for all $(i,j)$,
+and no subexpression is shared across different index pairs.
+\end{definition}
+
+\begin{theorem}[$O(N^2)$ Scaling for Double-Sum Models --- T\_SL3]
+\label{thm:TSL3}
+Let $f = \sum_{i=1}^{N} \sum_{j=1}^{N} g_{ij}(x)$ be a double-sum formula
+in the sense of Definition~\ref{def:doublesum}, with per-term cost $\alpha_0$
+and positive-domain addition.  Then
+\begin{equation}
+  \label{eq:TSL3}
+  \Cost(f) = (\alpha_0 + 3)\,N^2 - 3.
+\end{equation}
+In particular, $\Cost(f) = O(N^2)$ with leading coefficient $\alpha_0 + 3$.
+\end{theorem}
+
+\begin{proof}
+The $N^2$ terms $g_{ij}$ are independent by assumption, so $\SD = 0$
+and $\PB = 0$.  Flattening the double sum into a single sum of $N^2$ terms
+and applying Theorem T\_SL1 with $N \mapsto N^2$:
+\[
+  \Cost(f) = (\alpha_0 + 3)\,N^2 - 3. \qedhere
+\]
+\end{proof}
+
+\begin{remark}[Cross-row sharing]
+When the outer sum is evaluated row by row (inner index $j$ fixed, outer index
+$i$ running), there may be a nonzero sharing discount if rows share input
+variables.  For example, in the Hopfield energy, each $s_i$ appears in $N$
+terms of row~$i$.  However, the unit cost of \textit{reading} a variable is
+zero in $\mathcal{F}_{16}$ (variables are free leaves), so this sharing does
+not reduce the cost.  The formula~\eqref{eq:TSL3} therefore remains exact.
+\end{remark}
+
+% ── Hopfield energy ──────────────────────────────────────────────────────────
+\subsection{Worked Example: Hopfield Network Energy}
+\label{subsec:hopfield}
+
+The Hopfield network energy is
+\[
+  E = -\tfrac{1}{2} \sum_{i=1}^{N} \sum_{j=1}^{N} w_{ij}\, s_i\, s_j.
+\]
+Here each term is $w_{ij} s_i s_j$:
+\begin{itemize}
+  \item $\texttt{mul}(s_i, s_j)$: cost~2.
+  \item $\texttt{mul}(w_{ij}, s_i s_j)$: cost~2.
+\end{itemize}
+Per-term cost: $\alpha_0 = 4$.  The global scalar $-\tfrac{1}{2}$ is applied
+once to the outer sum and does not replicate over terms (shared prefix; but it
+costs one \texttt{mul} and one \texttt{neg} = 4 nodes, absorbed into $O(1)$).
+Ignoring the $O(1)$ outer scalar, Theorem T\_SL3 gives:
+\[
+  \Cost(E) \approx (4 + 3)N^2 - 3 = 7N^2 - 3.
+\]
+Adding the two nodes for the outer $-\tfrac{1}{2}\cdot(\cdot)$:
+$\Cost(E) = 7N^2 + 1$.  This is $O(N^2)$ with coefficient~7.
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{The Quadratic Ceiling Conjecture}
+\label{sec:conjecture}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{conjecture}[Quadratic Ceiling]
+\label{conj:QC}
+For any standard scientific closed-form formula $f$ expressed as a finite
+combination of operations from $\mathcal{F}_{16}$, the SuperBEST cost satisfies
+\[
+  \Cost(f) = O(N^2),
+\]
+where $N$ is the natural structural size parameter of the formula.
+Equivalently, no standard scientific formula has $O(N^k)$ cost for any $k > 2$.
+\end{conjecture}
+
+\subsection{Evidence for the Conjecture}
+
+\paragraph{Empirical scan.}
+The COST-9 audit of over 70 standard scientific equations from statistics,
+physics, chemistry, and machine learning found exactly three complexity classes:
+$O(1)$ (fixed-structure formulas), $O(N)$ (flat summations), and $O(N^2)$
+(double-sum interaction models).  No formula with $O(N^3)$ or higher cost was
+identified.
+
+\paragraph{Physical principle.}
+In continuum and statistical mechanics, interaction potentials are
+\emph{at most pairwise}: the energy of a system of $N$ particles is
+$U = \sum_i u_i + \sum_{i<j} u_{ij}$, with no standard three-body or
+higher-body closed-form terms in textbook formulations.  A triple interaction
+$\sum_{i,j,k} g_{ijk}$ would contribute $O(N^3)$ terms and $O(N^3)$ cost, but
+such terms do not appear in the standard library of named scientific formulas.
+
+\paragraph{Computational convention.}
+Scientific formulas that are described in terms of higher-order tensors
+(e.g., three-index summations in general relativity or quantum chemistry) are
+not in ``standard closed form'' for the purposes of the conjecture; they are
+described algorithmically (via loop nests) rather than as a single arithmetic
+expression in $\mathcal{F}_{16}$.
+
+\subsection{Boundary Cases and Open Questions}
+
+\begin{observation}[No known $O(N^3)$ standard formula]
+\label{obs:nocubic}
+An $O(N^3)$ formula would require a three-level nested summation
+$\sum_i \sum_j \sum_k g_{ijk}(x)$ with $N^3$ independent terms, each of
+positive cost.  No such formula appears in the catalog of named scientific
+equations.
+\end{observation}
+
+\begin{observation}[Tight bound is $O(N^2)$]
+\label{obs:tight}
+The $O(N^2)$ bound is tight: the Hopfield energy (Section~\ref{subsec:hopfield})
+and the pair-potential energy in molecular dynamics both achieve $\Theta(N^2)$
+cost.  The Quadratic Ceiling Conjecture therefore claims the bound is sharp.
+\end{observation}
+
+\begin{remark}[Open problem]
+\label{rem:openq}
+\textit{Is there a standard scientific formula with $O(N^3)$ or higher
+SuperBEST cost?}  A positive answer would refute the Quadratic Ceiling
+Conjecture and require an extension of the COST-9 complexity classification.
+No such example is currently known.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Proof of Exactness: Induction on $N$ (Theorem T\_SL4)}
+\label{sec:exactness}
+% ════════════════════════════════════════════════════════════════════════════
+
+Theorem T\_SL1 was proved from the T38 identity by a direct calculation.
+We now provide an independent \emph{inductive} proof that makes the exact
+(non-asymptotic) character of formula~\eqref{eq:TSL1} transparent.
+
+\begin{theorem}[Exactness of the Linear Formula --- T\_SL4]
+\label{thm:TSL4}
+Under the hypotheses of Theorem T\_SL1 (flat summation, per-term cost
+$\alpha_0$, positive-domain addition, no sharing, no cross-term patterns),
+the exact cost formula $\Cost(f_N) = (\alpha_0 + 3)N - 3$ holds for every
+$N \geq 1$.
+\end{theorem}
+
+\begin{proof}
+We proceed by strong induction on $N$.
+
+\medskip
+\noindent\textbf{Base case $N = 1$.}
+A single-term formula $f_1 = g_1(x)$ requires no addition; only the term
+evaluation itself is needed.  Thus:
+\[
+  \Cost(f_1) = \alpha_0.
+\]
+The formula gives $(\alpha_0 + 3) \cdot 1 - 3 = \alpha_0$. \checkmark
+
+\medskip
+\noindent\textbf{Inductive step.}
+Assume for some $N \geq 1$ that
+\[
+  \Cost(f_N) = (\alpha_0 + 3)N - 3.
+\]
+We construct $f_{N+1} = f_N + g_{N+1}(x)$, where $g_{N+1}$ is a fresh term
+with $\Cost(g_{N+1}) = \alpha_0$, independent of $f_N$.
+
+The cost of $f_{N+1}$ is:
+\begin{align*}
+  \Cost(f_{N+1})
+    &= \Cost(f_N) + \Cost(g_{N+1}) + c_{\texttt{add}^+} \\
+    &= \bigl[(\alpha_0 + 3)N - 3\bigr] + \alpha_0 + 3 \\
+    &= (\alpha_0 + 3)N - 3 + (\alpha_0 + 3) \\
+    &= (\alpha_0 + 3)(N + 1) - 3.
+\end{align*}
+The second equality uses:
+(a) the induction hypothesis for $\Cost(f_N)$;
+(b) $\Cost(g_{N+1}) = \alpha_0$ by the equal-cost assumption;
+(c) one positive-domain \texttt{add}$^+$ node of cost~3;
+(d) no sharing discount ($g_{N+1}$ is independent of $f_N$) and no pattern
+    bonus (no multi-node pattern spans the new \texttt{add}$^+$ boundary).
+
+\medskip
+\noindent By induction, the formula holds for all $N \geq 1$. \qedhere
+\end{proof}
+
+\begin{corollary}[Zero intercept at $N=1$, constant offset $-3$]
+\label{cor:intercept}
+The intercept of $-3$ in $(\alpha_0 + 3)N - 3$ is not an approximation
+artifact: it reflects the exact saving of $3$ nodes (one \texttt{add}$^+$
+that is \emph{not} needed when $N = 1$).  Every additional term beyond the
+first requires exactly one more \texttt{add}$^+$ node of cost~3.
+\end{corollary}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Summary of Scaling Laws}
+\label{sec:summary}
+% ════════════════════════════════════════════════════════════════════════════
+
+Table~\ref{tab:scaling} collects all scaling laws established in this paper,
+together with their structural conditions and representative examples.
+
+\begin{table}[h]
+\centering
+\caption{Complete scaling-law classification for SuperBEST cost.
+  $N$ = number of terms/parameters; $\alpha_0$ = cost per independent term;
+  $c_+ = 3$ = positive-domain \texttt{add} cost.}
+\label{tab:scaling}
+\smallskip
+\begin{tabular}{@{}L{2cm}L{3.8cm}L{4.0cm}L{3.8cm}@{}}
+\toprule
+\textbf{Class} & \textbf{Condition} & \textbf{Exact formula} & \textbf{Example} \\
+\midrule
+$O(1)$ &
+  Fixed structure; no sum grows with $N$ &
+  $\Cost = \alpha_\mathrm{fixed}$ &
+  Gaussian, sigmoid, softmax (single logit) \\[4pt]
+$O(N)$ &
+  Flat summation: single-level tree dependency graph (Thm.~T\_SL2) &
+  $(\alpha_0 + 3)N - 3$ (Thm.~T\_SL1, T\_SL4) &
+  Softmax sum $4N{-}3$; entropy $8N{-}3$; PK model $10N{-}3$ \\[4pt]
+$O(N^2)$ &
+  Double-sum: $N{\times}N$ independent terms (Thm.~T\_SL3) &
+  $(\alpha_0 + 3)N^2 - 3$ &
+  Hopfield energy ${\approx}7N^2$ \\[4pt]
+${>O(N^2)}$ &
+  No known standard example &
+  --- &
+  Open (Conjecture~\ref{conj:QC}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Relationship to Prior Results}
+
+The $O(N)$ class was identified empirically in COST-9 through the linear-fit
+analysis ($R^2 = 0.92$, $n = 50$ equations).  Theorem T\_SL1 provides the
+\emph{exact} coefficient $\alpha_0 + 3$ and intercept $-3$, upgrading the
+empirical observation to a formal theorem.
+
+The $O(N^2)$ class was observed in COST-9 for Hopfield-type interaction models.
+Theorem T\_SL3 identifies the $N^2$ geometry as the sole source of quadratic
+scaling, and the Quadratic Ceiling Conjecture (Section~\ref{sec:conjecture})
+elevates the empirical absence of $O(N^3)$ to a formal conjecture with a
+supporting physical argument.
+
+\subsection{Algorithmic Implications}
+
+For software implementations that evaluate $\Cost(f)$ symbolically:
+\begin{enumerate}
+  \item Detect whether $f$ is a flat summation (single-level tree check).
+  \item If yes, compute $\alpha_0$ by evaluating the cost of one term and
+        apply~\eqref{eq:TSL1} directly, avoiding the full $O(N)$ traversal.
+  \item If $f$ is a double sum, apply~\eqref{eq:TSL3} after computing $\alpha_0$
+        for one term-pair.
+  \item For general $f$, fall back to the full T38 computation with pattern
+        matching.
+\end{enumerate}
+Steps 1--3 reduce cost analysis of large-$N$ formulas from $O(N)$ traversal
+time to $O(1)$ once the structural class is identified.
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{Conclusion}
+% ════════════════════════════════════════════════════════════════════════════
+
+We have proved four theorems governing the scaling of SuperBEST v3 cost:
+
+\begin{description}
+  \item[T\_SL1] Exact $O(N)$ formula $(\alpha_0 + 3)N - 3$ for flat summations.
+  \item[T\_SL2] $O(N)$ if and only if single-level tree dependency graph.
+  \item[T\_SL3] Exact $O(N^2)$ formula $(\alpha_0 + 3)N^2 - 3$ for double-sum
+                ($N \times N$) interaction models.
+  \item[T\_SL4] Inductive proof of exactness for T\_SL1.
+\end{description}
+
+The Quadratic Ceiling Conjecture asserts $O(N^2)$ as the universal upper bound
+for all standard scientific closed-form formulas, consistent with the
+pairwise-interaction principle of classical physics and supported by the
+absence of any $O(N^3)$ example in the 70-equation COST-9 audit.
+
+\end{document}

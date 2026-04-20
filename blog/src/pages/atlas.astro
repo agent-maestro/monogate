@@ -130,7 +130,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     Mathematical objects classified by EML depth and operator cost.
   </p>
   <p style="color: #4a4d62; font-size: 0.85rem; margin-bottom: 32px;">
-    Last updated: 2026-04-20 · T26–T28 (Exponential Position Theorem) · 16-operator census complete
+    Last updated: 2026-04-20 · T38 (Cost Decomposition) · T41 (Structural Classes) · T42 (QCC) · 157-equation catalog
   </p>
 
   <div class="divider"></div>
@@ -336,6 +336,108 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       ))}
     </tbody>
   </table>
+
+  <div class="divider"></div>
+
+  <!-- ── COST THEORY ───────────────────────────────────────────────────────── -->
+  <h2>Cost Theory</h2>
+  <p style="color: #6b7280; margin-bottom: 6px; font-size: 0.9rem;">
+    Structural decomposition of SuperBEST node counts. T38–T43.
+  </p>
+  <p style="color: #4a4d62; font-size: 0.8rem; margin-bottom: 20px;">
+    Cost(E) = NaiveCost(E) − SharingDiscount(E) − PatternBonus(E)
+  </p>
+
+  <h3 style="font-size: 0.9rem; color: #d4d4d4; margin-bottom: 12px;">Structural Classes (T41)</h3>
+  <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 24px;">
+    <thead>
+      <tr style="border-bottom: 1px solid #252836;">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: #4a4d62; font-weight: 600; width: 10%;">Class</th>
+        <th style="text-align: left; padding: 6px 8px; color: #4a4d62; font-weight: 600; width: 18%;">Signature</th>
+        <th style="text-align: left; padding: 6px 8px; color: #4a4d62; font-weight: 600; width: 24%;">Description</th>
+        <th style="text-align: left; padding: 6px 8px; color: #4a4d62; font-weight: 600; width: 18%;">Mean cost</th>
+        <th style="text-align: left; padding: 6px 0 8px 8px; color: #4a4d62; font-weight: 600;">Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        { cls: 'A', sig: '(1, 0)', desc: 'Pure exponential', mean: '10.4n', ex: 'Boltzmann, Arrhenius' },
+        { cls: 'B', sig: '(0, 0)', desc: 'Rational / polynomial', mean: '12.2n', ex: 'Newton gravity, Coulomb' },
+        { cls: 'C', sig: '(0, 1)', desc: 'Log-ratio (cheapest)', mean: '9.5n', ex: 'Shannon entropy, pH' },
+        { cls: 'D', sig: '(1,1)+', desc: 'Mixed exp+log', mean: '20.1n', ex: 'Black-Scholes (47n)' },
+      ].map(r => (
+        <tr style="border-bottom: 1px solid #0d0f18;">
+          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); font-weight: 700; color: #fbbf24; font-size: 0.82rem;">{r.cls}</td>
+          <td style="padding: 5px 8px; font-family: var(--mono); color: #6b7280; font-size: 0.78rem;">{r.sig}</td>
+          <td style="padding: 5px 8px; color: #d4d4d4; font-size: 0.78rem;">{r.desc}</td>
+          <td style="padding: 5px 8px; font-family: var(--mono); color: #4ade80; font-size: 0.78rem;">{r.mean}</td>
+          <td style="padding: 5px 0 5px 8px; color: #6b7280; font-size: 0.76rem;">{r.ex}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h3 style="font-size: 0.9rem; color: #d4d4d4; margin-bottom: 12px;">Key Cost Facts</h3>
+  <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 24px;">
+    <thead>
+      <tr style="border-bottom: 1px solid #252836;">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: #4a4d62; font-weight: 600; width: 16%;">Theorem</th>
+        <th style="text-align: left; padding: 6px 8px; color: #4a4d62; font-weight: 600; width: 28%;">Statement</th>
+        <th style="text-align: left; padding: 6px 0 8px 8px; color: #4a4d62; font-weight: 600;">Detail</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        { thm: 'T34 (Naive UB)',  stmt: 'Cost(E) ≤ NaiveCost(E)',             detail: 'Always achievable; no sharing or pattern required.' },
+        { thm: 'T38 (Decomp)',    stmt: 'Three-term formula',                  detail: 'Cost = NC − SD − PB. Unique decomposition for each expression.' },
+        { thm: 'T38-NNP',        stmt: 'No Nesting Penalty',                  detail: 'Cost(O₁(O₂(A,B),C)) = c(O₁)+c(O₂)+Cost(A)+Cost(B)+Cost(C).' },
+        { thm: 'T40 (Add Law)',   stmt: 'Cost(op(E₁,E₂)) = Cost(E₁)+Cost(E₂)+1', detail: 'For independent sub-expressions. Explains Lorentz (57n).' },
+        { thm: 'T40 (Linear)',    stmt: 'N-term sum: (α₀+3)N − 3',            detail: 'Exact formula. Softmax: 4N−3. Shannon: 6N−3. Taylor: 8N−3.' },
+        { thm: 'T41 (Domain)',    stmt: 'Positive routing saves 8n/add',       detail: '3n (EAL) vs 11n (general add). ~1208n saved across 157-eq catalog.' },
+        { thm: 'T41 (ISO)',       stmt: '8 cross-domain isomorphism families', detail: 'Radioactive decay = compound interest = population growth (same tree).' },
+        { thm: 'T42 (QCC)',       stmt: 'Cost ≤ O(N²) conjecture',             detail: 'No standard scientific equation exceeds quadratic growth. Open.' },
+        { thm: 'T43 (Linear Ceil)', stmt: 'Cost ≤ O(N) conjecture',           detail: 'Linear Ceiling: no standard equation exceeds O(N). Open.' },
+      ].map(r => (
+        <tr style="border-bottom: 1px solid #0d0f18;">
+          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: #a78bfa; font-size: 0.78rem; font-weight: 600;">{r.thm}</td>
+          <td style="padding: 5px 8px; color: #d4d4d4; font-size: 0.78rem; font-family: var(--mono);">{r.stmt}</td>
+          <td style="padding: 5px 0 5px 8px; color: #6b7280; font-size: 0.76rem;">{r.detail}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h3 style="font-size: 0.9rem; color: #d4d4d4; margin-bottom: 12px;">Pattern Bonus Table (top 6)</h3>
+  <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 24px;">
+    <thead>
+      <tr style="border-bottom: 1px solid #252836;">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: #4a4d62; font-weight: 600; width: 16%;">Pattern</th>
+        <th style="text-align: right; padding: 6px 8px; color: #4ade80; font-weight: 600; width: 14%;">Bonus</th>
+        <th style="text-align: left; padding: 6px 0 8px 8px; color: #4a4d62; font-weight: 600;">Formula</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        { pat: 'DEML',  bonus: '5', formula: 'exp(−x) − ln(y)' },
+        { pat: 'EAL',   bonus: '4', formula: 'exp(x) + ln(y)' },
+        { pat: 'LEAd',  bonus: '4', formula: 'ln(exp(x) + y)' },
+        { pat: 'ELAd',  bonus: '4', formula: 'exp(x + ln(y))' },
+        { pat: 'EML',   bonus: '3', formula: 'exp(x) − ln(y)' },
+        { pat: 'EXL',   bonus: '3', formula: 'exp(x) · ln(y)' },
+      ].map(r => (
+        <tr style="border-bottom: 1px solid #0d0f18;">
+          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: #06b6d4; font-weight: 600; font-size: 0.8rem;">{r.pat}</td>
+          <td style="padding: 5px 8px; text-align: right; font-family: var(--mono); color: #4ade80; font-weight: 700; font-size: 0.8rem;">−{r.bonus}n</td>
+          <td style="padding: 5px 0 5px 8px; font-family: var(--mono); color: #6b7280; font-size: 0.76rem;">{r.formula}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <p style="color: #4a4d62; font-size: 0.82rem; margin-bottom: 32px;">
+    Blind test validation: 27/30 exact (MAE = 0.20) on held-out fluid dynamics, optics, acoustics, materials, epidemiology equations.
+    See <a href="/blog/cost-theory">Cost Theory →</a> and <a href="/blog/157-equations">157 Equations →</a>
+  </p>
 
   <div class="divider"></div>
 
