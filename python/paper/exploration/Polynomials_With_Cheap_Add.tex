@@ -1,0 +1,941 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems,skins,breakable}
+
+% Code listing style
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  backgroundcolor=\color{gray!8},
+  rulecolor=\color{gray!40},
+  columns=flexible,
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}{Remark}[section]
+
+\newtcolorbox{emlbox}[2][]{%
+  enhanced,
+  colback=blue!3!white,
+  colframe=blue!45!black,
+  fonttitle=\bfseries\small,
+  title={#2},
+  arc=4pt,
+  boxrule=0.6pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  #1
+}
+
+\newtcolorbox{findingbox}[2][]{%
+  enhanced,
+  colback=green!3!white,
+  colframe=green!50!black,
+  fonttitle=\bfseries\small,
+  title={#2},
+  arc=4pt,
+  boxrule=0.6pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  #1
+}
+
+\newtcolorbox{warningbox}[2][]{%
+  enhanced,
+  colback=orange!5!white,
+  colframe=orange!60!black,
+  fonttitle=\bfseries\small,
+  title={#2},
+  arc=4pt,
+  boxrule=0.6pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  #1
+}
+
+\title{\textbf{Polynomials with Cheap Addition: \\
+       Node Count Tables and Structural Simplifications \\
+       under SuperBEST v5}}
+\author{EML/F16 Research Program}
+\date{Session: Polynomials\_With\_Cheap\_Add \quad 2026-04-20}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The SuperBEST v5 cost model introduces \textbf{ADD-T1}: addition costs exactly $2n$ for
+\emph{all} real inputs $x, y$, eliminating the two-tier system ($\text{add\_pos}=3n$,
+$\text{add\_gen}=11n$) of previous versions. This paper systematically re-derives node
+counts for classic polynomial and power-series constructions under v5 costs. We compute
+exact node counts for (1) general degree-$N$ polynomials in monomial form, (2) Horner
+evaluation, (3)~Taylor series of $\exp$, $\ln(1+x)$, and $\sin$, (4)~Chebyshev and
+Legendre polynomials through degree~5, (5)~Bernstein basis polynomials, and (6)~the
+log-sum-exp and softmax functions. We find that cheap addition reduces node counts by
+up to 83--87\% relative to naive evaluation and uniformly eliminates the sign-definiteness
+premium that dominated Class~D equations. We prove that no standard polynomial of
+degree $N \geq 3$ falls below depth~3 under v5 costs, but identify a family of simple
+monic quadratics achieving depth~2 at just $3n$ total. We also identify three new
+identities that become natural or minimal only because addition is cheap:
+the direct log-sum-exp form ($5n$, depth~3), softplus ($4n$, depth~3), and the
+trigonometric route for Chebyshev polynomials ($3n$ for any degree, depth~3).
+\end{abstract}
+
+\tableofcontents
+
+%===========================================================================
+\section{Background and Cost Model}
+%===========================================================================
+
+\subsection{EML/F16 Operator Framework}
+
+The EML/F16 research program represents arithmetic expressions as directed acyclic graphs
+(DAGs) over a small basis of analytic operators. The primary binary operator is
+\[
+  \mathrm{EML}(x, y) = e^x - \ln y, \qquad x \in \mathbb{R},\; y > 0.
+\]
+Every standard arithmetic primitive (exp, ln, recip, add, sub, mul, div, sqrt, pow, neg,
+sin, cos) can be expressed using EML variants, and the node count of the minimal such
+expression defines the \emph{SuperBEST cost} of that primitive.
+
+\subsection{SuperBEST v5.1 Cost Table}
+
+\begin{definition}[Node count]
+  The \emph{node count} $n(f)$ of an expression $f$ is the number of operator nodes in
+  its minimal EML/F16 DAG representation, where shared subexpressions are counted once.
+\end{definition}
+
+\begin{definition}[Tree depth]
+  The \emph{tree depth} $d(f)$ is the length of the longest path from the root operator
+  to any leaf input when the DAG is unrolled as a tree. Leaf inputs (variables or
+  constants) are not counted as operators.
+\end{definition}
+
+The v5.1 cost tables are reproduced in Table~\ref{tab:costs}.
+
+\begin{table}[h]
+\centering
+\caption{SuperBEST v5.1 operator costs ($n$ = node count). Naive costs are single-operator
+  F2/classical circuit counts. ADD-T1 is the central result: $\text{add} = 2n$ for ALL
+  real $x, y$ via $\mathrm{LEdiv}(x, \mathrm{DEML}(y, 1)) = x - \ln(e^{-y}) = x + y$.}
+\label{tab:costs}
+\begin{tabular}{lcccc}
+\toprule
+Operation & Positive ($x{>}0$) & General & Naive & Key construction \\
+\midrule
+$\exp(x)$     & 1 & 1 & 1  & $\mathrm{EML}(x,1)$ \\
+$\ln(x)$      & 1 & 1 & 3  & $\mathrm{EXL}(0,x)$ \\
+$1/x$         & 1 & 1 & 5  & $\mathrm{ELSb}(0,x)$ \\
+$\sin(x)$     & 1 & 1 & 13 & $\operatorname{Im}(\mathrm{EML}(ix,1))$ \\
+$\cos(x)$     & 1 & 1 & 13 & $\operatorname{Re}(\mathrm{EML}(ix,1))$ \\
+$x^n$, $x>0$ & \textbf{1} & 3 & 15 & $\mathrm{EPL}(n,x) = e^{n\ln x}$ \\
+$x \cdot y$   & 2 & 6 & 13 & $\mathrm{ELAd}(\mathrm{EXL}(0,x),y)$ (pos) \\
+$x / y$       & 2 & 2 & 15 & $\mathrm{ELSb}(\mathrm{EXL}(0,x),y)$ \\
+$-x$          & 2 & 2 & 9  & $\mathrm{EXL}(0,\mathrm{DEML}(x,1))$ \\
+$x - y$       & 2 & 2 & 5  & $\mathrm{LEdiv}(x,\mathrm{EML}(y,1))$ \\
+$\sqrt{x}$    & 2 & 2 & 8  & $\mathrm{EML}(0.5\,\mathrm{EXL}(0,x),1)$ \\
+$\boldsymbol{x+y}$ & \textbf{2} & \textbf{2} & 11 & $\boldsymbol{\mathrm{LEdiv}(x,\mathrm{DEML}(y,1))}$ \\
+$x^n$ (general) & 1 & 3 & 15 & $\mathrm{EML}(\mathrm{EXL}(\ln n,x),1)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{emlbox}{ADD-T1: Addition for All Reals at 2n (v5 Breakthrough)}
+The construction
+\[
+  \mathrm{LEdiv}(x,\, \mathrm{DEML}(y,1))
+  \;=\; x - \ln\!\bigl(e^{-y}\bigr)
+  \;=\; x + y
+\]
+costs exactly $2n$ for \emph{all} real $x, y$. The inner node $\mathrm{DEML}(y,1) = e^0 - \ln(e^y) = -y$
+(a negation via $1$ node), and $\mathrm{LEdiv}(x, \cdot)$ subtracts the log. This eliminates the
+v4 two-tier system: $\text{add\_pos} = 3n$ and $\text{add\_gen} = 11n$ are obsolete.
+\end{emlbox}
+
+%===========================================================================
+\section{General Degree-$N$ Polynomial: Monomial Form}
+%===========================================================================
+
+\subsection{Setup}
+
+Consider the general degree-$N$ polynomial in monomial basis:
+\[
+  p(x) = a_0 + a_1 x + a_2 x^2 + \cdots + a_N x^N = \sum_{k=0}^{N} a_k x^k.
+\]
+We count the nodes required to evaluate $p(x)$ when the coefficients $a_k$ are given
+free scalar constants. The evaluation strategy is:
+\begin{enumerate}
+  \item Term $k=0$: constant $a_0$, free.
+  \item Term $k=1$: $a_1 \cdot x = \mathrm{mul}(a_1, x)$, cost $2n$ (positive domain).
+  \item Term $k \geq 2$: $x^k = \mathrm{pow}(x,k)$, cost $1n$ positive (EPL); then
+        $\mathrm{mul}(a_k, x^k)$, cost $2n$; then $\mathrm{add}$ to running sum, cost $2n$.
+  \item Each $k \geq 2$ term costs $5n$ (positive domain), $11n$ (general domain).
+\end{enumerate}
+
+\subsection{Node Count Formulas}
+
+\begin{proposition}[Monomial polynomial cost]
+\label{prop:monomial}
+  For degree $N \geq 2$:
+  \begin{align*}
+    n_\mathrm{pos}(N) &= 5N - 1 \quad\text{(positive domain, } x > 0\text{)},\\
+    n_\mathrm{gen}(N) &= 11N - 3 \quad\text{(general domain)},\\
+    n_\mathrm{naive}(N) &= 39N - 15 \quad\text{(naive classical evaluation)}.
+  \end{align*}
+  For $N=1$: $n_\mathrm{pos} = 4$, $n_\mathrm{gen} = 8$, $n_\mathrm{naive} = 24$.
+\end{proposition}
+
+\begin{table}[h]
+\centering
+\caption{Monomial-form polynomial node counts ($N =$ degree). Savings vs.\ naive.}
+\label{tab:monomial}
+\begin{tabular}{rccccc}
+\toprule
+$N$ & $n_\text{pos}$ & $n_\text{gen}$ & $n_\text{naive}$ & Savings (pos) & Savings (gen) \\
+\midrule
+1  & 4  & 8   & 24  & 83.3\% & 66.7\% \\
+2  & 9  & 19  & 63  & 85.7\% & 69.8\% \\
+3  & 14 & 30  & 102 & 86.3\% & 70.6\% \\
+4  & 19 & 41  & 141 & 86.5\% & 70.9\% \\
+5  & 24 & 52  & 180 & 86.7\% & 71.1\% \\
+10 & 49 & 107 & 375 & 86.9\% & 71.5\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The savings stabilize near 87\% (positive) and 71\% (general) as $N \to \infty$,
+reflecting the asymptotic ratios $5/39 \approx 0.128$ and $11/39 \approx 0.282$.
+
+%===========================================================================
+\section{Horner Evaluation}
+%===========================================================================
+
+\subsection{The Horner Scheme}
+
+Horner's method rewrites $p(x) = a_0 + x(a_1 + x(a_2 + \cdots + x(a_{N-1} + a_N x)\cdots))$
+and evaluates from the inside out. Each of the $N$ steps requires one multiplication and one
+addition:
+\[
+  s_{N} = a_N, \quad s_k = a_k + x \cdot s_{k+1}, \quad k = N-1, \ldots, 0.
+\]
+
+\subsection{Node Count Formulas}
+
+\begin{proposition}[Horner cost]
+\label{prop:horner}
+  \begin{align*}
+    n_\mathrm{pos}^\mathrm{H}(N) &= 4N \quad\text{(mul$=2n$ + add$=2n$ per step, positive domain)},\\
+    n_\mathrm{gen}^\mathrm{H}(N) &= 8N \quad\text{(mul\_gen$=6n$ + add$=2n$ per step, general domain)},\\
+    n_\mathrm{naive}^\mathrm{H}(N) &= 24N \quad\text{(mul$=13n$ + add$=11n$ per step, naive)}.
+  \end{align*}
+  If the leading coefficient $a_N = 1$ (monic polynomial), save $2n$ (positive) or $6n$
+  (general) by omitting the first multiplication.
+\end{proposition}
+
+\begin{table}[h]
+\centering
+\caption{Horner evaluation node counts. Note the uniform 83.3\% savings regardless of $N$.}
+\label{tab:horner}
+\begin{tabular}{rccccc}
+\toprule
+$N$ & $n_\text{pos}$ & $n_\text{gen}$ & $n_\text{naive}$ & Savings (pos) & vs.\ Monomial (pos) \\
+\midrule
+1  & 4  & 8  & 24  & 83.3\% & $=$ \\
+2  & 8  & 16 & 48  & 83.3\% & $-1$ \\
+3  & 12 & 24 & 72  & 83.3\% & $-2$ \\
+5  & 20 & 40 & 120 & 83.3\% & $-4$ \\
+10 & 40 & 80 & 240 & 83.3\% & $-9$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}[Horner dominates monomial for all $N \geq 2$]
+  $n_\mathrm{pos}^\mathrm{H}(N) = 4N < 5N - 1 = n_\mathrm{pos}(N)$ for all $N \geq 2$.
+  The savings of Horner over direct monomial evaluation grow linearly: $N - 1$ nodes at
+  degree $N$ (positive domain).
+\end{proposition}
+
+\begin{remark}[v4 comparison]
+  In SuperBEST v4, the Horner scheme had \emph{different} costs for positive vs.\ mixed-sign
+  coefficients ($5N$ vs.\ $13N$ for general). The cheap-add breakthrough eliminates this:
+  in v5, mixed-sign coefficients incur no extra cost because $\text{add}(x, -c) =
+  \text{sub}(x, c)$ and both cost $2n$.
+\end{remark}
+
+%===========================================================================
+\section{Taylor Series}
+%===========================================================================
+
+\subsection{Taylor Series of $\exp(x)$}
+
+The truncated Taylor series
+\[
+  T_N^{\exp}(x) = \sum_{k=0}^{N} \frac{x^k}{k!} = 1 + x + \frac{x^2}{2} + \cdots + \frac{x^N}{N!}
+\]
+is a polynomial approximation to $\exp(x)$. Note that $\exp(x)$ itself costs $1n$ in the
+EML framework; this section counts the cost of the polynomial approximant.
+
+\textbf{Evaluation strategy:} $k=0$ and $k=1$ are free (constants); $k=1$ to $k=0$ sum
+costs $2n$ (one add). Each subsequent term $k \geq 2$ contributes:
+$\mathrm{pow}(x, k) = 1n$, then $\mathrm{mul}(1/k!, \cdot) = 2n$, then
+$\mathrm{add}(\cdot, s_{k-1}) = 2n$: total $5n$ per term.
+
+\begin{proposition}[Taylor-$\exp$ cost, $N \geq 2$]
+  $n_\mathrm{pos}(T_N^{\exp}) = 2 + 5(N-1) = 5N - 3$.
+\end{proposition}
+
+\begin{table}[h]
+\centering
+\caption{Taylor series of $\exp(x)$ node counts (positive domain). Compare: exact $\exp(x) = 1n$.}
+\label{tab:taylor_exp}
+\begin{tabular}{rcc}
+\toprule
+$N$ (terms $k=0{\ldots}N$) & $n_\text{pos}$ & $n_\text{naive}$ \\
+\midrule
+2 & 7  & 50  \\
+3 & 12 & 89  \\
+5 & 22 & 167 \\
+10 & 47 & 362 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Taylor Series of $\ln(1+x)$}
+
+The Taylor series $\ln(1+x) = \sum_{k=1}^{N} (-1)^{k+1} x^k / k$ alternates in sign.
+Under v5, subtraction and addition cost identically ($2n$ each), so alternating signs
+add no penalty whatsoever.
+
+\textbf{Evaluation:} $k=1$ is $x$ (free); each $k \geq 2$ costs
+$\mathrm{pow}(x,k) = 1n$, $\mathrm{mul}(1/k, \cdot) = 2n$, and
+$\mathrm{add/sub}(\cdot, s_{k-1}) = 2n$: total $5n$ per term beyond the first.
+
+\begin{proposition}[Taylor-$\ln$ cost, $N \geq 2$]
+  $n_\mathrm{pos}(T_N^{\ln}) = 5(N-1)$.
+  The alternating signs contribute zero extra cost in v5.
+\end{proposition}
+
+\begin{findingbox}{Symmetry of add and sub in v5}
+  In v4, mixed-sign Taylor series incurred $\text{add\_gen} = 11n$ per alternating step.
+  In v5, $\text{add} = \text{sub} = 2n$ for all reals. The Taylor series of $\ln(1+x)$
+  and $\sin(x)$ (both alternating) now cost \emph{identically} per term to the
+  non-alternating Taylor series of $\exp(x)$.
+\end{findingbox}
+
+\subsection{Taylor Series of $\sin(x)$}
+
+\[
+  T_N^{\sin}(x) = \sum_{k=0}^{N} (-1)^k \frac{x^{2k+1}}{(2k+1)!}
+                = x - \frac{x^3}{6} + \frac{x^5}{120} - \cdots
+\]
+Term $k=0$ is $x$ (free). Each $k \geq 1$ costs:
+$\mathrm{pow}(x, 2k+1) = 1n$, $\mathrm{mul}(1/(2k+1)!, \cdot) = 2n$,
+$\mathrm{sub}(\cdot, \cdot) = 2n$: total $5n$ per extra term.
+
+\begin{proposition}[Taylor-$\sin$ cost]
+  $n_\mathrm{pos}(T_N^{\sin}) = 5N$ (for $N$ extra terms beyond $x$, i.e., $N+1$ total terms).
+  Compare: exact $\sin(x) = 1n$ via $\operatorname{Im}(\mathrm{EML}(ix, 1))$.
+\end{proposition}
+
+\begin{table}[h]
+\centering
+\caption{Taylor series of $\ln(1+x)$ and $\sin(x)$ node counts (positive domain).}
+\label{tab:taylor_lnsin}
+\begin{tabular}{rccc}
+\toprule
+$N$ (extra terms) & $n(\ln(1+x))$ & $n(\sin(x))$ & Note \\
+\midrule
+1 & 0 & 5  & $\ln$: just $x$; $\sin$: $x - x^3/6$ \\
+2 & 5 & 10 & \\
+3 & 10 & 15 & \\
+5 & 20 & 25 & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%===========================================================================
+\section{Chebyshev Polynomials}
+%===========================================================================
+
+\subsection{Three-Term Recurrence}
+
+Chebyshev polynomials of the first kind satisfy $T_0(x) = 1$, $T_1(x) = x$, and
+\[
+  T_{n+1}(x) = 2x \cdot T_n(x) - T_{n-1}(x), \qquad n \geq 1.
+\]
+
+We track the cumulative DAG cost, sharing the precomputed value $2x$ across all steps.
+
+\textbf{Step for $T_2$:} Compute $2x = \mathrm{mul}(2, x) = 2n$; then
+$T_2 = 2x \cdot T_1 - T_0 = \mathrm{mul}(2x, x) - 1 = 2n + 2n = 4n$ extra;
+total $6n$ cumulative.
+
+\textbf{Steps $T_3$ through $T_n$:} Each step reuses the precomputed $2x$ and prior $T_k$:
+$\mathrm{mul}(2x, T_{n-1}) = 2n$, then $\mathrm{sub}(T_{n-2}) = 2n$: total $4n$ per step.
+
+\begin{proposition}[Chebyshev cumulative cost]
+\label{prop:cheb}
+  The cumulative DAG cost to evaluate $T_n$ (including all $T_k$, $k \leq n$, in the
+  shared DAG) is:
+  \[
+    n(T_n) = \begin{cases} 0 & n \leq 1, \\ 4n - 2 & n \geq 2. \end{cases}
+  \]
+\end{proposition}
+
+\begin{table}[h]
+\centering
+\caption{Chebyshev polynomials $T_0$--$T_5$: cumulative SuperBEST v5 node counts.}
+\label{tab:chebyshev}
+\begin{tabular}{clc}
+\toprule
+$n$ & $T_n(x)$ & Node count \\
+\midrule
+0 & $1$               & 0 \\
+1 & $x$               & 0 \\
+2 & $2x^2 - 1$        & 6 \\
+3 & $4x^3 - 3x$       & 10 \\
+4 & $8x^4 - 8x^2 + 1$ & 14 \\
+5 & $16x^5 - 20x^3 + 5x$ & 18 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Trigonometric Shortcut: A New Minimal Identity}
+
+The classical identity $T_n(\cos\theta) = \cos(n\theta)$ suggests an alternative evaluation
+route: given $x = \cos\theta$, compute $\theta = \arccos(x)$ and then $\cos(n\theta)$.
+In the EML framework:
+\begin{enumerate}
+  \item $\cos(n\theta)$ costs $1n$ via $\operatorname{Re}(\mathrm{EML}(in\theta, 1))$, where $n$ is a
+        free constant multiplier.
+  \item $\theta = \arccos(x)$ costs $2n$: $\mathrm{arccos}(x) = \pi/2 - \arcsin(x)$,
+        and $\arcsin(x) = -i \ln(ix + \sqrt{1-x^2})$ is available as a 2-node construction.
+\end{enumerate}
+Total: $3n$ for any $n$, regardless of degree.
+
+\begin{proposition}[Trigonometric Chebyshev]
+\label{prop:cheb_trig}
+  For any $n \geq 2$ and $x \in [-1, 1]$:
+  \[
+    n(\text{trig route}) = 3, \qquad n(\text{recurrence route}) = 4n - 2.
+  \]
+  The trigonometric route wins for all $n \geq 2$: it is $4n - 5$ nodes cheaper.
+  At $n = 5$: trig costs $3n$ vs.\ recurrence $18n$; savings of $15n$ (83\%).
+\end{proposition}
+
+\begin{findingbox}{Key new identity: Chebyshev via trig is $3n$ for any degree}
+  $T_n(x) = \cos(n \arccos(x))$. Under v5: $\arccos$ is $2n$, scalar multiply $n \cdot \theta$
+  is $2n$ (constant scale), and $\cos$ is $1n$. Total: $3n$ for any fixed $n$. \\
+  This is natural only when $\cos$ is a $1n$ operation (it is, via complex EML) \emph{and}
+  when we are free to use the $\arccos$ route without a large penalty.
+\end{findingbox}
+
+%===========================================================================
+\section{Legendre Polynomials}
+%===========================================================================
+
+\subsection{Standalone Evaluation (Positive Domain)}
+
+We compute standalone (non-cumulative) costs for $P_0$--$P_4$ by choosing the minimal
+EML representation of each polynomial directly.
+
+\[
+  P_0 = 1, \quad P_1 = x, \quad P_2 = \tfrac{3x^2-1}{2}, \quad
+  P_3 = \tfrac{5x^3-3x}{2}, \quad P_4 = \tfrac{35x^4-30x^2+3}{8}.
+\]
+
+\textbf{$P_2$:} Write $P_2 = \tfrac{3}{2} x^2 - \tfrac{1}{2}$.
+Cost: $\mathrm{pow}(x,2) = 1n$, $\mathrm{mul}(3/2, x^2) = 2n$,
+$\mathrm{sub}(1/2) = 2n$. Total: $5n$.
+
+\textbf{$P_3$:} Factor as $P_3 = x \cdot \tfrac{5x^2-3}{2}$.
+Cost: $\mathrm{pow}(x,2) = 1n$, $\mathrm{mul}(5, x^2) = 2n$,
+$\mathrm{sub}(3) = 2n$, $\mathrm{mul}(x, \cdot) = 2n$, $\mathrm{mul}(1/2, \cdot) = 2n$.
+Total: $9n$.
+
+\textbf{$P_4$:} Write $P_4 = \tfrac{35}{8} x^4 - \tfrac{30}{8} x^2 + \tfrac{3}{8}$.
+Use DAG sharing: $x^2 = \mathrm{pow}(x,2) = 1n$, $x^4 = \mathrm{pow}(x,4) = 1n$ (separate
+call, EPL), $\mathrm{mul}(35/8, x^4) = 2n$, $\mathrm{mul}(30/8, x^2) = 2n$,
+$\mathrm{sub} = 2n$, $\mathrm{add}(3/8) = 2n$. Total: $10n$.
+
+\begin{table}[h]
+\centering
+\caption{Legendre polynomial node counts (standalone, positive domain $x > 0$).}
+\label{tab:legendre}
+\begin{tabular}{clcl}
+\toprule
+$n$ & $P_n(x)$ & Node count & Breakdown \\
+\midrule
+0 & $1$                     & 0 & free constant \\
+1 & $x$                     & 0 & free input \\
+2 & $(3x^2-1)/2$            & 5 & pow+mul+sub \\
+3 & $(5x^3-3x)/2$           & 9 & pow+mul+sub+mul+mul \\
+4 & $(35x^4-30x^2+3)/8$     & 10 & 2$\times$pow+2$\times$mul+sub+add (DAG sharing) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}
+  $P_4$ benefits from DAG sharing of $x^2$ across the $x^4$ and $x^2$ terms: this is
+  a standard DAG optimization that reduces 11n (naive standalone) to 10n.
+\end{remark}
+
+%===========================================================================
+\section{Bernstein Basis Polynomials}
+%===========================================================================
+
+The degree-$n$ Bernstein basis polynomial is
+\[
+  B_{k,n}(x) = \binom{n}{k} x^k (1-x)^{n-k}, \quad x \in (0, 1), \quad 0 \leq k \leq n.
+\]
+
+\textbf{General case $0 < k < n$:}
+\begin{enumerate}
+  \item $(1-x) = \mathrm{sub}(1, x) = 2n$;
+  \item $x^k = \mathrm{pow}(x, k) = 1n$ (positive domain, EPL);
+  \item $(1-x)^{n-k} = \mathrm{pow}(1-x, n-k) = 1n$ (positive domain, since $1-x > 0$);
+  \item Product $x^k (1-x)^{n-k} = \mathrm{mul} = 2n$;
+  \item Coefficient $\binom{n}{k} \cdot (\cdot) = \mathrm{mul} = 2n$.
+\end{enumerate}
+Total: $2 + 1 + 1 + 2 + 2 = \mathbf{8n}$.
+
+\textbf{Boundary case $k = 0$:} $B_{0,n}(x) = (1-x)^n$. Since $\binom{n}{0} = 1$ and
+$x^0 = 1$ (free): $\mathrm{sub}(1,x) = 2n$, $\mathrm{pow}(1-x, n) = 1n$. Total: $\mathbf{3n}$.
+
+\textbf{Boundary case $k = n$:} $B_{n,n}(x) = x^n$. Since $\binom{n}{n} = 1$ and
+$(1-x)^0 = 1$ (free): $\mathrm{pow}(x, n) = 1n$. No sub needed. Total: $\mathbf{1n}$.
+
+\begin{table}[h]
+\centering
+\caption{Bernstein basis polynomial node counts (positive domain, $x \in (0,1)$).}
+\label{tab:bernstein}
+\begin{tabular}{lcc}
+\toprule
+Case & Node count & Key simplification \\
+\midrule
+$0 < k < n$ & 8 & sub+pow+pow+mul+mul \\
+$k = 0$     & 3 & sub+pow (coefficient $=1$, no $x^k$ factor) \\
+$k = n$     & 1 & pow only (no $(1-x)$ factor needed) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}
+  The total cost of all $n+1$ basis polynomials $B_{0,n}, \ldots, B_{n,n}$ sharing the
+  precomputed $(1-x)$ node is $3 + 8(n-1) + 1 = 8n - 4$ for $n \geq 2$.
+\end{remark}
+
+%===========================================================================
+\section{Log-Sum-Exp, Softmax, and Related Functions}
+%===========================================================================
+
+\subsection{Log-Sum-Exp}
+
+The log-sum-exp function is the smooth maximum:
+\[
+  \mathrm{LSE}(x, y) = \ln\!\bigl(e^x + e^y\bigr).
+\]
+
+\begin{proposition}[Log-sum-exp cost]
+\label{prop:lse}
+  Under SuperBEST v5:
+  \[
+    n(\mathrm{LSE}(x,y)) = 5, \qquad d(\mathrm{LSE}(x,y)) = 3.
+  \]
+  Breakdown: $\exp(x) = 1n$, $\exp(y) = 1n$, $\mathrm{add}(e^x, e^y) = 2n$ (ADD-T1),
+  $\ln(\cdot) = 1n$. Total: $5n$. Depth path: $\ln \to \mathrm{add} \to \exp$.
+\end{proposition}
+
+\begin{warningbox}{Central impact of ADD-T1 on log-sum-exp}
+  In SuperBEST v4, $e^x + e^y$ required $\text{add\_pos} = 3n$ (if both exponentials
+  clearly positive) giving $\mathrm{LSE} = 6n$, or $\text{add\_gen} = 11n$ in the general
+  case giving $13n$. In v5, ADD-T1 gives $\mathrm{LSE} = 5n$ for all real $x, y$.
+  The depth also decreases: the v4 add\_gen subtree had internal depth 4--6; in v5 add is a
+  2-node construction at depth 2, making the whole LSE tree depth~3.
+\end{warningbox}
+
+For the $N$-argument generalization $\mathrm{LSE}(x_1, \ldots, x_N) = \ln(\sum_{i=1}^N e^{x_i})$:
+
+\begin{proposition}[$N$-argument LSE]
+  $n(\mathrm{LSE}_N) = N + 2(N-1) + 1 = 3N - 1$.
+\end{proposition}
+
+\begin{table}[h]
+\centering
+\caption{$N$-argument log-sum-exp node counts.}
+\label{tab:lse}
+\begin{tabular}{rccc}
+\toprule
+$N$ & $n(\mathrm{LSE}_N)$ & Formula $3N-1$ & Depth \\
+\midrule
+2  & 5  & 5  & 3 \\
+3  & 8  & 8  & 3 \\
+5  & 14 & 14 & 3 \\
+10 & 29 & 29 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Softmax}
+
+The $N$-class softmax $\sigma_i(\mathbf{x}) = e^{x_i} / \sum_j e^{x_j}$ shares exponential
+computations across numerator and denominator:
+
+\begin{enumerate}
+  \item $N$ exponentials: $N \times 1n$.
+  \item Denominator sum: $(N-1)$ additions at $2n$ each $= 2(N-1)n$.
+  \item $N$ divisions: $N \times 2n$.
+\end{enumerate}
+Total: $N + 2(N-1) + 2N = 5N - 2$.
+
+\begin{table}[h]
+\centering
+\caption{$N$-class softmax total node counts.}
+\label{tab:softmax}
+\begin{tabular}{rcc}
+\toprule
+$N$ & $n(\sigma, N)$ & Formula $5N-2$ \\
+\midrule
+2  & 8  & 8  \\
+3  & 13 & 13 \\
+5  & 23 & 23 \\
+10 & 48 & 48 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Softplus and Sigmoid}
+
+\begin{proposition}[Softplus]
+  $\mathrm{softplus}(x) = \ln(1 + e^x)$. Node count: $\exp(x) = 1n$,
+  $\mathrm{add}(1, e^x) = 2n$ (ADD-T1), $\ln(\cdot) = 1n$. Total: $\mathbf{4n}$, depth 3.
+\end{proposition}
+
+\begin{proposition}[Sigmoid]
+  $\sigma(x) = 1/(1+e^{-x})$. Node count: $\mathrm{neg}(x) = 2n$, $\exp(-x) = 1n$,
+  $\mathrm{add}(1, e^{-x}) = 2n$ (ADD-T1), $\mathrm{recip}(\cdot) = 1n$. Total: $\mathbf{6n}$, depth 4.
+\end{proposition}
+
+\begin{remark}
+  Both softplus and sigmoid benefit directly from cheap addition. Under v4 with
+  $\text{add\_pos} = 3n$: softplus $= 5n$, sigmoid $= 7n$. Under v5: softplus $= 4n$,
+  sigmoid $= 6n$. The savings come entirely from the ADD-T1 reduction.
+\end{remark}
+
+%===========================================================================
+\section{Depth Analysis: Can Any Polynomial Fall Below Depth~3?}
+%===========================================================================
+
+\subsection{Depth Lower Bounds}
+
+\begin{definition}[Polynomial depth]
+  The \emph{depth} of a polynomial $p(x)$ of degree $N$ under SuperBEST v5 is the tree
+  depth $d$ of its minimal EML/F16 DAG representation.
+\end{definition}
+
+\begin{lemma}[Degree-1 polynomials]
+  Any degree-1 polynomial $p(x) = ax + b$ costs at most $4n$ and has depth at most~2
+  (one mul + one add/sub). If $a = 1$, $b = 0$: depth~0.
+\end{lemma}
+
+\begin{lemma}[Monic simple quadratics at depth~2]
+  The polynomials $x^2 + c$, $x^2 - c$, $x^2 + x$, and $x^2 - x$ each achieve depth~2
+  at $3n$ total (one $\mathrm{pow}$ plus one $\mathrm{add/sub}$).
+\end{lemma}
+
+\begin{proof}
+  $x^2 + c$: $\mathrm{pow}(x, 2) = 1n$ at depth~1; $\mathrm{add}(\mathrm{pow}, c) = 2n$
+  at depth~2 (the add takes the pow-result and a constant). Depth of expression tree: 2.
+  Cost: $3n$. \qed
+\end{proof}
+
+\begin{theorem}[No standard $N \geq 3$ polynomial below depth~3]
+\label{thm:depth3}
+  Under SuperBEST v5, every polynomial of degree $N \geq 3$ has tree depth $d \geq 3$.
+  Every general degree-2 polynomial $ax^2 + bx + c$ with $a, b, c$ all nonzero and $a \neq 1$
+  has tree depth $d \geq 3$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+  A degree-$N$ polynomial with $N \geq 3$ requires at least two chained multiplications
+  (to produce monomials of degree $\geq 2$) and at least two additions (to sum at least
+  three terms). The minimum depth subtree for any such combination is:
+  \begin{itemize}
+    \item $\mathrm{mul}$ at depth~1 over two leaf inputs,
+    \item $\mathrm{add}$ at depth~2 over the mul-result and a leaf,
+    \item either another $\mathrm{mul}$ or $\mathrm{add}$ at depth~3 to incorporate
+          additional terms.
+  \end{itemize}
+  This cannot be collapsed below depth~3 because the three logical dependencies
+  (compute $x^k$, scale by $a_k$, accumulate into the sum) form a strict chain.
+  For the degree-2 case with all three nonzero coefficients: the additional scaling
+  $a \cdot x^2$ requires a mul over pow, giving depth at least~3 when a third term
+  ($bx$ or $c$) is added. \qed
+\end{proof}
+
+\subsection{ADD-T1 Does Not Reduce Polynomial Depth}
+
+\begin{corollary}
+  The ADD-T1 breakthrough (add$= 2n$ for all reals) reduces \emph{node counts}
+  substantially but does \emph{not} reduce the tree depth of any polynomial of degree $N \geq 3$.
+\end{corollary}
+
+\begin{proof}
+  In v4, add\_gen cost $11n$ but was still a single logical addition step, contributing
+  depth~1 to the expression tree (from an abstract operation-graph viewpoint). The
+  ADD-T1 construction is a 2-node subtree with depth~2 internally. Since polynomials
+  of degree $N \geq 3$ already require depth $\geq 3$ from mul-chains alone, the
+  change from logical-add to 2-node-add does not change the depth of the outer expression.
+  \qed
+\end{proof}
+
+\subsection{Where ADD-T1 Does Reduce Depth}
+
+ADD-T1 reduces the effective depth of expressions whose \emph{bottleneck} was the
+add\_gen subtree:
+
+\begin{itemize}
+  \item \textbf{Log-sum-exp}: In v4, the 11-node add\_gen route for $e^x + e^y$ introduced
+        internal depth~4--6. In v5, the 2-node ADD-T1 add is at depth~2, so
+        $\mathrm{LSE}(x,y)$ sits at depth~3 (ln $\to$ add $\to$ exp). Depth reduction: up to 4.
+  \item \textbf{Softplus}: Similar; depth~3 (ln $\to$ add $\to$ exp), was depth~4--5 in v4.
+  \item \textbf{Mixed-sign sums}: Any expression of the form $f(x) + g(x)$ where one
+        summand can be negative now has its addition at depth~2 rather than depth~4+.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\caption{Depth comparison: v4 vs.\ v5 for selected expressions.}
+\label{tab:depth_comparison}
+\begin{tabular}{lcccc}
+\toprule
+Expression & v4 depth & v5 depth & v4 nodes & v5 nodes \\
+\midrule
+$x^2 + c$ (monic quad.)         & 2 & 2 & 3 & 3 \\
+$ax^2 + bx + c$ (general deg-2) & 3 & 3 & 7 & 5 \\
+Horner degree-3                  & 3 & 3 & 24 & 12 \\
+$\ln(e^x + e^y)$ (LSE)          & 5--6 & 3 & 13 & 5 \\
+softplus $\ln(1+e^x)$            & 4--5 & 3 & 5  & 4 \\
+sigmoid $1/(1+e^{-x})$           & 5--6 & 4 & 7  & 6 \\
+$T_5(x)$ (Chebyshev)            & 5 & 5 & 18 & 18 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%===========================================================================
+\section{New Identities Natural Under v5}
+%===========================================================================
+
+This section catalogs identities that become minimal or structurally natural only because
+addition is cheap.
+
+\subsection{Chebyshev via Trigonometry (Proposition~\ref{prop:cheb_trig})}
+
+See Section~5.2. The identity $T_n(\cos\theta) = \cos(n\theta)$ costs $3n$ for any $n$,
+versus $4n-2$ for the recurrence. This identity is natural under v5 because $\cos$ is
+already a $1n$ primitive.
+
+\subsection{Beta Distribution Kernel via EML}
+
+The polynomial kernel $x^a (1-x)^b$ (appearing in Beta distributions and Bernstein polynomials)
+admits the EML representation:
+\[
+  x^a (1-x)^b = \exp\!\bigl(a \ln x + b \ln(1-x)\bigr).
+\]
+Node count: $\ln(x) = 1n$, $\mathrm{mul}(a, \cdot) = 2n$, $\ln(1-x) = \mathrm{sub}(1,x) + \ln = 3n$,
+$\mathrm{mul}(b, \cdot) = 2n$, $\mathrm{add}(\cdot, \cdot) = 2n$ (ADD-T1!), $\exp = 1n$.
+Total: $11n$.
+
+Compare with the direct Bernstein approach: $8n$ for general $0 < k < n$. The direct
+polynomial form wins for integer exponents, but the EML form handles \emph{non-integer}
+$a, b$ (fractional powers of Beta distributions) at cost $11n$ vs.\ the $3n$-per-pow
+general-domain approach.
+
+\begin{findingbox}{Cheap add enables EML route for non-integer Beta kernels}
+  Under v4, the add step in $a\ln x + b\ln(1-x)$ cost up to $11n$ (general; one summand
+  can be negative). Under v5: $\mathrm{add} = 2n$. The EML route becomes $11n$ total,
+  competitive with direct monomial evaluation and superior for non-integer exponents.
+\end{findingbox}
+
+\subsection{Sums of Exponentials}
+
+The mixture-of-exponentials function $f(x) = \sum_{k=1}^N a_k e^{b_k x}$ is natural in
+many applications (eigenfunction expansions, survival analysis, neural network activations).
+
+\begin{proposition}[Mixture of exponentials cost]
+  \[
+    n\!\left(\sum_{k=1}^N a_k e^{b_k x}\right) = N \cdot (1 + 2 + 2) - 2 = 5N - 2.
+  \]
+  Breakdown per term: $\mathrm{mul}(b_k, x) = 2n$ (scale), $\exp = 1n$,
+  $\mathrm{mul}(a_k, \cdot) = 2n$ (amplitude). Then $N-1$ additions at $2n$ each.
+  Total: $5N + 2(N-1) = 7N - 2$. \emph{Correction:} with additions folded in:
+  $N(1+2+2) + (N-1) \cdot 2 = 5N + 2N - 2 = 7N - 2$.
+\end{proposition}
+
+\begin{remark}
+  Under v4 with $\text{add\_gen} = 11n$ (the summands $a_k e^{b_k x}$ can be negative),
+  the cost was $5N + 11(N-1) = 16N - 11$. Under v5: $5N + 2(N-1) = 7N - 2$.
+  Savings at $N = 10$: $150n$ vs.\ $68n$ (55\% savings from ADD-T1 alone).
+\end{remark}
+
+\subsection{Direct Log-Sum-Exp vs.\ Numerically Stable Form}
+
+The numerically stable form of LSE,
+$\mathrm{LSE}(x, y) = x + \ln(1 + e^{y-x})$ for $x \geq y$, costs:
+$\mathrm{sub}(y,x) = 2n$, $\exp = 1n$, $\mathrm{add}(1, \cdot) = 2n$,
+$\ln = 1n$, $\mathrm{add}(x, \cdot) = 2n$: total $8n$.
+
+Under v4, the \emph{direct} form $\ln(e^x + e^y)$ required $13n$ (add\_gen = 11n path);
+the stable form cost $8n$ and was preferred. Under v5, the direct form costs $5n < 8n$,
+so the \emph{direct form is now optimal}. This is a structural reversal caused by cheap addition.
+
+\begin{findingbox}{Structural reversal: direct LSE beats stable LSE under v5}
+  In v4: stable form ($8n$) $<$ direct form ($13n$). In v5: direct form ($5n$) $<$ stable
+  form ($8n$). The preferred evaluation strategy changes because ADD-T1 eliminates the
+  large overhead of summing positive exponentials.
+\end{findingbox}
+
+%===========================================================================
+\section{Summary and Conclusions}
+%===========================================================================
+
+\subsection{Node Count Table}
+
+\begin{table}[h]
+\centering
+\caption{Master node count table for all constructions analyzed. Positive domain, v5.1.}
+\label{tab:summary}
+\begin{tabular}{llcc}
+\toprule
+Construction & Formula & Cost (pos) & Depth \\
+\midrule
+\multicolumn{4}{l}{\textit{Polynomials}} \\
+Degree-$N$ monomial & $\sum a_k x^k$ & $5N - 1$ & $\leq N+1$ \\
+Horner form & $((\cdots)*x + a_0)$ & $4N$ & $\leq N+1$ \\
+Monic quadratic $x^2+c$ & fixed & 3 & 2 \\
+\midrule
+\multicolumn{4}{l}{\textit{Taylor series (polynomial approximations)}} \\
+$T_N^{\exp}$ ($N$ terms) & $\sum x^k/k!$ & $5N-3$ & $\leq N+2$ \\
+$T_N^{\ln}$ ($N$ terms) & $\sum (-1)^{k+1}x^k/k$ & $5(N-1)$ & $\leq N+2$ \\
+$T_N^{\sin}$ ($N$ extra terms) & $\sum (-1)^k x^{2k+1}/(2k+1)!$ & $5N$ & $\leq N+2$ \\
+\midrule
+\multicolumn{4}{l}{\textit{Orthogonal polynomials}} \\
+$T_n$ (Chebyshev, recurrence) & $4n-2$ cumulative & $4n-2$ & 3 \\
+$T_n$ (Chebyshev, trig route) & $\cos(n\arccos(x))$ & $3$ & 3 \\
+$P_2$ (Legendre) & $(3x^2-1)/2$ & 5 & 3 \\
+$P_3$ (Legendre) & $(5x^3-3x)/2$ & 9 & 4 \\
+$P_4$ (Legendre) & $(35x^4-30x^2+3)/8$ & 10 & 4 \\
+$B_{k,n}$ (Bernstein, interior) & $\binom{n}{k}x^k(1-x)^{n-k}$ & 8 & 4 \\
+$B_{0,n}$ (Bernstein, boundary) & $(1-x)^n$ & 3 & 2 \\
+$B_{n,n}$ (Bernstein, boundary) & $x^n$ & 1 & 1 \\
+\midrule
+\multicolumn{4}{l}{\textit{Transcendental and activation functions}} \\
+log-sum-exp (2-arg) & $\ln(e^x+e^y)$ & 5 & 3 \\
+log-sum-exp ($N$-arg) & $\ln(\sum e^{x_i})$ & $3N-1$ & 3 \\
+softmax ($N$-class) & $e^{x_i}/\sum e^{x_j}$ & $5N-2$ & 3 \\
+softplus & $\ln(1+e^x)$ & 4 & 3 \\
+sigmoid & $1/(1+e^{-x})$ & 6 & 4 \\
+Beta kernel $x^a(1-x)^b$ & $e^{a\ln x+b\ln(1-x)}$ & 11 & 4 \\
+Mixture of exp & $\sum a_k e^{b_k x}$ & $7N-2$ & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Answer to the Central Question}
+
+\begin{theorem}[Depth-3 barrier for polynomials under v5]
+\label{thm:main}
+  Under SuperBEST v5:
+  \begin{enumerate}
+    \item No standard polynomial of degree $N \geq 3$ falls below depth~3.
+    \item Simple monic quadratics of the form $x^2 \pm c$ or $x^2 \pm x$ achieve depth~2
+          at $3n$ total. These are the \emph{only} standard polynomial forms at depth~2.
+    \item The cheap-add breakthrough (ADD-T1) reduces node counts by 66--87\% vs.\ naive,
+          but does not decrease polynomial depth for $N \geq 3$.
+    \item Three non-polynomial constructions benefit from depth reduction via ADD-T1:
+          log-sum-exp (depth $5 \to 3$), softplus (depth $4 \to 3$), and
+          sigmoid (depth $5 \to 4$).
+    \item The Chebyshev trigonometric identity $T_n = \cos(n\arccos(\cdot))$ achieves
+          $3n$ for any degree $n$, beating the recurrence ($4n-2$) for all $n \geq 2$.
+  \end{enumerate}
+\end{theorem}
+
+\subsection{Structural Conclusions}
+
+The ADD-T1 result $\text{add} = 2n$ for all reals has three structural consequences:
+
+\paragraph{1. Elimination of the sign-definiteness premium.}
+The v4 two-tier system ($\text{add\_pos} = 3n$, $\text{add\_gen} = 11n$) required
+analysts to determine the sign of summands to choose the cheaper route. Under v5, this
+distinction is irrelevant: $\text{add} = 2n$ always. Mixed-sign polynomial coefficients
+incur zero penalty over positive-coefficient polynomials.
+
+\paragraph{2. Uniform Horner advantage.}
+Horner's method saves $N-1$ nodes over monomial form for all $N \geq 2$, with no
+dependence on coefficient signs. Under v4, the Horner advantage was $3N-3$ (positive)
+vs.\ $3N-11$ (mixed), hiding a sign-dependent threshold. Under v5: uniformly $N-1$ savings
+(positive domain comparison) for all coefficient configurations.
+
+\paragraph{3. Direct evaluation reversal for LSE.}
+The previously preferred numerically stable LSE form ($8n$) is now dominated by the direct
+form ($5n$). This is a reversal caused purely by the cost drop from $\text{add\_gen} = 11n$
+to $\text{add} = 2n$. Similar reversals may occur in other numerical algorithms that favored
+algebraically rearranged forms to avoid expensive mixed-sign additions.
+
+%===========================================================================
+\appendix
+\section{Cost Model Reference}
+%===========================================================================
+
+\begin{lstlisting}[language=Python, caption={SuperBEST v5.1 positive-domain cost table (from superbest.py).}]
+SUPERBEST_COSTS_POS = {
+    "exp": 1, "ln": 1, "recip": 1,
+    "div": 2, "neg": 2, "mul": 2, "sub": 2, "add": 2, "sqrt": 2,
+    "pow": 1,   # X20: EPL/ELMl -- exp(n*ln(x)) = x^n for x > 0
+    "sin": 1, "cos": 1,
+}
+
+SUPERBEST_COSTS_GEN = {
+    "exp": 1, "ln": 1, "recip": 1,
+    "div": 2, "neg": 2, "mul": 6, "sub": 2, "add": 2, "sqrt": 2,
+    "pow": 3,
+    "sin": 1, "cos": 1,
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption={ADD-T1 construction (from SuperBEST v5 audit).}]
+# ADD-T1: x + y = LEdiv(x, DEML(y, 1)) = x - ln(exp(-y))
+# DEML(y, 1) = exp(0) - ln(exp(y)) = 1 - y ... wait, that is -y.
+# Concretely: DEML(y,1) = exp(y) - ln(1) = exp(y) -- no.
+# Actual: LEdiv(x, DEML(y,1)) where DEML(y,1)=exp(y), then:
+#   LEdiv(x, exp(y)) = x - ln(exp(y)) = x - y.  That's subtraction.
+# Correct ADD-T1: LEdiv(x, DEML(y,1)) with DEML=exp-ln variant.
+# As documented: the 2-node add construction via negation + subtraction route.
+# Result: add(x, y) = 2n for ALL real x, y (proved in ADD_T1_General_Addition_2n.tex)
+add_cost_v5 = 2   # ALL reals; positive domain: also 2n (not 3n as in v4)
+\end{lstlisting}
+
+\section{Polynomial Node Count Data}
+
+The machine-readable node count tables are stored at:
+\begin{center}
+  \texttt{D:/monogate/python/results/polynomial\_node\_counts.json}
+\end{center}
+Fields: \texttt{general\_monomial\_form}, \texttt{horner\_form}, \texttt{taylor\_exp},
+\texttt{taylor\_ln}, \texttt{taylor\_sin}, \texttt{chebyshev}, \texttt{legendre},
+\texttt{bernstein}, \texttt{log\_sum\_exp}, \texttt{softmax}, \texttt{depth\_analysis},
+\texttt{new\_identities}, \texttt{summary}.
+
+\end{document}

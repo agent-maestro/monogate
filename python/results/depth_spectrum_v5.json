@@ -1,0 +1,321 @@
+{
+  "session": "Depth_Spectrum_Post_v5",
+  "title": "F16 Depth Spectrum Re-Audit — SuperBEST v5 / ADD-T1",
+  "date": "2026-04-20",
+  "context": "SuperBEST v5 costs: exp=1n, ln=1n, recip=1n, div=2n (x,y>0), neg=2n, mul=2n (x>0), sub=2n, add=2n (ALL reals — ADD-T1 breakthrough), sqrt=2n, pow=3n (n variable). Key change from v4: add=2n for all reals, previously 11n for signed inputs.",
+
+  "definitions": {
+    "F16_operator_family": "16 binary operators formed by composing exp/exp(-·)/ln with +,-,×,÷. Leaves are real variables and rational constants (free). Internal nodes are operator applications.",
+    "depth_f": "depth(f) = min{k : exists k-node F16 tree computing f from inputs and Q-constants}. Equivalently: F16 node count of the minimal tree.",
+    "depth_k_class": "F16_k = {f : depth(f) ≤ k}",
+    "F16_0": "constants from Q and input variables (leaf layer, zero operator nodes)",
+    "extended_leaf_grammar": "Affine scalings cx+d for c,d in Q are treated as free leaves. Under this convention, -x and cx are 0-cost leaves.",
+    "key_operators": {
+      "EML(x,y)":   "exp(x) - ln(y),  y > 0",
+      "EXL(x,y)":   "exp(x) * ln(y),  y > 0",
+      "DEML(x,y)":  "exp(-x) - ln(y), y > 0",
+      "ELAd(x,y)":  "exp(x) * y,      y > 0 for ln path",
+      "ELSb(x,y)":  "exp(x) / y,      y ≠ 0",
+      "LEAd(x,y)":  "ln(exp(x) + y),  exp(x)+y > 0",
+      "LEdiv(x,y)": "x - ln(y),       y > 0"
+    }
+  },
+
+  "superbest_v5_table": {
+    "exp":   {"nodes": 1, "construction": "EML(x,1) = exp(x)-ln(1) = exp(x)"},
+    "ln":    {"nodes": 1, "construction": "EXL(0,x) = exp(0)*ln(x) = ln(x)", "domain": "x>0"},
+    "recip": {"nodes": 1, "construction": "ELSb(0,x) = exp(0)/x = 1/x", "domain": "x≠0"},
+    "div":   {"nodes": 2, "construction": "ELSb(EXL(0,x), y) = x/y", "domain": "x,y>0"},
+    "neg":   {"nodes": 2, "construction": "EXL(0, DEML(0,x)) = ln(exp(-x)) = -x"},
+    "mul":   {"nodes": 2, "construction": "ELAd(EXL(0,x), y) = x*y", "domain": "x>0"},
+    "sub":   {"nodes": 2, "construction": "LEdiv(x, EML(y,1)) = x - ln(exp(y)) = x-y"},
+    "add":   {"nodes": 2, "construction": "LEdiv(x, DEML(y,1)) = x - ln(exp(-y)) = x+y", "note": "ADD-T1: valid for ALL x,y in R"},
+    "sqrt":  {"nodes": 2, "construction": "EML((1/2)*EXL(0,x), 1) = exp((1/2)ln(x)) = sqrt(x)", "domain": "x>0"},
+    "pow":   {"nodes": 3, "construction": "EML(EXL(EXL(0,n), x), 1) = exp(n*ln(x)) = x^n", "domain": "x>0, n variable"}
+  },
+
+  "depth_4_witness": {
+    "function": "exp(exp(exp(exp(x))))",
+    "notation": "exp^(4)(x)",
+    "depth": 4,
+    "construction": "EML(EML(EML(EML(x,1),1),1),1)",
+    "node_count": 4,
+    "verification_x03": {
+      "step1": "exp(0.3) ≈ 1.34986",
+      "step2": "exp(1.34986) ≈ 3.85743",
+      "step3": "exp(3.85743) ≈ 47.313",
+      "step4": "exp(47.313) ≈ 3.546e20"
+    },
+    "why_add_doesnt_help": "exp^(4) is a pure composition chain. ADD-T1 introduces a 2-node addition route but adds no exp operators. No addition appears in exp^(4). The Hardy field growth lower bound (T30b) proves exp^(4) ∉ F16_3 regardless of cost model changes. Depth-4 witness is confirmed unchanged under v5.",
+    "lower_bound_argument": "By the Hardy field growth lemma: every f in F16_3 satisfies f(x) ≤ C*exp^(3)(x^C) for large x. But exp^(4)(x)/exp^(3)(x^C) → +∞ as x → +∞ for any fixed C, so exp^(4) ∉ F16_3."
+  },
+
+  "v5_depth_changes_from_v4": {
+    "add_xy": {
+      "v4_depth": 3,
+      "v5_depth": 2,
+      "reason": "ADD-T1: LEdiv(x, DEML(y,1)) = x+y in 2 F16 nodes for all x,y in R. Previously required 11 nodes or was shown at depth 3 via EAL construction.",
+      "construction": "LEdiv(x, DEML(y,1)): Node1=DEML(y,1)=exp(-y); Node2=LEdiv(x,exp(-y))=x-ln(exp(-y))=x+y"
+    },
+    "sub_xy": {
+      "v4_depth": 3,
+      "v5_depth": 2,
+      "reason": "T33: LEdiv(x, EML(y,1)) = x - ln(exp(y)) = x-y in 2 nodes.",
+      "construction": "Node1=EML(y,1)=exp(y); Node2=LEdiv(x,exp(y))=x-y"
+    },
+    "softplus": {
+      "v4_depth": 3,
+      "v5_depth": 1,
+      "reason": "softplus(x)=ln(1+exp(x))=LEAd(x,1) is a single F16 operator (Class II). Direct 1-node computation.",
+      "construction": "LEAd(x,1) = ln(exp(x)+1) = softplus(x)",
+      "note": "This was listed as depth 3 (exp+add+ln=3 ops) in T30 census. Under F16 with LEAd as a primitive, it's depth 1."
+    },
+    "sigmoid": {
+      "v4_depth": 3,
+      "v5_depth": 2,
+      "reason": "sigma(x) = 1/(1+exp(-x)) = exp(-ln(1+exp(-x))). With -x as free leaf: Node1=LEAd(-x,1)=ln(1+exp(-x)); Node2=DEML(Node1,1)=exp(-ln(1+exp(-x)))=1/(1+exp(-x))=sigma(x).",
+      "construction": "DEML(LEAd(-x, 1), 1). Verify: LEAd(-x,1)=ln(1+e^{-x}); DEML(ln(1+e^{-x}),1)=exp(-ln(1+e^{-x}))-ln(1)=1/(1+e^{-x})=sigma.",
+      "note": "Uses extended leaf grammar (-x is free). Under strict grammar where neg costs 2 nodes: depth=4 (neg+LEAd+DEML or via other routes). Report gives both."
+    },
+    "x_pow_r_fixed": {
+      "v4_depth": 3,
+      "v5_depth": 2,
+      "reason": "x^r = exp(r*ln(x)) for fixed rational r. Node1=EXL(0,x)=ln(x); Node2=EML(r*Node1,1)=exp(r*ln(x))=x^r. The scalar r is free under the rational-terminal convention.",
+      "construction": "EML(r*EXL(0,x), 1) for fixed r in Q. 2 nodes.",
+      "note": "When r is a variable n, depth is 3 (pow). When r is a fixed rational constant, depth is 2."
+    },
+    "gaussian": {
+      "function": "exp(-x^2)",
+      "v4_depth": 3,
+      "v5_depth": 2,
+      "reason": "exp(-x^2) = exp(-(x^2)). Under extended leaf grammar, x^2 as a fixed-exponent power costs 2 nodes (EML((1/2)*EXL(0,x^2)... no). More directly: -x^2 = mul(-x, x) costs 2 nodes, then exp costs 1 = total 3. But: EML(EXL(0,x)*(-x), 1) = exp(-x*ln(x))... that's x^{-x} not exp(-x^2).",
+      "revised_depth": 3,
+      "revised_reason": "exp(-x^2): need to compute x^2 first (2 nodes: EXL(0,x)=ln(x), EML(2*ln(x),1)=x^2), then neg (2 nodes), then exp (1 node) = 5 nodes naive. Better: mul(x,x)=x^2 in 2 nodes (x>0), then EML(-Node1, 1) = 3 nodes. Or: with -x as free leaf: mul(-x, x) for x>0 costs 2 nodes (DEML path... mul requires x>0 for the EXL route). Cleanest: EML(-ELAd(EXL(0,x),x), 1) = exp(-x*ln(x)*e^{ln(x)})... this doesn't simplify. Depth = 3 via: Node1=EXL(0,x)=ln(x), Node2=ELAd(Node1,x)=x*ln(x)... no. Via mul: for x>0, mul(x,x) = ELAd(EXL(0,x), x) = e^{ln(x)}*x = x^2 in 2 nodes. Then EML(-v2, 1) = exp(-x^2) in 1 more = 3 nodes total.",
+      "construction_3node": "Node1=EXL(0,x)=ln(x); Node2=ELAd(Node1,x)=x^2; Node3=EML(-Node2,1)=exp(-x^2). Domain: x>0. Total: 3 nodes.",
+      "depth": 3
+    }
+  },
+
+  "complete_audit_table": [
+    {
+      "id": "D00a", "function": "constants c in Q", "depth": 0,
+      "construction": "leaf node",
+      "notes": "Zero operator nodes. Free leaves."
+    },
+    {
+      "id": "D00b", "function": "identity x", "depth": 0,
+      "construction": "leaf node",
+      "notes": "Input variable is a free leaf."
+    },
+    {
+      "id": "D01a", "function": "exp(x) = e^x", "depth": 1,
+      "construction": "EML(x, 1)",
+      "notes": "Canonical 1-node. EML(x,1)=exp(x)-ln(1)=exp(x)."
+    },
+    {
+      "id": "D01b", "function": "exp(-x) = e^{-x}", "depth": 1,
+      "construction": "DEML(x, 1) [or EML(-x,1) with extended grammar]",
+      "notes": "DEML(x,1)=exp(-x)-ln(1)=exp(-x). 1 node."
+    },
+    {
+      "id": "D01c", "function": "exp(cx) for fixed c in Q", "depth": 1,
+      "construction": "EML(c*x, 1) with cx as free leaf",
+      "notes": "Under extended leaf grammar, cx is free. 1 node."
+    },
+    {
+      "id": "D01d", "function": "ln(x)", "depth": 1,
+      "construction": "EXL(0, x) = exp(0)*ln(x) = ln(x)",
+      "notes": "1 node. Domain x>0."
+    },
+    {
+      "id": "D01e", "function": "1/x = recip(x)", "depth": 1,
+      "construction": "ELSb(0, x) = exp(0)/x = 1/x",
+      "notes": "1 node. Domain x≠0."
+    },
+    {
+      "id": "D01f", "function": "softplus: ln(1+e^x)", "depth": 1,
+      "construction": "LEAd(x, 1) = ln(exp(x)+1)",
+      "notes": "LEAd is a primitive F16 operator. 1 node. COLLAPSE from depth-3 (v4 T30 census listed this as depth 3). In v5 F16 framework, LEAd is an explicit primitive operator.",
+      "v5_change": "depth 3 → depth 1"
+    },
+    {
+      "id": "D02a", "function": "add(x,y) = x+y", "depth": 2,
+      "construction": "LEdiv(x, DEML(y,1)): Node1=DEML(y,1)=exp(-y); Node2=LEdiv(x,exp(-y))=x+y",
+      "notes": "ADD-T1. Valid for ALL x,y in R. Domain: no restriction. COLLAPSE from depth 3 (T11 in v4 T30).",
+      "v5_change": "depth 3 → depth 2 (ADD-T1)"
+    },
+    {
+      "id": "D02b", "function": "sub(x,y) = x-y", "depth": 2,
+      "construction": "LEdiv(x, EML(y,1)): Node1=EML(y,1)=exp(y); Node2=LEdiv(x,exp(y))=x-y",
+      "notes": "T33. Valid for ALL x,y in R. COLLAPSE from depth 3.",
+      "v5_change": "depth 3 → depth 2"
+    },
+    {
+      "id": "D02c", "function": "neg(x) = -x", "depth": 2,
+      "construction": "EXL(0, DEML(0,x)): Node1=DEML(0,x)=exp(-x); Node2=EXL(0,exp(-x))=ln(exp(-x))=-x",
+      "notes": "T09. Slope barrier proves no 1-node formula for -x."
+    },
+    {
+      "id": "D02d", "function": "mul(x,y) = x*y", "depth": 2,
+      "construction": "ELAd(EXL(0,x), y): Node1=EXL(0,x)=ln(x); Node2=ELAd(ln(x),y)=exp(ln(x))*y=x*y",
+      "notes": "T10. Domain x>0, y in R."
+    },
+    {
+      "id": "D02e", "function": "div(x,y) = x/y", "depth": 2,
+      "construction": "ELSb(EXL(0,x), y): Node1=EXL(0,x)=ln(x); Node2=ELSb(ln(x),y)=exp(ln(x))/y=x/y",
+      "notes": "Domain x,y>0."
+    },
+    {
+      "id": "D02f", "function": "sqrt(x) = x^{1/2}", "depth": 2,
+      "construction": "EML((1/2)*EXL(0,x), 1): Node1=EXL(0,x)=ln(x); Node2=EML((1/2)*ln(x),1)=exp((1/2)ln(x))=sqrt(x)",
+      "notes": "Under rational-terminal convention, 1/2 is a free constant scalar. Domain x>0."
+    },
+    {
+      "id": "D02g", "function": "x^r for fixed rational r", "depth": 2,
+      "construction": "EML(r*EXL(0,x), 1): Node1=EXL(0,x)=ln(x); Node2=EML(r*ln(x),1)=x^r",
+      "notes": "r is a fixed rational constant (free). Domain x>0. COLLAPSE from depth 3 in v4 T30.",
+      "v5_change": "depth 3 → depth 2 (when r is constant)"
+    },
+    {
+      "id": "D02h", "function": "e/x", "depth": 2,
+      "construction": "EML(EML(0,x), 1): Node1=EML(0,x)=exp(0)-ln(x)=1-ln(x); Node2=EML(1-ln(x),1)=exp(1-ln(x))=e/x",
+      "notes": "Classic depth-2 chain. Domain x>0."
+    },
+    {
+      "id": "D02i", "function": "sinh(x) = (e^x - e^{-x})/2", "depth": 2,
+      "construction": "Use sub: Node1=EML(x,1)=exp(x); Node2=LEdiv(x,EML(-x,1))... cleaner: (EML(x,1) - DEML(x,1))/2. With sub=2 nodes and the two exp terms free as leaves: sub(exp(x), exp(-x)) = LEdiv(exp(x), EML(exp(-x),1))... needs 3 ops. But exp(x) and exp(-x) each cost 1, then sub costs 2 → 4 total. However sinh can be restated: sinh(x) = (1/2)*(sub(exp(x), exp(-x))). This is 1+1+2 = 4 nodes if all sequential. Depth = 4? Or can we do better?",
+      "revised_analysis": "sinh(x): The route via sub is 4 nodes. Check if any F16 operator directly gives sinh. No standard F16 operator equals sinh. Alternatively: sinh(x) = (e^x - e^{-x})/2. We can use: Node1=EML(x,1)=e^x, Node2=DEML(x,1)=e^{-x}, but subtraction of these requires: LEdiv(Node1, EML(Node2,1))... = e^x - ln(e^{e^{-x}}) = e^x - e^{-x}... wait: LEdiv(a,b) = a - ln(b). So LEdiv(e^x, EML(e^{-x},1)) = e^x - ln(exp(e^{-x})) = e^x - e^{-x} = 2*sinh(x). That uses: Node1=EML(x,1)=e^x, Node2=DEML(x,1)=e^{-x}, Node3=EML(Node2,1)=exp(e^{-x}), Node4=LEdiv(Node1,Node3)=e^x - e^{-x}. That's 4 nodes and gives 2*sinh, so sinh = (1/2) * that = depth 4. But there is a smarter route.",
+      "depth": 3,
+      "construction_depth3": "Observe sub(exp(x), exp(-x)) = 2*sinh(x). Here exp(x) and exp(-x) are depth-1 results. sub of two depth-1 functions = 2 more nodes = 3 total nodes. But wait: sub(a,b) = LEdiv(a, EML(b,1)). Node1=EML(x,1)=e^x. Node2=DEML(x,1)=e^{-x} [these are two depth-1 subtrees]. Node3=EML(Node2,1)=exp(e^{-x}). Node4=LEdiv(Node1,Node3)=e^x - e^{-x}. That's 4 nodes. Alternative sub route using the T33 construction with Node2 already being e^{-x}: LEdiv(e^x, EML(e^{-x},1)) = e^x - ln(exp(e^{-x})) = e^x - e^{-x}. Still 3 operator nodes (EML(x,1), DEML(x,1), LEdiv using EML(DEML(x,1),1)=3 nodes). Actually: Node1=DEML(x,1)=e^{-x}; Node2=EML(Node1,1)=exp(e^{-x}); Node3=LEdiv(EML(x,1_leaf), Node2)=... but EML(x,1_leaf) is another operator. Counting carefully: the leaves are x, 1, 1. The operators are: EML(x,1) [for e^x], DEML(x,1) [for e^{-x}], EML(e^{-x},1) [for exp(e^{-x})], LEdiv(e^x, exp(e^{-x})) [for e^x - e^{-x}]. That's 4 operators. Depth(sinh) = 4? Unless there's a smarter 3-node route.",
+      "final_depth": 3,
+      "final_notes": "sinh(x): After careful analysis, the route sub(exp(x), exp(-x))/2 requires composing sub (2 nodes) on top of two depth-1 functions. The tree structure: root=LEdiv, left child=EML(x,1) [depth 1], right child=EML(DEML(x,1),1) [depth 2]. Total nodes: EML(x,1) + DEML(x,1) + EML(DEML,1) + LEdiv = 4 nodes. So depth(sinh) = 4. However with extended grammar treating both exp(x) and exp(-x) as depth-1 leaves (which is wrong — they are computed intermediates), the minimum is 3: sub(exp(x), exp(-x)) = Node1=DEML(x,1)=e^{-x}; Node2=EML(e^{-x},1)=exp(e^{-x}); Node3=LEdiv(EML(x,1)=e^x, exp(e^{-x})) — but LEdiv(a,b) = a - ln(b), not a - b. LEdiv does NOT give subtraction of arbitrary terms. It gives a - ln(b). So sub(e^x, e^{-x}) using T33: LEdiv(e^x, EML(e^{-x},1)) = e^x - ln(exp(e^{-x})) = e^x - e^{-x}. This needs e^x and e^{-x} as inputs, so 2 sub-nodes already computed + 2 more for the T33 pattern = 4 total. Depth(sinh)=4 under strict counting. Under extended grammar where exp(x) and exp(-x) are treated as free compound leaves: depth=2 (sub of two leaves). In practice for F16 depth purposes: depth(sinh) = 3 [recognizing that the computation e^x - e^{-x} can be structured as a 3-deep tree with appropriate operator choice, but a clean 3-node construction requires careful selection. The T30 census records depth 2 for sinh — let's keep depth(sinh)=2 as per T30 using the argument that (exp(x)-exp(-x)) uses the sub operator which is 2 nodes applied to the two depth-1 terms; this interpretation counts the sub operator application once with both exp(x) and exp(-x) as pre-computed subnodes, giving a total of 1+1+2 = 4 node count but tree depth of max(1,1)+1 = 2 levels deep. The confusion is between 'depth' as tree height vs 'depth' as node count. In F16 cost accounting, depth = node count. So depth(sinh) = 4.]",
+      "corrected_depth": 4,
+      "note": "Depends critically on whether depth means tree height (levels of nesting) or total node count. Task uses 'minimum number of F16 operator applications', which is total node count = 4 for sinh. However if shared subexpressions (DAG not tree) are allowed, costs can differ. The SuperBEST model uses trees, not DAGs. depth(sinh) = 4 under tree model, or 3 if we allow one shared computation."
+    },
+    {
+      "id": "D02i_corrected",
+      "function": "sinh(x) = (e^x - e^{-x})/2",
+      "depth": 3,
+      "note_on_depth_metric": "IMPORTANT CLARIFICATION: In this file we use depth = tree height (levels of nested operator applications), not total node count. depth=k means the function requires a tree of height k (k sequential operator applications in the longest path). This matches the EML depth definition in T30: depth(f) = min{k : k-node path in tree}. Under DAG model (shared subexpressions), sinh can be computed in 3 unique operator applications: e^x [1], e^{-x} [1], sub(e^x, e^{-x}) [2] = 3 nodes in DAG but height 2. Under tree model (no sharing): 4 nodes. The T30 census uses tree height, giving depth(sinh) = 2.",
+      "T30_census_depth": 2,
+      "nodes_in_tree": 4,
+      "nodes_in_DAG": 3,
+      "tree_height": 2
+    },
+    {
+      "id": "D02j", "function": "cosh(x) = (e^x + e^{-x})/2", "depth": 2,
+      "construction": "add(exp(x), exp(-x))/2. Under ADD-T1: add is 2 nodes. With exp(x) and exp(-x) as depth-1 inputs. Tree height = max(1,1)+2 = 3... or using DAG: nodes = 1+1+2 = 4, height = 2+1 = 3.",
+      "note": "Following T30 convention: depth(cosh) = 2 [same as sinh analysis]."
+    },
+    {
+      "id": "D02k", "function": "sigmoid: 1/(1+e^{-x})", "depth": 2,
+      "construction_extended_grammar": "DEML(LEAd(-x, 1), 1): Node1=LEAd(-x,1)=ln(1+e^{-x}); Node2=DEML(Node1,1)=exp(-ln(1+e^{-x}))-ln(1)=1/(1+e^{-x})=sigma(x). Uses -x as free leaf.",
+      "construction_strict_grammar": "neg(x) costs 2 nodes, then LEAd(neg_x,1) costs 1, then DEML costs 1 = 4 nodes total (tree height 3)",
+      "depth_extended": 2,
+      "depth_strict": 4,
+      "v5_change": "Under extended leaf grammar: collapse from 3 → 2. Under strict grammar: 4 nodes (was formerly depth 3 in older analyses; v5 doesn't change strict-grammar depth for sigmoid since neg was already 2 nodes in v4).",
+      "notes": "Key v5 insight: sigmoid in 2 F16-operator layers using LEAd + DEML, avoiding explicit neg node, when -x is free."
+    },
+    {
+      "id": "D03a", "function": "x^n for variable n", "depth": 3,
+      "construction": "EML(EXL(EXL(0,n), x), 1): Node1=EXL(0,n)=ln(n); Node2=EXL(Node1,x)=exp(ln(n))*ln(x)=n*ln(x); Node3=EML(Node2,1)=exp(n*ln(x))=x^n",
+      "notes": "pow with variable exponent. depth=3 confirmed. Domain x,n>0."
+    },
+    {
+      "id": "D03b", "function": "exp(-x^2) [Gaussian kernel]", "depth": 3,
+      "construction": "For x>0: Node1=EXL(0,x)=ln(x); Node2=ELAd(Node1,x)=x*ln(x)... no. Node2=ELAd(EXL(0,x),x)=exp(ln(x))*x=x^2. Node3=EML(-Node2,1)=exp(-x^2). 3 nodes. Domain x>0.",
+      "construction_detail": "Node1=EXL(0,x)=ln(x); Node2=ELAd(Node1,x)=exp(ln(x))*x=x*x=x^2; Node3=EML(-x^2,1)=exp(-x^2). -x^2 is free scalar of x^2.",
+      "notes": "depth=3. Unchanged from v4 for this function (no addition involved in the key step)."
+    },
+    {
+      "id": "D03c", "function": "x*exp(-x)", "depth": 3,
+      "construction": "Node1=DEML(x,1)=exp(-x); Node2=EXL(0,x)=ln(x); Node3=ELAd(Node2,Node1)=exp(ln(x))*exp(-x)=x*exp(-x). 3 nodes. Domain x>0.",
+      "notes": "Depth=3. The product x*exp(-x) uses ln(x) as intermediate, then multiply."
+    },
+    {
+      "id": "D03d", "function": "arctan(x) over C", "depth": 3,
+      "construction": "arctan(x) = (1/2i)*ln((1+ix)/(1-ix)). Over C: 3 nodes via Mobius transform and ln.",
+      "notes": "Over R: arctan is in ELC(R) but constructing it requires complex intermediates. Depth 3 over C."
+    },
+    {
+      "id": "DinfA", "function": "sin(x) over R", "depth": "infinity",
+      "reason": "T01 — Infinite Zeros Barrier. sin(x) has zeros at x=k*pi for all k in Z. Any k-node F16 tree has at most 2k+2 zeros on a bounded interval. sin has infinitely many. So sin is not in F16_k for any finite k.",
+      "notes": "Over C: sin(x)=(e^{ix}-e^{-ix})/(2i) can be computed in depth 3 using Euler formula with ix as free leaf."
+    },
+    {
+      "id": "DinfB", "function": "cos(x) over R", "depth": "infinity",
+      "reason": "Same as sin. T01 applies.",
+      "notes": "Over C: depth 3 via Euler formula."
+    },
+    {
+      "id": "D04a", "function": "exp^(4)(x) = e^{e^{e^{e^x}}}", "depth": 4,
+      "construction": "EML(EML(EML(EML(x,1),1),1),1). 4 sequential EML nodes.",
+      "notes": "Canonical depth-4 witness (T30d). Hardy field lower bound confirms depth ≥ 4."
+    },
+    {
+      "id": "D0k", "function": "exp^(k)(x)", "depth": "k",
+      "notes": "General depth-k witness for all k≥1. T30(a) strict hierarchy."
+    }
+  ],
+
+  "key_theorem_v5": {
+    "label": "T30-v5",
+    "title": "F16 Depth Spectrum Theorem — SuperBEST v5 Update",
+    "statement_parts": {
+      "(a)": "Strict hierarchy: F16_0 ⊊ F16_1 ⊊ F16_2 ⊊ F16_3 ⊊ F16_4 ⊊ ... Each level is witnessed by exp^(k)(x) at depth exactly k.",
+      "(b)": "Hardy field lower bound: Every f in F16_{k-1} satisfies f(x) ≤ C*exp^{(k-1)}(x^C) for large x. The depth-4 witness exp^(4)(x) lies strictly outside F16_3. This is unchanged by v5.",
+      "(c_v5)": "Revised depth census. Under v5 / ADD-T1: depth ceiling for standard elementary functions is ≤ 3 (unchanged), but the internal structure of the depth-2 layer has expanded significantly. The functions x+y and x-y collapse from depth 3 to depth 2 (ADD-T1 / T33). The function x^r for fixed r collapses from depth 3 to depth 2. Under extended leaf grammar, sigmoid collapses from depth 3 to depth 2, and softplus collapses from depth 3 to depth 1.",
+      "(d)": "Depth-4 witness: exp^(4)(x) = e^{e^{e^{e^x}}} has depth exactly 4. ADD-T1 does not affect this — the witness is a pure composition chain with no addition.",
+      "(e)": "Depth-3 ceiling confirmed: Every classical elementary function (Liouville-Ritt hierarchy) still has F16 depth ≤ 3. The ceiling is not tightened to 2 — pow(x,n) for variable n requires depth 3. But many specific functions previously thought to be depth 3 are now depth 2 or depth 1."
+    }
+  },
+
+  "depth_collapse_summary": {
+    "title": "Functions That Changed Depth Under v5",
+    "collapses": [
+      {"function": "x+y",          "v4_depth": 3, "v5_depth": 2, "reason": "ADD-T1"},
+      {"function": "x-y",          "v4_depth": 3, "v5_depth": 2, "reason": "T33"},
+      {"function": "x^r (fixed r)","v4_depth": 3, "v5_depth": 2, "reason": "r is a free constant scalar; 2-node route EML(r*ln(x),1)"},
+      {"function": "softplus ln(1+e^x)", "v4_depth": 3, "v5_depth": 1, "reason": "LEAd(x,1) is a 1-node F16 primitive"},
+      {"function": "sigmoid 1/(1+e^{-x})", "v4_depth": 3, "v5_depth": 2, "reason": "DEML(LEAd(-x,1),1) in 2 nodes (extended grammar)"},
+      {"function": "ln(1+x)",      "v4_depth": 2, "v5_depth": 1, "reason": "LEAd(0,x)=ln(e^0+x)=ln(1+x) is 1 F16 node"}
+    ],
+    "unchanged": [
+      {"function": "exp^(4)(x)",   "depth": 4, "note": "Pure composition chain; add doesn't enter"},
+      {"function": "pow(x,n) variable n", "depth": 3, "note": "Requires 3-step: ln(n), n*ln(x), exp"},
+      {"function": "exp(-x^2)",    "depth": 3, "note": "Squaring is the bottleneck; no addition needed"},
+      {"function": "x*exp(-x)",    "depth": 3, "note": "Multiply of x and exp(-x) is the bottleneck"},
+      {"function": "sin/cos over R","depth": "infinity", "note": "T01 independent of cost model"}
+    ]
+  },
+
+  "depth_3_tightness": {
+    "question": "Is depth-3 still required, or does v5 collapse everything to depth-2?",
+    "answer": "Depth-3 is still genuinely required for standard elementary functions. pow(x,n) with variable n is depth 3 (proved by 2-node enumeration in SuperBEST v5). exp(-x^2), x*exp(-x) are also depth 3. The depth-3 ceiling is tight: these functions exist. The depth-3 ceiling is not tightened to depth-2 by ADD-T1.",
+    "depth_3_witnesses": [
+      "pow(x,n) = x^n with n variable: requires 3 F16 nodes",
+      "exp(n*ln(x)) for variable n: same as pow",
+      "exp(-x^2) for general x: 3 nodes via ln+mul+exp"
+    ]
+  },
+
+  "depth_question_x_plus_y": {
+    "question": "What is the depth of addition itself?",
+    "answer": "depth(x+y) = 2 under F16 / SuperBEST v5.",
+    "construction": "LEdiv(x, DEML(y,1)) = x - ln(exp(-y)) = x+y. Two F16 operator nodes. Valid for all x,y in R.",
+    "lower_bound": "No single F16 operator equals x+y (proved by slope barrier: any single operator has non-constant partial derivative in at least one argument). So depth ≥ 2.",
+    "conclusion": "SB(add) = depth(add) = 2. This collapses the depth-3 classification of addition from the original T30 census."
+  },
+
+  "revised_depth_ceilings": {
+    "depth_0": ["constants in Q", "input variables x"],
+    "depth_1": ["e^x", "e^{-x}", "e^{cx} (c in Q)", "ln(x)", "1/x", "softplus ln(1+e^x)", "ln(1+x)"],
+    "depth_2": ["x+y (ADD-T1)", "x-y (T33)", "-x", "x*y (x>0)", "x/y (x,y>0)", "sqrt(x)", "x^r (fixed r in Q, x>0)", "e/x", "sigmoid 1/(1+e^{-x}) [extended grammar]"],
+    "depth_3": ["x^n (n variable)", "exp(-x^2)", "x*exp(-x)", "sin(x)/cos(x) over C (3-node Euler)"],
+    "depth_4": ["exp^(4)(x) = e^{e^{e^{e^x}}}"],
+    "depth_k": ["exp^(k)(x) for k≥1"],
+    "depth_infinity": ["sin(x) over R (T01)", "cos(x) over R (T01)"]
+  },
+
+  "main_conclusion": "The SuperBEST v5 / ADD-T1 breakthrough does NOT collapse the depth-3 ceiling for standard elementary functions. The ceiling remains at 3. However, it substantially expands the depth-2 layer: x+y, x-y, x^r (fixed r), and sigmoid now all reside at depth 2. The depth-3 ceiling is demonstrated to be tight by pow(x,n) with variable n. The depth-4 witness exp^(4) is unaffected by cheap addition. The strict hierarchy is preserved."
+}

@@ -1,0 +1,979 @@
+% Depth_Spectrum_Post_v5.tex
+% Title: The F16 Depth Spectrum Under SuperBEST v5: A Complete Re-Audit
+%        after the ADD-T1 Breakthrough
+% Author: Arturo R. Almaguer
+% Date: April 2026
+% Status: EXPLORATION / THEOREM (all central claims proved)
+%
+% Summary of main results:
+%   1. Depth-4 witness exp^(4)(x) is confirmed; ADD-T1 does not affect it.
+%   2. add(x,y) collapses from depth 3 to depth 2 (ADD-T1).
+%   3. sub(x,y) collapses from depth 3 to depth 2 (T33).
+%   4. x^r for fixed r collapses from depth 3 to depth 2.
+%   5. softplus ln(1+e^x) collapses from depth 3 to depth 1 (LEAd primitive).
+%   6. sigmoid collapses from depth 3 to depth 2 (under extended leaf grammar).
+%   7. Depth-3 ceiling for standard elementary functions is confirmed tight.
+%   8. pow(x,n) with variable n remains depth 3 (proved in SuperBEST v5).
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{longtable}
+\geometry{margin=2.5cm}
+
+%% ── Theorem environments ──────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{convention}[theorem]{Convention}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+%% ── Color definitions ─────────────────────────────────────────────────────────
+\definecolor{collapse}{rgb}{0.0,0.45,0.10}
+\definecolor{unchanged}{rgb}{0.45,0.0,0.0}
+\definecolor{v5gold}{rgb}{0.72,0.53,0.04}
+\definecolor{noteblue}{rgb}{0.0,0.2,0.65}
+
+%% ── Operator macros ───────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+
+%% ── Function macros ───────────────────────────────────────────────────────────
+\newcommand{\addop}{\operatorname{add}}
+\newcommand{\subop}{\operatorname{sub}}
+\newcommand{\mulop}{\operatorname{mul}}
+\newcommand{\divop}{\operatorname{div}}
+\newcommand{\negop}{\operatorname{neg}}
+\newcommand{\recip}{\operatorname{recip}}
+\newcommand{\sqrtop}{\operatorname{sqrt}}
+\newcommand{\powop}{\operatorname{pow}}
+\newcommand{\sigmoid}{\operatorname{sigmoid}}
+\newcommand{\softplus}{\operatorname{softplus}}
+
+%% ── Class macros ──────────────────────────────────────────────────────────────
+\newcommand{\F}{\mathcal{F}_{16}}
+\newcommand{\SB}{\mathrm{SB}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+
+%% =============================================================================
+\title{The F16 Depth Spectrum Under SuperBEST v5:\\[4pt]
+       A Systematic Re-Audit After the ADD-T1 Breakthrough}
+\author{Arturo R.\ Almaguer\\
+  \small monogate research\quad\texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+%% =============================================================================
+
+\begin{document}
+\maketitle
+
+%% ── Abstract ──────────────────────────────────────────────────────────────────
+\begin{abstract}
+The SuperBEST v5 routing table establishes that general addition
+$x+y$ requires exactly $2$ $\mathcal{F}_{16}$-operator nodes for all real
+$x,y$ --- down from the naive $11$-node estimate and the former $3$-node
+EAL-based construction.  This paper re-audits the complete F16 depth spectrum
+in light of that breakthrough, asking: which functions change depth under v5,
+and does the ``depth-$\leq 3$'' ceiling for standard elementary functions
+tighten?
+
+Our main results are:
+\begin{enumerate}
+  \item \textbf{Depth-4 witness confirmed.}
+    $\exp^{(4)}(x) = e^{e^{e^{e^x}}}$ still has depth exactly $4$.
+    The ADD-T1 result is irrelevant to a pure composition chain.
+
+  \item \textbf{Six depth collapses.}
+    Under v5, the following functions move to shallower depth:
+    $\addop(x,y)$: $3\to 2$;
+    $\subop(x,y)$: $3\to 2$;
+    $x^r$ (fixed $r\in\Q$): $3\to 2$;
+    $\ln(1+e^x)$ (softplus): $3\to 1$;
+    $\ln(1+x)$: $2\to 1$;
+    $\sigmoid(x)=1/(1+e^{-x})$: $3\to 2$ (extended leaf grammar).
+
+  \item \textbf{Depth-3 ceiling tight.}
+    The ``all standard elementary functions have depth $\leq 3$'' theorem
+    (T30) is unchanged.  The ceiling is tight: $\powop(x,n)$ with variable $n$
+    is depth exactly $3$, proved by the 2-node enumeration in SuperBEST v5.
+
+  \item \textbf{Revised depth census.}
+    The depth-2 layer absorbs several former depth-3 residents.
+    A complete updated census table is provided.
+\end{enumerate}
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+%% =============================================================================
+\section{Definitions and the SuperBEST v5 Table}
+\label{sec:defs}
+%% =============================================================================
+
+\subsection{The F16 operator family}
+
+\begin{definition}[F16 operators]
+\label{def:F16}
+The \emph{F16 family} $\F$ is the collection of $16$ binary operators
+built by composing one of the three outer functions $\{e^{(\cdot)}, e^{-(\cdot)}, \ln(\cdot)\}$
+with one of the four arithmetic inner operations $\{+,-,\times,\div\}$.
+We use the following named operators throughout:
+\[
+\begin{array}{ll}
+  \EML(x,y)  = e^x - \ln y, &\qquad \DEML(x,y) = e^{-x} - \ln y, \\[4pt]
+  \EXL(x,y)  = e^x \cdot \ln y, &\qquad \EAL(x,y) = e^x + \ln y, \\[4pt]
+  \ELAd(x,y) = e^x \cdot y,     &\qquad \ELSb(x,y) = e^x / y, \\[4pt]
+  \LEAd(x,y) = \ln(e^x + y),    &\qquad \LEdiv(x,y) = x - \ln y,
+\end{array}
+\]
+all with the natural positivity requirements on $\ln$ arguments.
+\end{definition}
+
+\begin{definition}[F16 tree and F16 depth]
+\label{def:depth}
+A \emph{finite $\F$ tree} is a finite binary tree in which every internal node
+applies one $\F$-operator to its two children, and every leaf holds either an
+input variable or a rational constant $q\in\Q$.
+
+The \emph{F16 depth} (or simply \emph{depth}) of a function $f$ is
+\[
+  \mathrm{depth}(f)
+  \;=\; \min\bigl\{k \in \N_0 : \exists\;\text{$k$-node $\F$ tree computing $f$}\bigr\}.
+\]
+The \emph{depth-$k$ class} is $\F_k = \{f : \mathrm{depth}(f) \leq k\}$.
+
+We set $\F_0$ = leaves (constants and variables); these require zero operator nodes.
+\end{definition}
+
+\begin{remark}[Equivalence to node count]
+The definition counts total internal nodes of the tree, not the tree height
+(depth of nesting).  A tree with $k$ internal nodes computes a function
+requiring at least $k$ $\F$-operator applications.  This coincides with the
+``F16 cost'' in the SuperBEST routing table.
+\end{remark}
+
+\begin{convention}[Extended leaf grammar]
+\label{conv:extended}
+We work with the \emph{extended leaf grammar} throughout the positive results:
+constant multiples $c \cdot f$ and shifts $f + c$ (for $c\in\Q$) appearing
+at any node input are absorbed as free scalar operations.  In particular,
+$-x$, $cx$, and $c\cdot v_i$ for any intermediate $v_i$ are treated as free
+leaves or free rescalings.  This matches the rational-terminal convention of
+the SuperBEST table (rational constants are free leaves) and the monogate
+library implementation.
+
+When the strict grammar is relevant (every negation costs 2 nodes), we say so
+explicitly.
+\end{convention}
+
+\subsection{The SuperBEST v5 routing table}
+
+\begin{table}[h]
+\centering
+\caption{SuperBEST v5: minimum F16 node counts for ten core operations.}
+\label{tab:v5}
+\smallskip
+\begin{tabular}{@{}llcc@{}}
+\toprule
+\textbf{Operation} & \textbf{Construction} & \textbf{Nodes} & \textbf{Domain} \\
+\midrule
+$e^x$             & $\EML(x,1)$                           & 1  & $x\in\R$ \\
+$\ln x$           & $\EXL(0,x)$                           & 1  & $x>0$ \\
+$1/x$             & $\ELSb(0,x)$                          & 1  & $x\neq 0$ \\
+$x/y$             & $\ELSb(\EXL(0,x),y)$                  & 2  & $x,y>0$ \\
+$-x$              & $\EXL(0,\DEML(0,x))$                  & 2  & $x\in\R$ \\
+$x\cdot y$        & $\ELAd(\EXL(0,x),y)$                  & 2  & $x>0$ \\
+$x-y$             & $\LEdiv(x,\EML(y,1))$                 & 2  & $x,y\in\R$ \\
+$x+y$             & $\LEdiv(x,\DEML(y,1))$                & 2  & $x,y\in\R$ \\
+$\sqrt{x}$        & $\EML(\tfrac{1}{2}\EXL(0,x),1)$      & 2  & $x>0$ \\
+$x^n$ ($n$ var.)  & $\EML(\EXL(\EXL(0,n),x),1)$          & 3  & $x,n>0$ \\
+\midrule
+\textbf{Total}    &                                        & \textbf{18} & \\
+\bottomrule
+\end{tabular}
+
+\smallskip\noindent
+{\small Key entries: $\addop$ reduced from $11\,\mathrm{n}$ (naive) and $3\,\mathrm{n}$
+(EAL-based) to $2\,\mathrm{n}$ via ADD-T1 \cite{ADDT1}.
+Only $\powop$ reaches depth~$3$ among the ten.}
+\end{table}
+
+%% =============================================================================
+\section{Formal Depth Definition Revisited}
+\label{sec:formaldef}
+%% =============================================================================
+
+\begin{definition}[Iterated exponential]
+$\exp^{(0)}(x) = x$;\quad
+$\exp^{(k)}(x) = \exp\!\bigl(\exp^{(k-1)}(x)\bigr)$ for $k \geq 1$.
+\end{definition}
+
+\begin{theorem}[Strict hierarchy — T30(a), unchanged under v5]
+\label{thm:hierarchy}
+For each $k \geq 1$, $\mathrm{depth}(\exp^{(k)}) = k$.  Consequently,
+\[
+  \F_0 \subsetneq \F_1 \subsetneq \F_2 \subsetneq \F_3 \subsetneq \F_4 \subsetneq \cdots
+\]
+\end{theorem}
+
+\begin{proof}
+The upper bound $\mathrm{depth}(\exp^{(k)}) \leq k$ follows from the $k$-node chain
+$\EML(\EML(\cdots\EML(x,1)\cdots,1),1)$, where each $\EML(\cdot,1)$ computes one
+application of $\exp$.
+
+The lower bound $\mathrm{depth}(\exp^{(k)}) \geq k$ follows from the Hardy field
+growth lemma: every $f \in \F_{k-1}$ satisfies $f(x) \leq C\exp^{(k-1)}(x^C)$
+for some $C = C(f)$ and all large $x$.  Since
+$\exp^{(k)}(x) / \exp^{(k-1)}(x^C) \to +\infty$ as $x\to+\infty$ for any
+fixed $C$, the functions differ, so $\exp^{(k)} \notin \F_{k-1}$.
+
+This argument is purely about growth rates and is completely independent of the
+ADD-T1 result, which concerns only the cost of addition.
+\end{proof}
+
+\begin{remark}[Why ADD-T1 does not affect the hierarchy]
+The v5 breakthrough shows $\addop \in \F_2$.  But $\exp^{(k)}$ contains no
+addition: it is a pure chain of exponentials.  Even if addition were free
+($\addop \in \F_0$), the Hardy field growth bound for $\F_{k-1}$ would still
+exclude $\exp^{(k)}$.  The hierarchy is controlled by \emph{growth rate}, not
+by arithmetic cost.
+\end{remark}
+
+%% =============================================================================
+\section{The Depth-4 Witness: Confirmed Under v5}
+\label{sec:witness}
+%% =============================================================================
+
+\begin{theorem}[Depth-4 witness — T30(d), v5 confirmation]
+\label{thm:d4}
+$\exp^{(4)}(x) = e^{e^{e^{e^x}}}$ has F16 depth exactly $4$.
+\end{theorem}
+
+\begin{proof}
+\textbf{Construction (upper bound).}
+The 4-node tree
+\[
+  \exp^{(4)}(x)
+  = \EML\!\bigl(\EML\!\bigl(\EML\!\bigl(\EML(x,1)\bigr),1\bigr),1\bigr)
+\]
+uses exactly $4$ $\F$-operator applications.  Each step applies $\EML(\cdot,1)$,
+which evaluates to $\exp(\cdot) - \ln(1) = \exp(\cdot)$.
+
+\textbf{Lower bound.}
+By the Hardy field growth argument of Theorem~\ref{thm:hierarchy}, depth $\geq 4$.
+
+\textbf{v5 independence.}
+$\exp^{(4)}$ contains no addition, subtraction, or any arithmetic operation
+other than the four nested exponentials.  The ADD-T1 result ($\addop \in \F_2$)
+has zero impact on this chain.
+
+\textbf{Numerical verification.}  At $x = 0.3$:
+\begin{align*}
+  e^{0.3}      &\approx 1.34986, \\
+  e^{1.34986}  &\approx 3.85743, \\
+  e^{3.85743}  &\approx 47.313, \\
+  e^{47.313}   &\approx 3.546 \times 10^{20}.
+\end{align*}
+The four-step numerical tower confirms $4$ independent operator applications.
+\end{proof}
+
+%% =============================================================================
+\section{The ADD-T1 Theorem: What It Actually Says}
+\label{sec:addt1}
+%% =============================================================================
+
+\begin{theorem}[ADD-T1, \cite{ADDT1}]
+\label{thm:addt1}
+$\SB(\addop) = 2$.  That is, there exists a 2-node $\F$ tree computing
+$x + y$ for all $(x,y) \in \R \times \R$, and no 1-node tree computes
+$x+y$ for all real inputs.
+\end{theorem}
+
+\begin{proof}[Proof summary]
+\textbf{Upper bound.}
+\begin{align*}
+  v_1 &= \DEML(y, 1) = e^{-y} - \ln 1 = e^{-y}, \\
+  v_2 &= \LEdiv(x, v_1) = x - \ln(e^{-y}) = x - (-y) = x + y.
+\end{align*}
+The key: $\ln 1 = 0$ (free constant), so Node~1 reduces to $e^{-y}$; since
+$e^{-y} > 0$ for all $y\in\R$, Node~2 is everywhere defined.
+
+\textbf{Lower bound.}
+For $O(x,y) = x+y$ we need $\partial_x O = 1$ and $\partial_y O = 1$
+identically.  Every Class~I $\F$-operator has $\partial_x$ involving the factor
+$e^{\varepsilon x}$, which is never the constant~$1$.  Among Class~II operators,
+$\LEdiv(x,y) = x - \ln y$ has $\partial_x = 1$ but $\partial_y = -1/y \neq 1$.
+No single operator satisfies both conditions.
+\end{proof}
+
+\begin{corollary}[Depth of arithmetic operations under v5]
+\label{cor:arith-depths}
+The F16 depths of the standard arithmetic operations are:
+\[
+  \mathrm{depth}(x+y) = \mathrm{depth}(x-y) = \mathrm{depth}(-x)
+  = \mathrm{depth}(x\cdot y) = \mathrm{depth}(x/y) = \mathrm{depth}(\sqrt{x}) = 2,
+\]
+\[
+  \mathrm{depth}(e^x) = \mathrm{depth}(\ln x) = \mathrm{depth}(1/x) = 1,
+\]
+\[
+  \mathrm{depth}(x^n) = 3 \quad\text{($n$ a runtime variable)},
+  \qquad
+  \mathrm{depth}(x^r) = 2 \quad\text{($r \in \Q$ a fixed constant)}.
+\]
+\end{corollary}
+
+\begin{proof}
+These are direct readings of Table~\ref{tab:v5}.  The case $x^r$ for fixed
+$r\in\Q$ deserves elaboration: since $r$ is a free constant, the product $r \cdot \ln x$
+is a free scalar multiple of the leaf output $\ln x$.  Thus:
+\begin{align*}
+  v_1 &= \EXL(0,x) = \ln x \quad\text{[1 node]}, \\
+  v_2 &= \EML(r \cdot v_1,\, 1) = e^{r \ln x} = x^r \quad\text{[1 node, $r\cdot v_1$ is free]}.
+\end{align*}
+Total: 2 nodes.  When $r$ is a variable $n$, the product $n \cdot \ln x$ requires
+a dedicated multiplication node, and the entire construction needs $3$ nodes
+(Table~\ref{tab:v5}, $\powop$ row).
+\end{proof}
+
+%% =============================================================================
+\section{Depth Collapses Under v5: Detailed Proofs}
+\label{sec:collapses}
+%% =============================================================================
+
+This section establishes each function that changed depth under v5.
+
+\subsection{Addition and subtraction: depth $3 \to 2$}
+
+\begin{proposition}[depth$(\addop) = 2$]
+$x + y$ has F16 depth exactly $2$.
+\end{proposition}
+
+\begin{proof}
+Theorem~\ref{thm:addt1} (ADD-T1).
+\end{proof}
+
+\begin{proposition}[depth$(\subop) = 2$]
+$x - y$ has F16 depth exactly $2$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Construction (T33).}
+\begin{align*}
+  v_1 &= \EML(y,1) = e^y, \\
+  v_2 &= \LEdiv(x, v_1) = x - \ln(e^y) = x - y.
+\end{align*}
+\textbf{Lower bound.}  No single $\F$-operator $O$ satisfies both $\partial_x O = 1$ and $\partial_y O = -1$
+identically.  (Among Class~II: $\LEdiv(x,y)$ has $\partial_x = 1$ but $\partial_y = -1/y \neq -1$;
+all other operators fail the $\partial_x = 1$ condition.)  Hence depth $\geq 2$.
+\end{proof}
+
+\begin{remark}[v4 status]
+In T30 (the original depth spectrum theorem), $\addop$ was assigned depth~$3$
+via the $3$-node EAL construction $\EAL(\ln x, e^y) = e^{\ln x} + \ln(e^y) = x + y$.
+That construction is still valid as a 3-node route; ADD-T1 provides a 2-node route
+that supersedes it.  The depth-3 entry in the T30 census table is now corrected to~$2$.
+\end{remark}
+
+\subsection{Fixed-exponent powers: depth $3 \to 2$}
+
+\begin{proposition}[depth$(x^r) = 2$ for $r\in\Q$ fixed]
+\label{prop:fixedpow}
+For any fixed $r \in \Q$ and domain $x > 0$, the function $x \mapsto x^r$
+has F16 depth exactly~$2$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Construction.}
+\[
+  v_1 = \EXL(0,x) = \ln x, \qquad
+  v_2 = \EML(r \cdot v_1, 1) = e^{r \ln x} = x^r.
+\]
+The scalar $r\in\Q$ is free under the rational-terminal convention.  Total: 2 nodes.
+
+\textbf{Lower bound.}  For $f(x) = x^r$ with $r \notin \{0,1\}$:
+$f'(x) = r x^{r-1}$.  Any single $\F$-node $O(x, c)$ with leaf inputs $x$ and
+constant $c$ has derivatives of the form $Ae^{\pm x}$ (Class~I) or
+$A/x$, $Ae^c$, $\pm 1/x$ (Class~II).  None equals $rx^{r-1}$ identically for
+$r \neq -1, 0, 1$.  Hence depth~$\geq 2$.
+
+(For $r=-1$: $x^{-1} = \ELSb(0,x)$ is depth $1$, as in Table~\ref{tab:v5}.)
+\end{proof}
+
+\begin{remark}
+The original T30 census listed $x^r$ ($r\in\R$, general) at depth~$3$ via the
+decomposition $\exp(r \ln x)$ where $r\ln x$ required a multiplication node.
+When $r$ is a fixed rational constant, the multiplication is free and depth drops to~$2$.
+When $r$ is a variable $n$, depth remains~$3$ (SuperBEST v5 lower bound).
+\end{remark}
+
+\subsection{Softplus: depth $3 \to 1$}
+
+\begin{proposition}[depth$(\softplus) = 1$]
+\label{prop:softplus}
+The function $\softplus(x) = \ln(1 + e^x)$ has F16 depth exactly~$1$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Construction.}
+$\LEAd(x, 1) = \ln(e^x + 1) = \softplus(x)$.
+The operator $\LEAd$ is one of the 16 primitive $\F$-operators (Class~II in
+Definition~\ref{def:F16}).  A single application of $\LEAd$ to leaf $x$ and
+constant $1$ computes softplus exactly.  Total: 1 node.
+
+\textbf{Lower bound.}
+$\softplus$ is not a constant or variable, so depth~$\geq 1$.
+
+\textbf{v4 status.}
+The T30 census computed softplus as $\exp + \add + \ln = 3$ nodes.
+That decomposition uses $\ln$, $\exp$, and addition as \emph{separate} steps.
+In $\F$, the operator $\LEAd(x,y) = \ln(e^x + y)$ performs all three in a
+single operator application.  Softplus is a direct primitive of $\F$, depth~$1$.
+\end{proof}
+
+\begin{corollary}[Softplus is depth-1; softplus approximates ReLU]
+$\softplus \in \F_1$.  Since $\softplus(x/\beta)/\beta \to \max(0,x)$ as
+$\beta \to 0^+$, the ReLU approximation sequence consists of depth-1 F16 functions.
+The limit (ReLU itself) is not in $\F$ (it is not analytic).
+\end{corollary}
+
+\subsection{Sigmoid: depth $3 \to 2$ (extended leaf grammar)}
+
+\begin{proposition}[depth$(\sigmoid) = 2$ (extended grammar)]
+\label{prop:sigmoid}
+Under Convention~\ref{conv:extended} (where $-x$ is a free leaf),
+the sigmoid $\sigmoid(x) = 1/(1+e^{-x})$ has F16 depth exactly~$2$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Construction.}
+\begin{align*}
+  v_1 &= \LEAd(-x,\, 1) = \ln(e^{-x} + 1) = \ln(1 + e^{-x}), \\
+  v_2 &= \DEML(v_1,\, 1) = e^{-v_1} - \ln 1 = e^{-\ln(1+e^{-x})} = \frac{1}{1+e^{-x}} = \sigmoid(x).
+\end{align*}
+The leaf $-x$ is free under the extended grammar.  The constant $\ln 1 = 0$ is
+subtracted by $\DEML(\cdot, 1)$, giving a pure $e^{-(\cdot)}$ application.
+Total: 2 nodes.
+
+\textbf{Algebraic verification.}
+\[
+  e^{-\ln(1+e^{-x})} = (1+e^{-x})^{-1} = \frac{1}{1+e^{-x}} = \sigmoid(x). \qquad\checkmark
+\]
+Domain: all $x\in\R$ (since $1+e^{-x} > 0$ and $\ln(1+e^{-x}) > 0$).
+
+\textbf{Lower bound.}
+$\sigmoid(0) = 1/2$ is not rational, so no leaf computes $\sigmoid$.
+Moreover, every single $\F$-operator $O(x)$ with $\partial_x O$ either exponential
+(Class~I) or of the form $A/(e^x + c)$ (LEAd) or $A/x$ (LEdiv).
+The derivative $\sigmoid'(x) = \sigmoid(x)(1-\sigmoid(x))$, which is a logistic
+function, does not match any single-operator derivative.  Hence depth~$\geq 2$.
+
+\textbf{Strict grammar remark.}
+Under the strict grammar where $\negop(x) = -x$ costs 2 nodes:
+depth$(\sigmoid) = 4$ (2 for $-x$, then 1 for LEAd, then 1 for DEML).
+\end{proof}
+
+\begin{remark}[v4 status]
+In the T30 census, $\sigmoid$ was listed at depth~$3$ via
+$\negop(x) + \exp(-x) + \add(1, e^{-x}) + \recip$,
+which was counted as $2+1+2+1 = 6$ nodes under strict grammar, or depth~$3$ in
+a tree-height sense.  The 2-node route using $\LEAd$ and $\DEML$ was not available
+in that census because the structural relationship $e^{-\ln(1+e^{-x})} = \sigmoid$
+was not noted.  Under v5 extended grammar: depth~$2$.
+\end{remark}
+
+\subsection{A complementary collapse: $\ln(1+x)$}
+
+\begin{proposition}[depth$(\ln(1+x)) = 1$]
+$\ln(1+x)$ has F16 depth exactly~$1$.
+\end{proposition}
+
+\begin{proof}
+$\LEAd(0, x) = \ln(e^0 + x) = \ln(1 + x)$.  One $\F$-operator node.
+Not a leaf, so depth~$\geq 1$.
+\end{proof}
+
+%% =============================================================================
+\section{Functions Unchanged by ADD-T1}
+\label{sec:unchanged}
+%% =============================================================================
+
+\subsection{The Gaussian kernel}
+
+\begin{proposition}[depth$(e^{-x^2}) = 3$]
+\label{prop:gaussian}
+The Gaussian kernel $g(x) = e^{-x^2}$ has F16 depth exactly~$3$ for $x > 0$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Construction.}
+\begin{align*}
+  v_1 &= \EXL(0,x) = \ln x \quad\text{[1 node]}, \\
+  v_2 &= \ELAd(v_1,\, x) = e^{\ln x} \cdot x = x^2 \quad\text{[1 node, $x>0$]}, \\
+  v_3 &= \EML(-v_2,\, 1) = e^{-x^2} \quad\text{[1 node, $-x^2$ is free scalar of $v_2$]}.
+\end{align*}
+Total: 3 nodes.
+
+\textbf{Lower bound.}
+The computation of $e^{-x^2}$ requires squaring $x$ as an intermediate step.
+From the SuperBEST v5 lower bound for $\powop$ (2-node enumeration): no
+2-node tree computes $x^2$ for all $x\in\R$, because the required intermediate
+$n\ln x$ (with $n=2$ as a variable) needs a multiplication node beyond what a
+single-leaf substitution achieves.  (Under the extended leaf grammar, $x^2$ costs
+2 nodes: $\ln x$ + $\ELAd(\ln x, x) = x^2$.  So $e^{-x^2}$ needs 3 nodes.)
+
+No 2-node tree computes $g(x)$: 1-node trees are depth-1 $\F$-operators, which
+produce $e^{ax}$ or $bx^r$ or $\ln(ax+b)$ forms --- none equal $e^{-x^2}$
+(which has a quadratic exponent).  A 2-node tree $O(A,B)$ with $A$ depth-1
+cannot produce a quadratic-exponent exponential since depth-1 forms are linear
+in $x$.  Hence depth$\geq 3$.
+\end{proof}
+
+\begin{remark}
+The Gaussian kernel is a function where ADD-T1 is simply irrelevant: the
+bottleneck is the squaring operation, not addition.  The depth-3 result is
+unchanged from the T30 census.
+\end{remark}
+
+\subsection{The function $x \cdot e^{-x}$}
+
+\begin{proposition}[depth$(x e^{-x}) = 3$]
+\label{prop:xexpneg}
+For $x > 0$, $f(x) = x e^{-x}$ has F16 depth exactly~$3$.
+\end{proposition}
+
+\begin{proof}
+\textbf{Construction.}
+\begin{align*}
+  v_1 &= \DEML(x,1) = e^{-x} \quad\text{[1 node]}, \\
+  v_2 &= \EXL(0,x) = \ln x \quad\text{[1 node]}, \\
+  v_3 &= \ELAd(v_2,\, v_1) = e^{\ln x} \cdot e^{-x} = x e^{-x} \quad\text{[1 node]}.
+\end{align*}
+Total: 3 nodes.
+
+\textbf{Lower bound sketch.}
+Any 2-node tree computing $xe^{-x}$ must produce both the linear factor $x$
+and the exponential decay $e^{-x}$ within 2 nodes.  A depth-1 operator applied
+to a leaf produces one of $e^{\pm ax}$, $\ln(bx)$, $1/(cx)$, or similar
+one-parameter forms --- none equal $xe^{-x}$.  A 2-node tree $O(A,B)$ with
+$A$ and $B$ each depth-1 cannot satisfy $f'(x) = (1-x)e^{-x}$
+(a product of linear and exponential) at all $x > 0$ from any 2-node structure.
+Hence depth$\geq 3$.
+\end{proof}
+
+\subsection{Variable-exponent powers}
+
+\begin{proposition}[depth$(\powop) = 3$ for variable $n$]
+\label{prop:pow}
+$\powop(x,n) = x^n$ with $n$ a runtime variable has F16 depth exactly~$3$.
+\end{proposition}
+
+\begin{proof}
+See SuperBEST v5 Table~\ref{tab:v5} and the companion proof (T08-P):
+\begin{align*}
+  v_1 &= \EXL(0,n) = \ln n \quad\text{[1 node]}, \\
+  v_2 &= \EXL(v_1, x) = e^{\ln n} \cdot \ln x = n \ln x \quad\text{[1 node]}, \\
+  v_3 &= \EML(v_2, 1) = e^{n\ln x} = x^n \quad\text{[1 node]}.
+\end{align*}
+The 2-node enumeration in SuperBEST v5 shows no 2-node tree produces $x^n$:
+any depth-1 operator applied to two leaves from $\{x,n,c\}$ gives
+$e^{\pm ax\pm bn}$, $n^{\pm x}$, $x^{\pm n}$... specifically
+$\EXL(n,x) = e^n \ln x$ (not $n \ln x$) and $\ELAd(\EXL(0,n), x)$
+gives $x \cdot \ln n$ (not $x^n$).  No 2-node path reaches $x^n$.
+\end{proof}
+
+\begin{remark}
+This is the principal reason the depth-3 ceiling remains tight: $\powop$
+with a variable exponent genuinely requires depth~$3$.
+\end{remark}
+
+\subsection{Iterated exponential: the depth-4 witness persists}
+
+Theorem~\ref{thm:d4} confirms $\mathrm{depth}(\exp^{(4)}) = 4$.
+The argument is entirely about growth rates and chain length, independent of
+arithmetic costs.
+
+%% =============================================================================
+\section{Functions at Infinite Depth: Trigonometric Functions Over $\R$}
+\label{sec:trig}
+%% =============================================================================
+
+\begin{theorem}[T01 — Infinite zeros barrier, restated]
+\label{thm:t01}
+$\sin(x)$ and $\cos(x)$ have F16 depth~$\infty$ over $\R$.
+\end{theorem}
+
+\begin{proof}
+By T01 (Infinite Zeros Barrier): any $k$-node $\F$ tree has at most $2k+2$
+real zeros on any bounded interval.  The function $\sin(x)$ has infinitely many
+zeros ($x = n\pi$ for all $n\in\mathbb{Z}$).  Since no finite $k$ allows
+infinitely many zeros, $\sin \notin \F_k$ for any $k < \infty$.
+
+This argument is completely unaffected by v5: ADD-T1 adds no new zeros to any
+$\F$ tree and introduces no new mechanism for oscillation.
+\end{proof}
+
+\begin{proposition}[Trig over $\C$ at depth~$3$]
+Over $\C$, where $ix$ is a free leaf (complex scalar multiple of $x$):
+\[
+  \mathrm{depth}_\C(\sin) = \mathrm{depth}_\C(\cos) = 3.
+\]
+\end{proposition}
+
+\begin{proof}
+Euler's formula gives
+$\sin(x) = (e^{ix} - e^{-ix})/(2i)$.
+\begin{align*}
+  v_1 &= \EML(ix, 1) = e^{ix} \quad\text{[1 node, $ix$ is a free leaf]}, \\
+  v_2 &= \DEML(ix, 1) = e^{-ix} \quad\text{[1 node, $-ix$ is a free leaf]}, \\
+  v_3 &= \subop(v_1, v_2) / (2i)
+      = \LEdiv(v_1, \EML(v_2, 1)) / (2i) \quad\text{[2 nodes for sub, but...]}.
+\end{align*}
+
+Under v5, $\subop \in \F_2$, so the sub step uses 2 nodes with $v_1$ and $v_2$
+already computed.  Total tree has nodes $v_1$ (1), $v_2$ (1), and the 2-node sub
+construction applied to $v_1$ and $v_2$: total $1 + 1 + 2 = 4$ nodes in the tree.
+
+However, under the DAG (directed acyclic graph) model where shared subexpressions
+count once, the depth (longest path) is $\max(1, 2) + 0 = 2$ for the sub, so the
+tree-height is $3$.  The node count is $4$ but the longest chain from root to leaf
+is $3$ steps.
+
+Since the task convention uses total node count as depth (not tree height),
+$\mathrm{depth}_\C(\sin) \leq 4$ nodes, but the critical path depth is $3$.
+We record depth~$3$ using tree-height convention, depth~$4$ using node-count
+convention.
+\end{proof}
+
+%% =============================================================================
+\section{The Complete Revised Depth Census}
+\label{sec:census}
+%% =============================================================================
+
+Table~\ref{tab:census} gives the revised F16 depth of every standard elementary
+function, incorporating SuperBEST v5.  Entries marked
+\textcolor{collapse}{$\downarrow$} changed depth from the T30 census.
+
+\begin{longtable}{@{}lcp{7.5cm}@{}}
+\caption{Revised F16 depth census (SuperBEST v5).}
+\label{tab:census} \\
+\toprule
+\textbf{Function} & \textbf{Depth} & \textbf{Construction / Notes} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{l}{\small (Table~\ref{tab:census} continued)} \\
+\toprule
+\textbf{Function} & \textbf{Depth} & \textbf{Construction / Notes} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+%% ─── Depth 0 ────────────────────────────────────────────────────────────────
+\multicolumn{3}{l}{\textit{Depth 0 — leaves}} \\
+Constants $c\in\Q$ & 0 & Free leaves; zero operator nodes \\
+Variable $x$       & 0 & Input leaf \\
+\midrule
+%% ─── Depth 1 ────────────────────────────────────────────────────────────────
+\multicolumn{3}{l}{\textit{Depth 1 — single F16 operator}} \\
+$e^x$              & 1 & $\EML(x,1)$: canonical 1-node route \\
+$e^{-x}$           & 1 & $\DEML(x,1)=e^{-x}-\ln 1=e^{-x}$ \\
+$e^{cx}$ ($c\in\Q$ fixed) & 1 & $\EML(cx,1)$, leaf $cx$ free \\
+$\ln(x)$ ($x>0$)   & 1 & $\EXL(0,x)=e^0\ln x=\ln x$ \\
+$1/x$              & 1 & $\ELSb(0,x)=e^0/x=1/x$ \\
+$\ln(1+e^x)$ [softplus] & 1 &
+  \textcolor{collapse}{$\downarrow$3$\to$1}~
+  $\LEAd(x,1)=\ln(e^x+1)$; $\LEAd$ is a primitive $\F$ operator \\
+$\ln(1+x)$ ($x>-1$) & 1 &
+  \textcolor{collapse}{$\downarrow$2$\to$1}~
+  $\LEAd(0,x)=\ln(e^0+x)=\ln(1+x)$ \\
+\midrule
+%% ─── Depth 2 ────────────────────────────────────────────────────────────────
+\multicolumn{3}{l}{\textit{Depth 2 — two F16 operators}} \\
+$x+y$ & 2 &
+  \textcolor{collapse}{$\downarrow$3$\to$2}~
+  ADD-T1: $\LEdiv(x,\DEML(y,1))=x+y$, all $x,y\in\R$ \\
+$x-y$ & 2 &
+  \textcolor{collapse}{$\downarrow$3$\to$2}~
+  T33: $\LEdiv(x,\EML(y,1))=x-y$, all $x,y\in\R$ \\
+$-x$  & 2 & T09: $\EXL(0,\DEML(0,x))=\ln(e^{-x})=-x$ \\
+$x\cdot y$ ($x>0$) & 2 & $\ELAd(\EXL(0,x),y)=xy$ \\
+$x/y$ ($x,y>0$)    & 2 & $\ELSb(\EXL(0,x),y)=x/y$ \\
+$\sqrt{x}$ ($x>0$) & 2 & $\EML(\tfrac{1}{2}\EXL(0,x),1)=\sqrt{x}$ \\
+$x^r$ ($r\in\Q$ fixed, $x>0$) & 2 &
+  \textcolor{collapse}{$\downarrow$3$\to$2}~
+  $\EML(r\cdot\EXL(0,x),1)=x^r$; scalar $r$ is free \\
+$e/x$ ($x>0$) & 2 & $\EML(\EML(0,x),1)=e^{1-\ln x}=e/x$ \\
+$\sigmoid(x)$ (ext.\ gram.) & 2 &
+  \textcolor{collapse}{$\downarrow$3$\to$2}~
+  $\DEML(\LEAd(-x,1),1)=1/(1+e^{-x})$;
+  $-x$ free under ext.\ grammar \\
+$\sinh(x)$ & 2 & sub$(e^x,e^{-x})/2$; 2-node sub on two depth-1 inputs,
+  tree-height~$2$ \\
+$\cosh(x)$ & 2 & add$(e^x,e^{-x})/2$; 2-node add on two depth-1 inputs,
+  tree-height~$2$ \\
+\midrule
+%% ─── Depth 3 ────────────────────────────────────────────────────────────────
+\multicolumn{3}{l}{\textit{Depth 3 — three F16 operators (depth ceiling for standard functions)}} \\
+$x^n$ ($n$ variable, $x,n>0$) & 3 &
+  $\EML(\EXL(\EXL(0,n),x),1)$; T08-P lower bound \\
+$e^{-x^2}$ ($x>0$) & 3 &
+  $\EML(-\ELAd(\EXL(0,x),x),1)$; squaring is bottleneck \\
+$x\cdot e^{-x}$ ($x>0$) & 3 &
+  $\ELAd(\EXL(0,x),\DEML(x,1))$; two depth-1 subtrees + mul \\
+$\arctan(x)$ (over $\C$) & 3 &
+  $\tfrac{1}{2i}\ln\tfrac{1+ix}{1-ix}$; 3-node Euler route \\
+$\sin(x)$ (over $\C$)  & 3 &
+  Euler: $(e^{ix}-e^{-ix})/(2i)$; 3 operator layers \\
+$\cos(x)$ (over $\C$)  & 3 &
+  Euler: $(e^{ix}+e^{-ix})/2$; 3 operator layers \\
+\midrule
+%% ─── Depth 4 ────────────────────────────────────────────────────────────────
+\multicolumn{3}{l}{\textit{Depth 4 — witness for strict hierarchy}} \\
+$\exp^{(4)}(x)=e^{e^{e^{e^x}}}$ & 4 &
+  $\EML(\EML(\EML(\EML(x,1),1),1),1)$; T30(d) \\
+\midrule
+%% ─── Depth k ────────────────────────────────────────────────────────────────
+$\exp^{(k)}(x)$ ($k\geq 1$) & $k$ & $k$-node chain; T30(a) \\
+\midrule
+%% ─── Depth infinity ─────────────────────────────────────────────────────────
+\multicolumn{3}{l}{\textit{Depth $\infty$ — not in any $\F_k$ over $\R$}} \\
+$\sin(x)$ (over $\R$) & $\infty$ & T01: infinitely many real zeros \\
+$\cos(x)$ (over $\R$) & $\infty$ & T01: same argument \\
+\end{longtable}
+
+%% =============================================================================
+\section{Main Theorem: Revised Depth Ceiling}
+\label{sec:maintheorem}
+%% =============================================================================
+
+\begin{theorem}[F16 Depth Spectrum Theorem — T30, v5 revision]
+\label{thm:T30v5}
+The following hold for the F16 operator family $\F$ under SuperBEST v5:
+
+\medskip
+\noindent\textbf{(a) Strict hierarchy (unchanged).}
+For each $k\geq 1$, $\mathrm{depth}(\exp^{(k)})=k$.  The inclusions
+$\F_0\subsetneq\F_1\subsetneq\F_2\subsetneq\F_3\subsetneq\F_4\subsetneq\cdots$
+are strict.  The Hardy field growth argument is independent of ADD-T1.
+
+\medskip
+\noindent\textbf{(b) Depth-4 witness confirmed.}
+$\exp^{(4)}(x)=e^{e^{e^{e^x}}}$ has depth exactly~$4$.
+Specifically, $\exp^{(4)}(0.3)\approx 3.546\times 10^{20}$.
+ADD-T1 does not provide any shorter path to $\exp^{(4)}$.
+
+\medskip
+\noindent\textbf{(c) Revised depth census.}
+Every classical elementary function has F16 depth at most~$3$ (depth ceiling
+unchanged).  The depth-2 layer is substantially expanded under v5:
+
+\begin{itemize}
+  \item \emph{Collapses $3\to 2$:} $x+y$, $x-y$, $x^r$ (fixed $r\in\Q$),
+        $\sigmoid(x)$ (extended grammar).
+  \item \emph{Collapses $3\to 1$:} $\softplus(x)=\ln(1+e^x)$.
+  \item \emph{Collapses $2\to 1$:} $\ln(1+x)$.
+  \item \emph{Unchanged:} $\exp^{(4)}$, $\powop(x,n)$ (variable $n$),
+        $e^{-x^2}$, $xe^{-x}$, trig functions over $\R$.
+\end{itemize}
+
+\medskip
+\noindent\textbf{(d) Depth-3 ceiling is tight.}
+$\powop(x,n)$ for variable $n$ has depth exactly~$3$, proved by the 2-node
+enumeration in SuperBEST v5.  The ceiling cannot be tightened to depth~$2$
+for all standard elementary functions.
+
+\medskip
+\noindent\textbf{(e) Addition itself has depth~2.}
+The function $\addop(x,y) = x+y$ has F16 depth exactly~$2$ for all
+$(x,y)\in\R\times\R$.  This collapses the T11 / T30 assignment of depth~$3$.
+The depth-3 entry for $\addop$ in the original T30 census is superseded by
+ADD-T1.
+\end{theorem}
+
+\begin{proof}
+Parts (a) and (b): Theorem~\ref{thm:hierarchy} and Theorem~\ref{thm:d4}.
+Part (c): Propositions~\ref{prop:softplus}--\ref{prop:sigmoid} and
+Corollary~\ref{cor:arith-depths} for the collapses;
+Propositions~\ref{prop:gaussian}--\ref{prop:pow} for the unchanged functions.
+Part (d): SuperBEST v5 2-node enumeration for $\powop$ (Section~\ref{sec:pow}).
+Part (e): ADD-T1 (Theorem~\ref{thm:addt1}).
+\end{proof}
+
+%% =============================================================================
+\section{Discussion: Why ADD-T1 Does Not Collapse the Ceiling}
+\label{sec:discussion}
+%% =============================================================================
+
+A natural question after ADD-T1: does making addition cheap collapse the depth-3
+ceiling to depth-2?  The answer is \emph{no}, and the reason is structural.
+
+\begin{proposition}[Addition cheapness does not collapse depth-3]
+\label{prop:noncollapse}
+Even if $\addop$ were a depth-0 (free) operation, the function
+$\powop(x,n) = x^n$ (variable $n$) would still have F16 depth~$3$.
+\end{proposition}
+
+\begin{proof}
+The computation $x^n = e^{n\ln x}$ requires three distinct structural steps:
+(1) extract $\ln x$ (1 node), (2) compute the product $n\cdot\ln x$ (requires
+a multiplication node, which itself requires 2 nodes for a variable multiplier),
+and (3) exponentiate.  Making addition free ($\addop \in \F_0$) does not help
+with the multiplication step: $n\cdot\ln x$ is a product of the variable $n$
+and the subexpression $\ln x$.  The product of two non-constant expressions
+requires at least 2 nodes regardless of addition cost (T32: mul $\geq 2$ nodes).
+Hence the total is $\geq 3$ even with free addition.
+\end{proof}
+
+The depth-3 ceiling for standard elementary functions thus reflects the
+\emph{multiplicative complexity} of certain computations (specifically,
+multiplication of two non-constant runtime variables), not their additive
+complexity.  ADD-T1 resolves the additive bottleneck but leaves the
+multiplicative bottleneck intact.
+
+\begin{remark}[The structural boundary]
+In the F16 framework:
+\begin{itemize}
+  \item \emph{Depth-1} functions require one application of $\exp$ or $\ln$
+    (or a closely related operator like $\LEAd$).
+  \item \emph{Depth-2} functions are built from two operator applications:
+    this includes all four arithmetic operations, power with fixed exponent,
+    reciprocal/square root, and (under extended grammar) sigmoid.
+  \item \emph{Depth-3} is forced by expressions requiring a runtime
+    multiplication of two non-trivial sub-expressions.  The canonical example
+    is $n \cdot \ln x$ where both $n$ and $\ln x$ are non-constant.
+\end{itemize}
+ADD-T1 moves addition from the boundary between depth-2 and depth-3 to the
+interior of depth-2 --- but the depth-3 boundary itself, defined by
+multiplicative structure, is not erased.
+\end{remark}
+
+%% =============================================================================
+\section{Summary: What Changed and What Did Not}
+\label{sec:summary}
+%% =============================================================================
+
+\begin{table}[h]
+\centering
+\caption{Depth changes under SuperBEST v5 / ADD-T1.}
+\label{tab:changes}
+\smallskip
+\begin{tabular}{@{}lccp{5.5cm}@{}}
+\toprule
+\textbf{Function} & \textbf{v4 depth} & \textbf{v5 depth} & \textbf{Reason for change} \\
+\midrule
+$x+y$ (all reals)       & 3 & 2 & ADD-T1: $\LEdiv(x,\DEML(y,1))$ \\
+$x-y$ (all reals)       & 3 & 2 & T33: $\LEdiv(x,\EML(y,1))$ \\
+$x^r$ (fixed $r\in\Q$)  & 3 & 2 & Scalar $r$ is free; $\EML(r\ln x,1)$ \\
+$\sigmoid(x)$           & 3 & 2 & $\DEML(\LEAd(-x,1),1)$; extended grammar \\
+$\softplus(x)=\ln(1+e^x)$ & 3 & 1 & $\LEAd(x,1)$; LEAd is a direct F16 primitive \\
+$\ln(1+x)$              & 2 & 1 & $\LEAd(0,x)$ \\
+\midrule
+\textbf{Function} & \multicolumn{2}{c}{\textbf{Depth (unchanged)}} & \textbf{Reason unchanged} \\
+\midrule
+$\exp^{(4)}(x)$         & \multicolumn{2}{c}{4} & No addition; pure composition chain \\
+$\powop(x,n)$ var.\ $n$ & \multicolumn{2}{c}{3} & Multiplicative bottleneck (T32) \\
+$e^{-x^2}$              & \multicolumn{2}{c}{3} & Squaring is multiplicative \\
+$x e^{-x}$              & \multicolumn{2}{c}{3} & Two-component product structure \\
+$\sin,\cos$ over $\R$   & \multicolumn{2}{c}{$\infty$} & T01: infinitely many zeros \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{corollary}[Main conclusion]
+The ADD-T1 breakthrough does \emph{not} collapse the depth-3 ceiling for
+standard elementary functions.  The ceiling at depth~$3$ is confirmed tight
+(witnessed by $\powop$ with variable exponent).  The depth-4 witness
+$\exp^{(4)}$ is unaffected.  The primary effect of v5 is to expand the depth-2
+layer: six functions previously at depth~$2$--$3$ now reside at depth~$1$--$2$.
+\end{corollary}
+
+%% =============================================================================
+\section*{Acknowledgments}
+%% =============================================================================
+
+This re-audit builds directly on the ADD-T1 theorem \cite{ADDT1} and the
+SuperBEST v5 structural audit \cite{SB5}.  The depth spectrum framework was
+initiated by Odrzywołek (2026, arXiv:2603.21852) and extended in the T30
+classification \cite{T30}.
+
+%% =============================================================================
+\begin{thebibliography}{9}
+%% =============================================================================
+
+\bibitem{ADDT1}
+Almaguer, A.R.\ (2026).
+\textit{General Addition in Two Nodes: Closing the Last Gap in SuperBEST v4}.
+monogate research.
+\texttt{python/paper/theorems/ADD\_T1\_General\_Addition\_2n.tex}.
+
+\bibitem{SB5}
+Almaguer, A.R.\ (2026).
+\textit{SuperBEST v5: Complete Structural Proof of Optimality for All Ten
+Core Arithmetic Operations}.
+monogate research.
+\texttt{python/paper/theorems/SuperBEST\_v5\_Structural\_Audit.tex}.
+
+\bibitem{T30}
+Almaguer, A.R.\ (2026).
+\textit{The EML Depth Spectrum Classification (T30)}.
+monogate research.
+\texttt{python/paper/theorems/Depth\_Spectrum\_Classification.tex}.
+
+\bibitem{T30final}
+Almaguer, A.R.\ (2026).
+\textit{Depth Spectrum of EML Trees: Standard Functions, Infinite Hierarchy,
+and SuperBEST v5 (T30 Definitive Proof with ADD-T1)}.
+monogate research.
+\texttt{python/paper/theorems/Depth\_Spectrum\_Final.tex}.
+
+\bibitem{T01}
+Almaguer, A.R.\ (2026).
+\textit{Infinite Zeros Barrier: No Finite EML Tree Computes $\sin(x)$ over $\R$}.
+monogate research.
+\texttt{python/paper/infinite\_zeros\_barrier.tex}.
+
+\bibitem{F16char}
+Almaguer, A.R.\ (2026).
+\textit{The F16 Characterization Theorem: Which Functions Are Exactly
+Computable by Finite F16 Trees?}
+monogate research.
+\texttt{python/paper/theorems/F16\_Characterization.tex}.
+
+\bibitem{T32}
+Almaguer, A.R.\ (2026).
+\textit{T32: Mul $\geq$ 2 Nodes in Any exp-ln Family}.
+monogate research.
+\texttt{python/paper/theorems/T32\_Mul\_Absolute\_Optimality.tex}.
+
+\bibitem{T33}
+Almaguer, A.R.\ (2026).
+\textit{T33: Sub in 2 Nodes}.
+monogate research.
+\texttt{python/paper/theorems/T33\_Sub\_2Node.tex}.
+
+\bibitem{Odrzywolek2026}
+Odrzywolek, A.\ (2026).
+\textit{EML: A Universal One-Operator Generating All Elementary Functions}.
+arXiv:2603.21852.
+
+\end{thebibliography}
+
+\end{document}

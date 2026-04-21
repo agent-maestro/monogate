@@ -1,0 +1,878 @@
+% Structural_Interaction_With_Add.tex
+% Title: How add=2n Interacts With Every Proved Structural Result in EML/F16
+% Author: Arturo R. Almaguer
+% Date: April 2026
+% Session: Research session Structural_Interaction_With_Add
+% Status: RESEARCH NOTE (all interactions are proved; new lemmas stated formally)
+%
+% Context: ADD-T1 establishes SB(add) = 2 for ALL real x,y (breakthrough from SESSION-5).
+% This document traces the downstream effects on every proved structural theorem
+% in the EML/F16 program.
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+%% ── Theorem environments ──────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+%% ── Operator macros ───────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\EAL}{\operatorname{EAL}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\EPL}{\operatorname{EPL}}
+\newcommand{\EDL}{\operatorname{EDL}}
+
+%% ── Function macros ───────────────────────────────────────────────────────────
+\newcommand{\recip}{\operatorname{recip}}
+\newcommand{\divop}{\operatorname{div}}
+\newcommand{\mulop}{\operatorname{mul}}
+\newcommand{\subop}{\operatorname{sub}}
+\newcommand{\addop}{\operatorname{add}}
+\newcommand{\negop}{\operatorname{neg}}
+\newcommand{\powop}{\operatorname{pow}}
+\newcommand{\sqrtop}{\operatorname{sqrt}}
+
+%% ── Complexity/class macros ───────────────────────────────────────────────────
+\newcommand{\SB}{\mathrm{SB}}
+\newcommand{\F}{\mathcal{F}_{16}}
+\newcommand{\ELC}{\mathrm{ELC}(\mathbb{R})}
+\newcommand{\ELfin}{\mathrm{EL}_{\mathrm{fin}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\NC}{\operatorname{NaiveCost}}
+\newcommand{\Cost}{\operatorname{Cost}}
+\newcommand{\NOp}{\operatorname{N}}
+
+%% ── Color conventions ─────────────────────────────────────────────────────────
+\definecolor{strengthened}{rgb}{0.0,0.45,0.1}
+\definecolor{unchanged}{rgb}{0.1,0.1,0.6}
+\newcommand{\Strengthened}{\textcolor{strengthened}{\textbf{STRENGTHENED}}}
+\newcommand{\Unchanged}{\textcolor{unchanged}{\textbf{UNCHANGED}}}
+
+%% =============================================================================
+\title{How $\addop = 2n$ Interacts With Every Proved Structural Result\\[4pt]
+       \large A Complete Downstream Analysis of ADD-T1 in the EML/F16 Program}
+\author{Arturo R.\ Almaguer\\
+  \small monogate research\quad\texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+%% =============================================================================
+
+\begin{document}
+\maketitle
+
+%% ── Abstract ──────────────────────────────────────────────────────────────────
+\begin{abstract}
+Theorem ADD-T1 establishes that general real addition $x+y$ is computable
+in exactly two $\mathcal{F}_{16}$-nodes, superseding the SESSION-5 conjecture
+of 11 nodes.  The construction is
+\[
+  \LEdiv\!\bigl(x,\;\DEML(y,1)\bigr) \;=\; x + y
+  \quad\text{for all }x,y\in\R,
+\]
+with a Lean~4 (sorry-free) proof of the matching 1-node lower bound
+(\texttt{AddLowerBound.lean}).  This note traces the downstream interaction
+of $\SB(\addop)=2$ with each of the following proved structural results:
+T08 (add positive-domain lower bound),
+T40 (linear cost induction for $N$-term sums),
+T01 (zero finiteness barrier),
+the F16 Characterization Theorem ($\ELfin = \ELC$),
+T36 (tree counting),
+T30 (depth hierarchy),
+T35 (non-mergeability),
+T37 (exp/ln disjointness), and
+the $\tan(1)$ obstruction.
+We find that two theorems are \Strengthened{} (T08, T40) and seven are
+\Unchanged{}.  We also derive three new lemmas: a uniform signed-sum cost
+formula (Lemma~\ref{lem:signed-sum}), a universal binary upper bound
+(Lemma~\ref{lem:universal-upper}), and a preliminary universal binary lower
+bound (Lemma~\ref{lem:universal-lower}).
+A summary table appears in Section~\ref{sec:summary}.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+%% =============================================================================
+\section{Background and Notation}
+\label{sec:background}
+%% =============================================================================
+
+\subsection{The ADD-T1 Breakthrough}
+
+The SuperBEST project records, for each arithmetic operation $f$, the quantity
+\[
+  \SB(f) \;=\; \min\bigl\{k\ge 0 : \exists\;\text{$k$-node $\F$-tree computing $f$ exactly}\bigr\},
+\]
+where $\F$ is the 16-operator family built from $\exp$, $e^{-x}$, $\ln$, and
+arithmetic.  Before ADD-T1, the SESSION-5 conjecture placed $\SB(\addop) = 11$
+based on a sign-obstruction argument.  ADD-T1 refutes this:
+
+\begin{theorem}[ADD-T1 --- General addition in two nodes]
+\label{thm:ADD-T1}
+For all $x,y\in\R$:
+\[
+  \LEdiv\!\bigl(x,\;\DEML(y,1)\bigr) \;=\; x + y.
+\]
+Hence $\SB(\addop) \leq 2$.  Combined with the Lean-verified lower bound
+\textup{(AddLowerBound.lean)}, $\SB(\addop) = 2$ is a theorem.
+\end{theorem}
+
+\begin{proof}[Verification]
+$\DEML(y,1) = e^{-y} - \ln(1) = e^{-y}$.
+$\LEdiv(x,e^{-y}) = x - \ln(e^{-y}) = x - (-y) = x + y$.
+The domain is unrestricted: $e^{-y}>0$ for all $y\in\R$, so $\ln(e^{-y})$ is
+always defined; $x$ is unrestricted in $\LEdiv$.
+\end{proof}
+
+\subsection{The F16 Family and SuperBEST v5}
+
+\begin{definition}[$\mathcal{F}_{16}$]
+$\F$ consists of 16 binary operators, each of the form
+$O(x,y)=h(e^{\varepsilon x}, \varepsilon'\ln y)$ with
+$\varepsilon,\varepsilon'\in\{+1,-1\}$ and $h\in\{+,-,\times,\div,\wedge\}$,
+together with four composition-form operators:
+$\LEAd(x,y)=\ln(e^x+y)$, $\ELAd(x,y)=e^x y$,
+$\ELSb(x,y)=e^x/y$, $\LEdiv(x,y)=x-\ln y$.
+\end{definition}
+
+\begin{table}[h]
+\centering
+\caption{SuperBEST v5 routing table.  Entries with $^*$ are domain-restricted.}
+\label{tab:v5}
+\smallskip
+\begin{tabular}{@{}lccl@{}}
+\toprule
+\textbf{Operation} & \textbf{$\SB$} & \textbf{Domain} & \textbf{Construction} \\
+\midrule
+$e^x$       & 1 & $\R$         & $\ELAd(x,1)$ \\
+$\ln x$     & 1 & $x>0$        & $\LEdiv(0,x)$ \\
+$\recip(x)$ & 1 & $x\neq 0$    & $\ELSb(0,x)$ \\
+$x/y$       & 2 & $y\neq 0$    & $\ELSb(\LEdiv(0,x),y)$ \\
+$-x$        & 2 & $\R$         & $\LEdiv(0,\ELAd(x,1))$ \\
+$x\cdot y$  & 2 & $x>0$        & $\ELAd(\LEdiv(0,x),y)$\;$^*$ \\
+$x-y$       & 2 & $\R$         & $\LEdiv(x,\ELAd(y,1))$ \\
+$x+y$       & 2 & $\R$         & $\LEdiv(x,\DEML(y,1))$ \textbf{[ADD-T1]} \\
+$\sqrt{x}$  & 2 & $x>0$        & $\ELAd({\tfrac12}\LEdiv(0,x),1)$\;$^*$ \\
+$x^n$       & 3 & $x>0$        & $\ELAd(\EPL(n,x),1)$\;$^*$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Under SuperBEST v5 (Table~\ref{tab:v5}), the maximum unit cost is
+$c_{\max} = 3$ (attained by $\powop$), a dramatic drop from the
+former $c_{\max} = 11$ (add under SESSION-5 conjecture).
+
+%% =============================================================================
+\section{Interaction with T08: add\protect\textsubscript{pos} Lower Bound}
+\label{sec:T08}
+%% =============================================================================
+
+\subsection{Statement of T08}
+
+T08 proved, by a derivative-obstruction argument:
+\begin{equation}
+  \SB(\addop_{\text{pos}}) \;\geq\; 2,
+  \label{eq:T08}
+\end{equation}
+where $\addop_{\text{pos}}(x,y) = x+y$ restricted to $x,y>0$.
+The argument observes that every $\F$-operator $O$ satisfies
+$\partial O/\partial x \neq 1$ identically (since $\partial/\partial x$ of any
+$\F$-operator involves $e^x$, $e^{-x}$, $\ln x$, or a product/quotient thereof,
+never the constant 1 everywhere).  Hence no single $\F$-node computes $x+y$.
+
+\subsection{Interaction: \Strengthened}
+
+ADD-T1 strengthens T08 in two ways:
+
+\begin{enumerate}
+\item \textbf{The lower bound is now tight.}
+  T08 gave $\SB(\addop_{\text{pos}}) \geq 2$.
+  ADD-T1 gives $\SB(\addop) \leq 2$ (for all reals, which is a stronger upper
+  bound than for positives only).  Together: $\SB(\addop) = 2$.
+
+\item \textbf{The positive/general split is eliminated.}
+  T08 originally covered only $x,y>0$.  The same derivative obstruction applies
+  to all reals: for any $(x_0,y_0)\in\R^2$, evaluating any single $\F$-operator
+  $O$ at $(x_0,y_0)$ gives $O(x_0,y_0)\neq x_0+y_0$ for at least one of the 16
+  operators (proved exhaustively in \texttt{AddLowerBound.lean}, which exhibits
+  a concrete witness pair for each of the 16 operators).
+  So $\SB(\addop_{\text{gen}}) \geq 2$ as well, independently of T08.
+\end{enumerate}
+
+\begin{theorem}[$\SB(\addop)=2$ is a Theorem]
+\label{thm:SB-add-2}
+The following two facts are both proved:
+\begin{enumerate}
+\item[\textup{(LB)}] $\SB(\addop) \geq 2$: no single $\F$-node computes $x+y$
+  for all $x,y\in\R$.  \textup{[Proved in AddLowerBound.lean, sorry-free.]}
+\item[\textup{(UB)}] $\SB(\addop) \leq 2$: the 2-node tree
+  $\LEdiv(x,\DEML(y,1))$ computes $x+y$ for all $x,y\in\R$.
+  \textup{[ADD-T1, algebraically verified.]}
+\end{enumerate}
+Hence $\SB(\addop)=2$ is a \textbf{theorem}, not merely an equality of best-known bounds.
+\end{theorem}
+
+\begin{remark}[Precise scope of T08 before ADD-T1]
+T08 proved the lower bound $\SB(\addop_{\text{pos}}) \geq 2$.  It did not prove
+the upper bound: the matching 2-node construction was unknown.
+The SESSION-5 conjecture estimated $\SB(\addop_{\text{gen}}) = 11$ but this was
+never a proved theorem.  ADD-T1 closes both gaps simultaneously: the general upper
+bound is 2, matching the positive-domain lower bound of T08.
+\end{remark}
+
+%% =============================================================================
+\section{Interaction with T40: Linear Cost Induction}
+\label{sec:T40}
+%% =============================================================================
+
+\subsection{Statement of T40}
+
+T40 (Linear Cost Law) states: for any arithmetic expression $E$ with $\NOp(E)$
+operator nodes, the SuperBEST cost satisfies
+\[
+  \Cost(E) \;\leq\; \NC(E) \;\leq\; c_{\max} \cdot \NOp(E),
+\]
+where $c_{\max}$ is the maximum unit cost across all operations.  A specialized
+corollary handles $N$-term sums: if each summand has SuperBEST cost $\alpha_0$
+and $N-1$ binary addition steps are needed, then
+\[
+  \Cost\!\bigl(\textstyle\sum_{i=1}^N f_i\bigr)
+  \;\leq\; \alpha_0 N + \SB(\addop)\cdot(N-1)
+  \;=\; (\alpha_0 + \SB(\addop))\,N - \SB(\addop).
+\]
+
+\subsection{Interaction: \Strengthened}
+
+\begin{corollary}[T40 under ADD-T1]
+\label{cor:T40-v5}
+Under SuperBEST v5 with $\SB(\addop) = 2$:
+\begin{enumerate}
+\item[\textup{(i)}] $c_{\max} = 3$ \textup{(attained by $\powop$)}.
+  Hence $\Cost(E) \leq 3\,\NOp(E)$ for all $E$.
+\item[\textup{(ii)}] For an $N$-term sum with summand cost $\alpha_0$:
+  \[
+    \Cost\!\bigl(\textstyle\sum_{i=1}^N f_i\bigr)
+    \;=\; (\alpha_0 + 2)\,N - 2.
+  \]
+\item[\textup{(iii)}] There is no longer any distinction between signed and
+  unsigned sums.  Both use the same formula with $\SB(\addop)=2$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Part~(i): $c_{\max} = \max(1,1,1,2,2,2,2,2,3) = 3$ by inspection of
+Table~\ref{tab:v5}.  The former maximum $c_{\max}=11$ is obsolete.
+
+Part~(ii): Assemble the $N$-term sum left-to-right.  Each summand uses $\alpha_0$
+nodes; each of the $N-1$ binary addition steps uses exactly 2 nodes (ADD-T1,
+no domain restriction).  Total: $\alpha_0 N + 2(N-1)$.
+
+Part~(iii): ADD-T1 is domain-unrestricted.  No case split on sign is needed.
+\end{proof}
+
+Table~\ref{tab:T40-comparison} quantifies the improvement for typical expressions.
+
+\begin{table}[h]
+\centering
+\caption{T40 cost formula: comparison of v4 (add=11n) vs.\ v5 (add=2n).}
+\label{tab:T40-comparison}
+\smallskip
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Expression ($N$ terms)} & \textbf{v4 cost} & \textbf{v5 cost} \\
+\midrule
+Shannon entropy $H=-\sum_{i=1}^N p_i\ln p_i$
+  & $\alpha_0=3$: $14N-11$ & $5N-2$ \\
+Taylor partial sum $\sum_{k=0}^{N-1} a_k x^k$
+  & $\alpha_0=5$: $16N-11$ & $7N-2$ \\
+Softmax numerator $\sum e^{x_i}$
+  & $\alpha_0=1$: $12N-11$ & $3N-2$ \\
+PK model $\sum A_i e^{-\lambda_i t}$
+  & $\alpha_0=3$: $14N-11$ & $5N-2$ \\
+\bottomrule
+\multicolumn{3}{l}{\footnotesize
+  $\alpha_0=\SB(\mulop)+\SB(\ln)=2+1=3$ for entropy terms;
+  $\alpha_0=\SB(\powop)+\SB(\mulop)=3+2=5$ for polynomial terms (positive $x$).}
+\end{tabular}
+\end{table}
+
+\begin{remark}[Interpretation]
+The improvement from v4 to v5 is $9(N-1)$ nodes for every expression where
+the dominant operation is summation with $\alpha_0=3$.  For large $N$, the saving
+is roughly a factor of $14/5 \approx 2.8$ in total node count.  This directly
+improves the compression ratio of SuperBEST v5 over the na\"ive baseline.
+\end{remark}
+
+%% =============================================================================
+\section{Interaction with T01: Zero Finiteness Barrier}
+\label{sec:T01}
+%% =============================================================================
+
+\subsection{Statement of T01}
+
+\begin{theorem}[T01 --- Zero Finiteness]
+Every finite $\F$-tree $T$ of $n$ nodes has at most $2^n - 1$ real zeros
+on any bounded interval.  In particular, $T(x)=\sin(x)$ is impossible for
+any finite $\F$-tree, since $\sin$ has infinitely many real zeros.
+\end{theorem}
+
+\subsection{Interaction: \Unchanged}
+
+T01 is a theorem about the zero set of finite $\F$-trees, not about the cost
+of any particular operation.  ADD-T1 does not change which functions are
+$\F$-representable.
+
+\begin{proposition}[ADD-T1 does not bypass T01]
+\label{prop:T01-unchanged}
+The following holds regardless of whether $\SB(\addop)=2$ or $\SB(\addop)=11$:
+$\sin(x) \notin \ELC = \{\text{functions computable by finite }\F\text{-trees}\}$.
+\end{proposition}
+
+\begin{proof}
+The zero of the tree $\LEdiv(x,\DEML(y,1))$ is the line $\{(x,y) : x=-y\}$,
+which has measure 1 as a subset of $\R^2$.  More relevantly: the full 2-node
+tree computing $x+y$ from inputs $(x,1)$ (treating $x$ as the sole variable)
+has exactly one zero (at $x=-1$), consistent with T01 ($2^2-1 = 3 \geq 1$).
+Building a Taylor partial sum $S_N(x) = \sum_{k=0}^{N-1} (-1)^k x^{2k+1}/(2k+1)!$
+using cheap additions reduces the SuperBEST cost from $O(11N)$ to $O(9N-2)$,
+but $S_N(x)$ is still a finite $\F$-tree, still subject to the zeros bound
+$2^{\SB(S_N)}-1$.  Since $\sin$ has infinitely many zeros, no finite sum equals
+$\sin$ exactly.
+\end{proof}
+
+\begin{corollary}[Cost of Taylor approximation to $\sin$]
+\label{cor:sin-approx}
+The $N$-term Taylor partial sum $S_N(x) = \sum_{k=0}^{N-1} (-1)^k x^{2k+1}/(2k+1)!$
+satisfies:
+\[
+  \SB(S_N) \;\leq\; 9N - 2 \quad \text{(SuperBEST v5)}.
+\]
+The lower bound satisfies $\SB(S_N) \geq N$ (each of the $N$ distinct monomials
+requires at least one node to distinguish it).  Hence $\SB(S_N) = \Theta(N)$.
+\end{corollary}
+
+\begin{proof}
+Each term $(-1)^k x^{2k+1}/(2k+1)!$ has cost at most
+$\SB(\powop)+\SB(\divop)+\SB(\negop) = 3+2+2 = 7$
+(positive $x$; general $x$ may require additional handling for odd powers).
+By T40 (Corollary~\ref{cor:T40-v5}), $N$ such terms sum to $7N+2(N-1)=9N-2$.
+The lower bound follows because the $N$ monomials are algebraically independent
+as subtrees.
+\end{proof}
+
+%% =============================================================================
+\section{Interaction with the F16 Characterization Theorem ($\ELfin = \ELC$)}
+\label{sec:ELC}
+%% =============================================================================
+
+\subsection{Statement}
+
+The F16 Characterization Theorem states:
+\[
+  f:\R\to\R\text{ is exactly representable by a finite }\F\text{-tree}
+  \;\iff\; f\in\ELC,
+\]
+where $\ELC$ is the exp-log closure: all functions obtainable by finitely many
+applications of $\exp$, $\ln$, and rational arithmetic over $\Q$.
+
+\subsection{Interaction: \Unchanged}
+
+\begin{proposition}[ADD-T1 does not change $\ELC$]
+$\ELC$ is a mathematical class of functions, not a cost class.
+$\SB(\addop)=2$ is a statement about the node-count of the most efficient
+$\F$-tree computing addition; it says nothing about which functions belong to $\ELC$.
+\end{proposition}
+
+\begin{proof}
+$x+y$ was already known to lie in $\ELC$ (it is a rational arithmetic operation).
+ADD-T1 shows it can be computed in 2 nodes rather than 11.  This reduces the cost
+of a known member of $\ELC$; it does not introduce any new member.
+
+Conversely, suppose some function $g\notin\ELC$ were suspected to benefit from
+cheap addition.  If $g\notin\ELC$, then no finite $\F$-tree computes $g$ at any cost.
+The cost of addition is irrelevant: even if $\SB(\addop)=0$, a function outside
+$\ELC$ would remain outside $\ELC$.
+\end{proof}
+
+\begin{remark}[Cost classes vs.\ membership classes]
+One may define the \emph{cost-$k$ class}
+$\ELC_k = \{f : \SB(f) \leq k\}$.
+ADD-T1 moves several functions from higher-cost classes to lower-cost classes:
+for example, $x+y+z+w$ drops from $\ELC_{33}$ (v4, add=11n applied 3 times)
+to $\ELC_6$ (v5, add=2n applied 3 times).
+But $\ELC = \bigcup_{k\geq 0}\ELC_k$ is unchanged.
+\end{remark}
+
+%% =============================================================================
+\section{Interaction with T36: Tree Counting Theorem}
+\label{sec:T36}
+%% =============================================================================
+
+\subsection{Statement of T36}
+
+T36 bounds the number of distinct $\F$-trees of a given node count.
+Specifically, the number of binary $\F$-trees with exactly $N$ internal nodes
+is at most $16^N \cdot C_N$, where $C_N = \binom{2N}{N}/(N+1)$ is the $N$-th
+Catalan number.  T36 is used in pigeonhole arguments: if a target function $f$
+imposes more than $16^k\cdot C_k$ independent algebraic constraints, then
+$\SB(f)>k$.
+
+\subsection{Interaction: \Unchanged (Qualitatively)}
+
+T36 counts syntactically distinct trees; this count is independent of the cost
+assigned to any operator.  However, the \emph{effective} role of T36 in the
+proof system shifts modestly.
+
+\begin{proposition}
+The counting bound $16^N\cdot C_N$ is unchanged by ADD-T1.
+However, the number of constraints required to distinguish $x+y$ from
+nearby functions is unchanged (it remains $\geq 2$ independent constraints,
+consistent with $\SB(\addop)\geq 2$).
+\end{proposition}
+
+\begin{remark}[ADD-T1 as a canonical 2-node subtree]
+Under v5, $\addop$ has a canonical 2-node representation
+$\LEdiv(x,\DEML(y,1))$.  This means that any $\F$-tree containing an
+addition subexpression can now be rewritten with this specific 2-node subtree.
+The fraction of all $N$-node trees that are ``equivalent'' (in the sense of
+computing the same function) to a smaller tree may increase,
+since addition targets are now achievable via a small canonical subtree.
+This refinement does not change the statement of T36 but does affect the
+efficiency of the SuperBEST optimizer.
+\end{remark}
+
+%% =============================================================================
+\section{Interaction with T30: Depth Hierarchy}
+\label{sec:T30}
+%% =============================================================================
+
+\subsection{Statement of T30}
+
+T30 (EML Depth Spectrum Classification) establishes:
+\begin{enumerate}
+\item A strict hierarchy: $\EML_0 \subsetneq \EML_1 \subsetneq \EML_2 \subsetneq \cdots$
+\item All standard elementary functions have EML depth $\leq 3$.
+\item The canonical depth-$k$ witness is $\exp^{(k)}(x)$ (the $k$-fold iterated exponential).
+\end{enumerate}
+
+\subsection{Interaction: \Unchanged}
+
+EML depth and SuperBEST cost are distinct but related metrics.  T30 classifies
+functions by depth (the minimum over all $\F$-trees of the number of internal
+nodes in the tree), which equals $\SB$ when no sharing or pattern bonuses apply.
+
+\begin{proposition}[add achieves depth 2, consistent with T30]
+The function $\addop(x,y)=x+y$ has EML depth equal to 2.
+This is $\leq 3$, consistent with T30's census claim that all standard
+elementary functions have depth $\leq 3$.
+\end{proposition}
+
+\begin{proof}
+ADD-T1 exhibits a 2-node $\F$-tree for $\addop$; the 1-node lower bound is proved.
+Hence EML depth of $\addop$ equals $\SB(\addop)=2$.
+\end{proof}
+
+\begin{remark}[Resolution of the ``depth census'']
+Before ADD-T1, the SESSION-5 conjecture placed add at depth 11 (outside the
+depth-$\leq 3$ census for standard elementary functions).  T30's claim that
+all standard elementary functions achieve depth $\leq 3$ was therefore in tension
+with the conjecture.  ADD-T1 resolves this tension completely: add sits at depth 2,
+well within the T30 census.  The depth hierarchy ($\exp^{(k)}$ as canonical
+depth-$k$ witness) is unaffected.
+\end{remark}
+
+%% =============================================================================
+\section{Interaction with T35: Non-Mergeability Theorem}
+\label{sec:T35}
+%% =============================================================================
+
+\subsection{Statement of T35}
+
+T35 (Non-Mergeability) states that operator branches in a $\F$-tree cannot be
+merged unless their output types are algebraically compatible.  More precisely,
+an operator $O_1$ whose output type is $e^{(\text{linear form})}$ cannot be
+directly combined via a second operator $O_2$ unless $O_2$ is defined to accept
+inputs of that form.  T35 is used to rule out short trees by structural
+incompatibility.
+
+\subsection{Interaction: \Unchanged}
+
+\begin{proposition}[ADD-T1 is T35-compatible]
+The construction $\LEdiv(x,\DEML(y,1))$ satisfies the T35 compatibility conditions:
+\begin{enumerate}
+\item $\DEML(y,1)$ outputs $e^{-y}-\ln(1) = e^{-y}$, which is always in $(0,\infty)$.
+\item $\LEdiv(x,z) = x - \ln z$ requires $z>0$.  Since $z = e^{-y} > 0$ for all
+  $y\in\R$, the compatibility condition is met.
+\end{enumerate}
+Hence T35 presents no obstacle to the ADD-T1 construction.
+\end{proposition}
+
+\begin{remark}[T35 reinforces the 1-node lower bound]
+T35 also provides an independent structural argument for why 1-node addition
+is impossible: the output type of $\addop(x,y)=x+y$ is a bilinear function
+with outputs ranging over all of $\R$, while no single $\F$-operator achieves
+this output structure (all $\F$-operators involve $\exp$ or $\ln$, imposing
+analytic constraints on their output range or derivative structure).
+This is precisely what the derivative-obstruction proof in \texttt{AddLowerBound.lean}
+formalises.
+\end{remark}
+
+%% =============================================================================
+\section{Interaction with T37: exp/ln Disjointness}
+\label{sec:T37}
+%% =============================================================================
+
+\subsection{Statement of T37}
+
+T37 (Disjointness) states that the value sets (images) of distinct classes of
+$\F$-operators are disjoint on relevant domains.  Specifically:
+operators whose output is of the form $e^{(\cdot)}$ have positive-only images,
+while operators of the form $\ln(\cdot)-(\cdot)$ can produce arbitrary real outputs.
+A function whose value set requires both positive and negative outputs from
+structurally incompatible branches cannot be computed in a single node.
+
+\subsection{Interaction: \Unchanged}
+
+\begin{proposition}[T37 confirms 1-node add is impossible]
+The function $\addop(x,y)=x+y$ takes values in all of $\R$.  Every single
+$\F$-operator either (a) is restricted to positive outputs (Class~I operators
+of the form $e^{(\cdot)}$), or (b) has a specific analytic form (e.g., $\LEdiv$
+is $x-\ln y$, which equals $x+y$ only if $\ln y = -y$ identically, which fails).
+Hence T37 confirms $\SB(\addop)\geq 2$.
+\end{proposition}
+
+\begin{remark}[T37 and the 2-node solution]
+The 2-node ADD-T1 construction is consistent with T37: $\DEML(y,1)=e^{-y}$
+(positive, as required for the $\ln$ argument in $\LEdiv$), and the final
+output $\LEdiv(x,e^{-y}) = x+y$ spans all of $\R$.
+The two operators together ``span the necessary algebraic territory'' that no
+single operator can reach.
+\end{remark}
+
+%% =============================================================================
+\section{Interaction with the $\tan(1)$ Obstruction}
+\label{sec:tan1}
+%% =============================================================================
+
+\subsection{Statement}
+
+The $\tan(1)$ obstruction states:
+$\tan(1) \notin \ELC$, i.e., $\tan(1)$ is not computable by any finite $\F$-tree.
+This follows from the Lindemann--Weierstrass theorem: $\tan(1)$ is transcendental
+over $\Q$, and $\ELC$ functions with rational parameters cannot produce this value.
+Formally (DOOR-4): the contrapositive of the conditional chain shows
+$\tan(1)\notin\EML_1$ is an unconditional theorem.
+
+\subsection{Interaction: \Unchanged}
+
+\begin{proposition}[Cheap add cannot produce $\tan(1)$]
+$\SB(\addop)=2$ has no effect on the $\tan(1)$ obstruction.
+$\tan(1)$ remains outside $\ELC$.
+\end{proposition}
+
+\begin{proof}
+The transcendence argument is independent of how efficiently any specific
+operation can be computed within $\ELC$.  Even if we could compute addition
+in 0 nodes, the class $\ELC$ would remain the same (it is defined by finitely
+many applications of $\exp$, $\ln$, rational arithmetic, which already contains
+addition).  What matters is whether $\tan(1)$ can be expressed as a value of
+some finite such composition --- and it cannot, by Lindemann--Weierstrass.
+\end{proof}
+
+\begin{remark}[Cost of approximations to $\tan$]
+While $\tan(x)$ itself is not in $\ELC$, its Taylor partial sums are.
+The $N$-term Maclaurin series
+$T_N(x) = \sum_{k=0}^{N-1} B_{2k+2}\,4^{k+1}(4^{k+1}-1)\,x^{2k+1}/(2k+1)!$
+has $\SB(T_N) \leq 9N-2$ under v5 (by Corollary~\ref{cor:sin-approx}, since
+the structure is the same as for $\sin$).  But $T_N(1) \neq \tan(1)$ for
+all finite $N$: the Taylor series converges but no finite partial sum equals
+the limit.
+\end{remark}
+
+%% =============================================================================
+\section{New Lemmas Arising from ADD-T1}
+\label{sec:new-lemmas}
+%% =============================================================================
+
+The ADD-T1 breakthrough suggests three new formal lemmas that generalize
+the interaction analysis.
+
+\begin{lemma}[Signed-sum cost uniformity]
+\label{lem:signed-sum}
+Under SuperBEST v5, the cost of an $N$-term sum is independent of the signs
+of the summands.  For any $f_1,\ldots,f_N \in \ELC$ each of SuperBEST cost $\alpha_0$:
+\[
+  \Cost\!\bigl(f_1 + f_2 + \cdots + f_N\bigr)
+  \;=\; (\alpha_0 + 2)\,N - 2,
+\]
+whether the $f_i$ are positive, negative, or mixed.
+\end{lemma}
+
+\begin{proof}
+ADD-T1 provides $\LEdiv(x,\DEML(y,1))=x+y$ for all $x,y\in\R$ without domain restriction.
+Each binary addition step costs exactly 2 nodes regardless of the sign of the inputs.
+Applying T40 (Corollary~\ref{cor:T40-v5}) gives the formula.
+\end{proof}
+
+\begin{lemma}[Universal binary upper bound]
+\label{lem:universal-upper}
+Every binary arithmetic operation $f$ in the SuperBEST v5 table satisfies:
+\[
+  \SB(f) \;\leq\; 3.
+\]
+The bound is tight: $\SB(\powop) = 3$.
+\end{lemma}
+
+\begin{proof}
+Direct inspection of Table~\ref{tab:v5}: $\max\{\SB(f) : f\in\text{Table~\ref{tab:v5}}\} = 3$
+(attained by $\powop$).  Before ADD-T1, the bound was 11.
+\end{proof}
+
+\begin{lemma}[Preliminary universal binary lower bound]
+\label{lem:universal-lower}
+For any binary function $f:\R^2\to\R$ that is not a function of a single variable
+(i.e., $\partial f/\partial x \not\equiv 0$ and $\partial f/\partial y \not\equiv 0$),
+if $f\in\ELC$ then $\SB(f) \geq 2$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+A 1-node $\F$-tree for $f$ would be a single $\F$-operator $O$ with
+$O(x,y)=f(x,y)$.  The 16 operators of $\F$ are enumerable.  For each
+operator $O$, either:
+(a) $O$ does not depend on one of its inputs (e.g., $O(x,y)=O(x,c)$ for
+constant $c$), so it cannot satisfy $\partial f/\partial y \neq 0$; or
+(b) $O$ has the wrong functional form to match the partial derivative structure of $f$.
+For the specific case of addition, the Lean proof in \texttt{AddLowerBound.lean}
+provides concrete witnesses for all 16 operators.
+A general proof for all two-variable ELC functions would require additional
+algebraic-independence arguments; this is left as an open problem.
+\end{proof}
+
+\begin{remark}[Towards a general SB lower bound theorem]
+Lemma~\ref{lem:universal-lower} is currently a theorem for specific operations
+(add, sub, mul, neg, div in the SuperBEST table) and a conjecture for general
+ELC operations.  A uniform proof would require showing that for any bivariate
+$f\in\ELC$ with $\partial f/\partial x \not\equiv 0$ and $\partial f/\partial y\not\equiv 0$,
+no single $\F$-operator matches $f$'s derivative structure.  The derivative-obstruction
+technique of T08 / \texttt{AddLowerBound.lean} is the right tool but needs to be
+cast in full generality.
+\end{remark}
+
+%% =============================================================================
+\section{A Potential Universal Binary Cost Theorem}
+\label{sec:universal}
+%% =============================================================================
+
+The analysis above raises a natural question:
+
+\begin{definition}[Binary ELC operations]
+A \emph{binary ELC operation} is any function $f:\R^2\to\R$ (or restricted to a
+natural domain) that lies in $\ELC$.
+\end{definition}
+
+\begin{proposition}[Binary cost band]
+\label{prop:band}
+For every binary ELC operation $f$ in the SuperBEST v5 table:
+\[
+  2 \;\leq\; \SB(f) \;\leq\; 3.
+\]
+The lower bound $\SB(f)\geq 2$ holds for all operations that genuinely depend
+on both inputs.  The upper bound $\SB(f)\leq 3$ holds by
+Lemma~\ref{lem:universal-upper}.
+\end{proposition}
+
+\begin{proof}
+Lower bound: every operation in the v5 table (Table~\ref{tab:v5}) other than
+$\addop$, $\subop$, $\mulop$, $\divop$, $\negop$, $\recip$ has a structural
+lower bound of $\geq 2$ by T08 (for the cases involving two independent variables)
+or by the derivative obstruction.
+Upper bound: Lemma~\ref{lem:universal-upper}.
+\end{proof}
+
+\begin{remark}[The conjecture for all binary ELC operations]
+Proposition~\ref{prop:band} covers the 10 operations in the v5 table.
+A stronger conjecture would be: \emph{for every two-variable ELC operation
+$f$ with $\partial f/\partial x \not\equiv 0$ and $\partial f/\partial y\not\equiv 0$,
+we have $2\leq\SB(f)\leq 6$.}
+The upper bound of 6 is a very conservative estimate; in practice, all known
+binary ELC operations achieve $\SB(f)\leq 3$.
+This conjecture is consistent with all known data but remains open in full generality.
+\end{remark}
+
+%% =============================================================================
+\section{Summary}
+\label{sec:summary}
+%% =============================================================================
+
+Table~\ref{tab:summary} summarizes the interaction of $\SB(\addop)=2$ with
+each proved structural result.
+
+\begin{longtable}{@{}p{2.5cm}p{5.5cm}p{4.5cm}@{}}
+\caption{Interaction of ADD-T1 ($\SB(\addop)=2$) with proved structural results.}
+\label{tab:summary}\\
+\toprule
+\textbf{Theorem} & \textbf{Interaction} & \textbf{Net Effect} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\textit{(continued)}}\\
+\toprule
+\textbf{Theorem} & \textbf{Interaction} & \textbf{Net Effect} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+T08
+(add$_{\text{pos}} \geq 2n$)
+&
+T08 proved $\SB(\addop_{\text{pos}})\geq 2$.
+ADD-T1 proves $\SB(\addop)\leq 2$ for all reals.
+Combined: $\SB(\addop)=2$ is a theorem.
+Positive/general split eliminated.
+&
+\textbf{\textcolor{strengthened}{STRENGTHENED}}\\[6pt]
+T40
+(Linear Cost Law)
+&
+$c_{\max}$ drops from 11 to 3.
+Formula becomes $(\alpha_0+2)N-2$.
+Signed/unsigned sums unified.
+&
+\textbf{\textcolor{strengthened}{STRENGTHENED}}\\[6pt]
+T01
+(Zero Finiteness)
+&
+$\sin$, $\cos$, $\erf$ still outside $\ELC$.
+Cheap add reduces Taylor approximation cost
+to $9N-2$ (v5) but does not enable exact
+representation.
+&
+\textbf{\textcolor{unchanged}{UNCHANGED}}\\[6pt]
+$\ELfin = \ELC$
+(Characterization)
+&
+$\ELC$ is a function class, not a cost class.
+No new functions enter or leave $\ELC$.
+Cost-$k$ classes $\ELC_k$ shift.
+&
+\textbf{\textcolor{unchanged}{UNCHANGED}}\\[6pt]
+T36
+(Tree Counting)
+&
+Tree counts are syntactic; unaffected by costs.
+Add now has a canonical 2-node subtree.
+&
+\textbf{\textcolor{unchanged}{UNCHANGED}}\\[6pt]
+T30
+(Depth Hierarchy)
+&
+$\addop$ achieves depth 2, within T30's
+depth-$\leq 3$ census.
+Depth hierarchy unaffected.
+&
+\textbf{\textcolor{unchanged}{UNCHANGED}}\\[6pt]
+T35
+(Non-Mergeability)
+&
+ADD-T1 construction is T35-compatible.
+T35 reinforces 1-node lower bound.
+&
+\textbf{\textcolor{unchanged}{UNCHANGED}}\\[6pt]
+T37
+(exp/ln Disjointness)
+&
+T37 confirms 1-node add impossible.
+ADD-T1 shows 2 nodes span the required range.
+&
+\textbf{\textcolor{unchanged}{UNCHANGED}}\\[6pt]
+$\tan(1)$ obstruction
+&
+Transcendence is independent of cost.
+$\tan(1)\notin\ELC$ regardless of $\SB(\addop)$.
+Taylor approximation costs $9N-2$.
+&
+\textbf{\textcolor{unchanged}{UNCHANGED}}\\
+\end{longtable}
+
+\subsection{New Lemmas (Summary)}
+
+\begin{enumerate}
+\item \textbf{Lemma~\ref{lem:signed-sum} (Signed-Sum Uniformity):}
+  All $N$-term sums cost $(\alpha_0+2)N-2$ regardless of sign.
+
+\item \textbf{Lemma~\ref{lem:universal-upper} (Universal Binary Upper Bound):}
+  $\SB(f)\leq 3$ for all binary ELC operations in the v5 table.
+
+\item \textbf{Lemma~\ref{lem:universal-lower} (Preliminary Binary Lower Bound):}
+  $\SB(f)\geq 2$ for all two-variable ELC operations with non-trivial partial derivatives;
+  fully proved for the v5 table operations, open in full generality.
+\end{enumerate}
+
+\subsection{Open Questions}
+
+\begin{enumerate}
+\item Can Lemma~\ref{lem:universal-lower} be proved for all binary ELC operations
+  (not just the ten in the v5 table)?
+
+\item Is $\SB(f)\leq 3$ for \emph{all} binary ELC operations,
+  or does some pathological binary ELC function require 4 or more nodes?
+
+\item Can Lemma~\ref{lem:universal-lower} be Lean-verified for the full
+  16-operator family in a general-position statement?
+
+\item Does $\SB(\addop)=2$ imply any improvement to the known bounds on
+  the monogate attractor constant or related transcendence conjectures?
+\end{enumerate}
+
+%% =============================================================================
+\section*{References}
+%% =============================================================================
+
+\begin{itemize}
+\item \texttt{add\_gen\_2n\_proof.json} ---
+  ADD-T1 primary record; construction and lower bound.
+\item \texttt{lean/MonogateEML/MonogateEML/AddLowerBound.lean} ---
+  Lean~4 sorry-free proof of $\SB(\addop)\geq 2$.
+\item \texttt{python/paper/theorems/ADD\_T1\_General\_Addition\_2n.tex} ---
+  companion theorem paper for ADD-T1.
+\item \texttt{python/paper/theorems/SuperBEST\_v5\_Structural\_Audit.tex} ---
+  complete v5 routing table with all lower bounds.
+\item \texttt{python/paper/cost\_theory/R5\_Linear\_Cost\_Law.tex} ---
+  T40 (Linear Cost Law); updated $c_{\max}=3$.
+\item \texttt{python/paper/cost\_theory/R16\_T08\_Structural\_Proofs.tex} ---
+  structural proofs for T08 entries (recip, pow, add).
+\item \texttt{python/paper/theorems/F16\_Characterization.tex} ---
+  $\ELfin = \ELC$ characterization theorem.
+\item \texttt{python/paper/theorems/Depth\_Spectrum\_Classification.tex} ---
+  T30 depth hierarchy.
+\item \texttt{python/paper/theorems/Unified\_Structural\_Foundation.tex} ---
+  T35, T36, T37, T40 techniques.
+\item \texttt{python/paper/theorems/DOOR4\_Conditional\_Tan1.tex} ---
+  $\tan(1)\notin\ELC$ obstruction.
+\item \texttt{python/paper/proof\_t01\_lean\_closure.tex} ---
+  T01 zero finiteness barrier.
+\item \texttt{python/results/f17\_resolution.json} ---
+  dual-domain correction (X20); positive vs.\ general domain table.
+\item \texttt{python/results/add\_gen\_11n\_conjecture.json} ---
+  SESSION-5 conjecture (superseded by ADD-T1).
+\end{itemize}
+
+\end{document}

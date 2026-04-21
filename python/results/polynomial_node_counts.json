@@ -1,0 +1,359 @@
+{
+  "general_monomial_form": {
+    "description": "p(x) = a_0 + a_1*x + ... + a_N*x^N (monomial basis)",
+    "cost_formula_pos": "5N - 1 for N>=2 (pos domain, pow=1n, mul=2n, add=2n)",
+    "cost_formula_gen": "11N - 3 for N>=2 (gen domain, pow=3n, mul=6n, add=2n)",
+    "cost_formula_naive": "39N - 15 for N>=2",
+    "spot_checks": {
+      "1": {
+        "pos": 4,
+        "gen": 8,
+        "naive": 24
+      },
+      "2": {
+        "pos": 9,
+        "gen": 19,
+        "naive": 63
+      },
+      "3": {
+        "pos": 14,
+        "gen": 30,
+        "naive": 102
+      },
+      "5": {
+        "pos": 24,
+        "gen": 52,
+        "naive": 180
+      },
+      "10": {
+        "pos": 49,
+        "gen": 107,
+        "naive": 375
+      }
+    }
+  },
+  "horner_form": {
+    "description": "Horner method: (...((a_N*x + a_{N-1})*x + a_{N-2})*x ... + a_0)",
+    "cost_formula_pos": "4N (mul=2n + add=2n per step)",
+    "cost_formula_gen": "8N (mul_gen=6n + add=2n per step)",
+    "cost_formula_naive": "24N",
+    "monic_savings": "subtract 2n (pos) or 6n (gen) if leading coeff is 1",
+    "spot_checks": {
+      "1": {
+        "pos": 4,
+        "gen": 8,
+        "naive": 24
+      },
+      "2": {
+        "pos": 8,
+        "gen": 16,
+        "naive": 48
+      },
+      "3": {
+        "pos": 12,
+        "gen": 24,
+        "naive": 72
+      },
+      "5": {
+        "pos": 20,
+        "gen": 40,
+        "naive": 120
+      },
+      "10": {
+        "pos": 40,
+        "gen": 80,
+        "naive": 240
+      }
+    }
+  },
+  "taylor_exp": {
+    "description": "Truncated Taylor series: sum_{k=0}^N x^k/k!",
+    "exact_function_cost": "1n via EML(x,1)",
+    "cost_formula_pos": "2 + 5*(N-1) = 5N-3 for N>=2",
+    "spot_checks": {
+      "2": 7,
+      "3": 12,
+      "5": 22,
+      "10": 47
+    }
+  },
+  "taylor_ln": {
+    "description": "Truncated Taylor: sum_{k=1}^N (-1)^{k+1} x^k/k",
+    "exact_function_cost": "2n (add(x,1)+ln)",
+    "cost_formula_pos": "5*(N-1) for N>=2",
+    "sign_handling": "add and sub both cost 2n in v5; alternating signs add NO extra cost",
+    "spot_checks": {
+      "2": 5,
+      "3": 10,
+      "5": 20,
+      "10": 45
+    }
+  },
+  "taylor_sin": {
+    "description": "Truncated Taylor: sum_{k=0}^N (-1)^k x^{2k+1}/(2k+1)!",
+    "exact_function_cost": "1n via Im(EML(ix,1))",
+    "cost_formula_pos": "5*N for N extra terms beyond the leading x",
+    "spot_checks": {
+      "1": 5,
+      "2": 10,
+      "3": 15,
+      "5": 25
+    }
+  },
+  "chebyshev": {
+    "description": "Chebyshev polynomials via recurrence T_{n+1}=2x*T_n - T_{n-1}",
+    "recurrence_cost_per_step": "4n (mul(2x,T_n)=2n + sub(T_{n-1})=2n)",
+    "first_step_setup": "6n for T_2 (includes computing 2x)",
+    "cost_formula_cumulative": "4n-2 for n>=2 (cumulative DAG reusing 2x and all prior T_k)",
+    "individual_costs": {
+      "T0": 0,
+      "T1": 0,
+      "T2": 6,
+      "T3": 10,
+      "T4": 14,
+      "T5": 18
+    },
+    "formulas": {
+      "T0": "1",
+      "T1": "x",
+      "T2": "2x^2 - 1",
+      "T3": "4x^3 - 3x",
+      "T4": "8x^4 - 8x^2 + 1",
+      "T5": "16x^5 - 20x^3 + 5x"
+    }
+  },
+  "legendre": {
+    "description": "Legendre polynomials (standalone, positive domain)",
+    "individual_costs": {
+      "P0": 0,
+      "P1": 0,
+      "P2": 5,
+      "P3": 9,
+      "P4": 10
+    },
+    "formulas": {
+      "P0": "1",
+      "P1": "x",
+      "P2": "(3x^2-1)/2",
+      "P3": "(5x^3-3x)/2",
+      "P4": "(35x^4-30x^2+3)/8"
+    },
+    "breakdowns": {
+      "P0": "free constant",
+      "P1": "free input variable",
+      "P2": "pow(x,2)=1n + mul(3/2,x^2)=2n + sub(1/2)=2n",
+      "P3": "pow(x,2)=1n + mul(5,x^2)=2n + sub(3)=2n + mul(x)=2n + mul(1/2)=2n",
+      "P4": "pow(x,4)=1n + mul(35/8,x^4)=2n + pow(x,2)=1n(shared) + mul(30/8,x^2)=2n + sub=2n + add(3/8)=2n"
+    },
+    "note": "pow(x,2) can be shared across terms in P_4 (DAG reuse)"
+  },
+  "bernstein": {
+    "description": "Bernstein basis polynomial B_{k,n}(x) = C(n,k)*x^k*(1-x)^{n-k}",
+    "domain": "x in (0,1) for positive-domain pow",
+    "cost_general_0ltkltn": 8,
+    "cost_k_eq_0": 3,
+    "cost_k_eq_n": 1,
+    "breakdown_general": {
+      "sub(1,x)": 2,
+      "pow(x,k)": 1,
+      "pow(1-x,n-k)": 1,
+      "mul_product": 2,
+      "mul_coeff": 2,
+      "total": 8
+    }
+  },
+  "log_sum_exp": {
+    "two_arg": {
+      "formula": "ln(exp(x) + exp(y))",
+      "cost": 5,
+      "breakdown": {
+        "exp_x": 1,
+        "exp_y": 1,
+        "add": 2,
+        "ln": 1
+      },
+      "depth": 3,
+      "key_insight": "ADD-T1 drops add cost from 11n to 2n for all real inputs; depth 3 not depth 5+"
+    },
+    "N_arg": {
+      "formula": "ln(sum_{i=1}^N exp(x_i))",
+      "cost_formula": "3N - 1",
+      "spot_checks": {
+        "2": 5,
+        "3": 8,
+        "5": 14,
+        "10": 29
+      }
+    }
+  },
+  "softmax": {
+    "formula": "sigma_i(x) = exp(x_i) / sum_j exp(x_j)",
+    "cost_formula": "5N - 2 (shared exps, N-1 adds, N divs)",
+    "breakdown": {
+      "exp_terms": "N*1n (shared with numerators)",
+      "sum_additions": "(N-1)*2n",
+      "divisions": "N*2n"
+    },
+    "spot_checks": {
+      "2": 8,
+      "3": 13,
+      "5": 23,
+      "10": 48
+    }
+  },
+  "depth_analysis": {
+    "depth_1_functions": [
+      {
+        "expr": "exp(x)",
+        "cost": 1,
+        "op": "EML(x,1)"
+      },
+      {
+        "expr": "ln(x)",
+        "cost": 1,
+        "op": "EXL(0,x)"
+      },
+      {
+        "expr": "1/x",
+        "cost": 1,
+        "op": "ELSb(0,x)"
+      },
+      {
+        "expr": "sin(x)",
+        "cost": 1,
+        "op": "Im(EML(ix,1))"
+      },
+      {
+        "expr": "cos(x)",
+        "cost": 1,
+        "op": "Re(EML(ix,1))"
+      },
+      {
+        "expr": "x^n (x>0)",
+        "cost": 1,
+        "op": "EPL(n,x)"
+      }
+    ],
+    "depth_2_polynomials": [
+      {
+        "expr": "x^2 + c",
+        "cost": 3,
+        "ops": "pow(1n)+sub/add(2n)",
+        "note": "monic, simple offset"
+      },
+      {
+        "expr": "x^2 - c",
+        "cost": 3,
+        "ops": "pow(1n)+sub(2n)",
+        "note": "same"
+      },
+      {
+        "expr": "x^2 + x",
+        "cost": 3,
+        "ops": "pow(1n)+add(x,pow)(2n)",
+        "note": "monic linear+quadratic"
+      },
+      {
+        "expr": "x^2 - x",
+        "cost": 3,
+        "ops": "pow(1n)+sub(2n)",
+        "note": "same structure"
+      },
+      {
+        "expr": "x^n (x>0)",
+        "cost": 1,
+        "ops": "pow=1n",
+        "note": "trivially depth 1"
+      }
+    ],
+    "depth_3_minimum_for": [
+      "Any degree-2 polynomial ax^2+bx+c with a,b,c all nonzero and a!=1",
+      "Any degree-3+ polynomial in general (3 nested mul/add/sub operations minimum)",
+      "Horner evaluation of any degree-3+ polynomial",
+      "log-sum-exp: ln(exp(x)+exp(y)) is exactly depth 3"
+    ],
+    "key_finding": "Cheap add (2n, ADD-T1) REDUCES NODE COUNT but does NOT drop polynomial depth below 3 for N>=3 or for general degree-2 with nonzero coefficients. Simple monic quadratics (x^2+c, x^2+x) do sit at depth 2 with 3n total. No standard polynomial basis function (Chebyshev, Legendre, Bernstein) falls below depth 3 under v5.",
+    "add_depth_impact": "In v4, add_gen=11n required a depth-5+ subtree. In v5, add=2n always; depth of add is 2 (two nested ops). So any expression containing add now has its addition subtree at depth 2 instead of 5+. log-sum-exp: was depth 5-7 effectively (through the 11-node add_gen tree); now depth 3."
+  },
+  "new_identities": {
+    "log_sum_exp_symmetry": {
+      "identity": "ln(exp(x) + exp(y)) = x + ln(1 + exp(y-x)) [for x>=y]",
+      "v5_cost_direct": 5,
+      "v5_cost_stable": 8,
+      "note": "Direct form now competitive; stable form costs 8n due to extra sub+add",
+      "verdict": "Direct form preferred under v5 due to cheap add"
+    },
+    "polynomial_via_log_ratio": {
+      "identity": "x^a * (1-x)^b = exp(a*ln(x) + b*ln(1-x)) [Beta distribution kernel]",
+      "cost_breakdown": {
+        "ln_x": 1,
+        "mul_a": 2,
+        "ln_1mx": 3,
+        "mul_b": 2,
+        "add": 2,
+        "exp": 1
+      },
+      "total": 11,
+      "comment": "ln(1-x) = ln+sub = 2+2=... actually sub(1,x)=2n then ln=1n = 3n total",
+      "note": "This EML representation avoids two separate pow operations at cost 11n vs 8n Bernstein"
+    },
+    "sum_of_exponentials": {
+      "identity": "sum_{k=1}^N a_k * exp(b_k * x)",
+      "v5_cost": "N*(1+2+2) - 2 = 5N-2 (exp+mul_b+mul_a per term, N-1 adds)",
+      "note": "Mixtures of exponentials are now cheap to sum; equal cost to softmax-style sums"
+    },
+    "chebyshev_via_trig": {
+      "identity": "T_n(cos(theta)) = cos(n*theta) -- exact 1n if cos and n*theta available",
+      "v5_cost_via_trig": "1n for cos (EML-based) + mul(n,theta)=2n = 3n for any n",
+      "v5_cost_via_recurrence": "4n-2 for T_n",
+      "verdict": "Trigonometric route beats recurrence for n>=2: 3n vs 4n-2",
+      "note": "For n=2: trig=3n vs recurrence=6n; for n=5: trig=3n vs recurrence=18n. Massive win."
+    },
+    "sigmoid": {
+      "identity": "sigma(x) = 1/(1+exp(-x)) = recip(1+exp(-x))",
+      "breakdown": {
+        "neg_x": 2,
+        "exp_negx": 1,
+        "add_1": 2,
+        "recip": 1
+      },
+      "total": 6,
+      "note": "add(1, exp(-x))=2n via ADD-T1; total 6n. Alternative: 1-recip(1+exp(x))=same cost."
+    },
+    "softplus": {
+      "identity": "softplus(x) = ln(1 + exp(x))",
+      "breakdown": {
+        "exp_x": 1,
+        "add_1": 2,
+        "ln": 1
+      },
+      "total": 4,
+      "note": "add=2n (ADD-T1); 4n total. Before v5: add_pos=3n -> 5n, add_gen=11n -> 13n.",
+      "depth": 3
+    },
+    "gelu_approx": {
+      "identity": "GELU(x) approx x * sigmoid(1.702*x)",
+      "cost": "mul(1.702,x)=2n + sigmoid(6n) + mul(x,sigma)=2n = 10n",
+      "note": "Sigmoid was the expensive part; with cheap add, sigmoid=6n total"
+    }
+  },
+  "summary": {
+    "session": "Polynomials_With_Cheap_Add",
+    "date": "2026-04-20",
+    "superbest_version": "v5.1",
+    "key_breakthrough": "add=2n for ALL real x,y (ADD-T1). Old: 3n (pos) / 11n (gen).",
+    "main_findings": [
+      "Horner form costs 4N (pos) vs 5N-1 for monomial; saves ~20% for same degree",
+      "No standard polynomial of degree N>=3 falls below depth 3 under v5 costs",
+      "Simple monic quadratics (x^2+c, x^2+x) achieve depth 2 at 3n total",
+      "Chebyshev T_n: 4n-2 cumulative nodes, but trig route cos(n*arccos(x)) costs only 3n for any n",
+      "log-sum-exp ln(exp(x)+exp(y)): 5n total, depth 3 (add=2n is the key reduction)",
+      "softplus ln(1+exp(x)): 4n (add=2n makes this exceptionally cheap)",
+      "sigmoid 1/(1+exp(-x)): 6n",
+      "Bernstein B_{k,n}: 8n general, 3n for boundary cases k=0 (expt coeff) or k=n",
+      "Alternating-sign Taylor series (sin, ln(1+x)): add and sub IDENTICAL cost (2n each); no penalty",
+      "N-arg log-sum-exp: 3N-1 nodes; N-class softmax: 5N-2 nodes"
+    ],
+    "depth_below_3_answer": "ANSWER: No standard polynomial of degree >=2 with more than 2 terms falls below depth 3. Degree-1: depth 1 (free). Degree-2 monic with ONE extra term (x^2+c or x^2+x): depth 2, 3n. The cheap add DOES reduce depth of the addition subtree from 5+ (v4 add_gen) to 2 (v5). But the mul chain in polynomial evaluation always adds more depth."
+  }
+}

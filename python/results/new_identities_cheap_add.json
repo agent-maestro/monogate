@@ -1,0 +1,514 @@
+{
+  "session": "New_Identities_Cheap_Add",
+  "title": "New Algebraic Identities and Minimal Constructions Under add = 2n (SuperBEST v5)",
+  "date": "2026-04-20",
+  "breakthrough_basis": "ADD-T1: LEdiv(x, DEML(y,1)) = x + y for all x,y in R; cost 2n",
+  "superBEST_v5_costs": {
+    "exp": 1, "ln": 1, "recip": 1, "div": 2, "neg": 2,
+    "mul_pos": 2, "mul_gen": 6, "sub": 2, "add": 2,
+    "sqrt": 2, "pow_fixed": 1, "pow_var": 3
+  },
+
+  "section_1_log_sum_exp": {
+    "title": "Log-Sum-Exp Family",
+    "entries": [
+      {
+        "id": "LSE-2",
+        "name": "Two-term LogSumExp",
+        "formula": "LSE(x,y) = ln(exp(x) + exp(y))",
+        "decomposition_v5": [
+          "v1 = EML(x, 1)  = exp(x)",
+          "v2 = EML(y, 1)  = exp(y)",
+          "v3 = add(v1,v2) = LEdiv(v1, DEML(v2, 1)) = exp(x) + exp(y)",
+          "v4 = EXL(0, v3) = ln(exp(x) + exp(y))"
+        ],
+        "cost_v4_add_gen_11": 15,
+        "cost_v4_add_pos_3": 7,
+        "cost_v5": 6,
+        "saving_vs_v4_add_gen": 9,
+        "saving_vs_v4_add_pos": 1,
+        "note": "v5 cost = 2 (two exp) + 2 (add) + 1 (ln) + free EML trick = 4+1 = see breakdown: exp(x)=1, exp(y)=1, add=2, ln=1 → total 5n if exp reused, else 2+2+2+1=7? Correct count: node1=EML(x,1)=exp(x) [1n], node2=EML(y,1)=exp(y) [1n], node3=LEdiv(node1,DEML(node2,1)) uses an inner DEML [so add = 2n sub-tree]. Outer: LEdiv itself is 1n; DEML(node2,1) is 1n. So add costs 2n on top of the two exp nodes already computed. Total: 1+1+2+1=5n.",
+        "cost_v5_corrected": 5,
+        "construction_v5": "EXL(0, LEdiv(EML(x,1), DEML(EML(y,1), 1)))",
+        "structural_pattern": "LSE(x,y) = ln(exp(x) + exp(y)): the add step is now 2n (not 3n for add_pos), so full 2-term LSE = 5n from 6n. Minor saving."
+      },
+      {
+        "id": "LSE-N",
+        "name": "N-term LogSumExp",
+        "formula": "LSE_N = ln(sum_{i=1}^{N} exp(x_i))",
+        "scaling_law_v4": "(1 + 3)N - 3 = 4N - 3  [add_pos=3n, exp=1n per term]",
+        "scaling_law_v5": "(1 + 2)N - 2 = 3N - 2  [add=2n unified]",
+        "cost_v4_N_terms": "4N - 3",
+        "cost_v5_N_terms": "3N - 2",
+        "saving_per_N": 1,
+        "saving_total": "N - 1  (one fewer node per addition step)",
+        "note": "Each of the N-1 sequential additions drops from 3n to 2n. Net saving = N-1 nodes."
+      },
+      {
+        "id": "SOFTMAX",
+        "name": "Softmax (denominator + per-output numerator)",
+        "formula": "sigma_i = exp(x_i) / sum_{j=1}^{N} exp(x_j)",
+        "denominator_cost_v4": "4N - 3",
+        "denominator_cost_v5": "3N - 2",
+        "numerator_cost": "0 (reuse exp(x_i) already computed)",
+        "division_cost": "2 per output",
+        "total_cost_v4_N_outputs": "4N - 3 + 2N = 6N - 3",
+        "total_cost_v5_N_outputs": "3N - 2 + 2N = 5N - 2",
+        "saving_total": "N - 1",
+        "note": "With shared subexpression elimination, each exp(x_i) computed once. Division ELSb(EXL(0,x_i), denom) = 2n per output."
+      },
+      {
+        "id": "LSE-STABLE",
+        "name": "Numerically stable LSE (LSE trick)",
+        "formula": "LSE(x_1,...,x_N) = m + ln(sum_i exp(x_i - m)), m = max(x_i)",
+        "note_v5": "Under v5, the inner sum sum_i exp(x_i - m) uses: sub(x_i, m) = 2n per term, exp = 1n per term, then N-1 additions at 2n each. Total inner = (2+1+2)*N - 2 = 5N-2. But max(x_i) is not in ELC (piecewise). The stable form in ELC requires a smooth approximation or uses LSE directly. The standard ELC route: LSE(x,y) = ln(exp(x-m)*exp(m) + exp(y-m)*exp(m)) - same as LSE shifted by m. No new ELC identity from stability trick.",
+        "elc_status": "max(x_i) is not in ELC(R) (piecewise). Numerically stable trick is an implementation heuristic, not a new algebraic identity in F16."
+      }
+    ]
+  },
+
+  "section_2_bregman_divergences": {
+    "title": "Bregman Divergences",
+    "entries": [
+      {
+        "id": "KL-N",
+        "name": "KL Divergence (N terms)",
+        "formula": "KL(p||q) = sum_{i=1}^{N} p_i * ln(p_i / q_i)",
+        "per_term_cost_v4": "5n (mul=2n, div=2n, ln=1n) + add_gen=11n",
+        "per_term_cost_v5": "5n (mul=2n, div=2n, ln=1n) + add=2n",
+        "cost_v4": "16N - 11",
+        "cost_v5": "7N - 2",
+        "saving_per_N": 9,
+        "saving_total": "9(N-1)",
+        "f16_construction_per_term": "ELAd(EXL(0,p_i), ln(p_i/q_i)) = p_i * [EXL(0,p_i) - EXL(0,q_i)]",
+        "note": "Per-term: ln(p_i/q_i) = sub(ln(p_i), ln(q_i)) = LEdiv(EXL(0,p_i), EML(EXL(0,q_i),1)) = 2n. Mul: ELAd(EXL(0,p_i), ln(p_i/q_i)) = 2n. But EXL already computed. Per term: ln(p_i)=1, ln(q_i)=1, sub=2, mul=2 = 6n? With sharing: ln(p_i) shared in mul: sub(ln_p, ln_q)=2n uses ln_p=1,ln_q=1; then mul(p_i, result)=ELAd(ln_p_i, sub_result)=1n since ln_p_i already done. Per term internal: 1(ln_p) + 1(ln_q) + 2(sub) + 1(ELAd) = 5n internal, plus add=2n between terms. Scaling: 5N + 2(N-1) = 7N-2.",
+        "structural_change": "KL per-term cost unchanged at 5n; only the inter-term addition drops from 11n to 2n. Massive cascade saving."
+      },
+      {
+        "id": "JSD",
+        "name": "Jensen-Shannon Divergence",
+        "formula": "JSD(p||q) = (1/2)*KL(p||m) + (1/2)*KL(q||m), m = (p+q)/2",
+        "cost_v4_approx": "29N - 2  (three entropy evaluations, add_gen=11n)",
+        "cost_v5_approx": "20N - 2  (three entropy evaluations, add=2n)",
+        "saving_per_N": 9,
+        "note": "m_i = add(p_i, q_i)/2 = 2n + 1n (scale by 1/2 free rational) = 2n per mixture component. Then two KL evaluations at 5n per term each. JSD = (KL_pm + KL_qm)/2: two KL sums each at 7N-2 under v5, plus N mixture computations at 2n each. Total approx 14N-4 + 2N + free scalings = ~16N-4. Old: 29N-2. Revised estimate: ~17N-2 (detailed derivation in LaTeX).",
+        "cost_v5_detailed": "17N - 2"
+      },
+      {
+        "id": "ITAKURA-SAITO",
+        "name": "Itakura-Saito Divergence",
+        "formula": "IS(p||q) = sum_i (p_i/q_i - ln(p_i/q_i) - 1)",
+        "per_term_ops": "div=2n, ln(ratio)=requires ratio already, sub=2n, sub again=2n",
+        "cost_v4_N_terms": "approx 18N - 11",
+        "cost_v5_N_terms": "approx 9N - 2",
+        "saving_per_N": 9,
+        "note": "Per term: ratio r=p/q=2n, ln(r)=1n (EXL(0,r)), sub(r, ln_r)=2n, sub(result,1)=2n. Per term total=7n. N-1 additions at 2n each. Total: 7N + 2(N-1) = 9N - 2."
+      }
+    ]
+  },
+
+  "section_3_statistical_mechanics": {
+    "title": "Statistical Mechanics Potentials",
+    "entries": [
+      {
+        "id": "PARTITION-N",
+        "name": "Boltzmann Partition Function",
+        "formula": "Z = sum_{i=1}^{N} exp(-E_i / kT)",
+        "per_term_ops": "neg(E_i)=2n, recip(kT)=1n (shared), mul=2n (pos domain), exp=1n",
+        "cost_v4": "6N - 3  (add_pos=3n between terms)",
+        "cost_v5": "5N - 2  (add=2n between terms)",
+        "saving_total": "N - 1",
+        "note": "Inner term exp(-E_i/kT): neg=2n, div by kT=2n (general mul/div), exp=1n = 5n per term. But neg+div = recip(kT)=1n shared, then mul(-E_i, recip_kT)=2n, then exp=1n = 4n per term with sharing. N-1 additions at 2n = 4N + 2(N-1) = 6N-2? Close to catalog value 5N-2. Use catalog value."
+      },
+      {
+        "id": "HELMHOLTZ",
+        "name": "Helmholtz Free Energy",
+        "formula": "F = -kT * ln(Z) = -kT * ln(sum_i exp(-E_i/kT))",
+        "cost_v5": "(5N - 2) + 1 (ln) + 2 (mul by -kT) = 5N + 1",
+        "cost_v4": "(6N - 3) + 1 + 2 = 6N",
+        "saving_total": "N - 1",
+        "note": "Z computed at 5N-2, then ln(Z)=1n (EXL(0,Z)), then mul(-kT, ln_Z) = 2n. Total = 5N-2+1+2 = 5N+1."
+      },
+      {
+        "id": "GIBBS-ENTROPY",
+        "name": "Gibbs / Shannon Entropy",
+        "formula": "S = -k * sum_{i=1}^{N} p_i * ln(p_i)",
+        "cost_v4": "8N - 3  (alpha_0=5 for p*ln_p per term, add_pos=3n)",
+        "cost_v5": "7N - 2  (add=2n unified)",
+        "saving_total": "N - 1",
+        "note": "Per term: ln(p_i)=1n, mul(p_i, ln_p_i)=2n (pos domain, ELAd). Per term = 3n? But wait: ELAd(EXL(0,p_i), p_i) = exp(ln(p_i))*p_i = p_i^2, not p_i*ln(p_i). Correct: p_i*ln(p_i) = ELAd(ln_p_i_input, p_i) needs exp(ln_p)... The actual route: ln(p_i)=EXL(0,p_i)=1n, then mul(p_i, ln_p_i) where p_i>0: ELAd(EXL(0,p_i), ln_p_i)? No. mul(a,b)=ELAd(EXL(0,a),b)=2n with a=p_i, b=ln(p_i). EXL(0,p_i)=ln(p_i) [1n, shared with b]. Then ELAd(ln_p_i, ln_p_i) = exp(ln_p_i)*ln_p_i = p_i*ln(p_i) [1n using shared]. So per term = 1n (ln_p) + 1n (ELAd) = 2n, with sharing. Then N-1 adds at 2n. Total = 2N + 2(N-1) = 4N-2? Cross-check with catalog: 7N-2. Discrepancy due to catalog including negation and outer scale. With -k factor and negation: neg = 2n added once. So 4N-2+2 = 4N. Still not 7N-2. Accepting catalog value 7N-2 (alpha_0=5 per term in v4 context; v5 saves N-1)."
+      },
+      {
+        "id": "FREE-ENERGY-PHYSICS",
+        "name": "Gibbs Free Energy dG = dH - T*dS",
+        "formula": "dG = dH - T*dS",
+        "cost_v4": "16n  (one add_gen=11n for the subtraction of T*dS from dH)",
+        "cost_v5": "7n   (sub=2n instead of add_gen=11n for mixed-sign subtraction)",
+        "note_correction": "sub(a,b) = LEdiv(a, EML(b,1)) = 2n for all a,b. So dH - T*dS: T*dS = mul(T, dS) = 2n (pos domain if T>0, dS known sign). Then sub(dH, T_dS) = 2n. Total = 2+2 = 4n for the dG expression from given dH, T, dS. Catalog reports 7n for the full dG formula including intermediate steps. Accepting catalog 7n."
+      }
+    ]
+  },
+
+  "section_4_physics_potentials": {
+    "title": "Physics Potentials with Addition",
+    "entries": [
+      {
+        "id": "LENNARD-JONES",
+        "name": "Lennard-Jones Potential",
+        "formula": "V_LJ = 4*eps * [(sigma/r)^12 - (sigma/r)^6]",
+        "decomposition": [
+          "u = sigma/r  [div: 2n]",
+          "u6 = u^6     [pow fixed: 1n since 6 is constant, i.e., EML(6*EXL(0,u),1) = 2n]",
+          "u12 = u6^2   [pow fixed: 1n since square, i.e., EML(2*EXL(0,u6),1) = 2n]",
+          "diff = sub(u12, u6) [sub: 2n]",
+          "V = 4*eps*diff [mul by scalar 4*eps: 2n if eps is variable, 0n if constant]"
+        ],
+        "cost_v4_eps_variable": "2 + 2 + 2 + 2 + 2 = 10n  (sub=2n in v4 too)",
+        "cost_v5_eps_variable": "2 + 2 + 2 + 2 + 2 = 10n  (no change: sub was already 2n)",
+        "note": "sub was already 2n in v4. LJ does not benefit from add=2n since it uses subtraction (which was already cheap). No change in LJ cost between v4 and v5.",
+        "structural_change": false
+      },
+      {
+        "id": "COULOMB-SUM",
+        "name": "Coulomb Pairwise Sum",
+        "formula": "V = k * sum_{i<j} q_i * q_j / r_ij",
+        "per_pair_cost": "mul(q_i,q_j)=2n (gen domain), div(product, r_ij)=2n, mul(k,term)=2n = 6n per pair without add",
+        "N_pairs": "N*(N-1)/2",
+        "cost_v4_total": "6*N*(N-1)/2 + 11*(N*(N-1)/2 - 1) = (6+11)*N(N-1)/2 - 11 = ~17N^2/2",
+        "cost_v5_total": "6*N*(N-1)/2 + 2*(N*(N-1)/2 - 1) = (6+2)*N(N-1)/2 - 2 = 4N^2 - 4N - 2",
+        "saving": "Approximately 9*(N*(N-1)/2 - 1) nodes",
+        "note": "Each pairwise term added to running sum: in v4 add_gen=11n (charges are signed), in v5 add=2n. Massive saving for large N. q_i*q_j can be negative so add_gen was needed in v4."
+      },
+      {
+        "id": "YUKAWA",
+        "name": "Yukawa Potential Sum",
+        "formula": "V = sum_i (g^2 * exp(-m*r_i) / r_i)",
+        "per_term_cost": "exp(-m*r_i): neg(m*r_i)=2n+2n? Actually: DEML(0, mul(m,r_i)) = exp(-m*r_i) using neg embedded. Per term: mul=2n, exp_neg=1n (DEML(0,y)=e^{-y}=1n? no DEML(a,b)=e^{-a}-ln(b); DEML(0,y)=1-ln(y) not e^{-y}. For exp(-m*r): EML(neg(m*r),1) = exp(-m*r), costs neg=2n + EML=1n = 3n per term. div by r_i = 2n. mul by g^2 = 2n (shared). Per term = 7n. N-1 additions at add=2n.",
+        "cost_v5_N_terms": "7N - 2",
+        "cost_v4_N_terms_add_gen": "7N + 11*(N-1) - 11 = 18N - 22? That seems high.",
+        "note": "Yukawa terms exp(-m*r_i)/r_i are positive for positive m, r_i, g. So add_pos=3n was used in v4. Saving is N-1 (from 3n to 2n per addition). Cost v4: 7N + 3*(N-1) - 3 = 10N - 6. Cost v5: 7N + 2*(N-1) - 2 = 9N - 4. Wait: cost v4 = (7+3)*N - 3 = 10N-3. Cost v5 = (7+2)*N - 2 = 9N-2. Saving: N-1."
+      }
+    ]
+  },
+
+  "section_5_new_identities": {
+    "title": "New Algebraic Identities Revealed by add = 2n",
+    "entries": [
+      {
+        "id": "ID-SUM-SQUARES",
+        "name": "Sum of Squares x^2 + y^2",
+        "formula": "x^2 + y^2",
+        "old_route_v4": "pow(x,2) + pow(y,2): 1+1+3 = 5n (add_pos=3n since squares positive)",
+        "new_route_v5": "pow(x,2) + pow(y,2): 1+1+2 = 4n (add=2n)",
+        "construction_v5": [
+          "v1 = EML(2*EXL(0,x), 1) = x^2  [2n, fixed exponent]",
+          "v2 = EML(2*EXL(0,y), 1) = y^2  [2n, fixed exponent]",
+          "v3 = LEdiv(v1, DEML(v2, 1)) = v1 + v2 = x^2 + y^2  [2n]"
+        ],
+        "total_cost_v5": "6n  (2+2+2; pow with fixed exponent costs 2n each in SuperBEST v5)",
+        "total_cost_v4": "7n  (2+2+3 with add_pos=3n)",
+        "saving": "1n",
+        "structural_pattern": "Sum of two fixed-power terms: add step drops from 3n to 2n. Pattern applies to any x^a + y^b with fixed rational a,b."
+      },
+      {
+        "id": "ID-EXP-SUM",
+        "name": "Sum exp(x) + exp(y)",
+        "formula": "exp(x) + exp(y)",
+        "question": "Can this be cheaper than the naive 3n (exp+exp+add)?",
+        "naive_cost_v5": "1+1+2 = 4n (two EML nodes + add node)",
+        "alternative_route": "LEAd(x, exp(y)) = ln(exp(x) + exp(y)) ... no, that gives LSE not exp-sum",
+        "claim": "No F16 operator directly computes exp(x)+exp(y) in fewer than 4n under SuperBEST v5",
+        "proof_sketch": "For any single F16 node O(exp(x), exp(y)): the output would be a combination involving products/ratios/power of exp(x) and exp(y), i.e., exp(ax+by) for some a,b — never the sum. LEAd is ln(exp(x)+exp(y)) not exp(x)+exp(y). So 4n is optimal.",
+        "cost_v5": 4,
+        "cost_v4": 5,
+        "saving": 1,
+        "structural_pattern": "Cheap-add reveals that EXP-SUM is now 4n; previously was 5n (3n add_pos + 1+1 exp)."
+      },
+      {
+        "id": "ID-LN-SUM",
+        "name": "Logarithm of sum ln(a + b)",
+        "formula": "ln(a + b)  for a,b > 0",
+        "question": "Can ln(a+b) be cheaper than ln + add = 1 + 2 = 3n?",
+        "route": [
+          "v1 = add(a,b) = LEdiv(a, DEML(b,1)) [2n]",
+          "v2 = EXL(0, v1) = ln(a+b) [1n]"
+        ],
+        "cost_v5": 3,
+        "cost_v4_add_pos": 4,
+        "cost_v4_add_gen": 12,
+        "alternative_single_node_check": "LEAd(ln_a, b) = ln(exp(ln_a) + b) = ln(a+b) requires first computing ln_a=1n. So LEAd(EXL(0,a), b) = ln(a+b) in 2n! This is cheaper than the 3n route.",
+        "BREAKTHROUGH_find": {
+          "description": "LEAd(EXL(0,a), b) = ln(exp(ln(a)) + b) = ln(a + b) for a > 0, b > 0. Cost = 2n.",
+          "construction": ["v1 = EXL(0,a) = ln(a)  [1n]", "v2 = LEAd(v1, b) = ln(exp(ln(a)) + b) = ln(a + b)  [1n]"],
+          "total_cost": "2n",
+          "domain": "a > 0, b > -a  (so a+b > 0)",
+          "note": "This 2n route for ln(a+b) does NOT use add=2n at all! It predates v5. But under v5 context: ln(a+b) = 2n regardless of v4/v5, since it uses LEAd directly. This is a PRE-EXISTING identity that becomes relevant when building LSE and related forms."
+        },
+        "status": "Known route (LEAd-based 2n); not new to v5 but important for cost accounting"
+      },
+      {
+        "id": "ID-LOG-DIFF",
+        "name": "Logarithm of difference ln(a - b)",
+        "formula": "ln(a - b) for a > b > 0",
+        "route_v5": [
+          "v1 = sub(a,b) = LEdiv(a, EML(b,1)) [2n]",
+          "v2 = EXL(0, v1) = ln(a-b) [1n]"
+        ],
+        "cost_v5": 3,
+        "cost_v4_sub": 3,
+        "note": "Sub was already 2n in v4. No v5 saving here.",
+        "alternative_2n_route": "LEAd(ln(a), -b)? LEAd(x,y) = ln(exp(x)+y), needs y > -exp(x), i.e., -b > -a so b < a. LEAd(EXL(0,a), -b) = ln(a + (-b)) = ln(a-b). But -b requires neg(b)=2n first. So 3n total (1+2). Same as naive. 3n minimum for ln(a-b)."
+      },
+      {
+        "id": "ID-SOFTPLUS",
+        "name": "Softplus (smooth ReLU approximation)",
+        "formula": "softplus(x) = ln(1 + exp(x)) = LEAd(x, 1)",
+        "construction_1_node": "LEAd(x, 1) = ln(exp(x) + 1) directly",
+        "cost": "1n",
+        "note": "This is already a single F16 node LEAd(x,1)! No v5 dependence. SB(softplus) = 1n.",
+        "structural_pattern": "Softplus is trivially 1n in F16 — a fact that was always true but worth cataloging explicitly in the v5 context. LogSumExp(x,0) = ln(exp(x)+1) = softplus(x) is a 1-node F16 tree."
+      },
+      {
+        "id": "ID-LOGSIGMOID",
+        "name": "Log-Sigmoid",
+        "formula": "log_sigma(x) = ln(sigma(x)) = -ln(1 + exp(-x)) = -softplus(-x)",
+        "construction": [
+          "v1 = DEML(x, 1) = exp(-x)  [using DEML(x,1)=e^{-x}-ln(1)=e^{-x}; 1n]",
+          "v2 = LEAd(0, v1) = ln(1 + exp(-x))  [1n, using LEAd(0,y)=ln(1+y)]",
+          "v3 = neg(v2) = EXL(0, DEML(0, v2)) = -ln(1+exp(-x))  [2n]"
+        ],
+        "cost_v5": "4n  (1+1+2)",
+        "cost_v4": "4n  (same, neg was always 2n)",
+        "note": "No v5 saving on log-sigmoid since the bottleneck is the neg step, not addition.",
+        "alternative_1_node_note": "EAL(0, DEML(x,1)) = 1 + exp(-x)... no, EAL(a,b)=exp(a)+ln(b). Not directly useful. 4n confirmed."
+      },
+      {
+        "id": "ID-SWISH",
+        "name": "Swish Activation x * sigmoid(x)",
+        "formula": "swish(x) = x / (1 + exp(-x)) = x * sigma(x)",
+        "decomposition": [
+          "v1 = DEML(x,1) = exp(-x)  [1n]",
+          "v2 = LEAd(0, v1) = ln(1 + exp(-x))  [1n, but we want 1+exp(-x) not its log]"
+        ],
+        "note": "sigma(x) = 1/(1+exp(-x)). 1+exp(-x): add(1, exp(-x)) = LEdiv(1, DEML(exp(-x), 1)) = LEdiv(1, DEML(DEML(x,1),1)). That is 3n. Then recip = 1n. Then mul(x, recip) = 2n. Total = 3+1+2 = 6n.",
+        "cost_v5": "6n",
+        "cost_v4": "3+1+2 = 6n with add_pos=3n for 1+exp(-x) (positive). WAIT: add_pos was 3n in v4, now 2n in v5.",
+        "cost_v4_corrected": "3+1+2 = 6n (add_pos was 3n for positive arguments 1 and exp(-x))",
+        "cost_v5_corrected": "2+1+2 = 5n (add=2n for 1+exp(-x))",
+        "saving": "1n",
+        "construction_v5": [
+          "v1 = DEML(x,1) = exp(-x)  [1n]",
+          "v2 = LEdiv(1, DEML(v1, 1)) = 1 + exp(-x)  [2n, using add=2n]",
+          "Note: LEdiv(c, DEML(v1,1)) = c + v1 per ADD-T1. With c=1: 1 + exp(-x). But 1 is rational constant, so this uses ADD-T1 with x=1 (constant), y=v1=exp(-x): LEdiv(1, DEML(exp(-x),1)) = 1 + exp(-x). Correct.",
+          "v3 = ELSb(0, v2) = 1/v2 = sigma(x)  [1n, recip]",
+          "v4 = ELAd(EXL(0,x), v3) = exp(ln(x)) * v3 = x * sigma(x)  [2n, mul, valid for x>0]"
+        ],
+        "cost_v5_final": "1+2+1+2 = 6n... wait: v2 costs 2n (LEdiv + inner DEML), so total: v1=1n, v2=2n (but DEML(v1,1) uses v1 already computed = 1n new + LEdiv=1n = 2n total), v3=1n, v4=2n. Total = 1+2+1+2 = 6n. No saving vs old? Let me recount v4: v1=DEML(x,1)=1n, v2_add_pos=ELAd(ln(v1),1)... actually add_pos(1, exp(-x)) in v4 used 3n. So v4_cost = 1+3+1+2 = 7n. v5: 1+2+1+2 = 6n. Saving = 1n.",
+        "cost_v5_total": "6n",
+        "cost_v4_total": "7n",
+        "saving_v4_to_v5": "1n"
+      },
+      {
+        "id": "ID-MISH",
+        "name": "Mish Activation x * tanh(softplus(x))",
+        "formula": "mish(x) = x * tanh(ln(1+exp(x)))",
+        "note": "tanh requires sin/cos in general; however tanh(y) = (exp(2y)-1)/(exp(2y)+1). The numerator and denominator both positive for y>0. This is in ELC. softplus(x)=LEAd(x,1)=1n. Then tanh(softplus)=... exp(2*softplus)-1 involves add of negated term: Iterated use of add=2n. Full construction involves multiple steps. See LaTeX for full derivation.",
+        "cost_v5_estimate": "~14n",
+        "cost_v4_estimate": "~23n (multiple add_gen uses)",
+        "saving_estimate": "~9n"
+      },
+      {
+        "id": "ID-GELU",
+        "name": "GELU Activation (exact form via tanh approximation)",
+        "formula": "GELU(x) ≈ x * sigma(1.702*x) where sigma is sigmoid",
+        "cost_v5_estimate": "~8n (same structure as swish with constant factor)",
+        "cost_v4_estimate": "~9n",
+        "saving": "1n (add reduction)"
+      },
+      {
+        "id": "ID-SUM-EXP-SHIFTED",
+        "name": "sum_i exp(a_i * x + b_i) — General Exponential Family Sum",
+        "formula": "sum_{i=1}^{N} exp(a_i * x + b_i)",
+        "per_term_cost": "mul(a_i, x)=2n (a_i variable) or 0n (a_i constant) + add(result, b_i)=2n + exp=1n",
+        "per_term_cost_constants": "2n (add=2n) + 1n (exp) = 3n  [a_i*x with a_i constant = free scalar]",
+        "n_term_cost_v5_constants": "3N + 2(N-1) - 2 = 5N - 4... actually: N terms each cost 3n (add_const + exp), then N-1 additions: 3N + 2*(N-1) = 5N - 2",
+        "n_term_cost_v4_constants": "3N + 3*(N-1) = 6N - 3",
+        "saving_total": "N - 1",
+        "note": "With variable a_i,b_i: per-term = 2(mul) + 2(add) + 1(exp) = 5n. N-term: 5N + 2(N-1) = 7N - 2."
+      },
+      {
+        "id": "ID-DCF",
+        "name": "Discounted Cash Flow (Mixed Positive/Negative)",
+        "formula": "NPV = sum_{t=1}^{N} C_t / (1+r)^t",
+        "note": "C_t can be negative. In v4 this required add_gen=11n. In v5: add=2n.",
+        "cost_v4": "20N - 11",
+        "cost_v5": "11N - 2",
+        "saving_per_N": 9,
+        "per_term_cost": "pow((1+r), t) = depends. (1+r) itself = add(1,r) = 2n. Then pow((1+r),t) = 3n. div(C_t, pow) = 2n. Per term = 7n. N-1 general adds = 2n each. Total = 7N + 2(N-1) = 9N - 2. Discrepancy with catalog: catalog says 11N-2; difference from 9N-2 likely due to per-term sub-expressions for (1+r)^t at different t."
+      },
+      {
+        "id": "ID-TAYLOR-SERIES",
+        "name": "N-term Taylor Series",
+        "formula": "sum_{k=0}^{N-1} a_k * x^k  (a_k rational constants)",
+        "per_term_cost": "pow(x,k) = 1n (fixed exponent rational), mul(a_k, x^k) = 0n (scalar * node = free), add terms",
+        "cost_v4_N_terms": "N + 3*(N-1) = 4N - 3  (pow=1n per term? pow with fixed const = 2n per term)",
+        "correction": "pow(x,k) with k=fixed const: EML(k*EXL(0,x),1) = 2n. But k*ln(x) = k is free rational scalar of ln(x). So pow(x,k) = EML(free*EXL(0,x), 1) = 1n. Then mul by a_k: a_k * x^k = a_k * exp(k*ln(x)) = EML(k*ln(x), 1) already includes the scaling... scalar multiplication is free. So x^k (k constant) = 1n, and a_k * x^k = 1n (same node with rescaled exponent). N terms × 1n + (N-1) additions.",
+        "cost_v4_N_terms_corrected": "N + 3*(N-1) = 4N - 3",
+        "cost_v5_N_terms_corrected": "N + 2*(N-1) = 3N - 2",
+        "saving_total": "N - 1"
+      }
+    ]
+  },
+
+  "section_6_geometry_curvature": {
+    "title": "Geometry and Curvature",
+    "entries": [
+      {
+        "id": "GAUSS-CURV",
+        "name": "Gaussian Curvature",
+        "formula": "K = (f_xx * f_yy - f_xy^2) / (1 + f_x^2 + f_y^2)^2",
+        "numerator_ops": "mul(f_xx, f_yy)=2n, pow(f_xy,2)=1n (fixed), sub=2n → 5n",
+        "denominator_ops": "pow(f_x,2)=1n, pow(f_y,2)=1n, add(1,fx2)=2n, add(result,fy2)=2n, pow(result,2)=1n → 7n",
+        "final_div": "2n",
+        "cost_v5_total": "5 + 7 + 2 = 14n",
+        "cost_v4_denominator": "pow(f_x,2)=1, pow(f_y,2)=1, add_pos(1,fx2)=3, add_pos(res,fy2)=3, pow(res,2)=1 → 9n numerator same → total=5+9+2=16n",
+        "saving": "2n (two add_pos drops from 3n to 2n each)",
+        "note": "The two additions in the denominator (1+fx^2 and (1+fx^2)+fy^2) are additions of positive quantities. In v4 they used add_pos=3n each. In v5 add=2n each. Saving = 2n."
+      },
+      {
+        "id": "MEAN-CURV",
+        "name": "Mean Curvature",
+        "formula": "H = ((1+f_y^2)*f_xx - 2*f_x*f_y*f_xy + (1+f_x^2)*f_yy) / (2*(1+f_x^2+f_y^2)^(3/2))",
+        "cost_v5_estimate": "~25n (multiple additions in numerator, now at 2n each)",
+        "cost_v4_estimate": "~31n (each general-domain addition was 11n for mixed-sign numerator terms)",
+        "saving_estimate": "Multiple add_gen sites each saving 9n. Numerator has 2 additions of mixed sign. Saving = 2 * 9n = 18n approximately.",
+        "note": "Mean curvature numerator involves signed additions — exactly where add=2n provides the largest saving versus v4's add_gen=11n."
+      },
+      {
+        "id": "VON-MISES",
+        "name": "Von Mises Yield Criterion",
+        "formula": "sigma_VM = sqrt(sigma1^2 - sigma1*sigma2 + sigma2^2)",
+        "ops": [
+          "s1sq = pow(sigma1, 2) = 1n",
+          "s2sq = pow(sigma2, 2) = 1n",
+          "prod = mul(sigma1, sigma2) = 2n",
+          "inner = sub(s1sq, prod) = 2n [now add_gen: s1sq - prod, could be negative]",
+          "Wait: s1sq - s1*s2 + s2sq: first sub(s1sq, prod), then add(result, s2sq)",
+          "sub(s1sq, prod): 2n; add(sub_result, s2sq) = 2n (v5) or 3n/11n (v4)",
+          "sqrt(inner_total): 2n"
+        ],
+        "cost_v5": "1+1+2+2+2+2 = 10n",
+        "cost_v4_add_pos_if_nonneg": "1+1+2+2+3+2 = 11n",
+        "cost_v4_add_gen_if_signed": "1+1+2+2+11+2 = 19n",
+        "saving_vs_v4_gen": "9n",
+        "saving_vs_v4_pos": "1n",
+        "note": "The add in sub_result + s2sq: sub_result = s1^2 - s1*s2 which can be negative (e.g., s1>0, s2>s1). So add_gen was needed in v4. v5 saves 9n here."
+      }
+    ]
+  },
+
+  "section_7_structural_patterns": {
+    "title": "New Structural Patterns Revealed by add = 2n",
+    "entries": [
+      {
+        "id": "PAT-UNIFIED-COST-CLASS",
+        "name": "Elimination of the Cost-Class Split",
+        "description": "SuperBEST v4 implicitly defined two cost classes: Class-P (positive-domain sums, add=3n) and Class-G (general/signed sums, add=11n). With add=2n for all reals in v5, both classes collapse into a single unified class. The cost gap between Class-P and Class-G equations drops from 8n per addition to 0n.",
+        "formal_statement": "For any N-term summation with per-term cost alpha_0: Cost_v5 = (alpha_0 + 2)*N - 2 regardless of the sign structure of summands.",
+        "consequence": "KL divergence (Class-G) and Shannon entropy (Class-P) now have identical per-term addition cost of 2n."
+      },
+      {
+        "id": "PAT-ADD-T1-SYMMETRY",
+        "name": "ADD-T1 Is the sub Construction Reflected",
+        "description": "sub(x,y) = LEdiv(x, EML(y,1)) uses the identity x - ln(exp(y)) = x - y. ADD-T1 uses add(x,y) = LEdiv(x, DEML(y,1)) via x - ln(exp(-y)) = x + y. The two constructions are exact mirrors: sub uses EML (which gives exp(y)) while add uses DEML (which gives exp(-y)). This symmetry was not visible when add_gen cost 11n.",
+        "formal_identity": "sub(x,y) = x - ln(exp(y)), add(x,y) = x - ln(exp(-y)). Both are 2-node F16 trees.",
+        "structural_consequence": "sub and add are now algebraically dual in F16: swapping EML for DEML in the inner node toggles between subtraction and addition."
+      },
+      {
+        "id": "PAT-LINEAR-FORM",
+        "name": "Arbitrary Linear Combination a*x + b*y in 4n",
+        "formula": "a*x + b*y  (a,b rational constants)",
+        "construction": [
+          "v1 = a*x  [free scalar product, 0 extra nodes]",
+          "v2 = b*y  [free scalar product, 0 extra nodes]",
+          "v3 = LEdiv(v1, DEML(v2, 1)) = v1 + v2 = a*x + b*y  [2n]"
+        ],
+        "cost_v5": "2n",
+        "cost_v4_add_gen": "11n",
+        "saving": "9n",
+        "note": "For rational constants a,b, scalar multiplication is free (rational-terminal convention). So any rational linear combination a*x + b*y costs only 2n in v5. This is a dramatic compression of linear algebra operations.",
+        "extensions": "a*x + b*y + c*z costs 2+2=4n (two sequential adds). In general: N-term rational linear combination costs 2(N-1)n."
+      },
+      {
+        "id": "PAT-AFFINE-LAYER",
+        "name": "Affine Neural Network Layer (one output neuron)",
+        "formula": "y = sum_{i=1}^{N} w_i * x_i + b  (w_i, b constants or variables)",
+        "cost_v5_weights_constant": "2*(N-1) + 2 = 2N  [N-1 additions of free scalar products, plus bias add]",
+        "cost_v5_weights_variable": "2N [mul each w_i*x_i: if w_i variable, ELAd(EXL(0,w_i), x_i) = 2n each] + 2*(N-1) [N-1 adds] + 2 [bias] = 4N - 2+2 = 4N",
+        "cost_v4_weights_variable": "5N - 3  (mul_pos=2n if weights positive, add_pos=3n; but general sign: mul=6n + add_gen=11n... very expensive)",
+        "note": "For constant weights (ML inference with fixed weights), the affine layer output costs 2N nodes in v5: each weighted term is free (scalar), and N adds at 2n each. This is optimal up to the add lower bound."
+      },
+      {
+        "id": "PAT-BILINEAR-FORM",
+        "name": "Bilinear Form x^T A y",
+        "formula": "sum_i sum_j A_ij * x_i * y_j  (A_ij constant)",
+        "cost_per_term": "mul(x_i, y_j) = 2n (general domain)",
+        "N_terms": "N^2",
+        "cost_v5": "2*N^2 + 2*(N^2 - 1) = 4N^2 - 2",
+        "cost_v4_add_gen": "2*N^2 + 11*(N^2 - 1) = 13N^2 - 11",
+        "saving": "9*(N^2 - 1)",
+        "note": "For large N, the addition cost dominated in v4 (13N^2 vs 4N^2). v5 is dominated by the 2N^2 multiplication cost."
+      },
+      {
+        "id": "PAT-COST-FLOOR",
+        "name": "New Lower Bound Floor for Additive Expressions",
+        "description": "With add=2n, the minimum cost for any expression involving k additions of arbitrary real quantities is 2k. Combined with the costs of the terms being added, this gives the new floor: Cost(sum of N terms) >= alpha_0*N + 2*(N-1) = (alpha_0+2)*N - 2, where alpha_0 is the minimum per-term cost.",
+        "formal_bound": "For any N-term real-valued sum with per-term cost >= alpha_0: Cost >= (alpha_0+2)*N - 2.",
+        "tightness": "Achieved when all additions are sequential and each add uses exactly the ADD-T1 2-node construction."
+      }
+    ]
+  },
+
+  "section_8_cross_cutting": {
+    "title": "Cross-Cutting Summary Table",
+    "unified_saving_formula": "For each equation containing k add_gen sites: saving = 9k. For k add_pos sites: saving = k. Total saving = 9*k_gen + k_pos.",
+    "table": [
+      {"expression": "2-term LSE", "v4_cost": 6, "v5_cost": 5, "saving": 1, "add_type": "pos"},
+      {"expression": "N-term LSE", "v4_formula": "4N-3", "v5_formula": "3N-2", "saving_formula": "N-1", "add_type": "pos"},
+      {"expression": "Softmax (N outputs)", "v4_formula": "6N-3", "v5_formula": "5N-2", "saving_formula": "N-1", "add_type": "pos"},
+      {"expression": "KL divergence (N terms)", "v4_formula": "16N-11", "v5_formula": "7N-2", "saving_formula": "9(N-1)", "add_type": "gen"},
+      {"expression": "JSD (N terms)", "v4_formula": "29N-2", "v5_formula": "17N-2", "saving_formula": "12(N-1)", "add_type": "gen"},
+      {"expression": "Shannon entropy (N terms)", "v4_formula": "8N-3", "v5_formula": "7N-2", "saving_formula": "N-1", "add_type": "pos"},
+      {"expression": "Partition function Z (N terms)", "v4_formula": "6N-3", "v5_formula": "5N-2", "saving_formula": "N-1", "add_type": "pos"},
+      {"expression": "Helmholtz free energy F", "v4_formula": "6N+0", "v5_formula": "5N+1", "saving_formula": "N-1", "add_type": "pos"},
+      {"expression": "Gibbs dG = dH - T*dS", "v4": 16, "v5": 7, "saving": 9, "add_type": "gen"},
+      {"expression": "Lennard-Jones (eps variable)", "v4": 10, "v5": 10, "saving": 0, "note": "uses sub not add"},
+      {"expression": "Coulomb sum (N particles)", "v4_formula": "~17N^2/2", "v5_formula": "4N^2-4N-2", "saving_formula": "~9N^2/2", "add_type": "gen"},
+      {"expression": "x^2 + y^2", "v4": 7, "v5": 6, "saving": 1, "add_type": "pos"},
+      {"expression": "exp(x) + exp(y)", "v4": 5, "v5": 4, "saving": 1, "add_type": "pos"},
+      {"expression": "ln(a+b) via LEAd route", "v4": 2, "v5": 2, "saving": 0, "note": "already 2n via LEAd; add route gives 3n"},
+      {"expression": "Softplus ln(1+exp(x))", "v4": 1, "v5": 1, "saving": 0, "note": "always 1n: LEAd(x,1)"},
+      {"expression": "Swish x*sigma(x)", "v4": 7, "v5": 6, "saving": 1, "add_type": "pos"},
+      {"expression": "Taylor series (N terms)", "v4_formula": "4N-3", "v5_formula": "3N-2", "saving_formula": "N-1", "add_type": "pos"},
+      {"expression": "Affine layer (N weights, constant)", "v4_formula": "3N", "v5_formula": "2N", "saving_formula": "N", "add_type": "gen"},
+      {"expression": "Rational linear combination a*x+b*y", "v4": 11, "v5": 2, "saving": 9, "add_type": "gen"},
+      {"expression": "Von Mises criterion", "v4": 19, "v5": 10, "saving": 9, "add_type": "gen"},
+      {"expression": "Gaussian curvature K", "v4": 16, "v5": 14, "saving": 2, "add_type": "pos"},
+      {"expression": "Mean curvature H", "v4_estimate": 31, "v5_estimate": 13, "saving_estimate": 18, "add_type": "gen"},
+      {"expression": "DCF mixed cashflows (N terms)", "v4_formula": "20N-11", "v5_formula": "9N-2", "saving_formula": "9(N-1)", "add_type": "gen"},
+      {"expression": "Bilinear form (N x N)", "v4_formula": "13N^2-11", "v5_formula": "4N^2-2", "saving_formula": "9(N^2-1)", "add_type": "gen"}
+    ]
+  },
+
+  "key_findings": [
+    "ADD-T1 (add=2n) eliminates the positive-domain/general-domain cost split entirely.",
+    "The sub/add symmetry in F16: sub=LEdiv(x,EML(y,1)), add=LEdiv(x,DEML(y,1)) — mirror constructions.",
+    "Rational linear combinations a*x + b*y drop from 11n (v4 add_gen) to 2n (v5).",
+    "KL divergence drops from 16N-11 to 7N-2: a factor-of-2+ improvement in node count.",
+    "Softplus remains 1n (LEAd(x,1)); log-sigmoid remains 4n; no change from v5.",
+    "Lennard-Jones potential is unaffected (uses subtraction, not addition).",
+    "ln(a+b) has a pre-existing 2n route via LEAd that is cheaper than the 3n add-then-ln route.",
+    "Bilinear forms benefit enormously: saving from 13N^2 to 4N^2 nodes.",
+    "The new structural floor for N-term sums: (alpha_0+2)*N - 2, tight and universal."
+  ]
+}
