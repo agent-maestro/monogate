@@ -55,37 +55,37 @@ noncomputable def D_F16 (x y : ℝ) : ℝ := Real.exp (Real.log x + Real.log y)
 
 -- F1(1,1) = exp(1) - log(1) = exp(1) ≠ 1/1 = 1
 theorem D_F1_ne_div : ¬ (∀ x y : ℝ, D_F1 x y = x / y) := by
-  intro h; have := h 1 1; simp [D_F1, Real.log_one] at this; linarith [two_lt_e_d]
+  intro h; have := h 1 1; simp [D_F1, Real.log_one] at this
 
 -- F2(0,-1) = exp(0) - log(1) = 1 ≠ 0/(-1) = 0
 theorem D_F2_ne_div : ¬ (∀ x y : ℝ, D_F2 x y = x / y) := by
-  intro h; have := h 0 (-1); simp [D_F2, neg_neg, Real.log_one, Real.exp_zero] at this; linarith
+  intro h; have := h 0 (-1); simp [D_F2, neg_neg, Real.log_one, Real.exp_zero] at this
 
 -- F3(1,1) = exp(-1) - log(1) = exp(-1) ≠ 1/1 = 1
 theorem D_F3_ne_div : ¬ (∀ x y : ℝ, D_F3 x y = x / y) := by
-  intro h; have := h 1 1; simp [D_F3, Real.log_one] at this; linarith [eneg_lt_one_d]
+  intro h; have := h 1 1; simp [D_F3, Real.log_one] at this
 
 -- F4(0,-1) = exp(0) - log(1) = 1 ≠ 0/(-1) = 0
 theorem D_F4_ne_div : ¬ (∀ x y : ℝ, D_F4 x y = x / y) := by
-  intro h; have := h 0 (-1); simp [D_F4, neg_neg, Real.log_one, Real.exp_zero] at this; linarith
+  intro h; have := h 0 (-1); simp [D_F4, neg_neg, Real.log_one, Real.exp_zero] at this
 
 -- F5(1,1) = exp(1) - log(1) = exp(1) ≠ 1/1 = 1
 theorem D_F5_ne_div : ¬ (∀ x y : ℝ, D_F5 x y = x / y) := by
-  intro h; have := h 1 1; simp [D_F5, Real.log_one] at this; linarith [two_lt_e_d]
+  intro h; have := h 1 1; simp [D_F5, Real.log_one] at this
 
 -- F6(1,1) = exp(-1) - log(1) = exp(-1) ≠ 1/1 = 1
 theorem D_F6_ne_div : ¬ (∀ x y : ℝ, D_F6 x y = x / y) := by
-  intro h; have := h 1 1; simp [D_F6, Real.log_one] at this; linarith [eneg_lt_one_d]
+  intro h; have := h 1 1; simp [D_F6, Real.log_one] at this
 
 -- F7(-1,0) = exp(0) - log(1) = 1 ≠ (-1)/0 = 0 (div by 0 = 0 in Lean)
 theorem D_F7_ne_div : ¬ (∀ x y : ℝ, D_F7 x y = x / y) := by
   intro h; have := h (-1) 0
-  simp [D_F7, Real.exp_zero, neg_neg, Real.log_one] at this; linarith
+  simp [D_F7, Real.exp_zero, neg_neg, Real.log_one] at this
 
 -- F8(-1,0) = exp(0) - log(1) = 1 ≠ (-1)/0 = 0
 theorem D_F8_ne_div : ¬ (∀ x y : ℝ, D_F8 x y = x / y) := by
   intro h; have := h (-1) 0
-  simp [D_F8, neg_zero, Real.exp_zero, neg_neg, Real.log_one] at this; linarith
+  simp [D_F8, neg_zero, Real.exp_zero, neg_neg, Real.log_one] at this
 
 -- F9(1,2) = 1 - log(2) ≠ 1/2 = 0.5 (since 1 - log(2) < 1 < 1.5 … actually need both sides)
 -- Use witness (0,2): 0 - log(2) = -log(2) ≠ 0/2 = 0, and log(2) > 0
@@ -111,22 +111,22 @@ theorem D_F12_ne_div : ¬ (∀ x y : ℝ, D_F12 x y = x / y) := by
 
 -- F13(0,1) = exp(0 * log(1)) = exp(0) = 1 ≠ 0/1 = 0
 theorem D_F13_ne_div : ¬ (∀ x y : ℝ, D_F13 x y = x / y) := by
-  intro h; have := h 0 1; simp [D_F13, Real.log_one, Real.exp_zero] at this; linarith
+  intro h; have := h 0 1; simp [D_F13, Real.log_one, Real.exp_zero] at this
 
 -- F14(0,1) = exp(0 + log(1)) = exp(0) = 1 ≠ 0/1 = 0
 theorem D_F14_ne_div : ¬ (∀ x y : ℝ, D_F14 x y = x / y) := by
-  intro h; have := h 0 1; simp [D_F14, Real.log_one, Real.exp_zero] at this; linarith
+  intro h; have := h 0 1; simp [D_F14, Real.log_one, Real.exp_zero] at this
 
 -- F15(0,-1) = exp(0 + log(1)) = 1 ≠ 0/(-1) = 0
 theorem D_F15_ne_div : ¬ (∀ x y : ℝ, D_F15 x y = x / y) := by
-  intro h; have := h 0 (-1); simp [D_F15, neg_neg, Real.log_one, Real.exp_zero] at this; linarith
+  intro h; have := h 0 (-1); simp [D_F15, neg_neg, Real.log_one, Real.exp_zero] at this
 
 -- F16fn(0,1): exp(log(0) + log(1)) = exp(0) = 1 ≠ 0/1 = 0
 theorem D_F16_ne_div : ¬ (∀ x y : ℝ, D_F16 x y = x / y) := by
   intro h; have := h 0 1
   simp [D_F16, Real.log_zero, Real.log_one, Real.exp_zero] at this
 
-def d_f16_ops : List (ℝ → ℝ → ℝ) :=
+noncomputable def d_f16_ops : List (ℝ → ℝ → ℝ) :=
   [D_F1, D_F2, D_F3, D_F4, D_F5, D_F6, D_F7, D_F8,
    D_F9, D_F10, D_F11, D_F12, D_F13, D_F14, D_F15, D_F16]
 

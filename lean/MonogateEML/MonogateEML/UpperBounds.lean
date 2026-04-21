@@ -53,7 +53,7 @@ theorem mul_one_node_positive (x y : ℝ) (hx : 0 < x) (hy : 0 < y) :
     F13(n, x) = exp(n · log(x)) = x^n for x > 0. -/
 theorem rpow_one_node_positive (n x : ℝ) (hx : 0 < x) :
     Real.exp (n * Real.log x) = x ^ n := by
-  rw [Real.rpow_def_of_pos hx]
+  rw [Real.rpow_def_of_pos hx]; ring_nf
 
 -- ===================================================================
 -- 4. 1 / x = F13(-1, x) for x > 0
@@ -75,7 +75,8 @@ theorem recip_one_node_positive (x : ℝ) (hx : 0 < x) :
     F13(1/2, x) = exp((1/2)·log(x)) = √x for x > 0. -/
 theorem sqrt_one_node_positive' (x : ℝ) (hx : 0 < x) :
     Real.exp ((1/2) * Real.log x) = Real.sqrt x := by
-  rw [Real.sqrt_eq_rpow, rpow_one_node_positive]
+  rw [Real.sqrt_eq_rpow]
+  exact rpow_one_node_positive (1/2) x hx
 
 -- ===================================================================
 -- 6. exp(x + log(y)) = exp(x) * y  [F14 identity]  for y > 0

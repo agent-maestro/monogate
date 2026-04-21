@@ -7,6 +7,8 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Complex.Log
+import Mathlib.Data.Complex.ExponentialBounds
 
 open Real Complex
 
@@ -19,7 +21,6 @@ inductive EMLTree : Type where
   | const  : ℂ → EMLTree           -- constant node
   | var    : EMLTree                 -- variable x
   | ceml   : EMLTree → EMLTree → EMLTree  -- ceml(t1, t2) = exp(t1) - Log(t2)
-  deriving Repr
 
 /-- Evaluate an EML tree at a complex input. -/
 noncomputable def EMLTree.eval : EMLTree → ℂ → ℂ
@@ -60,9 +61,10 @@ def eulerTree : EMLTree := .ceml .var (.const 1)
     ceml(iπ, 1) = exp(iπ) = -1, so ceml(iπ, 1) + 1 = 0. -/
 theorem euler_identity :
     EMLTree.eval (.ceml (.const (Complex.I * Real.pi)) (.const 1)) 0 + 1 = 0 := by
-  simp [EMLTree.eval, Complex.log_one, Complex.exp_mul_I]
-  ring_nf
-  simp [Real.cos_pi, Real.sin_pi]
+  simp only [EMLTree.eval, Complex.log_one, sub_zero]
+  rw [show Complex.I * ↑Real.pi = ↑Real.pi * Complex.I from mul_comm _ _,
+      Complex.exp_pi_mul_I]
+  norm_num
 
 -- ============================================================
 -- 4. Depth Witnesses (CEML-T40 through T43)
@@ -81,11 +83,16 @@ theorem expTree_eval (x : ℂ) :
 /-- expTree is not constant (EML-0 ⊊ EML-1). -/
 theorem exp_not_constant : ¬ (∃ c : ℂ, ∀ x, expTree.eval x = c) := by
   intro ⟨c, hc⟩
-  have h0 := hc 0
-  have h1 := hc 1
-  simp [expTree_eval] at h0 h1
-  rw [← h0] at h1
-  simp at h1
+  have h0 : Complex.exp 0 = c := by simpa [expTree_eval] using hc 0
+  have h1 : Complex.exp 1 = c := by simpa [expTree_eval] using hc 1
+  have heq : Complex.exp (1 : ℂ) = 1 := by rw [h1, ← h0]; simp
+  have hre : Real.exp 1 = 1 := by
+    have := congr_arg Complex.re heq
+    simp only [Complex.one_re] at this
+    rwa [show (Complex.exp (1:ℂ)).re = Real.exp 1 from by
+      have : (1:ℂ) = ((1:ℝ):ℂ) := by norm_cast
+      rw [this, Complex.exp_ofReal_re]] at this
+  linarith [Real.exp_one_gt_d9]
 
 -- ============================================================
 -- 5. sin(x) Real Barrier (CEML-T48) — Skeleton with sorry
@@ -93,7 +100,7 @@ theorem exp_not_constant : ¬ (∃ c : ℂ, ∀ x, expTree.eval x = c) := by
 
 /-- Real restriction: a real EML tree takes real inputs to real outputs
     when all log arguments are positive. -/
-def EMLTree.evalReal (t : EMLTree) (x : ℝ) : ℝ :=
+noncomputable def EMLTree.evalReal (t : EMLTree) (x : ℝ) : ℝ :=
   (t.eval (x : ℂ)).re
 
 /-- Constant EML trees have constant real evaluation. -/
