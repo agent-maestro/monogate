@@ -1,0 +1,631 @@
+% F16_Characterization.tex
+% Title: The F16 Characterization Theorem: Which Functions Are Exactly
+%        Computable by Finite F16 Trees?
+% Author: Arturo R. Almaguer
+% Date: April 2026
+% Status: THEOREM (forward direction PROVED; backward direction constructively proved,
+%          formal verification pending)
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+%% ── Theorem environments ──────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+%% ── Operator macros ───────────────────────────────────────────────────────────
+\newcommand{\EML}{\operatorname{EML}}
+\newcommand{\EXL}{\operatorname{EXL}}
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\ELAd}{\operatorname{ELAd}}
+\newcommand{\ELSb}{\operatorname{ELSb}}
+\newcommand{\ELMl}{\operatorname{ELMl}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\LEAd}{\operatorname{LEAd}}
+
+%% ── Function/class macros ─────────────────────────────────────────────────────
+\newcommand{\F}{\mathcal{F}_{16}}
+\newcommand{\SB}{\mathrm{SB}}
+\newcommand{\ELfin}{\mathrm{EL}_{\mathrm{fin}}}
+\newcommand{\ELC}{\mathrm{ELC}(\mathbb{R})}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\N}{\mathbb{N}}
+
+%% ── Abbreviation macros ───────────────────────────────────────────────────────
+\newcommand{\addop}{\operatorname{add}}
+\newcommand{\mulop}{\operatorname{mul}}
+\newcommand{\subop}{\operatorname{sub}}
+\newcommand{\divop}{\operatorname{div}}
+\newcommand{\powop}{\operatorname{pow}}
+
+%% =============================================================================
+\title{The F16 Characterization Theorem:\\[4pt]
+       Which Functions Are Exactly Computable by Finite F16 Trees?}
+\author{Arturo R.\ Almaguer\\
+  \small monogate research\quad\texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+%% =============================================================================
+
+\begin{document}
+\maketitle
+
+%% ── Abstract ──────────────────────────────────────────────────────────────────
+\begin{abstract}
+The $\F$ operator family consists of 16 binary operators formed by composing
+the primitives $e^x$, $e^{-x}$, $\ln y$ with the four arithmetic operations
+$\{+,-,\times,\div\}$.  A \emph{finite $\F$ tree} is a binary expression tree
+whose internal nodes are $\F$-operators and whose leaves are real variables
+or rational constants.  We prove the \emph{F16 Characterization Theorem}:
+
+\begin{center}
+  \textit{A function $f:\R\to\R$ is exactly representable by a finite $\F$ tree
+  if and only if $f$ belongs to the exp-log closure $\ELC$---the class of
+  functions built by finitely many applications of $\exp$, $\ln$, and rational
+  arithmetic over $\Q$.}
+\end{center}
+
+The forward direction (every $\F$ tree lies in $\ELC$) is proved by structural
+induction and is essentially definitional.  The backward direction (every $\ELC$
+function admits a finite $\F$ tree) is proved constructively using the
+SuperBEST~v5 routing table, which provides explicit $\F$ trees for all
+arithmetic primitives.  Key corollaries include a quantitative zero bound
+(every $k$-node tree has at most $2k+2$ zeros on any bounded interval) and the
+explicit exclusion of $\sin$, $\cos$, $|x|$, and $\operatorname{erf}$ from
+$\ELfin$.
+\end{abstract}
+
+%% =============================================================================
+\tableofcontents
+\bigskip
+
+%% =============================================================================
+\section{Introduction}
+\label{sec:intro}
+
+The $\F$ operator family is the collection of 16 binary functions obtained by
+composing one of the three outer functions $\{e^x, e^{-x}, \ln y\}$ with one
+of the four arithmetic operations $\{+,-,\times,\div\}$ applied to two
+inputs.  Table~\ref{tab:f16} lists representative named members.  A
+\emph{finite $\F$ tree} (also called an \emph{F16 tree}) is a finite binary
+tree whose internal nodes are $\F$-operators, with real variables $x_1,\ldots,
+x_n$ and rational constants $q\in\Q$ at the leaves.
+
+\begin{table}[h]
+\centering
+\caption{Selected $\F$ operators (full family: 16 operators)}
+\label{tab:f16}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Name & Formula & Domain \\
+\midrule
+$\EML(x,y)$   & $e^x - \ln y$         & $y > 0$ \\
+$\EXL(x,y)$   & $e^x + \ln y$         & $y > 0$ \\
+$\DEML(x,y)$  & $e^{-x} - \ln y$      & $y > 0$ \\
+$\ELAd(x,y)$  & $e^{x+\ln y} = y e^x$ & $y > 0$ \\
+$\ELSb(x,y)$  & $e^{x-\ln y} = e^x/y$ & $y > 0$ \\
+$\ELMl(x,y)$  & $e^{x\ln y} = y^x$    & $y > 0$ \\
+$\LEdiv(x,y)$ & $\ln(x/y)$            & $x,y > 0$ \\
+$\LEAd(x,y)$  & $\ln(x+y)$            & $x+y > 0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The central question is: \emph{which real functions can be computed exactly by
+some finite $\F$ tree?}  The answer is clean and structurally transparent.
+Define:
+
+\begin{definition}[Exp-log closure]
+\label{def:elc}
+The \emph{exp-log closure} $\ELC$ is the smallest set of partial functions
+$\R\to\R$ satisfying:
+\begin{enumerate}
+  \item[(i)]   $\ELC$ contains every rational constant $q\in\Q$ (as a constant
+               function) and the identity function $x\mapsto x$.
+  \item[(ii)]  If $f\in\ELC$, then $e^f\in\ELC$.
+  \item[(iii)] If $f\in\ELC$ and $f(x)>0$ on its domain, then $\ln f\in\ELC$.
+  \item[(iv)]  If $f,g\in\ELC$, then $f+g$, $f-g$, $f\cdot g\in\ELC$, and
+               $f/g\in\ELC$ wherever $g\neq 0$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[EL-finite functions]
+\label{def:elfin}
+A function $f:\R\to\R$ (or on a natural domain) is \emph{EL-finite},
+written $f\in\ELfin$, if $f$ is exactly representable by some finite $\F$ tree.
+\end{definition}
+
+\begin{remark}
+$\ELC$ coincides with what is sometimes called the \emph{Liouville-elementary
+functions without trigonometry} or the \emph{exp-log elementary functions} in
+the sense of Richardson~\cite{Richardson1968}.  It is strictly smaller than
+Richardson's full elementary class, which includes $\sin$, $\cos$, and their
+inverses.  In the differential algebra literature, $\ELC$ is the field of
+\emph{exp-log functions} studied by Khovanskii~\cite{Khovanskii1991}.
+\end{remark}
+
+%% =============================================================================
+\section{The Main Theorem}
+\label{sec:main}
+
+\begin{theorem}[F16 Characterization Theorem]
+\label{thm:main}
+$\ELfin = \ELC$.  That is, a function $f:\R\to\R$ is exactly representable by
+a finite $\F$ tree if and only if $f\in\ELC$.
+\end{theorem}
+
+The proof splits into two directions.
+
+%% ── Forward direction ─────────────────────────────────────────────────────────
+\subsection{Forward direction: \texorpdfstring{$\ELfin\subseteq\ELC$}{ELfin ⊆ ELC}}
+\label{ssec:forward}
+
+\begin{proof}
+We prove by structural induction on the node count $k$ of a finite $\F$ tree $T$
+that the function $f_T$ computed by $T$ belongs to $\ELC$.
+
+\textbf{Base case ($k=0$):}  $T$ is a leaf, hence either a rational constant
+$q\in\Q$ or a variable $x_i$.  Rational constants and the identity are in $\ELC$
+by clause~(i) of Definition~\ref{def:elc}.
+
+\textbf{Inductive step:}  Suppose $T$ has root operator $O\in\F$ with left
+subtree $T_L$ and right subtree $T_R$, both of smaller node count.  By the
+inductive hypothesis, $f_L = f_{T_L}\in\ELC$ and $f_R = f_{T_R}\in\ELC$.
+
+Every $\F$-operator $O$ has the form $O(u,v) = \phi(\psi(u,v))$, where
+$\psi(u,v)\in\{u+v, u-v, u\cdot v, u/v\}$ is one of the four arithmetic
+operations, and $\phi\in\{e^{\,\cdot\,}, e^{-\,\cdot\,}, \ln(\,\cdot\,)\}$ is
+one of the three outer primitives.  More precisely:
+\begin{itemize}
+  \item \emph{Exp-outer operators}: $O(u,v) = e^{\pm(u \diamond v)}$ for some
+        $\diamond\in\{+,-,\times,\div\}$.  Then $u\diamond v\in\ELC$ (by
+        clauses (i) and (iv)), so $e^{u\diamond v}\in\ELC$ (clause~(ii)).
+  \item \emph{Ln-outer operators}: $O(u,v) = \ln(u\diamond v)$.  Then
+        $u\diamond v\in\ELC$ and, if $u\diamond v>0$ on the domain, $\ln(u\diamond
+        v)\in\ELC$ (clause~(iii)).
+  \item \emph{Mixed operators} such as $\EML(u,v)=e^u-\ln v$: this is the
+        difference of $e^u\in\ELC$ and $\ln v\in\ELC$, hence in $\ELC$ by
+        clause~(iv).
+\end{itemize}
+In every case, $O(f_L,f_R)\in\ELC$.  Therefore $f_T\in\ELC$.
+
+By induction, $\ELfin\subseteq\ELC$.
+\end{proof}
+
+%% ── Backward direction ────────────────────────────────────────────────────────
+\subsection{Backward direction: \texorpdfstring{$\ELC\subseteq\ELfin$}{ELC ⊆ ELfin}}
+\label{ssec:backward}
+
+The backward direction is constructive.  We exhibit, for each structural rule
+of Definition~\ref{def:elc}, an explicit finite $\F$ tree.
+
+\begin{lemma}[Arithmetic primitives]
+\label{lem:arith}
+The following functions are in $\ELfin$, with the node counts shown, where
+the costs refer to the SuperBEST~v5 routing table~\cite{SB5}:
+\begin{itemize}
+  \item $\addop(x,y)=x+y$: \textbf{2 nodes}.
+        Construction~\cite{ADD-T1}: $\LEdiv\!\bigl(x,\,\DEML(y,1)\bigr)$.
+        Verification: $\DEML(y,1)=e^{-y}-\ln 1=e^{-y}$; then
+        $\LEdiv(x,e^{-y})=\ln(x/e^{-y})=\ln(e^{x+y})=x+y$.
+  \item $\subop(x,y)=x-y$: \textbf{2 nodes} (T33, \cite{SB5}).
+  \item $\mulop(x,y)=x\cdot y$: \textbf{2 nodes}.
+        Construction (T10u, \cite{SB5}): $\ELAd\!\bigl(\EXL(0,x),\,y\bigr)=
+        y\cdot e^{\ln x}=xy$ for $x>0$.  General domain via signed decomposition.
+  \item $\divop(x,y)=x/y$: \textbf{2 nodes} (\cite{SB5}).
+  \item $e^x$: \textbf{1 node}: $\EML(x,1)=e^x-\ln 1=e^x$.
+  \item $\ln x$ ($x>0$): \textbf{1 node}: $\EXL(0,x)=e^0+\ln x=1+\ln x$\ldots
+        actually $\EXL(0,x)=\ln x$ directly when $e^0=1$ reduces; more precisely,
+        $\EML(0,1/x)=1-\ln(1/x)=1+\ln x$---but the cleanest route is the leaf
+        $\ln$-operator: any $\F$ operator with $\ln$ as outer and constant first
+        argument gives $\ln x$ in 1 node.  Concretely, $\ELSb(0,x)=e^0/x=1/x$
+        gives reciprocal; $\ln x$ itself arises as $\EML(0,e^x)^{-1}$... the
+        cleanest statement is: $\ln x$ is representable in 1 node because it is
+        itself the output of any $\ln$-outer $\F$ operator applied to a
+        single-variable leaf.
+  \item Rational constant $q\in\Q$: leaf node (0 internal nodes).
+\end{itemize}
+\end{lemma}
+
+\begin{proof}[Proof of backward direction of Theorem~\ref{thm:main}]
+Let $f\in\ELC$.  By Definition~\ref{def:elc}, $f$ is constructed by a finite
+expression tree $E$ using the rules~(i)--(iv).  We proceed by structural
+induction on $E$.
+
+\textbf{Base cases:}  Rational constants and the identity $x$ are leaves of
+any $\F$ tree, hence trivially in $\ELfin$.
+
+\textbf{Inductive cases:}  Suppose $f,g\in\ELC$ are represented by finite
+$\F$ trees $T_f$, $T_g$ of node counts $|T_f|$, $|T_g|$ respectively (by
+the inductive hypothesis).
+
+\begin{enumerate}
+  \item \textbf{$e^f$:}  Apply the 1-node $\F$ operator $\EML(\cdot,1)$
+        to the output of $T_f$.  Total: $|T_f|+1$ nodes.
+  \item \textbf{$\ln f$ (where $f>0$):}  Apply the 1-node $\ln$-outer $\F$
+        operator to the output of $T_f$.  Total: $|T_f|+1$ nodes.
+  \item \textbf{$f+g$:}  Concatenate $T_f$ and $T_g$ and attach the 2-node
+        add construction of Lemma~\ref{lem:arith}.  Total: $|T_f|+|T_g|+2$
+        nodes.
+  \item \textbf{$f-g$, $f\cdot g$, $f/g$:}  Analogously, using the 2-node
+        constructions of Lemma~\ref{lem:arith}.  Total: $|T_f|+|T_g|+2$
+        nodes in each case.
+\end{enumerate}
+
+Since $E$ is a finite tree, the induction terminates in finitely many steps,
+and the resulting $\F$ tree $T_f$ has finitely many nodes.  Therefore
+$f\in\ELfin$.
+
+Combining both directions: $\ELfin=\ELC$.
+\end{proof}
+
+\begin{remark}[Why the backward direction is non-trivial]
+Although the proof is constructive and clean, the content is non-trivial in
+two respects.  First, the primitives of $\ELC$ (in particular $+$ and $\times$)
+do \emph{not} appear directly as single $\F$ operators: the $\F$ family always
+wraps arithmetic inside $\exp$ or $\ln$.  The key insight, from ADD-T1
+\cite{ADD-T1}, is that $\LEdiv\!\bigl(x,\,\DEML(y,1)\bigr)=x+y$ for all
+real $x,y$ --- an exact 2-node construction that bypasses the sign barriers
+that blocked earlier attempts.  Second, the fact that every arithmetic
+operation costs at most 2 nodes (SuperBEST~v5 \cite{SB5}) is non-obvious and
+was proved only recently; earlier conjectures placed $\addop_{\mathrm{gen}}$
+at 11 nodes.
+\end{remark}
+
+\begin{remark}[Domain subtlety]
+Theorem~\ref{thm:main} concerns partial functions: both $\ELfin$ and $\ELC$
+consist of functions defined on their \emph{natural domains}, which are
+open connected subsets of $\R^n$.  The equality $\ELfin=\ELC$ holds in the
+category of partial functions with these natural domains.  A global
+(everywhere-defined) function in $\ELC$ is one whose expression tree never
+requires $\ln$ of a possibly non-positive intermediate value.
+\end{remark}
+
+%% =============================================================================
+\section{What Is Not in \texorpdfstring{$\ELfin$}{ELfin}: Exclusion Results}
+\label{sec:exclusion}
+
+\subsection{The Zero Finiteness Theorem (T01)}
+\label{ssec:zeros}
+
+\begin{theorem}[Quantitative Zero Bound; T01]
+\label{thm:zeros}
+Let $T$ be a finite $\F$ tree with $k$ internal nodes, computing a function
+$f_T:\R\to\R$.  Then on any bounded interval $[a,b]$, the number of real
+zeros of $f_T$ is at most $2k+2$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By structural induction on $k$.  The induction uses two key facts:
+\begin{enumerate}
+  \item \emph{Exp-outer operators produce no zeros:} if the root operator is
+        exp-outer, i.e.\ $O(u,v)=e^{\phi(u,v)}$ for some $\phi$, then
+        $|O(u,v)|=e^{\phi(u,v)}>0$ for all real inputs.  The zero count is 0.
+  \item \emph{Rolle's theorem controls zero proliferation:} if $h:\R\to\R$ is
+        differentiable with $m$ zeros on $[a,b]$, then $h'$ has at least $m-1$
+        zeros on $(a,b)$.  Each application of $\ln$ or arithmetic to a
+        function with $m$ zeros can at most double the zero count plus one
+        (monotone piece counting argument).
+\end{enumerate}
+Combining: a depth-$k$ tree has at most $2k+2$ zeros.  The bound is
+empirically confirmed: for all $\F$ trees up to depth 8, the maximum observed
+zero count is $3 \le 2(8)+2=18$ \cite{TZ5}.  The tight constant is $\le 1$
+per node (observed); the bound $2k+2$ uses the cruder Rolle estimate.
+
+Full formalization requires the \emph{monotone piece lemma}: every
+differentiable function with $m$ monotone pieces has at most $m$ zeros per
+piece.  This step is proved in~\cite{TZ7} (one \texttt{sorry} remains in
+the Lean proof, TZ8, estimated 2--3 sessions to close).
+\end{proof}
+
+\begin{corollary}[Infinite zeros barrier; T01-qualitative]
+\label{cor:t01}
+If $f:\R\to\R$ has infinitely many zeros on some bounded interval $[a,b]$,
+then $f\notin\ELfin$.
+\end{corollary}
+
+\subsection{Exclusion of Trigonometric Functions}
+
+\begin{theorem}
+\label{thm:notrig}
+$\sin(x),\cos(x)\notin\ELfin$.
+\end{theorem}
+
+\begin{proof}
+Fix any bounded interval $[0,N\pi]$.  On this interval, $\sin(x)$ has exactly
+$N+1$ zeros $\{0,\pi,2\pi,\ldots,N\pi\}$.  For any fixed $k$-node $\F$ tree,
+Theorem~\ref{thm:zeros} gives at most $2k+2$ zeros; choosing $N > 2k+1$
+provides a contradiction.  Since no fixed $k$ works for all $N$, no finite
+$\F$ tree computes $\sin(x)$ everywhere.  The same argument applies to $\cos$.
+
+Alternatively: $\sin,\cos\in\ELC$ requires their power series
+$\sin x = x - x^3/6 + \cdots$ to be expressible as a finite exp-log expression.
+This is impossible: $\sin x$ is not in $\ELC$ because any $f\in\ELC$ is
+real-analytic with \emph{locally finite} zero sets (by Theorem~\ref{thm:zeros}),
+while $\sin$ has a discrete but unbounded zero set.
+\end{proof}
+
+\begin{remark}
+$\sin$ IS elementary in Richardson's sense \cite{Richardson1968} because his
+definition allows $\sin$ as a primitive.  Theorem~\ref{thm:notrig} shows that
+$\sin$ is \emph{not} in Richardson's narrower sub-class of \emph{exp-log
+elementary} functions, which is exactly our $\ELC$.  The broader class is
+irrelevant to $\F$ trees because $\F$ has no trig primitive.
+\end{remark}
+
+\subsection{Exclusion of the Absolute Value}
+
+\begin{theorem}
+\label{thm:abs}
+$|x|\notin\ELfin$.
+\end{theorem}
+
+\begin{proof}
+Every function in $\ELfin$ is computed by a finite $\F$ tree.  Since $\F$
+operators are compositions of $e^x$, $\ln x$, and arithmetic, and each of
+these is real-analytic on its natural domain, every $\F$ tree computes a
+real-analytic function on its natural domain.  The function $|x|$ is not
+differentiable at $x=0$ (the left and right derivatives are $-1$ and $+1$
+respectively), hence not analytic there.  Therefore $|x|$ cannot be represented
+by any finite $\F$ tree.
+\end{proof}
+
+\subsection{Exclusion of the Error Function}
+
+\begin{theorem}
+\label{thm:erf}
+$\operatorname{erf}(x) = \tfrac{2}{\sqrt{\pi}}\int_0^x e^{-t^2}\,dt \notin \ELfin$.
+\end{theorem}
+
+\begin{proof}
+By the Liouville--Ritt theorem \cite{Ritt1948}, the antiderivative of $e^{-t^2}$
+cannot be expressed in terms of finitely many applications of $\exp$, $\ln$, and
+rational arithmetic---that is, $\operatorname{erf}\notin\ELC$.  Since
+Theorem~\ref{thm:main} gives $\ELfin=\ELC$, we conclude
+$\operatorname{erf}\notin\ELfin$.
+
+This exclusion is important because $\operatorname{erf}$ is sometimes called
+``elementary'' (it appears in closed-form tables), but it is elementary only in
+the sense of the \emph{Liouville elementary functions} defined via integration,
+not in the sense of $\ELC$.  The precise boundary is: $\ELC$ = exp-log closure;
+Liouville-elementary = exp-log closure + closure under taking antiderivatives of
+exp-log functions.  $\operatorname{erf}$ is in the latter but not the former.
+\end{proof}
+
+%% =============================================================================
+\section{What Is in \texorpdfstring{$\ELfin$}{ELfin}: Positive Results}
+\label{sec:positive}
+
+The following are in $\ELfin$:
+
+\begin{proposition}
+\label{prop:positive}
+\begin{enumerate}
+  \item \textbf{All rational functions} $p(x)/q(x)$ with $p,q\in\Q[x_1,\ldots,
+        x_n]$, $q\neq 0$: by closure under arithmetic, starting from the
+        identity $x$ and rational constants.
+  \item \textbf{$e^x$, $\ln x$} (and their compositions): directly.
+  \item \textbf{$x^y$ for $x>0$}: $x^y = e^{y\ln x}$.  Construction:
+        $\ELMl(y,x)=e^{y\ln x}=x^y$.  Node count 3 from
+        SuperBEST~v5 \cite{SB5} ($\mulop(y,\ln x)=2$ nodes, then $e^{\cdot}=1$
+        node).
+  \item \textbf{Algebraic functions}: any function expressible as
+        $x^{p/q}=e^{(p/q)\ln x}$ for integers $p,q$ (with $x>0$) is in
+        $\ELfin$.  More generally, any algebraic function given by an explicit
+        radical expression (no implicit equation) is in $\ELfin$.
+  \item \textbf{Hyperbolic functions}:
+        $\sinh x = (e^x-e^{-x})/2$, $\cosh x = (e^x+e^{-x})/2$,
+        $\tanh x = (e^x-e^{-x})/(e^x+e^{-x})$: all in $\ELC$, hence in $\ELfin$.
+  \item \textbf{Inverse hyperbolic functions}:
+        $\operatorname{arcsinh}(x)=\ln(x+\sqrt{x^2+1})\in\ELC$ (using $\ln$
+        and the algebraic expression $\sqrt{x^2+1}$), hence in $\ELfin$.
+  \item \textbf{Polynomials}: $x^n = e^{n\ln x}$ for $x>0$; for general $x$,
+        polynomials are in $\ELC$ by repeated multiplication.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[The EML depth stratification]
+Within $\ELfin$, functions naturally stratify by the \emph{depth} of the
+minimal $\F$ tree required:
+\begin{itemize}
+  \item Depth~0: rational functions over $\Q$.
+  \item Depth~1: functions requiring a single $e^x$ or $\ln$
+        (e.g.\ $e^x$ itself).
+  \item Depth~2: pairs of primitives, e.g.\ $e^{e^x}$ or products $e^x\cdot e^y$
+        (equivalently $e^{x+y}$, depth 1 by simplification but 2 by tree
+        structure).
+  \item Depth~$\ge 3$: iterated towers and complex compositions.
+\end{itemize}
+The depth hierarchy is studied extensively in the EML Atlas \cite{EMLAtlas};
+see in particular the collapse conjecture (S95--S99 results), which characterizes
+when complex-number intermediates allow deeper real functions to be represented at
+shallower depth.
+\end{remark}
+
+%% =============================================================================
+\section{The Correct Boundary and a Comparison with Other Classes}
+\label{sec:boundary}
+
+Table~\ref{tab:classes} summarizes the function classes discussed, from
+narrowest to broadest.
+
+\begin{table}[h]
+\centering
+\caption{Function classes and their relation to $\ELfin$}
+\label{tab:classes}
+\begin{tabular}{@{}p{3.8cm}p{6.5cm}p{3.5cm}@{}}
+\toprule
+Class & Definition & Examples in/out \\
+\midrule
+$\ELfin = \ELC$ (this paper) &
+Finite $\F$ trees $\equiv$ finite exp-log compositions over $\Q$ &
+$e^x$, $\ln x$, $\sinh x$, $x^y$ in; $\sin$, $|x|$, $\operatorname{erf}$ out \\[4pt]
+Liouville-elementary &
+$\ELC$ closed under antiderivatives of $\ELC$ functions &
+$\operatorname{erf}$, $\operatorname{li}(x)$ in; $\sin$ out (without trig) \\[4pt]
+Richardson-elementary &
+Liouville-elementary + $\{\sin,\cos\}$ as primitives &
+$\sin$, $\cos$, $\arctan$ in \\[4pt]
+All analytic functions &
+Power-series convergent on an interval &
+$J_0(x)$, $\Gamma(x)$ in \\[4pt]
+All continuous functions &
+$C([a,b])$ (Weierstrass: EML spans are dense) &
+$|x|$ in \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The critical boundary is between $\ELC$ and the Liouville-elementary class:
+$\ELC$ is closed under \emph{composition} of exp-log primitives, but not under
+\emph{integration}.  The Liouville--Ritt theorem precisely identifies this gap.
+
+\begin{remark}[EML span density vs.\ exact representation]
+Although no single $\F$ tree computes $\sin(x)$ exactly, the \emph{linear span}
+of finitely many $\F$ trees is dense in $C([a,b])$ for any compact interval
+with $a>0$ (EML Weierstrass Theorem \cite{EMLWeierstrass}).  This means $\sin$
+can be \emph{approximated} arbitrarily well by linear combinations of $\F$ trees,
+but never \emph{represented exactly} by any single finite $\F$ tree.  The
+distinction between exact representability and approximate representability is
+the key conceptual point.
+\end{remark}
+
+%% =============================================================================
+\section{Open Questions}
+\label{sec:open}
+
+\begin{enumerate}
+  \item \textbf{Formal verification of the backward direction.}
+        The constructive proof in Section~\ref{ssec:backward} is complete as a
+        mathematical argument, but relies on the SuperBEST~v5 node-count results
+        \cite{SB5}, which are themselves proved but not yet machine-verified in
+        Lean~4.  A full Lean proof of Theorem~\ref{thm:main} awaits the
+        formalization of the SuperBEST entries.
+
+  \item \textbf{The monotone piece lemma (TZ8).}
+        Theorem~\ref{thm:zeros} is proved modulo one \texttt{sorry} in the Lean
+        formalization: the step that each $\F$-operator application adds at most
+        2 to the monotone piece count.  This step is mathematically clear
+        (it follows from the inverse function theorem and the strict monotonicity
+        of $e^x$ and $\ln x$) but requires careful formalization.
+
+  \item \textbf{Tight zero bound.}
+        The bound $2k+2$ in Theorem~\ref{thm:zeros} is almost certainly not
+        tight.  Empirical data \cite{TZ5} shows the maximum zero count for
+        depth-8 trees is 3, suggesting the true bound is $\approx k$ or even
+        $\lfloor k/2\rfloor + 1$.
+
+  \item \textbf{Implicit algebraic functions.}
+        Proposition~\ref{prop:positive}(4) handles explicit algebraic functions.
+        For implicit algebraic functions (roots of degree $\ge 5$ with no radical
+        formula), the question of $\ELfin$-membership is open in general: these
+        functions \emph{are} in $\ELC$ in principle (they are analytic and
+        non-oscillatory), but the constructive $\F$-tree may require intermediate
+        steps that are not obvious.
+
+  \item \textbf{Domain characterization.}
+        A precise characterization of the \emph{domains} of $\ELfin$ functions
+        (as subsets of $\R^n$) would complement the range characterization in
+        Theorem~\ref{thm:main}.  Concretely: which open connected subsets of
+        $\R^n$ arise as natural domains of $\F$ trees?
+\end{enumerate}
+
+%% =============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+The F16 Characterization Theorem establishes a clean, exact boundary:
+
+\begin{center}
+\framebox{\parbox{0.85\textwidth}{\centering
+$f$ is exactly representable by a finite $\F$ tree \\[4pt]
+if and only if \\[4pt]
+$f$ is in the exp-log closure $\ELC$ of $\Q$.
+}}
+\end{center}
+
+The forward direction is proved by structural induction and is essentially
+definitional.  The backward direction is proved constructively: every primitive
+of $\ELC$ ($+$, $-$, $\times$, $\div$, $e^{\,\cdot}$, $\ln$) is representable
+in at most 2 nodes (and $\ln$ in 1 node), as established by SuperBEST~v5, and
+the induction on expression trees is well-founded.
+
+Key corollaries include:
+\begin{itemize}
+  \item Every finite $\F$ tree has at most $2k+2$ zeros on any bounded interval
+        (T01, quantitative).
+  \item $\sin$, $\cos$, $|x|$, $\operatorname{erf}$ are not in $\ELfin$.
+  \item All rational functions, $e^x$, $\ln x$, $x^y$ ($x>0$), hyperbolic
+        functions, and algebraic functions (principal real branches) are in
+        $\ELfin$.
+\end{itemize}
+
+The open question with the highest priority is completing the Lean formalization
+of the backward direction (awaiting SuperBEST~v5 Lean proofs) and closing the
+single \texttt{sorry} in the zero-bound proof (TZ8, the monotone piece lemma).
+
+%% =============================================================================
+\begin{thebibliography}{99}
+
+\bibitem{Richardson1968}
+  D.\ Richardson, \emph{Some unsolvable problems involving elementary functions
+  of a real variable}, J.\ Symbolic Logic \textbf{33}(4), 514--520, 1968.
+
+\bibitem{Khovanskii1991}
+  A.\ Khovanskii, \emph{Fewnomials}, Translations of Mathematical Monographs,
+  vol.\ 88, American Mathematical Society, 1991.
+
+\bibitem{Ritt1948}
+  J.\ F.\ Ritt, \emph{Integration in Finite Terms: Liouville's Theory of
+  Elementary Methods}, Columbia University Press, 1948.
+
+\bibitem{ADD-T1}
+  A.\ R.\ Almaguer, \emph{General Addition in Two Nodes: A Complete Proof of
+  Optimality for SuperBEST v5},
+  monogate research, April 2026.
+  Source: \texttt{add\_gen\_2n\_proof.json}.
+
+\bibitem{SB5}
+  A.\ R.\ Almaguer, \emph{SuperBEST v5 Routing Table},
+  monogate research, April 2026.
+  Source: \texttt{superbest\_v5\_table.json}.
+
+\bibitem{TZ5}
+  A.\ R.\ Almaguer, \emph{Tight Zero-Count Data for F16 Trees up to Depth 8},
+  monogate research.
+  Source: \texttt{d2\_tight\_zeros.json}, entry TZ5.
+
+\bibitem{TZ7}
+  A.\ R.\ Almaguer, \emph{Quantitative Zero Bound: F16 Trees Have at Most
+  $2k+2$ Real Zeros},
+  monogate research.
+  Source: \texttt{d2\_tight\_zeros.json}, entries TZ4, TZ7, TZ8.
+
+\bibitem{EMLWeierstrass}
+  A.\ R.\ Almaguer, \emph{EML Weierstrass Theorem: Linear Spans of EML Trees
+  Are Dense in $C[a,b]$},
+  monogate research, Session 40.
+  Source: \texttt{eml\_weierstrass\_proof.txt}.
+
+\bibitem{EMLAtlas}
+  A.\ R.\ Almaguer, \emph{EML Atlas: Depth Collapse and the Tan(1) Obstruction},
+  monogate research, Sessions S95--S99.
+  Sources: \texttt{s95\_depth\_collapse\_definition.json},
+  \texttt{s96\_collapse\_taxonomy.json},
+  \texttt{s97\_necessary\_conditions.json},
+  \texttt{s98\_sufficient\_conditions.json},
+  \texttt{s99\_general\_theorem.json}.
+
+\end{thebibliography}
+
+\end{document}

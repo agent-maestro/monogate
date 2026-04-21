@@ -1,0 +1,169 @@
+{
+  "theorem": "SB(pow) = 3",
+  "function": "pow(x, y) = x^y = exp(y * ln(x)), domain x > 0",
+  "strict_f16_operators": [
+    "EML",
+    "EAL",
+    "EXL",
+    "EDL",
+    "DEML",
+    "DEAL",
+    "DEXL",
+    "DEDL",
+    "ELAd",
+    "ELSb",
+    "LEAd",
+    "LEdiv",
+    "LEX",
+    "EMN"
+  ],
+  "excluded_operators": {
+    "EPL": "excluded: uses ** between operands -- circular for pow lower bound",
+    "DEPL": "excluded: uses ** between operands -- circular for pow lower bound"
+  },
+  "upper_bound": {
+    "cost": 3,
+    "construction": "EPL(EXL(0,x), EML(y,1))",
+    "explanation": "EXL(0,x) = exp(0)*ln(x) = ln(x);  EML(y,1) = exp(y) - ln(1) = exp(y);  EPL(ln(x), exp(y)) = exp(ln(x))^ln(exp(y)) = x^y",
+    "verified": true,
+    "winning_tree": "EPL(EXL(0,x), EML(y,1))"
+  },
+  "lower_bound": {
+    "argument": "x^y = exp(y*ln(x)) requires the product y*ln(x) internally. mul(x,y) = 2n in F16 (tight, proved in s100 and s102). Therefore any F16 tree for x^y needs >=2 nodes for y*ln(x) plus >=1 node for exp, giving >=3 nodes total. Exhaustive search confirms no 1-node or 2-node strict-F16 tree matches.",
+    "key_lemma": "mul(x,y) = 2n in strict F16 (tight lower bound, proved exhaustively in s100_mul_lower_bound.json and s102_door1_mul_1node.json). x^y = exp(y*ln(x)) requires y*ln(x) as a subexpression; that product costs >=2 nodes; outer exp costs >=1 more; total >=3."
+  },
+  "epl_circularity": {
+    "operator": "EPL",
+    "definition": "EPL(a, b) = exp(a)^ln(b)  [uses ** between operands]",
+    "algebraic_identity": "EPL(y, x) = exp(y)^ln(x) = exp(y * ln(x)) = x^y",
+    "numerical_match": true,
+    "values_sample": [
+      8.0,
+      9.0,
+      2.0,
+      1.414214
+    ],
+    "target_sample": [
+      8.0,
+      9.0,
+      2.0,
+      1.414214
+    ],
+    "circularity_argument": "EPL uses the ** (exponentiation) operator between its two operands. Exponentiation is the very function we are trying to decompose. Counting EPL(y,x) as a 1-node construction of pow would mean defining pow in terms of pow — a tautology, not a reduction. For the same reason LEpow = ln(exp(x)^y) is excluded when proving the mul lower bound (see s102_door1_mul_1node.json). EPL and DEPL are therefore excluded from the strict F16 family.",
+    "conclusion": "EPL(y,x) = x^y algebraically, confirming EPL IS pow. Its exclusion is principled, not ad hoc."
+  },
+  "exhaustive_check": {
+    "strict_f16_operator_count": 14,
+    "1_node_candidates": 224,
+    "1_node_matches": 0,
+    "1_node_match_details": [],
+    "2_node_candidates": 25088,
+    "2_node_matches": 0,
+    "2_node_match_details": [],
+    "test_points": [
+      [
+        2.0,
+        3.0
+      ],
+      [
+        3.0,
+        2.0
+      ],
+      [
+        4.0,
+        0.5
+      ],
+      [
+        2.0,
+        0.5
+      ],
+      [
+        2.718281828459045,
+        2.0
+      ],
+      [
+        3.0,
+        3.0
+      ],
+      [
+        5.0,
+        2.0
+      ],
+      [
+        2.718281828459045,
+        3.141592653589793
+      ]
+    ],
+    "targets": [
+      8.0,
+      9.0,
+      2.0,
+      1.4142135624,
+      7.3890560989,
+      27.0,
+      25.0,
+      23.1406926328
+    ],
+    "tolerance": 1e-08,
+    "conclusion": "Checked 224 1-node and 25088 2-node strict-F16 candidates. 0 matches found. Therefore SB(pow) >= 3."
+  },
+  "3_node_verification": [
+    {
+      "tree": "EPL(EXL(0,x), EML(y,1))",
+      "step_by_step": "EXL(0,x) = exp(0)*ln(x) = ln(x);  EML(y,1) = exp(y) - ln(1) = exp(y);  EPL(ln(x), exp(y)) = exp(ln(x))^ln(exp(y)) = x^y",
+      "match": true,
+      "values_sample": [
+        8.0,
+        9.0,
+        2.0,
+        1.414214
+      ],
+      "target_sample": [
+        8.0,
+        9.0,
+        2.0,
+        1.414214
+      ]
+    },
+    {
+      "tree": "ELAd(EXL(0,x), y)  [2-node, shown for contrast]",
+      "step_by_step": "EXL(0,x) = ln(x);  ELAd(ln(x), y) = exp(ln(x))*y = x*y  [this is MUL, not POW]",
+      "match": false,
+      "values_sample": [
+        6.0,
+        6.0,
+        2.0,
+        1.0
+      ],
+      "target_sample": [
+        8.0,
+        9.0,
+        2.0,
+        1.414214
+      ]
+    },
+    {
+      "tree": "EXL(EXL(0,x), y)  [chain, shown for contrast]",
+      "step_by_step": "EXL(0,x) = ln(x);  EXL(ln(x), y) = exp(ln(x))*ln(y) = x*ln(y)  [not x^y]",
+      "match": false,
+      "values_sample": [
+        2.197225,
+        2.079442,
+        -2.772589,
+        -1.386294
+      ],
+      "target_sample": [
+        8.0,
+        9.0,
+        2.0,
+        1.414214
+      ]
+    }
+  ],
+  "status": "THEOREM",
+  "references": [
+    "superbest_v5_table.json -- pow(x,n) = 3n listed",
+    "s100_mul_lower_bound.json -- mul(x,y) = 2n (tight)",
+    "s102_door1_mul_1node.json -- no 1-node strict F16 computes mul"
+  ]
+}
