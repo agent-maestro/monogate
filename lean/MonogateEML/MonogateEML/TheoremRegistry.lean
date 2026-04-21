@@ -18,16 +18,17 @@ explicitly marked [SORRY] / [CONJECTURE].
 -/
 
 /-- The canonical proved theorem count. Change ONLY when a new Lean proof is added. -/
-def PROVED_COUNT : ℕ := 18
+def PROVED_COUNT : ℕ := 21
 
 /-!
-## Proved Theorems (18 total)
+## Proved Theorems (21 total)
 
 ### T01 — Infinite Zeros Barrier
 Real ELC(ℝ) trees have finitely many real zeros; sin(x) has infinitely many.
 Therefore sin(x) ∉ ELC(ℝ) over ℝ.
-Lean: InfiniteZerosBarrier.lean — PARTIAL (sorry on analyticity induction)
-Status: [SORRY] — statement correct; induction pending Mathlib lemma
+Lean: InfiniteZerosBarrier.lean (sin_int_pi_zero, sin_has_infinitely_many_zeros — proved, 0 sorry)
+      sin_not_in_eml remains [SORRY] pending analyticity induction.
+Status: [PARTIAL] — T01a (infinitely many sin zeros) proved; T01b (EML barrier) sorry
 
 ### T02 — Universality (Weierstrass)
 ELC(ℝ) approximates every continuous function on a compact interval.
@@ -117,6 +118,32 @@ neg(mul(neg(x), y)) = x·y for all real x, y, at cost 2+2+2 = 6 nodes.
 Lean: none (explicit construction, no lower bound for general mul yet)
 Status: [PROVED (upper bound only)]
 
+### T_MUL_GEN_LB — SB(mul, general) ≥ 2
+No single F16 operator computes x*y for all real x, y.
+Lean: MulLowerBound.lean (SB_mul_ge_two) — 0 sorries
+Status: [PROVED] — Session 2 sprint
+
+### T_DIV_GEN_LB — SB(div, general) ≥ 2
+No single F16 operator computes x/y for all real x, y.
+Lean: DivLowerBound.lean (SB_div_ge_two) — 0 sorries
+Status: [PROVED] — Session 2 sprint
+
+### T_MUL_1N (gap filled) — SB(mul, positive) = 1
+Was listed as [PROVED] in the 18-count but had no Lean code.
+Lean code now added: ModelAudit.lean (mul_is_one_node_positive) — 0 sorries
+                     UpperBounds.lean (mul_one_node_positive) — 0 sorries
+Status: [PROVED] — gap filled, count unchanged (was already in 18)
+
+### T_EXP_1N, T_POW_1N, T_RECIP_1N (gaps filled) — upper bound constructions
+Lean code added in UpperBounds.lean for exp_one_node, rpow_one_node_positive,
+recip_one_node_positive, sqrt_one_node_positive'. 0 sorries.
+Status: [PROVED] — gaps filled, counts unchanged (were already in 18)
+
+### T01a — sin has infinitely many zeros
+sin(nπ) = 0 for all n ∈ ℤ; zeros are distinct; sin has infinitely many.
+Lean: InfiniteZerosBarrier.lean (sin_int_pi_zero, sin_has_infinitely_many_zeros) — 0 sorries
+Status: [PROVED] — Session 5 sprint
+
 ---
 
 ## Formal Conjectures (NOT counted in PROVED_COUNT)
@@ -135,18 +162,20 @@ This is empirical (§5 data). No mathematical proof of the 92% figure.
 An EML pumping lemma analogous to the regular language pumping lemma.
 Formal statement not yet fixed. Not counted until proved.
 
-### CONJ_MUL_GEN_LOWER
-SB(mul, general) ≥ 6n — general multiplication cannot be done in fewer than 6 nodes.
-Currently only the upper bound is proved. Lower bound is open.
+### CONJ_MUL_GEN_TIGHT
+SB(mul, general) = 6n — general multiplication cannot be done in fewer than 6 F16 nodes.
+Lower bound is ≥ 2 (proved: T_MUL_GEN_LB). Upper bound is ≤ 6 (proved: T_MUL_GEN_6N).
+Exact cost = 6 is open. The gap [2,6] is the remaining question.
 
 ---
 
 ## FOOTER INSTRUCTION
 
-Both monogate.org and monogate.dev footers currently say "24 theorems".
-The honest proved count is **18**. Update footers to say "18 theorems".
+Update footers to say "21 theorems" (was 18; sprint added 3 genuinely new results).
+New additions: T_MUL_GEN_LB, T_DIV_GEN_LB, T01a (sin infinitely many zeros).
+Gap fills (already counted): T_MUL_1N, T_EXP_1N, T_POW_1N, T_RECIP_1N Lean code added.
 Do not increase this number without adding a corresponding Lean proof.
 -/
 
 -- Sanity check: PROVED_COUNT matches the list above
-example : PROVED_COUNT = 18 := rfl
+example : PROVED_COUNT = 21 := rfl
