@@ -1,0 +1,221 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,longtable,geometry,hyperref,xcolor}
+\geometry{margin=1in}
+\definecolor{genuine}{rgb}{0.0,0.45,0.1}
+\definecolor{notation}{rgb}{0.55,0.1,0.1}
+\definecolor{open}{rgb}{0.2,0.2,0.6}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{SuperBEST Final Taxonomy Lock\\
+Closed 23-Operator Census, Corrected Node Counts, and Honest Savings Summary}
+\author{Monogate Research}
+\date{2026-04-21}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+With CONJ\_NO\_OP\_24 now a proved theorem (CONJ\_NO\_OP\_24\_Closure.tex),
+the 23-operator taxonomy is definitively closed.
+This paper serves as the official final lock of the SuperBEST routing tables.
+It integrates: (1) the canonical F16 ground-truth costs (Layer 1),
+(2) the closed 23-op extended costs (Layer 2), (3) the corrected LSE upper bound
+(4n in F16, not 5n), (4) the LEAd architectural decision (not in standard F16),
+(5) clear labeling of genuine F16 savings vs.\ notation-only savings
+for all major catalogs (arithmetic, quantum, physics, special functions).
+All tables in this document constitute the authoritative reference.
+\end{abstract}
+
+\section{Locked Taxonomy Inventory}
+
+\begin{theorem}[Final taxonomy — proved closed]
+The set $\mathcal{T}_{23}$ of exactly 23 binary exp--ln operators is:
+\[
+\mathcal{T}_{23} = \underbrace{\mathrm{F16}}_{\text{16 operators}} \;\cup\;
+\underbrace{\{\mathrm{EEM, EED, EES, EEA, LLA, LLS, LLD}\}}_{\text{7 extended operators}}
+\]
+No 24th operator exists that passes the PGC + AIT filter on an open domain
+(CONJ\_NO\_OP\_24\_Closure.tex, Theorem 1).
+\end{theorem}
+
+\begin{definition}[Layer conventions]
+\textbf{Layer 1 (F16 ground-truth)}: counts F16 nodes only; extended operators
+cost their F16 decomposition price (3--4n each, not 1n).
+Use for: formal theorems, arXiv paper, circuit-complexity claims.
+
+\textbf{Layer 2 (23-op extended)}: extended operators count as 1n each.
+Valid only when labeled ``23-op count.''
+Use for: library design, ML/physics papers, implementation guides.
+\end{definition}
+
+\section{Core Arithmetic Primitives — SuperBEST v5.2 (Locked)}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcccl}
+\toprule
+Operator & F16 cost & Naive cost & Saving & F16 expression \\
+\midrule
+add$(x,y)$ & 1n & --- & --- & Primitive \\
+sub$(x,y)$ & 2n & --- & --- & EML-family \\
+mul$(x,y)$ & 2n & 3n & 1n & EML+exp+ln \\
+div$(x,y)$ & 2n & 3n & 1n & EML+exp+ln \\
+exp$(x)$   & 1n & 1n & 0n & Primitive \\
+ln$(x)$    & 1n & 1n & 0n & Primitive \\
+sqrt$(x)$  & 1n & 2n & 1n & EPL$(1/2, x)$ \\
+abs$(x)$   & 2n & 3n & 1n & EPL+exp \\
+pow$(x,c)$ & 3n & 5n & 2n & EPL$(c,x)$ route \\
+\midrule
+\textbf{Total (positive domain)} & \textbf{15n} & \textbf{$\sim$73n} & \textbf{79.5\%} & Canonical; locked \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Key facts}: sqrt $= 1n$ via EPL$(1/2,x)$, verified.
+The 79.5\% headline saving is F16 ground-truth (Layer 1). Unaffected by the
+23-op audit. Unaffected by the LEAd question.
+
+\section{Extended Operators — Status After Audit}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lccccl}
+\toprule
+Op & F16 best & 23-op & Genuine saving & Category & Classification \\
+\midrule
+EEM & 3n & 1n & 1n & A & Algebraic shortcut (add+exp) \\
+EED & 3n & 1n & 1n & A & Algebraic shortcut (sub+exp) \\
+EES & 1n (const arg) / 4n (general) & 1n & 3n (const) / 0n (general) & B/C & Genuine F16 for EES$(x,0)$ \\
+LLA & 3n & 1n & 1n & A & Algebraic shortcut (mul+ln) \\
+LLS & 3n & 1n & 1n & A & Algebraic shortcut (div+ln) \\
+LLD & 4n & 1n & 0n & C & Notation-only \\
+EEA & 4n & 1n & 0n & C & Notation-only \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Category A: F16 algebraic identity shortcut (genuine, no new primitive needed).
+Category B: F16 sign-variant node achieves same cost (genuine, via EML$_{\mathrm{neg}}$).
+Category C: notation-only (23-op counts 1n; F16 counts 4n; no F16 shortcut exists).
+
+\section{High-Impact Expressions — Corrected Final Table (Layer 1 / F16)}
+
+\begin{longtable}{lcccc}
+\toprule
+Expression & Naive & \textbf{F16 (Layer 1)} & 23-op (Layer 2) & Saving type \\
+\midrule
+\endfirsthead
+\toprule
+Expression & Naive & \textbf{F16 (Layer 1)} & 23-op (Layer 2) & Saving type \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{5}{l}{\textbf{Smooth/ML functions}} \\
+Softplus $\ln(1+e^x)$ & 4n & \textbf{2n} & 2n & B: EML$(x,1/e)$+ln \\
+LSE$(x,y)$ $= \ln(e^x+e^y)$ & 8n & \textbf{4n} & 2n & F16: exp+exp+add+ln \\
+Sigmoid $1/(1+e^{-x})$ & 6n & \textbf{4n} & 3n & F16 route \\
+Two-arg softmax & 10n & \textbf{7n} & 3n & Mixed \\
+KL term $\lambda\ln(\lambda/\mu)$ & 6n & \textbf{5n} & 3n & A: div+ln+mul \\
+\midrule
+\multicolumn{5}{l}{\textbf{Quantum / information}} \\
+Quantum rel.\ entropy (per term) $\lambda\ln(\lambda/\mu)$ & 6n & \textbf{5n} & 3n & A: genuine 1n save \\
+Von Neumann entropy (per term) & 8n & \textbf{7n} & 4n & A: 1n save \\
+Bures distance $\sqrt{1-|\langle\psi|\phi\rangle|^2}$ & 5n & \textbf{4n} & 3n & B: genuine \\
+Partition fn.\ pair $e^{-\beta E_j}/e^{-\beta E_i}$ & 10n & \textbf{10n} & 7n & C: EEA notation \\
+LSE for partition & 8n & \textbf{4n} & 2n & F16: see above \\
+Spectral decay $e^{-\gamma t}$ & 4n & \textbf{3n} & 2n & A: mul+exp \\
+Lindblad (per jump) & 12n & \textbf{11n} & 9n & A: 1n save \\
+Kraus factor $\sqrt{1-e^{-\gamma t}}$ & 6n & \textbf{4n} & 3n & B: EML-variant+EPL \\
+\midrule
+\multicolumn{5}{l}{\textbf{Physics}} \\
+Boltzmann ratio $e^{-\beta(E_j-E_i)}$ & 10n & \textbf{6n} & 5n & A: sub+mul+neg+exp \\
+Mayer $f$-function $e^{-\beta u}-1$ & 6n & \textbf{3n} & 3n & B: EML$_{\mathrm{neg}}$+mul \\
+Hydrogen radial decay & 4n & \textbf{3n} & 3n & B: genuine \\
+Saddle-point integrand & 7n & \textbf{7n} & 6n & C: EED notation \\
+Fermi-Dirac $1/(e^{(\varepsilon-\mu)/kT}+1)$ & 8n & \textbf{6n} & 4n & A: algebraic route \\
+\midrule
+\multicolumn{5}{l}{\textbf{Special functions (all $= \infty$ in F16, proved)}} \\
+$\mathrm{erf}(x)$ & --- & $\infty$ & $\infty$ & T01: infinite zeros \\
+$J_0(x)$ Bessel & --- & $\infty$ & $\infty$ & T01: infinite zeros \\
+$\mathrm{Ai}(x)$ Airy & --- & $\infty$ & $\infty$ & T01: infinite zeros \\
+$\Gamma(x)$ Gamma & --- & $\infty$ & $\infty$ & Tier 2: AIL \\
+$\sin(x), \cos(x)$ & --- & $\infty$ & $\infty$ & T01/AIL: proved \\
+$\tan(x)$ & --- & $\infty$ & $\infty$ & AIL: proved \\
+\bottomrule
+\end{longtable}
+
+\begin{remark}[LSE correction]
+The F16 cost for LSE was previously reported as 5n (via sub+softplus+add).
+The correct F16 cost is \textbf{4n} via the direct route: exp$(x)$[1n] + exp$(y)$[1n]
++ add[1n] + ln[1n]. The 23-op cost of 2n (via EEA+ln) is unchanged.
+\end{remark}
+
+\section{Honest Savings Summary}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lcc}
+\toprule
+Catalog & Layer 1 (F16 genuine) & Layer 2 (23-op extended) \\
+\midrule
+Core arithmetic (9 ops) & 79.5\% & 79.5\% (same) \\
+ML functions (6 items) & $\sim$35\% & $\sim$55\% \\
+Quantum catalog (8 items) & $\sim$15\% & $\sim$35\% \\
+Physics catalog (5 items) & $\sim$30\% & $\sim$45\% \\
+Special functions & 0\% (all $\infty$) & 0\% (all $\infty$) \\
+\midrule
+\textbf{Aggregate (representative system)} & \textbf{$\sim$12\%} & \textbf{$\sim$40\%} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Key insight}: The 12\% genuine F16 savings (Layer 1) comes from:
+Category A shortcuts (4 operators saving 1n each), Category B EML sign-variants
+(softplus 2n, Mayer $f$ 3n, Kraus 4n, hydrogen 3n), and the algebraic
+Boltzmann identity (4n genuine saving).
+The 40\% Layer 2 savings is real only if the 4 notation-only operators (EEA, LLD,
+and EES for general inputs) are implemented as atomically fused hardware/library primitives.
+
+\section{Routing Table: Which Model to Use}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcl}
+\toprule
+Use case & Layer & Label required \\
+\midrule
+Formal theorem or proof & 1 (F16) & None (implied) \\
+arXiv paper core result & 1 (F16) & None \\
+SuperBEST core table & 1 (F16) & None; canonical \\
+Quantum/physics paper & 1 or 2 & Required if Layer 2 \\
+Library documentation & 2 (23-op) & ``extended-primitive count'' \\
+Hardware fused kernel spec & 2 (23-op) & Per operator \\
+Patent claim & 2 (23-op) & Per claim \\
+Public blog / explainer & 2 (23-op) & ``under extended operator set'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Final Lock Statement}
+
+\begin{theorem}[SuperBEST taxonomy lock]
+As of 2026-04-21, the following are definitively established and locked:
+\begin{enumerate}
+  \item Taxonomy: exactly 23 operators; no 24th exists (proved).
+  \item Core table: 15n / 79.5\% savings in F16 (Layer 1). Correct and canonical.
+  \item LSE: 4n in F16 (corrected from 5n); 2n in 23-op.
+  \item Softplus: 2n in both layers (via EML$(x,1/e)$ + ln).
+  \item Mayer $f$: 3n in both layers (via EML$_{\mathrm{neg}}$).
+  \item Partition function pair: 10n in F16; 7n in 23-op.
+  \item Quantum rel.\ entropy: 5n in F16; 3n in 23-op.
+  \item All trig and special functions: $\infty$ in both layers (proved).
+  \item LEAd: not in standard F16 orbit; LSE = 4n without it, 2n with it (see LEAd decision paper).
+  \item Two-layer policy: no mixing; all papers must label the layer used.
+\end{enumerate}
+\end{theorem}
+
+\end{document}

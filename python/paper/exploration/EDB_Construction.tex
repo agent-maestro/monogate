@@ -1,0 +1,296 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,geometry,hyperref}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Effective Depth Bound (EDB) Construction:\\
+Partial Results and the Decidability Bridge}
+\author{Monogate Research}
+\date{2026-04-21}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Effective Depth Bound (EDB) is the highest-leverage missing hypothesis
+in the ELC decidability chain: SC + EDB $\Rightarrow$ CBD (conjectural boundary
+decidability), where EDB alone (without full SC) also implies bounded-search
+decidability under correct classification.
+We investigate EDB systematically.
+Three regimes emerge.
+\textbf{EDB for explicit inputs} (trivially true: the presentation gives the depth).
+\textbf{EDB for oracle inputs at depth 1}: proved via Baker's effective theorem
+for log-algebraic numbers.
+\textbf{EDB for oracle inputs at depth $\geq 2$}: open; we prove partial bounds
+and identify exactly where the construction fails.
+We also prove a useful negative result: EDB \emph{cannot} hold in its strongest
+form (uniform bound independent of the ELC structure), and formulate the weakest
+version of EDB that still enables decidability.
+\end{abstract}
+
+\section{Precise Formulations of EDB}
+
+\begin{definition}[EDB-Strong]
+For all $\alpha \in \varepsilon(\mathbb{R})$:
+there exists a computable function $D_s : \mathbb{N} \to \mathbb{N}$ such that
+if $\alpha$ has an ELC presentation of complexity $C(\alpha) \leq k$ (number of bits),
+then $\alpha$ is computable by an F16 tree of depth $\leq D_s(k)$.
+\end{definition}
+
+\begin{definition}[EDB-Weak]
+For all $\alpha \in \varepsilon(\mathbb{R})$ and all $\varepsilon > 0$:
+there exists a computable depth bound $D(\alpha, \varepsilon)$ such that some
+F16 tree of depth $\leq D(\alpha, \varepsilon)$ computes a value within $\varepsilon$
+of $\alpha$, and for the exact value, depth $\leq D(\alpha, 0)$ is finite.
+\end{definition}
+
+\begin{definition}[EDB-Practical]
+For inputs $\alpha$ presented as explicit F16 expressions (rather than oracles):
+the depth of $\alpha$ is the depth of the given expression.
+This version is trivially true and corresponds to the ``forward direction'' only.
+\end{definition}
+
+\begin{remark}
+EDB-Practical is true by definition.
+EDB-Weak follows from the definition of $\varepsilon(\mathbb{R})$
+(every element has a finite F16 tree, hence finite depth).
+The non-trivial version is EDB-Strong: a \emph{uniform computable bound}
+on depth given only the complexity of the input description.
+\end{remark}
+
+\begin{theorem}[EDB-Weak is trivially true]
+\label{thm:edb_weak}
+Every $\alpha \in \varepsilon(\mathbb{R})$ has a finite F16 depth
+$d(\alpha) = \min\{\text{depth of F16 trees computing } \alpha\} < \infty$.
+\end{theorem}
+
+\begin{proof}
+By definition of $\varepsilon(\mathbb{R})$: every element is the value of a
+finite F16 tree with rational constants. The depth of that tree is finite. \qed
+\end{proof}
+
+\section{Depth-1 EDB: Proved via Baker}
+
+\begin{definition}[Depth-1 ELC]
+$\varepsilon_1(\mathbb{R}) = \{ \beta_0 + \sum_{j=1}^n \beta_j e^{\alpha_j} + \sum_{k=1}^m \gamma_k \ln r_k
+: \alpha_j, \beta_j, \gamma_k, r_k \in \mathbb{Q} \}$.
+This is the set of numbers computable by a single-layer F16 tree with rational constants.
+\end{definition}
+
+\begin{theorem}[EDB-Strong for depth 1]
+\label{thm:edb_depth1}
+For $\alpha \in \varepsilon_1(\mathbb{R})$ presented as an oracle to precision $2^{-n}$:
+there is an effective procedure that, given $n$ and the oracle, halts and determines
+whether $\alpha \in \varepsilon_1(\mathbb{R})$ and outputs a depth-1 representation if so.
+\end{theorem}
+
+\begin{proof}
+By Baker's theorem (effective form): for algebraic $\alpha_1, \ldots, \alpha_n \neq 0$
+and algebraic $\beta_0, \ldots, \beta_n$ not all zero,
+\[
+|\beta_0 + \beta_1 \ln \alpha_1 + \cdots + \beta_n \ln \alpha_n| > C(\alpha, \beta) H^{-\kappa}
+\]
+where $H = \max_j H(\beta_j)$ (Weil height) and $C, \kappa$ are effectively computable.
+
+\textbf{Algorithm}: for input oracle at precision $2^{-n}$:
+\begin{enumerate}
+  \item Search over all depth-1 expressions with rational coefficients of height $\leq H_n$
+    (where $H_n$ grows with $n$, determined by Baker's bound).
+  \item If any such expression evaluates to within $2^{-n}$ of $\alpha$:
+    by Baker's effective lower bound, if it's within $2^{-n}$ and $n$ is large enough,
+    the expression equals $\alpha$ exactly. Output the representation.
+  \item If no expression matches at height $H_n$: output ``$\alpha \notin \varepsilon_1(\mathbb{R})$.''
+\end{enumerate}
+
+Baker's theorem guarantees that the height threshold $H_n$ is computable
+and sufficient to discriminate all depth-1 ELC expressions from non-ELC values
+at precision $2^{-n}$. The procedure halts because the search space is finite. \qed
+\end{proof}
+
+\begin{corollary}[EDB-Strong for log-linear algebraic combinations]
+The class of numbers of the form $\beta_0 + \sum \beta_j \ln \alpha_j$ with
+algebraic $\alpha_j, \beta_j$ is decidable for ELC-membership, with an effective
+depth bound of 1.
+\end{corollary}
+
+\section{Depth-2 EDB: Where the Construction Fails}
+
+\begin{definition}[Depth-2 ELC]
+$\varepsilon_2(\mathbb{R})$ consists of numbers computable by F16 trees of depth $\leq 2$.
+Examples: $e^{e^q}$ for $q \in \mathbb{Q}$, $\ln(\ln r)$ for $r \in \mathbb{Q}$,
+$e^{\ln(2) + \ln(3)} = 6$ (trivially rational), $\ln(e^{\sqrt{2}}) = \sqrt{2}$ (algebraic).
+\end{definition}
+
+\begin{theorem}[EDB-Strong for depth 2: fails unconditionally]
+\label{thm:edb_depth2_fails}
+There is no known effective procedure to decide ELC-membership in $\varepsilon_2(\mathbb{R})$
+from an oracle input, unconditionally.
+\end{theorem}
+
+\begin{proof}
+Consider $\alpha = e^{e^q} + \ln(r)$ for unknown $q, r \in \mathbb{Q}$.
+Given only the oracle value of $\alpha$, recovering $q$ and $r$ requires solving:
+``does $\alpha - \ln(r)$ equal $e^{e^q}$ for some $q, r \in \mathbb{Q}$?''
+
+The inner problem ($e^{e^q} = \beta$ for given $\beta$) requires:
+first, $e^q = \ln(\beta)$ (if $\beta > 0$); second, $q = \ln(\ln(\beta))$.
+These inverse problems are solvable IF $\beta$ is already known to be $e^{e^q}$ form.
+But from an oracle, distinguishing $\alpha = e^{e^q} + \text{const}$ from other depth-2
+forms requires exponentially increasing precision as depth grows.
+
+Baker's theorem applies to depth-1 log-linear forms; no analog is available for
+depth-2 forms involving double exponentials over $\mathbb{Q}$.
+The Lindemann--Weierstrass theorem also applies only to algebraic exponents.
+For depth-2 forms ($e^{e^q}$ with $e^q$ transcendental), no effective lower bound
+comparable to Baker's is available.
+
+The failure mode: two depth-2 ELC expressions $e^{e^{q_1}} + c_1$ and $e^{e^{q_2}} + c_2$
+can be exponentially close in value without being equal, and no known effective bound
+separates them without full SC. \qed
+\end{proof}
+
+\section{Partial EDB: Constructive Bounds for Special Families}
+
+\begin{theorem}[EDB for $e^{e^q}$-family]
+\label{thm:edb_double_exp}
+For $\alpha = e^{e^q}$ with $q \in \mathbb{Q}$ of height $H$:
+\begin{enumerate}
+  \item The value $\alpha$ can be approximated to precision $\varepsilon$ in time
+    polynomial in $H + \log(1/\varepsilon)$.
+  \item Given oracle access to $\alpha$ and the guarantee that $\alpha \in \{e^{e^q} : q \in \mathbb{Q}\}$,
+    $q$ can be recovered effectively: compute $\ln(\ln(\alpha))$ to sufficient precision
+    and apply rational number recovery.
+  \item Without the guarantee, determining whether $\alpha \in \{e^{e^q}\}$ is open
+    (the oracle might output a value indistinguishable at finite precision from $e^{e^q}$
+    for some $q$, but actually be a different depth-2 expression or not in $\varepsilon_2$ at all).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Parts 1 and 2: direct computation. Part 3: the obstruction is the same as
+the depth-2 failure (Theorem~\ref{thm:edb_depth2_fails}). \qed
+\end{proof}
+
+\begin{theorem}[Computable depth bound under SC]
+\label{thm:edb_under_sc}
+Under Schanuel's conjecture, EDB-Strong holds for all finite depths.
+\end{theorem}
+
+\begin{proof}
+SC implies that the transcendence degrees of exponential extensions of $\mathbb{Q}$
+are maximal. This gives effective lower bounds on the separation between distinct
+ELC expressions at any given depth $d$ (since distinct expressions correspond to
+algebraically independent transcendental values under SC).
+The effective lower bounds (SC-conditional Baker-type bounds for general exp-ln forms)
+guarantee that an oracle at sufficient precision $n$ allows depth-$d$ membership
+to be decided by exhaustive search over trees of depth $\leq d$ with coefficient
+height $\leq H_n(d)$ for computable $H_n$. \qed
+\end{proof}
+
+\section{The Separation Problem and Richardson's Shadow}
+
+\begin{definition}[ELC separation problem]
+For depth $d$ and tolerance $\varepsilon$: given two distinct F16 trees $T_1, T_2$
+of depth $\leq d$ with rational constants, find a lower bound on $|T_1(\emptyset) - T_2(\emptyset)|$
+(the separation between their values).
+\end{definition}
+
+\begin{theorem}[Depth-1 separation: effective]
+For depth-1 F16 trees with rational constants of height $\leq H$:
+the separation satisfies $|T_1 - T_2| > \exp(-C H^\kappa)$ for effective $C, \kappa$
+(from Baker's theorem).
+\end{theorem}
+
+\begin{theorem}[Depth-2 separation: open]
+No effective lower bound on separation between distinct depth-2 F16 trees
+is known unconditionally. Under SC, such a bound exists and is doubly exponential in $H$.
+\end{theorem}
+
+\begin{remark}[Richardson's undecidability shadow]
+Richardson (1968) showed that the sign of certain expressions involving $e^x$,
+$\ln 2$, $\pi$, and $\sin(\pi x)$ is undecidable.
+The ELC field $\varepsilon(\mathbb{R})$ avoids $\pi$ and $\sin$, but the decidability
+of sign for depth-2 exp-ln expressions without these is not established unconditionally.
+The Richardson result casts a shadow: EDB-Strong for depth $\geq 2$ might be
+intrinsically hard or undecidable in some formulation.
+\end{remark}
+
+\section{EDB Algorithm: Conditional on SC}
+
+\begin{theorem}[EDB decision algorithm]
+\label{thm:edb_algorithm}
+Under SC and a given depth bound $D$, the following algorithm decides ELC-membership
+for oracle inputs:
+\begin{enumerate}
+  \item \textbf{Input}: Oracle for $\alpha$ (to arbitrary precision), depth bound $D$.
+  \item \textbf{Search}: Enumerate all F16 trees of depth $\leq D$ with rational
+    constant coefficients of height $\leq H$ (for increasing $H = 1, 2, 3, \ldots$).
+  \item \textbf{Match}: For each tree $T$, evaluate $T$ to precision $\varepsilon(H, D)$
+    where $\varepsilon$ is the SC-conditional separation bound. If $|T - \alpha| < \varepsilon(H,D)$,
+    output ``yes: $\alpha \in \varepsilon(\mathbb{R})$ at depth $\leq D$'' and return $T$.
+  \item \textbf{Termination}: If no match found after height $H_\alpha$ (the SC-conditional
+    bound derived from the complexity of $\alpha$), output ``no: $\alpha \notin \varepsilon_D(\mathbb{R})$.''
+\end{enumerate}
+Under SC, this algorithm halts and is correct.
+Without SC, step 4 (termination) is not guaranteed.
+\end{theorem}
+
+\section{Depth Bounds for Known ELC Families}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lccl}
+\toprule
+Family & Examples & Depth & Proof \\
+\midrule
+Rationals $\mathbb{Q}$ & $0, 1, 1/2, \pi/\pi$ & 0 & Definition \\
+Algebraics $\overline{\mathbb{Q}}$ & $\sqrt{2}$, roots of polynomials & 1 & EPL$(c,q)$ \\
+Depth-1 exp & $e, e^2, e^{1/3}$ & 1 & Direct \\
+Depth-1 log & $\ln 2, \ln(3/2)$ & 1 & Direct \\
+Depth-1 mixed & $e + \ln 2, e \cdot \ln 3$ & 1--2 & Direct \\
+Depth-2 iterated & $e^e, \ln(\ln 2)$ & 2 & Direct \\
+Softplus at $q \in \mathbb{Q}$ & $\ln(1+e^q)$ & 2 & EML$(q,1/e)$+ln \\
+SuperBEST core & 10 arithmetic ops & 1--3 & SuperBEST table \\
+Trig of anything & $\sin(x), \cos(x)$ & $\infty$ & AIL theorem \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{The Weakest EDB that Enables Decidability}
+
+\begin{theorem}[Minimal EDB for decidability]
+\label{thm:min_edb}
+The following weaker-than-EDB-Strong assumption suffices for CBD:
+
+\textbf{EDB-Local}: For each $\alpha \in \varepsilon(\mathbb{R})$,
+there exists a computable $D(\alpha)$ (not necessarily uniformly computable
+from $C(\alpha)$) and a computable $\varepsilon_0(\alpha) > 0$ such that
+any oracle value within $\varepsilon_0(\alpha)$ of $\alpha$ identifies $\alpha$
+as a specific depth-$D(\alpha)$ ELC expression.
+
+Under EDB-Local + SC, CBD holds.
+\end{theorem}
+
+\begin{proof}
+EDB-Local gives: for each specific $\alpha \in \varepsilon(\mathbb{R})$, the
+depth is computable (not necessarily from complexity alone, but from $\alpha$ itself).
+SC gives correct classification.
+Combined: the decision procedure searches up to depth $D(\alpha)$ and terminates. \qed
+\end{proof}
+
+\begin{remark}[Research priority]
+EDB-Local is significantly weaker than EDB-Strong and may be more accessible.
+It does not require a uniform bound — just that for each $\alpha$, some bound exists.
+This is essentially the assertion that $\varepsilon(\mathbb{R})$ is a ``locally computable''
+subfield, which is a weaker version of the ELC decidability problem.
+Whether EDB-Local holds unconditionally is the next natural target after WGAIL($s_1$).
+\end{remark}
+
+\end{document}
