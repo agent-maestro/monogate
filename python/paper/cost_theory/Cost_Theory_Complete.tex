@@ -186,8 +186,7 @@ Reciprocal $1/x$             & \texttt{recip} & 2  & \\
 Multiplication $x\cdot y$    & \texttt{mul}   & 2  & \\
 Subtraction $x-y$            & \texttt{sub}   & 2  & T33 optimal \\
 Exponentiation $x^n$         & \texttt{pow}   & 3  & \\
-Addition $x+y$ (pos.\ domain) & \texttt{add}$^+$ & 3  & \\
-Addition $x+y$ (general)     & \texttt{add}   & 11 & requires $|\cdot|$ \\
+Addition $x+y$ (all real $x,y$) & \texttt{add} & 2  & ADD-T1 (SuperBEST v5) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -377,7 +376,9 @@ verifiable as taking values in the positive domain ($v > 0$ always).
 Then the addition operator at any node summing $v$ with another positive
 sub-expression may use the positive-domain cost $c_{\texttt{add}^+}=3$
 rather than the general cost $c_{\texttt{add}}=11$, saving 8 nodes per
-such addition.
+such addition (v3/v4).
+\emph{In SuperBEST v5 (ADD-T1): $c_{\texttt{add}}=2$ for all real inputs;
+domain-folding saving for addition is 0 (all additions cost 2n regardless).}
 \end{theorem}
 
 Domain-folding savings are determined by static analysis: any sub-expression
@@ -629,10 +630,10 @@ $\Cost(f_N) = N\alpha_0 + 3(N-1) = (\alpha_0+3)N - 3$.
 \textbf{Equation} & $\alpha_0$ & \textbf{Cost formula} & \textbf{Class} \\
 \midrule
 Shannon entropy $-\sum p_i \ln p_i$ & 4  & $7N - 3$  & C \\
-Softmax cross-entropy               & 5  & $8N - 3$  & D \\
-Taylor series (sin, cos, exp)       & 6  & $9N - 3$  & A \\
-Fourier partial sum                 & 4  & $7N - 3$  & A \\
-PK multi-compartment sum            & 8  & $11N - 3$ & A \\
+Softmax cross-entropy               & 5  & $7N - 2$  & D \\
+Taylor series (sin, cos, exp)       & 6  & $8N - 2$  & A \\
+Fourier partial sum                 & 4  & $6N - 2$  & A \\
+PK multi-compartment sum            & 8  & $10N - 2$ & A \\
 \bottomrule
 \end{tabular}
 \end{table}

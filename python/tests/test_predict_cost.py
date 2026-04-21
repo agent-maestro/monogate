@@ -1,4 +1,11 @@
-"""Tests for monogate.predict_cost — SuperBEST v3 cost predictor (dict-based API)."""
+"""Tests for monogate.predict_cost — SuperBEST v5 cost predictor (dict-based API).
+
+v5 changes (ADD-T1, 2026-04-20):
+  - add=2n for ALL real x,y (was add_pos=3n)
+  - add_gen=2n (was 11n; legacy alias, same as add in v5)
+  - recip=1n (was 2n in v3 table; corrected to match EML primitive)
+  - div=2n (was 1n in v3 table; corrected)
+"""
 from __future__ import annotations
 
 import pytest
@@ -21,7 +28,7 @@ class TestUnitTable:
         assert UNIT['mul'] == 2
 
     def test_div_cost(self):
-        assert UNIT['div'] == 1
+        assert UNIT['div'] == 2  # v5: div=2n
 
     def test_neg_cost(self):
         assert UNIT['neg'] == 2
@@ -30,13 +37,16 @@ class TestUnitTable:
         assert UNIT['pow'] == 3
 
     def test_add_cost(self):
-        assert UNIT['add'] == 3
+        assert UNIT['add'] == 2  # v5 (ADD-T1): add=2n for ALL reals
 
     def test_add_gen_cost(self):
-        assert UNIT['add_gen'] == 11
+        assert UNIT['add_gen'] == 2  # v5: add_gen is legacy alias for add (was 11n in v3/v4)
+
+    def test_add_pos_cost(self):
+        assert UNIT['add_pos'] == 2  # v5: add_pos is legacy alias for add (was 3n in v3/v4)
 
     def test_recip_cost(self):
-        assert UNIT['recip'] == 2
+        assert UNIT['recip'] == 1  # EML primitive: recip=1n
 
     def test_sub_cost(self):
         assert UNIT['sub'] == 2
@@ -62,7 +72,7 @@ class TestNaiveCost:
         assert naive_cost({'ln': 1}) == 1
 
     def test_single_div(self):
-        assert naive_cost({'div': 1}) == 1
+        assert naive_cost({'div': 1}) == 2  # v5: div=2n
 
     def test_single_mul(self):
         assert naive_cost({'mul': 1}) == 2
@@ -74,14 +84,14 @@ class TestNaiveCost:
         assert naive_cost({'pow': 1}) == 3
 
     def test_single_add(self):
-        assert naive_cost({'add': 1}) == 3
+        assert naive_cost({'add': 1}) == 2  # v5 (ADD-T1): add=2n for ALL reals
 
     def test_single_add_gen(self):
-        assert naive_cost({'add_gen': 1}) == 11
+        assert naive_cost({'add_gen': 1}) == 2  # v5: legacy alias, same as add=2n
 
     def test_multiple_ops_sum(self):
-        # exp(1) + mul(2) + div(1) = 4
-        assert naive_cost({'exp': 1, 'mul': 1, 'div': 1}) == 4
+        # exp(1) + mul(2) + div(2) = 5 in v5
+        assert naive_cost({'exp': 1, 'mul': 1, 'div': 1}) == 5
 
     def test_repeated_op(self):
         # 3 muls: 3*2 = 6
@@ -93,8 +103,8 @@ class TestNaiveCost:
 
     def test_arrhenius_naive(self):
         # k = A * exp(-Ea/(R*T))
-        # div(1) + mul(2) + neg(2) + exp(1) + mul(2) = 8
-        assert naive_cost({'div': 1, 'mul': 2, 'neg': 1, 'exp': 1}) == 8
+        # v5: div(2) + mul(2)*2 + neg(2) + exp(1) = 2+4+2+1 = 9
+        assert naive_cost({'div': 1, 'mul': 2, 'neg': 1, 'exp': 1}) == 9
 
     def test_wien_displacement(self):
         # b = lambda_max * T — bare product, just mul
@@ -164,12 +174,12 @@ class TestPredictCostNoPattern:
         assert predict_cost({'exp': 1}) == 1
 
     def test_simple_mul_div(self):
-        # mul(2) + div(1) = 3
-        assert predict_cost({'mul': 1, 'div': 1}) == 3
+        # mul(2) + div(2) = 4 in v5
+        assert predict_cost({'mul': 1, 'div': 1}) == 4
 
     def test_arrhenius_naive(self):
-        # div(1) + mul(2) + neg(2) + exp(1) + mul(2) = 8
-        assert predict_cost({'div': 1, 'mul': 2, 'neg': 1, 'exp': 1}) == 8
+        # div(2) + mul(2)*2 + neg(2) + exp(1) = 2+4+2+1 = 9; no pattern bonus
+        assert predict_cost({'div': 1, 'mul': 2, 'neg': 1, 'exp': 1}) == 9
 
     def test_boltzmann_entropy(self):
         # S = k_B * ln(Omega) => mul(2) + ln(1) = 3
@@ -180,8 +190,8 @@ class TestPredictCostNoPattern:
         assert predict_cost({'mul': 1, 'pow': 1}) == 5
 
     def test_reciprocal(self):
-        # recip(x) => cost 2
-        assert predict_cost({'recip': 1}) == 2
+        # recip(x) => cost 1 (EML primitive: recip=1n)
+        assert predict_cost({'recip': 1}) == 1
 
     def test_sharing_reduces_cost(self):
         # shared=2 removes 2 nodes from cost
@@ -216,20 +226,20 @@ class TestPredictCostWithPatterns:
         assert result == 1
 
     def test_edl_pattern(self):
-        # EDL: exp(x)/ln(y) => naive: exp(1)+div(1)+ln(1)=3; bonus=2 => cost=1
+        # EDL: exp(x)/ln(y) => naive: exp(1)+div(2)+ln(1)=4; bonus=2 => cost=2
         result = predict_cost({'exp': 1, 'div': 1, 'ln': 1}, patterns=['EDL'])
-        assert result == 1
+        assert result == 2
 
     def test_eal_pattern(self):
-        # EAL: exp(x)+ln(y) => naive: exp(1)+add(3)+ln(1)=5; bonus=4 => cost=1
+        # EAL: exp(x)+ln(y) => naive: exp(1)+add(2)+ln(1)=4; bonus=4 => cost=0
         result = predict_cost({'exp': 1, 'add': 1, 'ln': 1}, patterns=['EAL'])
-        assert result == 1
+        assert result == 0
 
     def test_emn_pattern(self):
         # EMN: exp(x)*exp(y) folded to exp(x+y)
-        # naive: exp(2)+mul(2)+add(3) = 7; bonus=3 => cost=4
+        # naive: exp(2*1=2)+mul(2)+add(2) = 6; bonus=3 => cost=3
         result = predict_cost({'exp': 2, 'mul': 1, 'add': 1}, patterns=['EMN'])
-        assert result == 4  # 7 - 3 = 4
+        assert result == 3  # 6 - 3 = 3
 
     def test_multiple_patterns(self):
         # EML(bonus=3) + EXL(bonus=3) = total bonus 6
@@ -262,14 +272,14 @@ class TestPredictCostWithPatterns:
         assert result == 1
 
     def test_lead_pattern(self):
-        # LEAd: ln(exp(x)+y) => naive: ln(1)+exp(1)+add(3)=5; bonus=4 => cost=1
+        # LEAd: ln(exp(x)+y) => naive: ln(1)+exp(1)+add(2)=4; bonus=4 => cost=0
         result = predict_cost({'ln': 1, 'exp': 1, 'add': 1}, patterns=['LEAd'])
-        assert result == 1
+        assert result == 0
 
     def test_lediv_pattern(self):
-        # LEdiv: ln(exp(x)/y) => naive: ln(1)+exp(1)+div(1)=3; bonus=2 => cost=1
+        # LEdiv: ln(exp(x)/y) => naive: ln(1)+exp(1)+div(2)=4; bonus=2 => cost=2
         result = predict_cost({'ln': 1, 'exp': 1, 'div': 1}, patterns=['LEdiv'])
-        assert result == 1
+        assert result == 2
 
     def test_elsb_pattern(self):
         # ELSb: exp(x)-y => bonus=1; naive with exp+sub = 1+2=3; cost=2

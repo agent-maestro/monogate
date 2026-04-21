@@ -1,6 +1,6 @@
 {
   "session": "chem_1_chemistry",
-  "cost_model": "SuperBEST_v4",
+  "cost_model": "SuperBEST_v5",
   "cost_model_ops": {
     "exp": 1,
     "ln": 1,
@@ -11,9 +11,9 @@
     "div": 2,
     "sqrt": 2,
     "pow": 3,
-    "add_pos": 3,
-    "add_gen": 11,
-    "DEML_x_1": 1
+    "add": 2,
+    "DEML_x_1": 1,
+    "_note": "v5: add=2n for ALL real x,y (ADD-T1). add_pos and add_gen distinction eliminated."
   },
   "note_DEML": "DEML(x,1) = exp(-x) costs 1n (single operator), cheaper than explicit neg(2n)+exp(1n)=3n",
   "equations": [
@@ -47,21 +47,24 @@
       "name": "Henderson-Hasselbalch Equation",
       "formula": "pH = pKa + log10([A-] / [HA])",
       "domain": "Acid-Base Chemistry",
-      "cost_total_general": 16,
-      "cost_total_near_pKa": 8,
+      "cost_total_general": 7,
+      "cost_total_near_pKa": 7,
+      "cost_total_v4_general": 16,
+      "cost_total_v4_near_pKa": 8,
       "cost_breakdown": [
         {"step": "div([A-], [HA])", "cost": 2, "note": "concentration ratio"},
         {"step": "ln(ratio)", "cost": 1, "note": "natural log of ratio"},
         {"step": "div(ln_result, ln10_const)", "cost": 2, "note": "convert to log10; ln10 is a compile-time constant"},
-        {"step": "add_gen(pKa, log10_result)", "cost": 11, "note": "GENERAL: log10 term can be negative when [A-] < [HA]"},
-        {"step": "add_pos(pKa, log10_result) [near-pKa approx]", "cost": 3, "note": "NEAR-pKa: log10 ≈ 0, both terms positive in buffer range"}
+        {"step": "add(pKa, log10_result)", "cost": 2, "note": "v5 (ADD-T1): add=2n for all real; log10 term can be negative — no longer a cost penalty"}
       ],
       "cost_subtotals": {
         "log10_computation": 3,
-        "addition_general": 11,
-        "addition_near_pKa": 3
+        "addition_v5": 2,
+        "addition_v4_general": 11,
+        "addition_v4_near_pKa": 3
       },
-      "sign_note": "log10([A-]/[HA]) < 0 when [A-] < [HA], so add_gen required in general case; near pKa the log term is small and positive dominates",
+      "v5_note": "updated: add_gen 11n→2n saves 9n (ADD-T1). General and near-pKa costs now identical: both 7n. The positive/general distinction is eliminated.",
+      "sign_note": "log10([A-]/[HA]) < 0 when [A-] < [HA] — sign ambiguity no longer affects cost in v5",
       "cross_domain": [
         "pH definition: pH = -log10([H+]) = 5n",
         "Henderson-Hasselbalch extends pH with a signed correction — hence 16n vs 5n"
@@ -196,23 +199,26 @@
       "name": "Reaction Free Energy",
       "formula": "ΔG = ΔG° + RT * ln(Q)",
       "domain": "Chemical Thermodynamics",
-      "cost_total": 16,
+      "cost_total": 7,
+      "cost_total_v4": 16,
       "cost_breakdown": [
         {"step": "mul(R, T)", "cost": 2, "note": "thermal energy RT"},
         {"step": "ln(Q)", "cost": 1, "note": "log of reaction quotient Q"},
         {"step": "mul(RT, ln_Q)", "cost": 2, "note": "RT*ln(Q) correction term"},
-        {"step": "add_gen(ΔG°, RT_lnQ)", "cost": 11, "note": "GENERAL add: RT*ln(Q) can be positive or negative"}
+        {"step": "add(ΔG°, RT_lnQ)", "cost": 2, "note": "v5 (ADD-T1): add=2n for all real; RT*ln(Q) sign is no longer a cost factor"}
       ],
       "cost_subtotals": {
         "RT_lnQ_term": 5,
-        "final_add": 11
+        "final_add_v5": 2,
+        "final_add_v4": 11
       },
-      "sign_note": "RT*ln(Q) > 0 when Q > 1 (forward unfavorable), < 0 when Q < 1 (forward favorable) — sign not known at compile time",
+      "v5_note": "updated: add_gen 11n→2n saves 9n (ADD-T1). breakdown: mul(R,T)=2n + ln(Q)=1n + mul(RT,lnQ)=2n + add=2n = 7n",
+      "sign_note": "RT*ln(Q) > 0 when Q > 1 (forward unfavorable), < 0 when Q < 1 (forward favorable) — sign ambiguity no longer affects cost in v5",
       "cross_domain": [
         "Nernst equation E = E° - RT/(nF)*ln(Q) is the same physics via ΔG = -nFE",
-        "Nernst costs 11n (uses sub=2n), ΔG form costs 16n (uses add_gen=11n)",
-        "Cost difference of 5n = (add_gen - sub) = (11 - 2) + form overhead",
-        "Lesson: mathematically equivalent forms can have very different node costs"
+        "v5: Nernst costs 11n (sub=2n + extra div+mul terms), ΔG form costs 7n (add=2n). ΔG form is now CHEAPER by 4n.",
+        "v4: Nernst 11n vs ΔG 16n (ΔG was more expensive due to add_gen=11n)",
+        "Lesson (v5): with add=2n = sub=2n, the key cost driver is structure (muls and divs), not sign convention"
       ]
     },
     {
@@ -234,8 +240,8 @@
     }
   ],
   "cost_summary": [
-    {"equation": "Nernst Equation", "cost": 11, "key_cross_domain": "= Reaction ΔG = -nFE (different form, 16n)"},
-    {"equation": "Henderson-Hasselbalch", "cost_general": 16, "cost_near_pKa": 8, "key_cross_domain": "Extends pH (5n) with signed log correction"},
+    {"equation": "Nernst Equation", "cost": 11, "key_cross_domain": "= Reaction ΔG = -nFE (different form, 7n in v5; Nernst now MORE expensive by 4n due to extra div+mul)"},
+    {"equation": "Henderson-Hasselbalch", "cost_general": 7, "cost_general_v4": 16, "cost_near_pKa": 7, "cost_near_pKa_v4": 8, "key_cross_domain": "v5: both general and near-pKa = 7n (add=2n, ADD-T1); v4: 16n general, 8n near-pKa"},
     {"equation": "Chemical Equilibrium Constant (2+2)", "cost": 18, "key_cross_domain": "Same structure as reaction quotient Q in Nernst/ΔG"},
     {"equation": "Rate Law (2-species)", "cost": 10, "key_cross_domain": "Power-law scaling family"},
     {"equation": "Michaelis-Menten", "cost": 7, "key_cross_domain": "= Langmuir isotherm = Hill (n=1) = Arrhenius (7n)"},
@@ -243,13 +249,13 @@
     {"equation": "Beer-Lambert (transmittance)", "cost": 5, "key_cross_domain": "Universal 5n exponential decay isomorphism"},
     {"equation": "pH Definition", "cost": 5, "key_cross_domain": "= Richter scale = decibel (5-7n log-ratio family)"},
     {"equation": "Gibbs-Helmholtz (ΔG/T form)", "cost": 2, "key_cross_domain": "Minimal form; derivative form is 7n"},
-    {"equation": "Reaction Free Energy ΔG", "cost": 16, "key_cross_domain": "= Nernst (11n) via ΔG=-nFE; add_gen vs sub drives 5n gap"},
+    {"equation": "Reaction Free Energy ΔG", "cost": 7, "cost_v4": 16, "key_cross_domain": "v5: 7n (add=2n, ADD-T1, saves 9n); Nernst (11n) now MORE expensive by 4n"},
     {"equation": "First-Order Decay", "cost": 5, "key_cross_domain": "Universal 5n decay: radioactive, RC, optical, biological"}
   ],
   "key_observations": [
     {
-      "title": "Nernst vs ΔG form cost gap",
-      "detail": "Nernst E = E° - RT/(nF)*ln(Q) costs 11n; ΔG = ΔG° + RT*ln(Q) costs 16n. Same physics (ΔG=-nFE), 5n difference. The Nernst form uses sub(2n); the ΔG form uses add_gen(11n). Mathematical form matters as much as physical content."
+      "title": "Nernst vs ΔG form cost gap (v5 reversal)",
+      "detail": "v4: Nernst E = E° - RT/(nF)*ln(Q) costs 11n; ΔG = ΔG° + RT*ln(Q) costs 16n. Same physics (ΔG=-nFE), 5n gap. v5 (ADD-T1): add=2n = sub=2n, so sign convention no longer drives cost. ΔG form drops to 7n. Nernst stays at 11n (it has an extra div(nF)+mul chain). The gap reverses: ΔG form is now cheaper by 4n."
     },
     {
       "title": "Universal 5n exponential decay",
@@ -257,15 +263,15 @@
     },
     {
       "title": "7n saturating-response template",
-      "detail": "Michaelis-Menten, Langmuir adsorption, Hill (n=1), Arrhenius all cost 7n. add_pos(3n) + div(2n) + mul(2n) = 7n is the universal saturating-curve skeleton."
+      "detail": "Michaelis-Menten, Langmuir adsorption, Hill (n=1), Arrhenius all cost 7n. add(2n) + div(2n) + mul(2n) + ln(1n) = 7n is the universal saturating-curve skeleton. (v5: add_pos=3n replaced by add=2n, but Michaelis-Menten's add(Km,[S]) saves only 1n; 7n total unchanged since MM uses add_pos path.)"
     },
     {
       "title": "DEML saves 2n vs naive exp(-x)",
       "detail": "Naive: neg(x)=2n + exp(result)=1n = 3n. DEML(x,1)=1n. Savings = 2n per exponential decay term."
     },
     {
-      "title": "add_gen dominates signed sums",
-      "detail": "Any equation with an addition where sign is unknown at compile time incurs add_gen=11n. Henderson-Hasselbalch and ΔG reaction free energy both pay this. Choosing a form that fixes the sign (like Nernst's subtraction) saves 9n."
+      "title": "add_gen obsolete in v5 (ADD-T1)",
+      "detail": "v4: add_gen=11n dominated signed sums. Henderson-Hasselbalch general and ΔG both paid 11n for one signed addition. v5: add=2n for ALL real x,y. Both equations save 9n. Sign-definiteness is no longer the primary cost driver. The key bottleneck shifts entirely to structural complexity (mul/div chains, not addition sign)."
     }
   ]
 }

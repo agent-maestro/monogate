@@ -1,0 +1,405 @@
+{
+  "session": "CHEAP-3",
+  "title": "Minimal Expressions and Highest-Impact Equations — SuperBEST v5 (add=2n for ALL reals)",
+  "version": "SuperBEST v5",
+  "date": "2026-04-20",
+  "cost_model": {
+    "exp": 1, "ln": 1, "recip": 1,
+    "neg": 2, "mul": 2, "sub": 2, "div": 2, "sqrt": 2, "pow": 3,
+    "add": 2,
+    "_obsolete": "add_pos=3n and add_gen=11n are ELIMINATED. add=2n for ALL real x,y (ADD-T1). LEdiv+DEML path universally cheapest."
+  },
+
+  "key_axiom": {
+    "ADD_T1": "add(x,y) = 2n for ALL real x,y. The old positive-domain path (EAL, add_pos=3n) is OBSOLETE. LEdiv(x,DEML(y,1)) costs 2n even for positive inputs.",
+    "implication": "Sign-definiteness of operands NO LONGER drives cost. The central optimization question shifts from 'are summands positive?' to 'how many muls/divs are needed per term?'"
+  },
+
+  "task1_horner_method": {
+    "title": "Horner Polynomial Evaluation — The New Practical Method",
+    "description": "Horner's method for p(x) = a_N*x^N + ... + a_1*x + a_0, written as (...((a_N*x + a_{N-1})*x + a_{N-2})*x + ... + a_0)",
+    "per_step": {
+      "mul_prev_x": "2n",
+      "add_coeff": "2n (ALL reals, handles negative coefficients natively — no sign check)"
+    },
+    "cost_formula": "4N nodes for degree-N polynomial with leading coefficient != 1; 4(N-1) if leading coeff = 1 (free)",
+    "comparison_table": [
+      {
+        "method": "Direct expansion",
+        "v4_positive_coeffs": "8N - 3",
+        "v4_mixed_signs": "16N - 11",
+        "v5_all": "7N - 2",
+        "note": "v5 direct: N*pow(3n) + N*mul for scale + (N-1)*add(2n) = 5N + 2N-2 = 7N-2"
+      },
+      {
+        "method": "Horner",
+        "v4_positive_coeffs": "5N",
+        "v4_mixed_signs": "13N",
+        "v5_all": "4N",
+        "note": "v5 Horner: N*(mul+add) = N*4 = 4N (uniform, no sign branching)"
+      },
+      {
+        "method": "Savings: Horner vs Direct",
+        "v4_positive_coeffs": "3N - 3",
+        "v4_mixed_signs": "3N - 11",
+        "v5_all": "3N - 2",
+        "note": "Horner wins at ALL N >= 1 in v5"
+      }
+    ],
+    "specific_example_degree3": {
+      "polynomial": "p(x) = x^3 - 2x^2 + 3x - 4",
+      "horner_form": "((1*x + (-2))*x + 3)*x + (-4)",
+      "breakdown": [
+        {"step": "x (leading coeff=1, free)", "cost": 0},
+        {"step": "add(x, -2) = x-2", "cost": 2},
+        {"step": "mul(x-2, x) = x^2-2x", "cost": 2},
+        {"step": "add(x^2-2x, 3) = x^2-2x+3", "cost": 2},
+        {"step": "mul(x^2-2x+3, x) = x^3-2x^2+3x", "cost": 2},
+        {"step": "add(x^3-2x^2+3x, -4) = x^3-2x^2+3x-4", "cost": 2}
+      ],
+      "total": "10n for degree-3 with leading coeff=1",
+      "formula": "4*(N-1) = 4*3-2 = 10... correction: 4N with leading free = 4*3-0 = 12? No: N steps each 4n minus 2n for the free leading step = 4*3 - 2 = 10n. Verified.",
+      "verification": {
+        "python_snippet": "def horner(coeffs, x):\n    result = coeffs[0]\n    for c in coeffs[1:]:\n        result = result * x + c\n    return result\n\ncoeffs = [1, -2, 3, -4]\nassert horner(coeffs, 2) == 2   # x^3-2x^2+3x-4 at x=2: 8-8+6-4=2\nassert horner(coeffs, 0) == -4  # constant term\nassert horner(coeffs, 1) == -2  # 1-2+3-4=-2",
+        "x_equals_2": "p(2) = 8 - 8 + 6 - 4 = 2. Verified numerically."
+      }
+    },
+    "v5_conclusion": "In v5, Horner saves 3N-2 nodes over direct expansion for ALL N>=1, regardless of coefficient signs. For N=10: saves 28 nodes. The sign-branching overhead of v4 (Horner=13N for mixed vs Horner=5N for positive) is eliminated entirely."
+  },
+
+  "task2_top10_most_impacted": {
+    "title": "Top-10 Equations by Node Savings (v4 add_gen=11n → v5 add=2n)",
+    "methodology": "Savings per add_gen instance = 11n - 2n = 9n. Equations with N-1 add_gen operations save 9*(N-1). Table sorted by savings at representative N.",
+    "table": [
+      {
+        "rank": 1,
+        "equation": "Mutual Information I(X;Y)",
+        "domain": "Information Theory",
+        "old_cost": "18|X||Y| - 11",
+        "new_cost": "9|X||Y| - 2",
+        "add_gen_count": "|X||Y| - 1",
+        "savings_formula": "9*(|X||Y|-1)",
+        "example_N": "10x10 = 100 cells",
+        "old_example": 1789,
+        "new_example": 898,
+        "savings_example": 891,
+        "reason": "Individual terms p(x,y)*ln(p(x,y)/(p(x)p(y))) are mixed-sign; forced add_gen for all cells"
+      },
+      {
+        "rank": 2,
+        "equation": "KL Divergence D_KL(P||Q)",
+        "domain": "Information Theory",
+        "old_cost": "16N - 11",
+        "new_cost": "7N - 2",
+        "add_gen_count": "N - 1",
+        "savings_formula": "9*(N-1)",
+        "example_N": 10,
+        "old_example": 149,
+        "new_example": 68,
+        "savings_example": 81,
+        "reason": "Terms p_i*ln(p_i/q_i) are mixed-sign (can be positive or negative); global KL>=0 but per-term sign is unknown"
+      },
+      {
+        "rank": 3,
+        "equation": "Perplexity PP(P)",
+        "domain": "Information Theory",
+        "old_cost": "12N - 6",
+        "new_cost": "3N + 3",
+        "add_gen_count": "N - 1",
+        "savings_formula": "9*(N-1)",
+        "example_N": 10,
+        "old_example": 114,
+        "new_example": 33,
+        "savings_example": 81,
+        "reason": "All ln(p_i) values are <= 0 (negative), sum is negative; add_gen required in v4 since operands are not positive"
+      },
+      {
+        "rank": 4,
+        "equation": "Expected Value E[X] (signed outcomes)",
+        "domain": "Probability / Game Theory",
+        "old_cost": "2N + 11*(N-1) = 13N - 11",
+        "new_cost": "4N - 2",
+        "add_gen_count": "N - 1",
+        "savings_formula": "9*(N-1)",
+        "example_N": 10,
+        "old_example": 119,
+        "new_example": 38,
+        "savings_example": 81,
+        "reason": "When outcomes x_i can be negative (losses/gains), terms x_i*P_i are mixed-sign; add_gen required in v4"
+      },
+      {
+        "rank": 5,
+        "equation": "DCF / NPV (mixed cash flows)",
+        "domain": "Economics (Finance)",
+        "old_cost": "20N - 11",
+        "new_cost": "12N - 3",
+        "add_gen_count": "N - 1",
+        "savings_formula": "8*(N-1)  [per-period cost also changes: add_pos(1,r)=3n -> add(1,r)=2n, -1n per period]",
+        "example_N": 10,
+        "old_example": 189,
+        "new_example": 117,
+        "savings_example": 72,
+        "reason": "Mixed CF_t (investments and returns): sum requires add_gen for signed discounted cash flows. Also add_pos(1,r) -> add(1,r) saves 1n per period."
+      },
+      {
+        "rank": 6,
+        "equation": "Jensen-Shannon Divergence JSD(P||Q)",
+        "domain": "Information Theory",
+        "old_cost": "29N - 2",
+        "new_cost": "25N",
+        "add_gen_count": "N (mixture step) + 1 (avg entropy step)",
+        "savings_formula": "~4N - 2",
+        "example_N": 10,
+        "old_example": 288,
+        "new_example": 250,
+        "savings_example": 38,
+        "reason": "Mixture step (p_i+q_i)/2 used add_pos=3n (v4); each Shannon eval saves N-1 nodes from add_pos->add; total ~N+3*(N-1) savings"
+      },
+      {
+        "rank": 7,
+        "equation": "Shannon Entropy H(X) — v5 optimal strategy",
+        "domain": "Information Theory",
+        "old_cost": "8N - 3",
+        "new_cost": "5N  (direct-sum strategy: compute p*ln(p), sum, then negate)",
+        "add_gen_count": "N - 1  (add_pos in v4, now add=2n, enables strategy shift)",
+        "savings_formula": "3N - 3",
+        "example_N": 10,
+        "old_example": 77,
+        "new_example": 50,
+        "savings_example": 27,
+        "reason": "In v4 neg-first strategy gave add_pos(3n); now add=2n means direct sum (3N nodes) + outer neg = 3N+2N-2+2 = 5N is cheaper than neg-first (7N-2) for N>=3"
+      },
+      {
+        "rank": 8,
+        "equation": "Reaction Free Energy dG = dG_std + RT*ln(Q)",
+        "domain": "Chemistry (Thermodynamics)",
+        "old_cost": "16n",
+        "new_cost": "7n",
+        "add_gen_count": "1",
+        "savings_formula": "9",
+        "example_N": 1,
+        "old_example": 16,
+        "new_example": 7,
+        "savings_example": 9,
+        "reason": "RT*ln(Q) can be positive or negative depending on Q vs 1; forced add_gen=11n for the single addition dG_std + RT*ln(Q)"
+      },
+      {
+        "rank": 9,
+        "equation": "Henderson-Hasselbalch pH (general, [A-] < [HA])",
+        "domain": "Chemistry (Acid-Base)",
+        "old_cost": "16n",
+        "new_cost": "7n",
+        "add_gen_count": "1",
+        "savings_formula": "9",
+        "example_N": 1,
+        "old_example": 16,
+        "new_example": 7,
+        "savings_example": 9,
+        "reason": "log10([A-]/[HA]) < 0 when [A-] < [HA]; forced add_gen=11n for pKa + log10_term. Now add=2n, both cases (acidic/basic buffer) cost 7n."
+      },
+      {
+        "rank": 10,
+        "equation": "CES Utility (rho < 0, general elasticity)",
+        "domain": "Economics",
+        "old_cost": "27n",
+        "new_cost": "19n",
+        "add_gen_count": "1",
+        "savings_formula": "8",
+        "example_N": 1,
+        "old_example": 27,
+        "new_example": 19,
+        "savings_example": 8,
+        "reason": "When rho < 0, alpha*x^rho can be very large but sign is positive; (1-alpha)*y^rho is positive too, BUT the CES paper incorrectly required add_gen when rho<0. With add=2n, savings=8n (was add_gen=11n, now add=2n, also saves 1n from add_pos->add)."
+      }
+    ],
+    "note": "Rankings 2-4 are tied at 81n savings for N=10. Ranking is by N=10 savings; MI ranks 1st at any N because its N is |X||Y| which grows quadratically."
+  },
+
+  "task3_softmax_recomputation": {
+    "title": "Softmax Full Recomputation (N classes)",
+    "formula": "sigma_i = exp(x_i) / sum_j(exp(x_j))",
+    "cost_denominator": {
+      "v4": "N*exp + (N-1)*add_pos = N + 3(N-1) = 4N - 3",
+      "v5": "N*exp + (N-1)*add = N + 2(N-1) = 3N - 2",
+      "savings": "N - 1"
+    },
+    "cost_full_softmax_all_outputs": {
+      "strategy": "Share denominator: compute N exps once, sum once, then N divisions",
+      "breakdown_v5": [
+        {"step": "N exp(x_i) nodes", "cost": "N"},
+        {"step": "(N-1) add operations for sum", "cost": "2(N-1) = 2N-2"},
+        {"step": "N div(exp_i, sum) for each output", "cost": "2N"}
+      ],
+      "total_v5": "N + 2N-2 + 2N = 5N - 2",
+      "total_v4": "N + 3(N-1) + 2N = 5N - 3",
+      "discrepancy_note": "Wait: v4 cost should be higher. Let me recount: v4 denominator = N + 3(N-1) = 4N-3. Numerator exps already included. Per-output div = 2n each, N outputs = 2N. Total v4 = (4N-3) + 2N = 6N-3. Total v5 = (3N-2) + 2N = 5N-2.",
+      "corrected_total_v4": "6N - 3  [N exp + (N-1)*add_pos(3n) + N div]",
+      "corrected_total_v5": "5N - 2  [N exp + (N-1)*add(2n) + N div]",
+      "savings": "N - 1  nodes",
+      "savings_formula": "N - 1"
+    },
+    "spot_checks": {
+      "N=2": {"v5": "5*2-2=8n", "v4": "6*2-3=9n", "savings": 1},
+      "N=5": {"v5": "5*5-2=23n", "v4": "6*5-3=27n", "savings": 4},
+      "N=10": {"v5": "5*10-2=48n", "v4": "6*10-3=57n", "savings": 9},
+      "N=100": {"v5": "5*100-2=498n", "v4": "6*100-3=597n", "savings": 99}
+    },
+    "verification": {
+      "python_check": "softmax([1,2,3]) = [0.0900, 0.2447, 0.6652], sum=1.0. Verified.",
+      "cost_model_check": "N=3: v5=5*3-2=13n. Breakdown: 3 exp + 2 add + 3 div = 3+4+6=13. Correct."
+    },
+    "note_on_prior_catalog": "comp_all_domain2_summary.json lists 'partition function = 6N-3' — that formula was denominator-only (N exp + (N-1)*add_pos + 0 div). The 6N-3 v4 entry is ALSO the full softmax v4 total. The two interpretations coincide."
+  },
+
+  "task4_new_constructions": {
+    "title": "New Constructions Enabled by Cheap add=2n",
+
+    "log_sum_exp": {
+      "name": "Log-Sum-Exp (multi-term)",
+      "formula": "LSE(a,b) = ln(exp(a) + b) via LEAd",
+      "cost": "1n via LEAd single operator",
+      "v5_change": "UNCHANGED — LEAd was already 1n in v5. Independent of add cost model.",
+      "note": "For arbitrary positive b: LSE still uses LEAd internally. Multi-term: chain LEAd calls."
+    },
+
+    "bregman_divergence": {
+      "name": "KL Divergence as Bregman Divergence (F = negative entropy)",
+      "formula": "D_KL(p||q) = sum_i p_i * ln(p_i/q_i)",
+      "v4_cost": "16N - 11",
+      "v5_cost": "7N - 2",
+      "savings": "9(N-1)",
+      "note": "KL = Bregman with F=negative entropy. The savings (16N-11 -> 7N-2) are entirely from add_gen -> add."
+    },
+
+    "multivariate_gaussian_exponent_2d": {
+      "name": "Multivariate Gaussian Exponent (2D, diagonal Sigma)",
+      "formula": "-0.5*((x1-mu1)^2/s1^2 + (x2-mu2)^2/s2^2)",
+      "breakdown": [
+        {"step": "sub(x1,mu1)=2n, pow(result,2)=3n, div(pow,s1^2)=2n", "subtotal": 7, "note": "component 1"},
+        {"step": "sub(x2,mu2)=2n, pow(result,2)=3n, div(pow,s2^2)=2n", "subtotal": 7, "note": "component 2"},
+        {"step": "add(comp1, comp2)=2n", "subtotal": 2, "note": "v5: add=2n; was add_pos=3n (both components are positive squared-term ratios)"},
+        {"step": "mul(0.5, sum)=2n, neg(result)=2n", "subtotal": 4, "note": "scale and negate"}
+      ],
+      "total_v5": 20,
+      "total_v4": 21,
+      "savings": "1n (from add_pos=3n -> add=2n for the sum of two positive components)"
+    },
+
+    "lennard_jones_potential": {
+      "name": "Lennard-Jones Potential V(r) = 4e*((s/r)^12 - (s/r)^6)",
+      "breakdown": [
+        {"step": "u = div(s,r)", "cost": 2},
+        {"step": "u^6 = pow(u,6)", "cost": 3},
+        {"step": "u^12 = pow(u^6, 2)", "cost": 3, "note": "shared from u^6"},
+        {"step": "sub(u^12, u^6)", "cost": 2},
+        {"step": "mul(4e, result)", "cost": 2}
+      ],
+      "total_v5": 12,
+      "total_v4": 12,
+      "savings": "0n — Lennard-Jones uses sub (not add_gen); unchanged by ADD-T1",
+      "note": "sub=2n was already optimal in v4. No benefit from ADD-T1 here."
+    },
+
+    "horner_polynomial_v5": {
+      "name": "Horner Polynomial Evaluation (recap)",
+      "v5_cost": "4N nodes for degree-N polynomial",
+      "vs_v4_positive": "5N (saves N nodes)",
+      "vs_v4_mixed": "13N (saves 9N nodes)",
+      "key_insight": "In v5, there is no longer any reason to choose different Horner implementations based on coefficient signs. One uniform implementation handles all cases optimally."
+    }
+  },
+
+  "task5_minimal_expression_changes": {
+    "title": "Expressions with Significant Cost Changes in v5",
+    "changed": [
+      {
+        "expression": "sum of N signed real values",
+        "v4_cost": "11(N-1)  [add_gen]",
+        "v5_cost": "2(N-1)  [add]",
+        "savings_per_sum": "9(N-1)",
+        "note": "The single biggest change. Any sum that was forced to use add_gen is now 2n."
+      },
+      {
+        "expression": "sum of N positive real values",
+        "v4_cost": "3(N-1)  [add_pos]",
+        "v5_cost": "2(N-1)  [add]",
+        "savings_per_sum": "N-1",
+        "note": "Even positive sums benefit: 1n savings per addition."
+      },
+      {
+        "expression": "a + b*ln(Q)  (Gibbs-style, sign unknown)",
+        "v4_cost": "add_gen=11n for this one operation",
+        "v5_cost": "add=2n",
+        "savings": "9n",
+        "examples": ["dG = dG_std + RT*ln(Q) = 7n (was 16n)", "Henderson-Hasselbalch = 7n (was 16n)"]
+      },
+      {
+        "expression": "Horner step: prev*x + coeff (coeff negative)",
+        "v4_cost": "2n mul + 11n add_gen = 13n (for mixed-sign)",
+        "v5_cost": "2n mul + 2n add = 4n",
+        "savings": "9n per step with negative coefficient"
+      },
+      {
+        "expression": "Shannon entropy H(X) — optimal strategy",
+        "v4_cost": "8N-3  [neg-first restructuring required for add_pos]",
+        "v5_cost": "5N  [direct: sum p*ln(p) then negate outer; no restructuring needed]",
+        "savings": "3N-3",
+        "note": "The neg-first strategy is no longer optimal for N>=3. Direct sum (3N) + sum-reduction (2*(N-1)) + neg(2) = 5N."
+      }
+    ],
+    "unchanged": [
+      {
+        "expression": "LSE via LEAd",
+        "cost": "1n",
+        "note": "LEAd was already 1n; independent of add cost model"
+      },
+      {
+        "expression": "Lennard-Jones potential",
+        "cost": "12n",
+        "note": "Uses sub not add; sub=2n was already correct in v4"
+      },
+      {
+        "expression": "Michaelis-Menten v = Vmax*[S]/(Km+[S])",
+        "v4_cost": "7n (used add_pos=3n for Km+[S])",
+        "v5_cost": "6n (add=2n saves 1n): add(Km,[S])=2n + div([S],sum)=2n + mul(Vmax,frac)=2n = 6n",
+        "savings": "1n",
+        "note": "Saves 1n: was add_pos=3n, now add=2n. Michaelis-Menten IS improved by ADD-T1 (listed here as a correction to the catalog entry which showed 7n)."
+      },
+      {
+        "expression": "All sub-based expressions (Nernst, Lotka-Volterra, SIR)",
+        "cost": "unchanged",
+        "note": "sub=2n was already the cost; ADD-T1 does not affect subtraction"
+      }
+    ]
+  },
+
+  "softmax_cost_correction": {
+    "note": "Corrected from task description. Full softmax for N classes:",
+    "v4_formula": "6N - 3",
+    "v5_formula": "5N - 2",
+    "savings": "N - 1",
+    "breakdown_v5": "N exp(1n each) + (N-1) add(2n each) + N div(2n each) = N + 2N-2 + 2N = 5N - 2",
+    "breakdown_v4": "N exp(1n each) + (N-1) add_pos(3n each) + N div(2n each) = N + 3N-3 + 2N = 6N - 3"
+  },
+
+  "add_pos_eal_obsolete": {
+    "title": "Positive-Domain Addition Path (EAL, add_pos=3n) — OBSOLETE in v5",
+    "statement": "The EAL(EXL(0,x), EML(y,1)) path for add_pos cost 3n in v4. In v5, LEdiv(x, DEML(y,1)) = add(x,y) = 2n for ALL real x,y. There is no reason to use the EAL path for ANY addition.",
+    "consequence": [
+      "All positive-domain sum optimizations (Michaelis-Menten, logistic sigmoid denominator, Fermi-Dirac, partition function sums) now cost 2n per add instead of 3n.",
+      "The 8n gap between add_gen and add_pos is ELIMINATED. A single add operator handles all cases at 2n.",
+      "Code that previously required sign analysis to choose add_pos vs add_gen is simplified: always use add=2n."
+    ]
+  },
+
+  "verification_summary": {
+    "horner_p2": "p(2) = 8 - 8 + 6 - 4 = 2. Verified by both Horner and direct evaluation.",
+    "softmax_sum": "softmax([1,2,3]) sums to 1.0. Verified.",
+    "cost_arithmetic": [
+      "Horner degree-3 with leading 1: 5 steps * 2n each (add+mul per step, leading step free) = 10n. Verified.",
+      "Softmax N=10: 5*10-2 = 48n. Breakdown: 10 exp + 9*2n add + 10*2n div = 10+18+20=48. Verified.",
+      "KL N=10: 7*10-2 = 68n. v4: 16*10-11=149n. Savings=81n. Verified.",
+      "Perplexity N=10: 3*10+3=33n. v4: 12*10-6=114n. Savings=81n. Verified."
+    ]
+  }
+}

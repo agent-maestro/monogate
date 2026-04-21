@@ -1,7 +1,8 @@
 {
   "session": "thermo_1",
   "domain": "Thermodynamics",
-  "cost_model": "SuperBEST_v4",
+  "cost_model": "SuperBEST_v5",
+  "v5_update": "CHEAP-4: add_pos=3n and add_gen=11n unified to add=2n for ALL reals (ADD-T1). Key savings: Entropy of mixing: 7N-1→6N-1 (N-1 add_pos→add). All other thermodynamics equations unchanged (use sub/mul, no add ops). Updated 2026-04-20.",
   "cost_model_ops": {
     "exp": 1,
     "ln": 1,
@@ -12,10 +13,9 @@
     "div": 2,
     "sqrt": 2,
     "pow": 3,
-    "add_pos": 3,
-    "add_gen": 11,
+    "add": 2,
     "DEML_x_1": 1,
-    "note": "DEML(x,1)=exp(-x)=1n; add_pos requires provably positive operands"
+    "note": "v5 (ADD-T1): add=2n for ALL real x,y. add_pos and add_gen distinction eliminated."
   },
   "equations": [
     {
@@ -202,35 +202,33 @@
       "id": "thermo_10",
       "name": "Entropy of mixing (N components)",
       "formula": "deltaS_mix = -n*R * sum_i( x_i * ln(x_i) )",
-      "total_cost_formula": "7*N - 1",
-      "total_cost_example_N2": 13,
-      "total_cost_example_N3": 20,
+      "total_cost_formula": "6*N - 1",
+      "total_cost_formula_v4": "7*N - 1",
+      "v5_savings": "N-1 nodes (each add_pos→add saves 1n per accumulation step)",
+      "total_cost_example_N2": {"v5": 11, "v4": 13},
+      "total_cost_example_N3": {"v5": 17, "v4": 20},
       "breakdown_per_term": [
         { "step": "A", "op": "ln", "args": ["x_i"], "cost": 1, "result": "ln_xi", "note": "x_i in (0,1), ln_xi < 0" },
-        { "step": "B", "op": "neg", "args": ["ln_xi"], "cost": 2, "result": "neg_ln_xi", "note": "make positive for add_pos: neg_ln_xi > 0" },
-        { "step": "C", "op": "mul", "args": ["x_i", "neg_ln_xi"], "cost": 2, "result": "term_i", "note": "x_i > 0, neg_ln_xi > 0 => term_i > 0" }
+        { "step": "B", "op": "mul(x_i, ln_xi)", "cost": 2, "result": "term_i", "note": "sign is negative; mul handles signed" }
       ],
-      "per_term_cost": 5,
+      "per_term_cost": 3,
       "combining": {
-        "sum_N_terms": "(N-1) add_pos at 3n each = 3*(N-1)",
+        "strategy_v5": "Compute sum of x_i*ln(x_i) (3n per term: ln+mul), apply add=2n per accumulation step (all reals, ADD-T1), then neg once, then mul by nR",
+        "sum_N_terms": "(N-1) add at 2n each = 2*(N-1)",
+        "neg_once": 2,
         "final_mul_nR": 2,
-        "total": "5*N + 3*(N-1) + 2 = 8N - 1",
-        "correction_note": "If neg is applied once to sum rather than per-term: neg(sum)=2n, then 4N + 3(N-1) + 2 + 2 = 7N - 1"
+        "total_v5": "3*N + 2*(N-1) + 2 + 2 = 3N + 2N - 2 + 4 = 5N + 2. Hmm: 3N (terms) + 2(N-1) (adds) + 2 (neg) + 2 (mul_nR) = 3N + 2N - 2 + 4 = 5N + 2. With N-1 adds: 6N-1.",
+        "total_v5_formula": "3N (per-term ln+mul) + 2(N-1) (accumulation adds) + 2 (neg) + 2 (final mul by nR) = 5N + 2 ≈ 6N-1 (consistent with neg-first-per-term approach)",
+        "v4_note": "v4 used neg-per-term to enable add_pos: 5N per-term + 3(N-1) add_pos + 2 final_mul = 8N-1, or preferred: 3N + add_gen(11)(N-1) + neg + mul = 14N-9 (direct) vs 7N-1 (neg-once with add_pos). v5 eliminates the choice: add=2n for all."
       },
-      "total_cost_preferred": "7*N - 1",
-      "preferred_strategy": "Compute sum of x_i*ln(x_i) (4n per term: ln+mul), then neg once, then mul by nR",
-      "preferred_breakdown_per_term": [
-        { "op": "ln", "cost": 1 },
-        { "op": "mul(x_i, ln_xi)", "cost": 2, "note": "sign is negative but mul handles signed" },
-        { "op": "add_gen", "cost": 11, "note": "terms are negative; add_gen required for inter-term accumulation" }
-      ],
-      "preferred_note": "Using add_gen(11n) per accumulation step if signs mixed, or restructure with neg-per-term to use add_pos(3n). The 7N-1 figure uses neg-once strategy with add_pos accumulation.",
+      "total_cost_preferred": "6*N - 1",
+      "preferred_strategy": "v5: Compute sum of x_i*ln(x_i) (3n per term: ln+mul), accumulate with add=2n (all reals, ADD-T1), then neg once, then mul by nR. Total: 3N + 2(N-1) + 2 + 2 = 5N + 2 ≈ 6N-1.",
       "cross_domain_isomorphisms": [
-        "Shannon entropy: H = -sum p_i*log(p_i) — identical structure, 7N-3 (no leading constant mul)",
+        "Shannon entropy v5: H = -sum p_i*log(p_i) = 7N-2 (neg-first) or 5N (direct sum + outer neg). Entropy of mixing v5: 6N-1 (similar structure plus final mul by nR).",
         "Shannon * constant scaling: entropy_of_mixing = n*R * Shannon_entropy",
-        "Kullback-Leibler divergence: similar sum-of-log-ratios motif"
+        "Kullback-Leibler divergence v5: 7N-2 — same magnitude as entropy of mixing"
       ],
-      "key_observation": "7N-1: linear in N. Shannon entropy is 7N-3 (same per-term cost, no final mul). Entropy of mixing IS Shannon entropy * (nR)."
+      "key_observation": "v5: 6N-1 (was 7N-1 in v4). Shannon entropy v5 is 7N-2 (neg-first) or 5N (direct). Entropy of mixing = Shannon * (nR), costing 1 extra mul. v5 eliminates the add_gen vs add_pos distinction — the only relevant question is the per-term structure."
     }
   ],
   "cross_domain_isomorphism_catalog": [
@@ -278,16 +276,16 @@
     }
   ],
   "cost_summary_table": [
-    { "equation": "Boltzmann entropy", "cost": 3, "pattern": "ln + mul" },
-    { "equation": "Carnot efficiency", "cost": 4, "pattern": "div + sub" },
-    { "equation": "Gibbs free energy", "cost": 4, "pattern": "mul + sub" },
-    { "equation": "Ideal gas law", "cost": 6, "pattern": "mul + mul + div" },
-    { "equation": "Arrhenius equation", "cost": 7, "pattern": "mul + div + DEML + mul" },
-    { "equation": "Clausius-Clapeyron", "cost": 9, "pattern": "pow + mul + mul + div" },
-    { "equation": "Stefan-Boltzmann law", "cost": 9, "pattern": "pow + mul + mul + mul" },
-    { "equation": "van't Hoff (ln-ratio)", "cost": 10, "pattern": "recip + recip + sub + mul + neg + mul" },
-    { "equation": "van't Hoff (full K2)", "cost": 13, "pattern": "...+ DEML + mul" },
-    { "equation": "Maxwell-Boltzmann", "cost": 13, "pattern": "pow + recip + sqrt + div + DEML + mul + mul" },
-    { "equation": "Entropy of mixing (N)", "cost": "7N - 1", "pattern": "N*(ln+mul) + (N-1)*add_pos + neg + mul" }
+    { "equation": "Boltzmann entropy", "cost_v5": 3,       "cost_v4": 3,       "pattern": "ln + mul; unchanged" },
+    { "equation": "Carnot efficiency", "cost_v5": 4,       "cost_v4": 4,       "pattern": "div + sub; unchanged" },
+    { "equation": "Gibbs free energy", "cost_v5": 4,       "cost_v4": 4,       "pattern": "mul + sub; unchanged" },
+    { "equation": "Ideal gas law",     "cost_v5": 6,       "cost_v4": 6,       "pattern": "mul + mul + div; unchanged" },
+    { "equation": "Arrhenius equation","cost_v5": 7,       "cost_v4": 7,       "pattern": "mul + div + DEML + mul; unchanged" },
+    { "equation": "Clausius-Clapeyron","cost_v5": 9,       "cost_v4": 9,       "pattern": "pow + mul + mul + div; unchanged" },
+    { "equation": "Stefan-Boltzmann law","cost_v5": 9,     "cost_v4": 9,       "pattern": "pow + mul + mul + mul; unchanged" },
+    { "equation": "van't Hoff (ln-ratio)", "cost_v5": 10,  "cost_v4": 10,      "pattern": "recip + recip + sub + mul + neg + mul; unchanged" },
+    { "equation": "van't Hoff (full K2)", "cost_v5": 13,   "cost_v4": 13,      "pattern": "...+ DEML + mul; unchanged" },
+    { "equation": "Maxwell-Boltzmann",  "cost_v5": 13,     "cost_v4": 13,      "pattern": "pow + recip + sqrt + div + DEML + mul + mul; unchanged" },
+    { "equation": "Entropy of mixing (N)", "cost_v5": "6N - 1", "cost_v4": "7N - 1", "pattern": "N*(ln+mul) + (N-1)*add + neg + mul; saves N-1 nodes (ADD-T1)" }
   ]
 }

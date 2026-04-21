@@ -1,12 +1,21 @@
-"""SuperBEST v3 cost predictor."""
+"""SuperBEST v5 cost predictor.
+
+v5 changes (ADD-T1, 2026-04-20):
+  - add=2n for ALL real x, y (LEdiv(x, DEML(y,1)) = x+y)
+  - add_gen: 11n → 2n (no domain restriction needed)
+  - add_pos: 3n → 2n (subsumed by unified add=2n)
+  - The positive/general-domain split is eliminated.
+  - Reference: ADD_T1_General_Addition_2n.tex, SuperBEST_v5_Structural_Audit.tex
+"""
 from __future__ import annotations
 
 UNIT: dict[str, int] = {
     'exp': 1, 'ln': 1, 'log': 1,
-    'neg': 2, 'recip': 2, 'mul': 2, 'sub': 2,
-    'div': 1, 'pow': 3,
-    'add': 3,       # positive domain default
-    'add_gen': 11,
+    'neg': 2, 'recip': 1, 'mul': 2, 'sub': 2,
+    'div': 2, 'pow': 3,
+    'add': 2,       # v5 (ADD-T1): add=2n for ALL reals (was add_pos=3n)
+    'add_pos': 2,   # legacy alias → same as add in v5
+    'add_gen': 2,   # legacy alias → same as add in v5 (was 11n in v4/v3)
 }
 
 # bonus = NaiveCost(pattern) - 1

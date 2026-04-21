@@ -1,8 +1,9 @@
 {
-  "session": "SuperBEST v4 — Biology & Epidemiology Cost Session",
+  "session": "SuperBEST v5 — Biology & Epidemiology Cost Session",
   "date": "2026-04-20",
+  "v5_update": "CHEAP-4: add_pos=3n and add_gen=11n unified to add=2n for ALL reals (ADD-T1). Updated 2026-04-20.",
   "cost_model": {
-    "version": "SuperBEST v4",
+    "version": "SuperBEST v5",
     "exp": "1n",
     "ln": "1n",
     "recip": "1n",
@@ -12,8 +13,7 @@
     "div": "2n",
     "sqrt": "2n",
     "pow": "3n",
-    "add_pos": "3n (provably positive operands)",
-    "add_gen": "11n (general/signed operands)",
+    "add": "2n (ALL reals, ADD-T1 — add_pos and add_gen distinction eliminated)",
     "DEML": "DEML(x,1) = exp(-x) = 1n"
   },
   "equations": [
@@ -27,16 +27,18 @@
         { "step": "mul(r, t)",              "cost": 2, "note": "exponent argument" },
         { "step": "DEML(rt, 1) = exp(-rt)", "cost": 1, "note": "negative exponential via DEML" },
         { "step": "mul(A, exp(-rt))",        "cost": 2, "note": "A precomputed, both factors positive" },
-        { "step": "add_pos(1, A·exp(-rt))", "cost": 3, "note": "denominator; both terms positive" },
+        { "step": "add(1, A·exp(-rt))",     "cost": 2, "note": "v5: add=2n for all reals (ADD-T1); was add_pos=3n" },
         { "step": "div(K, denominator)",    "cost": 2, "note": "K precomputed constant" }
       ],
-      "total_cost": 10,
+      "total_cost": 9,
+      "total_cost_v4": 10,
+      "v5_savings": "1n (add_pos 3n → add 2n)",
       "cross_domain": [
-        "Logistic function (ML sigmoid): σ(x) = 1/(1+exp(-x)) — 4n (DEML + add_pos + recip)",
+        "Logistic function (ML sigmoid): σ(x) = 1/(1+exp(-x)) — 4n (DEML + add + recip)",
         "Verhulst equation in ecology shares identical structure",
-        "Any 'saturation' S-curve: 10n canonical form"
+        "Any 'saturation' S-curve: 9n in v5 (was 10n in v4)"
       ],
-      "key_observation": "Logistic growth is 10n — the S-curve of nature, from tumor growth to epidemic saturation."
+      "key_observation": "Logistic growth is 9n in v5 (was 10n) — the S-curve of nature, from tumor growth to epidemic saturation."
     },
     {
       "id": "bio_02",
@@ -54,12 +56,14 @@
       ],
       "cost_per_compartment": { "dS_dt": 8, "dI_dt": 10, "dR_dt": 2 },
       "total_cost_per_timestep": 20,
+      "total_cost_v4": 20,
+      "v5_savings": "0n (SIR uses sub and neg ops, not add_gen; cost unchanged)",
       "sharing_note": "With sharing of βSI/N and γI across all three equations; standalone would be ~24n",
       "cross_domain": [
         "SEIR adds E compartment (~+6n per step)",
         "SIS (no recovery to R): 12n per step"
       ],
-      "key_observation": "SIR is 20n per step — cheap enough to run millions of timesteps; epidemic simulation is computationally tractable."
+      "key_observation": "SIR is 20n per step — same in v4 and v5 (no add_gen was used). Cheap enough to run millions of timesteps; epidemic simulation is computationally tractable."
     },
     {
       "id": "bio_03",
@@ -70,6 +74,8 @@
         { "step": "div(β, γ)", "cost": 2, "note": "single division" }
       ],
       "total_cost": 2,
+      "total_cost_v4": 2,
+      "v5_savings": "0n",
       "cross_domain": [
         "Any ratio of rates: 2n",
         "Signal-to-noise ratio, odds ratio in biostatistics — same 2n",
@@ -94,13 +100,15 @@
       ],
       "cost_per_equation": { "dN_dt": 8, "dP_dt": 8 },
       "total_cost_per_timestep": 16,
+      "total_cost_v4": 16,
+      "v5_savings": "0n (Lotka-Volterra uses sub ops, not add_gen; cost unchanged)",
       "sharing_note": "N and P values shared; βN and αN partially overlap if β=α, else independent",
       "cross_domain": [
         "Competitive exclusion (two-species): same bilinear structure",
         "Chemical kinetics (bimolecular reaction): A+B→C has same dA/dt form",
         "Bilinear interaction (NP term) is the signature: each equation 8n"
       ],
-      "key_observation": "Lotka-Volterra is 16n per step — two coupled 8n equations. Bilinear interaction (NP) is the structural signature."
+      "key_observation": "Lotka-Volterra is 16n per step — same in v4 and v5. Two coupled 8n equations. Bilinear interaction (NP) is the structural signature."
     },
     {
       "id": "bio_05",
@@ -113,6 +121,8 @@
         { "step": "mul(N₀, exp(rt))", "cost": 2, "note": "scale by initial population" }
       ],
       "total_cost": 5,
+      "total_cost_v4": 5,
+      "v5_savings": "0n",
       "cross_domain": [
         "Compound interest A = P·e^(rt): identical 5n",
         "Beer-Lambert transmission I = I₀·e^(-μx): 5n (DEML variant: mul+DEML+mul = 2+1+2)",
@@ -134,6 +144,8 @@
         { "step": "mul(K, outer_exp)",             "cost": 2, "note": "scale to carrying capacity" }
       ],
       "total_cost": 8,
+      "total_cost_v4": 8,
+      "v5_savings": "0n",
       "deml_chain_note": "Two chained DEML calls elegantly handle the double-exponential: DEML∘DEML(b(t-tm)) = exp(-exp(-b(t-tm)))",
       "cross_domain": [
         "Gumbel CDF (extreme value distribution): F(x) = exp(-exp(-(x-μ)/β)) — same 8n structure",
@@ -150,26 +162,30 @@
       "breakdown": [
         { "step": "pow(C, n)",               "cost": 3, "note": "concentration to Hill power" },
         { "step": "pow(EC50, n)",            "cost": 3, "note": "half-maximal concentration to Hill power" },
-        { "step": "add_pos(EC50_n, C_n)",    "cost": 3, "note": "denominator; both provably positive" },
+        { "step": "add(EC50_n, C_n)",        "cost": 2, "note": "v5: add=2n for all (ADD-T1); was add_pos=3n" },
         { "step": "div(C_n, denominator)",   "cost": 2, "note": "occupancy fraction" },
         { "step": "mul(E_max, fraction)",    "cost": 2, "note": "scale to maximum effect" }
       ],
-      "total_cost": 13,
+      "total_cost": 12,
+      "total_cost_v4": 13,
+      "v5_savings": "1n (add_pos 3n → add 2n)",
       "special_cases": {
         "n=1 (Michaelis-Menten)": {
           "formula": "v = V_max · [S] / (K_m + [S])",
-          "breakdown": "add_pos(Km, S)=3n + div(S, sum)=2n + mul(Vmax, frac)=2n = 7n",
-          "total_cost": 7,
+          "breakdown": "add(Km, S)=2n + div(S, sum)=2n + mul(Vmax, frac)=2n = 6n (v5); was 7n (v4)",
+          "total_cost": 6,
+          "total_cost_v4": 7,
+          "v5_savings": "1n",
           "note": "No pow needed when n=1"
         }
       },
       "cross_domain": [
-        "Michaelis-Menten enzyme kinetics (n=1): 7n",
-        "Pythagorean expectation (baseball): W% = RS^k/(RS^k+RA^k) — 11n (two pows + add_pos + div)",
-        "Langmuir adsorption isotherm (n=1): 7n",
-        "Any sigmoidal binding/saturation with cooperativity: 13n"
+        "Michaelis-Menten enzyme kinetics (n=1): 6n (v5), was 7n (v4)",
+        "Pythagorean expectation (baseball): W% = RS^k/(RS^k+RA^k) — 10n (v5: two pows + add + div)",
+        "Langmuir adsorption isotherm (n=1): 6n (v5)",
+        "Any sigmoidal binding/saturation with cooperativity: 12n (v5)"
       ],
-      "key_observation": "Hill equation is 13n; Michaelis-Menten (n=1) is only 7n — cooperativity (n>1) costs +6n via two pow operations."
+      "key_observation": "Hill equation is 12n in v5 (was 13n); Michaelis-Menten (n=1) is 6n (was 7n). Cooperativity (n>1) costs +6n via two pow operations."
     },
     {
       "id": "bio_08",
@@ -183,6 +199,8 @@
         { "step": "mul(I₀, exp(λt))", "cost": 2, "note": "scale by initial infected count" }
       ],
       "total_cost": 7,
+      "total_cost_v4": 7,
+      "v5_savings": "0n",
       "cross_domain": [
         "Arrhenius rate with computed activation: k = A·exp(-(Ea/R)·(1/T)) — 7n with sub for rate",
         "Any process where effective rate = difference of two rates: 7n",
@@ -200,6 +218,8 @@
         { "step": "sub(1, recip(R₀))", "cost": 2, "note": "complement to get vaccination threshold" }
       ],
       "total_cost": 3,
+      "total_cost_v4": 3,
+      "v5_savings": "0n",
       "cross_domain": [
         "Carnot efficiency η = 1 - T_cold/T_hot: 4n (div instead of recip, since T_cold ≠ 1)",
         "Any '1 minus a fraction' threshold: 3n with recip, 4n with div",
@@ -217,6 +237,8 @@
         { "step": "mul(a, pow_result)", "cost": 2, "note": "scale by coefficient a" }
       ],
       "total_cost": 5,
+      "total_cost_v4": 5,
+      "v5_savings": "0n",
       "cross_domain": [
         "Stefan-Boltzmann law P = εσA·T^4: 5n (pow + mul)",
         "Kepler's third law T² ∝ a³: 5n",
@@ -227,17 +249,17 @@
     }
   ],
   "summary_table": [
-    { "id": "bio_03", "name": "Basic Reproduction Number R₀",     "cost": 2,  "highlight": "cheapest important metric in all of epidemiology" },
-    { "id": "bio_09", "name": "Herd Immunity Threshold p_c",      "cost": 3,  "highlight": "policy-critical threshold: recip + sub" },
-    { "id": "bio_05", "name": "Malthusian (Exponential) Growth",  "cost": 5,  "highlight": "universal 5n: applies across all domains" },
-    { "id": "bio_10", "name": "Allometric Scaling (Kleiber)",     "cost": 5,  "highlight": "same 5n as Malthusian but via pow; all power laws" },
-    { "id": "bio_08", "name": "Infection Growth (Exponential)",   "cost": 7,  "highlight": "Malthusian + sub for net rate computation" },
-    { "id": "bio_06", "name": "Gompertz Growth",                  "cost": 8,  "highlight": "double-exponential via two chained DEML calls" },
-    { "id": "bio_01", "name": "Logistic Growth",                  "cost": 10, "highlight": "canonical S-curve; all saturation equations" },
-    { "id": "bio_07", "name": "Hill Equation (n=1: 7n)",          "cost": 13, "highlight": "cooperativity costs +6n over Michaelis-Menten" },
-    { "id": "bio_07_mm", "name": "Michaelis-Menten (Hill n=1)",   "cost": 7,  "highlight": "enzyme kinetics special case of Hill" },
-    { "id": "bio_04", "name": "Lotka-Volterra (per step)",        "cost": 16, "highlight": "two 8n coupled equations; bilinear NP term" },
-    { "id": "bio_02", "name": "SIR Model (per timestep)",         "cost": 20, "highlight": "20n with sharing; epidemic simulation is tractable" }
+    { "id": "bio_03", "name": "Basic Reproduction Number R₀",     "cost_v5": 2,  "cost_v4": 2,  "highlight": "cheapest important metric in all of epidemiology" },
+    { "id": "bio_09", "name": "Herd Immunity Threshold p_c",      "cost_v5": 3,  "cost_v4": 3,  "highlight": "policy-critical threshold: recip + sub" },
+    { "id": "bio_05", "name": "Malthusian (Exponential) Growth",  "cost_v5": 5,  "cost_v4": 5,  "highlight": "universal 5n: applies across all domains" },
+    { "id": "bio_10", "name": "Allometric Scaling (Kleiber)",     "cost_v5": 5,  "cost_v4": 5,  "highlight": "same 5n as Malthusian but via pow; all power laws" },
+    { "id": "bio_08", "name": "Infection Growth (Exponential)",   "cost_v5": 7,  "cost_v4": 7,  "highlight": "Malthusian + sub for net rate computation" },
+    { "id": "bio_06", "name": "Gompertz Growth",                  "cost_v5": 8,  "cost_v4": 8,  "highlight": "double-exponential via two chained DEML calls" },
+    { "id": "bio_01", "name": "Logistic Growth",                  "cost_v5": 9,  "cost_v4": 10, "highlight": "canonical S-curve; -1n from add_pos→add savings" },
+    { "id": "bio_07_mm", "name": "Michaelis-Menten (Hill n=1)",   "cost_v5": 6,  "cost_v4": 7,  "highlight": "enzyme kinetics special case of Hill; -1n savings" },
+    { "id": "bio_07", "name": "Hill Equation (general n)",        "cost_v5": 12, "cost_v4": 13, "highlight": "-1n from add_pos→add; cooperativity costs +6n over MM" },
+    { "id": "bio_04", "name": "Lotka-Volterra (per step)",        "cost_v5": 16, "cost_v4": 16, "highlight": "two 8n coupled equations; bilinear NP term; unchanged" },
+    { "id": "bio_02", "name": "SIR Model (per timestep)",         "cost_v5": 20, "cost_v4": 20, "highlight": "20n with sharing; unchanged (no add_gen used)" }
   ],
   "cross_domain_bridges": [
     {
@@ -261,15 +283,15 @@
       "other_domains": ["Gumbel CDF exp(-exp(-(x-μ)/β))", "Extreme value statistics"]
     },
     {
-      "cost": "10n",
+      "cost": "9n (v5, was 10n v4)",
       "biology": "Logistic growth K/(1+A·exp(-rt))",
       "other_domains": ["ML sigmoid 1/(1+e^-x) at 4n simplified", "Any saturation S-curve"]
     },
     {
-      "cost": "13n",
+      "cost": "12n (v5, was 13n v4)",
       "biology": "Hill equation E_max·C^n/(EC50^n+C^n)",
-      "other_domains": ["Pythagorean expectation RS^k/(RS^k+RA^k) at 11n", "Langmuir isotherm at 7n (n=1)"]
+      "other_domains": ["Pythagorean expectation RS^k/(RS^k+RA^k) at 10n (v5)", "Langmuir isotherm at 6n (n=1)"]
     }
   ],
-  "key_insight": "The most important number in epidemiology (R₀=2n) and the policy threshold derived from it (p_c=3n) are the cheapest equations in the entire biology/epidemiology set. Complex dynamics (SIR=20n, Lotka-Volterra=16n) cost an order of magnitude more but remain tractable for simulation."
+  "key_insight": "The most important number in epidemiology (R₀=2n) and the policy threshold derived from it (p_c=3n) are the cheapest equations in the entire biology/epidemiology set. v5 savings are modest here (1n per add_pos op) because most biology equations use sub rather than add_gen. Complex dynamics (SIR=20n, Lotka-Volterra=16n) cost an order of magnitude more but remain tractable for simulation."
 }

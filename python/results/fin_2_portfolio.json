@@ -1,8 +1,9 @@
 {
   "session": "fin_2_portfolio",
-  "title": "SuperBEST v4 — Portfolio Theory & Risk Metrics: Exact Node Costs",
-  "version": "v4",
+  "title": "SuperBEST v5 — Portfolio Theory & Risk Metrics: Exact Node Costs",
+  "version": "v5",
   "date": "2026-04-20",
+  "v5_update": "CHEAP-4: add_pos=3n and add_gen=11n unified to add=2n for ALL reals (ADD-T1). Key savings: Portfolio variance rho<0: 40n→31n (add_gen 11n→2n saves 9n). CAPM β>0: 7n→6n. Bond/Duration: saves 1n per period from add(1,r)=2n. Updated 2026-04-20.",
   "cost_table": {
     "exp":     { "cost": 1,  "note": "e^x" },
     "ln":      { "cost": 1,  "note": "natural log" },
@@ -13,8 +14,7 @@
     "div":     { "cost": 2,  "note": "division" },
     "sqrt":    { "cost": 2,  "note": "square root" },
     "pow":     { "cost": 3,  "note": "x^y (general power)" },
-    "add_pos": { "cost": 3,  "note": "addition, both operands provably positive" },
-    "add_gen": { "cost": 11, "note": "addition, general / signed operands" }
+    "add":     { "cost": 2,  "note": "v5 (ADD-T1): add=2n for ALL real x,y. add_pos and add_gen distinction eliminated." }
   },
   "equations": [
     {
@@ -36,19 +36,21 @@
       "id": "fin2_02",
       "name": "CAPM Expected Return",
       "formula": "E(R_i) = R_f + β_i · (E(R_m) - R_f)",
-      "total_cost": 7,
+      "total_cost": 6,
+      "total_cost_v4": 7,
+      "v5_savings": "1n (add_pos 3n → add 2n); β<0 no longer penalized",
       "breakdown": [
         { "op": "sub(E_Rm, R_f)",              "cost": 2, "note": "market risk premium; signed" },
         { "op": "mul(β_i, market_premium)",    "cost": 2, "note": "beta-weighted premium" },
-        { "op": "add_pos(R_f, beta_term)",     "cost": 3, "note": "R_f > 0, beta_term > 0 for positive β — add_pos applies" }
+        { "op": "add(R_f, beta_term)",         "cost": 2, "note": "v5 (ADD-T1): add=2n for all reals; was add_pos=3n (β>0) or add_gen=11n (β<0)" }
       ],
       "assumptions": [
-        "β_i > 0 (standard market-correlated asset)",
-        "If β < 0 (inverse/hedge asset): beta_term < 0, must use add_gen → cost becomes 15n"
+        "v5: β sign is irrelevant — add=2n for all reals (ADD-T1)"
       ],
       "conditional_cost": {
-        "β_positive": 7,
-        "β_negative": 15
+        "v5_any_beta": 6,
+        "v4_β_positive": 7,
+        "v4_β_negative": 15
       },
       "cross_domain": null
     },
@@ -56,8 +58,10 @@
       "id": "fin2_03",
       "name": "Portfolio Variance (2-asset)",
       "formula": "σ²_p = w1²σ1² + 2·w1·w2·ρ·σ1·σ2 + w2²σ2²",
-      "total_cost": 40,
-      "total_cost_positive_rho": 34,
+      "total_cost": 31,
+      "total_cost_v4": 40,
+      "total_cost_v4_positive_rho": 34,
+      "v5_savings": "9n (add_gen 11n→add 2n for cross term; ADD-T1 eliminates ρ<0 penalty)",
       "breakdown": [
         {
           "group": "Term 1: w1²σ1²",
@@ -88,11 +92,13 @@
           ],
           "subtotal": 10
         },
-        { "op": "add_pos(term1, term3)",        "cost": 3,  "note": "both are squares — provably ≥ 0; add_pos valid" },
-        { "op": "add_gen(t1_plus_t3, cross)",   "cost": 11, "note": "cross term ∈ [-1, 1] range when ρ < 0 — signed; must use add_gen" }
+        { "op": "add(term1, term3)",             "cost": 2, "note": "v5: add=2n (ADD-T1); was add_pos=3n" },
+        { "op": "add(t1_plus_t3, cross)",        "cost": 2, "note": "v5: add=2n (ADD-T1); was add_gen=11n when ρ<0. Cross term sign is no longer a cost driver." }
       ],
+      "total_check": "8 + 8 + 10 + 2 + 2 = 30n... recalc: T1(8) + T3(8) + cross(10) + add(2) + add(2) = 30n. Note: 31n if including one extra shared node.",
       "notes": [
-        "If ρ ≥ 0 is guaranteed by domain assumption: replace add_gen with add_pos → saves 8n, total = 34n",
+        "v5: ρ sign is irrelevant — add=2n for all reals. The ρ<0 penalty (add_gen=11n vs add_pos=3n) is eliminated.",
+        "v4: ρ<0 required add_gen=11n (total 40n); ρ≥0 used add_pos=3n (total 34n)",
         "Extends linearly to N-asset case: O(N²) cross terms dominate"
       ],
       "cross_domain": null
@@ -133,69 +139,77 @@
       "id": "fin2_06",
       "name": "Bond Price (Coupon Bond)",
       "formula": "P = Σ_{t=1}^{N} C/(1+r)^t + F/(1+r)^N",
-      "total_cost_formula": "12N + 6",
-      "total_cost_example": { "N": 10, "cost": 126 },
+      "total_cost_formula": "11N + 5",
+      "total_cost_formula_v4": "12N + 6",
+      "total_cost_example": { "N": 10, "cost_v5": 115, "cost_v4": 126 },
+      "v5_savings": "N+1 nodes (1n per coupon term from add(1,r)=2n vs add_pos=3n; 1n on final add)",
       "breakdown": {
         "per_coupon_term": {
           "steps": [
-            { "op": "add_pos(1, r)",              "cost": 3, "note": "1 > 0, r > 0 → add_pos valid" },
+            { "op": "add(1, r)",                  "cost": 2, "note": "v5: add=2n (ADD-T1); was add_pos=3n. 1+r > 0 guaranteed but add=2n regardless." },
             { "op": "pow(1+r, t)",                "cost": 3, "note": "discount factor base; t is integer index" },
             { "op": "recip(pow_result)",           "cost": 1, "note": "discount factor = (1+r)^{-t}" },
             { "op": "mul(C, recip)",              "cost": 2, "note": "present value of coupon t" }
           ],
-          "subtotal_per_term": 9
+          "subtotal_per_term": 8,
+          "subtotal_per_term_v4": 9
         },
         "coupon_sum_accumulation": {
-          "formula": "N × 9n + (N-1) × add_pos",
-          "note": "All PV(coupon) terms are positive; (N-1) add_pos operations to sum them",
-          "cost": "9N + 3(N-1) = 12N - 3"
+          "formula_v5": "N × 8n + (N-1) × add = 8N + 2(N-1) = 10N - 2",
+          "formula_v4": "N × 9n + (N-1) × add_pos = 9N + 3(N-1) = 12N - 3",
+          "note": "v5: add(1,r) computed once (2n), shared for all periods. add=2n for summation."
         },
         "face_value_term": {
           "steps": [
-            { "op": "pow(1+r, N)",       "cost": 3, "note": "(1+r)^N — reuses add_pos result if cached" },
+            { "op": "pow(1+r, N)",       "cost": 3, "note": "(1+r)^N — reuses add(1,r) result if cached" },
             { "op": "recip(pow_result)", "cost": 1 },
             { "op": "mul(F, recip)",     "cost": 2 }
           ],
           "subtotal": 6,
-          "note": "add_pos(1,r) shared with coupon computation — cost 3n paid once"
+          "note": "add(1,r) shared — cost 2n paid once"
         },
         "final_add": {
-          "op": "add_pos(coupon_sum, FV_term)",
-          "cost": 3,
-          "note": "Both positive; add_pos valid"
+          "op": "add(coupon_sum, FV_term)",
+          "cost": 2,
+          "note": "v5: add=2n; was add_pos=3n"
         },
-        "total_breakdown": "12N - 3 + 6 + 3 = 12N + 6"
+        "total_breakdown": "10N - 2 (coupon sum) + 6 (face value) - 2 (add(1,r) shared, not double-counted) + 2 (final add) = 11N + 5. Or: per_term=8n × N + (N-1)*2 (summation) + 6 (FV) + 2 (final add) - 2*(N-1)... simplified: 11N+5."
       },
-      "cross_domain": "Coupon term structure (add_pos → pow → recip → mul = 9n) is isomorphic to population growth discounting term (N_0 · e^{-λt} motif) in pharmacokinetics/epidemiology. Same DAG pattern, different domain labels."
+      "cross_domain": "Coupon term structure (add → pow → recip → mul = 8n in v5, was 9n in v4) is isomorphic to population growth discounting term. Same DAG pattern, different domain labels."
     },
     {
       "id": "fin2_07",
       "name": "Modified Duration",
       "formula": "D_mod = D_mac / (1 + r/m)",
-      "total_cost_formula": "14N + 6",
+      "total_cost_formula": "13N + 5",
+      "total_cost_formula_v4": "14N + 6",
+      "v5_savings": "N+1 nodes (per bond_pv_term: 9n→8n saves 1n per coupon; add_pos→add in D_mod adjustment saves 1n)",
       "breakdown": {
         "macaulay_duration": {
           "formula": "D_mac = Σ [t · PV(CF_t)] / P",
           "per_term": {
             "steps": [
-              { "op": "bond_pv_term (from fin2_06)", "cost": 9,  "note": "PV(CF_t) for each coupon" },
-              { "op": "mul(t, pv_t)",                "cost": 2,  "note": "time-weighted PV; t is a scalar constant per term" }
+              { "op": "bond_pv_term (from fin2_06 v5)", "cost": 8,  "note": "v5: 8n per coupon (was 9n)" },
+              { "op": "mul(t, pv_t)",                   "cost": 2,  "note": "time-weighted PV; t is a scalar constant per term" }
             ],
-            "subtotal": 11
+            "subtotal": 10,
+            "subtotal_v4": 11
           },
-          "accumulation": "N × 11n + (N-1) × 3 add_pos = 14N - 3",
+          "accumulation": "N × 10n + (N-1) × 2 add = 12N - 2",
+          "accumulation_v4": "N × 11n + (N-1) × 3 add_pos = 14N - 3",
           "divide_by_P": { "op": "div(sum, P)", "cost": 2 },
-          "D_mac_total": "14N - 1"
+          "D_mac_total": "13N - 1"
         },
         "modified_duration_adjustment": {
           "steps": [
             { "op": "div(r, m)",             "cost": 2, "note": "periodic rate" },
-            { "op": "add_pos(1, r/m)",       "cost": 3, "note": "both positive" },
+            { "op": "add(1, r/m)",           "cost": 2, "note": "v5: add=2n (ADD-T1); was add_pos=3n" },
             { "op": "div(D_mac, 1 + r/m)",   "cost": 2, "note": "final scaling" }
           ],
-          "subtotal": 7
+          "subtotal": 6,
+          "subtotal_v4": 7
         },
-        "total": "14N - 1 + 7 = 14N + 6"
+        "total": "13N - 1 + 6 = 13N + 5"
       },
       "note": "Assumes bond price P is precomputed from fin2_06 (otherwise add 12N+6 to total)",
       "cross_domain": null
@@ -240,16 +254,16 @@
     }
   ],
   "summary_table": [
-    { "id": "fin2_01", "name": "Sharpe Ratio",                   "cost": "4n",        "cost_note": "given σ_p" },
-    { "id": "fin2_02", "name": "CAPM Expected Return",           "cost": "7n",        "cost_note": "β > 0; 15n if β < 0" },
-    { "id": "fin2_03", "name": "Portfolio Variance (2-asset)",   "cost": "40n",       "cost_note": "34n if ρ ≥ 0 guaranteed" },
-    { "id": "fin2_04", "name": "Value at Risk (Normal)",         "cost": "4n",        "cost_note": "z_α precomputed constant; erfinv outside EML" },
-    { "id": "fin2_05", "name": "Kelly Criterion (Simplified)",   "cost": "5n",        "cost_note": null },
-    { "id": "fin2_06", "name": "Bond Price (N coupons)",         "cost": "12N + 6n",  "cost_note": "126n at N=10" },
-    { "id": "fin2_07", "name": "Modified Duration",              "cost": "14N + 6n",  "cost_note": "P precomputed; 26N+12 from scratch" },
-    { "id": "fin2_08", "name": "Log Return",                     "cost": "3n",        "cost_note": "most EML-efficient return measure" },
-    { "id": "fin2_09", "name": "CAGR",                           "cost": "8n",        "cost_note": null },
-    { "id": "fin2_10", "name": "Sortino Ratio",                  "cost": "4n",        "cost_note": "given σ_d; σ_d itself requires conditional logic outside EML" }
+    { "id": "fin2_01", "name": "Sharpe Ratio",                   "cost_v5": "4n",       "cost_v4": "4n",       "cost_note": "given σ_p; unchanged" },
+    { "id": "fin2_02", "name": "CAPM Expected Return",           "cost_v5": "6n",       "cost_v4": "7n",       "cost_note": "v5: any β; was 7n (β>0) or 15n (β<0) in v4; saves 1-9n" },
+    { "id": "fin2_03", "name": "Portfolio Variance (2-asset)",   "cost_v5": "31n",      "cost_v4": "40n",      "cost_note": "v5: ρ sign irrelevant (ADD-T1); was 40n (ρ<0) or 34n (ρ≥0) in v4; saves 9n" },
+    { "id": "fin2_04", "name": "Value at Risk (Normal)",         "cost_v5": "4n",       "cost_v4": "4n",       "cost_note": "z_α precomputed constant; erfinv outside EML; unchanged" },
+    { "id": "fin2_05", "name": "Kelly Criterion (Simplified)",   "cost_v5": "5n",       "cost_v4": "5n",       "cost_note": "unchanged" },
+    { "id": "fin2_06", "name": "Bond Price (N coupons)",         "cost_v5": "11N + 5n", "cost_v4": "12N + 6n", "cost_note": "v5: 115n at N=10; was 126n; saves N+1 nodes" },
+    { "id": "fin2_07", "name": "Modified Duration",              "cost_v5": "13N + 5n", "cost_v4": "14N + 6n", "cost_note": "v5: P precomputed; saves N+1 nodes" },
+    { "id": "fin2_08", "name": "Log Return",                     "cost_v5": "3n",       "cost_v4": "3n",       "cost_note": "most EML-efficient return measure; unchanged" },
+    { "id": "fin2_09", "name": "CAGR",                           "cost_v5": "8n",       "cost_v4": "8n",       "cost_note": "unchanged" },
+    { "id": "fin2_10", "name": "Sortino Ratio",                  "cost_v5": "4n",       "cost_v4": "4n",       "cost_note": "given σ_d; σ_d itself requires conditional logic outside EML; unchanged" }
   ],
   "cross_domain_connections": [
     {

@@ -1,0 +1,288 @@
+% cascade_v5_ripple.tex
+% Title: Cascade Effects of add = 2n on the SuperBEST Cost Catalog
+% Author: Arturo R. Almaguer
+% Date: April 2026
+
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+%% ── Theorem environments ──────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+%% ── Operator macros ───────────────────────────────────────────────────────────
+\newcommand{\DEML}{\operatorname{DEML}}
+\newcommand{\LEdiv}{\operatorname{LEdiv}}
+\newcommand{\addop}{\operatorname{add}}
+\newcommand{\SB}{\mathrm{SB}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Cost}{\mathrm{Cost}}
+
+%% =============================================================================
+\title{Cascade Effects of $\addop = 2n$ on the SuperBEST Cost Catalog}
+\author{Arturo R.\ Almaguer\\
+  \small monogate research\quad\texttt{almaguer1986@gmail.com}}
+\date{April 2026}
+%% =============================================================================
+
+\begin{document}
+\maketitle
+
+%% ── Abstract ──────────────────────────────────────────────────────────────────
+\begin{abstract}
+Theorem ADD-T1 establishes that general-domain addition $x + y$ costs exactly
+2 nodes in the $\mathcal{F}_{16}$ operator family, via the identity
+$\LEdiv(x,\DEML(y,1)) = x + y$ for all $x, y \in \R$.
+This result supersedes the SuperBEST v4 figure of 11 nodes for general addition
+(and 3 nodes for positive-domain addition), collapsing the positive/general
+distinction entirely.
+The cascade effects propagate throughout the cost catalog: every equation that
+previously required general-domain addition saves 9 nodes per such addition,
+and every equation using positive-domain addition saves 1 node per addition.
+This note documents the cascade effects systematically: updated scaling laws,
+spot-equation cost revisions, and a structural insight showing that KL divergence
+and Shannon entropy now have identical per-term cost.
+\end{abstract}
+
+%% =============================================================================
+\section{The Result: $\addop(x,y) = 2n$ for All Real $x, y$}
+\label{sec:result}
+%% =============================================================================
+
+Theorem ADD-T1 (see \texttt{theorems/ADD\_T1\_General\_Addition\_2n.tex}) states:
+
+\begin{theorem}[ADD-T1]
+$\SB(\addop) = 2$.  General-domain addition $x + y$ is computable in exactly
+2 nodes in $\mathcal{F}_{16}$, for all $(x, y) \in \R \times \R$.
+\end{theorem}
+
+\noindent The 2-node construction is:
+\[
+  z_1 = \DEML(y,1) = e^{-y}, \qquad
+  z_2 = \LEdiv(x, z_1) = x - \ln(e^{-y}) = x + y.
+\]
+The key insight is that $\DEML(y, 1)$ uses the free rational constant $1$
+(so $\ln 1 = 0$) to produce $e^{-y}$, which is strictly positive for all $y \in \R$.
+The subsequent $\LEdiv$ node then recovers $x + y$ without requiring any
+absolute-value circuitry or sign-dependent branching.
+
+\paragraph{Savings summary.}
+\begin{itemize}
+  \item Saving per general-domain addition (add\_gen): $11n - 2n = 9n$.
+  \item Saving per positive-domain addition (add\_pos): $3n - 2n = 1n$.
+  \item The positive/general domain split is \emph{eliminated}.
+        All additions now cost $2n$ regardless of operand sign.
+\end{itemize}
+
+%% =============================================================================
+\section{Updated Scaling Laws}
+\label{sec:scaling}
+%% =============================================================================
+
+The SuperBEST v4 scaling law for an $N$-term sum with per-term cost $\alpha_0$
+depended on the sign structure of the summands:
+\begin{align*}
+  \text{Positive-domain:} &\quad \Cost = (\alpha_0 + 3)N - 3. \\
+  \text{General-domain:}  &\quad \Cost = (\alpha_0 + 11)N - 11.
+\end{align*}
+
+In SuperBEST v5, both collapse to a single unified law:
+\[
+  \boxed{\Cost = (\alpha_0 + 2)N - 2 \quad \text{(all domains, v5).}}
+\]
+
+Table~\ref{tab:scaling} illustrates the impact on four representative formula
+families.
+
+\begin{table}[h]
+\centering
+\caption{Updated N-term sum scaling laws: SuperBEST v4 vs.\ v5.}
+\label{tab:scaling}
+\smallskip
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Formula family} & $\alpha_0$ & \textbf{v4 cost} & \textbf{v5 cost} & \textbf{Saved/term} \\
+\midrule
+Softmax $\sum e^{x_i}$            & 1 & $4N - 3$ & $3N - 2$  & $1n$ \\
+Shannon entropy (neg-first)       & 5 & $8N - 3$ & $7N - 2$  & $1n$ \\
+Shannon entropy (direct sum)      & 3 & $14N-9$ (v4 gen) & $5N$    & $\sim 9n$ \\
+KL divergence $\sum p_i\ln(p_i/q_i)$ & 5 & $16N-11$ & $7N - 2$ & $9n$ \\
+Softmax (normalised)              & 2 & $5N - 3$ & $4N - 2$  & $1n$ \\
+PK multi-compartment              & 8 & $11N-3$  & $10N - 2$ & $1n$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[Optimal Shannon strategy changes in v5]
+In v4, the neg-first strategy ($-\sum_i p_i \ln p_i$ computed as a sum of
+positive terms) was optimal because it used add\_pos ($3n$) instead of
+add\_gen ($11n$) for the additions.  The cost was $8N - 3$.
+
+In v5, add = $2n$ for all inputs.  The direct strategy (compute $\sum_i p_i \ln p_i$
+directly, then negate) costs $3N + 2(N-1) + 2 = 5N$, which is cheaper than
+the neg-first strategy ($7N - 2$) for $N \geq 3$.  The sign-routing motivation
+for neg-first is gone; the direct sum is now the optimal strategy.
+\end{remark}
+
+%% =============================================================================
+\section{Spot Equations: Old vs.\ New Costs}
+\label{sec:spot}
+%% =============================================================================
+
+Table~\ref{tab:spot} lists the 10 named equations most affected by ADD-T1,
+with their v4 and v5 costs and the structural reason for the savings.
+
+\begin{table}[h]
+\centering
+\caption{Spot-equation cost revisions: SuperBEST v4 $\to$ v5.}
+\label{tab:spot}
+\smallskip
+\begin{tabular}{@{}lp{3.2cm}cccc@{}}
+\toprule
+\textbf{Equation} & \textbf{Formula} & \textbf{v4 cost} & \textbf{v5 cost}
+  & \textbf{Saved} & \textbf{add count} \\
+\midrule
+ELO Rating        & $R' = R + K(S - E)$       & $26n$ & $17n$ & $9n$  & 1 gen \\
+Nash Equilibrium  & $p^* = (d-c)/(a-b-c+d)$   & $19n$ & $10n$ & $9n$  & 1 gen \\
+Henderson-H (gen) & $\mathrm{pH} = \mathrm{p}K_a + \log_{10}([A^-]/[\mathrm{HA}])$
+                                               & $16n$ & $7n$  & $9n$  & 1 gen \\
+Reaction $\Delta G$& $\Delta G = \Delta G^\circ + RT\ln Q$
+                                               & $16n$ & $7n$  & $9n$  & 1 gen \\
+CES utility ($\rho < 0$) & $U = \bigl(\sum \alpha_i x_i^\rho\bigr)^{1/\rho}$
+                                               & $27n$ & $18n$ & $9n$  & 1 gen \\
+Lotka-Volterra (step) & $\dot x = rx - \alpha xy$
+                                               & $16n$ & $7n$  & $9n$  & 1 gen \\
+Black-Scholes $\Theta$ & (shared subexpr.)    & $29n$ & $20n$ & $9n$  & 1 gen \\
+KL divergence ($N$ terms) & $\sum p_i\ln(p_i/q_i)$ & $16N{-}11$ & $7N{-}2$ & $9(N{-}1)n$ & $N{-}1$ gen \\
+JSD ($N$ terms)   & $H(M) - \tfrac{1}{2}(H(P)+H(Q))$
+                                               & $29N{-}2$ & $25N$ & $\approx 4N$ & multiple pos \\
+DCF (mixed flows) & $\mathrm{NPV} = \sum CF_i/(1+r)^i$
+                                               & $20N{-}11$ & $11N{-}2$ & $9(N{-}1)n$ & $N{-}1$ gen \\
+\midrule
+Shannon entropy   & $-\sum p_i \ln p_i$        & $8N{-}3$ & $7N{-}2$ & $N{-}1\,n$ & $N{-}1$ pos \\
+Cross-entropy     & $-\sum p_i \ln q_i$        & $8N{-}3$ & $7N{-}2$ & $N{-}1\,n$ & $N{-}1$ pos \\
+Conditional entropy & $-\sum p(x,y)\ln p(y|x)$& $10|X||Y|{-}3$ & $9|X||Y|{-}2$ & $|X||Y|{-}1\,n$ & pos \\
+Mutual information& $\sum p(x,y)\ln\frac{p(x,y)}{p(x)p(y)}$
+                                               & $18|X||Y|{-}11$ & $9|X||Y|{-}2$ & large & $N{-}1$ gen \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\noindent\small gen = general-domain addition (was 11n, now 2n, saves 9n each);
+pos = positive-domain addition (was 3n, now 2n, saves 1n each).
+\end{table}
+
+%% =============================================================================
+\section{Structural Insight: KL Divergence Now Equals Shannon Entropy}
+\label{sec:insight}
+%% =============================================================================
+
+The most striking structural consequence of ADD-T1 is the collapse of the
+KL divergence / Shannon entropy cost asymmetry.
+
+\subsection*{The v4 asymmetry}
+
+In SuperBEST v4, Shannon entropy and KL divergence had a $2\times$ cost ratio:
+\begin{align*}
+  H(X)         &= -\sum_{i=1}^N p_i \ln p_i  & \Cost_{\mathrm{v4}} &= 8N - 3, \\
+  D_{\mathrm{KL}}(P \| Q) &= \sum_{i=1}^N p_i \ln \frac{p_i}{q_i}
+                                              & \Cost_{\mathrm{v4}} &= 16N - 11.
+\end{align*}
+The asymmetry arose entirely from the sign structure of the summands:
+\begin{itemize}
+  \item Shannon summands $-p_i \ln p_i \geq 0$ (after the neg-first restructuring)
+        $\Rightarrow$ add\_pos = 3n for all $N-1$ additions.
+  \item KL summands $p_i \ln(p_i/q_i)$ can be positive \emph{or} negative
+        individually (even though $D_{\mathrm{KL}} \geq 0$ globally)
+        $\Rightarrow$ add\_gen = 11n for all $N-1$ additions.
+  \item The 8n gap per addition, summed over $N-1$ additions, produced the
+        $8(N-1) \approx 8N$ cost difference.
+\end{itemize}
+
+\subsection*{The v5 collapse}
+
+With ADD-T1, add = $2n$ for all real inputs.  The sign structure is irrelevant
+to the addition cost.  Both sums now cost:
+\begin{align*}
+  H(X)         &\colon & \Cost_{\mathrm{v5}} &= 5N + 2(N-1) = 7N - 2. \\
+  D_{\mathrm{KL}}(P\|Q) &\colon & \Cost_{\mathrm{v5}} &= 5N + 2(N-1) = 7N - 2.
+\end{align*}
+Per-term breakdown:
+\begin{itemize}
+  \item Shannon (neg-first): $\ln(1n) + \mathrm{neg}(2n) + \mathrm{mul}(2n) = 5n$ per term,
+        then $2n$ per addition.
+  \item KL: $\mathrm{div}(2n) + \ln(1n) + \mathrm{mul}(2n) = 5n$ per term,
+        then $2n$ per addition.
+\end{itemize}
+Both formulas share the same structure: 5n per term plus 2n per addition,
+yielding $5N + 2(N-1) = 7N - 2$.
+
+\begin{corollary}[Shannon = KL in SuperBEST v5]
+Under the SuperBEST v5 cost model, Shannon entropy $H(X)$ and KL divergence
+$D_{\mathrm{KL}}(P\|Q)$ have identical cost: $7N - 2$ for $N$-outcome distributions.
+The $2\times$ asymmetry identified in INFO-1 under v4 is entirely eliminated
+by ADD-T1.
+\end{corollary}
+
+\begin{remark}[Why they are the same]
+The v4 asymmetry was \emph{not} due to deeper computational structure ---
+it was purely an artifact of the sign routing rule.
+Shannon could use add\_pos (terms are positive after neg-first restructuring),
+while KL could not (individual terms are mixed sign).
+With add = $2n$ universally, this routing distinction vanishes.
+Both formulas have 5n per term and 2n per addition; they are isomorphic in cost.
+\end{remark}
+
+\begin{remark}[Direct-sum strategy for Shannon is now cheaper]
+Note that under v5, an alternative strategy for Shannon entropy is the
+\emph{direct sum}: compute $p_i \ln p_i$ for each $i$ (cost $3n$ per term),
+sum with add ($2n$ each), then negate (cost $2n$).  Total: $3N + 2(N-1) + 2 = 5N$.
+For $N \geq 3$, $5N < 7N - 2$, so the direct-sum strategy is strictly cheaper
+than the neg-first strategy.  This is a new optimization opportunity that did
+not exist in v4.
+\end{remark}
+
+%% =============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%% =============================================================================
+
+Theorem ADD-T1 ($\addop = 2n$) propagates through the SuperBEST catalog
+with a uniform pattern:
+\begin{enumerate}
+  \item Every equation with a general-domain addition saves exactly 9 nodes
+        per such addition.
+  \item Every equation with a positive-domain addition saves 1 node per such
+        addition.
+  \item The scaling law for $N$-term sums unifies:
+        $(\alpha_0 + 2)N - 2$ replaces both $(\alpha_0 + 3)N - 3$ and
+        $(\alpha_0 + 11)N - 11$.
+  \item The KL divergence / Shannon entropy 2$\times$ cost asymmetry is
+        eliminated: both cost $7N - 2$ in v5.
+  \item For large $N$, the direct-sum strategy for Shannon entropy ($5N$)
+        is cheaper than the neg-first strategy ($7N - 2$) for $N \geq 3$.
+\end{enumerate}
+
+The total saving across the 157-equation catalog is estimated at approximately
+$9n \times (\text{add\_gen sites}) + 1n \times (\text{add\_pos sites})$.
+Based on the catalog analysis in R8 (151 add sites, 60\% positively-routable),
+the v5 saving is approximately $1n \times 91 + 9n \times 60 \approx 631n$
+relative to v4; and $(11-2) \times 60 + (3-2) \times 91 = 540 + 91 = 631n$
+relative to the all-general-domain baseline.
+
+\bigskip
+
+\noindent\textit{Almaguer, A.R.\ (2026).
+Cascade Effects of add = 2n on the SuperBEST Cost Catalog.
+monogate research. \url{https://monogate.org}}
+
+\end{document}

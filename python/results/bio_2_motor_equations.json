@@ -1,15 +1,15 @@
 {
   "session": "BIO-2",
   "title": "Flagellar Motor Equations",
+  "v5_update": "CHEAP-4: add_pos=3n and add_gen=11n unified to add=2n for ALL reals (ADD-T1). Key savings: PMF: 7n→6n (add_pos→add). Motor Switching (Hill): 11n→10n (add_pos→add). Other equations unchanged. Updated 2026-04-20.",
   "cost_model": {
-    "version": "SuperBEST v4",
+    "version": "SuperBEST v5",
     "recip": "1n",
     "div": "2n",
     "mul": "2n",
     "sub": "2n",
     "neg": "2n",
-    "add_pos": "3n",
-    "add_gen": "11n",
+    "add": "2n (ALL reals, ADD-T1)",
     "pow": "3n",
     "ln": "1n",
     "exp": "1n",
@@ -20,8 +20,10 @@
     {
       "name": "Proton Motive Force",
       "formula": "\\Delta\\mu = \\Delta\\psi + \\frac{2.303\\, k_B T}{e}\\,\\Delta\\text{pH}",
-      "superbest_cost": 7,
-      "cost_breakdown": "With constant folding (2.303*kB/e treated as one literal coefficient c): mul(c, T) = 2n; mul(cT, DeltapH) = 2n; add_gen(Deltapsi, product) = 11n... but Deltapsi and cT*DeltapH are both positive real voltages, so add_pos applies: add_pos(Deltapsi, cT*DeltapH) = 3n. Total = 2+2+3 = 7n.",
+      "superbest_cost": 6,
+      "superbest_cost_v4": 7,
+      "v5_savings": "1n (add_pos 3n → add 2n; ADD-T1)",
+      "cost_breakdown": "With constant folding (2.303*kB/e treated as one literal coefficient c): mul(c, T) = 2n; mul(cT, DeltapH) = 2n; add(Deltapsi, cT*DeltapH) = 2n (v5: ADD-T1, add=2n for all reals; was add_pos=3n). Total = 2+2+2 = 6n.",
       "verified_at": [
         {
           "inputs": { "Deltapsi": 0.12, "kBT_over_e": 0.02585, "DeltapH": 1 },
@@ -68,8 +70,10 @@
     {
       "name": "Motor Switching Probability (Hill Equation)",
       "formula": "P = \\frac{[\\text{CheY-P}]^H}{K_d^H + [\\text{CheY-P}]^H}",
-      "superbest_cost": 11,
-      "cost_breakdown": "pow([CheY-P], H) = 3n; pow(Kd, H) = 3n; add_pos(Kd^H, [CheY-P]^H) = 3n (both positive); div([CheY-P]^H, denominator) = 2n. Total = 3+3+3+2 = 11n.",
+      "superbest_cost": 10,
+      "superbest_cost_v4": 11,
+      "v5_savings": "1n (add_pos 3n → add 2n; ADD-T1)",
+      "cost_breakdown": "pow([CheY-P], H) = 3n; pow(Kd, H) = 3n; add(Kd^H, [CheY-P]^H) = 2n (v5: ADD-T1; was add_pos=3n); div([CheY-P]^H, denominator) = 2n. Total = 3+3+2+2 = 10n.",
       "verified_at": [
         {
           "inputs": { "CheY_P": 5, "Kd": 3, "H": 2 },

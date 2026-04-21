@@ -1,6 +1,6 @@
 # monogate — Theoretical Foundations and Open Research Agenda
 
-**Version:** v0.10.0 / Phase 11  
+**Version:** v0.11.0 / Phase 12 (SuperBEST v5)  
 **Preprint:** arXiv:2603.21852 (Odrzywołek, 2026)  
 **Source:** https://github.com/almaguer1986/monogate  
 
@@ -42,16 +42,44 @@ thereof admit exact EML tree representations.
 The number of internal nodes required is the *EML node count* of a function —
 a complexity measure analogous to circuit depth in Boolean complexity theory.
 
-**Definition 1.4 (BEST routing, monogate v0.9.0).**  
-The *BEST hybrid operator* is a dispatcher that selects among three EML
-operator families — EML ($e^a - \ln b$), EDL ($e^a / \ln b$), and
-EXL ($e^a \cdot \ln b$) — per operation to minimise node count.  The routing
-rules are: EXL for $\ln$ and $\operatorname{pow}$ (1 and 3 nodes respectively),
-EDL for $\operatorname{mul}$, $\operatorname{div}$, $\operatorname{recip}$
-(7, 1, 2 nodes), EML for $\operatorname{add}$, $\operatorname{sub}$,
-$\operatorname{exp}$ (11, 5, 1 nodes).  Combined, BEST reduces node count by
-52% on average across the standard nine operations, and by 74% for
-Taylor-series approximations of $\sin / \cos$.
+**Definition 1.4 (SuperBEST routing, monogate v0.11.0).**  
+The *SuperBEST* routing table records the minimum $\mathcal{F}_{16}$-node
+count $\mathrm{SB}(f)$ for each standard arithmetic operation $f$, where
+$\mathcal{F}_{16}$ is the 16-operator family built from $\exp$, $\ln$, $\pm$,
+and $/$.  SuperBEST v5 covers ten operations, all proved optimal:
+
+| Operation | Construction | Nodes |
+|-----------|-------------|-------|
+| $\exp(x)$ | $\operatorname{EML}(x,1)$ | 1 |
+| $\ln(x)$ | $\operatorname{EXL}(0,x)$ | 1 |
+| $e^{-x}$ | $\operatorname{DEML}(0,x)$ | 1 |
+| $\operatorname{recip}(x)$ | $\operatorname{ELSb}(0,x)$ | 1 |
+| $\operatorname{div}(x,y)$ | $\operatorname{ELSb}(\ln x, y)$ | 2 |
+| $\operatorname{neg}(x)$ | $\operatorname{EXL}(0,\operatorname{DEML}(0,x))$ | 2 |
+| $\operatorname{mul}(x,y)$ | $\operatorname{ELAd}(\operatorname{EXL}(0,x),y)$ | 2 |
+| $\operatorname{sub}(x,y)$ | $\operatorname{LEdiv}(x,\operatorname{EML}(y,1))$ | 2 |
+| $\operatorname{add}(x,y)$ | $\operatorname{LEdiv}(x,\operatorname{DEML}(y,1))$ | **2** (all reals, ADD-T1) |
+| $\operatorname{pow}(x,n)$ | $\operatorname{EML}(\operatorname{EXL}(0,x)\cdot n,1)$ | 3 |
+
+**Total: 18 nodes** (vs.\ 73 naive EML) — **75.3% savings.**  The table is
+complete; all 10 entries are proved.
+
+**Theorem ADD-T1 (General addition, two nodes).**  
+$\mathrm{SB}(\operatorname{add}) = 2$, i.e.,
+$$
+  \operatorname{LEdiv}(x,\,\operatorname{DEML}(y,1)) \;=\; x + y
+  \quad \text{for all } x, y \in \mathbb{R}.
+$$
+*Proof sketch.*  $\operatorname{DEML}(y,1) = e^{-y} - \ln 1 = e^{-y}$ (always
+positive).  $\operatorname{LEdiv}(x, e^{-y}) = x - \ln(e^{-y}) = x - (-y) = x+y$.
+No domain restriction applies since $e^{-y} > 0$ for all $y$.  A lower bound
+follows from the derivative obstruction: $\partial(x+y)/\partial x \equiv 1$,
+but every single $\mathcal{F}_{16}$-operator has a nonlinear $x$-derivative.
+See `python/paper/theorems/General_Addition_Two_Node.tex` for the full proof.  $\square$
+
+*Remark:* The positive-domain restriction $\operatorname{add}_+$ is subsumed;
+both cost exactly 2 nodes.  Any formula previously estimated with 11-node
+general addition reduces by 9 nodes per addition site.
 
 ---
 

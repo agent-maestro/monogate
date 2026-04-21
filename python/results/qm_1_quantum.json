@@ -1,6 +1,7 @@
 {
-  "title": "SuperBEST v4 Node Cost Analysis: Quantum Mechanics Equations",
-  "version": "v4",
+  "title": "SuperBEST v5 Node Cost Analysis: Quantum Mechanics Equations",
+  "version": "v5",
+  "v5_update": "CHEAP-4: add_pos=3n and add_gen=11n unified to add=2n for ALL reals (ADD-T1). Key savings: Fermi-Dirac: 9n→8n (add_pos→add in denominator). Partition function: 6N-3→5N-2 (N-1 add_pos→add). Updated 2026-04-20.",
   "cost_model": {
     "exp": "1n",
     "ln": "1n",
@@ -11,11 +12,10 @@
     "div": "2n",
     "sqrt": "2n",
     "pow": "3n",
-    "add_pos": "3n (both operands provably positive)",
-    "add_gen": "11n (general/signed)",
+    "add": "2n (ALL reals, ADD-T1 — add_pos and add_gen distinction eliminated)",
     "DEML_x_1": "1n (= exp(-x), shorthand for DEML(x,1))"
   },
-  "key_insight": "DEML(x,1) = exp(-x) costs 1n. The Boltzmann factor exp(-E/kT) becomes 1n after the division, making statistical mechanics structurally cheap. Fermi-Dirac and Bose-Einstein are EML-native.",
+  "key_insight": "DEML(x,1) = exp(-x) costs 1n. The Boltzmann factor exp(-E/kT) becomes 1n after the division, making statistical mechanics structurally cheap. Fermi-Dirac and Bose-Einstein are EML-native. v5: add=2n for ALL reals (ADD-T1) — Fermi-Dirac drops from 9n to 8n; partition function from 6N-3 to 5N-2.",
   "equations": [
     {
       "id": "qm_01",
@@ -41,21 +41,23 @@
       "name": "Fermi-Dirac distribution",
       "formula": "f(E) = 1 / (1 + exp((E - mu) / kT))",
       "domain": "quantum statistical mechanics (fermions)",
-      "cost_total": "9n",
+      "cost_total": "8n",
+      "cost_total_v4": "9n",
+      "v5_savings": "1n (add_pos 3n → add 2n; ADD-T1)",
       "cost_breakdown": [
         {"step": "sub(E, mu)", "cost": "2n", "note": "energy above chemical potential"},
         {"step": "div(result, kT)", "cost": "2n", "note": "kT precomputed; dimensionless argument"},
         {"step": "exp(quotient)", "cost": "1n", "note": "EML primitive; positive or negative argument"},
-        {"step": "add_pos(1, exp_result)", "cost": "3n", "note": "both operands positive, use add_pos"},
+        {"step": "add(1, exp_result)", "cost": "2n", "note": "v5 (ADD-T1): add=2n for all reals; was add_pos=3n"},
         {"step": "recip(sum)", "cost": "1n", "note": "1/denominator"}
       ],
       "cross_domain_isomorphisms": [
-        "Sigmoid / logistic function: sigma(x) = 1/(1+exp(-x)) — structurally identical, same 9n (with sign flip absorbed into sub)",
-        "ELO expected score: E_A = 1/(1+10^(delta/400)) — same form with base-10 exp, ~9n",
-        "Logistic regression output: p = 1/(1+exp(-w·x)) — same 9n after dot product",
+        "Sigmoid / logistic function: sigma(x) = 1/(1+exp(-x)) — structurally identical, same 8n in v5 (was 9n in v4)",
+        "ELO expected score: E_A = 1/(1+10^(delta/400)) — same form with base-10 exp, ~8n in v5",
+        "Logistic regression output: p = 1/(1+exp(-w·x)) — same 8n in v5 after dot product",
         "Softmax binary case: exp(x_1)/(exp(x_1)+exp(x_2)) reduces to Fermi-Dirac form"
       ],
-      "notes": "The Fermi-Dirac distribution IS the physics sigmoid. The cross-domain isomorphism connects quantum statistics, neural networks, and probabilistic classifiers at the node-cost level."
+      "notes": "The Fermi-Dirac distribution IS the physics sigmoid. v5: 8n (was 9n) — add=2n for all reals eliminates the add_pos vs exp sign distinction. The cross-domain isomorphism connects quantum statistics, neural networks, and probabilistic classifiers at the node-cost level."
     },
     {
       "id": "qm_03",
@@ -208,26 +210,29 @@
       "name": "Canonical partition function",
       "formula": "Z = sum_{i=1}^{N} exp(-E_i / kT)",
       "domain": "statistical mechanics",
-      "cost_total": "6N - 3 nodes for N energy levels",
+      "cost_total": "5N - 2 nodes for N energy levels",
+      "cost_total_v4": "6N - 3",
+      "v5_savings": "N-1 nodes (one add_pos 3n → add 2n per accumulation step; ADD-T1)",
       "cost_breakdown": [
         {"step": "div(E_i, kT)", "cost": "2n per term", "note": "kT precomputed; N terms total"},
         {"step": "DEML(E_i/kT, 1) = exp(-E_i/kT)", "cost": "1n per term", "note": "Boltzmann factor per level"},
-        {"step": "add_pos(term_i, term_{i+1})", "cost": "3n per addition", "note": "N-1 additions; all Boltzmann factors are positive"}
+        {"step": "add(term_i, term_{i+1})", "cost": "2n per addition", "note": "v5 (ADD-T1): add=2n for all reals; N-1 additions; was add_pos=3n"}
       ],
-      "formula_cost": "N terms * 3n/term + (N-1) additions * 3n/add = 3N + 3(N-1) = 6N - 3",
+      "formula_cost": "N terms * 3n/term + (N-1) additions * 2n/add = 3N + 2(N-1) = 5N - 2",
+      "formula_cost_v4": "N * 3n/term + (N-1) * 3n/add = 3N + 3(N-1) = 6N - 3",
       "examples": [
-        {"N": 1, "cost": "3n"},
-        {"N": 2, "cost": "9n"},
-        {"N": 5, "cost": "27n"},
-        {"N": 10, "cost": "57n"}
+        {"N": 1, "cost_v5": "3n",  "cost_v4": "3n"},
+        {"N": 2, "cost_v5": "8n",  "cost_v4": "9n"},
+        {"N": 5, "cost_v5": "23n", "cost_v4": "27n"},
+        {"N": 10, "cost_v5": "48n","cost_v4": "57n"}
       ],
       "cross_domain_isomorphisms": [
-        "Softmax denominator in neural networks: sum(exp(x_i)) — same structure, same cost formula",
+        "Softmax denominator in neural networks: sum(exp(x_i)) — same structure; v5: 5N-2 (was 6N-3 in v4)",
         "Normalizing constant in Boltzmann policy (RL): pi(a) = exp(Q(a)) / Z",
         "Evidence in Bayesian inference: p(D) = sum_i p(D|theta_i)*p(theta_i) — same sum-of-exponentials pattern",
-        "All are 6N-3 for N options when using EML primitives"
+        "All are 5N-2 (v5) for N options when using EML primitives"
       ],
-      "notes": "Linear in N. The softmax denominator and partition function are the same computation — a deep ML/physics connection."
+      "notes": "Linear in N. The softmax denominator and partition function are the same computation — a deep ML/physics connection. v5: 5N-2 (was 6N-3 in v4). The scaling law changes from 6N-3 to 5N-2."
     },
     {
       "id": "qm_10",
@@ -274,24 +279,24 @@
     }
   ],
   "summary_table": [
-    {"id": "qm_01", "name": "Boltzmann factor", "cost": "5n (3n if kT constant)", "isomorphism": "Beer-Lambert, RC decay, radioactive decay"},
-    {"id": "qm_02", "name": "Fermi-Dirac distribution", "cost": "9n", "isomorphism": "sigmoid, logistic regression, ELO score"},
-    {"id": "qm_03", "name": "Bose-Einstein distribution", "cost": "8n", "isomorphism": "novel; Planck kernel"},
-    {"id": "qm_04", "name": "Planck spectral radiance", "cost": "19n", "isomorphism": "integrates to Stefan-Boltzmann T^4"},
-    {"id": "qm_05", "name": "Hydrogen energy levels", "cost": "7n", "isomorphism": "Kepler orbit energy, Rydberg formula"},
-    {"id": "qm_06", "name": "de Broglie wavelength", "cost": "4n (2n if p given)", "isomorphism": "Compton wavelength, lambda=v/f"},
-    {"id": "qm_07", "name": "Heisenberg uncertainty (check)", "cost": "2n", "isomorphism": "bandwidth-time uncertainty, Cramer-Rao"},
-    {"id": "qm_08a", "name": "Particle-in-box wavefunction", "cost": "13n (9n if L constant)", "isomorphism": "Fourier sine basis, standing waves"},
-    {"id": "qm_08b", "name": "Particle-in-box energy", "cost": "7n", "isomorphism": "rigid rotor E_J; inverse of H-atom n^2 scaling"},
-    {"id": "qm_09", "name": "Partition function (N levels)", "cost": "6N-3 nodes", "isomorphism": "softmax denominator, Bayesian evidence"},
-    {"id": "qm_10", "name": "Maxwell-Boltzmann distribution", "cost": "19n", "isomorphism": "chi distribution, Gaussian velocity, Rayleigh 2D"}
+    {"id": "qm_01", "name": "Boltzmann factor",          "cost_v5": "5n (3n if kT constant)", "cost_v4": "5n (3n if kT constant)", "isomorphism": "Beer-Lambert, RC decay, radioactive decay"},
+    {"id": "qm_02", "name": "Fermi-Dirac distribution",  "cost_v5": "8n",    "cost_v4": "9n",    "isomorphism": "sigmoid, logistic regression, ELO score; saves 1n (ADD-T1)"},
+    {"id": "qm_03", "name": "Bose-Einstein distribution","cost_v5": "8n",    "cost_v4": "8n",    "isomorphism": "novel; Planck kernel; unchanged (uses sub not add)"},
+    {"id": "qm_04", "name": "Planck spectral radiance",  "cost_v5": "19n",   "cost_v4": "19n",   "isomorphism": "integrates to Stefan-Boltzmann T^4; unchanged"},
+    {"id": "qm_05", "name": "Hydrogen energy levels",    "cost_v5": "7n",    "cost_v4": "7n",    "isomorphism": "Kepler orbit energy, Rydberg formula; unchanged"},
+    {"id": "qm_06", "name": "de Broglie wavelength",     "cost_v5": "4n (2n if p given)", "cost_v4": "4n (2n if p given)", "isomorphism": "Compton wavelength, lambda=v/f; unchanged"},
+    {"id": "qm_07", "name": "Heisenberg uncertainty (check)", "cost_v5": "2n", "cost_v4": "2n", "isomorphism": "bandwidth-time uncertainty, Cramer-Rao; unchanged"},
+    {"id": "qm_08a", "name": "Particle-in-box wavefunction", "cost_v5": "13n (9n if L constant)", "cost_v4": "13n (9n if L constant)", "isomorphism": "Fourier sine basis, standing waves; unchanged"},
+    {"id": "qm_08b", "name": "Particle-in-box energy",   "cost_v5": "7n",    "cost_v4": "7n",    "isomorphism": "rigid rotor E_J; unchanged"},
+    {"id": "qm_09", "name": "Partition function (N levels)", "cost_v5": "5N-2 nodes", "cost_v4": "6N-3 nodes", "isomorphism": "softmax denominator, Bayesian evidence; saves N-1 nodes"},
+    {"id": "qm_10", "name": "Maxwell-Boltzmann distribution", "cost_v5": "19n", "cost_v4": "19n", "isomorphism": "chi distribution, Gaussian velocity, Rayleigh 2D; unchanged"}
   ],
   "global_observations": [
     "The Boltzmann factor exp(-E/kT) = DEML(E/kT,1) is the fundamental 1n primitive after one division; it propagates cheapness across all of statistical mechanics.",
-    "Fermi-Dirac (9n) = sigmoid: the most important cross-domain isomorphism discovered. Quantum statistics and deep learning share identical node structure.",
-    "Bose-Einstein (8n) is one node cheaper than Fermi-Dirac due to sub(exp,1) costing less than add_pos(1,exp). The -1 vs +1 is a 1-node physical distinction.",
+    "v5: Fermi-Dirac (8n) = sigmoid (8n): same cross-domain isomorphism. Previously 9n in v4; add=2n (ADD-T1) saves 1n. Bose-Einstein is now tied at 8n — the -1 vs +1 distinction is no longer a cost difference.",
+    "v4: Bose-Einstein (8n) was 1n cheaper than Fermi-Dirac (9n) because sub(exp,1)=2n < add_pos(1,exp)=3n. v5: both are 8n (add=sub=2n). The boson/fermion cost distinction is eliminated.",
     "Both particle-in-box (7n) and hydrogen (7n) energy levels cost identically, despite one scaling as n^2 and the other as 1/n^2.",
-    "Partition function cost is exactly 6N-3, matching softmax denominator — statistical mechanics and attention mechanisms are the same computation.",
+    "Partition function: v5 cost is 5N-2 (was 6N-3 in v4). Softmax denominator now equals 5N-2 — statistical mechanics and attention mechanisms share the same computation at this new cost.",
     "Maxwell-Boltzmann and Planck both reach 19n; they are the most expensive in this set due to polynomial-times-exponential structure."
   ]
 }

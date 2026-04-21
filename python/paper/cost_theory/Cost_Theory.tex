@@ -131,8 +131,7 @@ Reciprocal $1/x$            & \texttt{recip} & 2 & \\
 Multiplication $x \cdot y$  & \texttt{mul}   & 2 & \\
 Subtraction $x - y$         & \texttt{sub}   & 2 & T33 optimal \\
 Exponentiation $x^n$        & \texttt{pow}   & 3 & \\
-Addition $x + y$ (pos.\ domain) & \texttt{add} & 3 & \\
-Addition $x + y$ (general)  & \texttt{add}   & 11 & requires absolute value \\
+Addition $x + y$ (all real $x,y$) & \texttt{add} & 2 & ADD-T1 (SuperBEST v5) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -547,11 +546,11 @@ $\SD = \PB = 0$ for this structure, and T38 gives equality.
 \toprule
 \textbf{Equation} & $\alpha_0$ & \textbf{Cost formula} \\
 \midrule
-Taylor series (sin, cos, exp)   & 6  & $9N - 3$ \\
-Shannon entropy $-\sum p_i \ln p_i$ & 4  & $7N - 3$ \\
-Softmax cross-entropy           & 5  & $8N - 3$ \\
-PK multi-compartment sum        & 8  & $11N - 3$ \\
-Fourier partial sum             & 4  & $7N - 3$ \\
+Taylor series (sin, cos, exp)   & 6  & $8N - 2$ \\
+Shannon entropy $-\sum p_i \ln p_i$ & 4  & $6N - 2$ \\
+Softmax cross-entropy           & 5  & $7N - 2$ \\
+PK multi-compartment sum        & 8  & $10N - 2$ \\
+Fourier partial sum             & 4  & $6N - 2$ \\
 \bottomrule
 \end{tabular}
 \end{center}

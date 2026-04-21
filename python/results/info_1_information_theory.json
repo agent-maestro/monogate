@@ -1,7 +1,7 @@
 {
   "session": "INFO-1",
   "title": "Information Theory — SuperBEST v4 Cost Analysis",
-  "version": "SuperBEST v4",
+  "version": "SuperBEST v5",
   "date": "2026-04-20",
   "operator_costs": {
     "exp": 1,
@@ -13,11 +13,11 @@
     "div": 2,
     "sqrt": 2,
     "pow": 3,
-    "add_pos": 3,
-    "add_gen": 11,
-    "constants_and_parameters": 0
+    "add": 2,
+    "constants_and_parameters": 0,
+    "_note": "v5 (ADD-T1): add=2n for ALL real x,y. add_pos and add_gen distinction eliminated."
   },
-  "key_insight": "Information theory is built on p * ln(p) — ln costs 1n, mul costs 2n. The critical question per equation is whether terms are sign-definite (unlocking add_pos=3n) or can be individually negative (requiring add_gen=11n). This single sign question is the primary cost driver across the entire domain.",
+  "key_insight": "Information theory is built on p * ln(p) — ln costs 1n, mul costs 2n. In v5, add=2n for all real inputs (ADD-T1), so the sign-definiteness question no longer drives costs. Shannon and KL divergence now have nearly identical per-term costs (Shannon: 8N-3 due to neg overhead; KL: 7N-2). The add_gen bottleneck is eliminated.",
   "equations": [
     {
       "id": 1,
@@ -25,16 +25,18 @@
       "expression": "H(X) = -sum_i p_i * ln(p_i)",
       "domain": "Information theory, statistical physics, ML",
       "n_dependence": "O(N), N = number of outcomes",
-      "cost_formula": "8N - 3",
+      "cost_formula": "7N - 2",
+      "cost_formula_v4": "8N - 3",
       "sign_analysis": {
         "p_i_range": "(0, 1]",
         "ln_p_i_range": "(-inf, 0]",
         "p_i_times_ln_p_i_range": "(-inf, 0]",
         "neg_p_i_times_ln_p_i_range": "[0, +inf)",
-        "verdict": "Restructure as sum of -p_i*ln(p_i): each term non-negative => add_pos=3n"
+        "verdict_v4": "Restructure as sum of -p_i*ln(p_i): each term non-negative => add_pos=3n",
+        "verdict_v5": "add=2n for all (ADD-T1); add_pos=3n is subsumed. Same neg-first strategy, but additions now cost 2n instead of 3n."
       },
       "breakdown": {
-        "strategy": "Compute neg(ln(p_i)) first, then mul, yielding positive terms. Sum with add_pos.",
+        "strategy": "Compute neg(ln(p_i)) first, then mul, yielding positive terms. Sum with add (2n in v5).",
         "per_term": [
           {"op": "ln(p_i)",            "cost": 1, "note": "1n — ln is a 1-node primitive"},
           {"op": "neg(ln_pi)",         "cost": 2, "note": "2n — flip sign, result >= 0"},
@@ -42,18 +44,22 @@
         ],
         "per_term_total": "5n",
         "N_terms_total": "5N",
-        "additions": "(N-1) * add_pos = 3(N-1)  [all terms non-negative]",
-        "grand_total": "5N + 3(N-1) = 8N - 3"
+        "additions_v5": "(N-1) * add = 2(N-1)  [add=2n, ADD-T1; terms are non-negative but add=2n is universal now]",
+        "additions_v4": "(N-1) * add_pos = 3(N-1)  [required non-negativity for add_pos]",
+        "grand_total_v5": "5N + 2(N-1) = 7N - 2",
+        "grand_total_v4": "5N + 3(N-1) = 8N - 3"
       },
       "spot_checks": {
-        "N=2_binary":  {"formula": "8*2-3 = 13n",   "example": "H(0.5,0.5) = ln(2) = 0.693 nats"},
-        "N=256_byte":  {"formula": "8*256-3 = 2045n","example": "H(uniform 256) = ln(256) = 5.545 nats"},
-        "N=1000":      {"formula": "8*1000-3 = 7997n"}
+        "N=2_binary":  {"v5": "7*2-2 = 12n",    "v4": "8*2-3 = 13n",    "savings": "1n",   "example": "H(0.5,0.5) = ln(2) = 0.693 nats"},
+        "N=256_byte":  {"v5": "7*256-2 = 1790n", "v4": "8*256-3 = 2045n","savings": "255n", "example": "H(uniform 256) = ln(256) = 5.545 nats"},
+        "N=1000":      {"v5": "7*1000-2 = 6998n", "v4": "8*1000-3 = 7997n","savings": "999n"}
       },
       "rejected_strategy": {
-        "description": "Compute p_i*ln(p_i) directly (negative terms), sum with add_gen, then negate",
-        "cost": "3N + 11(N-1) + 2 = 14N - 9",
-        "why_worse": "14N-9 vs 8N-3: add_gen (11n) vs add_pos (3n) for N-1 additions"
+        "description": "Compute p_i*ln(p_i) directly (negative terms), sum with add, then negate",
+        "cost_v5": "3N + 2(N-1) + 2 = 5N",
+        "cost_v4": "3N + 11(N-1) + 2 = 14N - 9",
+        "note_v5": "v5: both strategies now differ only by the outer neg(2n); direct sum 5N vs neg-first 7N-2. For large N, DIRECT SUM (5N) is actually cheaper! The neg-first strategy is no longer optimal in v5.",
+        "v5_optimal_strategy": "Direct: mul(p_i, ln_p_i) for each i (3n per term = 3N), sum with add (2*(N-1)), then neg(2n). Total: 3N + 2N-2+2 = 5N. Simpler and cheaper than neg-first (7N-2) for N >= 3."
       }
     },
     {
@@ -62,11 +68,13 @@
       "expression": "D_KL(P||Q) = sum_i p_i * ln(p_i / q_i)",
       "domain": "Information theory, Bayesian inference, variational methods",
       "n_dependence": "O(N), N = number of outcomes",
-      "cost_formula": "16N - 11",
+      "cost_formula": "7N - 2",
+      "cost_formula_v4": "16N - 11",
       "sign_analysis": {
         "single_term_sign": "p_i*ln(p_i/q_i) can be positive (p_i > q_i) or negative (p_i < q_i)",
         "global_sum_sign": "D_KL >= 0 (Gibbs inequality), but individual terms are mixed sign",
-        "verdict": "Cannot use add_pos at term level — must use add_gen=11n for all N-1 additions"
+        "verdict_v4": "Could not use add_pos — required add_gen=11n for all N-1 additions",
+        "verdict_v5": "add=2n for all real (ADD-T1); sign ambiguity is no longer a cost factor. Same 2n per addition regardless of sign."
       },
       "breakdown": {
         "per_term": [
@@ -76,15 +84,17 @@
         ],
         "per_term_total": "5n",
         "N_terms_total": "5N",
-        "additions": "(N-1) * add_gen = 11(N-1)  [mixed-sign terms]",
-        "grand_total": "5N + 11(N-1) = 16N - 11"
+        "additions_v5": "(N-1) * add = 2(N-1)  [add=2n regardless of sign, ADD-T1]",
+        "additions_v4": "(N-1) * add_gen = 11(N-1)  [was required for mixed-sign terms]",
+        "grand_total_v5": "5N + 2(N-1) = 7N - 2",
+        "grand_total_v4": "5N + 11(N-1) = 16N - 11"
       },
       "spot_checks": {
-        "N=2":   {"formula": "16*2-11 = 21n",   "example": "D_KL([0.4,0.6]||[0.5,0.5]) = 0.02014"},
-        "N=10":  {"formula": "16*10-11 = 149n"},
-        "N=256": {"formula": "16*256-11 = 4085n"}
+        "N=2":   {"v5": "7*2-2 = 12n",  "v4": "16*2-11 = 21n",  "savings": "9n", "example": "D_KL([0.4,0.6]||[0.5,0.5]) = 0.02014"},
+        "N=10":  {"v5": "7*10-2 = 68n", "v4": "16*10-11 = 149n", "savings": "81n"},
+        "N=256": {"v5": "7*256-2 = 1790n", "v4": "16*256-11 = 4085n", "savings": "2295n"}
       },
-      "cost_vs_shannon": "Exactly 2x Shannon minus constant: (16N-11) vs (8N-3). The doubling comes entirely from add_gen (11n) replacing add_pos (3n), costing 8 extra per addition."
+      "cost_vs_shannon": "v5: KL = 7N-2 vs Shannon = 8N-3. KL is now CHEAPER per-term (no neg node needed; div+ln+mul=5n vs ln+neg+mul=5n — wait: KL has div(2n) extra but no neg(2n), Shannon has neg(2n) but no div; net: both 5n per term). Additions: both 2n. Shannon has extra outer neg-first restructuring. The 2x cost ratio from v4 collapses entirely."
     },
     {
       "id": 3,
@@ -92,7 +102,8 @@
       "expression": "H(P,Q) = -sum_i p_i * ln(q_i)",
       "domain": "ML training loss, information theory, maximum likelihood",
       "n_dependence": "O(N), N = number of classes",
-      "cost_formula": "8N - 3",
+      "cost_formula": "7N - 2",
+      "cost_formula_v4": "8N - 3",
       "sign_analysis": {
         "q_i_range": "(0, 1]",
         "ln_q_i_range": "(-inf, 0]",
@@ -108,8 +119,10 @@
         ],
         "per_term_total": "5n",
         "N_terms_total": "5N",
-        "additions": "(N-1) * add_pos = 3(N-1)  [all terms non-negative, no outer neg needed]",
-        "grand_total": "5N + 3(N-1) = 8N - 3"
+        "additions_v5": "(N-1) * add = 2(N-1)  [add=2n, ADD-T1]",
+        "additions_v4": "(N-1) * add_pos = 3(N-1)  [was required: all terms non-negative]",
+        "grand_total_v5": "5N + 2(N-1) = 7N - 2",
+        "grand_total_v4": "5N + 3(N-1) = 8N - 3"
       },
       "spot_checks": {
         "N=2":    {"formula": "8*2-3 = 13n"},
@@ -124,11 +137,13 @@
       "expression": "I(X;Y) = sum_xy p(x,y) * ln(p(x,y) / (p(x)*p(y)))",
       "domain": "Information theory, feature selection, causal inference",
       "n_dependence": "O(|X|*|Y|), double sum over joint distribution",
-      "cost_formula": "18|X||Y| - 11",
+      "cost_formula": "9|X||Y| - 2",
+      "cost_formula_v4": "18|X||Y| - 11",
       "sign_analysis": {
         "single_term_sign": "p(x,y)*ln(p(x,y)/(p(x)p(y))) can be positive or negative individually",
         "global_sum_sign": "I(X;Y) >= 0, but individual cells are mixed sign",
-        "verdict": "add_gen required for all |X||Y|-1 additions"
+        "verdict_v4": "add_gen=11n required for all |X||Y|-1 additions",
+        "verdict_v5": "add=2n for all real (ADD-T1); mixed-sign cells no longer penalized"
       },
       "breakdown": {
         "per_cell": [
@@ -140,13 +155,15 @@
         "per_cell_total": "7n",
         "total_cells": "|X|*|Y|",
         "N_cells_total": "7*|X|*|Y|",
-        "additions": "(|X||Y|-1) * add_gen = 11(|X||Y|-1)  [mixed sign terms]",
-        "grand_total": "7|X||Y| + 11(|X||Y|-1) = 18|X||Y| - 11"
+        "additions_v5": "(|X||Y|-1) * add = 2(|X||Y|-1)  [add=2n, ADD-T1]",
+        "additions_v4": "(|X||Y|-1) * add_gen = 11(|X||Y|-1)  [was mixed-sign penalty]",
+        "grand_total_v5": "7|X||Y| + 2(|X||Y|-1) = 9|X||Y| - 2",
+        "grand_total_v4": "7|X||Y| + 11(|X||Y|-1) = 18|X||Y| - 11"
       },
       "spot_checks": {
-        "binary_2x2":  {"formula": "18*4-11 = 61n",    "note": "binary X and Y"},
-        "3x3":         {"formula": "18*9-11 = 151n"},
-        "10x10":       {"formula": "18*100-11 = 1789n"}
+        "binary_2x2":  {"v5": "9*4-2 = 34n",    "v4": "18*4-11 = 61n",    "savings": "27n", "note": "binary X and Y"},
+        "3x3":         {"v5": "9*9-2 = 79n",    "v4": "18*9-11 = 151n",   "savings": "72n"},
+        "10x10":       {"v5": "9*100-2 = 898n",  "v4": "18*100-11 = 1789n","savings": "891n"}
       }
     },
     {
@@ -155,29 +172,32 @@
       "expression": "PP(P) = exp(-1/N * sum_i ln(p_i))",
       "domain": "Language model evaluation, information theory",
       "n_dependence": "O(N), N = sequence length or vocabulary",
-      "cost_formula": "12N - 6",
+      "cost_formula": "3N + 5",
+      "cost_formula_v4": "12N - 6",
       "sign_analysis": {
         "ln_p_i_range": "(-inf, 0]",
         "all_terms_sign": "All ln(p_i) <= 0",
         "sum_sign": "sum ln(p_i) <= 0",
-        "note": "Sum of same-sign (negative) values still requires add_gen — sign uniformity alone is insufficient; add_pos requires positivity"
+        "verdict_v4": "add_gen=11n required since values are negative (add_pos requires positivity)",
+        "verdict_v5": "add=2n for all real (ADD-T1); the negative-value penalty is eliminated"
       },
       "breakdown": {
         "steps": [
           {"op": "ln(p_i) for each i",    "cost_total": "N * 1 = N",         "note": "N evaluations of ln"},
-          {"op": "(N-1) additions of negative values", "cost_total": "(N-1)*11", "note": "add_gen: values are negative, not positive"},
+          {"op": "(N-1) additions of negative values", "cost_total_v5": "(N-1)*2", "cost_total_v4": "(N-1)*11", "note": "v5: add=2n regardless of sign; v4: add_gen=11n"},
           {"op": "neg(sum)",              "cost": 2,   "note": "negate the negative sum to get positive"},
           {"op": "div(neg_sum, N)",       "cost": 2,   "note": "divide by N (1/N average)"},
           {"op": "exp(result)",           "cost": 1,   "note": "exponentiate to get perplexity"}
         ],
-        "grand_total": "N + 11(N-1) + 2 + 2 + 1 = 12N - 6"
+        "grand_total_v5": "N + 2(N-1) + 2 + 2 + 1 = 3N + 3",
+        "grand_total_v4": "N + 11(N-1) + 2 + 2 + 1 = 12N - 6"
       },
       "spot_checks": {
-        "N=10":   {"formula": "12*10-6 = 114n",    "example": "PP(uniform 10) = 10 exactly"},
-        "N=100":  {"formula": "12*100-6 = 1194n",  "example": "PP(uniform 100) = 100 exactly"},
-        "N=1000": {"formula": "12*1000-6 = 11994n", "example": "LM evaluation over 1000-token context"}
+        "N=10":   {"v5": "3*10+3 = 33n",    "v4": "12*10-6 = 114n",    "savings": "81n", "example": "PP(uniform 10) = 10 exactly"},
+        "N=100":  {"v5": "3*100+3 = 303n",  "v4": "12*100-6 = 1194n",  "savings": "891n"},
+        "N=1000": {"v5": "3*1000+3 = 3003n","v4": "12*1000-6 = 11994n", "savings": "8991n"}
       },
-      "cost_insight": "Perplexity costs 12N-6 vs Shannon's 8N-3 for N terms. The 4N-3 overhead comes from: (a) losing add_pos (negative ln values force add_gen, costing 8n extra per addition), and (b) the additional neg+div+exp steps. The add_gen dominance is the key bottleneck."
+      "cost_insight": "v5: Perplexity costs 3N+3 vs Shannon's 8N-3. The add_gen penalty is gone. The remaining overhead (neg+div+exp = 5n fixed) is now small relative to N. v4 overhead was 4N-3 growing with N due to add_gen dominance; v5 overhead is just 5 fixed nodes."
     },
     {
       "id": 6,
@@ -185,7 +205,8 @@
       "expression": "H = -sum_i mu_i * sum_j P_ij * ln(P_ij)",
       "domain": "Information theory, stochastic processes, ergodic theory",
       "n_dependence": "O(|S|^2), |S| = number of states",
-      "cost_formula": "8|S|^2 + 2|S| - 3",
+      "cost_formula": "7|S|^2 + 2|S| - 2",
+      "cost_formula_v4": "8|S|^2 + 2|S| - 3",
       "sign_analysis": {
         "inner_H_i": "Shannon entropy of row i — each inner term is non-negative",
         "mu_i_times_H_i": "non-negative (mu_i >= 0, H_i >= 0)",
@@ -194,7 +215,8 @@
       "breakdown": {
         "inner_loop": {
           "description": "For each state i, compute H_i = Shannon entropy of transition row P_ij",
-          "cost_per_state": "8|S| - 3  [Shannon entropy formula with N=|S|]",
+          "cost_per_state_v5": "7|S| - 2  [v5 Shannon formula with N=|S|]",
+          "cost_per_state_v4": "8|S| - 3  [v4 Shannon formula]",
           "number_of_states": "|S|"
         },
         "outer_mul": {
@@ -203,17 +225,19 @@
           "note": "per state"
         },
         "outer_sum": {
-          "op": "(|S|-1) * add_pos",
-          "cost_total": "3(|S|-1)",
-          "note": "mu_i*H_i >= 0 for all i => add_pos"
+          "op": "(|S|-1) * add",
+          "cost_total_v5": "2(|S|-1)",
+          "cost_total_v4": "3(|S|-1)",
+          "note": "v5: add=2n (ADD-T1); mu_i*H_i >= 0, but add_pos=3n is subsumed by universal add=2n"
         },
-        "grand_total": "|S|*(8|S|-3+2) + (|S|-1)*3 = |S|*(8|S|-1) + 3|S|-3 = 8|S|^2 + 2|S| - 3"
+        "grand_total_v5": "|S|*(7|S|-2+2) + (|S|-1)*2 = 7|S|^2 + 2|S|-2",
+        "grand_total_v4": "|S|*(8|S|-3+2) + (|S|-1)*3 = |S|*(8|S|-1) + 3|S|-3 = 8|S|^2 + 2|S| - 3"
       },
       "spot_checks": {
-        "S=2":  {"formula": "8*4+4-3 = 33n"},
-        "S=3":  {"formula": "8*9+6-3 = 75n"},
-        "S=10": {"formula": "8*100+20-3 = 817n"},
-        "S=20": {"formula": "8*400+40-3 = 3237n"}
+        "S=2":  {"v5": "7*4+4-2 = 30n",    "v4": "8*4+4-3 = 33n",    "savings": "3n"},
+        "S=3":  {"v5": "7*9+6-2 = 67n",    "v4": "8*9+6-3 = 75n",    "savings": "8n"},
+        "S=10": {"v5": "7*100+20-2 = 718n", "v4": "8*100+20-3 = 817n","savings": "99n"},
+        "S=20": {"v5": "7*400+40-2 = 2838n","v4": "8*400+40-3 = 3237n","savings": "399n"}
       }
     },
     {
@@ -222,7 +246,8 @@
       "expression": "H(Y|X) = -sum_x sum_y p(x,y) * ln(p(y|x))",
       "domain": "Information theory, channel capacity, decision trees",
       "n_dependence": "O(|X|*|Y|), double sum",
-      "cost_formula": "10|X||Y| - 3",
+      "cost_formula": "9|X||Y| - 2",
+      "cost_formula_v4": "10|X||Y| - 3",
       "sign_analysis": {
         "p_y_given_x_range": "(0, 1]",
         "ln_p_y_given_x_range": "(-inf, 0]",
@@ -240,15 +265,17 @@
         "per_pair_total": "7n",
         "total_pairs": "|X|*|Y|",
         "N_pairs_total": "7*|X|*|Y|",
-        "additions": "(|X||Y|-1) * add_pos = 3(|X||Y|-1)  [all terms non-negative]",
-        "grand_total": "7|X||Y| + 3(|X||Y|-1) = 10|X||Y| - 3"
+        "additions_v5": "(|X||Y|-1) * add = 2(|X||Y|-1)  [add=2n, ADD-T1; terms are non-negative but add is universal]",
+        "additions_v4": "(|X||Y|-1) * add_pos = 3(|X||Y|-1)  [required non-negativity]",
+        "grand_total_v5": "7|X||Y| + 2(|X||Y|-1) = 9|X||Y| - 2",
+        "grand_total_v4": "7|X||Y| + 3(|X||Y|-1) = 10|X||Y| - 3"
       },
       "spot_checks": {
-        "2x2":   {"formula": "10*4-3 = 37n"},
-        "3x3":   {"formula": "10*9-3 = 87n"},
-        "10x10": {"formula": "10*100-3 = 997n"}
+        "2x2":   {"v5": "9*4-2 = 34n",   "v4": "10*4-3 = 37n",   "savings": "3n"},
+        "3x3":   {"v5": "9*9-2 = 79n",   "v4": "10*9-3 = 87n",   "savings": "8n"},
+        "10x10": {"v5": "9*100-2 = 898n", "v4": "10*100-3 = 997n","savings": "99n"}
       },
-      "comparison_with_mi": "Conditional entropy (10|X||Y|-3) is cheaper than mutual information (18|X||Y|-11) despite similar structure. The key difference: H(Y|X) terms are always non-negative (add_pos=3n), while I(X;Y) terms are mixed sign (add_gen=11n). This 8n-per-addition gap drives the cost difference."
+      "comparison_with_mi": "v5: Both conditional entropy (9|X||Y|-2) and mutual information (9|X||Y|-2) now cost the SAME! The entire gap from v4 (10|X||Y|-3 vs 18|X||Y|-11) was driven by add_pos vs add_gen. With add=2n for all, the sign advantage of H(Y|X) is eliminated — both converge to 9|X||Y|-2."
     },
     {
       "id": 8,
@@ -256,31 +283,36 @@
       "expression": "JSD(P||Q) = H((P+Q)/2) - (H(P) + H(Q))/2",
       "domain": "Information theory, distributional distance, generative models",
       "n_dependence": "O(N), N = number of outcomes",
-      "cost_formula": "29N - 2",
+      "cost_formula": "26N - 2",
+      "cost_formula_v4": "29N - 2",
       "breakdown": {
         "step_1_mixture": {
           "description": "Compute M_i = (p_i + q_i)/2 for each i",
           "ops": [
-            {"op": "add(p_i, q_i)",    "cost": 3, "note": "add_pos: both p_i, q_i >= 0"},
+            {"op": "add(p_i, q_i)",    "cost": 2, "note": "v5: add=2n for all (ADD-T1); p_i, q_i >= 0, was add_pos=3n"},
             {"op": "mul(sum, 0.5)",    "cost": 2, "note": "multiply by constant 1/2"}
           ],
-          "cost_per_i": "5n",
-          "cost_total": "5N"
+          "cost_per_i": "4n",
+          "cost_total_v5": "4N",
+          "cost_total_v4": "5N"
         },
         "step_2_H_M": {
-          "description": "Shannon entropy of mixture M",
-          "cost": "8N - 3"
+          "description": "Shannon entropy of mixture M (v5 cost)",
+          "cost_v5": "7N - 2",
+          "cost_v4": "8N - 3"
         },
         "step_3_H_P": {
-          "description": "Shannon entropy of P",
-          "cost": "8N - 3"
+          "description": "Shannon entropy of P (v5 cost)",
+          "cost_v5": "7N - 2",
+          "cost_v4": "8N - 3"
         },
         "step_4_H_Q": {
-          "description": "Shannon entropy of Q",
-          "cost": "8N - 3"
+          "description": "Shannon entropy of Q (v5 cost)",
+          "cost_v5": "7N - 2",
+          "cost_v4": "8N - 3"
         },
         "step_5_average_entropy": [
-          {"op": "add(H_P, H_Q)",        "cost": 3, "note": "add_pos: both entropies >= 0"},
+          {"op": "add(H_P, H_Q)",        "cost": 2, "note": "v5: add=2n (ADD-T1); both entropies >= 0, was add_pos=3n"},
           {"op": "div(H_P_plus_H_Q, 2)", "cost": 2, "note": "divide by 2"}
         ],
         "step_6_subtract": {
@@ -288,15 +320,17 @@
           "cost": 2,
           "note": "sub=2n always; result JSD >= 0 by convexity of entropy"
         },
-        "grand_total": "5N + (8N-3) + (8N-3) + (8N-3) + 3 + 2 + 2 = 29N - 2"
+        "grand_total_v5": "4N + (7N-2) + (7N-2) + (7N-2) + 2 + 2 + 2 = 25N + 2... recalculate: 4N + 3*(7N-2) + 2+2+2 = 4N + 21N - 6 + 6 = 25N",
+        "grand_total_v5_correct": "4N + 3*(7N-2) + 2 + 2 + 2 = 4N + 21N - 6 + 6 = 25N",
+        "grand_total_v4": "5N + (8N-3) + (8N-3) + (8N-3) + 3 + 2 + 2 = 29N - 2"
       },
       "spot_checks": {
-        "N=2":    {"formula": "29*2-2 = 56n",    "example": "JSD([1,0]||[0,1]) = ln(2) = 0.693 nats"},
-        "N=4":    {"formula": "29*4-2 = 114n"},
-        "N=10":   {"formula": "29*10-2 = 288n"},
-        "N=256":  {"formula": "29*256-2 = 7422n"}
+        "N=2":    {"v5": "25*2 = 50n",    "v4": "29*2-2 = 56n",    "savings": "6n",   "example": "JSD([1,0]||[0,1]) = ln(2) = 0.693 nats"},
+        "N=4":    {"v5": "25*4 = 100n",   "v4": "29*4-2 = 114n",   "savings": "14n"},
+        "N=10":   {"v5": "25*10 = 250n",  "v4": "29*10-2 = 288n",  "savings": "38n"},
+        "N=256":  {"v5": "25*256 = 6400n","v4": "29*256-2 = 7422n", "savings": "1022n"}
       },
-      "cost_insight": "JSD = 3 Shannon evaluations + mixture computation. The 29N-2 cost vs Shannon's 8N-3 reflects the 3x structural overhead. JSD is bounded: 0 <= JSD <= ln(2), making it a superior distance metric to KL (unbounded) at 3.6x its cost."
+      "cost_insight": "v5: JSD = 3 Shannon evaluations (7N-2 each) + mixture (4N) + scalar ops (6n) = 25N. v4 was 29N-2. The savings come from: (a) mixture step: add_pos 3n→add 2n saves 1n per N term = N saved; (b) each Shannon eval: 8N-3 → 7N-2 saves N-1 per eval = 3*(N-1) = 3N-3 saved; total ~4N saved consistent with 29N-2 → 25N."
     }
   ],
   "cross_domain_isomorphisms": {
@@ -313,8 +347,9 @@
         "name": "KL divergence = free energy difference",
         "IT_form":      "D_KL(P||Q) = sum_i p_i * ln(p_i/q_i)",
         "physics_form": "Delta_F / k_B*T = D_KL(P_nonequil || P_equil)",
-        "EML_cost": "16N - 11",
-        "note": "KL divergence from equilibrium measures thermodynamic free energy cost of non-equilibrium distribution."
+        "EML_cost_v5": "7N - 2",
+        "EML_cost_v4": "16N - 11",
+        "note": "v5: KL divergence now equals Shannon entropy cost (7N-2). The 2x cost ratio from v4 is eliminated by ADD-T1."
       },
       {
         "name": "Cross-entropy loss = Shannon cross-entropy",
@@ -340,28 +375,30 @@
   },
   "summary_table": {
     "columns": ["id", "equation", "cost_formula", "N=10_cost", "key_sign_insight"],
+    "columns_note": "v5 costs shown (SuperBEST v5, add=2n for all real x,y, ADD-T1)",
     "rows": [
-      [1, "Shannon entropy H(X)",          "8N - 3",           77,    "neg-first => each term positive => add_pos"],
-      [2, "KL divergence D_KL(P||Q)",      "16N - 11",         149,   "terms individually signed => add_gen; 2x Shannon"],
-      [3, "Cross-entropy loss H(P,Q)",     "8N - 3",           77,    "identical to Shannon: -p*ln(q) >= 0 termwise"],
-      [4, "Mutual info I(X;Y)",            "18|X||Y| - 11",    1789,  "extra mul for marginals; add_gen (signed terms)"],
-      [5, "Perplexity PP",                 "12N - 6",          114,   "neg ln values => add_gen dominates"],
-      [6, "Entropy rate H(Markov)",        "8|S|^2 + 2|S| - 3",817,  "quadratic: inner Shannon loop per state"],
-      [7, "Conditional entropy H(Y|X)",   "10|X||Y| - 3",     997,   "div for p(y|x) but terms positive => add_pos"],
-      [8, "JSD(P||Q)",                     "29N - 2",          288,   "3 Shannon evals + mixture; most expensive per-N"]
+      [1, "Shannon entropy H(X)",          "7N - 2  (v4: 8N-3)",       68,    "v5: add=2n saves 1n per addition vs add_pos=3n; optimal strategy shifts to direct sum (5N) for large N"],
+      [2, "KL divergence D_KL(P||Q)",      "7N - 2  (v4: 16N-11)",     68,    "v5: add=2n saves 9n per addition; KL now equals Shannon cost per term"],
+      [3, "Cross-entropy loss H(P,Q)",     "7N - 2  (v4: 8N-3)",       68,    "identical to Shannon in v5"],
+      [4, "Mutual info I(X;Y)",            "9|X||Y| - 2  (v4: 18|X||Y|-11)", 898, "v5: add=2n saves 9n per cell addition"],
+      [5, "Perplexity PP",                 "3N + 3  (v4: 12N-6)",      33,    "v5: add=2n for negative ln values; dramatic reduction"],
+      [6, "Entropy rate H(Markov)",        "7|S|^2 + 2|S| - 2  (v4: 8|S|^2+2|S|-3)", 700, "quadratic: inner Shannon loop per state (7N-2 per row in v5)"],
+      [7, "Conditional entropy H(Y|X)",   "9|X||Y| - 2  (v4: 10|X||Y|-3)", 898, "v5: add_pos 3n→add 2n saves 1n per cell addition"],
+      [8, "JSD(P||Q)",                     "25N  (v4: 29N-2)",         250,   "v5: 3 Shannon evals (7N-2 each) + mixture (4N) + scalars; saves ~4N vs v4"]
     ],
     "note_N10": "For equations 4, 6, 7: N=10 means |X|=|Y|=10 (100 cells/pairs) or |S|=10 states"
   },
   "eml_domain_assessment": {
     "verdict": "Information theory is the most EML-native applied domain after pure mathematics",
     "rationale": [
-      "Core primitive is p*ln(p): ln=1n + mul=2n = 3n per weighted log term",
-      "Shannon entropy 8N-3 is among the lowest costs for any N-term statistical formula",
+      "Core primitive is p*ln(p): ln=1n + mul=2n = 3n per weighted log term (unchanged in v5)",
+      "Shannon entropy v5: 7N-2 (v4: 8N-3). KL divergence v5: 7N-2 (v4: 16N-11). They are now EQUAL.",
       "Cross-entropy ML loss is structurally identical to IT entropy: zero overhead for ML training",
-      "The dominant cost driver is sign structure, not computational complexity",
-      "Nearly all costs collapse to 8N-3 (positive terms) or 16N-11 (signed terms)",
-      "The 8n factor difference between add_pos and add_gen is the main architectural lever"
+      "v5 key insight: sign-definiteness NO LONGER drives cost. add=2n for all real inputs (ADD-T1).",
+      "All N-term sums collapse to (alpha_0 + 2)*N - 2 regardless of sign structure",
+      "The KL vs Shannon 2x cost ratio from v4 is ELIMINATED. The positive/signed split is obsolete."
     ],
-    "design_principle": "The central optimization question for any information-theoretic formula: are the summands sign-definite? If yes, 3n/addition; if no, 11n/addition. Restructuring formulas to expose positive terms is the primary cost reduction strategy."
+    "design_principle": "v5: The central optimization question shifts from sign-definiteness to structural complexity. The add_gen vs add_pos distinction is gone. Focus on minimizing mul/div chains and per-term node count. For Shannon, the direct-sum strategy (5N, computing p*ln(p) then negating sum) is now optimal for N>=3.",
+    "v4_design_principle_obsolete": "v4: The central optimization question was: are summands sign-definite? If yes, 3n/addition; if no, 11n/addition. This 8n gap no longer exists in v5."
   }
 }

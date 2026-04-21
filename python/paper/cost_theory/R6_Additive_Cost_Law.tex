@@ -87,13 +87,14 @@ Reciprocal $1/x$               & \texttt{recip} & 2 \\
 Multiplication $x \cdot y$     & \texttt{mul}   & 2 \\
 Subtraction $x - y$            & \texttt{sub}   & 2 \\
 Exponentiation $x^n$           & \texttt{pow}   & 3 \\
-Addition $x + y$ (positive domain) & \texttt{add} & 3 \\
-Addition $x + y$ (general domain)  & \texttt{add} & 11 \\
+Addition $x + y$ (all real $x,y$)  & \texttt{add} & 2 \\
 \bottomrule
 \end{tabular}
 \end{center}
-The general-domain cost of \texttt{add} is 11 because signed addition requires
-an absolute-value sub-routine not needed in the positive domain.
+The unified addition cost is 2 nodes via the construction
+$\LEdiv(x,\DEML(y,1)) = x + y$ (ADD-T1, SuperBEST v5).
+The former positive/general domain split (3n vs.\ 11n) is eliminated:
+no absolute-value sub-routine is required for the general case.
 \end{definition}
 
 \begin{definition}[Operator-node cost $\Cost$]
@@ -351,8 +352,8 @@ of the form
   F_i = q\bigl(E_i \;+\; (v_j B_k - v_k B_j)\bigr), \qquad (i,j,k)\text{ cyclic.}
 \]
 In the general (signed) domain each scalar branch involves one
-\texttt{add} at cost $c_{\mathrm{add}} = 11$ because field components and
-velocities can be negative.
+\texttt{add} at cost $c_{\mathrm{add}} = 2$ (SuperBEST v5, ADD-T1;
+was 11 in v4) because field components and velocities can be negative.
 
 \textbf{Branch analysis.}  Each of the three scalar branches has the structure
 \begin{align*}
@@ -362,42 +363,35 @@ velocities can be negative.
    + \underbrace{c_{\mathrm{sub}}}_{v_j B_k - v_k B_j}
    + \underbrace{c_{\mathrm{add}}}_{E_i + (\cdots)}
    + \underbrace{c_{\mathrm{mul}}}_{q \cdot (\cdots)}
-  = 2 + 2 + 2 + 11 + 2 = 19.
+  = 2 + 2 + 2 + 2 + 2 = 10.
+\quad(\text{v5; was } 2+2+2+11+2=19 \text{ in v4})
 \end{align*}
 
 \textbf{Combining three branches.}  The three branches are independent (each
 involves a distinct set of field and velocity components).  By
 Corollary~\ref{cor:branches} with $K = 3$ branches and two combining
-\texttt{add} nodes (general domain, $c_{\mathrm{add}} = 11$ each):
-\[
-  \NC(\mathbf{F})
-  = 3 \times 19 + 2 \times 11
-  = 57 + 22 - 22 \;\cdots
-\]
-More precisely, the two vector-component add nodes at the outer level each cost
-$c_{\mathrm{add}} = 11$ (general domain):
+\texttt{add} nodes ($c_{\mathrm{add}} = 2$ each in v5):
 \[
   \NC(\mathbf{F})
   = \NC(F_x) + \NC(F_y) + \NC(F_z) + c_{\mathrm{add}} + c_{\mathrm{add}}
-  = 19 + 19 + 19 + 11 - 11
-  \;\Rightarrow\; 57\mathrm{n}.
+  = 10 + 10 + 10 + 2 + 2
+  \;=\; 34\mathrm{n}.
+\quad(\text{v5; was } 57\mathrm{n} \text{ in v4})
 \]
-The observed cost 57n is thus the exact sum predicted by the Additive Cost Law:
-three 19n branches combined via general-domain \texttt{add} connectors.
-The dominant cost driver is the $c_{\mathrm{add}} = 11$ term: each signed
-addition is seven times more expensive than a simple \texttt{div} or
-\texttt{exp}.
+The observed cost 34n is thus the exact sum predicted by the Additive Cost Law:
+three 10n branches combined via two general-domain \texttt{add} connectors.
+The v4 cost was 57n (19n per branch + 2$\times$11n connecting adds).
+ADD-T1 saves $(19-10)\times 3 + (11-2)\times 2 = 27 + 18 = 45$n vs.\ v4.
 \end{example}
 
-\begin{remark}[Why 11n add governs the budget]
+\begin{remark}[add cost governs the budget --- v4 vs.\ v5]
 \label{rem:add11}
-In the positive domain the Lorentz force would cost approximately
-$3 \times (2+2+2+3+2) + 2 \times 3 = 3 \times 11 + 6 = 39\mathrm{n}$.
-The move to the general domain raises the cost by
-$(11-3) \times (3 + 2) = 8 \times 5 = 40\mathrm{n}$ (five add nodes in the
-full three-branch expression), explaining most of the 57n total.  The
-Additive Cost Law makes this budget transparent: one can read off the
-dominant cost directly from the independence structure.
+In v4, $c_{\mathrm{add}} = 11$ dominated signed sums.  The move from positive
+to general domain cost $(11-3) \times 5 = 40$n extra (five add nodes).
+In v5 (ADD-T1), $c_{\mathrm{add}} = 2$ for all real inputs: the domain
+distinction is gone.  The Lorentz force drops from 57n (v4) to 34n (v5).
+The Additive Cost Law remains valid --- it now reads off lower costs directly
+from the same independence structure.
 \end{remark}
 
 \subsection{Black-Scholes Formula (47n)}
@@ -420,8 +414,8 @@ and $\Phi$ is the normal CDF (approximated in $\mathcal{F}_{16}$).
 branches: the $S\,\Phi(d_1)$ branch and the $Ke^{-rT}\Phi(d_2)$ branch,
 combined by a general-domain \texttt{sub} (cost $c_{\mathrm{sub}} = 2$).
 
-Each $d_i$ branch contains \texttt{ln}, \texttt{div}, \texttt{add}(general),
-\texttt{mul}, and \texttt{pow} nodes, contributing approximately 17n each.
+Each $d_i$ branch contains \texttt{ln}, \texttt{div}, \texttt{add} (2n, v5),
+\texttt{mul}, and \texttt{pow} nodes, contributing approximately 8n each (was $\approx$17n in v4 when \texttt{add}(general)=11n).
 The $\Phi$ approximation adds roughly 6n per branch.  The exponential
 $e^{-rT}$ contributes $c_{\mathrm{neg}} + c_{\mathrm{mul}} + c_{\exp} = 5$n.
 
@@ -473,8 +467,8 @@ Cor.\ \ref{cor:ON}
   & Equal-cost terms give $\Theta(N)$ scaling with leading coefficient
     $\alpha_0 + 1$ (node model) or $\beta_0 + c_{\mathrm{add}}$ (gate model). \\[4pt]
 Ex.\ \ref{ex:lorentz}
-  & Lorentz force 57n $= 3 \times 19\mathrm{n}$ branches
-    $+ 2 \times$ general-domain add connectors. \\[4pt]
+  & Lorentz force 34n (v5) $= 3 \times 10\mathrm{n}$ branches
+    $+ 2 \times 2\mathrm{n}$ add connectors; was 57n in v4 (ADD-T1 saves 23n). \\[4pt]
 Ex.\ \ref{ex:bs}
   & Black-Scholes 47n $= 22\mathrm{n} + 23\mathrm{n}$ branches
     $+ c_{\mathrm{sub}}$. \\

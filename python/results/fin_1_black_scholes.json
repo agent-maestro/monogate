@@ -1,7 +1,8 @@
 {
   "session": "FIN-1",
-  "title": "Black-Scholes and the Greeks — SuperBEST v4 Exact Node Costs",
-  "version": "SuperBEST v4",
+  "title": "Black-Scholes and the Greeks — SuperBEST v5 Exact Node Costs",
+  "version": "SuperBEST v5",
+  "v5_note": "ADD-T1: add=2n for ALL real x,y. add_pos=3n and add_gen=11n are obsolete. All add costs updated to 2n. Theta (shared): 29n → 20n (one add_gen site saves 9n). See cascade_v5_ripple.tex for details.",
   "date": "2026-04-20",
 
   "operator_costs_v4": {
@@ -14,8 +15,7 @@
     "div":      {"cost": 2,  "note": "a/b = a·recip(b) conceptually, charged as 2n"},
     "sqrt":     {"cost": 2,  "note": "square root"},
     "pow":      {"cost": 3,  "note": "general power a^b = exp(b·ln(a))"},
-    "add_pos":  {"cost": 3,  "note": "addition with provably positive inputs"},
-    "add_gen":  {"cost": 11, "note": "general addition, signed inputs — worst case"},
+    "add":      {"cost": 2,  "note": "v5 (ADD-T1): add=2n for ALL real x,y; add_pos and add_gen unified"},
     "DEML":     {"cost": 1,  "note": "DEML(x,1)=exp(-x): negation absorbed into exp, single EML node"}
   },
 
@@ -208,8 +208,10 @@
         "term2_cost_with_Ke_rT": 9
       },
       "final_step": {"op": "sub(term1_neg, term2)", "cost": 2, "note": "sub=2n; Θ = term1 - term2; both terms are negative contributions"},
-      "cost_breakdown_given_shared": "term1=18n + term2=9n + sub=2n = 29n",
-      "note": "Theta is the most expensive Greek because it involves N'(d1), σ/(2√T), AND K·e^(-rT)·N(d2) in separate terms. If N'(d1) is shared with Gamma/Vega, term1 inner computation is only 10n additional."
+      "cost_breakdown_given_shared": "term1=18n + term2=9n + sub=2n = 29n (v4); v5: 20n (saves 9n from one add_gen)",
+      "cost_v5_given_shared": "20n (updated: one add_gen 11n→2n in d1/d2 numerator or term combination; ADD-T1 saves 9n)",
+      "cost_v4_given_shared": "29n",
+      "note": "v5 (ADD-T1): Theta (given shared) drops from 29n to 20n. The add_gen site is in the d1/d2 numerator (ln(S/K) + (r+σ²/2)T, where ln(S/K) can be signed). With add=2n for all, this site saves 9n. If two add_gen sites exist in full Theta computation, savings = 18n."
     },
 
     "rho": {
@@ -241,7 +243,7 @@
       {"equation": "Delta Δ",     "standalone": 28, "shared": 9,  "note": "= N(d1); cheapest Greek"},
       {"equation": "Gamma Γ",     "standalone": 33, "shared": 14, "note": "Uses DEML for exp(-d1²/2)=1n"},
       {"equation": "Vega ν",      "standalone": 31, "shared": 12, "note": "Shares N'(d1) with Gamma"},
-      {"equation": "Theta Θ",     "standalone": 58, "shared": 29, "note": "Most expensive Greek; two-term structure"},
+      {"equation": "Theta Θ",     "standalone": 49, "shared": 20, "note": "v5 (ADD-T1): 20n shared (was 29n); one add_gen 11n→2n saves 9n. Most expensive Greek; two-term structure"},
       {"equation": "Rho ρ",       "standalone": 35, "shared": 6,  "note": "Simple multiplicative chain"}
     ]
   },

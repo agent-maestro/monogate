@@ -87,20 +87,22 @@ make paper            # compile preprint.tex (requires TeX Live)
 
 ---
 
-## SuperBEST routing table (T08 — all entries exhaustive-search optimal)
+## SuperBEST v5 routing table (all 10 entries proved optimal)
 
-| Operation | BEST family | BEST nodes | Naive EML | Saving |
-|-----------|-------------|-----------|-----------|--------|
-| pow | EXL | 3 | 15 | −12 |
-| div | EDL | 1 | 15 | −14 |
-| mul | EXL | 3 | 13 | −10 |
-| ln  | EXL | 1 |  3 | −2  |
-| recip | EDL | 2 | 5 | −3 |
-| neg | EXL/DEML | 2 | 9 | −7 |
-| sub | EML | 3 | 5 | −2 |
-| add | EAL | 3 | 11 | −8 |
+| Operation | Construction | SB nodes | Naive EML | Saving |
+|-----------|-------------|---------|-----------|--------|
+| exp | EML(x,1) | 1 | 1 | — |
+| ln  | EXL(0,x) | 1 | 3 | −2 |
+| e^−x | DEML(0,x) | 1 | 5 | −4 |
+| recip | ELSb(0,x) | 1 | 5 | −4 |
+| div | ELSb(ln x, y) | 2 | 15 | −13 |
+| neg | EXL(0,DEML(0,x)) | 2 | 9 | −7 |
+| mul | ELAd(EXL(0,x),y) | 2 | 13 | −11 |
+| sub | LEdiv(x,EML(y,1)) | 2 | 5 | −3 |
+| add | LEdiv(x,DEML(y,1)) | **2** | 8 | −6 |
+| pow | EML(EXL(0,x)·n,1) | 3 | 15 | −12 |
 
-Total: **21 nodes** (SuperBEST) vs 73 (all-EML) — **71.2% fewer.** (T23)
+Total: **18 nodes** (SuperBEST v5) vs 73 (naive EML) — **75.3% fewer.** (ADD-T1)
 
 16 exp-ln operators classified: **8 exactly complete, 1 approximately complete (EMN), 7 incomplete.** (T24–T28)
 

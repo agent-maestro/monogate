@@ -92,13 +92,21 @@
 
 % ── Abstract ─────────────────────────────────────────────────────────────────
 \begin{abstract}
+\textbf{Historical note (SuperBEST v5, ADD-T1, April 2026).}
+Theorem ADD-T1 proves that general-domain addition costs exactly 2 nodes via
+$\LEdiv(x,\DEML(y,1)) = x+y$, eliminating the positive/general routing split
+entirely.  Both routes now cost 2 nodes; the domain-folding saving $\Delta_{\mathrm{add}} = 0$.
+The analysis below is preserved for historical completeness and as an illustration
+of domain propagation techniques applicable to other operator families.
+\bigskip
+
 SuperBEST v3 provides two routing paths for binary addition: a positive-domain
 route costing $3n$ nodes, used when both operands are provably positive, and a
 general-domain route costing $11n$ nodes, used otherwise (requiring internal
 absolute-value circuitry).
 The \emph{Domain-Folding Theorem} ($T_{\mathrm{DF}}$) formalises exactly when the
 positive-domain route applies and quantifies the savings: \emph{8 nodes per
-addition}.
+addition} (v3/v4; \emph{0 nodes per addition in v5}).
 We prove eight domain propagation rules that a static analyser can apply to an
 expression tree to classify operands as $\POS$, $\NEG$, or $\UNK$ without
 evaluating any inputs.
@@ -107,7 +115,8 @@ linear time.
 Applied to the 157-equation monogate catalog, we estimate that approximately
 60\% of equations contain at least one positively-routable addition, yielding a
 total savings of roughly $8n \times 151$ addition sites across the catalog ---
-a non-trivial structural economy over the na\"{i}ve general-domain assumption.
+a non-trivial structural economy over the na\"{i}ve general-domain assumption
+(relevant for v3/v4; superseded by ADD-T1 in v5).
 \end{abstract}
 
 \tableofcontents
@@ -126,17 +135,21 @@ addition $x + y$.
 
 \begin{table}[h]
 \centering
-\caption{SuperBEST v3 addition costs by domain.}
+\caption{Addition costs by domain (v3/v4 historical; v5 unified).}
 \label{tab:add-costs}
 \smallskip
-\begin{tabular}{@{}lcc@{}}
+\begin{tabular}{@{}lccc@{}}
 \toprule
-\textbf{Routing path} & \textbf{Condition} & \textbf{Cost ($n$)} \\
+\textbf{Routing path} & \textbf{Condition} & \textbf{Cost v3/v4} & \textbf{Cost v5} \\
 \midrule
-Positive-domain addition & $x > 0$ and $y > 0$ provably & $3n$ \\
-General-domain addition  & at least one operand sign unknown & $11n$ \\
+Positive-domain addition & $x > 0$ and $y > 0$ provably & $3n$ & $2n$ \\
+General-domain addition  & at least one operand sign unknown & $11n$ & $2n$ \\
 \bottomrule
 \end{tabular}
+\smallskip
+
+\noindent\textbf{v5 note:} ADD-T1 proves \texttt{add}$(x,y) = 2n$ for all real $x,y$.
+The routing distinction is eliminated.
 \end{table}
 
 \begin{definition}[Domain routing]
@@ -156,17 +169,21 @@ tree.  The \emph{domain routing decision} is the compile-time selection between:
 \label{def:saving}
 The \emph{domain-folding saving} for a single addition node is
 \[
-  \Delta_{\mathrm{add}} \;=\; 11n - 3n \;=\; 8n.
+  \Delta_{\mathrm{add}} \;=\; 11n - 3n \;=\; 8n \quad(\text{v3/v4}).
 \]
 This saving is realised if and only if both operands are certified positive by
-the static analyser.
+the static analyser.  \emph{In SuperBEST v5 (ADD-T1), $\Delta_{\mathrm{add}} = 2n - 2n = 0$:
+all additions cost $2n$ regardless of domain, so domain folding for addition
+is obsolete.}
 \end{definition}
 
 \subsection{Motivation and Scope}
 
-The distinction between $3n$ and $11n$ is the largest single-operator cost gap
+\textbf{Historical context (v3/v4).}
+The distinction between $3n$ and $11n$ was the largest single-operator cost gap
 in $\mathcal{F}_{16}$ (compare: multiplication costs $2n$ regardless of sign,
 and \texttt{exp} costs $1n$ regardless of sign).
+In SuperBEST v5, this gap is eliminated by ADD-T1: \texttt{add} = $2n$ uniformly.
 Consequently, domain-aware compilation has a larger per-site impact on total
 cost than any other routing decision available in SuperBEST v3.
 
@@ -694,15 +711,21 @@ Across all 157 equations this yields an estimate of
 
 \subsection{Total Catalog Savings}
 
-\begin{theorem}[Catalog-level domain-folding savings]
+\begin{theorem}[Catalog-level domain-folding savings --- v4]
 \label{thm:catalog-savings}
+\emph{Note (SuperBEST v5): ADD-T1 collapses all addition costs to 2n, so
+the positive/general domain saving $\Delta_{\mathrm{add}} = 0$ in v5.
+The v5 catalog saving vs.\ v4 general-domain baseline is:
+$9n \times (\text{\# add\_gen sites})$ from add\_gen $11n\to 2n$;
+and $1n \times (\text{\# add\_pos sites})$ from add\_pos $3n\to 2n$.}
+
 Under the estimate of Observation~\ref{obs:estimate}, the total node saving
-from positive-domain routing across the 157-equation catalog is
+from positive-domain routing across the 157-equation catalog \emph{(v4 analysis)} is
 \[
   \Delta_{\mathrm{catalog}} \;=\; 8n \times 151 \;=\; 1208n.
 \]
 This represents a saving of $1208n$ nodes relative to the baseline that treats
-every addition as general-domain (cost $11n$).
+every addition as general-domain (cost $11n$) in v4.
 \end{theorem}
 
 \begin{proof}

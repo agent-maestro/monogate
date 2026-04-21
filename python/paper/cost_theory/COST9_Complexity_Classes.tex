@@ -77,8 +77,8 @@ scientific equation has super-linear cost in its structural parameter.
 
 We identify the structural parameters that govern O(N) scaling (number
 of Fourier terms, Taylor terms, entropy components, pharmacokinetic
-compartments, softmax classes, etc.), examine the addition bottleneck
-(cost 3n positive-domain vs.\ 11n general-domain), and verify the
+compartments, softmax classes, etc.), examine the addition cost (2n unified in SuperBEST v5 via ADD-T1;
+formerly 3n positive-domain vs.\ 11n general-domain), and verify the
 conjecture against the 80$+$ equation catalog built in sessions Chem-1
 through Bio-5.
 \end{abstract}
@@ -111,16 +111,17 @@ Multiplication $xy$  & \texttt{mul}   & 2 \\
 Subtraction $x-y$    & \texttt{sub}   & 2 \\
 Division $x/y$       & \texttt{div}   & 1 \\
 Exponentiation $x^n$ & \texttt{pow}   & 3 \\
-Addition $x+y$       & \texttt{add}   & 3 (positive domain) or 11 (general) \\
+Addition $x+y$       & \texttt{add}   & 2 (all real $x,y$; ADD-T1, SuperBEST v5) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \noindent
-We use $c_{\mathrm{add}} \in \{3, 11\}$ depending on whether both operands
-are guaranteed positive.  In the positive domain the identity
-$\ln(e^x + e^y) - \text{offset}$ implements addition in 3 nodes; in the
-general domain the best known construction uses 11 nodes.
+In SuperBEST v5 (ADD-T1), $c_{\mathrm{add}} = 2$ for all real inputs:
+$\LEdiv(x,\DEML(y,1)) = x+y$ in 2 nodes regardless of operand sign.
+The positive/general split ($c_{\mathrm{add}} \in \{3, 11\}$) is eliminated.
+Below, historical references to $c_{\mathrm{add}} = 3$ or $11$ reflect v3/v4
+analysis; all current scaling laws use $c_{\mathrm{add}} = 2$.
 
 \medskip
 
@@ -235,16 +236,13 @@ themselves each cost some fixed $\alpha_0$.
 \begin{proposition}[General linear cost formula]
 \label{prop:linear_formula}
 If an equation consists of a sum of $N$ terms, where each term has
-fixed SuperBEST cost $\alpha_0$, and where all additions operate in
-the positive domain (cost 3n each), then
+fixed SuperBEST cost $\alpha_0$, then in SuperBEST v5 (all domains, ADD-T1):
 \[
-  \Cost = \alpha_0 \cdot N + 3(N-1) = (\alpha_0 + 3)N - 3.
+  \Cost = \alpha_0 \cdot N + 2(N-1) = (\alpha_0 + 2)N - 2.
 \]
-If additions are in the general domain (cost 11n),
-\[
-  \Cost = (\alpha_0 + 11)N - 11.
-\]
-Both formulas are O(N) in $N$ with leading coefficient $(\alpha_0 + c_{\mathrm{add}})$.
+Historical v4 formulas: positive domain (3n): $(\alpha_0+3)N-3$;
+general domain (11n): $(\alpha_0+11)N-11$.
+All three are O(N) in $N$ with leading coefficient $(\alpha_0 + c_{\mathrm{add}})$.
 \end{proposition}
 
 \begin{proof}
@@ -432,20 +430,18 @@ In practice, the overwhelming majority of scientific equations sum
   \item Squared amplitudes $A_i^2 \geq 0$ (spectral decompositions),
   \item Boltzmann factors $e^{-E_i/k_BT} \geq 0$ (partition functions).
 \end{itemize}
-Signed additions ($c_{\mathrm{add}} = 11$) arise only for explicitly
-signed physical quantities: voltages, displacements, temperature
-differences $\Delta T = T_1 - T_2$, and similar.  In these cases the
-signed additions are typically implemented as subtractions (cost 2n),
-not as general additions (cost 11n).
+In SuperBEST v5 (ADD-T1), signed additions cost $c_{\mathrm{add}} = 2$,
+the same as subtraction.  The distinction between signed and unsigned
+sums is no longer a cost driver.
 \end{remark}
 
-\begin{remark}[Subtraction vs.\ general addition]
-Subtraction $x - y$ costs 2n in SuperBEST v3 (T33), much less than a
-general-domain addition (11n).  Whenever a sum contains negative terms,
-it is algebraically equivalent to rearranging as a difference of
-positive sums.  This substitution is always beneficial:
-$-\sum_i p_i \ln p_i$ is computed as negation of a positive-domain sum,
-not as a general-domain sum of signed terms.
+\begin{remark}[Subtraction vs.\ general addition --- v5 update]
+In SuperBEST v3/v4, subtraction $x - y$ costs 2n while general-domain addition
+costs 11n, making sub-vs-add rearrangement highly beneficial.
+In SuperBEST v5 (ADD-T1), $c_{\mathrm{add}} = c_{\mathrm{sub}} = 2$: both cost
+the same.  The optimization of rearranging sums as differences is no longer
+relevant for cost reduction; choose the form that is most natural for the
+formula.
 \end{remark}
 
 % ════════════════════════════════════════════════════════════════════════════
@@ -674,13 +670,11 @@ has a variable nesting depth.
         the structural class (O(1) vs.\ O(N)) is determined entirely by
         whether the formula contains a summation, not by the scientific
         domain (chemistry, biology, physics).
-  \item \textbf{The positive-domain assumption is almost always valid.}
-        Since nearly all scientific equations sum non-negative quantities,
-        the $c_{\mathrm{add}} = 3$ cost applies in the overwhelming
-        majority of cases.  The $c_{\mathrm{add}} = 11$ general case
-        arises only for explicitly signed intermediates, and these are
-        typically handled as subtractions (cost 2n) rather than signed
-        additions.
+  \item \textbf{Domain distinction is obsolete in SuperBEST v5.}
+        ADD-T1 proves $c_{\mathrm{add}} = 2$ for all real inputs.
+        The positive-domain / general-domain split ($c \in \{3, 11\}$)
+        is replaced by a single unified cost.  All scaling laws update
+        from $(\alpha_0 + 3)N - 3$ to $(\alpha_0 + 2)N - 2$.
 \end{enumerate}
 
 \subsection{Open Questions}

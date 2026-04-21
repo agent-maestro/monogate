@@ -115,8 +115,7 @@ Reciprocal $1/x$                    & \texttt{recip} & 2 \\
 Multiplication $x \cdot y$          & \texttt{mul}   & 2 \\
 Subtraction $x - y$                 & \texttt{sub}   & 2 \\
 Exponentiation $x^n$                & \texttt{pow}   & 3 \\
-Addition $x + y$ (positive domain)  & \texttt{add}$^+$  & 3 \\
-Addition $x + y$ (general domain)   & \texttt{add}   & 11 \\
+Addition $x + y$ (all real $x,y$)   & \texttt{add}   & 2 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -524,7 +523,7 @@ together with their structural conditions and representative examples.
 \centering
 \caption{Complete scaling-law classification for SuperBEST cost.
   $N$ = number of terms/parameters; $\alpha_0$ = cost per independent term;
-  $c_+ = 3$ = positive-domain \texttt{add} cost.}
+  $c_{\texttt{add}} = 2$ = unified addition cost (SuperBEST v5, ADD-T1; was $c_+ = 3$ or $c_{\mathrm{gen}} = 11$).}
 \label{tab:scaling}
 \smallskip
 \begin{tabular}{@{}L{2cm}L{3.8cm}L{4.0cm}L{3.8cm}@{}}
@@ -537,12 +536,12 @@ $O(1)$ &
   Gaussian, sigmoid, softmax (single logit) \\[4pt]
 $O(N)$ &
   Flat summation: single-level tree dependency graph (Thm.~T\_SL2) &
-  $(\alpha_0 + 3)N - 3$ (Thm.~T\_SL1, T\_SL4) &
-  Softmax sum $4N{-}3$; entropy $8N{-}3$; PK model $10N{-}3$ \\[4pt]
+  $(\alpha_0 + 2)N - 2$ (v5; was $(\alpha_0+3)N-3$) &
+  Softmax sum $3N{-}2$; entropy $7N{-}2$; KL $7N{-}2$; PK model $9N{-}2$ \\[4pt]
 $O(N^2)$ &
   Double-sum: $N{\times}N$ independent terms (Thm.~T\_SL3) &
-  $(\alpha_0 + 3)N^2 - 3$ &
-  Hopfield energy ${\approx}7N^2$ \\[4pt]
+  $(\alpha_0 + 2)N^2 - 2$ (v5; was $(\alpha_0+3)N^2-3$) &
+  Hopfield energy ${\approx}6N^2$ \\[4pt]
 ${>O(N^2)}$ &
   No known standard example &
   --- &

@@ -1,12 +1,13 @@
 {
   "session": "SPORT-2",
   "title": "Game Theory and Probability",
-  "version": "SuperBEST v4",
+  "version": "SuperBEST v5",
   "cost_table": {
     "exp": "1n", "ln": "1n", "recip": "1n",
     "neg": "2n", "mul": "2n", "sub": "2n", "div": "2n", "sqrt": "2n",
     "pow": "3n",
-    "add_pos": "3n", "add_gen": "11n"
+    "add": "2n",
+    "_note": "v5: add=2n for ALL real x,y (ADD-T1). add_pos and add_gen distinction eliminated."
   },
   "equations": [
     {
@@ -171,9 +172,9 @@
         "denominator": {
           "sub(a, b)": "2n",
           "sub(result_ab, c)": "2n",
-          "add_type": "add_gen OR add_pos depending on game structure",
-          "add_gen(result_abc, d)": "11n — denominator (a-b-c+d) can be negative depending on payoff matrix; add_gen required for honest accounting",
-          "denom_subtotal": "2+2+11 = 15n"
+          "add_type": "add — now unified 2n for all real inputs (ADD-T1)",
+          "add(result_abc, d)": "2n — (a-b-c+d) can be negative, but add=2n covers ALL real x,y in v5",
+          "denom_subtotal": "2+2+2 = 6n"
         },
         "div(numer, denom)": "2n"
       },
@@ -181,14 +182,15 @@
         {"op": "sub(d, c) [numerator]", "cost": 2},
         {"op": "sub(a, b)", "cost": 2},
         {"op": "sub(result, c)", "cost": 2},
-        {"op": "add_gen(result, d)", "cost": 11},
+        {"op": "add(result, d)", "cost": 2, "note": "v5: add=2n for all real (ADD-T1); sign of denominator is irrelevant"},
         {"op": "div(numerator, denominator)", "cost": 2}
       ],
-      "v4_cost": "19n (honest — add_gen for denominator)",
-      "v4_cost_optimistic": "11n (add_pos if denominator is provably positive for this specific game)",
+      "v5_cost": "10n (updated: add_gen 11n→2n saves 9n, ADD-T1)",
+      "v4_cost": "19n (was honest — add_gen for denominator)",
+      "v4_cost_optimistic": "11n (was add_pos=3n if denominator provably positive)",
       "spec_cost": "10n (used add_pos=3n and old div=1n)",
-      "note": "Critical correction from spec: The denominator (a-b-c+d) is the difference of diagonal sums in the payoff matrix. This can be negative (e.g., coordination games with specific payoffs). Honest cost = add_gen = 11n. If a specific game's structure guarantees positive denominator, add_pos=3n applies giving 11n total. Spec used 10n = 3+3+3+1 (3 subs + add_pos + div=1n). v4 honest = 19n; v4 optimistic = 11n.",
-      "add_gen_justification": "In a general 2x2 payoff matrix [[a,b],[c,d]], the denominator a-b-c+d equals (a+d)-(b+c). This is negative when off-diagonal payoffs exceed diagonal payoffs — common in anti-coordination games. Cannot assume positive without proof.",
+      "note": "v5 update (ADD-T1): add=2n for all real x,y. The denominator (a-b-c+d) sign ambiguity is no longer a cost driver. Total drops from 19n to 10n (saves 9n). v4 honest was 19n; v4 optimistic was 11n.",
+      "add_gen_justification": "OBSOLETE in v5 — add=2n covers all real inputs (ADD-T1). The positive/general split is eliminated.",
       "test_case": {
         "matrix": "Matching Pennies: a=1, b=-1, c=-1, d=1",
         "numerator": "d - c = 1 - (-1) = 2",
@@ -223,5 +225,10 @@
     {"equation": "Kelly Criterion", "old": "7n", "new": "8n", "delta": "+1n", "reason": "div: 1n→2n"},
     {"equation": "Nash Equilibrium (honest)", "old": "10n", "new": "19n", "delta": "+9n", "reason": "add_gen(11n) vs add_pos(3n) for denominator (+8n) and div: 1n→2n (+1n)"},
     {"equation": "Nash Equilibrium (optimistic)", "old": "10n", "new": "11n", "delta": "+1n", "reason": "only div change if denominator provably positive"}
+  ],
+  "v5_changes_summary": [
+    {"equation": "Nash Equilibrium (honest)", "v4": "19n", "v5": "10n", "delta": "-9n", "reason": "add_gen 11n→add 2n (ADD-T1); saves 9n"},
+    {"equation": "Expected Value (mixed-sign outcomes)", "v4_add_gen": "13N-11", "v5": "4N-2", "delta": "9(N-1)n saved", "reason": "add=2n replaces add_gen=11n per addition"},
+    {"note": "All other equations unchanged — no add_gen usage"}
   ]
 }

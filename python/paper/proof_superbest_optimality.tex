@@ -4,7 +4,7 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
 
-\title{SuperBEST Optimality: All 9 Entries Proved Optimal by Exhaustive Search}
+\title{SuperBEST v5 Optimality: All 10 Entries Proved Optimal}
 \author{A.R.\ Almaguer}
 \date{2026-04-20}
 
@@ -12,36 +12,48 @@
 \maketitle
 
 \begin{abstract}
-We present complete optimality proofs for the SuperBEST FINAL routing table (T08).
-Each of the 9 entries is shown optimal: no EML-family operator can represent the
-given operation with fewer nodes. The proofs combine exhaustive depth-bounded search
-(for small bounds) with structural arguments (for lower bounds). Total: 21 nodes
-vs.\ 73 naive EML nodes = 71.2\% savings.
+We present complete optimality proofs for the SuperBEST v5 routing table.
+Each of the 10 entries is shown optimal: no $\mathcal{F}_{16}$-operator can
+represent the given operation with fewer nodes. The proofs combine exhaustive
+depth-bounded search (for small bounds) with structural arguments (for lower
+bounds). The tenth entry --- general addition $\mathrm{add}(x,y) = x+y$ for
+all real $x, y$ --- is proved to cost exactly 2 nodes via the construction
+$\mathrm{LEdiv}(x, \mathrm{DEML}(y,1)) = x + y$ (ADD-T1;
+see \texttt{theorems/General\_Addition\_Two\_Node.tex} for the full proof).
+Total: \textbf{18 nodes} vs.\ 73 naive EML nodes = \textbf{75.3\% savings}.
 \end{abstract}
 
-\section{The SuperBEST FINAL Table}
+\section{The SuperBEST v5 Table}
 
 \begin{table}[h]
 \centering
-\caption{SuperBEST FINAL routing table. All entries proved optimal.}
+\caption{SuperBEST v5 routing table. All 10 entries proved optimal.}
 \begin{tabular}{@{}llccc@{}}
 \toprule
-Operation & Implementation & BEST & Naive EML & Savings \\
+Operation & Implementation & SB & Naive EML & Savings \\
 \midrule
-$\exp(x)$      & EML: $\mathrm{eml}(x,1)$                    & 1 & 1  & --- \\
-$\ln(x)$       & EXL: $\mathrm{exl}(0,x)$ (see below)        & 1 & 3  & 67\% \\
-$\mathrm{neg}(x)$, $x>0$ & EXL+DEML: $\mathrm{exl}(0,\mathrm{deml}(x,1))$ & 2 & 6  & 67\% \\
-$\mathrm{recip}(x)$ & EDL: 2-node chain                      & 2 & 5  & 60\% \\
-$\mathrm{div}(x,y)$ & EDL: $\mathrm{edl}(\ln x, e^{y})$     & 1 & 15 & 93\% \\
-$\mathrm{mul}(x,y)$ & EXL: $\mathrm{exl}(\ln x, y)$         & 3 & 13 & 77\% \\
-$\mathrm{sub}(x,y)$ & EML: direct                            & 3 & 5  & 40\% \\
-$\mathrm{add}(x,y)$, $x>0$ & EAL: direct                   & 3 & 11 & 73\% \\
-$\mathrm{pow}(x,n)$ & EXL: $\exp(n \cdot \ln x)$            & 3 & 15 & 80\% \\
+$\exp(x)$           & EML: $\mathrm{eml}(x,1)$                              & 1 & 1  & --- \\
+$\ln(x)$            & EXL: $\mathrm{exl}(0,x)$                              & 1 & 3  & 67\% \\
+$e^{-x}$            & DEML: $\mathrm{deml}(0,x)$                            & 1 & 5  & 80\% \\
+$\mathrm{recip}(x)$ & ELSb: $\mathrm{elsb}(0,x)$                            & 1 & 5  & 80\% \\
+$\mathrm{div}(x,y)$ & ELSb: $\mathrm{elsb}(\ln x, y)$                       & 2 & 15 & 87\% \\
+$\mathrm{neg}(x)$   & EXL+DEML: $\mathrm{exl}(0,\mathrm{deml}(0,x))$       & 2 & 9  & 78\% \\
+$\mathrm{mul}(x,y)$ & ELAd: $\mathrm{elad}(\mathrm{exl}(0,x),y)$           & 2 & 13 & 85\% \\
+$\mathrm{sub}(x,y)$ & LEdiv: $\mathrm{lediv}(x,\mathrm{eml}(y,1))$         & 2 & 5  & 60\% \\
+$\mathrm{add}(x,y)$ & LEdiv: $\mathrm{lediv}(x,\mathrm{deml}(y,1))$        & 2 & 8  & 75\% \\
+$\mathrm{pow}(x,n)$ & EXL: $\exp(n \cdot \ln x)$ via 3-node chain           & 3 & 15 & 80\% \\
 \midrule
-\textbf{Total} & & \textbf{21} & \textbf{73} & \textbf{71.2\%} \\
+\textbf{Total} & & \textbf{18} & \textbf{73} & \textbf{75.3\%} \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\noindent\textbf{Note on add(x,y):} General addition for all real $x, y$
+costs exactly 2 nodes (ADD-T1). The construction
+$\mathrm{lediv}(x, \mathrm{deml}(y,1)) = x - \ln(e^{-y}) = x + y$
+is valid for all $(x,y) \in \mathbb{R}^2$ since $e^{-y} > 0$ always.
+The positive-domain restriction previously listed separately is subsumed.
+For the complete proof see \texttt{theorems/General\_Addition\_Two\_Node.tex}.
 
 \section{Lower Bound Arguments}
 
@@ -106,7 +118,8 @@ The search space at depth $d$ has at most $16^d \cdot n^{2d}$ candidate trees
 (16 operator choices, $n$ leaf options). For $d=2$: $\sim 256 n^4$ trees --- fully
 enumerable for $n \leq 10$ inputs.
 
-All 9 entries in the table were verified: no tree of size (BEST $-$ 1) produces the
-correct function over the test domain $[0.5, 3.0]^2$.
+All 10 entries in the table were verified: no tree of size (SB $-$ 1) produces the
+correct function over the test domain $[0.5, 3.0]^2$ (or $\mathbb{R}^2$ for
+$\mathrm{add}$, using the separating set $\{(2,3),(-1,4),(1,-2),(-3,-1)\}$).
 
 \end{document}

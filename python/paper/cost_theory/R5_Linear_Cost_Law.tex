@@ -115,8 +115,7 @@ Reciprocal $1/x$              & \texttt{recip} & 2  & \\
 Multiplication $x \cdot y$    & \texttt{mul}   & 2  & \\
 Subtraction $x - y$           & \texttt{sub}   & 2  & \\
 Exponentiation $x^n$          & \texttt{pow}   & 3  & \\
-Addition $x + y$ (pos.\ domain) & \texttt{add} & 3  & both operands $\geq 0$ \\
-Addition $x + y$ (general)    & \texttt{add}   & 11 & requires absolute value \\
+Addition $x + y$ (all real $x,y$) & \texttt{add} & 2  & ADD-T1 (SuperBEST v5); positive/general split eliminated \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -125,8 +124,12 @@ Addition $x + y$ (general)    & \texttt{add}   & 11 & requires absolute value \\
 The maximum unit cost across all operators is
 \[
   c_{\max} \;=\; \max_{\mathrm{op}\,\in\,\mathcal{F}_{16}} c_{\mathrm{op}}
-             \;=\; 11 \quad(\text{general \texttt{add}}).
+             \;=\; 3 \quad(\texttt{pow}).
 \]
+\noindent\textbf{Note (SuperBEST v5, ADD-T1).}
+The former maximum $c_{\max} = 11$ (general \texttt{add}) is obsolete:
+Theorem ADD-T1 shows $\SB(\addop) = 2$, lowering the maximum to $c_{\max} = 3$
+(attained by \texttt{pow}).
 The minimum non-trivial unit cost is
 \[
   c_{\min} \;=\; \min_{\mathrm{op}\,\in\,\mathcal{F}_{16}} c_{\mathrm{op}}
@@ -207,12 +210,12 @@ cost:
   \NC(E) \;=\; \sum_{i=1}^{\NOp(E)} c(\mathrm{op}_i)
           \;\leq\; \sum_{i=1}^{\NOp(E)} c_{\max}
           \;=\; c_{\max} \cdot \NOp(E)
-          \;=\; 11 \cdot \NOp(E).
+          \;=\; 3 \cdot \NOp(E).
 \]
-The inequality $c(\mathrm{op}_i) \leq c_{\max} = 11$ holds for every
+The inequality $c(\mathrm{op}_i) \leq c_{\max} = 3$ holds for every
 $\mathrm{op}_i \in \mathcal{F}_{16}$ by inspection of
-Table~\ref{tab:superbest3}.  This establishes
-$\Cost(E) \leq \NC(E) \leq 11 \cdot \NOp(E)$.
+Table~\ref{tab:superbest3} (SuperBEST v5; see ADD-T1 for \texttt{add} = 2).
+This establishes $\Cost(E) \leq \NC(E) \leq 3 \cdot \NOp(E)$.
 
 \bigskip
 \textbf{Part (ii) --- non-negativity.}
@@ -269,35 +272,36 @@ For any expression $E$ with $\NOp(E)$ primitive operations:
 \[
   \Cost(E) \;=\; O\!\left(\NOp(E)\right).
 \]
-The implicit constant is at most $c_{\max} = 11$.
+The implicit constant is at most $c_{\max} = 3$ (SuperBEST v5).
 \end{corollary}
 
 \begin{proof}
 By part~(i) of Theorem~\ref{thm:T40},
-$\Cost(E) \leq 11 \cdot \NOp(E)$, which is the definition of
-$O(\NOp(E))$ with constant $11$.
+$\Cost(E) \leq 3 \cdot \NOp(E)$, which is the definition of
+$O(\NOp(E))$ with constant $3$ (using ADD-T1: \texttt{add} = 2n $\leq$ 3 = \texttt{pow}).
 \end{proof}
 
 \begin{corollary}[Tight constant]
 \label{cor:tight}
 \begin{enumerate}
   \item[\textup{(a)}] The leading constant in Corollary~\ref{cor:ON} is at most
-        $c_{\max} = 11$ (attained by expressions consisting entirely of general
-        \texttt{add} nodes).
+        $c_{\max} = 3$ (attained by \texttt{pow} nodes; SuperBEST v5).
+        \emph{Note:} the former bound $c_{\max} = 11$ (general \texttt{add})
+        is superseded by ADD-T1, which establishes $c_{\texttt{add}} = 2$.
   \item[\textup{(b)}] The leading constant is at least $c_{\min} = 1$ (attained
         by expressions consisting entirely of \texttt{exp}, \texttt{ln}, or
         \texttt{div} nodes).
-  \item[\textup{(c)}] For expressions in the \emph{positive domain}
-        (all operands guaranteed non-negative), the \texttt{add} cost is $3$,
-        so the leading constant is at most $3$.
+  \item[\textup{(c)}] The positive/general domain split for \texttt{add} is
+        eliminated in SuperBEST v5.  All additions cost $2$ nodes regardless
+        of operand sign.
 \end{enumerate}
 \end{corollary}
 
 \begin{proof}
 (a) and (b) follow directly from the bound in part~(i) and the values
-$c_{\max} = 11$, $c_{\min} = 1$ in Table~\ref{tab:superbest3}.
-For (c), replace $c_{\max}$ with $c_{\max}^{+} = \max(3, 3, 2, 2, 2, 1, 1, 1) = 3$
-when restricted to positive-domain operations where \texttt{add} costs $3$.
+$c_{\max} = 3$, $c_{\min} = 1$ in Table~\ref{tab:superbest3}.
+For (c), ADD-T1 proves $\SB(\addop) = 2$ for all real inputs; the positive-domain
+restriction $\addop^+$ (cost 3) is subsumed.
 \end{proof}
 
 % ════════════════════════════════════════════════════════════════════════════
@@ -345,14 +349,15 @@ For large $N$, the constant term $-c_{\mathrm{add}}$ is negligible, giving
   \Cost(E_N) \;\approx\; (\alpha_0 + c_{\mathrm{add}})\,N.
 \]
 The leading coefficient $(\alpha_0 + c_{\mathrm{add}})$ captures both the
-per-term cost and the aggregation cost, and grows at most as
-$\alpha_0 + 11$ in the general domain.
+per-term cost and the aggregation cost; in SuperBEST v5, $c_{\mathrm{add}} = 2$
+for all real inputs (ADD-T1), so the maximum leading coefficient is $\alpha_0 + 2$.
 \end{remark}
 
 \subsection{Summation Scaling Instances}
 
 We instantiate Theorem~\ref{thm:T40b} for four standard scientific
-summation formulas using the positive-domain cost $c_{\mathrm{add}} = 3$
+summation formulas using the unified addition cost $c_{\mathrm{add}} = 2$
+(SuperBEST v5, ADD-T1; the positive/general split is eliminated)
 throughout.
 
 \begin{table}[h]
@@ -621,17 +626,23 @@ Corollary~\ref{cor:ON}.
 \textbf{Formula} & $\alpha_0$ & $c_{\mathrm{add}}$ &
   \textbf{Exact cost} & \textbf{Leading coeff.} \\
 \midrule
-Softmax $\sum e^{x_i}$               & 1 & 3 & $4N - 3$  & 4  \\
-Shannon entropy $-\sum p_i \ln p_i$  & 3 & 3 & $6N - 3$  & 6  \\
-Taylor series $\sum a_n x^n$         & 5 & 3 & $8N - 3$  & 8  \\
+Softmax $\sum e^{x_i}$               & 1 & 2 & $3N - 2$  & 3  \\
+Shannon entropy $-\sum p_i \ln p_i$  & 3 & 2 & $5N - 2$  & 5  \\
+Taylor series $\sum a_n x^n$         & 5 & 2 & $7N - 2$  & 7  \\
 PK multi-compartment $\sum A_i e^{-\lambda_i t}$
-                                     & 7 & 3 & $10N - 3$ & 10 \\
-Worst-case (general add)             & $\alpha_0$ & 11 & $(\alpha_0+11)N - 11$ & $\alpha_0 + 11$ \\
+                                     & 7 & 2 & $9N - 2$  & 9  \\
+Unified (v5, all domains)            & $\alpha_0$ & 2 & $(\alpha_0+2)N - 2$ & $\alpha_0 + 2$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The leading coefficients form an arithmetic progression $4, 6, 8, 10, \ldots$
+\noindent\textbf{Note (SuperBEST v5, ADD-T1).}
+The table above reflects the updated costs.  All entries use $c_{\mathrm{add}} = 2$
+(proved in ADD-T1 via the 2-node construction $\LEdiv(x,\DEML(y,1)) = x+y$).
+The v4 entries were: Softmax $4N{-}3$, Shannon $8N{-}3$ (using neg-first strategy),
+PK model $10N{-}3$, worst-case $(\alpha_0+11)N-11$.
+
+The leading coefficients form an arithmetic progression $3, 5, 7, 9, \ldots$
 as $\alpha_0$ increases by 2 per level of per-term complexity.  All instances
 are strictly $O(N)$.
 

@@ -3,6 +3,15 @@
 % Date: 2026-04-20
 % Status: THEOREM (all gaps closed in this file)
 %
+% NOTE (2026-04-20, SuperBEST v5 / ADD-T1):
+%   This file has been superseded as the authoritative T30 reference by:
+%     Depth_Spectrum_Final.tex
+%   That file incorporates the ADD-T1 breakthrough (add=2n for ALL real x,y)
+%   from the ADD-CASCADE session (SuperBEST v5), which confirms and strengthens
+%   the depth-3 ceiling: addition now has EML depth 2 (not 3).
+%   All results in this file remain valid; see Depth_Spectrum_Final.tex for the
+%   definitive statement with the updated depth census.
+%
 % This file closes two remaining gaps identified in R17:
 %   GAP-3: Self-contained depth census (T30(c)), no external citations.
 %   GAP-4: Division case missing from Hardy field inductive step.
@@ -66,6 +75,16 @@ It is the final step of the T30 verification chain:
 \end{tabular}
 \end{center}
 
+\noindent\textbf{SuperBEST v5 update (ADD-T1, 2026-04-20).}
+Subsequent to this file, the ADD-CASCADE session established that
+$\mathrm{LEDIV}(x,\mathrm{DEML}(y,1)) = x + y$ in exactly 2 nodes (depth~2) for all
+$x, y \in \mathbb{R}$.  This replaces the 3-node add\_pos and 11-node add\_gen entries.
+The Proposition~\ref{prop:add} below (which establishes depth $\leq 3$ for addition)
+remains correct but is now superseded by depth~2 via ADD-T1.
+All census entries with depth $\leq 3$ continue to hold; depth bounds are not worsened.
+For the updated census see \texttt{Depth\_Spectrum\_Final.tex}.
+
+\medskip
 \noindent\textbf{What is proved here, from scratch, with no external citations:}
 \begin{enumerate}
   \item[\textbf{GAP-4}] The division case in Lemma~\ref{lem:growthcap-full}

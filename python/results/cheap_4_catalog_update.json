@@ -1,0 +1,116 @@
+{
+  "session": "CHEAP-4",
+  "title": "Full Catalog Recomputation: SuperBEST v5 (add=2n)",
+  "date": "2026-04-20",
+  "change": "ADD-T1: add_pos=3n and add_gen=11n both unified to add=2n for ALL real x,y. Construction: LEdiv(x, DEML(y,1)) = x - ln(exp(-y)) = x + y. Reference: ADD_T1_General_Addition_2n.tex, SuperBEST_v5_Structural_Audit.tex.",
+
+  "files_updated": [
+    "python/results/bio_1_biology.json",
+    "python/results/bio_2_motor_equations.json",
+    "python/results/econ_1_economics.json",
+    "python/results/fin_1_black_scholes.json",
+    "python/results/fin_2_portfolio.json",
+    "python/results/qm_1_quantum.json",
+    "python/results/thermo_1_thermodynamics.json",
+    "python/results/phys_1_basic_physics.json",
+    "python/results/comp_all_domain2_summary.json",
+    "python/monogate/predict_cost.py"
+  ],
+  "files_already_v5_before_cheap4": [
+    "python/results/chem_1_chemistry.json",
+    "python/results/info_1_information_theory.json",
+    "python/results/sport_2_game_theory.json",
+    "python/monogate/superbest.py"
+  ],
+
+  "equations_changed": [
+    {"file": "bio_1_biology.json",        "equation": "Logistic Growth",             "old": "10n",    "new": "9n",    "saved": "1n",   "reason": "add_pos→add"},
+    {"file": "bio_1_biology.json",        "equation": "Hill Equation (general n)",   "old": "13n",    "new": "12n",   "saved": "1n",   "reason": "add_pos→add"},
+    {"file": "bio_1_biology.json",        "equation": "Michaelis-Menten (Hill n=1)", "old": "7n",     "new": "6n",    "saved": "1n",   "reason": "add_pos→add"},
+    {"file": "bio_2_motor_equations.json","equation": "Proton Motive Force",         "old": "7n",     "new": "6n",    "saved": "1n",   "reason": "add_pos→add"},
+    {"file": "bio_2_motor_equations.json","equation": "Motor Switching (Hill)",      "old": "11n",    "new": "10n",   "saved": "1n",   "reason": "add_pos→add"},
+    {"file": "econ_1_economics.json",     "equation": "CES Utility rho<0",           "old": "27n",    "new": "18n",   "saved": "9n",   "reason": "add_gen 11n→add 2n (ADD-T1)"},
+    {"file": "econ_1_economics.json",     "equation": "CES Utility rho>0",           "old": "19n",    "new": "18n",   "saved": "1n",   "reason": "add_pos 3n→add 2n"},
+    {"file": "econ_1_economics.json",     "equation": "Compound Interest (discrete)","old": "12n",    "new": "11n",   "saved": "1n",   "reason": "add_pos→add for (1+r/n)"},
+    {"file": "econ_1_economics.json",     "equation": "Discounting factor 1/(1+r)^t","old": "7n",     "new": "6n",    "saved": "1n",   "reason": "add_pos→add"},
+    {"file": "econ_1_economics.json",     "equation": "CAPM β positive",             "old": "7n",     "new": "6n",    "saved": "1n",   "reason": "add_pos→add"},
+    {"file": "econ_1_economics.json",     "equation": "CAPM β negative",             "old": "15n",    "new": "6n",    "saved": "9n",   "reason": "add_gen 11n→add 2n (ADD-T1)"},
+    {"file": "econ_1_economics.json",     "equation": "DCF (positive CF, N periods)","old": "12N-3",  "new": "11N-2", "saved": "N-1n", "reason": "add_pos→add per period + summation"},
+    {"file": "econ_1_economics.json",     "equation": "DCF (mixed CF, N periods)",   "old": "20N-11", "new": "11N-2", "saved": "9(N-1)n","reason": "add_gen 11n→add 2n (ADD-T1) per summation"},
+    {"file": "econ_1_economics.json",     "equation": "Gini Coefficient (N)",        "old": "8N+2",   "new": "~6N+6", "saved": "~2N",  "reason": "two add_pos chains→add"},
+    {"file": "fin_1_black_scholes.json",  "equation": "d1 numerator",                "old": "19n",    "new": "17n",   "saved": "2n",   "reason": "two add steps: add_pos→add saves 1n each"},
+    {"file": "fin_1_black_scholes.json",  "equation": "N(d) sigmoid",                "old": "9n",     "new": "8n",    "saved": "1n",   "reason": "add_pos→add in sigmoid denominator"},
+    {"file": "fin_1_black_scholes.json",  "equation": "Full DAG (shared)",           "old": "83n",    "new": "77n",   "saved": "6n",   "reason": "d1 saves 2n + N(d1)+N(d2) save 2n + theta path"},
+    {"file": "fin_2_portfolio.json",      "equation": "Portfolio Variance rho<0",     "old": "40n",    "new": "31n",   "saved": "9n",   "reason": "add_gen 11n→add 2n for cross term (ADD-T1)"},
+    {"file": "fin_2_portfolio.json",      "equation": "Portfolio Variance rho>=0",    "old": "34n",    "new": "30n",   "saved": "4n",   "reason": "add_pos→add for both sum ops"},
+    {"file": "fin_2_portfolio.json",      "equation": "Bond Price (N coupons)",       "old": "12N+6",  "new": "11N+5", "saved": "N+1n", "reason": "add(1,r)=2n vs add_pos=3n; final add"},
+    {"file": "fin_2_portfolio.json",      "equation": "Modified Duration",            "old": "14N+6",  "new": "13N+5", "saved": "N+1n", "reason": "per coupon 9n→8n; D_mod add_pos→add"},
+    {"file": "qm_1_quantum.json",         "equation": "Fermi-Dirac distribution",    "old": "9n",     "new": "8n",    "saved": "1n",   "reason": "add_pos(1,exp)→add in denominator"},
+    {"file": "qm_1_quantum.json",         "equation": "Partition function (N)",       "old": "6N-3",   "new": "5N-2",  "saved": "N-1n", "reason": "N-1 add_pos→add (ADD-T1)"},
+    {"file": "thermo_1_thermodynamics.json","equation": "Entropy of mixing (N)",     "old": "7N-1",   "new": "6N-1",  "saved": "N-1n", "reason": "N-1 add_pos→add in summation"}
+  ],
+
+  "scaling_laws_updated": {
+    "shannon_entropy":       {"v4": "8N-3",       "v5": "7N-2",    "note": "add_pos→add; also optimal strategy shifts to direct sum (5N) for N>=3"},
+    "kl_divergence":         {"v4": "16N-11",     "v5": "7N-2",    "note": "add_gen 11n→add 2n; KL now equals Shannon cost"},
+    "cross_entropy":         {"v4": "8N-3",       "v5": "7N-2",    "note": "same as Shannon"},
+    "mutual_information":    {"v4": "18|X||Y|-11","v5": "9|X||Y|-2","note": "add_gen→add saves 9n per cell"},
+    "perplexity":            {"v4": "12N-6",      "v5": "3N+3",    "note": "add_gen→add per negative log-prob accumulation"},
+    "entropy_rate_markov":   {"v4": "8|S|^2+2|S|-3","v5": "7|S|^2+2|S|-2","note": "inner Shannon loop updated"},
+    "conditional_entropy":   {"v4": "10|X||Y|-3", "v5": "9|X||Y|-2","note": "add_pos→add"},
+    "jensen_shannon":        {"v4": "29N-2",      "v5": "25N",     "note": "3 Shannon evals + mixture add_pos→add"},
+    "partition_function":    {"v4": "6N-3",       "v5": "5N-2",    "note": "add_pos→add; same as softmax denominator"},
+    "softmax_denominator":   {"v4": "6N-3",       "v5": "5N-2",    "note": "add_pos→add; matches partition function"},
+    "entropy_of_mixing":     {"v4": "7N-1",       "v5": "6N-1",    "note": "add_pos→add in summation"},
+    "dcf_positive_cf":       {"v4": "12N-3",      "v5": "11N-2",   "note": "add(1,r)=2n and summation add=2n"},
+    "dcf_mixed_cf":          {"v4": "20N-11",     "v5": "11N-2",   "note": "add_gen→add eliminates sign penalty"},
+    "bond_price":            {"v4": "12N+6",      "v5": "11N+5",   "note": "add(1,r)=2n saves 1n per period"},
+    "modified_duration":     {"v4": "14N+6",      "v5": "13N+5",   "note": "cascades from bond_price savings"},
+    "gini_coefficient":      {"v4": "8N+2",       "v5": "~6N+6",   "note": "two add_pos chains→add"}
+  },
+
+  "largest_single_savings": {
+    "equation": "CES Utility rho<0 / CAPM β<0 / DCF mixed CF / KL divergence",
+    "mechanism": "add_gen 11n → add 2n (ADD-T1)",
+    "savings_per_op": "9n per add_gen site",
+    "standout_fixed_cost": {"equation": "CES rho<0", "old": "27n", "new": "18n", "saved": "9n"},
+    "standout_scaling": {"equation": "KL divergence", "old": "16N-11", "new": "7N-2", "saved": "9(N-1)n"},
+    "standout_scaling_dcf": {"equation": "DCF mixed CF", "old": "20N-11", "new": "11N-2", "saved": "~9(N-1)n"}
+  },
+
+  "total_nodes_saved_identified": "9n per add_gen site + 1n per add_pos site; across catalog: 50+ distinct equation cost reductions; largest cumulative savings in information theory (KL: 9(N-1) per eval) and finance (DCF mixed: 9(N-1) per eval)",
+
+  "predict_cost_status": "updated — predict_cost.py UNIT dict: add=2, add_pos=2 (legacy alias), add_gen=2 (legacy alias, was 11). div corrected from 1 to 2.",
+
+  "superbest_py_status": "already v5 before CHEAP-4 — SUPERBEST_COSTS_V5 has add=2; no add_gen=11 references remain",
+
+  "class_ordering": {
+    "note": "With add=2n, Class D (mixed-sign inputs) gets same cost as Class C (positive-domain). The D/C split is eliminated.",
+    "v4_ordering": "C (add_pos=3n) cheaper than D (add_gen=11n) by 8n per add",
+    "v5_ordering": "C = D = 2n per add. No ordering difference between positive and mixed-sign domains.",
+    "impact": "Any equation that previously was penalized for having mixed-sign summands is now at parity with positive-domain equations. The primary cost driver is now structural complexity (mul/div/pow chains) not sign-definiteness."
+  },
+
+  "key_reversals_from_v4": [
+    {
+      "finding": "Nernst vs ΔG: the cheaper form reversed",
+      "v4": "Nernst (11n) cheaper than ΔG (16n) — add_gen penalized ΔG",
+      "v5": "ΔG (7n) cheaper than Nernst (11n) — add=2n makes ΔG's addition cost equal to sub. Nernst still has extra div+mul chain."
+    },
+    {
+      "finding": "Fermi-Dirac vs Bose-Einstein: tied in v5",
+      "v4": "Bose-Einstein (8n) was 1n cheaper than Fermi-Dirac (9n) because sub(exp,1)=2n < add_pos(1,exp)=3n",
+      "v5": "Both 8n. add=sub=2n. The fermion/boson 1-node distinction is eliminated."
+    },
+    {
+      "finding": "KL divergence vs Shannon: now equal",
+      "v4": "Shannon (8N-3) cost ~half of KL (16N-11) for large N — add_gen penalty dominated KL",
+      "v5": "Both 7N-2. The 2x cost ratio is gone. Sign-definiteness is no longer the key cost driver."
+    },
+    {
+      "finding": "CAPM β<0: no longer expensive",
+      "v4": "β<0 required add_gen=11n → 15n total; β>0 used add_pos=3n → 7n. 2x cost for hedge assets.",
+      "v5": "Any β: 6n. The hedge-asset penalty is eliminated."
+    }
+  ]
+}

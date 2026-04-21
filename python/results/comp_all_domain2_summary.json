@@ -3,7 +3,8 @@
   "title": "Real-World Mathematics Domain Expansion Round 2",
   "subtitle": "Finance, Information Theory, Quantum, Thermodynamics, Chemistry, Biology, Economics",
   "date": "2026-04-20",
-  "superbest_version": "v4",
+  "superbest_version": "v5",
+  "v5_update": "CHEAP-4 (2026-04-20): All catalog files updated to SuperBEST v5 (ADD-T1). add_pos=3n and add_gen=11n unified to add=2n for ALL reals. See cheap_4_catalog_update.json for full changelog.",
   "catalog_before": 214,
   "catalog_after": 295,
   "new_equations": 81,
@@ -65,16 +66,16 @@
       "verify_file": "verify_info_1.py",
       "checks": "16/16",
       "headline_costs": {
-        "shannon_entropy": "8N-3",
-        "kl_divergence": "16N-11",
-        "cross_entropy": "8N-3",
-        "mutual_information": "18|X||Y|-11",
-        "perplexity": "12N-6",
-        "entropy_rate_markov": "8|S|^2 + 2|S| - 3",
-        "conditional_entropy": "10|X||Y|-3",
-        "jensen_shannon_divergence": "29N-2"
+        "shannon_entropy": "7N-2 (v5; was 8N-3 v4)",
+        "kl_divergence": "7N-2 (v5; was 16N-11 v4)",
+        "cross_entropy": "7N-2 (v5; was 8N-3 v4)",
+        "mutual_information": "9|X||Y|-2 (v5; was 18|X||Y|-11 v4)",
+        "perplexity": "3N+3 (v5; was 12N-6 v4)",
+        "entropy_rate_markov": "7|S|^2 + 2|S| - 2 (v5; was 8|S|^2 + 2|S| - 3 v4)",
+        "conditional_entropy": "9|X||Y|-2 (v5; was 10|X||Y|-3 v4)",
+        "jensen_shannon_divergence": "25N (v5; was 29N-2 v4)"
       },
-      "key_insight": "The sign-definiteness of summands is the single architectural question that determines cost: add_pos(3n) vs add_gen(11n). Shannon uses add_pos (neg-first restructuring), KL forces add_gen — explains 2x cost ratio."
+      "key_insight": "v5 (ADD-T1): add=2n for ALL real x,y. The sign-definiteness distinction (add_pos vs add_gen) is eliminated. Shannon and KL divergence now cost equally (7N-2). The 2x cost ratio from v4 is gone."
     },
     {
       "id": "QM-1",
@@ -85,18 +86,18 @@
       "checks": "16/16",
       "headline_costs": {
         "boltzmann_factor": "5n (3n if kT const)",
-        "fermi_dirac": "9n",
-        "bose_einstein": "8n",
+        "fermi_dirac": "8n (v5; was 9n v4)",
+        "bose_einstein": "8n (unchanged; sub is 2n same as add)",
         "planck_spectral_radiance": "19n",
         "hydrogen_energy_levels": "7n",
         "de_broglie_wavelength": "4n (2n if p given)",
         "heisenberg_uncertainty": "2n",
         "particle_in_box_wavefunction": "13n (9n if L const)",
         "particle_in_box_energy": "7n",
-        "partition_function": "6N-3",
+        "partition_function": "5N-2 (v5; was 6N-3 v4)",
         "maxwell_boltzmann": "19n"
       },
-      "key_insight": "Fermi-Dirac = sigmoid (9n): physics of quantum exclusion and ML classification share identical node structure. Bose-Einstein costs 1n less (8n) — sub(exp,1) vs add_pos(1,exp)."
+      "key_insight": "v5: Fermi-Dirac = Bose-Einstein = 8n. The fermion/boson 1n cost gap from v4 is eliminated (add=sub=2n). Partition function: 5N-2 (was 6N-3). Fermi-Dirac = sigmoid: quantum exclusion and ML classification share identical structure at 8n."
     },
     {
       "id": "THERMO-1",
@@ -129,19 +130,19 @@
       "checks": "11/11",
       "headline_costs": {
         "nernst_equation": "11n",
-        "henderson_hasselbalch_general": "16n",
-        "henderson_hasselbalch_near_pka": "8n",
+        "henderson_hasselbalch_general": "7n (v5; was 16n v4)",
+        "henderson_hasselbalch_near_pka": "7n (same as general in v5)",
         "equilibrium_constant": "18n",
         "rate_law_2species": "10n",
-        "michaelis_menten": "7n",
+        "michaelis_menten": "6n (v5; was 7n v4)",
         "beer_lambert_absorbance": "4n",
         "beer_lambert_transmittance": "5n",
         "ph_definition": "5n",
         "gibbs_helmholtz": "2n",
-        "reaction_free_energy": "16n",
+        "reaction_free_energy": "7n (v5; was 16n v4)",
         "first_order_decay": "5n"
       },
-      "key_insight": "Nernst (11n) vs dG form (16n): same physics, 5n gap purely from mathematical form. sub(2n) vs add_gen(11n). Form choice matters as much as physics."
+      "key_insight": "v5: Nernst (11n) vs dG form (7n) — the gap REVERSES in v5. dG = ΔG° + RT·ln(Q) uses add=2n (was add_gen=11n), saving 9n. Nernst now COSTS MORE by 4n. Henderson-Hasselbalch: 7n (was 16n/8n). The form-choice conclusion remains but the winner flips."
     },
     {
       "id": "BIO-1",
@@ -155,15 +156,15 @@
         "herd_immunity_threshold": "3n",
         "malthusian_growth": "5n",
         "allometric_scaling_kleiber": "5n",
-        "michaelis_menten_hill1": "7n",
+        "michaelis_menten_hill1": "6n (v5; was 7n v4)",
         "infection_growth": "7n",
         "gompertz": "8n",
-        "logistic_growth": "10n",
-        "hill_cooperativity": "13n",
+        "logistic_growth": "9n (v5; was 10n v4)",
+        "hill_cooperativity": "12n (v5; was 13n v4)",
         "lotka_volterra_per_step": "16n",
         "sir_model_per_step": "20n"
       },
-      "key_insight": "R0 (2n) and herd immunity (3n) are the most policy-critical metrics in epidemiology and cost 10x less than full SIR simulation (20n). The 2n-20n range is the widest of any domain studied."
+      "key_insight": "v5: R0 (2n) and herd immunity (3n) unchanged. Michaelis-Menten: 6n (was 7n). Logistic growth: 9n (was 10n). Hill: 12n (was 13n). SIR and Lotka-Volterra unchanged (use sub, not add_gen). The 2n-20n range is the widest of any domain studied."
     },
     {
       "id": "ECON-1",
@@ -177,17 +178,16 @@
         "compound_interest_continuous": "5n",
         "price_elasticity": "6n",
         "laffer_curve": "6n",
-        "discounting_factor": "7n",
+        "discounting_factor": "6n (v5; was 7n v4)",
         "crra_utility": "7n",
         "cobb_douglas": "10n",
-        "compound_interest_discrete": "12n",
-        "ces_utility_rho_pos": "19n",
-        "ces_utility_rho_neg": "27n",
-        "dcf_npv_positive_cf": "12N-3",
-        "dcf_npv_mixed_cf": "20N-11",
-        "gini_coefficient": "8N+2"
+        "compound_interest_discrete": "11n (v5; was 12n v4)",
+        "ces_utility_rho_pos": "18n (v5; was 19n v4)",
+        "ces_utility_rho_neg": "18n (v5; was 27n v4)",
+        "dcf_npv_any_cf": "11N-2 (v5; was 12N-3 pos or 20N-11 mixed in v4)",
+        "gini_coefficient": "~6N+6 (v5; was 8N+2 v4)"
       },
-      "key_insight": "Log utility is a 1n EML primitive — cheapest nonlinear utility. CRRA→log limit drops cost 7n discontinuously. Cobb-Douglas (10n) = chemical rate law (10n): cleanest cross-science identity in catalog."
+      "key_insight": "v5: CES rho<0: 27n→18n is the largest single-equation saving (9n). Discounting factor: 6n (was 7n). DCF sign-of-CF distinction eliminated. Log utility remains 1n EML primitive. Cobb-Douglas (10n) = chemical rate law (10n): unchanged."
     }
   ],
 
@@ -245,14 +245,15 @@
       "note": "add_pos(3n) + div(2n) + mul(2n) = 7n for saturation; others share arithmetic structure"
     },
     {
-      "cost": "8n (N-body: 8N-3)",
+      "cost": "7n (N-body: 7N-2)",
       "family": "entropy / cross-entropy",
       "members": [
-        "Shannon entropy H(X) = 8N-3",
-        "Cross-entropy H(P,Q) = 8N-3",
-        "Entropy of mixing ~ 7N-1 (one mul offset)"
+        "Shannon entropy H(X) = 7N-2 (v5; was 8N-3 v4)",
+        "Cross-entropy H(P,Q) = 7N-2 (v5; was 8N-3 v4)",
+        "KL divergence D_KL = 7N-2 (v5; was 16N-11 v4 — now equals Shannon!)",
+        "Entropy of mixing ~ 6N-1 (v5; was 7N-1 v4; one mul offset from Shannon)"
       ],
-      "note": "neg-first restructuring converts to add_pos summands"
+      "note": "v5 (ADD-T1): add=2n for all reals. Shannon and KL now cost identically (7N-2). The sign-definiteness distinction is eliminated."
     },
     {
       "cost": "9n",
@@ -277,14 +278,14 @@
       "note": "Two pow(3n) + two mul(2n) + optional constant — exact structural isomorphism"
     },
     {
-      "cost": "6N-3",
+      "cost": "5N-2 (v5; was 6N-3 v4)",
       "family": "softmax denominator / partition function",
       "members": [
-        "Statistical mechanics partition function Z = sum exp(-E_i/kT)",
-        "Softmax denominator in attention",
-        "Bayesian model evidence"
+        "Statistical mechanics partition function Z = sum exp(-E_i/kT) = 5N-2 (v5)",
+        "Softmax denominator in attention = 5N-2 (v5)",
+        "Bayesian model evidence = 5N-2 (v5)"
       ],
-      "note": "All are sum_i exp(x_i); the central computation of statistical mechanics and attention"
+      "note": "All are sum_i exp(x_i); the central computation of statistical mechanics and attention. v5: add=2n (was add_pos=3n) saves N-1 nodes."
     }
   ],
 
@@ -299,10 +300,11 @@
     "cheapest_nonlinear": "log utility U=ln(C) at 1n — ln is an EML primitive",
     "cheapest_policy_metric": "R0=beta/gamma at 2n",
     "cheapest_quantum": "Heisenberg check 2n; de Broglie 2n given p",
-    "most_expensive_standalone": "SIR model per-step at 20n; Black-Scholes full 9-output DAG standalone at 329n",
-    "best_sharing_ratio": "Black-Scholes: 329n standalone → 83n shared (75% reduction)",
+    "most_expensive_standalone": "SIR model per-step at 20n; Black-Scholes full 9-output DAG standalone at ~317n (v5, was ~329n v4)",
+    "best_sharing_ratio": "Black-Scholes: ~317n standalone → 77n shared (v5, was 83n v4)",
     "widest_domain_range": "Epidemiology: R0=2n to SIR=20n (10x)",
-    "best_form_gap": "Nernst 11n vs dG=nFE 16n — same physics, 5n difference from form choice alone"
+    "best_form_gap_v5": "Nernst 11n vs dG form 7n — dG is now CHEAPER by 4n (reversal from v4). v4: Nernst 11n vs dG 16n (dG was more expensive).",
+    "largest_v5_saving_single_eq": "CES utility rho<0: 27n → 18n (saves 9n); KL divergence: 16N-11 → 7N-2 (saves 9(N-1)n)"
   },
 
   "catalog_counts_by_domain": {
