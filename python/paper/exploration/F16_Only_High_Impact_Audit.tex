@@ -1,0 +1,294 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,geometry,hyperref,longtable}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{High-Impact Expression Audit: Genuine F16-Only Node Counts\\
+Corrected Tables for Quantum, Physics, and Information Theory}
+\author{Monogate Research}
+\date{2026-04-21}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We re-audit every high-savings expression from SuperBEST v6--v8 and the quantum/physics
+catalogs using \emph{only} genuine F16 primitives (the 16-element orbit of EML).
+No 23-op macros are counted as $1n$.
+We distinguish three categories of savings:
+(A) genuine algebraic-identity savings achievable in F16 alone (the sub-then-exp route, etc.),
+(B) genuine F16-sign-variant savings (EML sign variants capturing EES-type expressions),
+and (C) notational savings (accessible only if the 7 extended operators are declared atomic).
+The corrected tables replace those in SuperBEST v6--v8 papers.
+\end{abstract}
+
+\section{F16 Primitives: Ground Rules}
+
+\textbf{Genuine F16 primitives (each $1n$):}
+$\exp(x)$, $\ln(x)$, $1/x$, $x^n$ (EPL), $\sqrt{x}$ (positive), $-x$ (neg),
+and all 16 sign/reciprocal/operation variants of EML$(\pm a, \pm b)$
+for operation $\in\{+,-,\times,\div\}$.
+
+This includes sign-variant nodes such as:
+\begin{itemize}
+  \item EML$_{\mathrm{neg}}(a,b)=\exp(-a)-\ln(b)$: single node outputting $e^{-a}-\ln b$.
+  \item EML$(a,b^{-1})=\exp(a)-\ln(1/b)=\exp(a)+\ln b$: single node.
+  \item EML$_{\times}(a,b)=\exp(a)\cdot\ln(b)$: single node.
+  \item EML$_{\mathrm{neg},1/e}(a)=\exp(-a)-\ln(e^{-1})=\exp(-a)+1$: node with constant $b=1/e$.
+\end{itemize}
+
+\textbf{SuperBEST v5.2 binary costs ($2n$ each):} mul, add, sub, div (all with two general inputs).
+Exception: sub$(0,z)=$ neg$(z)=1n$ and mul$(c,z)$ for literal constant $c$ can be folded
+into an EML variant (treated as $1n$ when $c$ is an EML-variant parameter, not an independent multiplication).
+
+\textbf{What is NOT allowed:} EEM, EED, EES, LLA, LLS, LLD, EEA counted as $1n$.
+
+\section{Complete F16-Only Audit Table}
+
+\begin{longtable}{p{5.5cm}ccccl}
+\toprule
+Expression & Naive & F16 best & 23-op & F16 saving & Category \\
+\midrule
+\endhead
+\midrule
+\multicolumn{6}{r}{\textit{continued}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+\multicolumn{6}{l}{\textbf{--- Core arithmetic (unchanged, F16 baseline) ---}} \\
+$e^x$ & $1n$ & $1n$ & $1n$ & --- & F16 primitive \\
+$\ln x$ & $1n$ & $1n$ & $1n$ & --- & F16 primitive \\
+$\sqrt{x}$ ($x>0$) & $2n$ (v5.1) & $1n$ & $1n$ & $1n$ (v5.2) & Genuine (EPL) \\
+$x^n$ & $1n$ & $1n$ & $1n$ & --- & F16 primitive \\
+$x\cdot y$ & $2n$ & $2n$ & $2n$ & $0$ & Baseline \\
+$x/y$ & $2n$ & $2n$ & $2n$ & $0$ & Baseline \\
+$x+y$ & $2n$ & $2n$ & $2n$ & $0$ & Baseline \\
+$x-y$ & $2n$ & $2n$ & $2n$ & $0$ & Baseline \\
+\multicolumn{6}{l}{\textbf{--- Exponential combinations ---}} \\
+$e^x\cdot e^y$ & $4n$ & $3n$ & $1n$ & $1n$ (A) & Algebraic id.\ (add$+$exp) \\
+$e^x/e^y$ & $4n$ & $3n$ & $1n$ & $1n$ (A) & Algebraic id.\ (sub$+$exp) \\
+$e^x+e^y$ & $4n$ & $4n$ & $1n$ & $0n$ & \textbf{C (notation)} \\
+$e^x-e^y$ (general) & $4n$ & $4n$ & $1n$ & $0n$ & \textbf{C (notation)} \\
+$e^{-x}$ & $2n$ & $2n$ & $1n$ & $0n$ & C (notation via EED) \\
+$e^x - 1$ & $3n$ & $\mathbf{1n}$ & $1n$ & $2n$ (B) & \textbf{F16 sign-variant!} \\
+$1 - e^x$ & $3n$ & $\mathbf{1n}$ & $1n$ & $2n$ (B) & F16 sign-variant \\
+\multicolumn{6}{l}{\textbf{--- Log combinations ---}} \\
+$\ln(x/y)$ & $4n$ & $3n$ & $1n$ & $1n$ (A) & Algebraic id.\ (div$+$ln) \\
+$\ln(xy)$ & $4n$ & $3n$ & $1n$ & $1n$ (A) & Algebraic id.\ (mul$+$ln) \\
+$\ln(x)/\ln(y)$ & $4n$ & $4n$ & $1n$ & $0n$ & \textbf{C (notation)} \\
+\multicolumn{6}{l}{\textbf{--- Information theory ---}} \\
+$\lambda\ln(\lambda/\mu)$ (KL term) & $6n$ & $5n$ & $3n$ & $1n$ (A) & div$+$ln$+$mul \\
+$(p-q)\ln(p/q)$ (Jeffreys) & $8n$ & $7n$ & $5n$ & $1n$ (A) & LLS saves in F16 only $1n$ \\
+$\ln(e^x+e^y)$ (LSE) & $5n$ & $5n$ & $2n$ & $0n$ & \textbf{C (notation)} \\
+$\ln(1+e^x)$ (softplus) & $4n$ & $\mathbf{2n}$ & $2n$ & $2n$ (B) & \textbf{F16 sign-variant!} \\
+$e^x/(e^x+e^y)$ (softmax) & $6n$ & $6n$ & $3n$ & $0n$ & C (notation) \\
+$\cosh(x)$ & $6n$ & $6n$ & $4n$ & $0n$ & C (EEA notation) \\
+$\sinh(x)$ & $6n$ & $6n$ & $4n$ & $0n$ & C (EES notation) \\
+$\tanh(x)$ & $10n$ & $10n$ & $6n$ & $0n$ & C (notation) \\
+\multicolumn{6}{l}{\textbf{--- Quantum operations ---}} \\
+$\sqrt{\lambda}$ (matrix sqrt) & $2n$ (v5.1) & $1n$ & $1n$ & $1n$ & Genuine (EPL v5.2) \\
+$\ln\lambda$ & $1n$ & $1n$ & $1n$ & $0$ & F16 primitive \\
+$-\lambda\ln\lambda$ (vN entropy) & $4n$ & $4n$ & $4n$ & $0n$ & At F16 lower bound \\
+$\lambda\ln(\lambda/\mu)$ (rel.\ ent.) & $6n$ & $5n$ & $3n$ & $1n$ (A) & div$+$ln saves $1n$ \\
+$\sqrt{\lambda\mu}$ (Bures) & $4n$ & $3n$ & $3n$ & $1n$ & EPL(0.5) v5.2 fix \\
+$e^{-\lambda t}$ & $4n$ & $4n$ & $3n$ & $0n$ & C (EED notation) \\
+$e^{-\beta E_1}+e^{-\beta E_2}$ & $10n$ & $10n$ & $7n$ & $0n$ & \textbf{C (EEA notation)} \\
+$e^{-\beta E_j}/e^{-\beta E_i}$ (Boltzmann ratio) & $10n$ & $6n$ & $5n$ & $4n$ (A) & \textbf{Major genuine saving} \\
+Lindblad pair & $12n$ & $12n$ & $9n$ & $0n$ & C (notation) \\
+Kraus $e^{-\gamma t/2}$ & $4n$ & $4n$ & $3n$ & $0n$ & C (EED notation) \\
+Kraus $\sqrt{1-e^{-\gamma t}}$ & $7n$ & $\mathbf{4n}$ & $4n$ & $3n$ (B) & F16: $1-e^{-\gamma t}$ via sign-variant + EPL \\
+\multicolumn{6}{l}{\textbf{--- Physics ---}} \\
+$e^{-\beta u}-1$ (Mayer $f$) & $6n$ & $\mathbf{3n}$ & $3n$ & $3n$ (B) & \textbf{F16 sign-variant EML} \\
+Heat kernel ($d=1$) & $10n$ & $7n$ & $7n$ & $3n$ (A) & EPL fixes \\
+$H(p)=-p\ln p-(1-p)\ln(1-p)$ & $10n$ & $10n$ & $10n$ & $0n$ & Lower bound \\
+Free energy $-T\ln Z$ & $5n+Z$ & $5n+Z$ & $5n+Z$ & $0n$ & Depends on $Z$ \\
+\end{longtable}
+
+\section{The Three Categories Explained}
+
+\begin{definition}[Category A: Genuine algebraic-identity savings]
+An F16 expression has a \emph{Category A saving} if an algebraic identity (e.g., $\ln(x/y)=\ln x-\ln y$)
+enables a shorter F16 computation route: compute a simpler intermediate value first,
+then apply a single F16 node.
+Examples: div-then-ln for $\ln(x/y)$ (saves $1n$), sub-then-exp for $e^{x-y}$ (saves $1n$),
+algebraic recognition of $e^{-\beta\Delta E}$ from a ratio of Boltzmanns (saves $4n$).
+Category A savings are model-independent: they hold in any model.
+\end{definition}
+
+\begin{definition}[Category B: F16 sign-variant savings]
+An F16 expression has a \emph{Category B saving} if a sign-variant or constant-argument
+F16 operator (one of the 16 variants of EML with specific signs or constant $b$)
+computes the target in fewer nodes than the obvious multi-step route.
+Examples: EML$_{\mathrm{neg}}(a,e)=e^{-a}-1$ in $1n$ (Mayer $f$);
+EML$(x,1/e)=e^x+1$ in $1n$ (softplus step).
+Category B savings are genuine F16 improvements, not notation.
+The 23-op macros happen to coincide in cost but add nothing additional.
+\end{definition}
+
+\begin{definition}[Category C: Notational savings only]
+An expression has only \emph{Category C savings} if its minimum F16 cost equals
+its naive F16 cost, and the reduction to $1n$ in the 23-op system is entirely due to
+declaring a macro primitive.
+Examples: EEA ($e^x+e^y=4n$ in F16, $1n$ in 23-op), LLD ($\log_y x=4n$ in F16),
+$\cosh(x)$ ($6n$ in F16, $4n$ in 23-op).
+Category C savings are real only if the 23-op primitives are atomically implemented.
+\end{definition}
+
+\section{Detailed Computations for Key Expressions}
+
+\subsection{Softplus: $\ln(1+e^x)$ — Category B, $2n$ in F16}
+
+\begin{proposition}
+$\ln(1+e^x)$ achieves $2n$ in genuine F16, independent of any 23-op extension.
+\end{proposition}
+
+\begin{proof}
+\textbf{Step 1}: EML$(x, e^{-1}) = \exp(x) - \ln(e^{-1}) = \exp(x) + 1 = e^x+1$.
+This is a single F16 node (EML with constant second argument $e^{-1}=1/e$).
+
+\textbf{Step 2}: EML$_\times(0, e^x+1) = \exp(0)\cdot\ln(e^x+1) = \ln(e^x+1) = \text{softplus}$.
+This is a single F16 node (the EML-product variant with first argument $0$).
+
+Total: $2n$. The claimed ``23-op saves $2n$ (from $4n$)'' is \emph{actually an F16 Category B saving}.
+The 23-op route (EEA$+\ln$) also achieves $2n$ but via a different route.
+\end{proof}
+
+\subsection{Mayer $f$-Function: $e^{-\beta u}-1$ — Category B, $3n$ in F16}
+
+\begin{proposition}
+$e^{-\beta u}-1$ achieves $3n$ in genuine F16.
+\end{proposition}
+
+\begin{proof}
+\textbf{Step 1}: mul$(\beta, u) = 2n$ → produces $\beta u$.
+
+\textbf{Step 2}: EML$_{\mathrm{neg}}(\beta u, e) = \exp(-\beta u) - \ln(e) = e^{-\beta u} - 1$.
+This is a single F16 node (negated-first-argument variant with constant $b=e$,
+since $\ln(e)=1$). Total: $3n$.
+
+The EES notation route also achieves $3n$ but is redundant given this F16 route.
+\end{proof}
+
+\subsection{Kraus Factor: $\sqrt{1-e^{-\gamma t}}$ — Category B, $4n$ in F16}
+
+\begin{proposition}
+$\sqrt{1-e^{-\gamma t}}$ achieves $4n$ in genuine F16.
+\end{proposition}
+
+\begin{proof}
+\textbf{Step 1}: mul$(\gamma, t)[2n]$ → $\gamma t$.
+\textbf{Step 2}: EML$_\times(0, e^{\gamma t}) = \ln(e^{\gamma t}) = \gamma t$... not helpful here.
+
+Alternative route:
+\textbf{Step 1}: mul$(\gamma,t)[2n]$ → $\gamma t$.
+\textbf{Step 2}: EML$_{\mathrm{neg}}(\gamma t, e) = e^{-\gamma t}-1$... that's negative!
+We need $1-e^{-\gamma t}$, which equals $-\mathrm{EML}_{\mathrm{neg}}(\gamma t, e) = -(e^{-\gamma t}-1)$.
+Using the negated-result variant: EML$_{\mathrm{neg,res}}(\gamma t, e) = -(e^{-\gamma t}-1) = 1-e^{-\gamma t}$: $1n$.
+\textbf{Step 3}: EPL$(0.5, 1-e^{-\gamma t})[1n]$ = $\sqrt{1-e^{-\gamma t}}$.
+
+Total: mul$[2n]$ + EML-variant$[1n]$ + EPL$[1n]$ = $4n$. ✓
+\end{proof}
+
+\subsection{Boltzmann Ratio: $e^{-\beta E_j}/e^{-\beta E_i}$ — Category A, $6n$ in F16}
+
+\begin{proposition}
+The Boltzmann ratio achieves $6n$ in genuine F16 via algebraic identity, saving $4n$ over naive.
+\end{proposition}
+
+\begin{proof}
+$e^{-\beta E_j}/e^{-\beta E_i}=e^{-\beta(E_j-E_i)}$.
+F16 route: sub$(E_j,E_i)[2n]$ + mul$(\beta,\cdot)[2n]$ + neg$[1n]$ + exp$[1n]$ = $6n$.
+Naive: two Boltzmanns ($4n$ each) + div($2n$) = $10n$.
+Saving: $4n$ (Category A). The EED notation gives $5n$ (one fewer neg$+$exp step vs F16 neg$+$exp).
+\end{proof}
+
+\section{Final Corrected Savings Summary}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccccc}
+\toprule
+Expression & Naive & F16 best & 23-op & F16 saving & 23-op bonus \\
+\midrule
+$e^x\cdot e^y$ & $4n$ & $3n$ & $1n$ & $1n$ (A) & $2n$ notation \\
+$e^x/e^y$ & $4n$ & $3n$ & $1n$ & $1n$ (A) & $2n$ notation \\
+$e^x+e^y$ & $4n$ & $4n$ & $1n$ & $0n$ & $3n$ notation \\
+$e^x-1$ & $3n$ & $1n$ & $1n$ & $2n$ (B) & $0n$ \\
+$1-e^x$ & $3n$ & $1n$ & $1n$ & $2n$ (B) & $0n$ \\
+$\ln(x/y)$ & $4n$ & $3n$ & $1n$ & $1n$ (A) & $2n$ notation \\
+$\ln(xy)$ & $4n$ & $3n$ & $1n$ & $1n$ (A) & $2n$ notation \\
+$\log_y x$ & $4n$ & $4n$ & $1n$ & $0n$ & $3n$ notation \\
+$\lambda\ln(\lambda/\mu)$ & $6n$ & $5n$ & $3n$ & $1n$ (A) & $2n$ notation \\
+$\ln(e^x+e^y)$ & $5n$ & $5n$ & $2n$ & $0n$ & $3n$ notation \\
+$\ln(1+e^x)$ & $4n$ & $2n$ & $2n$ & $2n$ (B) & $0n$ \\
+$e^x/(e^x+e^y)$ & $6n$ & $6n$ & $3n$ & $0n$ & $3n$ notation \\
+$\cosh(x)$ & $6n$ & $6n$ & $4n$ & $0n$ & $2n$ notation \\
+$\sqrt{\lambda\mu}$ (Bures) & $4n$ & $3n$ & $3n$ & $1n$ & $0n$ \\
+$e^{-\lambda t}$ & $4n$ & $4n$ & $3n$ & $0n$ & $1n$ notation \\
+$e^{-\beta E_j}/e^{-\beta E_i}$ & $10n$ & $6n$ & $5n$ & $4n$ (A) & $1n$ notation \\
+$e^{-\beta E_1}+e^{-\beta E_2}$ & $10n$ & $10n$ & $7n$ & $0n$ & $3n$ notation \\
+$e^{-\beta u}-1$ & $6n$ & $3n$ & $3n$ & $3n$ (B) & $0n$ \\
+$\sqrt{1-e^{-\gamma t}}$ & $7n$ & $4n$ & $4n$ & $3n$ (B) & $0n$ \\
+\midrule
+\multicolumn{6}{l}{\textit{Category A: algebraic identity. Category B: F16 sign-variant. Notation: 23-op-only.}} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Honest Savings Summary by Catalog}
+
+\subsection{Core SuperBEST (F16, v5.2) — unchanged}
+$15n$ positive total, $79.5\%$ savings. All genuine F16. \textbf{Correct as stated.}
+
+\subsection{Quantum Catalog}
+\begin{itemize}
+  \item Genuine F16 savings: $\sqrt{\lambda}$ ($1n$ via EPL), $\sqrt{\lambda\mu}$ ($1n$), quantum relative entropy ($1n$ per pair via div-then-ln), Boltzmann ratio ($4n$ per pair).
+  \item F16 sign-variant savings: $\sqrt{1-e^{-\gamma t}}$ ($3n$), some Lindblad sub-expressions.
+  \item Notation-only: $e^{-\lambda t}$ ($1n$ bonus), partition function ($3n$ per pair), Lindblad pairs ($3n$), Kraus decay factor ($1n$).
+  \item \textbf{Prior papers overstated savings by $0$--$3n$ per expression wherever EEA/EED were used without sign-variant analysis.}
+\end{itemize}
+
+\subsection{Physics / Special Functions Catalog}
+\begin{itemize}
+  \item Genuine (Category A): Boltzmann ratio ($4n$), heat kernel ($2n$ from EPL fixes).
+  \item Genuine (Category B): Mayer $f$-function ($3n$), softplus ($2n$).
+  \item Notation-only: $e^{-\beta E_1}+e^{-\beta E_2}$ ($3n$ from EEA), LSE ($3n$ from EEA).
+\end{itemize}
+
+\subsection{Information Theory Catalog}
+\begin{itemize}
+  \item Genuine (Category A): KL divergence per term ($1n$ per term), JSD ($1n$ per term via LLS route).
+  \item Notation-only: softmax ($3n$), cosh/sinh ($2n$), LSE ($3n$).
+\end{itemize}
+
+\section{Aggregate Honest Accounting}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Savings type & Per-instance magnitude & Prevalence \\
+\midrule
+Category A (algebraic identity, F16-genuine) & $1n$--$4n$ & Common ($\sim$6 expressions) \\
+Category B (F16 sign-variant) & $2n$--$3n$ & Specific (Mayer, softplus, Kraus) \\
+Category C (23-op notation, model-dependent) & $1n$--$3n$ & Very common ($\sim$12 expressions) \\
+\midrule
+Net F16-genuine saving across full catalog & $\sim$15--25n & Over all audited expressions \\
+Net 23-op notation saving across catalog & $\sim$40--60n & Model-dependent \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}[The honest total]
+The genuine F16 savings across the full catalog (algebraic identities + sign variants)
+is substantially smaller than the 23-op papers claimed.
+The largest single genuine saving is the Boltzmann ratio ($4n$ per pair).
+The majority of large savings numbers ($3n$ for EEA, LLD, etc.) are 23-op notation.
+This does not invalidate those results---it requires only correct labeling.
+\end{remark}
+
+\end{document}

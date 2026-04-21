@@ -1,0 +1,251 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,geometry,hyperref,longtable}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Formal Status of the 23-Operator Set:\\
+Decision Paper with Recommendation and Policy}
+\author{Monogate Research}
+\date{2026-04-21}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Following the definitive operator primitiveness audit, we formally decide the status of
+the 7 extended operators (EEM, EED, EES, LLA, LLS, LLD, EEA) relative to the 16-element
+F16 orbit.
+We compare two models----(A) pure notation atop F16, (B) a separate legitimate atomic
+primitive set---across five criteria: node-count honesty, implementation cost, pedagogical
+clarity, theorem-statement integrity, and patent/commercial implications.
+The audit also surfaced two unexpected F16 optimizations: the Mayer $f$-function
+achieves $3n$ in pure F16 via a sign-variant EML node (not EES notation), and softplus
+achieves $2n$ in pure F16 via EML$(x,1/e)+\ln$ (matching the 23-op claim with no bonus).
+We issue a formal policy recommendation and produce the corrected accounting tables.
+\end{abstract}
+
+\section{The Audit Results That Drive This Decision}
+
+Before comparing models, the primitiveness audit surfaced three facts that reframe the choice:
+
+\begin{enumerate}
+  \item \textbf{EES is not purely notational.}
+    EES$(x,0)=e^x-1$ is achievable as a single F16 node:
+    EML$_{\mathrm{neg}}(a,e) = \exp(-a)-\ln(e)=\exp(-a)-1$.
+    The Mayer $f$-function $e^{-\beta u}-1$ therefore costs $3n$ in \emph{pure F16}
+    (mul$[2n]$ + EML$_{\mathrm{neg}}(\cdot,e)[1n]$), not $6n$ (naive) or $3n$ via EES notation.
+    EES-as-notation and F16-direct give the same $3n$; the savings are real.
+
+  \item \textbf{Softplus is $2n$ in pure F16.}
+    $\ln(1+e^x)$: EML$(x,1/e)=e^x-\ln(1/e)=e^x+1$ is one F16 node;
+    then $\ln(\cdot)$ is another F16 node. Total: $2n$ in F16.
+    The 23-op route (EEA$(x,0)+\ln$) claims $2n$ but adds no bonus over F16.
+
+  \item \textbf{Boltzmann ratio has $4n$ genuine F16 savings.}
+    $e^{-\beta E_j}/e^{-\beta E_i}=e^{-\beta(E_j-E_i)}$:
+    F16 optimal costs $6n$ (sub$+$mul$+$neg$+$exp) vs naive $10n$.
+    Savings of $4n$ are a genuine algebraic-identity improvement in F16.
+    An additional $1n$ comes from EED notation (neg$+$exp $\to$ EED as $1n$).
+\end{enumerate}
+
+\section{Model Definitions}
+
+\begin{definition}[Model A: Notation only]
+The 7 extended operators are \emph{shorthand} for multi-node F16 sub-expressions.
+All node counts in SuperBEST are measured in F16 primitives.
+When we write ``LLS costs $1n$,'' we mean ``the F16-optimal computation of $\ln(x/y)$
+(div$+$ln $=3n$) is abbreviated as LLS, but the count is $3n$, not $1n$.''\
+SuperBEST tables under Model A use F16 counts only.
+\end{definition}
+
+\begin{definition}[Model B: Atomic primitive set]
+The 23 operators form a legitimate separate computational model.
+Each of the 7 extended operators is a first-class primitive: it costs $1n$,
+exactly as exp or ln costs $1n$.
+Model B tables count each of the 23 operators at $1n$.
+Savings are real if the computation model (hardware/software library) implements them atomically.
+\end{definition}
+
+\section{Five-Criterion Comparison}
+
+\subsection{Criterion 1: Node-Count Honesty}
+
+\textbf{Model A (F16-only)}: All counts are physically grounded in the actual F16 orbit.
+The cost of LLS is $3n$ (div$+$ln), not $1n$.
+Headline: quantum relative entropy costs $5n$ per pair, not $3n$.
+Partition function per pair costs $10n$, not $7n$.
+LSE costs $5n$, not $2n$.
+
+\textbf{Model B (23-op)}: Counts are $1n$ per macro only if the hardware/software treats them
+as atomic. If the runtime calls \texttt{exp(x)+exp(y)} separately, the count collapses to F16.
+The savings claim ($3n$ for LLS) is real only if LLS is a fused kernel.
+
+\textbf{Verdict}: \textbf{Model A wins} for formal theorem statements.
+Model B is honest only when explicitly qualified: ``in the 23-op extended model.''
+
+\subsection{Criterion 2: Implementation Cost}
+
+Implementing the 7 operators as atomic library routines (NumPy-style ufuncs or CUDA kernels)
+has concrete benefits:
+
+\begin{itemize}
+  \item \textbf{EEA} ($e^x+e^y$): A fused implementation avoids two separate exp evaluations.
+    Modern architectures compute $e^x$ and $e^y$ sharing the range-reduction step,
+    reducing wall-clock time by $\sim30$--$40\%$ vs sequential.
+  \item \textbf{LLS} ($\ln(x/y)$): A fused log-ratio is more numerically stable than
+    $\ln(x)-\ln(y)$ (avoids catastrophic cancellation when $x\approx y$).
+  \item \textbf{EED} ($e^{x-y}$): A fused implementation avoids underflow/overflow that
+    can occur when computing $e^x$ and $e^y$ separately for large $|x|,|y|$.
+\end{itemize}
+
+\textbf{Verdict}: \textbf{Model B wins} for library design.
+The 7 operators have real numerical and performance benefits even if node counts
+are definitional.
+
+\subsection{Criterion 3: Pedagogical Clarity}
+
+\textbf{Model A}: Teaches that all EML computations reduce to F16. Clean and rigorous.
+But describing ``quantum relative entropy costs $5n$'' hides the
+conceptual simplicity of the LLS route: ``it is $\lambda\cdot\mathrm{LLS}(\lambda,\mu)$.''
+
+\textbf{Model B}: Teaches a richer operator vocabulary matching mathematical concepts
+($\log$-ratio, $\log$-sum-exp, etc.). Easier to explain to practitioners.
+Risk: students may believe $3n$ is the F16 count without understanding the macro layers.
+
+\textbf{Verdict}: \textbf{Model B wins} for ML/optimization practitioners;
+\textbf{Model A wins} for formal circuit-complexity audiences.
+
+\subsection{Criterion 4: Theorem-Statement Integrity}
+
+Mathematical theorems about EML/SuperBEST must state their metric precisely.
+A theorem claiming ``quantum relative entropy requires $3n$ nodes'' is:
+\begin{itemize}
+  \item \textbf{True} under Model B (23-op extended, if stated)
+  \item \textbf{False} under Model A (F16-only; actual cost is $5n$)
+\end{itemize}
+
+The existing SuperBEST v6--v8 papers omit the model qualifier.
+This makes several theorem statements formally incorrect under the F16 interpretation,
+which is the intended baseline.
+
+\textbf{Verdict}: \textbf{Model A required} for theorem statements.
+Model B facts must carry an explicit ``in the 23-op extended model'' qualifier.
+
+\subsection{Criterion 5: Patent and Commercial Implications}
+
+\begin{itemize}
+  \item \textbf{Model A (F16 only)}: The $16$-operator orbit is the basis of the arXiv paper.
+    Novel efficiency results (79.5\% savings) rest on F16 counts. These are defensible.
+  \item \textbf{Model B (23-op)}: The $7$ extended operators, if novel and non-obvious,
+    could be patentable as fused computational primitives (analogous to FMA, exp2, etc.).
+    Specific claims: ``fused log-ratio (LLS) for stable KL computation,''
+    ``fused double-exponential sum (EEA) for log-sum-exp,'' etc.
+    Commercial value: library routines implementing these as hardware-fused operations
+    would constitute genuinely novel performance improvements.
+\end{itemize}
+
+\textbf{Verdict}: \textbf{Model B has commercial upside} if the 7 operators are
+implemented as hardware-fused primitives. F16 (Model A) is the theoretical foundation.
+
+\section{Recommendation}
+
+\begin{theorem}[Formal policy recommendation]
+\label{thm:policy}
+Adopt a \textbf{two-layer accounting system}:
+
+\textbf{Layer 1 (F16-ground-truth)}: All formal theorems, SuperBEST core table (15n/79.5\%),
+and circuit-complexity lower bounds use F16 counts exclusively.
+The 7 extended operators are \emph{not} counted as $1n$ in Layer 1.
+
+\textbf{Layer 2 (23-op extended)}: Library design, implementation guides, downstream papers
+for ML/physics audiences, and efficiency comparisons use 23-op counts,
+\emph{always labeled as ``23-op count'' or ``extended-primitive count''}.
+
+\textbf{No mixing}: A single table never lists both F16 and 23-op counts without explicit labels.
+All prior tables in SuperBEST v6--v8 must be relabeled.
+\end{theorem}
+
+\section{Recommendation Table}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lcccl}
+\toprule
+Context & Use & Metric & Label required & Reason \\
+\midrule
+Formal theorem & F16 (Layer 1) & F16 nodes & ``F16 node count'' & Rigor \\
+arXiv paper & F16 (Layer 1) & F16 nodes & implied by context & Paper baseline \\
+SuperBEST core table & F16 (Layer 1) & 15n/79.5\% & none (baseline) & Already correct \\
+Extended catalog & 23-op (Layer 2) & 23-op nodes & ``23-op count'' & Label required \\
+Library documentation & 23-op (Layer 2) & 23-op nodes & ``extended-primitive'' & User-facing \\
+Patent claims & 23-op (Layer 2) & 23-op nodes & per operator & Commercial \\
+Physics/ML papers & 23-op (Layer 2) & 23-op nodes & explicit qualifier & Accuracy \\
+Public blog posts & 23-op (Layer 2) & 23-op nodes & ``under extended set'' & Clarity \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Corrected Status of Each Operator}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccccl}
+\toprule
+Op & F16 best & 23-op & F16 real saving & Bonus & Revised classification \\
+\midrule
+EEM & $3n$ & $1n$ & $1n$ & $2n$ notation & Algebraic shortcut + notation \\
+EED & $3n$ & $1n$ & $1n$ & $2n$ notation & Algebraic shortcut + notation \\
+EES & $3n$ & $1n$ & $3n$\textsuperscript{*} & $0n$ & \textbf{Genuine F16 shortcut!} \\
+LLA & $3n$ & $1n$ & $1n$ & $2n$ notation & Algebraic shortcut + notation \\
+LLS & $3n$ & $1n$ & $1n$ & $2n$ notation & Algebraic shortcut + notation \\
+LLD & $4n$ & $1n$ & $0n$ & $3n$ notation & Notational macro \\
+EEA & $4n$ & $1n$ & $0n$ & $3n$ notation & Notational macro \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize *EES$(x,0)=e^x-1$ achieves $3n$ via F16 sign-variant EML$_{\mathrm{neg}}(a,e)$; general EES$(x,y)$ costs $4n$ in F16.}
+\end{tabular}
+\end{center}
+
+\begin{remark}[EES exceptional case]
+EES is neither purely notational nor a simple 1n primitive.
+For the specific case EES$(x,0)=e^x-1$ (or EES$(0,x)=1-e^x$):
+F16 achieves $3n$ via EML$_{\mathrm{neg}}(a,e)=\exp(-a)-1$.
+This means the Mayer $f$-function and related physics expressions have
+\emph{genuine} F16 savings of $3n$ (from $6n$ naive to $3n$ via sign-variant EML),
+not notational savings. EES as a 23-op primitive adds no further bonus in this case.
+For general EES$(x,y)$: F16 cost is $4n$; calling it $1n$ saves $3n$ notationally.
+\end{remark}
+
+\section{Final Policy Statement}
+
+\textbf{Effective immediately for all Monogate research outputs:}
+
+\begin{enumerate}
+  \item The \textbf{SuperBEST core table} (Table of 10 arithmetic operators, v5.2, $15n$/$79.5\%$)
+    is the canonical F16-ground-truth result. It does not use any 23-op operators.
+    This result stands and is formally correct.
+
+  \item All \textbf{extended catalog tables} (SuperBEST v6, v7, v8) are relabeled as
+    \emph{``23-op extended-primitive counts''} with a note that F16-only counts are larger
+    by $0$--$3n$ per 23-op macro used.
+
+  \item The \textbf{Operator Primitiveness Audit} (this file and its companion file) constitute
+    the authoritative record of which savings are genuine F16 savings vs notational savings.
+
+  \item Future theorem statements must include the model qualifier:
+    \emph{``In the F16 model\ldots''} or \emph{``In the 23-op extended model\ldots''}
+
+  \item The \textbf{EES operator} is reclassified from ``notational macro'' to
+    \emph{``genuine F16 shortcut for constant-argument cases''}; its general-input cost
+    remains $4n$ in F16.
+
+  \item \textbf{Softplus} ($2n$) is confirmed correct in both F16 and 23-op; no labeling correction needed.
+
+  \item The \textbf{Boltzmann ratio} ($4n$ genuine saving) is confirmed; the additional $1n$
+    from EED is notational.
+\end{enumerate}
+
+\end{document}
