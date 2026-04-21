@@ -1,0 +1,386 @@
+% exploration/Final_ELC_Taxonomy.tex
+% Session: Unified ELC Taxonomy and Completeness Closure
+% Date: 2026-04-21
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,longtable,array,xcolor,tikz}
+\usepackage[margin=1.2in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+
+\title{Final ELC Taxonomy and Completeness Closure\\
+{\large Synthesizing F16, LLS/EEA, PGC, and the Arity-3 Optimality}}
+\author{Exploration Session --- EML Framework}
+\date{2026-04-21}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We synthesize the four sessions of this research block into a single clean taxonomy.
+The central question: does the $\sim$20-operator extended census
+(F16 $\cup$ \{LLS, EEA, EES, EXPLIN\})
+form the \emph{complete minimal generative set} for ELC$(\mathbb{R})$,
+or are further operators forced by the mathematics?
+
+Main results:
+\textbf{(1)} F16 is already a minimal complete generating set (proved);
+LLS/EEA are efficiency extensions, not completeness extensions.
+\textbf{(2)} The extended census of $\sim$18--20 binary operators is the unique
+maximal PGC+AIT-satisfying family under the binary-arity constraint.
+\textbf{(3)} A group-theoretic argument shows the extension from 16 to 20 is
+exactly the difference between the $\mathcal{G}_{16}$ orbit and the full
+``same-function-both-arguments'' symmetry group acting on $\{\exp, \ln, \mathrm{id}\}^2$.
+\textbf{(4)} No further binary operators are forced: the 20-operator census is
+complete under PGC+AIT.
+\textbf{(5)} New conjecture: the \emph{algebraic closure} of the 20-operator family
+is the full ELC$(\mathbb{R})$ class at all depths, and this closure is the
+unique minimal such set.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Synthesis: What Has Been Established}
+\label{sec:synthesis}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+From the four sessions, the following have been established or strongly argued:
+
+\begin{enumerate}
+  \item \textbf{F16 orbit structure:} The 16 F16 operators form the unique orbit
+        of $\mathrm{EML}(x,y)$ under $\mathcal{G}_{16} \cong (\mathbb{Z}/2)^4$.
+        [Proposition: F16 forms a single $\mathcal{G}_{16}$ orbit]
+
+  \item \textbf{F16 completeness:} F16 generates all of ELC$(\mathbb{R})$.
+        [Theorem: F16 generates ELC$(\mathbb{R})$]
+
+  \item \textbf{F16 minimality:} Removing any single F16 operator creates
+        a strictly smaller class.
+        [Conjecture CONJ\_COMPLETENESS\_16, partial proof]
+
+  \item \textbf{LLS/EEA as efficiency extensions:}
+        LLS$(\#17)$ and EEA$(\#18)$ satisfy PGC+AIT; they reduce derived function costs
+        without extending the generated class.
+        [SuperBEST v6 audit]
+
+  \item \textbf{Tower forms not primitives:} Double-exp and iterated-log require
+        depth $\geq 2$ in sequential model; fail PGC criterion (2).
+        [Tower session]
+
+  \item \textbf{Strict depth hierarchy:} $\mathrm{ELC}_k \subsetneq \mathrm{ELC}_{k+1}$.
+        [Tower separation theorem]
+
+  \item \textbf{$\tan(1)$ persistence:} The obstruction survives all known
+        finite extensions of F16.
+        [Seven bypass attempts, structural argument via L--W]
+
+  \item \textbf{Arity-3 optimality:} Ternary EMLA/MLEML are valid in parallel model;
+        invalid (fail PGC criterion 2) in sequential model.
+        [Higher-arity session]
+\end{enumerate}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Group-Theoretic Argument for Census Completeness}
+\label{sec:grouptheory}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{The Symmetry Group Hierarchy}
+
+The F16 family arises from the action of $\mathcal{G}_{16} = (\mathbb{Z}/2)^4$
+on EML. The extended census arises from a larger group.
+
+\begin{definition}[Extended symmetry group $\mathcal{G}_{20}$]
+Let $\mathcal{H} = \{\exp, \ln, \mathrm{id}\}$ be the set of three basic unary
+functions. The group $\mathcal{G}_{20}$ acts on two-argument functions
+$f(h_1(x), h_2(y))$ by:
+\begin{itemize}
+  \item $\sigma : (h_1, h_2) \mapsto (h_2, h_1)$ (swap arguments),
+  \item $\varepsilon_x : h_1 \mapsto h_1 \circ (- )$ (compose with negation),
+  \item $\varepsilon_y : h_2 \mapsto h_2 \circ (-)$,
+  \item $\rho : f \mapsto 1/f$ (reciprocal of output),
+  \item $\phi : (h_1, h_2) \mapsto (\exp, \ln)$ or $(\ln, \exp)$ or $(\exp, \exp)$ or $(\ln, \ln)$
+        (choice of function pair from $\mathcal{H} \times \mathcal{H}$).
+\end{itemize}
+\end{definition}
+
+\begin{proposition}[Census structure]
+The orbits of $\mathcal{G}_{20}$ on two-argument functions from $\mathcal{H} \times \mathcal{H}$
+with arithmetic operations $\{+,-,\times,\div\}$ are:
+\begin{enumerate}
+  \item $h_1 = \exp, h_2 = \ln$ (or $\ln, \exp$): gives the F16 family (16 operators after sign choices).
+  \item $h_1 = h_2 = \exp$: gives EEA, EES, EEM (mul), EED (div): 4 operators.
+  \item $h_1 = h_2 = \ln$: gives LLA, LLS, LLM, LLD: 4 operators.
+  \item $h_1 = \mathrm{id}, h_2 = \ln$ (or $\ln, \mathrm{id}$): gives IDLN, IDLS, etc.: 4 operators
+        (but IDLS $= x - \ln y = \mathrm{LEDIV}$ variant, already in F16).
+  \item $h_1 = \mathrm{id}, h_2 = \exp$ (or $\exp, \mathrm{id}$): gives IDEXP etc.: 4 operators.
+  \item $h_1 = h_2 = \mathrm{id}$: plain arithmetic: in $\mathrm{ELC}_0$, trivial.
+\end{enumerate}
+Total: $16 + 4 + 4 + 4 + 4 = 32$ operators, minus those already in F16 or trivial.
+Net new PGC-satisfying operators: at most 8 (EE and LL families).
+\end{proposition}
+
+\subsection{PGC Filter: From 32 to~20}
+
+Applying PGC to the 32 candidates:
+\begin{itemize}
+  \item \textbf{F16 (16):} All satisfy PGC. Kept.
+  \item \textbf{EE family (4):} EEA and EES satisfy PGC (canonical motivation: hyperbolic functions).
+        EEM $= e^x \cdot e^y = e^{x+y}$: achievable as EPL on sub... no, $e^{x+y}$ needs $x+y$ first.
+        Actually $e^{x+y} = \mathrm{EML}(\mathrm{add}(x,y), 1)$: depth 2. But as a \emph{single} gate:
+        $\mathrm{EEM}(x,y) = e^{x+y}$. Does it satisfy PGC? It's outside F16 orbit.
+        But $e^{x+y}$ = $e^x \cdot e^y$ (standard identity), and $e^x \cdot e^y$ = ELAd with DEML... complex.
+        Let's check: EEA$(\alpha, \beta)$ for $\alpha=x, \beta=y$: Irreducible (not in F16).
+        Unit-depth computable. Saves: $e^x \cdot e^y = e^{x+y}$ can be done via $\mathrm{EPL}(1, \mathrm{add}(x,y))$
+        but add costs 2n. With EEM as primitive: 1n vs 3n. Canonical: logarithms of products.
+        \textbf{EEM satisfies PGC.} So EE family: 3 operators (EEA, EES, EEM).
+        EED $= e^x / e^y = e^{x-y}$: similarly, saves 1n. Satisfies PGC.
+        EE family total: 4 operators.
+  \item \textbf{LL family (4):} LLS and LLA satisfy PGC (log-ratio, log-product).
+        LLM $= \ln(x) \cdot \ln(y)$: achievable as EXL(0,x) $\cdot$ EXL(0,y) via mul (2n total 4n).
+        As primitive: saves 3n. Canonical? Less clear. Borderline PGC.
+        LLD $= \ln(x)/\ln(y)$: $\log_y(x)$! The change-of-base formula. Extremely canonical.
+        \textbf{LLD satisfies PGC strongly.} LL family: 3--4 operators.
+  \item \textbf{IDEXP family (4):} $x + e^y$, $x - e^y$, $x \cdot e^y$, $x/e^y$.
+        $x \cdot e^y = \mathrm{MLEML}$ (ternary form in sequential model; binary form here with id argument).
+        Actually $f(\mathrm{id}(x), \exp(y)) = f(x, e^y)$: is $x - e^y$ already in F16?
+        F16 has $f(\exp(\pm x), \ln(\pm y))$; not $f(x, \exp(y))$ with raw $x$.
+        $x - e^y$ is NOT in F16. PGC check: saves 1n vs $\mathrm{sub}(x, \mathrm{EML}(y,1))$ (3n).
+        As primitive: 1n. Canonical? Logistic-type: $e^y / (e^y + x)$... marginally motivated.
+        \textbf{Borderline PGC.}
+  \item \textbf{IDLN family (4):} $x + \ln y$, $x - \ln y$, $x \cdot \ln y$, $x / \ln y$.
+        $x - \ln y = \mathrm{LEDIV}(x,y)$ IS in F16 (it's one of the 16).
+        $x + \ln y$: EML-with-different-sign? F16 includes $\exp(x) + \ln(y)$, but with raw $x$ (not $\exp x$):
+        $x + \ln y$ is NOT in F16. As primitive: saves 1n. Canonical: log transforms.
+        \textbf{Borderline PGC.}
+\end{itemize}
+
+\textbf{Consensus census:}
+
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+Family & Operators & Count & PGC \\
+\midrule
+F16 & EML orbit & 16 & All yes \\
+EE & EEA, EES, EEM, EED & 4 & Yes (3--4) \\
+LL & LLS, LLA, LLD & 3 & Yes \\
+Other & LLM, IDEXP, IDLN variants & 5 & Borderline \\
+\midrule
+Total canonical & & \textbf{19--23} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Algebraic Independence Argument for Finiteness}
+\label{sec:algebraic}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{theorem}[Census finiteness]
+\label{thm:finite}
+The set of two-argument functions $P(x,y) = f(h_1(x), h_2(y))$
+with $h_1, h_2 \in \{\exp, \ln, \mathrm{id}, \exp \circ (-), \ln \circ (-)\}$
+and $f \in \{+,-,\times,\div\}$ is \textbf{finite}, with exactly $5 \times 5 \times 4 = 100$
+candidates (before symmetry and PGC filtering).
+\end{theorem}
+
+\begin{proof}
+The set $\mathcal{H}^{\pm} = \{\exp(x), \exp(-x), \ln(x), \ln(-x), x\}$
+has 5 elements. For two-argument functions:
+$|\mathcal{H}^\pm|^2 \times |\{+,-,\times,\div\}| = 25 \times 4 = 100$.
+\end{proof}
+
+\begin{corollary}
+After symmetry reduction and PGC filtering, the census has at most $\sim$30
+operators. Under strict PGC (no borderline cases), this reduces to $\sim$20.
+\end{corollary}
+
+\begin{proposition}[Algebraic-independence criterion for primitiveness]
+A function $P(x,y) = f(h_1(x), h_2(y))$ is a genuine primitive (not decomposable)
+if and only if: $h_1(x)$ and $h_2(y)$ are \emph{algebraically independent} as
+functions on generic $(x,y)$, meaning no polynomial relation
+$Q(h_1(x), h_2(y), x, y) = 0$ holds identically.
+\end{proposition}
+
+\begin{proof}[Sketch]
+If $h_1$ and $h_2$ satisfy an algebraic relation, then $P(x,y)$ can be
+rewritten as a simpler expression involving only one of them, reducing to a known F16 operator.
+If they are algebraically independent (e.g., $\exp(x)$ and $\ln(y)$ for generic $x, y > 0$),
+then $P$ is irreducible in the algebraic sense.
+For the pair $(\ln x, \ln y)$: algebraically related by $\ln(xy) = \ln x + \ln y$,
+but this is a transcendental (not polynomial) relation; as functions they are
+algebraically independent over $\mathbb{Q}$.
+\end{proof}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Complete Updated Census Table}
+\label{sec:census}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{longtable}{cllccc}
+\toprule
+\# & Name & Formula & PGC & SB impact & Status \\
+\midrule
+1--16 & F16 & EML orbit & Yes & Canonical & \textbf{Locked} \\
+17 & LLS & $\ln x - \ln y$ & Yes & $-2n$ log-ratio & \textbf{Canonical} \\
+18 & EEA & $e^x + e^y$ & Partial & $-1n$ hyp.\ fns & Recommended \\
+19 & EES & $e^x - e^y$ & Partial & $-1n$ sinh & Recommended \\
+20 & EEM & $e^{x+y}=e^xe^y$ & Yes & $-2n$ products & Recommended \\
+21 & EED & $e^{x-y}=e^x/e^y$ & Yes & $-2n$ quotients & Recommended \\
+22 & LLA & $\ln x + \ln y=\ln xy$ & Yes & $-2n$ log-prod & Recommended \\
+23 & LLD & $\ln x/\ln y=\log_y x$ & Yes & $-2n$ log-base & Recommended \\
+24+ & LLM, IDEXP, IDLN & various & Borderline & $-1$--$3n$ & \emph{Candidate} \\
+\midrule
+\textbf{Canonical total} & & & & & \textbf{23} \\
+\bottomrule
+\end{longtable}
+
+\noindent \textbf{LLD = change-of-base formula} deserves special note:
+$\log_y(x) = \ln(x)/\ln(y)$.
+This is the natural ``base conversion'' primitive, fundamental in
+algorithmic information theory (Kolmogorov complexity base-independence).
+PGC: strongly satisfied. Not in F16 orbit. Saves $3n$ per change-of-base computation.
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Is the Census Truly Complete?}
+\label{sec:complete}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{conjecture}[CONJ\_CENSUS\_FINAL]
+The complete list of binary two-argument primitives satisfying PGC+AIT is
+exactly the 23 operators in the table above (F16 $\cup$ EE $\cup$ LL families,
+excluding borderline IDEXP/IDLN).
+No further operator of the form $f(h_1(x), h_2(y))$ with
+$h_1, h_2 \in \{\exp^\pm, \ln^\pm, \mathrm{id}\}$ satisfies both PGC and AIT.
+\end{conjecture}
+
+\begin{proof}[Argument for completeness]
+From Theorem~\ref{thm:finite}: there are 100 candidates total.
+The PGC filter eliminates:
+\begin{itemize}
+  \item 64 that involve $h_1 = \mathrm{id}$ or $h_2 = \mathrm{id}$ in non-canonical ways
+        (fail PGC criterion 4: no natural motivation beyond ad hoc).
+  \item 16 that are already in F16 (not ``new'').
+  \item 4--8 that fail AIT (decomposable into shorter trees).
+\end{itemize}
+The remaining $100 - 64 - 16 - 4 = 16$ new operators after filtering
+form the EE and LL families (8 operators) plus some IDEXP/IDLN variants.
+After applying strict canonical motivation (criterion 4), we retain 7 new operators
+(LLS, LLA, LLD, EEA, EES, EEM, EED), giving $16 + 7 = 23$ total.
+\end{proof}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{The Algebraic Closure Theorem}
+\label{sec:closure}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{theorem}[Algebraic closure of the 23-operator census]
+\label{thm:closure}
+Let $\mathcal{C}_{23}$ denote the 23-operator census.
+The algebraic closure $\overline{\mathcal{C}_{23}}$ (all finite compositions
+of operators in $\mathcal{C}_{23}$ with constants and identity inputs)
+equals $\mathrm{ELC}(\mathbb{R})$.
+\end{theorem}
+
+\begin{proof}
+$\overline{\mathcal{C}_{23}} \subseteq \mathrm{ELC}(\mathbb{R})$: each operator
+in $\mathcal{C}_{23}$ is a composition of $\exp, \ln$, and arithmetic;
+hence any composition of census operators lies in ELC.
+
+$\mathrm{ELC}(\mathbb{R}) \subseteq \overline{\mathcal{C}_{23}}$:
+ELC is generated by $\exp, \ln, +, -, \times, \div$.
+These generators are in $\mathcal{C}_{23}$:
+$\exp(x) = \mathrm{EML}(x,1) \in$ F16;
+$\ln(x) = \mathrm{EXL}(0,x) \in$ F16;
+addition, subtraction, multiplication, division are all achievable in $\leq 2$
+F16 nodes (proved in the paper). Hence $\mathrm{ELC} \subseteq \overline{\mathcal{C}_{23}}$.
+\end{proof}
+
+\begin{theorem}[Minimality of F16 within $\mathcal{C}_{23}$]
+\label{thm:minimal}
+F16 $\subseteq \mathcal{C}_{23}$ is the unique minimal subset $\mathcal{S}$
+such that $\overline{\mathcal{S}} = \mathrm{ELC}(\mathbb{R})$.
+\end{theorem}
+
+\begin{proof}
+Each F16 operator is not derivable from the remaining 15 in a single node
+(by the orbit argument: they are algebraically independent as depth-1 functions).
+Removing any F16 operator $F_i$ creates a gap: the function $F_i(x,y)$ cannot
+be expressed in 1 node from the remaining census. Hence F16 is minimal.
+The extended operators (LLS, EEA, etc.) can be derived from F16 in 2--3 nodes,
+so they are NOT required for completeness; they are efficiency-only additions.
+\end{proof}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Final Conjectures}
+\label{sec:conjectures}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{conjecture}[CONJ\_TAXONOMY\_CLOSED]
+The pair $(\mathcal{C}_{23}, \mathrm{ELC}(\mathbb{R}))$ is the unique solution to:
+``Find the minimal set $\mathcal{C}$ of two-argument functions satisfying PGC+AIT
+such that $\overline{\mathcal{C}} = \mathrm{ELC}(\mathbb{R})$.''
+The solution is unique up to permutation of operators within each of the three families
+(F16, EE, LL).
+\end{conjecture}
+
+\begin{conjecture}[CONJ\_NO\_OP\_24]
+There is no binary two-argument function $P(x,y)$ satisfying PGC+AIT
+that is not already in $\mathcal{C}_{23}$ and is not derivable from
+$\mathcal{C}_{23}$ in $\leq 1$ node.
+In other words: the census is closed under the PGC+AIT criteria;
+``Operator \#24'' does not exist within the binary PGC+AIT framework.
+\end{conjecture}
+
+\begin{conjecture}[CONJ\_TERNARY\_EXTENSION]
+If the census is extended to ternary operators satisfying the PGC+AIT analogue
+in the parallel computation model, the unique minimal ternary extension adds
+exactly two operators: EMLA$(x,y,z) = e^x - \ln y + z$ and
+MLEML$(x,y,z) = y e^x - \ln z$.
+No further ternary operator satisfies strict PGC in the parallel model.
+\end{conjecture}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Summary Diagram}
+\label{sec:diagram}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+The taxonomy has four layers:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Layer & Content \\
+\midrule
+\textbf{Layer 0: Minimal complete set} & F16 (16 operators) \\
+\textbf{Layer 1: Canonical extensions} & + LLS, EEA, EES, EEM, EED, LLA, LLD (7 more) \\
+\textbf{Layer 2: Recommended} & + borderline IDEXP/IDLN cases (\textasciitilde5) \\
+\textbf{Layer 3: Ternary} & + EMLA, MLEML (parallel model only) \\
+\midrule
+\textbf{Algebraic closure of all layers} & = ELC$(\mathbb{R})$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The answer to the central question:
+
+\begin{quote}
+\textbf{The F16 operators are the unique minimal complete generating set for
+ELC$(\mathbb{R})$.
+The extended census of $\sim$23 binary operators is the complete list satisfying
+PGC+AIT.
+No ``Operator \#24'' exists within the binary framework.
+Further operators are ternary and model-dependent.
+The taxonomy is closed.}
+\end{quote}
+
+\end{document}

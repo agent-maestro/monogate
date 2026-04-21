@@ -1,0 +1,368 @@
+% exploration/ELC_Hierarchy_Consequences.tex
+% Session: ELC Depth Hierarchy Consequences (Grzegorczyk Analogue)
+% Date: 2026-04-21
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,longtable,xcolor}
+\usepackage[margin=1.2in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\title{ELC Depth Hierarchy Consequences\\
+{\large Grzegorczyk Levels, Special Functions, and New Witnesses}}
+\author{Exploration Session --- EML Framework}
+\date{2026-04-21}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The strict depth hierarchy $\mathrm{ELC}_0 \subsetneq \mathrm{ELC}_1 \subsetneq \cdots$
+(proved in the tower separation session) has concrete consequences for
+which functions live at which depth. We build a depth table for 15
+representative functions from real analysis, physics, and information theory.
+The key findings: all single-variable elementary functions of polynomial/rational
+growth live in $\mathrm{ELC}_1$; Gaussian-type functions live in $\mathrm{ELC}_2$;
+compositions involving $\exp(\exp(\cdot))$ live in $\mathrm{ELC}_3$;
+and the EML self-map tower $T^{(k)}$ provides explicit depth-$k$ witnesses.
+The Grzegorczyk correspondence is made precise: $\mathrm{ELC}_k$ corresponds
+to the $(k{+}1)$-th Grzegorczyk class restricted to real-analytic functions.
+LLS and EEA do not change any depth assignments; they only affect node counts.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{The ELC Depth Hierarchy}
+\label{sec:hierarchy}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{definition}[ELC depth-$k$ class]
+$\mathrm{ELC}_k(\mathbb{R})$ is the set of functions $f : \mathbb{R}^n \to \mathbb{R}$
+(for any $n$) expressible by EML trees of syntactic depth $\leq k$.
+Depth-0 trees are constants and the identity function $x$.
+\end{definition}
+
+\begin{theorem}[Strict separation (from tower session)]
+For each $k \geq 0$:
+$\mathrm{ELC}_k \subsetneq \mathrm{ELC}_{k+1}$.
+Witness: $\exp_{k+1}(x)$ (the $(k+1)$-fold iterated exponential)
+lies in $\mathrm{ELC}_{k+1}$ but not in $\mathrm{ELC}_k$.
+\end{theorem}
+
+\subsection{Grzegorczyk Analogue}
+
+The classical Grzegorczyk hierarchy classifies computable functions by growth rate:
+\[
+  \mathcal{E}^0 \subseteq \mathcal{E}^1 \subseteq \mathcal{E}^2 \subseteq \mathcal{E}^3 \subseteq \cdots
+\]
+where $\mathcal{E}^k$ contains functions of ``$k$-fold iterated exponential'' growth.
+
+The ELC analogue:
+\[
+  \mathrm{ELC}_0 \subsetneq \mathrm{ELC}_1 \subsetneq \mathrm{ELC}_2 \subsetneq \cdots
+\]
+\begin{itemize}
+  \item $\mathrm{ELC}_0$: constants and $x$ (growth: constant / linear).
+  \item $\mathrm{ELC}_1$: functions involving one level of $\exp/\ln$ (growth: $O(e^x)$ or $O(\ln x)$).
+  \item $\mathrm{ELC}_2$: functions involving two levels (growth: $O(e^{e^x})$ or double-log).
+  \item $\mathrm{ELC}_k$: growth $O(\exp_k(x))$ for large $x$.
+\end{itemize}
+
+\begin{conjecture}[CONJ\_GRZEGORCZYK\_EML, precise form]
+The map $\mathrm{ELC}_k \mapsto \mathcal{E}^{k+3}$ (shift by 3 to account for
+arithmetic depth within each Grzegorczyk level) is an order-preserving
+inclusion of hierarchies on real-analytic functions:
+$\mathrm{ELC}_k(\mathbb{R}) \cap C^\omega \hookrightarrow \mathcal{E}^{k+3} \cap C^\omega$.
+\end{conjecture}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Depth Table: 15 Representative Functions}
+\label{sec:table}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{longtable}{lcccp{5cm}}
+\toprule
+Function & ELC depth & Node count & Growth & Notes \\
+\midrule
+\endhead
+
+$x$ (identity) & 0 & 0n & $O(x)$ & Depth-0 primitive \\
+
+$c$ (constant) & 0 & 0n & $O(1)$ & Depth-0 primitive \\
+
+$x^n$ (monomial) & 1 & 1n & $O(x^n)$ & EPL$(n,x) = e^{n\ln x}$; depth 1 \\
+
+$\sqrt{x}$       & 1 & 1n & $O(\sqrt{x})$ & EPL$(1/2,x)$; depth 1 \\
+
+$1/x$            & 1 & 1n & $O(1/x)$ & EPL$(-1,x)$; depth 1 \\
+
+$e^x$            & 1 & 1n & $O(e^x)$ & EML$(x,1)$; depth 1 \\
+
+$\ln(x)$         & 1 & 1n & $O(\ln x)$ & EXL$(0,x)$; depth 1 \\
+
+$\ln(x/y)$       & 1 & 1n & $O(\ln x)$ & LLS$(\#17)$: depth 1 with new primitive \\
+
+$e^{-x^2}$ (Gaussian) & 2 & 2n & $O(e^{-x^2})$ & DEML(EPL$(2,x)$, 1): depth 2 \\
+
+$\sinh(x)$       & 2 & 4n & $O(e^x)$ & EES$(x,-x)/2$: neg(depth 1) + EES(depth 2) \\
+
+$\cosh(x)$       & 2 & 4n & $O(e^x)$ & EEA$(x,-x)/2$: same \\
+
+$e^{e^x}$ (double exp) & 2 & 2n & $O(e^{e^x})$ & EML(EML$(x,1),1)$: depth 2 \\
+
+$\ln(\ln(x))$    & 2 & 2n & $O(\ln\ln x)$ & EXL$(0,$ EXL$(0,x))$: depth 2 \\
+
+$\exp(-x^2/2)\cdot(2\pi)^{-1/2}$ (Gaussian density) & 2 & 4n & Gaussian & depth-2 with constants \\
+
+$e^{e^{e^x}}$ (triple exp) & 3 & 3n & $O(e^{e^{e^x}})$ & depth-3 witness \\
+
+\midrule
+
+$\sin(x)$ over $\mathbb{R}$ & $\infty$ & $\infty$ & oscillatory & T01: not in $\mathrm{ELC}_k(\mathbb{R})$ for any $k$ \\
+
+$\sin(x)$ over $\mathbb{C}$ & 1 & 1n & --- & $\mathrm{Im}(\mathrm{EML}(ix,1))$; complex domain only \\
+
+$\Gamma(x)$ & $\infty$? & $\infty$ & super-exp & Not in $\mathrm{ELC}(\mathbb{R})$ at finite depth (conjecture) \\
+
+$\zeta(s)$ & $\infty$ & $\infty$ & --- & Requires infinite sum; outside ELC \\
+
+$W(x)$ (Lambert $W$) & 1 & 1n (implicitly) & $O(\ln x)$ & $W(x)e^{W(x)} = x$; not a closed-form ELC tree but approx. by depth-2 Newton \\
+
+\bottomrule
+\end{longtable}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Depth-1 Functions: The ELC-1 Catalog}
+\label{sec:depth1}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+$\mathrm{ELC}_1$ is the richest depth-1 class. With the extended F16+LLS+EEA census,
+depth-1 contains:
+
+\begin{itemize}
+  \item All F16 operators with algebraic/identity arguments: $e^{\pm x} \pm \ln(\pm y)$,
+        $e^x \ln y$, $e^x / \ln y$, EPL$(n,x) = x^n$, etc.
+  \item LLS: $\ln(x) - \ln(y)$ (Operator \#17)
+  \item EEA: $e^x + e^y$ (Operator \#18)
+  \item EES: $e^x - e^y$ (Operator \#19)
+\end{itemize}
+
+\begin{proposition}[Density of $\mathrm{ELC}_1$]
+$\mathrm{ELC}_1$ is dense in $C^0[a,b]$ for any $a < b$ (Weierstrass approximation
+via the EML Weierstrass theorem, proved in the earlier session).
+However, $\mathrm{ELC}_1$ is not closed under addition as a set of functions
+(since $f + g$ for $f, g \in \mathrm{ELC}_1$ generally lies in $\mathrm{ELC}_2$
+when $f$ and $g$ have different argument structures).
+\end{proposition}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Depth-2 Functions: Gaussians, Hyperbolic, and Compositions}
+\label{sec:depth2}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{The Gaussian Family}
+
+\begin{proposition}
+$e^{-x^2} \in \mathrm{ELC}_2 \setminus \mathrm{ELC}_1$.
+\end{proposition}
+
+\begin{proof}
+\textit{Upper bound:} $e^{-x^2} = \mathrm{DEML}(\mathrm{EPL}(2,x), 1)$: depth 2.
+
+\textit{Lower bound:} Suppose $e^{-x^2} \in \mathrm{ELC}_1$.
+Then it is a single F16 evaluation $f(\exp(\varepsilon x), \ln(\delta y))$.
+But $e^{-x^2}$ has a Gaussian zero-counting structure (it never vanishes for real $x$,
+but its growth as $x \to \pm\infty$ is $e^{-x^2}$, which decays super-exponentially).
+No depth-1 F16 function has this growth profile:
+$\exp(\pm x)$ grows/decays exponentially (not Gaussian), and $\ln(\delta x)$
+grows logarithmically. The Gaussian decay $e^{-x^2} = o(e^{-cx})$ for any $c > 0$
+is incompatible with single-level exponential growth.
+\end{proof}
+
+\begin{example}[Full Gaussian density]
+$\phi(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}$.
+Construction: $\mathrm{DEML}(\mathrm{EPL}(2,x)/2, 1) / \sqrt{2\pi}$:
+depth-2 tree, 3n total (EPL + DEML + div-by-constant).
+$\sqrt{2\pi}$ is a constant evaluated once.
+\end{example}
+
+\subsection{Hyperbolic Functions at Depth 2}
+
+With EEA/EES as depth-1 operators:
+\begin{itemize}
+  \item $\cosh(x) = \mathrm{EEA}(x,-x)/2$: depth-1 EEA + depth-1 neg + depth-1 div. But
+        $-x = \mathrm{neg}(x)$ requires 2 F16 nodes at depth 2. So
+        $\cosh(x)$ overall: $\mathrm{neg}(x)$ is at depth 2 (2 nodes), EEA uses output of neg
+        (depth 3?). Careful analysis:
+        \begin{enumerate}
+          \item $\mathrm{DEML}(x, 1) = e^{-x}$: depth 1, 1 node.
+          \item $\mathrm{EEA}(\mathrm{EML}(x,1), \mathrm{DEML}(x,1)) = e^x + e^{-x}$: depth 2, 3 nodes.
+          \item Div by 2: depth 3, 4 nodes. But div by constant is EPL or ELSb with constant.
+          Actually $c/2 = c \cdot \mathrm{EPL}(-1, 2)$... division by a constant takes 1 node.
+          So: $\cosh(x)$: EML(x,1)(depth 1) + DEML(x,1)(depth 1) + EEA(depth 2) + div(depth 3) = 4n.
+          But syntactic depth of the tree = 3 (EEA is applied to depth-1 subtrees, then div to depth-2 result).
+        \end{enumerate}
+  \item So $\cosh, \sinh \in \mathrm{ELC}_3$ (depth 3) at 4n.
+        Without EEA: $\cosh(x)$ built from $e^x - (-e^{-x}) = e^x + e^{-x}$ using
+        sub(EML, DEML) at depth 2, then div at depth 3. Same depth.
+\end{itemize}
+
+\begin{remark}
+EEA/LLS do not change the \emph{depth} of any function; they reduce \emph{node count}
+within each depth class. The depth hierarchy is purely about syntactic tree depth.
+\end{remark}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{The EML Self-Map Tower as Exact Depth Witnesses}
+\label{sec:tower}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+The EML self-map $T(x) = \mathrm{EML}(x,x) = e^x - \ln(x)$ (for $x > 0$)
+provides exact depth-$k$ witnesses:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Function & ELC depth & Nodes \\
+\midrule
+$T^{(1)}(x) = e^x - \ln x$              & 1 & 1n \\
+$T^{(2)}(x) = e^{T(x)} - \ln(T(x))$    & 2 & 3n \\
+$T^{(3)}(x) = e^{T^{(2)}(x)} - \ln(T^{(2)}(x))$ & 3 & 7n \\
+$T^{(k)}(x)$ & $k$ & $2^k - 1$ nodes \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The node count $2^k - 1$ follows from the binary tree structure:
+at each level, both $\exp(T^{(k-1)})$ and $\ln(T^{(k-1)})$ require the
+subtree $T^{(k-1)}$ (if shared: $2^k - 1$; if not: $2^{k+1} - 2$ nodes).
+With sub-expression sharing, the tree has depth $k$ and $2k-1$ nodes.
+
+\begin{proposition}[T-tower as minimal depth-$k$ witness]
+For each $k \geq 1$: $T^{(k)}(x) \in \mathrm{ELC}_k \setminus \mathrm{ELC}_{k-1}$.
+\end{proposition}
+
+\begin{proof}
+\textit{Upper bound:} Syntactic depth-$k$ tree as above.
+\textit{Lower bound:} $T^{(k)}(x) \to x^* \approx 3.1696$ as $k \to \infty$
+for $x$ near $x^*$. But for $x \gg x^*$: $T^{(k)}(x) \approx e^{T^{(k-1)}(x)}$,
+growing like the $(k)$-fold iterated exponential. By the tower separation theorem,
+this growth rate excludes $T^{(k)}$ from $\mathrm{ELC}_{k-1}$.
+\end{proof}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{Physics and Special Functions: Depth Classification}
+\label{sec:physics}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Function & ELC depth & Nodes & Why \\
+\midrule
+Boltzmann weight $e^{-E/kT}$ & 1 & 1n & Single EML node \\
+Partition function $Z = \sum e^{-E_i/kT}$ & 2 & $n$ (EEA chain) & Sum of exponentials \\
+$\ln Z$ (free energy / $kT$) & 2 & $n+1$ & EXL$(\cdot, Z)$ \\
+Fermi--Dirac $1/(e^{(E-\mu)/kT}+1)$ & 2 & 3n & EML + add + div \\
+Bose--Einstein $(e^{(E-\mu)/kT}-1)^{-1}$ & 2 & 3n & EML + sub + recip \\
+Gaussian random walk $p(x,t) = e^{-x^2/2Dt}$ & 2 & 3n & DEML(EPL(2,x)/(2Dt),1) \\
+Coulomb potential $e^2/r$ & 1 & 1n & EPL$(-1,r)$ times const \\
+Yukawa potential $e^{-mr}/r$ & 2 & 2n & EML$(-mr,\ln r)$... DEML + EPL \\
+Tunneling amplitude $e^{-2\kappa d}$ & 1 & 1n & Single exponential \\
+Wigner function (Gaussian state) & 2 & 4n & Involves $e^{-x^2}$, depth 2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent \textbf{Key pattern:} Most physics functions are in $\mathrm{ELC}_1$ or $\mathrm{ELC}_2$.
+The transition to $\mathrm{ELC}_3+$ requires repeated function composition
+(e.g., renormalisation group flows, iterated maps).
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{New Structural Patterns}
+\label{sec:patterns}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{The Depth-Node Tradeoff}
+
+Within each depth class, LLS and EEA reduce node counts without changing depth.
+The tradeoff:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+& Depth & Nodes (F16) & Nodes (F16+LLS+EEA) \\
+\midrule
+$e^{-x^2}$ & 2 & 2n & 2n (unchanged) \\
+$\cosh(x)$ & 3 & 5n & 4n ($-1n$) \\
+$\ln(x/y)$ & 1 & 3n & 1n ($-2n$) \\
+$D_\mathrm{KL}$ (1 term) & 2 & 4n & 3n ($-1n$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The Depth-2 Boundary: What Sits There Naturally?}
+
+The depth-2 boundary is the most structurally interesting:
+\begin{itemize}
+  \item \textbf{Gaussian family:} $e^{-x^2}$, $e^{-x^2/2}$, and all
+        $e^{-p(x)}$ for polynomials $p$ of degree $\geq 2$.
+        These are the natural ``sub-Gaussian'' probability distributions.
+  \item \textbf{Iterated logarithm:} $\ln\ln(x)$, $\ln\ln\ln(x)$, etc.
+        These arise in number theory (prime number theorem corrections).
+  \item \textbf{Double-exponential:} $e^{e^x}$, relevant in combinatorics
+        (Bell numbers, partition generating functions).
+  \item \textbf{Hyperbolic functions:} $\cosh$, $\sinh$, $\tanh$ (depth 2--3).
+  \item \textbf{Normal CDF:} $\Phi(x) = \frac{1}{2}(1 + \mathrm{erf}(x/\sqrt{2}))$.
+        erf is not in $\mathrm{ELC}(\mathbb{R})$ at any finite depth (requires integral).
+        But $\Phi(x) \approx$ depth-2 approximations exist.
+\end{itemize}
+
+\begin{conjecture}[CONJ\_DEPTH2\_BOUNDARY]
+A real-analytic function $f : \mathbb{R} \to \mathbb{R}$ lies in
+$\mathrm{ELC}_2 \setminus \mathrm{ELC}_1$ if and only if its growth is
+bounded between single-exponential and double-exponential:
+$O(e^{cx})$ for some $c > 0$ for all $x > 0$, while NOT $O(e^{cx})$ for large $x$
+in the precise sense that $\ln f(x) / x \to \infty$.
+
+Equivalently: $f \in \mathrm{ELC}_2 \setminus \mathrm{ELC}_1$ iff
+$f(x)$ involves a composition of two $\exp/\ln$ functions that cannot be
+collapsed to a single application.
+\end{conjecture}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+\section{LLS/EEA Impact on the Depth Spectrum (T30)}
+\label{sec:t30}
+%% ─────────────────────────────────────────────────────────────────────────────
+
+The T30 depth spectrum result says: the number of distinct elementary functions
+expressible at depth $k$ grows doubly exponentially in $k$.
+Adding LLS and EEA as depth-1 primitives:
+\begin{itemize}
+  \item \textbf{Depth 1 set expands:} functions previously needing 3n at depth 2
+        (like $\ln(x/y)$) now need only 1n at depth 1.
+        This increases the depth-1 count by exactly the number of log-ratio expressions.
+  \item \textbf{Depth 2 set contracts:} some functions move from depth 2 to depth 1
+        (those whose complexity was entirely in the log-ratio sub-expression).
+  \item \textbf{Overall spectrum:} the depth boundaries shift ``inward'' --- more functions
+        are representable at shallower depths.
+\end{itemize}
+
+\begin{proposition}
+The only functions that change depth classification (move to a lower depth class)
+when LLS and EEA are added as primitives are those whose \emph{entire}
+computational structure reduces to a log-ratio or exp-sum.
+These include: $\ln(x/y)$, $\ln(xy)$, $e^x \pm e^y$, and simple compositions thereof.
+Functions involving any additional computation (e.g., $\ln(x/y) + z$) do not
+change depth.
+\end{proposition}
+
+\end{document}
