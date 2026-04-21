@@ -1,0 +1,151 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Framework — EML F16 Operator Family"
+  description="The 16 two-input operators built from exp, ln, and arithmetic. Every elementary function is a finite binary tree over F16. ELC(R) characterization."
+>
+  <div class="meta">
+    <span>Odrzywołek (2026)</span>
+    <span>arXiv:2603.21852</span>
+    <span>Almaguer (2026)</span>
+  </div>
+
+  <h1>The F16 Framework</h1>
+  <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
+    Every two-input function formed by combining exp and ln with arithmetic is one of exactly
+    16 operators. Every elementary function is a finite binary tree over F16.
+  </p>
+
+  <div class="divider"></div>
+
+  <h2>The generating operator</h2>
+
+  <div class="math-block">eml(x, y) = exp(x) − ln(y)</div>
+
+  <p>
+    A single binary function that generates every elementary function as a finite tree.
+    The 16 operators below are its complete family — all sign combinations of the
+    exponent argument and all branch choices of the logarithm.
+  </p>
+
+  <h2>The 16 F16 operators</h2>
+
+  <div class="ops-table">
+    <div class="ops-header">
+      <span>ID</span><span>Name</span><span>Definition</span><span>Domain</span><span>Note</span>
+    </div>
+    <div class="ops-row"><span class="op-id">F1</span><span class="op-name">EML</span><span class="op-def"><code>exp(x) − ln(y)</code></span><span class="op-dom">all x, y &gt; 0</span><span class="op-note">Native gate. eml(x,1) = eˣ.</span></div>
+    <div class="ops-row"><span class="op-id">F2</span><span class="op-name">EMLn</span><span class="op-def"><code>exp(x) − ln(−y)</code></span><span class="op-dom">all x, y &lt; 0</span><span class="op-note">Negative-branch ln.</span></div>
+    <div class="ops-row"><span class="op-id">F3</span><span class="op-name">DEML</span><span class="op-def"><code>exp(−x) − ln(y)</code></span><span class="op-dom">all x, y &gt; 0</span><span class="op-note">Dual gate. deml(x,1) = e^(−x).</span></div>
+    <div class="ops-row"><span class="op-id">F4</span><span class="op-name">DEMLn</span><span class="op-def"><code>exp(−x) − ln(−y)</code></span><span class="op-dom">all x, y &lt; 0</span><span class="op-note">Dual negative-branch.</span></div>
+    <div class="ops-row"><span class="op-id">F5</span><span class="op-name">EMLswap</span><span class="op-def"><code>exp(y) − ln(x)</code></span><span class="op-dom">x &gt; 0, all y</span><span class="op-note">Args swapped.</span></div>
+    <div class="ops-row"><span class="op-id">F6</span><span class="op-name">EMLnswap</span><span class="op-def"><code>exp(−y) − ln(x)</code></span><span class="op-dom">x &gt; 0, all y</span><span class="op-note">Dual-swap.</span></div>
+    <div class="ops-row"><span class="op-id">F7</span><span class="op-name">EMLswapn</span><span class="op-def"><code>exp(y) − ln(−x)</code></span><span class="op-dom">x &lt; 0, all y</span><span class="op-note">Swap + negative branch.</span></div>
+    <div class="ops-row"><span class="op-id">F8</span><span class="op-name">EMLnswapn</span><span class="op-def"><code>exp(−y) − ln(−x)</code></span><span class="op-dom">x &lt; 0, all y</span><span class="op-note">Dual swap + negative branch.</span></div>
+    <div class="ops-row"><span class="op-id">F9</span><span class="op-name">LEdiv</span><span class="op-def"><code>x − ln(y)</code></span><span class="op-dom">all x, y &gt; 0</span><span class="op-note">lediv(x,eml(y,1)) = x−y.</span></div>
+    <div class="ops-row"><span class="op-id">F10</span><span class="op-name">LEdivn</span><span class="op-def"><code>x − ln(−y)</code></span><span class="op-dom">all x, y &lt; 0</span><span class="op-note">Negative-branch LEdiv.</span></div>
+    <div class="ops-row"><span class="op-id">F11</span><span class="op-name">LEAd</span><span class="op-def"><code>ln(eˣ + y)</code></span><span class="op-dom">all x, y &gt; −eˣ</span><span class="op-note">Log-sum. LEAd(x,1) = softplus(x).</span></div>
+    <div class="ops-row"><span class="op-id">F12</span><span class="op-name">LEAdn</span><span class="op-def"><code>ln(eˣ − y)</code></span><span class="op-dom">all x, y &lt; eˣ</span><span class="op-note">Log-difference.</span></div>
+    <div class="ops-row"><span class="op-id">F13</span><span class="op-name">EXL / EPL</span><span class="op-def"><code>exp(x · ln(y))</code></span><span class="op-dom">all x, y &gt; 0</span><span class="op-note">y^x — pow primitive. EPL(n,x)=xⁿ (1 node).</span></div>
+    <div class="ops-row"><span class="op-id">F14</span><span class="op-name">EAL / ELAd</span><span class="op-def"><code>exp(x + ln(y))</code></span><span class="op-dom">all x, y &gt; 0</span><span class="op-note">y·eˣ — mul primitive.</span></div>
+    <div class="ops-row"><span class="op-id">F15</span><span class="op-name">EALn</span><span class="op-def"><code>exp(x + ln(−y))</code></span><span class="op-dom">all x, y &lt; 0</span><span class="op-note">(−y)·eˣ.</span></div>
+    <div class="ops-row"><span class="op-id">F16</span><span class="op-name">ELsum</span><span class="op-def"><code>exp(ln(x) + ln(y))</code></span><span class="op-dom">x, y &gt; 0</span><span class="op-note">x·y — product via log-sum.</span></div>
+  </div>
+
+  <h2>ELC(ℝ) — Exp-Log Closure</h2>
+
+  <p>
+    The <strong>Exp-Log Closure</strong> of ℝ (ELC(ℝ)) is the smallest set containing
+    ℝ that is closed under the EML gate and the constant 1.
+  </p>
+
+  <div class="math-block">ELC(ℝ) = closure of ℝ ∪ &#123;1&#125; under eml(x,y) = exp(x) − ln(y)</div>
+
+  <p>
+    <strong>Theorem (Odrzywołek 2026):</strong> ELC(ℝ) equals the set of all functions
+    expressible as a finite composition of real exp and ln. Every classical elementary
+    function belongs to ELC(ℝ).
+  </p>
+
+  <h2>What is in ELC(ℝ)</h2>
+
+  <ul class="in-out-list">
+    <li>✓ All polynomials and rational functions</li>
+    <li>✓ exp(x), ln(x), x^r for any rational r</li>
+    <li>✓ sin(x), cos(x) over ℂ (via Euler: e^(ix) = cos x + i sin x)</li>
+    <li>✓ Sigmoid, softplus, and all activation functions built from exp/ln</li>
+    <li>✓ Every function in the classical elementary function hierarchy</li>
+  </ul>
+
+  <h2>What is NOT in ELC(ℝ) over ℝ</h2>
+
+  <ul class="in-out-list blocked">
+    <li>✗ sin(x) and cos(x) over ℝ — T01: every real F16 tree has finitely many zeros; sin/cos have infinitely many</li>
+    <li>✗ erf(x), Γ(x) — same zero-count obstruction</li>
+    <li>✗ |x| — no real F16 tree computes abs(x) (sign barrier)</li>
+  </ul>
+
+  <h2>SuperBEST: minimum depth within ELC(ℝ)</h2>
+
+  <p>
+    For each operation in ELC(ℝ), the SuperBEST table records the minimum number of
+    F16 nodes needed. Every arithmetic primitive costs ≤ 2 nodes on the positive domain.
+  </p>
+
+  <p><a href="/superbest">See the full SuperBEST table →</a></p>
+
+  <style>
+    .ops-table {
+      margin: 24px 0 40px;
+      font-family: var(--mono);
+      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ops-header {
+      display: grid;
+      grid-template-columns: 40px 110px 1fr 130px 1fr;
+      gap: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .ops-row {
+      display: grid;
+      grid-template-columns: 40px 110px 1fr 130px 1fr;
+      gap: 0;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .ops-row:last-child { border-bottom: none; }
+    .ops-row:hover { background: var(--surface); }
+    .op-id { color: var(--muted); font-size: 10px; padding-top: 2px; }
+    .op-name { color: var(--accent); font-weight: 600; font-size: 11px; }
+    .op-def code { font-size: 11px; color: var(--cyan); }
+    .op-dom { font-size: 10px; color: var(--muted); padding-top: 2px; }
+    .op-note { font-size: 11px; color: var(--muted); }
+    .in-out-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 28px;
+    }
+    .in-out-list li {
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .in-out-list.blocked li { color: var(--muted); }
+    @media (max-width: 600px) {
+      .ops-header, .ops-row { grid-template-columns: 1fr; }
+      .ops-header span:not(:first-child) { display: none; }
+    }
+  </style>
+</Base>

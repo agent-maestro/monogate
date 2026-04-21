@@ -18,13 +18,13 @@ const { title, description, date } = Astro.props;
     <link rel="icon" href="/favicon.ico" />
     <style>
       :root {
-        --bg: #08090e;
-        --surface: #0d0f18;
-        --border: #1c1f2e;
-        --text: #d4d4d4;
+        --bg: #fafaf8;
+        --surface: #f4f4f0;
+        --border: #e2e2d8;
+        --text: #1a1a1a;
         --muted: #6b7280;
-        --accent: #a78bfa;
-        --cyan: #06b6d4;
+        --accent: #4facfe;
+        --cyan: #2563eb;
         --pink: #ec4899;
         --orange: #e8a020;
         --mono: 'Space Mono', monospace;
@@ -154,8 +154,8 @@ const { title, description, date } = Astro.props;
         font-size: 1.2em;
         color: var(--accent);
         padding: 20px;
-        background: rgba(167,139,250,0.04);
-        border: 1px solid rgba(167,139,250,0.12);
+        background: rgba(79,172,254,0.06);
+        border: 1px solid rgba(79,172,254,0.15);
         border-radius: 12px;
         margin: 24px 0;
       }
@@ -173,28 +173,30 @@ const { title, description, date } = Astro.props;
   </head>
   <body>
     <nav id="site-nav">
-      <a class="brand" href="/">monogate.org</a>
+      <a class="brand" href="/">MONOGATE</a>
       <div class="links">
-        <a href="/blog">Blog</a>
-        <a href="/theorems">Theorems</a>
+        <a href="/superbest">SuperBEST</a>
+        <a href="/framework">Framework</a>
         <a href="/atlas">Atlas</a>
+        <a href="/theorems">Theorems</a>
+        <a href="/blog">Blog</a>
         <a href="/paper">Paper</a>
-        <a href="https://monogate.dev" target="_blank" rel="noopener noreferrer">Library ↗</a>
       </div>
       <button class="hamburger" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
     <div class="mobile-menu" id="mobile-menu" role="menu">
-      <a href="/blog" role="menuitem">Blog</a>
-      <a href="/theorems" role="menuitem">Theorems</a>
+      <a href="/superbest" role="menuitem">SuperBEST</a>
+      <a href="/framework" role="menuitem">Framework</a>
       <a href="/atlas" role="menuitem">Atlas</a>
+      <a href="/theorems" role="menuitem">Theorems</a>
+      <a href="/blog" role="menuitem">Blog</a>
       <a href="/paper" role="menuitem">Paper</a>
-      <a href="https://monogate.dev" target="_blank" rel="noopener noreferrer" role="menuitem">Library ↗</a>
     </div>
     <main>
       <slot />
     </main>
     <footer>
-      monogate.org · eml(x,y) = exp(x) − ln(y) · <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a> · <a href="https://monogate.dev">monogate.dev</a>
+      Research by Arturo R. Almaguer · <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a> · 24 theorems · 315+ equations · 4 patents filed · <a href="https://monogate.org">monogate.org</a> · <a href="https://monogate.dev">monogate.dev</a> · <a href="https://github.com/almaguer1986/monogate">GitHub</a> · <a href="https://pypi.org/project/monogate/">PyPI</a>
     </footer>
   </body>
   <script>
