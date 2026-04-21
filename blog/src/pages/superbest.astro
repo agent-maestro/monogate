@@ -4,25 +4,38 @@ import superbest from '../data/superbest.json';
 
 const ops = superbest.table;
 const totals = superbest.totals;
+const extOps = superbest.extended_operators;
+const hi = superbest.high_impact;
+const summary = superbest.savings_summary;
+const lock = superbest.taxonomy_lock;
 ---
 
 <Base
   title="SuperBEST — Optimal EML Routing Table"
-  description="Minimum node counts for every arithmetic primitive in the EML/F16 operator family. Positive-domain: 15n (79.5% savings). General-domain: 22n (69.9% savings)."
+  description="Minimum node counts for every arithmetic primitive in the EML/F16 operator family. Taxonomy locked at 23 operators. Layer 1 (F16): 15n / 79.5%. Layer 2 (23-op): 40% aggregate."
 >
   <div class="meta">
-    <span>SuperBEST v{superbest.version}</span>
+    <span>SuperBEST {superbest.version}</span>
     <span>{superbest.date}</span>
     <span>arXiv:2603.21852</span>
+    <span class="lock-badge">Taxonomy Locked — 23 ops · No 24th exists</span>
   </div>
 
   <h1>SuperBEST Routing Table</h1>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     Minimum F16-node constructions for every elementary arithmetic primitive.
     Proved optimal via derivative obstruction lower bounds and explicit constructions.
+    Taxonomy definitively closed: {lock.conj_no_op_24}.
   </p>
 
   <div class="divider"></div>
+
+  <!-- Two-layer policy notice -->
+  <div class="policy-box">
+    <strong>Two-layer accounting policy:</strong>
+    <span class="layer layer1">Layer 1 (F16)</span> — formal theorems, arXiv paper; counts only F16 orbit nodes.
+    <span class="layer layer2">Layer 2 (23-op)</span> — library/ML/physics use; extended operators count as 1n each. Must be labeled.
+  </div>
 
   <div class="domain-toggle" id="domain-toggle">
     <button class="toggle-btn active" id="btn-pos" onclick="setDomain('positive')">
@@ -35,13 +48,13 @@ const totals = superbest.totals;
 
   <div class="headline" id="headline-pos">
     <span class="headline-num">{totals.positive_headline}</span>
-    <span class="headline-label">vs naive {totals.savings_positive.naive_total}n baseline</span>
   </div>
   <div class="headline" id="headline-gen" style="display:none">
     <span class="headline-num">{totals.general_headline}</span>
-    <span class="headline-label">vs naive {totals.savings_general.naive_total}n baseline</span>
   </div>
 
+  <!-- Core arithmetic table -->
+  <h2 class="section-head">Core Arithmetic Primitives (F16 Layer 1)</h2>
   <div class="table-wrap">
     <table id="sb-table">
       <thead>
@@ -50,14 +63,14 @@ const totals = superbest.totals;
           <th id="col-cost">Nodes (x&gt;0)</th>
           <th>Naive</th>
           <th id="col-construction">Construction (positive)</th>
-          <th>Domain</th>
+          <th>Notes</th>
         </tr>
       </thead>
       <tbody>
         {ops.map(row => (
           <tr>
             <td class="op-name"><code>{row.op}</code></td>
-            <td class="cost" id={`cost-${row.op.split('(')[0].trim()}`}>
+            <td class="cost">
               <span class="cost-pos">{row.cost_positive}</span>
               <span class="cost-gen" style="display:none">{typeof row.cost_general === 'number' ? row.cost_general : '—'}</span>
             </td>
@@ -66,10 +79,137 @@ const totals = superbest.totals;
               <span class="constr-pos"><code>{row.construction_positive}</code></span>
               <span class="constr-gen" style="display:none"><code>{row.construction_general}</code></span>
             </td>
-            <td class="domain">
-              <span class="dom-pos" style="font-size:11px;color:var(--muted)">{row.domain_positive}</span>
-              <span class="dom-gen" style="display:none;font-size:11px;color:var(--muted)">{row.domain_general}</span>
-            </td>
+            <td class="note-cell">{row.notes}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Extended operators table -->
+  <h2 class="section-head" style="margin-top:48px">Extended Operators (23-op Beyond F16)</h2>
+  <p class="section-desc">
+    Category A: genuine F16 algebraic shortcut. Category B: genuine via EML sign-variant.
+    Category C: notation-only (23-op counts 1n; F16 costs 3–4n; no F16 shortcut exists).
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Operator</th>
+          <th>F16 cost (Layer 1)</th>
+          <th>23-op cost (Layer 2)</th>
+          <th>Genuine saving</th>
+          <th>Category</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {extOps.map(row => (
+          <tr>
+            <td class="op-name"><code>{row.op}</code></td>
+            <td class="cost">{row.f16_cost}</td>
+            <td class="cost" style="color:var(--green)">{row.cost_23op}n</td>
+            <td class="naive">{row.genuine_saving}</td>
+            <td><span class={`cat cat-${row.category.split('/')[0].toLowerCase()}`}>{row.category}</span></td>
+            <td class="note-cell">{row.desc}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- High-impact expressions -->
+  <h2 class="section-head" style="margin-top:48px">High-Impact Expressions</h2>
+  <p class="section-desc">{hi.note}</p>
+
+  <h3 class="sub-head">ML / Smooth Functions</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Expression</th><th>Naive</th><th class="l1">F16 (Layer 1)</th><th class="l2">23-op (Layer 2)</th><th>Saving type</th></tr></thead>
+      <tbody>
+        {hi.ml.map(row => (
+          <tr>
+            <td><code>{row.expr}</code></td>
+            <td class="naive">{row.naive}n</td>
+            <td class="cost">{row.f16}n</td>
+            <td class="cost" style="color:var(--green)">{row.op23}n</td>
+            <td class="note-cell">{row.type}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-head">Quantum / Information</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Expression</th><th>Naive</th><th class="l1">F16 (Layer 1)</th><th class="l2">23-op (Layer 2)</th><th>Saving type</th></tr></thead>
+      <tbody>
+        {hi.quantum.map(row => (
+          <tr>
+            <td><code>{row.expr}</code></td>
+            <td class="naive">{row.naive}n</td>
+            <td class="cost">{row.f16}n</td>
+            <td class="cost" style="color:var(--green)">{row.op23}n</td>
+            <td class="note-cell">{row.type}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-head">Physics</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Expression</th><th>Naive</th><th class="l1">F16 (Layer 1)</th><th class="l2">23-op (Layer 2)</th><th>Saving type</th></tr></thead>
+      <tbody>
+        {hi.physics.map(row => (
+          <tr>
+            <td><code>{row.expr}</code></td>
+            <td class="naive">{row.naive}n</td>
+            <td class="cost">{row.f16}n</td>
+            <td class="cost" style="color:var(--green)">{row.op23}n</td>
+            <td class="note-cell">{row.type}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-head">Special Functions (all require infinite F16 depth)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Function</th><th>F16 cost</th><th>Reason</th></tr></thead>
+      <tbody>
+        {hi.special_functions.map(row => (
+          <tr>
+            <td><code>{row.expr}</code></td>
+            <td style="color:var(--muted)">∞</td>
+            <td class="note-cell">{row.reason}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Savings summary -->
+  <h2 class="section-head" style="margin-top:48px">Honest Savings Summary</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Catalog</th>
+          <th class="l1">Layer 1 — F16 genuine</th>
+          <th class="l2">Layer 2 — 23-op extended</th>
+        </tr>
+      </thead>
+      <tbody>
+        {summary.catalogs.map(row => (
+          <tr>
+            <td>{row.catalog}</td>
+            <td class="cost">{row.layer1}</td>
+            <td class="cost" style="color:var(--green)">{row.layer2}</td>
           </tr>
         ))}
       </tbody>
@@ -79,11 +219,11 @@ const totals = superbest.totals;
   <div class="notes-block">
     <h2>Key results</h2>
     <ul>
-      <li><strong>add(x,y) = 2n for all reals</strong> — ADD-T1: <code>LEdiv(x, DEML(y,1)) = x+y</code></li>
-      <li><strong>pow(x,n) = 1n for x&gt;0</strong> — EPL/ELMl: <code>exp(n·ln(x)) = xⁿ</code> is a direct F16 primitive</li>
-      <li><strong>sqrt(x) = 1n for x&gt;0</strong> — EPL(0.5, x): same mechanism as pow, single F16 node. Verified.</li>
-      <li><strong>mul general = 6n</strong> — via <code>neg(mul(neg(x), y))</code></li>
-      <li>All 10 operations: positive domain ≤ 2 nodes each (7 ops at 1n, 3 at 2n)</li>
+      <li><strong>Core table locked:</strong> 15n / 79.5% savings (positive domain) — canonical, unaffected by extended operators</li>
+      <li><strong>LSE corrected:</strong> ln(e^x+e^y) = 4n in F16 (corrected from 5n); 2n in 23-op via EEA+ln</li>
+      <li><strong>Taxonomy closed:</strong> exactly 23 operators exist; CONJ_NO_OP_24 is now a proved theorem</li>
+      <li><strong>softplus = 2n</strong> in both layers via EML(x,1/e)+ln (Category B: genuine F16)</li>
+      <li><strong>Aggregate genuine F16 savings: ~12%</strong> across all catalogs; 40% with 23-op extended primitives</li>
     </ul>
     <p style="margin-top:20px">
       Full proof: <a href="/paper">papers and Lean proofs</a> ·
@@ -92,83 +232,37 @@ const totals = superbest.totals;
   </div>
 
   <style>
-    .domain-toggle {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .toggle-btn {
-      font-family: var(--mono);
-      font-size: 11px;
-      padding: 6px 14px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      background: var(--surface);
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .toggle-btn.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(79,172,254,0.06);
-    }
-    .headline {
-      margin-bottom: 28px;
-      font-family: var(--mono);
-    }
-    .headline-num {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-right: 12px;
-    }
-    .headline-label {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-    .table-wrap {
-      overflow-x: auto;
-      margin: 0 -24px;
-      padding: 0 24px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      font-family: var(--mono);
-    }
-    th {
-      text-align: left;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted);
-      font-weight: 400;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-    }
-    .op-name code { color: var(--text); font-size: 13px; }
-    .cost { font-weight: 700; color: var(--accent); font-size: 15px; }
-    .naive { color: var(--muted); }
-    .construction code { font-size: 11px; color: var(--cyan); }
-    .notes-block {
-      margin-top: 48px;
-      padding: 24px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-    .notes-block ul {
-      padding-left: 20px;
-      margin: 12px 0;
-    }
-    .notes-block li { margin-bottom: 8px; }
+    .meta { display:flex; gap:16px; font-size:11px; color:var(--muted); margin-bottom:24px; flex-wrap:wrap; align-items:center; }
+    .lock-badge { background:rgba(79,172,254,0.1); border:1px solid var(--accent); color:var(--accent); padding:2px 8px; border-radius:3px; font-size:10px; }
+    .policy-box { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:14px 18px; margin-bottom:28px; font-size:12px; color:var(--muted); line-height:1.8; }
+    .layer { display:inline-block; padding:1px 7px; border-radius:3px; font-size:11px; font-weight:700; margin:0 3px; }
+    .layer1 { background:rgba(79,172,254,0.12); color:var(--accent); }
+    .layer2 { background:rgba(94,196,122,0.12); color:var(--green,#5ec47a); }
+    .domain-toggle { display:flex; gap:8px; margin-bottom:16px; }
+    .toggle-btn { font-family:var(--mono); font-size:11px; padding:6px 14px; border:1px solid var(--border); border-radius:4px; background:var(--surface); color:var(--muted); cursor:pointer; transition:all 0.15s; }
+    .toggle-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(79,172,254,0.06); }
+    .headline { margin-bottom:28px; font-family:var(--mono); font-size:0.95rem; color:var(--accent); font-weight:700; }
+    .section-head { font-size:1rem; font-weight:700; color:var(--text); margin:40px 0 8px; font-family:var(--mono); border-bottom:1px solid var(--border); padding-bottom:8px; }
+    .sub-head { font-size:0.85rem; color:var(--muted); font-family:var(--mono); margin:24px 0 6px; }
+    .section-desc { font-size:12px; color:var(--muted); margin-bottom:14px; }
+    .table-wrap { overflow-x:auto; margin:0 -24px; padding:0 24px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; font-family:var(--mono); }
+    th { text-align:left; padding:8px 12px; border-bottom:1px solid var(--border); color:var(--muted); font-weight:400; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; }
+    th.l1 { color:var(--accent); }
+    th.l2 { color:var(--green,#5ec47a); }
+    td { padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .op-name code { color:var(--text); font-size:13px; }
+    .cost { font-weight:700; color:var(--accent); font-size:14px; }
+    .naive { color:var(--muted); }
+    .construction code { font-size:11px; color:var(--cyan,#4facfe); }
+    .note-cell { font-size:11px; color:var(--muted); max-width:240px; }
+    .cat { display:inline-block; padding:1px 6px; border-radius:3px; font-size:11px; font-weight:700; }
+    .cat-a { background:rgba(94,196,122,0.15); color:#5ec47a; }
+    .cat-b { background:rgba(79,172,254,0.12); color:var(--accent); }
+    .cat-c { background:rgba(200,80,80,0.12); color:#c85050; }
+    .notes-block { margin-top:48px; padding:24px; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
+    .notes-block ul { padding-left:20px; margin:12px 0; }
+    .notes-block li { margin-bottom:8px; font-size:13px; }
   </style>
 
   <script>

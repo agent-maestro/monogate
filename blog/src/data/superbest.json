@@ -1,9 +1,9 @@
 {
   "version": "v5.2",
   "date": "2026-04-21",
-  "revision": "X20 resolution + sqrt correction — sqrt = EPL(0.5, x) = 1n for positive domain (was 2n in v5.1)",
+  "revision": "Taxonomy lock v5.2 locked — 23 operators definitively closed (CONJ_NO_OP_24 proved); LSE corrected to 4n F16; two-layer accounting policy formalized",
   "breakthrough": "add_gen = 2n discovered via LEdiv+DEML construction: lediv(x, deml(y,1)) = ln(exp(x)/exp(-y)) = x+y for ALL real x,y",
-  "X20_finding": "EPL(x,y) = exp(x*ln(y)) = y^x is one of the 16 F16 operators (ELMl in Sixteen_Operator_Census). Therefore pow(x,y) = x^y = EPL(y,x) for x>0 is a single 1-node F16 application — not 3n. The 3n construction was for general domain where x can be negative (ln(x) undefined). This resolves the F17d paradox in X20.",
+  "X20_finding": "EPL(x,y) = exp(x*ln(y)) = y^x is one of the 16 F16 operators (ELMl in Sixteen_Operator_Census). Therefore pow(x,y) = x^y = EPL(y,x) for x>0 is a single 1-node F16 application â€” not 3n. The 3n construction was for general domain where x can be negative (ln(x) undefined). This resolves the F17d paradox in X20.",
   "construction_detail": {
     "deml_y_1": "DEML(y,1) = exp(-y) - ln(1) = exp(-y)",
     "lediv_x_z": "LEDIV(x,z) = ln(exp(x)/z)",
@@ -21,7 +21,7 @@
       "construction_general": "EML(x,1) = e^x",
       "domain_positive": "all x (exp is defined everywhere)",
       "domain_general": "all x (exp is defined everywhere)",
-      "notes": "primitive — no domain restriction",
+      "notes": "primitive â€” no domain restriction",
       "v4_cost": 1,
       "delta": 0
     },
@@ -30,7 +30,7 @@
       "cost_positive": 1,
       "cost_general": "UNDEFINED",
       "construction_positive": "EXL(0,x) = ln(x), x > 0",
-      "construction_general": "UNDEFINED — ln(x) undefined for x <= 0 in real F16",
+      "construction_general": "UNDEFINED â€” ln(x) undefined for x <= 0 in real F16",
       "domain_positive": "x > 0 (ln requires positive argument)",
       "domain_general": "not defined for x <= 0; no real F16 tree computes ln for all reals",
       "notes": "primitive; domain-restricted to x > 0",
@@ -42,9 +42,9 @@
       "cost_positive": 1,
       "cost_general": 1,
       "construction_positive": "ELSb(0,x) = exp(0 - ln(x)) = 1/x, x > 0",
-      "construction_general": "ELSb(0,x) in the real-F16 sense requires x > 0. For x < 0: note that 1/x = -1/|x|; no single real-ELC 1-node tree covers all x != 0. However, the implementation (X8 audit) handles x != 0 including negatives — likely via the algebraic identity rather than a strict real-ln route.",
-      "domain_positive": "x > 0 — ELSb(0,x) = exp(-ln(x)) = 1/x directly valid",
-      "domain_general": "x != 0 — ELSb works in practice (X8 verified); strict real-ELC requires x > 0 for the ln step",
+      "construction_general": "ELSb(0,x) in the real-F16 sense requires x > 0. For x < 0: note that 1/x = -1/|x|; no single real-ELC 1-node tree covers all x != 0. However, the implementation (X8 audit) handles x != 0 including negatives â€” likely via the algebraic identity rather than a strict real-ln route.",
+      "domain_positive": "x > 0 â€” ELSb(0,x) = exp(-ln(x)) = 1/x directly valid",
+      "domain_general": "x != 0 â€” ELSb works in practice (X8 verified); strict real-ELC requires x > 0 for the ln step",
       "notes": "R16-C1; X8 audit confirms negative x also handled in implementation",
       "v4_cost": 1,
       "delta": 0
@@ -54,8 +54,8 @@
       "cost_positive": 1,
       "cost_general": 2,
       "construction_positive": "ELSb(ln(x), y) = exp(ln(x) - ln(y)) = x/y, x > 0, y > 0",
-      "construction_general": "elsb(exl(0,x), y): requires ln(x), so x > 0 is hard constraint; y < 0 works (X8 verified). General signed x cannot be handled in 1n. For x < 0: div(x,y) = neg(div(-x,y)) — adds neg step. Best general cost not fully resolved; 2n for positive x.",
-      "domain_positive": "x > 0, y > 0 — single ELSb node if ln(x) is pre-computed; 2n total (ln(x) + ELSb)",
+      "construction_general": "elsb(exl(0,x), y): requires ln(x), so x > 0 is hard constraint; y < 0 works (X8 verified). General signed x cannot be handled in 1n. For x < 0: div(x,y) = neg(div(-x,y)) â€” adds neg step. Best general cost not fully resolved; 2n for positive x.",
+      "domain_positive": "x > 0, y > 0 â€” single ELSb node if ln(x) is pre-computed; 2n total (ln(x) + ELSb)",
       "domain_general": "x > 0 required (hard, from ln); y != 0 (y < 0 works per X8). For x < 0 no clean single real-F16 tree.",
       "notes": "X7/X8 confirmed: x > 0 hard constraint; y can be negative",
       "cost_note": "cost_positive=1 counts ELSb alone assuming ln(x) pre-computed; full tree is 2n (EXL node + ELSb node)",
@@ -70,7 +70,7 @@
       "construction_positive": "EXL(0, DEML(x,1)) = ln(exp(-x)) = -x; or DEML(x,1)=exp(-x) then EXL gives -x",
       "construction_general": "EXL(0, DEML(x,1)) = ln(exp(-x)) = -x for all x; DEML(x,1)=exp(-x) > 0 always, so EXL is always valid",
       "domain_positive": "all x (DEML output is always positive, so EXL is always valid)",
-      "domain_general": "all x — same construction works for all reals (neg is domain-universal at 2n)",
+      "domain_general": "all x â€” same construction works for all reals (neg is domain-universal at 2n)",
       "notes": "T09; 2n for all reals; positive domain gives no cost improvement",
       "v4_cost": 2,
       "delta": 0
@@ -93,8 +93,8 @@
       "cost_general": 2,
       "construction_positive": "LEdiv(x, EML(y,1)) = ln(exp(x)/exp(y)) = x - y",
       "construction_general": "LEdiv(x, EML(y,1)) = ln(e^x / e^y) = x - y for all x,y; EML(y,1)=exp(y) > 0 always, so LEdiv is always valid",
-      "domain_positive": "all x, y (same as general — sub is domain-universal)",
-      "domain_general": "all x, y — X8 verified 100/100 test points passed",
+      "domain_positive": "all x, y (same as general â€” sub is domain-universal)",
+      "domain_general": "all x, y â€” X8 verified 100/100 test points passed",
       "notes": "T33; 2n for all reals; X8 confirmed",
       "v4_cost": 2,
       "delta": 0
@@ -105,8 +105,8 @@
       "cost_general": 2,
       "construction_positive": "LEdiv(x, DEML(y,1)) = ln(exp(x)/exp(-y)) = x + y",
       "construction_general": "LEdiv(x, DEML(y,1)) = ln(e^x / e^{-y}) = ln(e^{x+y}) = x+y for all x,y; DEML(y,1)=exp(-y) > 0 always, so LEdiv is always valid",
-      "domain_positive": "all x, y (same as general — add is domain-universal)",
-      "domain_general": "all x, y — X8 verified 100/100 test points passed",
+      "domain_positive": "all x, y (same as general â€” add is domain-universal)",
+      "domain_general": "all x, y â€” X8 verified 100/100 test points passed",
       "notes": "NEW v5 (ADD-T1): all real x,y. Replaced add_pos=3n and add_gen=11n with unified 2n.",
       "v4_cost_add_pos": 3,
       "v4_cost_add_gen": 11,
@@ -117,9 +117,9 @@
       "op": "sqrt(x) = x^(1/2)",
       "cost_positive": 1,
       "cost_general": "UNDEFINED",
-      "construction_positive": "EPL(0.5, x) = ELMl(0.5, x) = exp(0.5·ln(x)) = sqrt(x), x > 0 — single F16 node",
-      "construction_general": "UNDEFINED — sqrt(x) undefined for x < 0 in real arithmetic; no real F16 tree covers all reals",
-      "domain_positive": "x > 0 — natural domain for real sqrt",
+      "construction_positive": "EPL(0.5, x) = ELMl(0.5, x) = exp(0.5Â·ln(x)) = sqrt(x), x > 0 â€” single F16 node",
+      "construction_general": "UNDEFINED â€” sqrt(x) undefined for x < 0 in real arithmetic; no real F16 tree covers all reals",
+      "domain_positive": "x > 0 â€” natural domain for real sqrt",
       "domain_general": "not defined for x < 0 in real F16; complex sqrt is outside real ELC",
       "notes": "T_SQRT_1N; EPL(0.5,x) = ELMl direct primitive. Same mechanism as pow=1n. Corrected from v5.1 (was 2n). Verified: EPL(0.5,4)=2.0, EPL(0.5,9)=3.0, EPL(0.5,16)=4.0.",
       "cost_correction": "positive domain corrected from 2n to 1n",
@@ -131,9 +131,9 @@
       "op": "pow(x,n) = x^n",
       "cost_positive": 1,
       "cost_general": 3,
-      "construction_positive": "EPL(n,x) = ELMl(n,x) = exp(n * ln(x)) = x^n, x > 0 — single 1-node F16 operator from the 16-operator census",
-      "construction_general": "exp(n * ln(x)): mul(n,ln(x)) = 2n (requires x > 0 for ln), then EML(result,1) = 1n more; total 3n. For general domain with possibly-negative x, ln is undefined — no clean real F16 tree; 3n is for positive-base case using expanded construction.",
-      "domain_positive": "x > 0, n real — EPL(n,x) is a direct 1-node application of the ELMl operator from the F16 census",
+      "construction_positive": "EPL(n,x) = ELMl(n,x) = exp(n * ln(x)) = x^n, x > 0 â€” single 1-node F16 operator from the 16-operator census",
+      "construction_general": "exp(n * ln(x)): mul(n,ln(x)) = 2n (requires x > 0 for ln), then EML(result,1) = 1n more; total 3n. For general domain with possibly-negative x, ln is undefined â€” no clean real F16 tree; 3n is for positive-base case using expanded construction.",
+      "domain_positive": "x > 0, n real â€” EPL(n,x) is a direct 1-node application of the ELMl operator from the F16 census",
       "domain_general": "x > 0 required in all real constructions (ln(x)); general negative x has no real F16 solution. 3n is the positive-base cost using expanded EXL/ELAd/EML tree rather than direct EPL.",
       "notes": "X20 RESOLUTION: EPL/ELMl = exp(x*ln(y)) = y^x IS in F16 census. pow(x,n)=x^n=EPL(n,x) for x>0 costs 1n (direct), not 3n. The 3n construction used EXL+ELAd+EML explicitly rather than recognizing EPL as a primitive. For positive domain: corrected to 1n.",
       "cost_correction": "positive domain corrected from 3n to 1n per X20 finding",
@@ -163,14 +163,14 @@
       "superbest_positive_total": 15,
       "savings_n": 58,
       "savings_pct": "79.5%",
-      "formula": "(73 - 15) / 73 = 58/73 = 0.7945... ≈ 79.5%"
+      "formula": "(73 - 15) / 73 = 58/73 = 0.7945... â‰ˆ 79.5%"
     },
     "savings_general": {
       "naive_total": 73,
       "superbest_general_total": 22,
       "savings_n": 51,
       "savings_pct": "69.9%",
-      "formula": "(73 - 22) / 73 = 51/73 = 0.6986... ≈ 69.9%"
+      "formula": "(73 - 22) / 73 = 51/73 = 0.6986... â‰ˆ 69.9%"
     }
   },
   "sum_v4": 19,
@@ -181,7 +181,7 @@
   "add_gen_v4": 11,
   "add_gen_v5": 2,
   "add_pos_v4": 3,
-  "add_pos_v5": "subsumed — general 2n construction works everywhere",
+  "add_pos_v5": "subsumed â€” general 2n construction works everywhere",
   "pow_pos_v5_old": 3,
   "pow_pos_v5_new": 1,
   "improvement_v5_to_v5_1": "pow_positive drops from 3n to 1n (EPL/ELMl recognized as direct 1-node operator); positive-domain total drops from 18n to 16n; savings vs naive jumps from 75.3% to 78.1%",
@@ -199,7 +199,7 @@
   "X20_resolution": {
     "paradox": "F17d in X20 asked: if ELMl is in the 16-operator census, why is pow = 3n?",
     "resolution": "ELMl = EPL(x,y) = exp(x*ln(y)) = y^x IS in F16. pow(x,n) = x^n = EPL(n,x) for x>0 is 1 node. The 3n construction (EXL+ELAd+EML) was an expanded decomposition that failed to recognize EPL as a usable primitive. For positive domain: pow = 1n. The general-domain 3n figure remains the best known for the expanded-tree path; with EPL as primitive, even general positive-base pow is 1n.",
-    "table_total_impact": "Positive-domain total: 18n → 16n. Savings: 75.3% → 78.1%.",
+    "table_total_impact": "Positive-domain total: 18n â†’ 16n. Savings: 75.3% â†’ 78.1%.",
     "downstream_note": "Any catalog equations containing pow(x,n) with positive base x have their positive-domain cost reduced by 2 nodes per pow occurrence."
   },
   "linear_cost_law_update": {
@@ -207,5 +207,242 @@
     "old_add_gen_law": "N-term general signed summation: (alpha_0 + 11)*N - 11",
     "new_unified_law": "N-term summation (any domain): (alpha_0 + 2)*N - 2",
     "note": "The positive/general distinction collapses for add/sub/neg. mul and pow retain domain splits."
+  },
+  "taxonomy_lock": {
+    "locked_date": "2026-04-21",
+    "total_operators": 23,
+    "f16_orbit": 16,
+    "extended_operators": 7,
+    "conj_no_op_24": "PROVED — no 24th operator passes PGC+AIT filter on open domain",
+    "lse_correction": "LSE corrected from 5n to 4n in F16 (direct: exp+exp+add+ln)",
+    "two_layer_policy": {
+      "layer_1": "F16 ground-truth — formal theorems, arXiv paper",
+      "layer_2": "23-op extended — library design, ML/physics; must label as 23-op count"
+    }
+  },
+  "extended_operators": [
+    {
+      "op": "EEM",
+      "f16_cost": 3,
+      "cost_23op": 1,
+      "genuine_saving": 1,
+      "category": "A",
+      "desc": "Algebraic shortcut (add+exp)"
+    },
+    {
+      "op": "EED",
+      "f16_cost": 3,
+      "cost_23op": 1,
+      "genuine_saving": 1,
+      "category": "A",
+      "desc": "Algebraic shortcut (sub+exp)"
+    },
+    {
+      "op": "EES",
+      "f16_cost": "1n/4n",
+      "cost_23op": 1,
+      "genuine_saving": "3n(const)/0n(gen)",
+      "category": "B/C",
+      "desc": "Genuine F16 for const arg; notation-only general"
+    },
+    {
+      "op": "LLA",
+      "f16_cost": 3,
+      "cost_23op": 1,
+      "genuine_saving": 1,
+      "category": "A",
+      "desc": "Algebraic shortcut (mul+ln)"
+    },
+    {
+      "op": "LLS",
+      "f16_cost": 3,
+      "cost_23op": 1,
+      "genuine_saving": 1,
+      "category": "A",
+      "desc": "Algebraic shortcut (div+ln)"
+    },
+    {
+      "op": "LLD",
+      "f16_cost": 4,
+      "cost_23op": 1,
+      "genuine_saving": 0,
+      "category": "C",
+      "desc": "Notation-only — no F16 shortcut"
+    },
+    {
+      "op": "EEA",
+      "f16_cost": 4,
+      "cost_23op": 1,
+      "genuine_saving": 0,
+      "category": "C",
+      "desc": "Notation-only — enables LSE=2n in 23-op"
+    }
+  ],
+  "high_impact": {
+    "note": "Layer 1 = F16 ground-truth; Layer 2 = 23-op extended (must be labeled)",
+    "ml": [
+      {
+        "expr": "softplus ln(1+exp(x))",
+        "naive": 4,
+        "f16": 2,
+        "op23": 2,
+        "type": "B: EML(x,1/e)+ln"
+      },
+      {
+        "expr": "LSE(x,y) = ln(exp(x)+exp(y))",
+        "naive": 8,
+        "f16": 4,
+        "op23": 2,
+        "type": "F16: exp+exp+add+ln (corrected from 5n)"
+      },
+      {
+        "expr": "sigmoid 1/(1+exp(-x))",
+        "naive": 6,
+        "f16": 4,
+        "op23": 3,
+        "type": "F16 route"
+      },
+      {
+        "expr": "KL term l*ln(l/m)",
+        "naive": 6,
+        "f16": 5,
+        "op23": 3,
+        "type": "A: div+ln+mul"
+      }
+    ],
+    "quantum": [
+      {
+        "expr": "quantum rel entropy (per term)",
+        "naive": 6,
+        "f16": 5,
+        "op23": 3,
+        "type": "A: genuine 1n save"
+      },
+      {
+        "expr": "von Neumann entropy (per term)",
+        "naive": 8,
+        "f16": 7,
+        "op23": 4,
+        "type": "A: 1n save"
+      },
+      {
+        "expr": "Bures distance",
+        "naive": 5,
+        "f16": 4,
+        "op23": 3,
+        "type": "B: genuine"
+      },
+      {
+        "expr": "partition fn pair exp(-bEj)/exp(-bEi)",
+        "naive": 10,
+        "f16": 10,
+        "op23": 7,
+        "type": "C: EEA notation-only"
+      },
+      {
+        "expr": "spectral decay exp(-g*t)",
+        "naive": 4,
+        "f16": 3,
+        "op23": 2,
+        "type": "A: mul+exp"
+      },
+      {
+        "expr": "Kraus factor sqrt(1-exp(-g*t))",
+        "naive": 6,
+        "f16": 4,
+        "op23": 3,
+        "type": "B: EML-variant+EPL"
+      }
+    ],
+    "physics": [
+      {
+        "expr": "Boltzmann ratio exp(-b*(Ej-Ei))",
+        "naive": 10,
+        "f16": 6,
+        "op23": 5,
+        "type": "A: sub+mul+neg+exp"
+      },
+      {
+        "expr": "Mayer f-function exp(-b*u)-1",
+        "naive": 6,
+        "f16": 3,
+        "op23": 3,
+        "type": "B: EML_neg+mul"
+      },
+      {
+        "expr": "hydrogen radial decay",
+        "naive": 4,
+        "f16": 3,
+        "op23": 3,
+        "type": "B: genuine"
+      },
+      {
+        "expr": "Fermi-Dirac 1/(exp((e-m)/kT)+1)",
+        "naive": 8,
+        "f16": 6,
+        "op23": 4,
+        "type": "A: algebraic route"
+      }
+    ],
+    "special_functions": [
+      {
+        "expr": "erf(x)",
+        "f16": "inf",
+        "op23": "inf",
+        "reason": "T01: infinite zeros"
+      },
+      {
+        "expr": "J_0(x) Bessel",
+        "f16": "inf",
+        "op23": "inf",
+        "reason": "T01: infinite zeros"
+      },
+      {
+        "expr": "Gamma(x)",
+        "f16": "inf",
+        "op23": "inf",
+        "reason": "AIL theorem"
+      },
+      {
+        "expr": "sin(x), cos(x)",
+        "f16": "inf",
+        "op23": "inf",
+        "reason": "T01/AIL: proved"
+      }
+    ]
+  },
+  "savings_summary": {
+    "catalogs": [
+      {
+        "catalog": "Core arithmetic (9 ops)",
+        "layer1": "79.5%",
+        "layer2": "79.5%"
+      },
+      {
+        "catalog": "ML functions (6 items)",
+        "layer1": "~35%",
+        "layer2": "~55%"
+      },
+      {
+        "catalog": "Quantum (8 items)",
+        "layer1": "~15%",
+        "layer2": "~35%"
+      },
+      {
+        "catalog": "Physics (5 items)",
+        "layer1": "~30%",
+        "layer2": "~45%"
+      },
+      {
+        "catalog": "Special functions",
+        "layer1": "0% (all inf)",
+        "layer2": "0% (all inf)"
+      },
+      {
+        "catalog": "Aggregate",
+        "layer1": "~12%",
+        "layer2": "~40%"
+      }
+    ]
   }
 }
