@@ -9,9 +9,9 @@ Solved: 0/20 (0%)
 | nguyen-1 | mcts | 0 | 3.504e-01 | ✗ | `x` | 0.0 |
 | nguyen-1 | beam | 6 | 2.264e-02 | ✗ | `eml(eml(x, eml(1.0, 1.0)), eml(eml(x, em` | 0.4 |
 | nguyen-2 | mcts | 3 | 2.739e-01 | ✗ | `eml(x, eml(1.0, eml(1.0, 1.0)))` | 0.0 |
-| nguyen-2 | beam | 6 | 1.415e-02 | ✗ | `eml(eml(x, eml(x, 1.0)), eml(eml(1.0, em` | 0.5 |
+| nguyen-2 | beam | 6 | 1.415e-02 | ✗ | `eml(eml(x, eml(x, 1.0)), eml(eml(1.0, em` | 0.4 |
 | nguyen-3 | mcts | 2 | 6.813e-01 | ✗ | `eml(x, eml(1.0, 1.0))` | 0.0 |
-| nguyen-3 | beam | 5 | 1.108e-02 | ✗ | `eml(eml(x, eml(1.0, 1.0)), eml(1.0, eml(` | 0.4 |
+| nguyen-3 | beam | 5 | 1.108e-02 | ✗ | `eml(eml(x, eml(1.0, 1.0)), eml(1.0, eml(` | 0.5 |
 | nguyen-4 | mcts | 4 | 1.518e-01 | ✗ | `eml(x, eml(1.0, eml(eml(x, 1.0), 1.0)))` | 0.0 |
 | nguyen-4 | beam | 6 | 7.440e-02 | ✗ | `eml(eml(x, eml(1.0, 1.0)), eml(1.0, eml(` | 0.4 |
 | nguyen-5 | mcts | 5 | 9.636e-01 | ✗ | `eml(eml(1.0, 1.0), eml(eml(eml(1.0, 1.0)` | 0.0 |
@@ -23,7 +23,7 @@ Solved: 0/20 (0%)
 | nguyen-8 | mcts | 4 | 3.004e-01 | ✗ | `eml(eml(x, eml(eml(x, 1.0), x)), 1.0)` | 0.0 |
 | nguyen-8 | beam | 4 | 1.554e-01 | ✗ | `eml(1.0, eml(eml(1.0, eml(1.0, 1.0)), x)` | 0.7 |
 | keijzer-6 | mcts | 3 | 3.310e-01 | ✗ | `eml(1.0, eml(eml(1.0, x), 1.0))` | 0.1 |
-| keijzer-6 | beam | 5 | 3.310e-01 | ✗ | `eml(eml(1.0, 1.0), eml(eml(eml(1.0, 1.0)` | 0.5 |
+| keijzer-6 | beam | 5 | 3.310e-01 | ✗ | `eml(eml(1.0, 1.0), eml(eml(eml(1.0, 1.0)` | 0.4 |
 | keijzer-11 | mcts | 3 | 2.955e+01 | ✗ | `eml(eml(1.0, eml(1.0, x)), x)` | 0.0 |
 | keijzer-11 | beam | 4 | 5.153e+00 | ✗ | `eml(eml(1.0, eml(1.0, x)), eml(x, 1.0))` | 0.6 |
 
