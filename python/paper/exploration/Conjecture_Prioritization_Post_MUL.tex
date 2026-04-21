@@ -1,0 +1,294 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsthm,hyperref,booktabs,xcolor,enumitem}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\definecolor{high}{RGB}{180,50,50}
+\definecolor{med}{RGB}{180,130,30}
+\definecolor{low}{RGB}{80,130,80}
+
+\title{\textbf{Open Conjecture Prioritization: Post-MUL Resolution}\\[0.5em]
+\large After Closing CONJ\_MUL\_GEN\_TIGHT (SB(mul) = 3)}
+\author{Arturo R.\ Almaguer}
+\date{2026-04-21}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+With CONJ\_MUL\_GEN\_TIGHT resolved ($\mathrm{SB}(\mathrm{mul}, \mathbb{R}^2) = 3$),
+21 theorems machine-verified in Lean, and the taxonomy closed at exactly 23 operators,
+we re-rank the remaining open conjectures by mathematical leverage, feasibility, and
+strategic impact.  The new top priority is the \textbf{positive-domain depth hierarchy}
+(\texttt{eml\_tree\_analytic} sorry completion), which unlocks the EDB and, conditionally,
+decidability of ELC-membership.  A concrete attack plan for this target is given.
+\end{abstract}
+
+%──────────────────────────────────────────────────────────────────────────────
+\section{Current State After MUL Resolution}
+
+\subsection{Closed / Resolved (as of 2026-04-21)}
+
+\begin{itemize}
+  \item \textbf{CONJ\_NO\_OP\_24}: Taxonomy closed at exactly 23 operators.  [\textsc{Theorem}]
+  \item \textbf{CONJ\_MUL\_GEN\_TIGHT}: $\mathrm{SB}(\mathrm{mul}) = 3$. [Python-certified + 3-node witness]
+  \item \textbf{SB(mul) $\geq$ 2, SB(div) $\geq$ 2}: Lean-verified (0 sorries).
+  \item \textbf{SuperBEST v5.2 core table}: All entries Lean-certified or Python-certified.
+  \item \textbf{sin $\notin$ EML\_n}: Partial (2 sorries in \texttt{InfiniteZerosBarrier.lean}).
+  \item \textbf{ELC depth hierarchy}: Partial (1 sorry in \texttt{EMLDepth.lean}).
+\end{itemize}
+
+\subsection{Open Items Summary}
+
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+ID & Statement & Priority & Difficulty \\
+\midrule
+EDB-ANALYTIC & \texttt{eml\_tree\_analytic} sorry & \textcolor{high}{\textbf{HIGH}} & Low \\
+CONJ\_DIV\_GEN\_TIGHT & $\mathrm{SB}(\mathrm{div}) = ?$ & \textcolor{high}{\textbf{HIGH}} & Low \\
+CONJ\_BOUNDARY\_DECIDABLE & SC + EDB $\Rightarrow$ decidable & \textcolor{high}{\textbf{HIGH}} & Hard \\
+CONJ\_TRIG L1 & sin-tower L1 (unconditional) & \textcolor{med}{\textbf{MED}} & Medium \\
+GAIL & $\alpha \notin \varepsilon(\mathbb{R}) \Rightarrow \sin\alpha \notin \varepsilon(\mathbb{R})$ & \textcolor{med}{\textbf{MED}} & Hard \\
+CONJ\_TRIG L2–L4 & sin-tower levels 2–4 & \textcolor{low}{\textbf{LOW}} & Very hard \\
+CompletenessClass & Lean session 4 (not started) & \textcolor{low}{\textbf{LOW}} & Medium \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%──────────────────────────────────────────────────────────────────────────────
+\section{Ranked Open Conjectures}
+
+\subsection{Priority 1 — EDB-ANALYTIC: Close \texttt{eml\_tree\_analytic}}
+\label{sec:p1}
+
+\textbf{Statement:} Every EML tree function is real-analytic on the interior of its
+domain.
+
+\textbf{Why top priority:}
+\begin{itemize}[noitemsep]
+  \item Closes the sorry blocking the full EDB construction.
+  \item Unlocks the non-membership certification for all analytic functions via
+    the zero-counting argument.
+  \item Direct path: the sorry is a structural induction using
+    Mathlib's \texttt{AnalyticOn.comp}, \texttt{analyticOn\_exp},
+    \texttt{analyticOn\_log}.  Estimated 1–2 Lean hours.
+  \item No new mathematics — purely a formalization of a known fact.
+\end{itemize}
+
+\textbf{Attack plan:}
+\begin{enumerate}
+  \item Open \texttt{InfiniteZerosBarrier.lean}.
+  \item Import \texttt{Mathlib.Analysis.Analytic.Composition}.
+  \item Prove \texttt{eml\_tree\_analytic} by induction on \texttt{EMLTree}:
+    \begin{itemize}
+      \item Base cases: \texttt{leaf\_x}, \texttt{leaf\_y} use \texttt{analyticOn\_id}.
+      \item Node case: apply \texttt{AnalyticOn.comp} with the appropriate
+        F16 operator analyticity lemma (one per operator, 16 cases).
+    \end{itemize}
+  \item Prove \texttt{analytic\_finite\_zeros\_compact} using
+    \texttt{AnalyticOn.eq\_zero\_of\_frequently\_eq} from Mathlib.
+  \item Both sorries closed $\Rightarrow$ \texttt{sin\_not\_in\_eml} fully proved.
+  \item Run \texttt{lake build} to confirm.
+\end{enumerate}
+
+\textbf{Impact:} Moves T01 (Part B/C) from ``partial'' to ``fully Lean-verified'';
+lifts \texttt{PROVED\_COUNT} from 21 to 23.
+
+---
+
+\subsection{Priority 2 — CONJ\_DIV\_GEN\_TIGHT: $\mathrm{SB}(\mathrm{div}) = ?$}
+
+\textbf{Statement:} The exact F16 cost of general division $x/y$ on $\mathbb{R}^*$.
+
+\textbf{Current bounds:} $[2, 6]$ (SB(div) $\geq$ 2 Lean-verified; $\leq 6$ by
+construction).
+
+\textbf{Expected result:} $\mathrm{SB}(\mathrm{div}) = 3$, symmetric to multiplication
+(division requires sign-case handling analogously).
+
+\textbf{Attack plan:}
+\begin{enumerate}
+  \item Copy \texttt{mul\_gen\_tight\_2node\_search.py} to
+    \texttt{div\_gen\_tight\_2node\_search.py}.
+  \item Replace \texttt{tgt = x * y} with \texttt{tgt = x / y} and exclude
+    $y = 0$ from test points.
+  \item Run the script; expect 0 matches (confirming $\geq 3$).
+  \item Exhibit a 3-node circuit for div: $x/y = xe^{-\ln y}$ (for $y > 0$)
+    and sign-extension to the general domain.
+  \item Write companion paper \texttt{CONJ\_DIV\_GEN\_TIGHT\_Resolution.tex}.
+\end{enumerate}
+
+\textbf{Estimated time:} 30 minutes (copy-paste + run).
+
+---
+
+\subsection{Priority 3 — CONJ\_BOUNDARY\_DECIDABLE}
+
+\textbf{Statement:} Assuming SC, ELC-membership is decidable: given a candidate
+function $f$ and depth bound $n$, the question ``$f \in \mathrm{EML}_n$?'' is
+decidable.
+
+\textbf{Prerequisites:}
+\begin{itemize}[noitemsep]
+  \item Full EDB (requires completing EDB-ANALYTIC + zero-count bound $Z(n)$).
+  \item Schanuel's Conjecture (SC) as a hypothesis.
+  \item Algebraic independence of EML tree outputs over $\varepsilon(\mathbb{R})$.
+\end{itemize}
+
+\textbf{Current status:} The EDB partial construction is in
+\texttt{EDB\_Full\_Construction.tex}.  The EDB-ANALYTIC sorry (Priority 1) is the
+primary blocker.  Once that is closed, the zero-count bound $Z(n)$ is the next
+obstacle (open mathematical problem; not a formalization question).
+
+\textbf{Why high priority despite difficulty:} This is the deepest result in the
+project — decidability of a transcendence question — and would be a landmark
+theorem if proved.
+
+---
+
+\subsection{Priority 4 — CONJ\_TRIG L1 (Unconditional)}
+
+\textbf{Statement:} The value $s_1 = \sin(1)$ is not in $\varepsilon(\mathbb{R})$.
+
+\textbf{Context:} Level 1 of the sin-tower conjecture
+(CONJ\_TRIG\_DEPTH\_TOWER).  $s_1 \notin \varepsilon(\mathbb{R})$ would follow if we
+could show $\sin(1)$ is not a value of any EML circuit.  The Hermite–Lindemann–
+Weierstrass theorem implies $e^{i\alpha} \notin \bar{\mathbb{Q}}$ for algebraic
+$\alpha \neq 0$; Euler–Niven gives $\sin(r\pi) \in \mathbb{Q}$ only for $r \in
+\{0, \pm 1/6, \pm 1/4, \pm 1/3, \pm 1/2, 1\}$.
+
+\textbf{Strategy:} Use AIL (Algebraically Isolated Limit) argument.  If
+$\sin(1) \in \varepsilon(\mathbb{R})$, then by the field structure, infinitely
+many $\sin(n)$ values would be in $\varepsilon(\mathbb{R})$.  This conflicts with
+the algebraic independence of $\{e, e^2, e^3, \ldots\}$ (Schanuel-type).
+
+\textbf{Current gap:} The argument is morally clear but not rigorous without SC.
+Unconditional L1 requires a new algebraic tool.
+
+---
+
+\subsection{Priority 5 — GAIL}
+
+\textbf{Statement:} If $\alpha \notin \varepsilon(\mathbb{R})$, then
+$\sin(\alpha) \notin \varepsilon(\mathbb{R})$.
+
+\textbf{Status:} Open unconditionally; follows from Schanuel's Conjecture.
+
+\textbf{Strategic role:} GAIL + CONJ\_TRIG L1 $\Rightarrow$ L2 (sin(sin(1)) $\notin
+\varepsilon(\mathbb{R}))$.  GAIL is thus a multiplier: proving it once gives
+all levels of the tower as corollaries.
+
+---
+
+\subsection{Priority 6 — CompletenessClassification.lean (Session 4)}
+
+\textbf{Content:} Lean formalization of the operator completeness classification
+(which F16 operators are ``EML-complete'', ``approximating'', or ``isolated'').
+
+\textbf{Status:} Not started.  Depends on the three-tier ELC boundary theorem
+(partially proved in \texttt{EMLDepth.lean}).
+
+\textbf{Priority:} Lower — the classification is conceptually clear; the Lean
+formalization is useful but not blocking any other result.
+
+%──────────────────────────────────────────────────────────────────────────────
+\section{Detailed Attack Plan: Priority 1 (EDB-ANALYTIC)}
+
+This section gives the complete, step-by-step Lean implementation plan.
+
+\subsection{Step 1: Required Mathlib Imports}
+
+Add to \texttt{InfiniteZerosBarrier.lean}:
+\begin{verbatim}
+import Mathlib.Analysis.Analytic.Composition
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+\end{verbatim}
+
+\subsection{Step 2: Operator Analyticity Lemmas}
+
+Prove \texttt{eml\_op\_analytic} for each F16 operator.  Example for $F_1$:
+\begin{verbatim}
+lemma F1_analytic : AnalyticOn ℝ (fun p : ℝ × ℝ => Real.exp p.1 - Real.log p.2)
+    {p | p.2 > 0} := by
+  apply AnalyticOn.sub
+  · exact (Real.analyticOn_exp.comp (analyticOn_fst _) (fun _ _ => Set.mem_univ _))
+  · exact Real.analyticOn_log.comp (analyticOn_snd _) (fun p hp => hp)
+\end{verbatim}
+
+\subsection{Step 3: Tree Induction}
+
+\begin{verbatim}
+lemma eml_tree_analytic (t : EMLTree) :
+    AnalyticOn ℝ (EMLTree.evalReal t) (interior (eml_domain t)) := by
+  induction t with
+  | leaf => exact analyticOn_id.mono interior_subset
+  | node op l r ih_l ih_r =>
+    rcases op with _ | _ | ... -- 16 cases
+    all_goals {
+      apply AnalyticOn.comp (eml_op_analytic _)
+      · exact ih_l.prod ih_r
+      · intro x hx; exact ...  -- domain inclusion proof
+    }
+\end{verbatim}
+
+\subsection{Step 4: Finite Zeros Lemma}
+
+\begin{verbatim}
+lemma analytic_finite_zeros_compact {f : ℝ → ℝ} {K : Set ℝ}
+    (hK : IsCompact K) (hf : AnalyticOn ℝ f K)
+    (hne : ∃ x ∈ K, f x ≠ 0) :
+    Set.Finite {x ∈ K | f x = 0} := by
+  exact hf.setOf_eq_zero_finite_of_isConnected_of_mem hK.isConnected hne
+\end{verbatim}
+
+(Using \texttt{AnalyticOn.setOf\_eq\_zero\_finite\_of\_isConnected\_of\_mem}
+or equivalent from Mathlib's isolated zeros theorem.)
+
+\subsection{Timeline}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Task & Estimated time & Output \\
+\midrule
+Step 1: imports & 5 min & \texttt{InfiniteZerosBarrier.lean} \\
+Step 2: 16 operator lemmas & 45 min & (same file) \\
+Step 3: tree induction & 30 min & (same file) \\
+Step 4: zeros lemma & 20 min & (same file) \\
+\texttt{lake build} verify & 5 min & build passes \\
+\midrule
+\textbf{Total} & $\approx$ \textbf{2 hours} & PROVED\_COUNT $\to$ 23 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%──────────────────────────────────────────────────────────────────────────────
+\section{Summary Table}
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+Priority & ID & Statement & Effort & Blocker \\
+\midrule
+1 & EDB-ANALYTIC & \texttt{eml\_tree\_analytic} & 2h Lean & none \\
+2 & DIV-TIGHT & $\mathrm{SB}(\mathrm{div}) = 3$ & 30min & none \\
+3 & DECIDABLE & SC + EDB $\Rightarrow$ decidable & months & EDB \\
+4 & TRIG-L1 & $\sin(1) \notin \varepsilon(\mathbb{R})$ & open & new tool \\
+5 & GAIL & $\alpha\notin\varepsilon \Rightarrow \sin\alpha\notin\varepsilon$ & open & SC \\
+6 & Session 4 & CompletenessClassification.lean & 1 day & EMLDepth \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Recommended immediate action:} Close EDB-ANALYTIC (Priority 1) in the
+next Lean session.  This is pure formalization with no mathematical uncertainty,
+estimated at 2 hours, and it upgrades 2 sorry theorems to fully verified and
+raises the theorem count to 23.
+
+\end{document}

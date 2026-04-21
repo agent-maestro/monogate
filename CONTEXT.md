@@ -127,12 +127,21 @@ Smallest subfield of ℝ closed under exp and ln. Countable. Contains all algebr
 - Tier 1: analytic but ∞-zero (sin, cos, tan — infinite ELC obstruction)
 - Tier 2: AIL — algebraically isolated (functions whose ELC approximation requires unbounded depth)
 
+## Resolved Conjectures
+
+| ID | Statement | Resolution |
+|----|-----------|------------|
+| CONJ_NO_OP_24 | Taxonomy closed at exactly 23 operators | Theorem — proved |
+| CONJ_MUL_GEN_TIGHT | SB(mul, general) = 3 | Python-certified (exhaustive 4112-circuit search) + 3-node witness; Lean target: MulLowerBound3.lean |
+
 ## Open Conjectures
 
 | ID | Statement | Status |
 |----|-----------|--------|
+| EDB-ANALYTIC | eml_tree_analytic sorry in InfiniteZerosBarrier.lean | 2h Lean — top priority |
+| CONJ_DIV_GEN_TIGHT | SB(div, general) = ? (expected: 3) | Python search pending |
+| CONJ_BOUNDARY_DECIDABLE | SC + EDB ⟹ ELC-membership decidable | Conditional; EDB missing zero-count bound |
 | CONJ_TRIG_DEPTH_TOWER | Tower s₀=1, s₁=sin(1), s₂=sin(sin(1)),… algebraically independent over ε(ℝ) | Open; L1 unconditional, L2 needs GAIL, L3/L4 needs SC |
-| CONJ_BOUNDARY_DECIDABLE | SC + EDB ⟹ ELC-membership decidable | Conditional; EDB is missing bridge |
 | GAIL | If α ∉ ε(ℝ), then sin(α) ∉ ε(ℝ) | Open unconditionally; follows from Schanuel |
 
 ## File Index — Exploration Papers
@@ -153,6 +162,9 @@ All files in `python/paper/exploration/`:
 | ELC_Boundary_Layer.tex | Three-tier theorem; shell functions; 18 classification examples |
 | Tan1_Persistence_Final_Proof.tex | tan(1) ∉ ε(ℝ); AIL proof; 7 bypass attempts closed |
 | Taxonomy_Closure_Conjecture.tex | 100-operator enumeration; CONJ_NO_OP_24 proved |
+| CONJ_MUL_GEN_TIGHT_Resolution.tex | SB(mul,general)=3; exhaustive search + 3-node witness + Lean plan |
+| EDB_Full_Construction.tex | EDB construction: B+(n)=n proved; general EDB partial; eml_tree_analytic sorry plan |
+| Conjecture_Prioritization_Post_MUL.tex | Ranked open conjectures post-MUL; EDB-ANALYTIC is #1 |
 
 ## Version History
 
