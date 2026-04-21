@@ -65,10 +65,12 @@ the same sprint (2026-04-20):
         $\mathcal{F}_{16}$ (down from 3; operator: $\ELAd(\EXL(0,x),y)$).
   \item \textbf{T33}: $\operatorname{sub}(x,y)=x-y$ requires only 2 nodes in
         $\mathcal{F}_{16}$ (down from 3; operator: $\LEdiv(x,\EML(y,1))$).
+  \item \textbf{R16-C1}: $\operatorname{recip}(x)=1/x$ requires only 1 node in
+        $\mathcal{F}_{16}$ (down from 2; operator: $\ELSb(0,x)=e^0/x=1/x$).
 \end{itemize}
-The combined effect reduces the total from 21 (v1) to 20 (v2) to
-\textbf{19 nodes (v3)}, raising the global compression ratio from 71.2\% to 72.6\%
-to $\mathbf{1 - 19/73 = 54/73 \approx 74.0\%}$.
+The combined effect reduces the total from 21 (v1) to 20 (v2) to 19 (v3) to
+\textbf{18 nodes (v4)}, raising the global compression ratio from 71.2\% to 72.6\%
+to 74.0\% to $\mathbf{1 - 18/73 = 55/73 \approx 75.3\%}$.
 All entries are certified by exhaustive search and proved optimal.
 \end{abstract}
 
@@ -97,8 +99,8 @@ For a collection of $n$ target operations $f_1,\ldots,f_n$:
   \mathrm{savings} \;=\; 1 - \frac{\sum_{i=1}^n \mathrm{SB}(f_i)}{\sum_{i=1}^n \mathrm{Naive}(f_i)}.
 \]
 For the 8 standard arithmetic operations:
-$\mathrm{Naive\text{-}total} = 73$ nodes (fixed); v3 achieves
-$\mathrm{SB\text{-}total} = 19$ nodes.
+$\mathrm{Naive\text{-}total} = 73$ nodes (fixed); v4 achieves
+$\mathrm{SB\text{-}total} = 18$ nodes.
 \end{definition}
 
 % ════════════════════════════════════════════════════════════════════════════
@@ -115,7 +117,8 @@ $\mathrm{SB\text{-}total} = 19$ nodes.
 \midrule
 v1 & All F6 rows certified (T08) & 21 & 71.2\% & T08, T23 \\
 v2 & mul: $3\to2$ (T10u, F16) & 20 & 72.6\% & T10u, T29 \\
-v3 & sub: $3\to2$ (T33, F16) & \textbf{19} & \textbf{74.0\%} & T33 \\
+v3 & sub: $3\to2$ (T33, F16) & 19 & 74.0\% & T33 \\
+v4 & recip: $2\to1$ (R16-C1, $\ELSb$) & \textbf{18} & \textbf{75.3\%} & R16-C1 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -146,17 +149,18 @@ combines it with the other variable.
 
 \begin{theorem}[SuperBEST v3 is globally optimal]\label{thm:superbest3}
 Table~\ref{tab:v3} gives the minimum node counts.
-The global minimum total over $\mathcal{F}_{16}$ is exactly 19 nodes, and
+The global minimum total over $\mathcal{F}_{16}$ is exactly 18 nodes (updated
+from v3 = 19 by R16-C1: recip drops from 2 to 1 node), and
 \[
-  \mathrm{savings} \;=\; 1 - \tfrac{19}{73} \;=\; \tfrac{54}{73} \;\approx\; 73.97\%
-  \;\approx\; 74.0\%.
+  \mathrm{savings} \;=\; 1 - \tfrac{18}{73} \;=\; \tfrac{55}{73} \;\approx\; 75.34\%
+  \;\approx\; 75.3\%.
 \]
 \end{theorem}
 
 \begin{table}[h]
 \centering
-\caption{SuperBEST v3: Minimum node counts, optimal operators, and savings.
-         Changes from v2 are marked with $\dagger$.}
+\caption{SuperBEST v4: Minimum node counts, optimal operators, and savings.
+         Changes from v2 are marked with $\dagger$; changes from v3 are marked with $\ddagger$.}
 \label{tab:v3}
 \smallskip
 \begin{tabular}{@{}lcccccl@{}}
@@ -172,25 +176,26 @@ The global minimum total over $\mathcal{F}_{16}$ is exactly 19 nodes, and
 $e^x$        & 1  & 1 & 1 & $\EML(x,1)$                & $0\%$    & trivial \\
 $\ln x$      & 3  & 1 & 1 & $\EXL(0,x)$                & $66.7\%$ & T01 \\
 $-x$ ($x>0$) & 7  & 2 & 2 & $\EXL(0,\DEML(x,1))$       & $71.4\%$ & T09 \\
-$1/x$        & 5  & 2 & 2 & $\EDL(0,x)$                & $60.0\%$ & T09 \\
+$1/x$        & 5  & 2 & \textbf{1}$^\ddagger$ & $\ELSb(0,x)$   & $\mathbf{80.0\%}^\ddagger$ & R16-C1 \\
 $xy$         & 13 & 3 & 2 & $\ELAd(\EXL(0,x),y)$       & $84.6\%$ & T10u \\
 $x-y$        & 11 & 3 & \textbf{2}$^\dagger$
                            & $\LEdiv(x,\EML(y,1))$      & $\mathbf{81.8\%}^\dagger$ & T33 \\
 $x+y$        & 13 & 3 & 3 & $\EAL(\EXL(0,x),\EXL(0,y))$& $76.9\%$ & T11 \\
 $x^n$        & 15 & 3 & 3 & $\EML(\EXL(0,x)\cdot n, 1)$& $80.0\%$ & T11 \\
 \midrule
-\textbf{Total} & \textbf{73} & \textbf{21} & \textbf{19}$^\dagger$
-  & & $\mathbf{74.0\%}^\dagger$ & \\
+\textbf{Total} & \textbf{73} & \textbf{21} & \textbf{18}$^\ddagger$
+  & & $\mathbf{75.3\%}^\ddagger$ & \\
 \bottomrule
 \end{tabular}
 
 \smallskip
 \footnotesize{%
-$\dagger$ Updated from v2.
+$\dagger$ Updated from v2. $\ddagger$ Updated from v3 (R16-C1: recip $2\to1$ node via $\ELSb(0,x)$).
 Savings computed as $(1 - \text{F16}/\text{Naive})$.
 All F16 entries are proved optimal by exhaustive search + structural argument.
 Exhaustive search scripts: \texttt{python/scripts/door5\_sub\_2node.py}
 (T33) and \texttt{python/scripts/mul\_lower\_bound\_search.py} (T10u).
+R16-C1 proof: \texttt{python/paper/cost\_theory/R16\_T08\_Structural\_Proofs.tex}, Section~5.
 }
 \end{table}
 
@@ -216,13 +221,12 @@ $\{x,0,1\}$ gives $-x$; $\EML(0,e^x)=1-x$ fails at $x\neq\tfrac{1}{2}$.
 Exhaustive 1-node search confirms.  Optimum: 2.
 
 \medskip
-\noindent\textbf{recip(x), 2 nodes.}
-$\EDL(0,x)=e^0/\ln x = 1/\ln x$... (corrected):
-$\EXL(0,\EDL(0,x))$ gives $\ln(e^0/\ln x)$; the direct 2-node recip is
-$\EDL\!\bigl(\EXL(0,x),1\bigr)$ — but a simpler route uses
-$\EXL(0, x^{-1})$.
-The certified construction uses 2 nodes (T09 result; script: \texttt{research\_neg\_optimality.py}).
-Exhaustive 1-node search finds no solution.  Optimum: 2.
+\noindent\textbf{recip(x), 1 node (R16-C1).}
+$\ELSb(0,x) = e^0/x = 1/x$.
+The operator $\ELSb(a,b) = e^a/b$ with $a=0$, $b=x$ gives $1/x$ directly
+in a single node, with leaves $0$ and $x$ both in $\mathcal{T}$.
+Lower bound: 0 nodes impossible since no terminal equals $1/x$ for all
+$x > 0$.  Optimum: 1 (updated from 2 by R16-C1).
 
 \medskip
 \noindent\textbf{mul(x,y), 2 nodes (T10u).}
@@ -250,10 +254,10 @@ one for $\EML$).  Exhaustive 2-node search finds no solution.  Optimum: 3.
 
 \medskip
 \noindent\textbf{Global total.}
-$1+1+2+2+2+2+3+3 = \mathbf{19}$.
+$1+1+2+1+2+2+3+3 = \mathbf{18}$.
 Row lower bounds are independent (each operation is computed by a separate
-sub-tree), so the global minimum is 19.
-$\text{savings} = 1 - 19/73 = 54/73 \approx 74.0\%$.
+sub-tree), so the global minimum is 18 (updated from 19 by R16-C1).
+$\text{savings} = 1 - 18/73 = 55/73 \approx 75.3\%$.
 \end{proof}
 
 % ════════════════════════════════════════════════════════════════════════════
@@ -263,13 +267,17 @@ $\text{savings} = 1 - 19/73 = 54/73 \approx 74.0\%$.
 \begin{proposition}[Remaining 1-node floor]\label{prop:floor}
 The following operations have been proved to require at least 2 or 3 nodes:
 \begin{itemize}
-  \item \textbf{neg, recip} (2 nodes each): 1-node lower bound certified.
+  \item \textbf{neg} (2 nodes): 1-node lower bound certified.
+  \item \textbf{recip} (1 node): 0-node lower bound trivial (non-constant);
+        $\ELSb(0,x)=1/x$ achieves 1 node (R16-C1).
   \item \textbf{mul, sub} (2 nodes each): 1-node lower bound certified.
   \item \textbf{add, pow} (3 nodes each): 2-node lower bound certified.
 \end{itemize}
-Hence the total is bounded below by $1+1+2+2+2+2+3+3 = 19$, and the savings
-are bounded above by $1 - 19/73 = 74.0\%$ within the current 8-operation,
+Hence the total is bounded below by $1+1+2+1+2+2+3+3 = 18$, and the savings
+are bounded above by $1 - 18/73 = 75.3\%$ within the current 8-operation,
 terminal-set-$\{x,y,0,1\}$, $\mathcal{F}_{16}$ framework.
+Note: recip achieving 1 node means the floor has been lowered; no further
+improvement is possible for exp, ln, recip, div since all are at 1 node.
 \end{proposition}
 
 \begin{remark}[Can add or pow be reduced to 2 nodes?]\label{rem:open}
@@ -291,7 +299,7 @@ For all $(x,y)$ in the appropriate domains:
   e^x &= \EML(x,1), \label{eq:exp} \\
   \ln x &= \EXL(0,x), \label{eq:ln} \\
   -x &= \EXL\!\bigl(0,\,\DEML(x,1)\bigr) \quad (x>0), \label{eq:neg} \\
-  1/x &= \text{[2-node construction; T09]}, \label{eq:recip} \\
+  1/x &= \ELSb(0,\,x), \label{eq:recip} \\
   xy &= \ELAd\!\bigl(\EXL(0,x),\,y\bigr)  \quad (x>0), \label{eq:mul} \\
   x-y &= \LEdiv\!\bigl(x,\,\EML(y,1)\bigr), \label{eq:sub} \\
   x+y &= \EAL\!\bigl(\EXL(0,x),\,\EXL(0,y)\bigr)  \quad (x,y>0), \label{eq:add} \\

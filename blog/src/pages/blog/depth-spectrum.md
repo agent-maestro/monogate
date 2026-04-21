@@ -9,7 +9,7 @@ tag: theorem
 
 # The Exact Depth Spectrum of EML
 
-**Tier: THEOREM (T30, T31)**
+**Tier: THEOREM (T30, T31) — fully proved; GAP-3 and GAP-4 closed 2026-04-20**
 
 Every function computable by EML trees has a *depth* — the minimum number of operator
 nodes to compute it exactly. Four sessions resolved the complete picture.
@@ -20,11 +20,19 @@ nodes to compute it exactly. Four sessions resolved the complete picture.
 
 | Depth | Functions | Notes |
 |-------|-----------|-------|
-| 1 | exp(x), exp(−x) | eml(x,1) = exp(x) |
-| 2 | ln(x), x^n, −x, **x·y (new!)** | ln = 1 EXL node; mul = 2 nodes |
-| 3 | sin(x)/cos(x) over ℂ, arctan, add/sub | Euler gateway; mixed routing |
+| 0 | constants, x | leaves, no operator |
+| 1 | exp(x), exp(−x), exp(cx) | eml(x,1) = exp(x) |
+| 1 | tan(x) over ℂ | T07 Euler gateway |
+| 2 | ln(x), 1/x, **x·y**, x/y | EXL/ELSb bridge; 1/x = ELSb(0,x), **1 node** (R16-C1) |
+| 3 | **sinh(x), cosh(x)** | corrected from 2 — see below |
+| 3 | sin(x), cos(x) over ℂ, arctan, add/sub, x^r | Euler substitution; mixed routing |
 | k | exp^k(x) | iterated exponential, k nested nodes |
-| ∞ | sin(x) over ℝ | T01: Infinite Zeros Barrier |
+| ∞ | sin(x), cos(x) over ℝ | T01: Infinite Zeros Barrier |
+
+> **Correction (2026-04-20):** sinh(x) and cosh(x) were previously listed at
+> depth 2. The correct depth is **3**. No 2-node EML tree can produce sinh or cosh.
+> The explicit 3-node tree for sinh: `eml(x, eml(eml(-x,1), 1)) / 2 = (eᵡ − e⁻ˣ)/2`.
+> The claim T30(c) — all standard functions have depth ≤ 3 — remains valid.
 
 ---
 
@@ -138,6 +146,8 @@ obstruction and the entire structure would collapse.
 
 ## Proof documents
 
+- `python/paper/theorems/Depth_Spectrum_Self_Contained.tex` — **complete self-contained T30 proof (GAP-3 + GAP-4 closed)**
+- `python/paper/cost_theory/R17_T30_Hardy_Field_Verification.tex` — gap analysis; Lemma 4.2 repair
 - `python/paper/theorems/Mul_Lower_Bound_Tightened.tex` — exhaustive search + structural proof
 - `python/paper/theorems/Complex_Closure_Density.tex` — Runge + density proof
 - `python/paper/theorems/EML4_Gap_Resolution.tex` — strict hierarchy, depth-4 witness

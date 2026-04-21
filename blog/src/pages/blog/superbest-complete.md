@@ -9,6 +9,8 @@ tags: ["EML", "SuperBEST", "optimality", "routing"]
 
 # The SuperBEST Table Is Complete
 
+> **Update 2026-04-20 (R16-C1):** This post documents SuperBEST v1 (21 nodes, 71.2%). Three subsequent results lowered the total further: T10u (mul: 3→2), T33 (sub: 3→2), and R16-C1 (recip: 2→1 via ELSb). Current SuperBEST v4 total: **18 nodes, 75.3% savings**. See the [Atlas](/atlas) for the live table.
+
 The SuperBEST routing table — the minimum-node dispatch table for arithmetic
 operations over the exp-ln binary operator family — is now fully characterized.
 

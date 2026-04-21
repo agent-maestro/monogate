@@ -148,7 +148,7 @@ Both mul and add are now at 3 nodes. The BEST routing table is symmetric at the 
 | exp | EML | 1n | Proved optimal |
 | ln | EXL | 1n | Proved optimal |
 | div | EDL | 1n | Proved optimal |
-| recip | EDL | 2n | Best known |
+| recip | ELSb | **1n** | **Proved optimal** (R16-C1) |
 | pow | EXL | 3n | Best known |
 | **add** | **Mixed(EXL/EML/EAL)** | **3n** (a>0) | **Improved from 11n** |
 | **mul** | **Mixed(EXL/EML)** | **3n** | **Improved from 7n; lower bound TIGHT** |

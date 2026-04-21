@@ -83,14 +83,14 @@ With neg closed at 2n, the full routing table is:
 | exp(−x) | 1 | deml(x,1) |
 | ln(x) | 1 | exl(0,x) |
 | div(x,y) | 1 | edl(x,y) |
-| recip(x) | 2 | edl(0,eml(x,1)) |
+| recip(x) | **1** | **elsb(0,x)** (R16-C1) |
 | **neg(x)** | **2** | **exl(0,deml(x,1))** |
-| mul(x,y) | 3 | exl(exl(0,x),eml(y,1)) |
-| sub(x,y) | 3 | eml(exl(0,x),eml(y,1)) |
+| mul(x,y) | 2 | elad(exl(0,x),y) (T10u) |
+| sub(x,y) | 2 | lediv(x,eml(y,1)) (T33) |
 | pow(x,n) | 3 | eml(exl(ln(n),x),1) |
 | add(x,y) | 3 | eal(exl(0,x),eml(y,1)) |
 
-**Total: 21 nodes** vs 73 naive = **71.2% savings.**
+**Total: 18 nodes** vs 73 naive = **75.3% savings** (SuperBEST v4).
 
 Both general domain and positive domain now converge to 21 nodes.
 Every entry except add (general, 11n) is proved optimal by exhaustive

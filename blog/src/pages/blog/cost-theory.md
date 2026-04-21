@@ -26,13 +26,13 @@ The answer is yes. This post summarises the complete theory developed across ses
 | Natural log ln x | ln | 1n |
 | Division x/y | div | 1n |
 | Negation −x | neg | 2n |
-| Reciprocal 1/x | recip | 2n |
+| Reciprocal 1/x | recip | **1n** (ELSb, R16-C1) |
 | Multiplication x·y | mul | 2n |
 | Subtraction x−y | sub | 2n |
 | Exponentiation x^n | pow | 3n |
 | Addition x+y (pos. domain) | add | 3n |
 
-A 19-node reference equation (SuperBEST v3 standard) costs 19n vs 71n naive — a 74.0% saving.
+**SuperBEST v4**: 18-node total vs 73n naive — **75.3% saving** (updated from v3: 19n, 74.0%, by R16-C1).
 
 ---
 

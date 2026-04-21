@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/Base.astro
 title: "The SuperBEST Cost of Geometry"
-description: "12 classical geometric primitives — hyperbolic distance, Lie group maps, curvature, conformal maps — expressed as EML operator trees. Total: 126n SuperBEST vs 345n naive, 63% savings. All exact."
+description: "12 classical geometric primitives — hyperbolic distance, Lie group maps, curvature, conformal maps — expressed as EML operator trees. Total: 125n SuperBEST vs 345n naive, 64% savings. All exact. Updated for R16-C1 (recip = 1n)."
 date: "2026-04-20"
 author: "Arturo R. Almaguer"
 tags: ["EML", "SuperBEST", "geometry", "information geometry", "Lie groups"]
@@ -17,7 +17,7 @@ exp maps, Bregman divergence, Gaussian curvature, Lie group exponentials,
 conformal maps, mean curvature, cross-ratios — each expressed as an EML
 operator tree with exact node counts.
 
-**Summary: 126n SuperBEST vs 345n naive — 63% savings. Every entry exact.**
+**Summary: 125n SuperBEST vs 345n naive — 64% savings. Every entry exact. Updated for R16-C1 (recip = 1n via ELSb).**
 
 ---
 
@@ -29,7 +29,7 @@ operator tree with exact node counts.
 | S¹ exp/log map | **1** | 8 | EML complex (Euler) |
 | S² exp map | 24 | 50 | EML complex (sincos shared) |
 | Bregman KL divergence | 12 | 40 | EXL/EML/EAL mixed |
-| Gaussian curvature K(z=ln r) | **7** | 25 | mul+recip+neg (neg=2n) |
+| Gaussian curvature K(z=ln r) | **6** | 25 | mul+recip+neg (recip=1n via ELSb, R16-C1) |
 | Vertical geodesic (hyperbolic) | 4 | 12 | EML |
 | Circular geodesic (hyperbolic) | **2** | 12 | EML complex |
 | SO(2) Lie exp map | **1** | 8 | EML complex (Euler) |
@@ -37,7 +37,7 @@ operator tree with exact node counts.
 | Stereographic projection | 4 | 15 | complex div |
 | Mean curvature κ (graph) | 13 | 30 | EML/EXL mixed |
 | Cross-ratio ln\|CR\| | 13 | 25 | EXL + add/sub |
-| **TOTAL** | **126** | **345** | |
+| **TOTAL** | **125** | **345** | |
 
 ---
 
@@ -172,8 +172,8 @@ Output: `D:/monogate/python/results/eml_geometry_catalog.json`
 ## Conclusion
 
 The 12 primitives above cover the core of differential geometry, information
-geometry, and complex analysis. Total cost: **126n SuperBEST vs 345n naive —
-63% reduction**.
+geometry, and complex analysis. Total cost: **125n SuperBEST vs 345n naive —
+64% reduction** (updated from 126n by R16-C1: recip = 1n via ELSb).
 
 Three structural insights drive the savings:
 
