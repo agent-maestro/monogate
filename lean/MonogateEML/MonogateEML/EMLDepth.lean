@@ -114,13 +114,24 @@ lemma var_tree_evalReal (x : ℝ) :
   simp [EMLTree.evalReal, EMLTree.eval]
 
 /-- CEML-T91 (depth-1 barrier lemma — sorry):
-    Real depth-1 EML trees cannot have infinitely many zeros in a bounded interval.
-    This is a consequence of analyticity; the proof requires Mathlib's analytic zeros theorem.
-    (Placeholder: the statement is correct; the induction step is the hard part.) -/
-lemma depth1_finite_zeros_real (t : EMLTree) (ht : t.depth ≤ 1) (a b : ℝ) (hab : a < b) :
+    A non-zero real depth-1 EML tree has finitely many zeros in any bounded interval.
+    This follows from eml_tree_analytic + analytic_finite_zeros_compact.
+
+    Note: the hypothesis hne (non-zero on (a,b)) is required — without it the statement
+    is FALSE (consider the constant-zero tree). -/
+lemma depth1_finite_zeros_real (t : EMLTree) (ht : t.depth ≤ 1) (a b : ℝ) (hab : a < b)
+    (hpos : a > 0)
+    (hne : ∃ x ∈ Set.Ioo a b, t.evalReal x ≠ 0) :
     Set.Finite {x ∈ Set.Icc a b | t.evalReal x = 0} := by
-  sorry -- Proof outline: exp and log are analytic; their combinations have finitely many zeros
-        -- by the identity theorem for analytic functions (zero set has no accumulation point).
+  -- Use eml_tree_analytic (t is analytic on (0,∞)) + analytic_finite_zeros_compact
+  -- eml_tree_analytic gives AnalyticOnNhd ℝ t.evalReal (Ioi 0)
+  -- Since Icc a b ⊆ Ioi 0 (as a > 0), restrict to get AnalyticOnNhd on Icc a b
+  sorry
+  -- Proof:
+  -- have hanal := (MonogateEML.InfiniteZerosBarrier.eml_tree_analytic t).mono
+  --   (Set.Icc_subset_Ioi.mpr hpos)
+  -- exact MonogateEML.InfiniteZerosBarrier.analytic_finite_zeros_compact
+  --   t.evalReal a b hab hanal hne
 
 /-- sin is not monotone on [0, 2π]. -/
 lemma sin_not_monotone_full :
@@ -148,10 +159,10 @@ theorem sin_not_in_real_EML_k (k : ℕ) :
 
 /-
 SORRY CENSUS (current):
-  1. depth1_finite_zeros_real — analyticity argument (MEDIUM difficulty)
+  1. depth1_finite_zeros_real — depends on eml_tree_analytic (InfiniteZerosBarrier.lean)
      Location: EMLDepth.lean, lemma depth1_finite_zeros_real
-     Status: NON-BLOCKING — needs Mathlib analytic zero-set theorem
-     Path: Use Mathlib.Analysis.Analytic.IsolatedZeros (analytic functions have isolated zeros)
+     Status: NON-BLOCKING once eml_tree_analytic is proved
+     Path: Use eml_tree_analytic.mono + analytic_finite_zeros_compact (now proved)
 
   2. sin_not_in_real_EML_k — finite zeros induction (HARD)
      Location: EMLDepth.lean, theorem sin_not_in_real_EML_k

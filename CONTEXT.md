@@ -22,13 +22,24 @@
 | Euler Identity e^{iπ} + 1 = 0 | EMLDepth.lean | euler_identity |
 | EML-0 ⊊ EML-1 (exp not constant) | EMLDepth.lean | exp_not_constant |
 | sin has infinitely many zeros | InfiniteZerosBarrier.lean | sin_has_infinitely_many_zeros |
+| analytic non-zero → finitely many zeros | InfiniteZerosBarrier.lean | analytic_finite_zeros_compact |
 | TheoremRegistry PROVED_COUNT = 21 | TheoremRegistry.lean | (rfl check) |
 
-### Partial / sorry'd
-| Item | Sorry'd step | File |
-|------|-------------|------|
-| sin ∉ EML_k (T01 Part B/C) | eml_tree_analytic, analytic_finite_zeros_compact | InfiniteZerosBarrier.lean |
-| ELC depth barrier (T48) | sin_not_in_real_EML_k | EMLDepth.lean |
+### Partial / sorry'd (2 genuine open steps)
+| Item | Sorry'd step | File | Blocker |
+|------|-------------|------|---------|
+| sin ∉ EML_k (T01 Part C) | eml_tree_analytic (analyticity by induction) | InfiniteZerosBarrier.lean | ~2h Lean |
+| sin ∉ EML_k (T01 Part D) | sin_not_in_eml (quantitative zero bound) | InfiniteZerosBarrier.lean | O-minimal theory |
+| ELC depth barrier (T48) | sin_not_in_real_EML_k | EMLDepth.lean | depends on T01 |
+| depth-1 zeros finite | depth1_finite_zeros_real | EMLDepth.lean | depends on eml_tree_analytic |
+
+**Progress this session**: `analytic_finite_zeros_compact` fully proved (0 sorry).
+Uses: `Set.Infinite.exists_accPt_of_subset_isCompact` + `AnalyticOnNhd.eqOn_zero_of_preconnected_of_frequently_eq_zero` + `frequently_iff_neBot`.
+
+### Python-certified (not yet Lean)
+| Result | Method | File |
+|--------|--------|------|
+| SB(mul, general) = 3 | Exhaustive 4112-circuit search | mul_gen_tight_2node_search.py |
 
 ### Not yet formalized
 - T02 (Universality / Weierstrass) — pending
