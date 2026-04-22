@@ -3,7 +3,7 @@ layout: ../../layouts/Base.astro
 title: "Why tan(1) Controls Everything"
 description: "A single transcendence fact about tan(1) is the root cause behind three separate EML results: the multiplication lower bound, the depth-3 ceiling for standard functions, and the complex density behavior."
 date: "2026-04-20"
-author: "Arturo R. Almaguer"
+author: "Monogate Research"
 tag: theorem
 ---
 
@@ -225,7 +225,7 @@ One number. One transcendence fact. Three theorems.
 
 ---
 
-*Almaguer, A.R. (2026). "Why tan(1) Controls Everything."
+*Monogate Research (2026). "Why tan(1) Controls Everything."
 monogate research blog. https://monogate.org/blog/tan1-obstruction*
 
 *Full paper: D:/monogate/python/paper/Unifying_Obstruction_Tan1.tex · Sessions S93–S99 + Unified synthesis*

@@ -3,7 +3,7 @@
 NEG-1 through NEG-3: Close neg(x) target.
 ADD-1 through ADD-4: Reconcile and close add(x,y) target.
 
-Author: Arturo R. Almaguer
+Author: Monogate Research
 """
 
 import math

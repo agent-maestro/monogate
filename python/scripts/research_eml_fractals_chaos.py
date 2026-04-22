@@ -1,6 +1,6 @@
 """
 EML Frontiers: Fractals, Sound, Chaos — Sessions F1–F6, S1–S5, C1–C4
-Author: Arturo R. Almaguer
+Author: Monogate Research
 
 Note: The EML iteration z → exp(z) − ln(c) = exp(z) − k (k = ln(c))
 is the exponential family f_k studied by Devaney, Eremenko-Lyubich.

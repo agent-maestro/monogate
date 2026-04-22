@@ -1,6 +1,6 @@
 """
 Neg Optimality — 10 Sessions (N1–N10)
-Author: Arturo R. Almaguer
+Author: Monogate Research
 
 Goal: Prove neg(x) = -x requires 4 nodes (general domain), or find a 3n construction.
 If 4n proved optimal → SuperBEST table is FULLY characterized.
@@ -858,7 +858,7 @@ FINAL SuperBEST SUMMARY:
 
 def main():
     print("NEG OPTIMALITY — 10 Sessions")
-    print("Author: Arturo R. Almaguer")
+    print("Author: Monogate Research")
     print("Goal: Prove neg=4n optimal OR find 3n construction")
 
     results = {}

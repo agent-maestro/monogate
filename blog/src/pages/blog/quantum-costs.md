@@ -99,4 +99,4 @@ Results in `python/results/cal_quantum_results.json` under keys `Q1`, `Q2`, `Q3`
 
 ---
 
-**Cite:** Almaguer, A.R. (2026). "The SuperBEST Cost of Quantum Mechanics." monogate research blog. https://monogate.org/blog/quantum-costs
+**Cite:** Monogate Research (2026). "The SuperBEST Cost of Quantum Mechanics." monogate research blog. https://monogate.org/blog/quantum-costs

@@ -125,7 +125,7 @@ Two main open problems remain:
 
 ## Citation
 
-Almaguer, A.R. (2026). "The Cost Theory Is Complete." monogate research. [https://monogate.org/blog/cost-theory-complete](https://monogate.org/blog/cost-theory-complete)
+Monogate Research (2026). "The Cost Theory Is Complete." monogate research. [https://monogate.org/blog/cost-theory-complete](https://monogate.org/blog/cost-theory-complete)
 
 The full technical paper (including all proofs and the complete theorem index T34--T43) is available at:
 `python/paper/cost_theory/Cost_Theory_Complete.tex` in the [monogate repository](https://github.com/monogate-dev/monogate).

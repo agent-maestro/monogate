@@ -105,4 +105,4 @@ Results in `python/results/new_operators_results.json`.
 
 ---
 
-**Cite:** Almaguer, A.R. (2026). "16 Operators: The Complete exp-ln Census." monogate research blog. https://monogate.org/blog/sixteen-operators
+**Cite:** Monogate Research (2026). "16 Operators: The Complete exp-ln Census." monogate research blog. https://monogate.org/blog/sixteen-operators

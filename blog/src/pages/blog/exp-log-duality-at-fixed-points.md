@@ -117,5 +117,5 @@ print(z)  # ~ 0.3181 + 1.3372i
 
 ---
 
-**Cite:** Almaguer, A.R. (2026). "The Exp-Log Duality at Fixed Points."
+**Cite:** Monogate Research (2026). "The Exp-Log Duality at Fixed Points."
 monogate research blog. https://monogate.org/blog/exp-log-duality-at-fixed-points

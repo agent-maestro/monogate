@@ -3,7 +3,7 @@ title: "EML Meets Neural Networks"
 subtitle: "What happens when you put a 1-operator symbolic head on a DNN"
 date: 2026-04-20
 tags: [neural-networks, symbolic-regression, eml, cost-theory]
-author: "Arturo R. Almaguer"
+author: "Monogate Research"
 ---
 
 # EML Meets Neural Networks

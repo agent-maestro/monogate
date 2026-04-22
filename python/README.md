@@ -138,7 +138,7 @@ If you use monogate in your research, please cite:
   title   = {Practical Extensions to the {EML} Universal Operator:
              Hybrid Routing, Phantom Attractors, Performance Kernels,
              and the {N=11} Sin Barrier},
-  author  = {Almaguer, Art},
+  author  = {{Monogate Research}},
   journal = {arXiv preprint},
   year    = {2026},
   note    = {arXiv:ARXIV_ID_PLACEHOLDER}

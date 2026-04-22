@@ -130,6 +130,6 @@ research repository.
 
 ---
 
-**Cite:** Almaguer, A.R. (2026). "Hyperbolic Functions Preserve ELC (And
+**Cite:** Monogate Research (2026). "Hyperbolic Functions Preserve ELC (And
 Why Trig Doesn't)." monogate research blog.
 https://monogate.org/blog/hyperbolic-preserves-elc

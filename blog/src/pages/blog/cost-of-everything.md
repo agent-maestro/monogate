@@ -4,7 +4,7 @@ title: "The SuperBEST Cost of Everything"
 description: "From Google's PageRank to your GPS to the NFL passer rating — every equation has a node count. Here are the ones that matter."
 date: "2026-04-20"
 tag: "observation"
-author: "Arturo R. Almaguer"
+author: "Monogate Research"
 ---
 
 ## From Google's PageRank to your GPS to the NFL passer rating
@@ -211,7 +211,7 @@ The cost of everything is countable. We are counting.
 
 ---
 
-*Almaguer, A.R. (2026). "The SuperBEST Cost of Everything." monogate research blog. https://monogate.org/blog/cost-of-everything*
+*Monogate Research (2026). "The SuperBEST Cost of Everything." monogate research blog. https://monogate.org/blog/cost-of-everything*
 
 *Sessions: TECH-1 through TECH-5, SPORT-1 through SPORT-2, NAT-1 through NAT-2. SuperBEST v4 routing table (div=2n, recip=1n). All results exact and reproducible.*
 

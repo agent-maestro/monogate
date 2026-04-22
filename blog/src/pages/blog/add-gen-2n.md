@@ -89,4 +89,4 @@ SuperBEST v5 is the final table. All 10 core operations cost at most 3 nodes. No
 
 ---
 
-*Almaguer, A.R. (2026). "General Addition in 2 Nodes: The Last Gap Closes." monogate research blog.*
+*Monogate Research (2026). "General Addition in 2 Nodes: The Last Gap Closes." monogate research blog.*

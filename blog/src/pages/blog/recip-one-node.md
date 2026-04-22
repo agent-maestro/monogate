@@ -142,6 +142,6 @@ no constant equals $1/x$ for all $x > 0$.
 
 ---
 
-> Almaguer, A.R. (2026). "R16-C1: recip(x) Is 1 Node — ELSb Closes the Gap."
+> Monogate Research (2026). "R16-C1: recip(x) Is 1 Node — ELSb Closes the Gap."
 > monogate research blog. Session: 1-Node Integration.
 > https://monogate.org/blog/recip-one-node

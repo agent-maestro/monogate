@@ -3,7 +3,7 @@ layout: ../../layouts/Base.astro
 title: "Negation in Two Nodes — For All Real x"
 description: "The neg gap is closed: exl(0, deml(x,1)) computes −x in exactly 2 nodes for all x ∈ ℝ, with no domain restriction. The SuperBEST table is complete."
 date: "2026-04-20"
-author: "Arturo R. Almaguer"
+author: "Monogate Research"
 tags: ["EML", "SuperBEST", "negation", "optimality"]
 ---
 
@@ -110,5 +110,5 @@ is the exact minimum.
 
 ---
 
-> Almaguer, A.R. (2026). "Negation in Two Nodes — For All Real x."
+> Monogate Research (2026). "Negation in Two Nodes — For All Real x."
 > monogate research blog. Sessions N1–N10.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Mathematical Exploration Sessions M1-M10
-Author: Arturo R. Almaguer
+Author: Monogate Research
 
 Every session asks a precise mathematical question and produces a precise answer.
 Output: results/math_exploration.json

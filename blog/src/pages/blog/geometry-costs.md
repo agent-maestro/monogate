@@ -3,7 +3,7 @@ layout: ../../layouts/Base.astro
 title: "The SuperBEST Cost of Geometry"
 description: "12 classical geometric primitives — hyperbolic distance, Lie group maps, curvature, conformal maps — expressed as EML operator trees. Total: 125n SuperBEST vs 345n naive, 64% savings. All exact. Updated for R16-C1 (recip = 1n)."
 date: "2026-04-20"
-author: "Arturo R. Almaguer"
+author: "Monogate Research"
 tags: ["EML", "SuperBEST", "geometry", "information geometry", "Lie groups"]
 ---
 
@@ -184,6 +184,6 @@ Three structural insights drive the savings:
 
 ---
 
-> Almaguer, A.R. (2026). "The SuperBEST Cost of Geometry."
+> Monogate Research (2026). "The SuperBEST Cost of Geometry."
 > monogate research blog. Sessions GEO-G1–GEO-G10, 2026-04-20.
 > https://monogate.org/blog/geometry-costs

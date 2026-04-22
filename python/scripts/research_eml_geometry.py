@@ -1,6 +1,6 @@
 """
 EML/EAL Family in Geometry — Sessions GEO-G1 through GEO-G10
-Author: Arturo R. Almaguer
+Author: Monogate Research
 """
 import math, cmath, json, os
 

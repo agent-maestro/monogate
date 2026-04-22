@@ -3,7 +3,7 @@ layout: ../../layouts/Base.astro
 title: "The Exact Depth Spectrum of EML"
 description: "Every function has a minimum node count. We now know the complete depth spectrum: 1, 2, 3, ∞ — and why depth-4 exists but contains no standard functions. Plus: multiplication drops to 2 nodes."
 date: "2026-04-20"
-author: "Arturo R. Almaguer"
+author: "Monogate Research"
 tag: theorem
 ---
 
@@ -162,5 +162,5 @@ python python/scripts/complex_density_search.py
 
 ---
 
-**Cite:** Almaguer, A.R. (2026). "The Exact Depth Spectrum of EML."
+**Cite:** Monogate Research (2026). "The Exact Depth Spectrum of EML."
 monogate research blog. https://monogate.org/blog/depth-spectrum

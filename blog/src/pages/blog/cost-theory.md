@@ -132,4 +132,4 @@ The cost model was validated in two stages:
 
 ---
 
-**Cite:** Almaguer, A.R. (2026). "Predicting SuperBEST Cost from Equation Structure." monogate research blog. https://monogate.org/blog/cost-theory
+**Cite:** Monogate Research (2026). "Predicting SuperBEST Cost from Equation Structure." monogate research blog. https://monogate.org/blog/cost-theory

@@ -4,7 +4,7 @@
 
 **Paper:** "Practical Extensions to the EML Universal Operator: Hybrid Routing,
 Phantom Attractors, Performance Kernels, and the N=11 Sin Barrier"
-Art Almaguer · April 2026 · arXiv:**ARXIV_ID_PLACEHOLDER**
+Monogate Research · April 2026 · arXiv:**ARXIV_ID_PLACEHOLDER**
 
 ---
 
@@ -138,7 +138,7 @@ cd explorer && npm install && npm run dev
   title  = {Practical Extensions to the {EML} Universal Operator:
              Hybrid Routing, Phantom Attractors, Performance Kernels,
              and the {N=11} Sin Barrier},
-  author = {Almaguer, Art},
+  author = {{Monogate Research}},
   year   = {2026},
   note   = {arXiv:ARXIV_ID_PLACEHOLDER}
 }

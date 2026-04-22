@@ -12,7 +12,7 @@ __all__ = ["run_session42"]
 
 PAPER_TITLE = "The Complex EML Hierarchy: Depth Classification of Analytic Functions via exp-log Composition"
 
-PAPER_AUTHORS = ["Art Almaguer"]  # placeholder
+PAPER_AUTHORS = ["Monogate Research"]
 
 PAPER_ABSTRACT = """
 We introduce the Complex EML (ceml) operator ceml(z₁, z₂) = exp(z₁) − Log(z₂),

@@ -174,7 +174,7 @@ softmax over N logits: N−1 nodes.
 
 ---
 
-*Almaguer, A.R. (2026). "Why exp(+x) Means Complete: The Structural Theorem for
+*Monogate Research (2026). "Why exp(+x) Means Complete: The Structural Theorem for
 Exponential-Logarithmic Operators." monogate research blog.
 https://monogate.org/blog/completeness-characterization*
 

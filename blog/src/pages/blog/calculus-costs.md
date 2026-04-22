@@ -109,4 +109,4 @@ Results in `python/results/cal_quantum_results.json`.
 
 ---
 
-**Cite:** Almaguer, A.R. (2026). "The SuperBEST Cost of Calculus." monogate research blog. https://monogate.org/blog/calculus-costs
+**Cite:** Monogate Research (2026). "The SuperBEST Cost of Calculus." monogate research blog. https://monogate.org/blog/calculus-costs

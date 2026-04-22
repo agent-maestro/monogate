@@ -2,7 +2,7 @@
 SuperBEST Router — Dynamic Per-Operation Operator Selection
 Finds the minimum-node operator for each arithmetic primitive in an expression tree.
 
-Author: Arturo R. Almaguer
+Author: Monogate Research
 Session: FAM-C2 / SuperBEST v5 (ADD-CASCADE 2026-04-20)
 Revised: X20 resolution (2026-04-20) — dual-domain table, pow and mul corrected
 

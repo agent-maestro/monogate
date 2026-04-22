@@ -3,7 +3,7 @@ layout: ../../layouts/Base.astro
 title: "What If tan(1) Were Constructible?"
 description: "A thought experiment: if tan(1) could be built from EML trees, what would follow? The conditional chain connects to Schanuel's conjecture and would collapse the depth hierarchy."
 date: "2026-04-20"
-author: "Arturo R. Almaguer"
+author: "Monogate Research"
 tag: conjecture
 ---
 

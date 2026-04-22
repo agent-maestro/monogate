@@ -3,7 +3,7 @@ layout: ../../layouts/Base.astro
 title: "The SuperBEST Table Is Complete"
 description: "Every arithmetic operation now has a proved-optimal or exhaustively-bounded node count in the exp-ln operator family. Total: 21 nodes, 71.2% savings vs naive."
 date: "2026-04-20"
-author: "Arturo R. Almaguer"
+author: "Monogate Research"
 tags: ["EML", "SuperBEST", "optimality", "routing"]
 ---
 
@@ -114,6 +114,6 @@ The table is complete.
 
 ---
 
-> Almaguer, A.R. (2026). "The SuperBEST Table Is Complete."
+> Monogate Research (2026). "The SuperBEST Table Is Complete."
 > monogate research blog. Sessions N1–N10, 2026-04-20.
 > https://monogate.org/blog/superbest-complete

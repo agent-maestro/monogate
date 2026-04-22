@@ -1,6 +1,6 @@
 """
 Family Census & Extensions — Sessions EAL-A6 through FAM-C5
-Author: Arturo R. Almaguer
+Author: Monogate Research
 """
 import math, itertools, json, time, random, os, sys
 
@@ -587,7 +587,7 @@ superbest_code = '''"""
 SuperBEST Router — Dynamic Per-Operation Operator Selection
 Finds the minimum-node operator for each arithmetic primitive in an expression tree.
 
-Author: Arturo R. Almaguer
+Author: Monogate Research
 Session: FAM-C2
 """
 from __future__ import annotations

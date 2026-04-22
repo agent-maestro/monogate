@@ -3,7 +3,7 @@ layout: ../../layouts/Base.astro
 title: "SuperBEST Node Costs: Chemistry and Biology"
 description: "How many operator nodes does it take to compute 40 standard equations from chemistry and biology? A systematic analysis using the SuperBEST v3 routing table."
 date: "2026-04-20"
-author: "Arturo R. Almaguer"
+author: "Monogate Research"
 tag: observation
 ---
 
@@ -281,7 +281,7 @@ Structure is the invariant. Domain is a label.
 
 ---
 
-> Almaguer, A.R. (2026). "SuperBEST Node Costs: Chemistry and Biology."
+> Monogate Research (2026). "SuperBEST Node Costs: Chemistry and Biology."
 > monogate research blog. Sessions Chem-1 through Bio-5, 2026-04-20.
 > Full LaTeX catalog: `python/paper/observations/SuperBEST_ChemBio_Catalog.tex`
 > https://monogate.org/blog/chembio-costs
