@@ -20,6 +20,7 @@ import WeierstrasMachine from "./weierstrass-machine";
 import BillionTrees from "./billion-trees";
 import EMLSynth from "./eml-synth";
 import FractalStudio from "./fractal-studio";
+import ZenGarden from "./zen-garden";
 import EMLSynthesizer from "./eml-synthesizer";
 
 function BackButton() {
@@ -79,6 +80,7 @@ export default function GamesApp() {
         <Route path="/eml-synth" element={<Game><EMLSynth /></Game>} />
         <Route path="/fractal-studio" element={<Game><FractalStudio /></Game>} />
         <Route path="/fractal-explorer" element={<Navigate to="/fractal-studio" replace />} />
+        <Route path="/zen-garden" element={<Game><ZenGarden /></Game>} />
         <Route path="/eml-synthesizer" element={<Game><EMLSynthesizer /></Game>} />
       </Routes>
     </BrowserRouter>

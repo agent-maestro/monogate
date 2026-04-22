@@ -125,6 +125,12 @@ const GAMES = [
     color: "#e8a020", icon: "◈", phase: "Fractal", teaches: "How operator structure determines fractal geometry — and what that geometry sounds like",
   },
   {
+    id: "zen-garden", title: "Zen Garden", status: "play", category: "experience",
+    tagline: "Drag. Listen. Breathe.",
+    desc: "A living, interactive complex-plane garden. Drag floating leaf-nodes across the plane — each node is a constant in a linear chain of F16 operators. The canvas renders domain coloring, orbit field, or flow field of the resulting expression; move a node and the entire visual morphs in real time. A continuous drone tracks the tree's output: Re(f) is pitch, Im(f) is pan, |f| is volume. Audio-reactive mode maps mic or file FFT bands onto node parameters — bass drives depth, mids drive rotation, treble shifts palette hue, amplitude breathes the zoom. Presets: Pure Euler, Phantom Attractor, Chaos Lullaby, Golden Spiral, Breath. Share link encodes the full tree as a URL.",
+    color: "#a18cd1", icon: "❋", phase: "Garden", teaches: "How the same EML tree produces coupled visual and audio behavior — one operator, two senses",
+  },
+  {
     id: "eml-synthesizer", title: "EML Synthesizer", status: "play", category: "experience",
     tagline: "Timbre is EML node count.",
     desc: "Fourier synthesis where every harmonic is one complex EML node: Im(eml(i·2πft,1))=sin(2πft). A sine wave costs 1 node. A violin costs 12. Adjust harmonic amplitudes with sliders, watch the waveform and spectrum update live, then play the sound.",
