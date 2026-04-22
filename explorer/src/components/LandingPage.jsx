@@ -1,8 +1,7 @@
 // explorer/src/components/LandingPage.jsx
 // Landing page — shown on first visit (no URL params).
 // onEnter(tab?) — enters the explorer, optionally jumping to a specific tab.
-
-import EMLFractalExplorer from "./EMLFractalExplorer.jsx";
+// The fractal explorer lives on /lab (monogate.dev/lab), not here.
 
 const C = {
   bg:      "#07080f",
@@ -64,10 +63,7 @@ export default function LandingPage({ onEnter }) {
       overflowX: "hidden",
     }}>
 
-      {/* ── Fractal Explorer Hero ─────────────────────────────────────── */}
-      <EMLFractalExplorer />
-
-      {/* ── Below-the-fold content ───────────────────────────────────── */}
+      {/* ── Main content ──────────────────────────────────────────────── */}
       <div style={{ padding: "48px 24px 100px" }}>
       <div style={{ maxWidth: 760, margin: "0 auto" }}>
 
@@ -93,8 +89,8 @@ export default function LandingPage({ onEnter }) {
             margin: "0 0 24px", lineHeight: 1.6, maxWidth: 540,
           }}>
             A symbolic math optimizer built on a single binary operator.
-            8 fractal universes — each operator above is a different Mandelbrot set.
-            Scroll to zoom, drag to pan, switch operators.
+            Calculate, verify, search, and benchmark EML expressions across
+            nine tools. For the 8-operator fractal zoo, see monogate.dev/lab.
           </p>
 
           <code style={{
