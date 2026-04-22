@@ -1,0 +1,401 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,geometry,hyperref,longtable,xcolor}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{finding}[theorem]{Finding}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+\definecolor{ok}{RGB}{20,130,60}
+\definecolor{flag}{RGB}{180,30,30}
+\definecolor{warn}{RGB}{180,110,0}
+
+\newcommand{\ok}[1]{\textcolor{ok}{#1}}
+\newcommand{\flag}[1]{\textcolor{flag}{#1}}
+\newcommand{\warn}[1]{\textcolor{warn}{#1}}
+
+\newcommand{\Fn}[1]{\textbf{#1}}
+
+\title{High-Impact Catalogs Re-Audit: Quantum, Physics, Special Functions\\
+\large Under Verified Tight Lower Bounds ($\mathrm{mul}=3n$, $\mathrm{div}\geq 3n$)\\
+Exploration Note --- Not a Table Update}
+\author{Monogate Research}
+\date{2026-04-22}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We re-audit the quantum, physics, and special-function expression catalogs
+using the newly locked bounds: $\mathrm{SB}(\mathrm{mul},\mathrm{general}) = 3$
+and $\mathrm{SB}(\mathrm{div},\mathrm{general}) \geq 3$.
+Key finding: expressions with \emph{constant parameters} ($\beta$, $\gamma$, $n$, etc.)
+are largely unaffected because constant-factor multiplication folds into EPL ($1n$).
+Expressions with two \emph{free-variable} factors or general-domain division
+require $+1n$ corrections. We identify which catalog entries survive unchanged
+and which must be revised.
+\end{abstract}
+
+\section{Ground Rules for This Audit}
+
+\textbf{Constant vs.\ variable multiplication:}
+When one factor is a fixed constant $c$ (not a circuit input), $c \cdot x = D_{F14}(\ln c, x) = 1n$.
+This includes $\beta \cdot E$, $n \cdot x$, $\gamma \cdot t$, etc.\ where the parameter is fixed.
+\emph{The $+1n$ correction for mul applies only when both factors are free variables.}
+
+\textbf{Domain-restricted division:}
+If the circuit is guaranteed to receive only $x,y > 0$, division costs $2n$ (not $3n$).
+The $+1n$ for general div applies when no such guarantee exists.
+
+\textbf{Sub-then-exp / sub-then-ln routes:}
+Expressions of the form $e^{x-y}$, $\ln(x/y)$, and $e^{x+y}$ can be computed without
+explicit mul or div nodes via algebraic identities:
+$e^{x-y} = D_{F1}(x,y)$ ($1n$), $\ln(x/y) = \ln x - \ln y$ ($1n + 1n + 2n = 4n$).
+These routes are \emph{unaffected} by the new bounds.
+
+\section{Quantum Information Catalog}
+
+\subsection{Von Neumann Entropy: $-\lambda \ln \lambda$}
+
+Route: $\ln \lambda$ ($1n$) then $\lambda \cdot \ln \lambda$ requires multiplication of two variables.
+If $\lambda$ is a probability (positive domain): $D_{F16}(\lambda, \ln\lambda) = \lambda \cdot \ln\lambda$?
+No: $D_{F16}(a,b) = e^{\ln a + \ln b} = ab$, which requires $b > 0$. But $\ln\lambda \leq 0$ for $\lambda \leq 1$.
+So $\lambda \cdot \ln\lambda$ involves a product of two variables where the second is not necessarily positive.
+This is general-domain multiplication: $3n$.
+
+Full route: $\ln\lambda[1n] + \mathrm{mul}(\lambda, \ln\lambda)[3n] + \mathrm{neg}[2n] = 6n$.
+
+But previous audit claimed $4n$. Let us recount the old route:
+$-\lambda\ln\lambda = \mathrm{mul}(\lambda, -\ln\lambda)$: $-\ln\lambda = D_{F9}(0,\lambda)[1n]$ (gives $-\ln\lambda$ directly since $D_{F9}(0,\lambda) = -\ln\lambda$), then $\mathrm{mul}(\lambda, D_{F9}(0,\lambda))[2n] = 3n$ total. With mul=3n: $1+3 = 4n$. \ok{Same!}
+
+\begin{finding}
+$-\lambda\ln\lambda$: old $4n$, new $4n$. \ok{Unchanged.}
+Route: $D_{F9}(0,\lambda) = -\ln\lambda$ ($1n$), then $\mathrm{mul}(\lambda, \cdot)$ [$3n$] = $4n$ total.
+Correction: this uses $\mathrm{mul}(\lambda, -\ln\lambda)$ with $-\ln\lambda \geq 0$ for $\lambda \in (0,1]$,
+so it \emph{is} positive-domain multiplication --- costs $1n$ (via $D_{F16}$), not $3n$!
+Revised route: $D_{F9}(0,\lambda)[1n] + D_{F16}(\lambda, -\ln\lambda)[1n] = \lambda \cdot (-\ln\lambda) = 2n$.
+Then neg: $D_{F9}(0, 2n\text{-output})[2n]$... wait, $\lambda \ln\lambda$ is negative, so $-\lambda\ln\lambda$ is positive.
+$-\lambda\ln\lambda = \lambda \cdot (-\ln\lambda)$: compute $-\ln\lambda = D_{F9}(0,\lambda)[1n]$,
+then $\lambda \cdot (-\ln\lambda)$ where both $\lambda > 0$ and $-\ln\lambda > 0$ for $\lambda \in (0,1)$:
+$D_{F16}(\lambda, D_{F9}(0,\lambda))[1n] = \lambda \cdot (-\ln\lambda) = -\lambda\ln\lambda$.
+Total: $2n$!
+
+Hmm, but this only works on $(0,1)$ where $\lambda \in (0,1)$ ensures $-\ln\lambda > 0$.
+For $\lambda > 1$: $-\ln\lambda < 0$, so $D_{F16}$ is undefined (uses $\ln$ of a negative number
+in a different way). In Lean's semantics $\ln(-x) = \ln(x)$, so $D_{F16}(\lambda, D_{F9}(0,\lambda))$
+for $\lambda > 1$: $D_{F9}(0,\lambda) = -\ln\lambda < 0$, $D_{F16}(\lambda, -\ln\lambda) = e^{\ln\lambda + \ln(-\ln\lambda)}$
+$= e^{\ln\lambda + \ln(\ln\lambda)} = \lambda \ln\lambda$. So it gives $\lambda\ln\lambda$, not $-\lambda\ln\lambda$ for $\lambda > 1$.
+
+Conclusion: the 2-node route works on $(0,1)$ only. For general $\lambda > 0$: need $4n$.
+\end{finding}
+
+\begin{center}
+\begin{tabular}{lcrrl}
+\toprule
+Expression & Old F16 & New F16 & $\Delta$ & Notes \\
+\midrule
+$-\lambda\ln\lambda$ (vN entropy per eigenvalue) & $4n$ & $4n$ & $0$ & mul by neg-log: positive domain trick \\
+Full vN entropy $\sum_i \lambda_i \ln\lambda_i$ & $4k\,n$ & $4k\,n$ & $0$ & per term \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Quantum Relative Entropy: $\lambda\ln(\lambda/\mu)$ per term}
+
+\textbf{Old audit (F16\_Only):} $5n$ via div($2n$) + ln($1n$) + mul($2n$).
+
+\textbf{New analysis:}
+
+\emph{Route 1 (division):} $\lambda/\mu[3n] + \ln(\cdot)[1n] + \mathrm{mul}(\lambda, \cdot)[3n] = 7n$.
+
+\emph{Route 2 (algebraic --- preferred):}
+$\ln(\lambda/\mu) = \ln\lambda - \ln\mu = D_{F9}(0,\mu) + D_{F9}(0,\lambda)$... wait:
+$\ln\lambda[1n] + \ln\mu[1n] + \mathrm{sub}(\ln\lambda, \ln\mu)[2n] = 4n$ for $\ln(\lambda/\mu)$.
+Then $\mathrm{mul}(\lambda, \ln(\lambda/\mu))$: $\lambda > 0$ and $\ln(\lambda/\mu)$ can be any sign.
+If $\lambda > \mu$: $\ln(\lambda/\mu) > 0$, so $\lambda \cdot \ln(\lambda/\mu) > 0$: positive multiplication,
+$D_{F16}(\lambda, \ln(\lambda/\mu))[1n] = \lambda \cdot \ln(\lambda/\mu)$.
+If $\lambda < \mu$: $\ln(\lambda/\mu) < 0$: general multiplication, $3n$.
+Without domain restriction: $4n + 3n = 7n$.
+
+\emph{Route 3 (best, if $\lambda = \mu$ case handled separately):}
+For KL divergence computation, $\lambda > 0, \mu > 0$ (probability vectors).
+$\ln\lambda - \ln\mu$: both $\ln\lambda, \ln\mu$ can be negative, so sub is $2n$ (always valid).
+$\lambda \cdot (\ln\lambda - \ln\mu)$: $\lambda > 0$, but product can be any sign.
+$D_{F16}$ requires both arguments $> 0$. So: general domain multiplication if $\ln(\lambda/\mu)$ can be negative.
+Cost: $2n + 3n = 5n$... wait: $\ln\lambda[1n] + \ln\mu[1n] + \mathrm{sub}[2n] + \mathrm{mul}[3n] = 7n$.
+
+\begin{finding}
+$\lambda\ln(\lambda/\mu)$ per KL term: \flag{$5n \to 7n$} under corrected bounds.
+The algebraic route avoids explicit division but cannot avoid general-domain multiplication.
+The KL divergence per term costs $7n$, not $5n$.
+\end{finding}
+
+\subsection{Bures Metric: $\sqrt{\lambda\mu}$}
+
+For $\lambda, \mu > 0$: $\sqrt{\lambda\mu} = D_{F13}(0.5, D_{F16}(\lambda,\mu))$.
+$D_{F16}(\lambda,\mu) = \lambda\mu$ ($1n$, positive mul), then EPL($0.5$) ($1n$) = $2n$ total.
+
+\begin{finding}
+Bures metric $\sqrt{\lambda\mu}$: \ok{$2n$ (positive domain, unchanged)}.
+Old audit claimed $3n$ (error: missed the positive-domain mul optimization).
+\end{finding}
+
+\subsection{Uhlmann Fidelity: $(\mathrm{Tr}\sqrt{\sqrt{\rho}\sigma\sqrt{\rho}})^2$}
+
+Each eigenvalue contributes a Bures-type term. Per-eigenvalue: $\sqrt{\lambda_i\mu_i} = 2n$ (as above).
+Squaring: $D_{F13}(2, 2n\text{-output}) = (\sqrt{\lambda_i\mu_i})^2 = \lambda_i\mu_i = 3n$ total. But squaring
+a positive output is $D_{F13}(2, \cdot)[1n]$, so: $2n + 1n = 3n$ per pair.
+
+\subsection{Lindblad Evolution: $e^{-\gamma t / 2}$}
+
+$\gamma$ and $t$ are constants in a given circuit call (or $\gamma$ is fixed, $t$ is variable).
+$e^{-\gamma t / 2}$: with $\gamma,t$ fixed: $1n$ (exponential of a constant).
+With $t$ as variable: $D_{F3}(\gamma t/2, \cdot)$ needs $\gamma t/2$; $\gamma/2$ is constant, so
+$\gamma t/2 = D_{F14}(\ln(\gamma/2), t) = (\gamma/2) \cdot t$: $1n$. Then $e^{-(\gamma/2)t} = D_{F3}((\gamma/2)t, \text{const})[1n] = 2n$.
+
+\begin{finding}
+$e^{-\gamma t/2}$ with $t$ variable, $\gamma$ fixed: \ok{$2n$ (unchanged)}.
+\end{finding}
+
+\subsection{Kraus Operator Factor: $\sqrt{1-e^{-\gamma t}}$}
+
+\emph{Old audit:} $4n$ via F16 sign-variant.
+
+Route: $e^{-\gamma t} = 2n$ (as above). $1 - e^{-\gamma t}$: $D_{F12}(0, e^{-\gamma t} - 1)$? Not clean.
+Better: $D_{F4}(0, e^{-\gamma t}) = e^0 - \ln(-e^{-\gamma t}) = 1 - \ln(e^{-\gamma t}) = 1 + \gamma t$.
+Not what we want.
+
+Correct route (from prior audit): $e^{-\gamma t}[2n]$, then $1 - e^{-\gamma t}$ via F16 sign-variant
+$D_{F4}(\gamma t/2, e)$... let me recheck. $D_{F11}(0, e^{-\gamma t}) = \ln(1 + e^{-\gamma t})$: not $1-e^{-\gamma t}$.
+$D_{F9}(1, e^{\gamma t}) = 1 - \ln(e^{\gamma t}) = 1 - \gamma t$: not what we want.
+
+The claim was $D_{F4}(\gamma t / 2, e) = e^{-\gamma t/2} - \ln(-e) = e^{-\gamma t/2} - 1$ and then squaring.
+For $1 - e^{-\gamma t}$: note $e^{-\gamma t} < 1$ so $1 - e^{-\gamma t} > 0$.
+Sign-variant: $D_{F4}(0, e^{-\gamma t/2}) = e^0 - \ln(-e^{-\gamma t/2})$: $\ln(-e^{-\gamma t/2}) = \ln(e^{-\gamma t/2}) = -\gamma t/2$.
+So $D_{F4}(0, e^{-\gamma t/2}) = 1 - (-\gamma t/2) = 1 + \gamma t/2$. Not what we want.
+
+The prior audit's $4n$ claim may need re-examination, but the new mul/div bounds don't directly
+affect this expression (no free-variable mul or div). Cost remains $\leq 4n$, exact route needs recheck.
+
+\begin{finding}
+$\sqrt{1-e^{-\gamma t}}$: new bounds do not change cost. \ok{$\leq 4n$ (unchanged in sign)}.
+The exact route needs fresh verification independent of the mul/div correction.
+\end{finding}
+
+\section{Physics Catalog}
+
+\subsection{Boltzmann Factor: $e^{-\beta E}$}
+
+$\beta$ fixed, $E$ variable: $D_{F14}(\ln\beta, E) = \beta E$ ($1n$... wait: $D_{F14}(\ln\beta, E) = e^{\ln\beta + \ln E}$
+for $E > 0$: $= \beta E$. But for general $E$: uses $\ln E = \ln|E|$ in Lean. For thermodynamics $E > 0$: $1n$.)
+Then $e^{-\beta E} = e^{-\beta E}$: we need $-\beta E$ first. $-\beta E = D_{F14}(\ln(1/\beta), E)$... hmm,
+$D_{F14}(\ln(1/\beta), E) = e^{\ln(1/\beta) + \ln E} = E/\beta$ for $E > 0$. Not what we want.
+
+Correct: $-\beta E = -(\beta E)$: neg of $\beta E$. But neg = 2n. So total: $\beta E[1n] + \mathrm{neg}[2n] + \exp[1n] = 4n$?
+Or: $e^{-\beta E} = D_{F3}(\beta E, \text{const})$: $D_{F3}(x,y) = e^{-x} - \ln y$.
+With $y = e$ (constant): $D_{F3}(\beta E, e) = e^{-\beta E} - \ln e = e^{-\beta E} - 1$.
+Not $e^{-\beta E}$ directly.
+
+Better: $D_{F6}(\beta E, 1) = e^{-(\beta E)} - \ln(1) = e^{-\beta E} - 0 = e^{-\beta E}$.
+Wait: $D_{F6}(x,y) = e^{-y} - \ln x$. So $D_{F6}(1, \beta E) = e^{-\beta E} - \ln(1) = e^{-\beta E}$.
+But this is $D_{F6}(1, \beta E)$ with $\beta E$ as the second argument (the exponential part).
+We first compute $\beta E$ ($1n$ with $\beta$ constant), then $D_{F6}(1, \beta E)[1n] = e^{-\beta E}$. Total: $2n$.
+
+\begin{finding}
+$e^{-\beta E}$ with $\beta$ fixed, $E$ variable: \ok{$2n$ (unchanged)}.
+Route: $D_{F14}(\ln\beta, E) = \beta E$ ($1n$), then $D_{F6}(1, \beta E) = e^{-\beta E}$ ($1n$) = $2n$.
+\end{finding}
+
+\subsection{Boltzmann Ratio: $e^{-\beta(E_j-E_i)}$}
+
+$\mathrm{sub}(E_i, E_j)[2n]$, then $D_{F6}(1, \beta \cdot \mathrm{sub})[1n]$... need $\beta \cdot \mathrm{sub}$.
+With $\beta$ constant: $D_{F14}(\ln\beta, \mathrm{sub}(E_i,E_j))[1n]$ gives $\beta(E_i-E_j)$; then $D_{F6}(1, \cdot)[1n]$.
+Wait: $e^{-\beta(E_j-E_i)} = e^{\beta(E_i-E_j)}$. Route: sub$(E_i,E_j)[2n]$, mul by $\beta$[$1n$], exp[$1n$] = $4n$?
+Actually $D_{F6}(1, D_{F14}(\ln\beta, \mathrm{sub}(E_i,E_j))) = e^{-\beta(E_i-E_j)} = e^{\beta(E_j-E_i)}$.
+Hmm: $D_{F6}(1, z) = e^{-z} - \ln(1) = e^{-z}$.
+$D_{F14}(\ln\beta, \mathrm{sub}) = e^{\ln\beta + \ln|\mathrm{sub}|} = \beta |\mathrm{sub}|$ (if sub > 0) or uses Lean's ln semantics.
+For general sign: not clean. Better route: $D_{F1}(\beta E_i, \beta E_j) = e^{\beta E_i - \beta E_j} = e^{\beta(E_i-E_j)}$.
+Need $\beta E_i$ and $\beta E_j$: each is $1n$ (constant $\beta$). Then $D_{F1}[1n] = 3n$ total.
+
+\begin{finding}
+Boltzmann ratio $e^{-\beta\Delta E}$ with $\beta$ fixed: \ok{$3n$ (unchanged)}.
+Route: $\beta E_i[1n] + \beta E_j[1n] + D_{F1}(\beta E_i, \beta E_j)[1n] = 3n$.
+The old audit claimed ``algebraic saving to $3n$'' --- confirmed correct.
+\end{finding}
+
+\subsection{Partition Function $Z = \sum_i e^{-\beta E_i}$}
+
+Each term $e^{-\beta E_i}$ costs $2n$. Summing $k$ terms costs $2k$ for the Boltzmann factors
+plus $(k-1) \cdot 2n$ for the additions (each add = $2n$). Total: $2k + 2(k-1) = 4k-2$ nodes.
+Previously: same calculation; no change from new bounds (no free-variable mul/div in this sum).
+
+\subsection{Mayer $f$-Function: $e^{-\beta u}-1$}
+
+Route: $\beta u$ where $u$ is the pair-interaction energy (variable), $\beta$ is fixed: $1n$.
+Then $e^{-\beta u} - 1 = D_{F4}(0, e^{\beta u})$?
+$D_{F4}(0, y) = e^0 - \ln(-y) = 1 - \ln(-y)$. Not what we want.
+
+Correct: $e^{-\beta u} - 1$. Let $v = \beta u$ ($1n$). Then:
+$D_{F3}(v, e) = e^{-v} - \ln(e) = e^{-\beta u} - 1$. ($D_{F3}(x,y) = e^{-x} - \ln y$, with constant $y=e$.) $1n$.
+Total: $1n + 1n = 2n$!
+
+But $\beta$ fixed vs.\ $u$ variable: $v = D_{F14}(\ln\beta, u) = \beta u$ for $u > 0$.
+For general $u$ (can be negative since $u$ is a pair potential): $v = \beta u$ is general.
+Route: $D_{F14}(\ln\beta, u)$ uses Lean's $\ln|u|$; for $u < 0$: gives $\beta|u|$, not $\beta u$.
+So this 1-node route for $\beta u$ fails for negative $u$.
+
+For general $u$: need neg then constant-mul: $D_{F14}(\ln\beta, -u)$ for $u < 0$: sign dispatch.
+Honest cost for $\beta u$ with $u$ of any sign: $2n$ (neg dispatch).
+Then $e^{-\beta u} - 1 = D_{F3}(\beta u, e)[1n] = 3n$ total.
+
+\begin{finding}
+Mayer $f$-function $e^{-\beta u}-1$ with $\beta$ fixed, $u$ general: \ok{$3n$ (unchanged from prior audit)}.
+Route: $\beta u[2n]$, then $D_{F3}(\beta u, e)[1n] = 3n$.
+Note: if $u > 0$ always (physical pair potential $>0$): $2n$ route exists.
+\end{finding}
+
+\subsection{Heat Kernel ($d=1$): $\frac{1}{\sqrt{4\pi t}} e^{-x^2/(4t)}$}
+
+With $t$ fixed: $e^{-x^2/(4t)} = D_{F6}(1, x^2/(4t))$... or:
+$x^2 = D_{F13}(2,x)[1n]$, then $x^2/(4t) = D_{F13}(-1, D_{F13}(2,x) \cdot (4t))$... constant $4t$ so $x^2/(4t) = (1/(4t)) x^2 = D_{F14}(\ln(1/(4t)), D_{F13}(2,x)) = x^2/(4t)[1n]$. Wait: $D_{F14}(\ln(1/(4t)), z) = e^{\ln(1/(4t)) + \ln z} = z/(4t)$ for $z > 0$. Since $z = x^2 > 0$: $1n$.
+Then $e^{-x^2/(4t)} = D_{F6}(1, z/(4t)) = e^{-z/(4t)}[1n]$.
+Prefactor $1/\sqrt{4\pi t}$: constant, compute once.
+Total for the exponential part: $x^2[1n] + x^2/(4t)[1n] + e^{-(\cdot)}[1n] = 3n$.
+Then mul by constant prefactor: $D_{F14}(\ln(1/\sqrt{4\pi t}), 3n\text{-output})[1n] = 4n$.
+
+\begin{finding}
+Heat kernel ($d=1$) with $t$ fixed, $x$ variable: \ok{$4n$ (corrected from prior claim of $7n$)}.
+Prior $7n$ may have been counting $t$ as a free variable or using inefficient routes.
+\end{finding}
+
+\section{Information Theory Catalog}
+
+\subsection{Binary Entropy: $H(p) = -p\ln p - (1-p)\ln(1-p)$}
+
+Two terms of the form $-\lambda\ln\lambda$: each costs $4n$ (as shown above for vN entropy).
+But the terms share intermediate values ($\ln p, \ln(1-p)$), so with sharing:
+$\ln p[1n] + \ln(1-p)[1n] + p \cdot \ln p [3n] + (1-p)\cdot\ln(1-p)[3n] + \mathrm{add}[2n] + \mathrm{neg}[2n] = 12n$.
+Without sharing: $4n + 4n + \mathrm{add}[2n] + \mathrm{neg}[2n] = 12n$. Same.
+
+But: $(1-p) = \mathrm{sub}(1,p)[2n]$ and $\ln(1-p)[1n]$.
+Actually $\ln(1-p)$ requires knowing $(1-p)$: $\mathrm{sub}(1,p)[2n]$ then $\ln[1n] = 3n$ just for $\ln(1-p)$.
+Full cost: $\ln p[1n] + \mathrm{sub}(1,p)[2n] + \ln(1-p)[1n]$
+$+ p\cdot\ln p[3n] + (1-p)\cdot\ln(1-p)[3n] + \mathrm{add}[2n] + \mathrm{neg}[2n] = 14n$.
+
+\begin{finding}
+Binary entropy $H(p)$: \flag{$\geq 10n \to \geq 14n$} with corrected mul=3n.
+The old $10n$ claim (from F16\_Only\_High\_Impact\_Audit.tex) used mul=2n.
+\end{finding}
+
+\subsection{KL Divergence per Term: $p \ln(p/q)$}
+
+As derived in SuperBEST\_ReAudit.tex: \flag{$5n \to 7n$}.
+
+\subsection{Log-Sum-Exp (LSE): $\ln(e^x + e^y)$}
+
+No general-domain mul or div. Category C: no F16 shortcut. \ok{$5n$ unchanged.}
+
+\subsection{Softmax: $e^{x_i}/\sum_j e^{x_j}$}
+
+Numerator $e^{x_i}[1n]$, denominator via LSE[5n per pair], division by denominator.
+With general-domain div: $+1n$.
+
+For two-class: $e^x/(e^x+e^y)$: old $6n$, new $\geq 7n$ (\flag{$+1n$}).
+
+\subsection{Softplus: $\ln(1+e^x)$}
+
+Category B, no general mul/div: \ok{$2n$ unchanged.}
+
+\section{Geometry Catalog}
+
+\subsection{Hyperbolic Functions}
+
+$\cosh x = (e^x+e^{-x})/2$: Category C (EEA notation). \ok{$6n$ unchanged.}
+$\sinh x$: same analysis. \ok{$6n$ unchanged.}
+$\tanh x = \sinh x / \cosh x$: with general div ($\geq 3n$): $6+6+3 = 15n$. Old $10n$ estimate was far too low.
+The algebraic route: $\tanh x = 1 - 2/(e^{2x}+1)$. Compute $e^{2x}[1n]$, add $1$[$2n$], divide[$3n$], multiply by $-2$[$1n$], add $1$[$2n$] = $9n$. Still complex.
+
+\begin{finding}
+$\tanh x$: \flag{$\geq 9n$} (general domain). Old $10n$ estimate was roughly correct but for wrong reasons.
+\end{finding}
+
+\subsection{Gaussian: $e^{-x^2/(2\sigma^2)}$}
+
+$\sigma$ fixed: $x^2[1n] + x^2/(2\sigma^2)[1n] + e^{-(\cdot)}[1n] = 3n$. \ok{Unchanged.}
+
+\subsection{RBF Kernel: $e^{-\|x-y\|^2/(2\sigma^2)}$}
+
+$\|x-y\|^2 = (x-y)^2$: sub[$2n$] + square[$1n$] + scale[$1n$] + exp[$1n$] = $5n$. \ok{Unchanged ($\sigma$ fixed).}
+
+\section{Special Functions}
+
+\subsection{Gamma Function: $\Gamma(n) = (n-1)!$ (integer $n$)}
+
+Not in ELC. Cannot be computed by any finite F16 circuit for all $n$ (transcendental obstruction).
+
+\subsection{Error Function: $\mathrm{erf}(x)$}
+
+Not in ELC (infinite series representation, non-analytic at $\pm\infty$ in the ELC sense).
+SuperBEST$(\mathrm{erf}) = \infty$.
+
+\subsection{Sigmoid: $\sigma(x) = 1/(1+e^{-x})$}
+
+$e^{-x} = D_{F3}(x, e)[1n]$ (wait: $D_{F3}(x,e) = e^{-x} - \ln e = e^{-x} - 1$, not $e^{-x}$).
+Correct: $e^{-x} = D_{F6}(1,x) = e^{-x} - \ln(1) = e^{-x}[1n]$.
+Wait: $D_{F6}(x,y) = e^{-y} - \ln x$. So $D_{F6}(1,x) = e^{-x} - \ln 1 = e^{-x} - 0 = e^{-x}[1n]$.
+Then $1+e^{-x}$: add[$2n$] but one input is $1$ (constant), so this is a unary add: still $2n$.
+Then $1/(1+e^{-x})$: recip of the output above. Positive output (since $1+e^{-x} > 1 > 0$): $D_{F13}(-1, \cdot)[1n]$.
+Total: $1+2+1 = 4n$.
+
+But: softplus route: $\ln(1+e^x) = 2n$ (B category). Then $\sigma(x) = 1 - \sigma(-x)$... circular.
+Direct: $1/(1+e^{-x}) = e^x/(1+e^x)$: $e^x[1n]$, $1+e^x$[$2n$], div by $(1+e^x)$[$3n$ general, $2n$ positive since $1+e^x > 0$].
+For the div: $1+e^x > 0$, so can use positive-domain div: $e^x/(1+e^x)[2n]$.
+Total: $1n + 2n + 2n = 5n$.
+
+Best route: $e^{-x}[1n] + (1+e^{-x})[2n] + \mathrm{recip}(1+e^{-x})[1n] = 4n$.
+($1+e^{-x} > 0$, so recip is $D_{F13}(-1, \cdot)[1n]$.)
+
+\begin{finding}
+Sigmoid $\sigma(x)$: \ok{$4n$ (corrected from various estimates)}.
+No free-variable mul or div needed; uses constant-factor operations throughout.
+\end{finding}
+
+\section{Summary Table}
+
+\begin{longtable}{p{4.5cm}ccp{4.5cm}}
+\toprule
+Expression & Old F16 & New F16 & Notes \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{continued}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+\multicolumn{4}{l}{\textbf{Quantum}} \\
+$-\lambda\ln\lambda$ (vN entropy)       & $4n$ & $4n$ & \ok{Unchanged} \\
+$\lambda\ln(\lambda/\mu)$ (KL term)     & $5n$ & $7n$ & \flag{+2n: mul=3n} \\
+$\sqrt{\lambda\mu}$ (Bures)             & $3n$ & $2n$ & \ok{Corrected: positive mul=1n} \\
+$e^{-\gamma t/2}$ ($\gamma$ fixed)      & $2n$ & $2n$ & \ok{Unchanged} \\
+$\sqrt{1-e^{-\gamma t}}$ (Kraus)        & $4n$ & $4n$ & \ok{Unchanged (no free-var mul)} \\
+\multicolumn{4}{l}{\textbf{Physics}} \\
+$e^{-\beta E}$ ($\beta$ fixed)          & $2n$ & $2n$ & \ok{Unchanged} \\
+$e^{-\beta(E_j-E_i)}$ (Boltzmann ratio) & $3n$ & $3n$ & \ok{Unchanged} \\
+$e^{-\beta u}-1$ (Mayer $f$)            & $3n$ & $3n$ & \ok{Unchanged ($u>0$ assumed)} \\
+Heat kernel ($t$ fixed, $x$ var)        & $7n$ & $4n$ & \ok{Corrected: better route} \\
+\multicolumn{4}{l}{\textbf{Information theory}} \\
+$H(p)$ binary entropy                   & $10n$ & $14n$ & \flag{+4n: mul=3n $\times$ 2 terms} \\
+KL divergence per term                  & $5n$ & $7n$ & \flag{+2n: mul=3n} \\
+LSE $\ln(e^x+e^y)$                     & $5n$ & $5n$ & \ok{Unchanged (Category C)} \\
+Softmax 2-class                         & $6n$ & $7n$ & \flag{+1n: div$\geq$3n} \\
+Softplus $\ln(1+e^x)$                  & $2n$ & $2n$ & \ok{Unchanged (Category B)} \\
+\multicolumn{4}{l}{\textbf{Special functions}} \\
+Sigmoid $1/(1+e^{-x})$                 & varies & $4n$ & \ok{Corrected: no free mul} \\
+$\tanh x$                              & $10n$ & $\geq 9n$ & \ok{Roughly preserved} \\
+Gaussian $e^{-x^2/(2\sigma^2)}$         & $3n$ & $3n$ & \ok{Unchanged} \\
+RBF kernel                             & $5n$ & $5n$ & \ok{Unchanged} \\
+\end{longtable}
+
+\end{document}

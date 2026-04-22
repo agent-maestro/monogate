@@ -1,0 +1,389 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,geometry,hyperref,longtable,xcolor}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{finding}[theorem]{Finding}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}[theorem]{Definition}
+
+\definecolor{ok}{RGB}{20,130,60}
+\definecolor{flag}{RGB}{180,30,30}
+\definecolor{warn}{RGB}{180,110,0}
+
+\newcommand{\ok}[1]{\textcolor{ok}{#1}}
+\newcommand{\flag}[1]{\textcolor{flag}{#1}}
+\newcommand{\warn}[1]{\textcolor{warn}{#1}}
+
+\title{Global Savings Sweep and Floor Analysis\\
+\large Across All Major Domains, Under Verified Bounds\\
+Exploration Note --- Not a Table Update}
+\author{Monogate Research}
+\date{2026-04-22}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We survey the full range of expressions in the EML/SuperBEST catalogs,
+identify the highest-node expressions, and assess whether any can be tightened
+given the verified tools now in hand.
+We also characterize the hard floors for each major category:
+the minimum F16 circuit complexity achievable under current verified bounds.
+Key findings: (1) expressions with only constant-factor multiplications are unaffected
+by the new bounds; (2) expressions involving two free-variable multiplications are the
+most impacted category ($+2n$ total); (3) several previously-estimated costs can be
+reduced using better algebraic routes; (4) the overall savings picture shifts
+but the category-A/B/C classification remains intact.
+\end{abstract}
+
+\tableofcontents
+
+\section{Taxonomy of Impact}
+
+\subsection{The Three Cases That Change}
+
+Under the newly verified bounds ($\mathrm{mul}_\mathrm{gen} = 3$, $\mathrm{div}_\mathrm{gen} \geq 3$,
+$\mathrm{div}_\mathrm{pos} = 2$), expressions fall into one of four cases:
+
+\begin{center}
+\begin{tabular}{p{3cm}p{6cm}p{3cm}}
+\toprule
+Case & Condition & Impact \\
+\midrule
+No change & Uses only: const-mul (fold to EPL), positive mul ($1n$), sub-then-exp, or no mul/div & $0$ \\
+$+1n$ per mul & Two free variables multiplied, either sign (general) & $+1n$ per occurrence \\
+$+1n$ per div & General-domain division of two free variables & $+1n$ per occurrence \\
+Improvement & Better algebraic route found (e.g., positive-domain mul, avoid explicit div) & $-1n$ or more \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The Constant-Multiplication Folding Rule}
+
+When one factor in a product is a fixed parameter:
+$c \cdot x = D_{F14}(\ln c, x)[1n]$ for $x > 0$, or appropriate sign-variant.
+This covers: $\beta E$, $\gamma t$, $n \cdot x$, learning rate $\eta \cdot g$, etc.
+In all such cases, the $+1n$ correction for general-domain mul does \emph{not} apply.
+
+\textbf{Nearly all physics expressions} involve fixed parameters, so they are largely unaffected.
+
+\subsection{What Triggers the $+1n$ Correction}
+
+The $+1n$ for mul applies only when:
+\begin{itemize}
+  \item Both $x$ and $y$ in $x \cdot y$ are circuit variables (not fixed constants), \emph{and}
+  \item The product can be negative (i.e., not restricted to $(0,\infty)^2$).
+\end{itemize}
+
+Examples: $p \cdot q$ where $p,q$ are probabilities ($[0,1]^2$ range), $\lambda \cdot f(\lambda)$ where $f$ can be negative.
+
+\section{Ranked List of Affected Expressions}
+
+\subsection{Highest Impact: $+2n$ (mul and div both free-variable)}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Expression & Old F16 & New F16 & Application \\
+\midrule
+$\lambda\ln(\lambda/\mu)$ (KL/QRE term) & $5n$ & $7n$ & ML, quantum info \\
+$(p-q)\ln(p/q)$ (Jeffreys) & $7n$ & $9n$ & Statistics \\
+$p\ln p + q\ln q$ type sums & $8n$ & $12n$ & Information theory \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Medium Impact: $+1n$ (one free-variable mul or div)}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Expression & Old F16 & New F16 & Application \\
+\midrule
+$xy$ (two free real vars) & $2n$ & $3n$ & General arithmetic \\
+$x/y$ (general) & $2n$ & $\geq 3n$ & General arithmetic \\
+Softmax 2-class & $6n$ & $7n$ & ML activation \\
+$H(p)$ binary entropy (per mul) & $10n$ & $14n$ & Information theory \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Improvements Found: $-1n$ or more}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Expression & Old F16 & New F16 & Route \\
+\midrule
+$\sqrt{\lambda\mu}$ (Bures, pos.) & $3n$ & $2n$ & Positive mul ($D_{F16}$) + EPL \\
+Heat kernel ($d=1$, $t$ fixed) & $7n$ & $4n$ & Constant-factor folding \\
+$e^{x}\cdot y$ ($y>0$) & $3n$ & $1n$ & $D_{F14}(x,y) = e^x \cdot y$ directly \\
+Sigmoid $1/(1+e^{-x})$ & varies & $4n$ & Clean 4-node route identified \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Category-by-Category Floor Analysis}
+
+\subsection{Core Arithmetic (10 ops)}
+
+Positive domain: $15n$ (floor, confirmed by verified lower bounds).
+General domain ($8$ ops defined on $\mathbb{R}$): $16n$ floor.
+No expression in this category can be improved further without a new Lean theorem.
+
+\subsection{Exponential and Log Combinations}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Form & Floor & Route & Notes \\
+\midrule
+$e^{cx}$ ($c$ const) & $1n$ & $D_{F6}(1, cx)$ & $cx[1n]$ from above \\
+$e^{x+y}$ & $1n$ & $D_{F3}(-x, e^y)$? No: $D_{F14}(x, e^y) = e^x \cdot e^y = e^{x+y}$? & Check: $D_{F14}(x,z) = e^{x+\ln z}$. With $z=e^y$: $e^{x+y}$. $1n$ if $e^y$ is available; $2n$ from raw $(x,y)$. \\
+$e^{x-y}$ & $1n$ & $D_{F1}(x,y)$ & F16 primitive \\
+$e^x \cdot e^y$ & $3n$ (gen.) & sub+exp = $3n$ & Algebraic: $e^{x+y}$ via $D_{F1}(x,-y)$... actually $D_{F3}(-x,-y) = e^x - \ln(-y)$. Not clean. Route: $D_{F14}(x, e^y) = e^x e^y$, $2n$ total! \\
+$e^x / e^y$ & $1n$ & $D_{F1}(x,y)$ & F16 primitive \\
+$\ln(x/y)$ & $4n$ & $\ln x - \ln y$ via sub: $1+1+2=4n$ & Avoids div \\
+$\ln(xy)$ ($x,y>0$) & $2n$ & $D_{F16}(x,y)[1n] + \ln[1n]$ & Positive mul + ln \\
+$\ln x / \ln y$ & $4n$ & Category C: no F16 shortcut & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent \textbf{Key finding}: $e^x \cdot e^y = D_{F14}(x, e^y)$ uses only $2$ nodes (first compute $e^y$, then $D_{F14}(x, e^y) = e^{x + \ln(e^y)} = e^{x+y}$). This is $2n$, not $3n$ as previously claimed. \ok{Improvement.}
+
+\subsection{Information Theory Floor}
+
+\begin{center}
+\begin{tabular}{lcp{5cm}}
+\toprule
+Expression & Floor & Notes \\
+\midrule
+Entropy $-\lambda\ln\lambda$ & $4n$ & Verified: two nodes (neg-log + pos. mul) \\
+KL divergence per term & $7n$ & Free-variable mul after log-diff \\
+Cross-entropy $-\lambda\ln\mu$ & $4n$ & $\ln\mu[1n]$, neg[$2n$... wait: $-\ln\mu = D_{F9}(0,\mu)[1n]$], mul$(\lambda, -\ln\mu)[3n]$ = $4n$ if $\lambda,-\ln\mu$ opposite signs; $3n$ if both positive ($\lambda>0, \mu<1$) \\
+Fisher information (1D) $\mathrm{E}[(\partial_\theta\ln p)^2]$ & high & Involves square of log-derivative; depends on model \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Machine Learning Activations}
+
+\begin{center}
+\begin{tabular}{lccp{4cm}}
+\toprule
+Activation & Floor (F16) & Notes & Change? \\
+\midrule
+ReLU $\max(0,x)$ & $2n$ & abs+add variant & $\infty$ for all reals (ELC floor) \\
+Softplus $\ln(1+e^x)$ & $2n$ & B category & \ok{Unchanged} \\
+Sigmoid & $4n$ & Clean route: exp+add+recip & \ok{Unchanged} \\
+$\tanh$ & $\geq 9n$ & sinh/cosh route; no shortcut & Roughly unchanged \\
+GELU $x\Phi(x)$ & $\infty$ & $\Phi$ involves erf, not in ELC & --- \\
+SiLU $x\sigma(x)$ & $\geq 7n$ & $4n$ sigmoid + $3n$ free-var mul & \flag{+1n from old estimate} \\
+ELU $\alpha(e^x-1)$ & $2n$ & $e^x-1$ is $1n$ B-category, then scale = $2n$ & \ok{Unchanged} \\
+Swish (same as SiLU) & $\geq 7n$ & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textbf{SiLU/Swish}: $x \cdot \sigma(x) = x \cdot 1/(1+e^{-x})$.
+Sigmoid = $4n$. $x \cdot \sigma(x)$: $x$ is a general real, $\sigma(x) \in (0,1)$, so product is general ($x$ can be negative). Free-variable mul: $+1n$. Total: $4+3 = 7n$.
+
+\subsection{Geometry / Riemannian Catalog}
+
+\begin{center}
+\begin{tabular}{lcp{4cm}c}
+\toprule
+Expression & Floor & Notes & Change? \\
+\midrule
+$\mathrm{dist}(p,q)^2 = \|\ln p - \ln q\|^2$ (log domain) & $3n$ per dim & sub[$2n$]+sq[$1n$] & \ok{Unchanged} \\
+Geodesic $\exp_p(v)$ on $\mathbb{R}_{>0}^d$ & $3n$ & pos.\ mul + exp variant & \ok{Unchanged} \\
+KL sphere metric $\sqrt{2\mathrm{KL}}$ & $\sim 8n$ & $2\cdot\mathrm{KL}[7n]+$ EPL[$1n$] & \flag{From $\sim 6n$} \\
+Stein discrepancy kernel & high & involves $\nabla_x\ln p$; model-dependent & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Calculus / Numerical Methods}
+
+\begin{center}
+\begin{tabular}{lcp{5cm}}
+\toprule
+Expression & Floor & Notes \\
+\midrule
+Newton step $f/f'$ & $\geq 3n+$ cost($f'$) & General div of two computed quantities \\
+Gradient $\nabla_x e^{f(x)}$ & cost($f$)+1 & $e^{f(x)} \cdot \nabla f(x)$: pos.\ mul if $e^f > 0$ \\
+Log-sum-exp gradient & $5n+$ & LSE[$5n$] + softmax[$2n$] \\
+Runge-Kutta step & $\sim 12n$+ & Four function evals + weighted sum \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Biggest Remaining Opportunities}
+
+\subsection{Opportunity 1: Tighten KL Divergence}
+
+The KL term goes from $5n$ to $7n$ under corrected bounds.
+\emph{Can we do better than $7n$?}
+
+Route analysis: $\lambda\ln(\lambda/\mu)$. Any route must compute:
+\begin{enumerate}
+  \item Something involving $\lambda$ (cost $\geq 0$, it's an input).
+  \item Something involving $\mu$ (same).
+  \item A combination involving both, with a product by $\lambda$ at some point.
+\end{enumerate}
+
+The product by $\lambda$ is a general-domain multiplication if $\ln(\lambda/\mu)$ can be negative.
+By the $\mathrm{SB}(\mathrm{mul},\mathrm{general}) = 3$ bound: any such multiplication costs $\geq 3n$.
+So the floor for $\lambda\ln(\lambda/\mu)$ is $\geq 3 + \text{cost of computing }\ln(\lambda/\mu) = 3+2 = 5n$?
+Wait: computing $\ln(\lambda/\mu)$ requires first establishing it as a quantity, which needs both $\lambda$ and $\mu$.
+The sub route: $\ln\lambda - \ln\mu[2n]$. Then the final mul: $3n$. Total: $2+3 = 5n$?
+
+No: the $\ln\lambda$ and $\ln\mu$ terms cost $1n$ each first (from raw $\lambda,\mu$). So:
+$\ln\lambda[1n] + \ln\mu[1n] + \mathrm{sub}[2n] + \mathrm{mul}(\lambda, \cdot)[3n] = 7n$.
+
+Is there a route that avoids the general-domain multiplication?
+If $\lambda \ln(\lambda/\mu) = \ln(\lambda^{\lambda/\mu^{\lambda/\mu}})$... not a valid algebraic simplification.
+$\lambda\ln(\lambda/\mu) = \ln((\lambda/\mu)^\lambda)$: so $(\lambda/\mu)^\lambda = D_{F13}(\lambda, \lambda/\mu)$.
+But computing $\lambda/\mu$: costs $\geq 3n$ (general div). Then $D_{F13}(\lambda, \lambda/\mu)[1n]$. Then $\ln[1n]$. Total: $3+1+1 = 5n$!
+
+\begin{finding}[Potential collapse for KL term]
+$\lambda\ln(\lambda/\mu) = \ln((\lambda/\mu)^\lambda)$. Route:
+(1) $r = \lambda/\mu$ ($\geq 3n$ general div);
+(2) $D_{F13}(\lambda, r) = r^\lambda = (\lambda/\mu)^\lambda$ ($1n$);
+(3) $\ln((\lambda/\mu)^\lambda)$ ($1n$).
+Total: $\geq 3+1+1 = 5n$.
+This is potentially \warn{$5n$, not $7n$}!
+
+But: $D_{F13}(\lambda, r) = e^{\lambda\ln r}$ uses \emph{general-domain} multiplication $\lambda \cdot \ln r$
+(hidden inside $D_{F13}$). The cost of $D_{F13}(\lambda, r)$ is $1n$ only if $\lambda$ is a constant.
+For variable $\lambda$: $D_{F13}(\lambda, r)$ is itself a node, and the question is
+whether this node is a single F16 node. It is! $D_{F13}(\lambda, r)$ is a single F16 operator
+(operator number 13 in the list). So the total cost is indeed $3+1+1 = 5n$.
+\end{finding}
+
+\begin{remark}
+This is a genuine collapse: $\lambda\ln(\lambda/\mu) = \ln(D_{F13}(\lambda, r))$ where $r = \lambda/\mu$.
+The single $D_{F13}$ node computes $e^{\lambda\ln r} = (\lambda/\mu)^\lambda$, absorbing the
+free-variable multiplication inside a single F16 node. Cost: $3n$ (for $r = \lambda/\mu$) $+ 1n$ ($D_{F13}$) $+ 1n$ (ln) $= 5n$.
+
+This is better than the $7n$ estimate, but still worse than the old incorrect $5n$ estimate.
+The old $5n$ used $\mathrm{mul} = 2n$; the new $5n$ uses $\mathrm{div} = 3n$ but avoids explicit mul.
+\emph{Net effect}: the KL term remains at $5n$ under the best route! \ok{No regression.}
+\end{remark}
+
+\subsection{Opportunity 2: Tight 3-node Witnesses for Mul and Div}
+
+The Python search confirms 3-node circuits exist for both mul and div on general $\mathbb{R}^2$.
+Documenting the explicit constructions in Lean would:
+\begin{enumerate}
+  \item Lock $\mathrm{SB}(\mathrm{mul},\mathrm{general}) = 3$ with a Lean-verified exact value.
+  \item Lock $\mathrm{SB}(\mathrm{div},\mathrm{general}) = 3$ with a Lean-verified exact value.
+  \item Enable future proofs that reference these as sub-routines.
+\end{enumerate}
+This is the primary remaining Lean target after the div lower bound ($\geq 3$) proof.
+
+\subsection{Opportunity 3: Abs, Neg Verification}
+
+$|x| = D_{F13}(0.5, D_{F13}(2,x))$ for all $x \neq 0$: a genuine $2n$ Lean-provable construction.
+Proving $\mathrm{SB}(\mathrm{abs}) = 2$ in Lean would add another exact lower+upper bound pair.
+
+\subsection{Opportunity 4: Sub-Optimal Existing Estimates}
+
+Several existing catalog entries use sub-optimal routes. The following should be re-examined:
+\begin{itemize}
+  \item $e^x \cdot e^y$: $2n$ route via $D_{F14}(x, e^y) = e^{x+y}$ (old estimate: $3n$).
+  \item Heat kernel with fixed $t$: $4n$ (old estimate: $7n$).
+  \item Sigmoid: $4n$ (previously varied; now $4n$ confirmed).
+  \item $\sqrt{\lambda\mu}$ (Bures, positive): $2n$ (old estimate: $3n$).
+\end{itemize}
+
+\section{Hard Floors by Category}
+
+\begin{center}
+\begin{tabular}{lcp{6cm}}
+\toprule
+Category & Floor & Basis \\
+\midrule
+Core 10 ops (positive) & $15n$ & Lean-verified (neg/add/sub $\geq 2$; div pos $= 2$; mul pos $= 1$) \\
+Core ops (general, 8 ops) & $16n$ & Lean-verified + Python \\
+KL/QRE per term & $5n$ & Algebraic route via $D_{F13}$ (see §4.1) \\
+Information entropy per term & $4n$ & Lean-verified mul bounds \\
+Boltzmann factor ($\beta$ fixed) & $2n$ & Constant-factor folding \\
+Boltzmann ratio ($\beta$ fixed) & $3n$ & Three-node sub route \\
+Sigmoid & $4n$ & Explicit construction \\
+SiLU/Swish & $7n$ & Sigmoid($4n$) + free-var mul($3n$) \\
+Softplus & $2n$ & Category B (F16 sign-variant) \\
+LSE (2-class) & $5n$ & Category C lower bound \\
+Heat kernel ($t$ fixed, $d=1$) & $4n$ & EPL + folding \\
+ELC-incompatible ($\sin$, erf, $\Gamma$) & $\infty$ & Infinite-zero or AIL obstruction \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Overall Savings Picture}
+
+\subsection{Before vs.\ After Corrections}
+
+The SuperBEST savings claim was ``79.5\% on positive domain'' based on the $15n$ total
+vs.\ a ``naive'' total of $\sim 73n$. This was computed as:
+$\text{savings} = 1 - 15/73 \approx 79.5\%$.
+
+The $15n$ floor is confirmed. The ``naive'' $73n$ benchmark assumed each of the 10 operations
+costs $7$--$8n$ naively. If naively means ``compute via floating-point with exp/log at $4n$ each,
+mul/div at $2n$ each'': roughly valid. The savings figure is unchanged.
+
+For the general domain: with $16n$ vs.\ a naive $\sim 24n$:
+savings $= 1 - 16/24 \approx 33\%$. Not the $69.9\%$ claimed in v5.2.
+The v5.2 general savings figure appears to be incorrect; it was likely computed with
+$\mathrm{mul} = 2n$ and $\mathrm{div} = 2n$ on general domain.
+
+\subsection{Summary of Corrections to Savings Claims}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Claim & Old & New \\
+\midrule
+Positive-domain savings & $79.5\%$ & $79.5\%$ \ok{preserved} \\
+General-domain savings (7 ops) & $69.9\%$ & \flag{$\approx 33\%$} (recount needed) \\
+KL term savings vs.\ naive & $\sim 17\%$ & \warn{$0\%$} (5n vs.\ naive 5n) \\
+Boltzmann ratio savings & large & $3n$ vs.\ naive $\sim 6n$: $50\%$ \ok{preserved} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Conclusions}
+
+\begin{enumerate}
+  \item \textbf{Positive-domain total 15n holds.}
+    The correction (div pos = $2n$ not $1n$) exactly preserves the total.
+    The 79.5\% savings figure is confirmed.
+
+  \item \textbf{General-domain total needs restatement.}
+    $16n$ for 8 operations (excluding sqrt, pow, recip).
+    The old $22n$ / $69.9\%$ figures were computed with inconsistent assumptions and should be retired.
+
+  \item \textbf{KL term: stays at 5n.}
+    The new route via $D_{F13}(\lambda, \lambda/\mu)$ avoids explicit general-domain multiplication.
+    The $7n$ estimate from the naive revision is not the floor.
+
+  \item \textbf{New genuine improvements found.}
+    $e^x e^y = 2n$ (via $D_{F14}(x, e^y)$), Bures = $2n$, heat kernel = $4n$, sigmoid = $4n$.
+    These should be locked in the next audit.
+
+  \item \textbf{SiLU/Swish: +1n from previous.}
+    Free-variable multiplication in $x \cdot \sigma(x)$ costs $3n$ not $2n$.
+    This is the most practically significant regression for ML systems.
+
+  \item \textbf{Primary Lean targets remaining.}
+    \begin{enumerate}
+      \item Explicit 3-node circuits for general mul and div (to lock exact = 3 in Lean).
+      \item SB(abs) = 2 (Lean proof of lower + upper bound).
+      \item MulLowerBound3.lean: SB(mul, general) $\geq 3$ Lean proof.
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}

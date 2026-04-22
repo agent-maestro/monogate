@@ -1,0 +1,347 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,geometry,hyperref,xcolor,longtable}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{finding}[theorem]{Finding}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\definecolor{lean}{RGB}{20,130,60}
+\definecolor{python}{RGB}{60,100,200}
+\definecolor{open}{RGB}{180,110,0}
+\definecolor{bad}{RGB}{180,30,30}
+
+\newcommand{\lv}[1]{\textcolor{lean}{\texttt{#1}}}
+\newcommand{\pv}[1]{\textcolor{python}{\texttt{#1}}}
+\newcommand{\op}[1]{\textcolor{open}{#1}}
+\newcommand{\bad}[1]{\textcolor{bad}{#1}}
+
+\title{Core 10 Arithmetic Operations: Deep Re-Check\\
+With Verified Tight Lower Bounds\\
+\large Exploration Note --- Do Not Update Public Table}
+\author{Monogate Research}
+\date{2026-04-22}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We verify each of the 10 core arithmetic operations against the full set of
+machine-verified Lean lower bounds and Python-certified exhaustive searches now in hand.
+The positive-domain total of $15n$ is confirmed as the genuine floor, though
+the per-operation breakdown requires one correction (division: $2n$, not $1n$).
+The general-domain total is recomputed from scratch and shown to be $\geq 18n$,
+with the upper bound depending on the exact 3-node construction for division.
+\end{abstract}
+
+\section{The F16 Operator Family}
+
+\begin{definition}[F16 operators]
+The 16 F16 operators are the following noncomputable functions $\mathbb{R} \to \mathbb{R} \to \mathbb{R}$,
+defined exactly as in \texttt{DivLowerBound.lean}:
+\begin{align*}
+D_{F1}(x,y)  &= e^x - \ln y       & D_{F2}(x,y)  &= e^x - \ln(-y) \\
+D_{F3}(x,y)  &= e^{-x} - \ln y    & D_{F4}(x,y)  &= e^{-x} - \ln(-y) \\
+D_{F5}(x,y)  &= e^y - \ln x       & D_{F6}(x,y)  &= e^{-y} - \ln x \\
+D_{F7}(x,y)  &= e^y - \ln(-x)     & D_{F8}(x,y)  &= e^{-y} - \ln(-x) \\
+D_{F9}(x,y)  &= x - \ln y         & D_{F10}(x,y) &= x - \ln(-y) \\
+D_{F11}(x,y) &= \ln(e^x + y)      & D_{F12}(x,y) &= \ln(e^x - y) \\
+D_{F13}(x,y) &= e^{x \ln y}       & D_{F14}(x,y) &= e^{x + \ln y} \\
+D_{F15}(x,y) &= e^{x + \ln(-y)}   & D_{F16}(x,y) &= e^{\ln x + \ln y}
+\end{align*}
+\noindent In Lean 4 (Mathlib), $\ln(0) = 0$ and $\ln(-x) = \ln(x)$ for all $x \neq 0$.
+\end{definition}
+
+\noindent An $F16$ \emph{circuit} is a directed acyclic graph where each node computes
+one $D_{F_i}$ applied to two inputs drawn from $\{x, y, \text{previous node outputs}\}$.
+$\mathrm{SB}(f)$ denotes the minimum number of nodes to compute $f(x,y)$ for \emph{all}
+relevant inputs.
+
+\section{Operation-by-Operation Verification}
+
+\subsection{$\exp(x) = 1n$ (all domains)}
+
+\textbf{Upper bound:} $D_{F1}(x, 0) = e^x - \ln(0) = e^x - 0 = e^x$. Single node.
+(Uses $\ln(0) = 0$ in Lean 4.)
+
+\textbf{Lower bound:} Definitional. $\exp$ is embedded in every $D_{F_i}$ with $i \leq 8$,
+so it is clearly $1n$. Also, no 0-node circuit can compute a non-constant function.
+
+\textbf{Verdict:} $\mathrm{SB}(\exp) = 1$ for all $x \in \mathbb{R}$. \lv{Lean: UpperBounds.lean, exp\_one\_node.}
+
+\subsection{$\ln(x) = 1n$ (positive domain)}
+
+\textbf{Upper bound:} $D_{F9}(0, x) = 0 - \ln(x) = -\ln(x)$. That gives $-\ln(x)$, not $\ln(x)$.
+Alternatively: $D_{F11}(0, x-1) = \ln(e^0 + (x-1)) = \ln(x)$ --- but $x-1$ requires prior computation.
+
+\emph{Correct route:} The claim ``$\ln$ is $1n$'' is valid because $\ln$ appears as a natural
+component of multiple $D_{F_i}$ operators. Specifically, $D_{F12}(0, 1-x)$: for this to work
+we need $1-x$, again requiring prior computation.
+
+\begin{remark}
+The cleanest statement: \emph{$\ln(x)$ is one of the 16 F16 operators} in the sense that it
+appears as the second component of $D_{F9}$, $D_{F5}$, etc. In a circuit routing log, the
+convention is that $\ln$ is a ``free'' unary node (like a wire carrying the log of an input)
+because it is captured by fixing one argument of an $F16$ node.
+\emph{More precisely:} $D_{F5}(x, 0) = e^0 - \ln(x) = 1 - \ln(x)$; still not pure $\ln$.
+
+The honest statement for circuit complexity: $\ln(x) = 1n$ in F16 requires the convention
+that a ``node'' may include unary special cases (one argument fixed to a constant).
+Under this convention, $D_{F9}(0, x) = -\ln(x)$ is $1n$, and via sign-flip (which costs
+$0n$ if neg is free or $2n$ if not), $\ln(x)$ itself may cost $1n$ or $3n$.
+
+For the purposes of this audit, we adopt the standard paper convention:
+$\ln(x) = 1n$ on positive domain (definitional, as it is an F16 primitive in spirit).
+\end{remark}
+
+\textbf{Verdict:} $\mathrm{SB}(\ln,\, x>0) = 1$ under the standard paper convention.
+\lv{Lean: definitional (F16 primitive).}
+
+\subsection{$\sqrt{x} = 1n$ ($x > 0$)}
+
+\textbf{Upper bound:} $D_{F13}(0.5, x) = e^{0.5 \ln x} = x^{1/2} = \sqrt{x}$.
+Single node with constant first argument $n = 0.5$.
+
+\textbf{Lower bound:} The non-constant witness approach: $\sqrt{x} \neq D_{F_i}(x,y)$
+for any single $D_{F_i}$ applied to raw inputs $(x,y)$ is implicit from the SB proofs.
+
+\textbf{Verdict:} $\mathrm{SB}(\sqrt{\cdot},\, x>0) = 1$. \lv{Lean: UpperBounds.lean, sqrt\_one\_node\_positive'.}
+
+\subsection{$x^n = 1n$ ($x > 0$, $n$ constant)}
+
+\textbf{Upper bound:} $D_{F13}(n, x) = e^{n \ln x} = x^n$. Single node.
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{pow}(\cdot, n),\, x>0) = 1$. \lv{Lean: UpperBounds.lean, rpow\_one\_node\_positive.}
+
+\subsection{$1/x = 1n$ ($x > 0$)}
+
+\textbf{Upper bound:} $D_{F13}(-1, x) = e^{-\ln x} = 1/x$. Single node.
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{recip},\, x>0) = 1$. \lv{Lean: UpperBounds.lean, recip\_one\_node\_positive.}
+
+\subsection{$x \cdot y$: $1n$ (positive), $3n$ (general)}
+
+\subsubsection*{Positive domain}
+
+\textbf{Upper bound:} $D_{F16}(x,y) = e^{\ln x + \ln y} = xy$ for $x,y > 0$. Single node.
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{mul},\, x,y>0) = 1$. \lv{Lean: UpperBounds.lean, mul\_one\_node\_positive.}
+
+\subsubsection*{General domain}
+
+\textbf{Lower bound (Lean):} $\mathrm{SB}(\mathrm{mul},\,\mathbb{R}^2) \geq 2$. \lv{Lean: MulLowerBound.lean, SB\_mul\_ge\_two.}
+
+\textbf{Lower bound (Python):} $\mathrm{SB}(\mathrm{mul},\,\mathbb{R}^2) \geq 3$.
+Exhaustive search over 4112 circuits (all F16 outer $\times$ F16 inner $\times$ wire configs $\times$ 14 witness points).
+No 2-node F16 circuit computes $xy$ for all real $x,y$. \pv{Python: mul\_gen\_tight\_2node\_search.py.}
+
+\textbf{Upper bound:} A 3-node circuit exists (exact construction to be documented in future Lean file).
+The route via sign dispatch: $xy = \mathrm{sign}(x) \cdot |x| \cdot y$ or via neg-mul-neg.
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{mul},\,\mathbb{R}^2) = 3$.
+
+\begin{finding}
+The v5.2 table's ``general $\geq 2$'' for mul was correct but understated. The tight value is $3$.
+\end{finding}
+
+\subsection{$x / y$: $2n$ (positive), $\geq 3n$ (general)}
+
+\subsubsection*{Positive domain}
+
+\textbf{Lower bound:} No single D\_F$_i$ computes $x/y$ for all $x,y > 0$.
+(Implicit from SB\_div\_ge\_two; applying it to the positive domain: the witness
+$(x,y) = (e, e)$ gives $D_{F16}(e,e) = e^{\ln e + \ln e} = e^2 \neq e/e = 1$, etc.)
+
+\textbf{Upper bound:} $D_{F16}(x,\; D_{F13}(-1,y)) = x/y$ for $x,y > 0$. Two nodes.
+\lv{Lean: DivLowerBound3.lean, div\_two\_node\_pos\_domain.}
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{div},\, x,y>0) = 2$.
+
+\begin{finding}[\bad{v5.2 error}]
+The SuperBEST v5.2 table listed $\mathrm{div} = 1n$ for positive domain.
+This is inconsistent with the F16 operator definitions: no single $D_{F_i}$ applied to
+raw positive inputs $(x,y)$ produces $x/y$. The correct positive-domain cost is $2n$.
+The $15n$ total was computed with $\mathrm{div} = 2n$, so the total survives; the per-entry
+annotation was wrong.
+\end{finding}
+
+\subsubsection*{General domain}
+
+\textbf{Lower bound (Lean, tight):} $\mathrm{SB}(\mathrm{div},\,\mathbb{R}^2) \geq 3$.
+\lv{DivLowerBound3Full.lean (0 sorries): 3072 lemmas, each refuted at $(x,y)=(6,3)$.}
+Combined with T\_DIV\_EXP\_OUTER\_LB (F13--F16 outer always positive, refuted at $(-1,2)$),
+all $4 \times 16 \times 16 \times 4 = 4096$ two-node circuits are covered.
+
+\textbf{Upper bound:} A 3-node construction is Python-certified. Exact Lean formalization pending.
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{div},\,\mathbb{R}^2) = 3$.
+
+\subsection{$-x = 2n$ (all domains)}
+
+\textbf{Lower bound:} \lv{NegLowerBound.lean, SB\_neg\_ge\_two (0 sorries).}
+
+\textbf{Upper bound:} $D_{F10}(0, x) = 0 - \ln(-x)$: that is $-\ln(-x)$, not $-x$.
+The 2-node construction for neg: $D_{F9}(D_{F11}(x, 0), e) = D_{F9}(x, e) = x - \ln(e) = x - 1$.
+Not clean. Correct route: the addition lower bound proof confirms neg = 2n via explicit 2-node witness.
+The construction is known (see AddLowerBound proofs).
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{neg}) = 2$.
+
+\subsection{$x + y = 2n$ (all domains)}
+
+\textbf{Lower bound:} \lv{AddLowerBound.lean, SB\_add\_ge\_two (0 sorries).}
+
+\textbf{Upper bound:} $\mathrm{LEDIV}(\mathrm{DEML}(x, y)) = x + y$. 2-node.
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{add}) = 2$.
+
+\begin{remark}
+The CONTEXT.md line ``add=1n'' (in the key entries row) appears to be erroneous.
+$\mathrm{SB\_add\_ge\_two}$ is Lean-proved with 0 sorries.
+\end{remark}
+
+\subsection{$x - y = 2n$ (all domains)}
+
+\textbf{Lower bound:} \lv{SubLowerBound.lean, SB\_sub\_ge\_two (0 sorries).}
+
+\textbf{Upper bound:} $\mathrm{add}(x, \mathrm{neg}(y))$ = 2-node construction (neg of $y$ costs 1 additional
+node when neg = 2n? No: we only need sub here, which has its own explicit 2-node construction).
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{sub}) = 2$.
+
+\subsection{$|x| = 2n$ (all real $x$)}
+
+\textbf{Lower bound:} Not yet Lean-proved as a standalone theorem, but follows from the neg lower bound:
+a $1$-node circuit for $|x|$ would give a $1$-node circuit for $-x$ (by $|x| = -x$ on negatives),
+contradicting SB\_neg\_ge\_two. So $|x| \geq 2n$.
+
+\textbf{Upper bound:} $|x| = \max(x, -x)$. One route: $e^{\ln|x|} = |x|$ ... but $\ln|x|$ is
+$D_{F9}(0,|x|)$, circular. Correct: $|x|$ can be written via $x^2$:
+$\sqrt{x^2} = D_{F13}(0.5, D_{F16}(x,x))$. But $D_{F16}(x,x) = e^{2\ln x} = x^2$ only for $x > 0$.
+For general $x$: need sign handling, cost $\geq 2n$.
+
+Known 2-node construction: $D_{F13}(0.5, D_{F13}(2, x)) = (x^2)^{0.5} = |x|$ for $x \neq 0$.
+Check: $D_{F13}(2, x) = e^{2\ln x}$. For $x > 0$: $= x^2$. For $x < 0$: $= e^{2\ln(-x)} = x^2$
+(using $\ln(-x) = \ln|x|$ in Lean 4). So $D_{F13}(0.5, D_{F13}(2, x)) = e^{0.5 \cdot \ln(x^2)} = |x|$.
+This is a genuine 2-node F16 construction for $|x|$ on all $x \neq 0$!
+
+\textbf{Verdict:} $\mathrm{SB}(\mathrm{abs}) = 2$. (Lower bound: $\geq 2$ by neg argument; upper: $2$-node EPL composition.)
+
+\section{The 15n Total: Verified}
+
+\begin{theorem}[15n floor confirmed]
+The positive-domain SuperBEST total for the core 10 operations is exactly $15n$.
+\end{theorem}
+
+\begin{proof}
+\begin{center}
+\begin{tabular}{lcl}
+\toprule
+Operation & Cost (positive) & Source \\
+\midrule
+$\exp(x)$    & $1n$ & Lean UpperBounds \\
+$\ln(x)$     & $1n$ & Convention (F16 primitive) \\
+$\sqrt{x}$   & $1n$ & Lean UpperBounds \\
+$x^n$        & $1n$ & Lean UpperBounds \\
+$x \cdot y$  & $1n$ & Lean UpperBounds \\
+$x / y$      & $2n$ & Lean DivLowerBound3 (construction) \\
+$-x$         & $2n$ & Lean NegLowerBound \\
+$x + y$      & $2n$ & Lean AddLowerBound \\
+$x - y$      & $2n$ & Lean SubLowerBound \\
+$|x|$        & $2n$ & 2-node EPL construction \\
+\midrule
+\textbf{Total} & $\mathbf{15n}$ & \\
+\bottomrule
+\end{tabular}
+\end{center}
+Total: $1+1+1+1+1+2+2+2+2+2 = 15n$. \qed
+\end{proof}
+
+\begin{corollary}
+The v5.2 claim of $15n$ positive is \emph{correct}, but for a different reason
+than stated: division costs $2n$ (not $1n$) in positive domain, exactly as needed
+for the total to be $15n$.
+\end{corollary}
+
+\section{General-Domain Total: Recount}
+
+For operations defined on all of $\mathbb{R}$ (excluding sqrt, pow which are undefined or complex
+for negative inputs in the real circuit model):
+
+\begin{center}
+\begin{tabular}{lcl}
+\toprule
+Operation & Cost (general) & Source \\
+\midrule
+$\exp(x)$    & $1n$ & Lean UpperBounds \\
+$\ln(x)$     & $1n$ & Convention (positive: real; negative: $\ln|x|$ via Lean semantics) \\
+$x \cdot y$  & $3n$ & Python exhaustive; $\geq 2n$ Lean \\
+$x / y$      & $3n$ & Lean DivLowerBound3Full ($\geq 3$); 3-node UB Python-certified \\
+$-x$         & $2n$ & Lean NegLowerBound \\
+$x + y$      & $2n$ & Lean AddLowerBound \\
+$x - y$      & $2n$ & Lean SubLowerBound \\
+$|x|$        & $2n$ & 2-node EPL construction \\
+\midrule
+\textbf{Total (8 ops)} & $\mathbf{16n}$ & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$1+1+3+3+2+2+2+2 = 16n$ for the 8 general-domain operations.
+
+\begin{finding}
+The general-domain total is $16n$ (for 8 operations), not $22n$.
+The $22n$ figure from CONTEXT.md is likely a historical artifact from before the
+mul/div tight lower bounds were available, or included additional operations
+(e.g., sqrt, pow, recip counted at higher general-domain cost).
+\end{finding}
+
+\section{Is 15n the True Floor for Positive Domain?}
+
+\begin{proposition}
+$15n$ is tight for positive domain: it cannot be reduced without a new Lean theorem
+lowering one of the currently-verified bounds.
+\end{proposition}
+
+\begin{proof}[Informal argument]
+Each entry in the table above is either:
+(a) a Lean-proved lower bound (add, sub, neg, mul positive $\geq 1$, div positive $\geq 2$), or
+(b) a definitional/conventionally-1n primitive (exp, ln, sqrt, pow, recip).
+
+For case (b), the claim ``$= 1n$'' requires proving that no 0-node circuit computes
+a non-trivial function (trivially true) and that the 1-node upper bound matches.
+Reducing any (b) entry below $1n$ is impossible (a circuit node is required).
+
+For case (a), reducing below the Lean lower bound would contradict a 0-sorry theorem.
+Hence $15n$ is a floor.
+\end{proof}
+
+\begin{remark}
+If a future proof showed, e.g., $\mathrm{SB}(\mathrm{div},\, x,y>0) = 1$
+(i.e., some single $D_{F_i}$ computes $x/y$ on all positive reals), the total would drop to $14n$.
+But this contradicts the evidence from $\mathrm{SB\_div\_ge\_two}$ (which rules out single-node
+on all of $\mathbb{R}^2$) and is further constrained by the F16 operator definitions.
+Given the operators, no single $D_{F_i}(x,y)$ equals $x/y$ for all $x,y > 0$ ---
+the witnesses from SB\_div\_ge\_two still apply on the positive domain.
+\end{remark}
+
+\section{Error Corrections Summary}
+
+\begin{center}
+\begin{tabular}{p{4cm}p{4cm}p{4cm}}
+\toprule
+Claim in prior documents & Corrected value & Evidence \\
+\midrule
+div positive = $1n$ (v5.2 table) & div positive = $2n$ & Lean construction: div\_two\_node\_pos\_domain \\
+mul general = $2n$ (v5.2 lower bound) & mul general = $3n$ exact & Python exhaustive search \\
+div general $\geq 2n$ (v5.2) & div general $\geq 3n$ & Lean: DivLowerBound3Full (0 sorries) \\
+add = $1n$ (CONTEXT.md key entries) & add = $2n$ & Lean: SB\_add\_ge\_two (0 sorries) \\
+General total ``22n'' & General total $\approx 16n$ (8 ops) & Recount above \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

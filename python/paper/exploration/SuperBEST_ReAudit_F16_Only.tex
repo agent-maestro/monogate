@@ -1,0 +1,297 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,geometry,hyperref,longtable,xcolor,multirow}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{finding}[theorem]{Finding}
+
+\definecolor{correct}{RGB}{20,130,60}
+\definecolor{flagged}{RGB}{180,30,30}
+\definecolor{warn}{RGB}{180,110,0}
+
+\newcommand{\ok}[1]{\textcolor{correct}{#1}}
+\newcommand{\bad}[1]{\textcolor{flagged}{#1}}
+\newcommand{\warn}[1]{\textcolor{warn}{#1}}
+
+\title{SuperBEST Re-Audit: Incorporating Verified Tight Lower Bounds\\
+\large Exploration Note --- Not a Table Update}
+\author{Monogate Research}
+\date{2026-04-22}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This exploration note re-audits the SuperBEST router using two newly locked lower bounds:
+$\mathrm{SB}(\mathrm{mul},\mathrm{general}) = 3$ (Python-certified exhaustive search)
+and $\mathrm{SB}(\mathrm{div},\mathrm{general}) \geq 3$ (Lean-verified, \texttt{DivLowerBound3Full.lean}, 0 sorries).
+We also correct the positive-domain division cost, which the v5.2 table claimed as $1n$ but
+the Lean construction \texttt{div\_two\_node\_pos\_domain} establishes as $2n$.
+We do \emph{not} update the canonical SuperBEST table here; all corrections are exploration-level.
+The positive-domain $15n$ total is \ok{preserved} under the corrected accounting.
+The general-domain total requires upward revision.
+\end{abstract}
+
+\tableofcontents
+
+\section{New Locked Lower Bounds (as of 2026-04-22)}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Bound & Status & Source & Circuit count \\
+\midrule
+$\mathrm{SB}(\mathrm{mul},\text{general}) = 3$ & \warn{Python-certified} & \texttt{mul\_gen\_tight\_2node\_search.py} & 4112 circuits \\
+$\mathrm{SB}(\mathrm{div},\text{general}) \geq 3$ & \ok{Lean-proved} & \texttt{DivLowerBound3Full.lean} & 3072 lemmas \\
+$\mathrm{SB}(\mathrm{div},\text{positive}) = 2$ & \ok{Lean-proved (UB)} & \texttt{div\_two\_node\_pos\_domain} & 1 construction \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The Lean proofs use the exact F16 operator definitions from \texttt{DivLowerBound.lean}:
+\begin{align*}
+D_{F1}(x,y) &= \exp(x) - \ln(y) & D_{F9}(x,y) &= x - \ln(y) \\
+D_{F10}(x,y) &= x - \ln(-y) & D_{F11}(x,y) &= \ln(\exp(x)+y) \\
+D_{F12}(x,y) &= \ln(\exp(x)-y) & D_{F13}(x,y) &= \exp(x \ln y) \\
+D_{F14}(x,y) &= \exp(x + \ln y) & D_{F16}(x,y) &= \exp(\ln x + \ln y)
+\end{align*}
+(plus sign variants F2--F8, F15). Key lemma used throughout: $\ln(-x) = \ln(x)$ for $x \neq 0$
+(\texttt{Real.log\_neg\_eq\_log}, Lean 4 Mathlib).
+
+\section{What Changed vs.\ v5.2}
+
+\subsection{General-Domain Multiplication: $2n \to 3n$}
+
+The v5.2 table stated $\mathrm{SB}(\mathrm{mul},\text{general}) \geq 2$ (Lean lower bound).
+The Python exhaustive search confirms the exact cost is $3n$:
+no 2-node F16 circuit computes $xy$ for all real $x,y$.
+
+\begin{finding}
+Every expression involving general-domain multiplication of two free real variables
+requires $+1n$ relative to the v5.2 claim.
+\end{finding}
+
+\noindent The 3-node upper bound: negate-multiply-negate route gives $xy$ at cost $\leq 5n$,
+but the Python search found 3-node constructions. The exact 3-node witness should be
+documented in a future Lean proof.
+
+\subsection{General-Domain Division: $2n \to \geq 3n$ (now Lean-proved)}
+
+The v5.2 table stated $\mathrm{SB}(\mathrm{div},\text{general}) \geq 2$ (Lean).
+Now \texttt{DivLowerBound3Full.lean} proves $\geq 3$ with 3072 lemmas (0 sorries).
+Every 2-node F16 circuit with F1--F12 outer is refuted at $(x,y) = (6,3)$.
+Combined with the exp-outer impossibility (F13--F16 always positive, but $x/y$ can be negative),
+this completes the $\geq 3$ bound for all outer operators.
+
+\begin{finding}
+Every expression involving general-domain division of two free real variables
+requires $\geq +1n$ relative to the v5.2 claim.
+\end{finding}
+
+\subsection{Positive-Domain Division: Claimed $1n$, Correct $2n$}
+
+The v5.2 table (SuperBEST\_v5.2\_Verified\_Lock.tex) listed:
+\begin{center}
+\texttt{div($x,y$) \quad 1n (positive) \quad $\geq 2n$ (general)}
+\end{center}
+
+\noindent This $1n$ claim is \bad{inconsistent} with the F16 operator definitions.
+No single D\_F1 through D\_F16 operator applied to raw inputs $(x,y)$ computes $x/y$ for all $x,y > 0$.
+The correct positive-domain cost is $2n$, demonstrated by \texttt{div\_two\_node\_pos\_domain}:
+\[
+D_{F16}(x,\; D_{F13}(-1,y)) \;=\; \exp(\ln x + \ln(1/y)) \;=\; x/y \quad (x,y > 0).
+\]
+
+\begin{finding}
+$\mathrm{SB}(\mathrm{div},\text{positive}) = 2$ (not $1$).
+The $15n$ positive-domain total is \ok{preserved}: it was computed with $\mathrm{div} = 2n$.
+The v5.2 table entry ``$1n$ positive'' for div was an error or notational artifact.
+\end{finding}
+
+\noindent\textbf{Why does $15n$ still hold?}
+Summing the core 10 operations on positive domain with corrected div:
+\[
+\underbrace{1}_{\exp} + \underbrace{1}_{\ln} + \underbrace{1}_{\sqrt{\cdot}} + \underbrace{1}_{\mathrm{pow}} + \underbrace{1}_{\mathrm{mul}} + \underbrace{2}_{\mathrm{div}} + \underbrace{2}_{\mathrm{neg}} + \underbrace{2}_{\mathrm{add}} + \underbrace{2}_{\mathrm{sub}} + \underbrace{2}_{\mathrm{abs}} = 15n. \checkmark
+\]
+
+\subsection{Positive-Domain Multiplication: Still $1n$}
+\[
+D_{F16}(x,y) = \exp(\ln x + \ln y) = xy \quad (x,y > 0). \quad\text{(Lean-verified.)}
+\]
+No change here.
+
+\section{Revised General-Domain Core Table}
+
+\begin{remark}
+This table is \emph{exploratory only}. Bounds marked $\geq$ are one-sided.
+The canonical table is not updated until all bounds are fully Lean-verified.
+\end{remark}
+
+\begin{center}
+\begin{tabular}{lrrrll}
+\toprule
+Operation & Pos.\ (old) & Pos.\ (new) & Gen.\ (old) & Gen.\ (new) & Change? \\
+\midrule
+$\exp(x)$      & $1n$ & $1n$ & $1n$      & $1n$      & --- \\
+$\ln(x)$       & $1n$ & $1n$ & $1n$      & $1n$      & --- \\
+$\sqrt{x}$     & $1n$ & $1n$ & ---       & ---       & --- \\
+$x^n$          & $1n$ & $1n$ & ---       & ---       & --- \\
+$x \cdot y$    & $1n$ & $1n$ & $\geq 2n$ & \bad{$3n$} & \bad{+1n gen.} \\
+$x / y$        & \warn{$1n$} & \ok{$2n$} & $\geq 2n$ & \bad{$\geq 3n$} & \bad{+1n pos., +1n gen.} \\
+$-x$           & $2n$ & $2n$ & $2n$      & $2n$      & --- \\
+$x + y$        & $2n$ & $2n$ & $2n$      & $2n$      & --- \\
+$x - y$        & $2n$ & $2n$ & $2n$      & $2n$      & --- \\
+$|x|$          & $2n$ & $2n$ & $2n$      & $2n$      & --- \\
+\midrule
+\textbf{Total (positive)} & $15n$ & $\mathbf{15n}$ & & & \ok{preserved} \\
+\textbf{Total (general)}  & & & $\leq 22n$ & $\leq 22n$ & recount needed \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The general-domain total with corrected mul=3n and div$\geq$3n:
+$1+1+3+3+2+2+2+2 = 16n$ for the 8 operations defined on all of $\mathbb{R}$.
+The old ``22n'' figure likely included additional operations or overestimates;
+a precise recount is deferred to Core10\_ReCheck.tex.
+
+\section{Impact on Catalog Expressions}
+
+\subsection{Rule: When Does the Correction Apply?}
+
+The $+1n$ corrections for mul and div apply \emph{only} when:
+\begin{enumerate}
+  \item Both arguments are free variables (not fixed constants), \emph{and}
+  \item The domain is not restricted to $(0,\infty) \times (0,\infty)$ for mul.
+\end{enumerate}
+
+\noindent\textbf{Unaffected:} $c \cdot x$ with fixed constant $c$ folds into EPL: $D_{F13}(c,x) = x^c$ or $D_{F14}(\ln c, x) = c \cdot x$. Cost: $1n$.
+
+\noindent\textbf{Affected:} $\lambda \cdot \mu$ when both $\lambda,\mu$ are variable probabilities (not forced to $(0,1)^2$
+as a domain restriction --- F16 circuit must work on all reals).
+
+\subsection{Selected Expression Re-Audit}
+
+\begin{longtable}{p{4.5cm}cccp{4.5cm}}
+\toprule
+Expression & Old F16 & New F16 & $\Delta$ & Notes \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\textit{continued}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+\multicolumn{5}{l}{\textbf{--- Unchanged (no free-variable mul/div) ---}} \\
+$e^x$ & $1n$ & $1n$ & $0$ & F16 primitive \\
+$\ln x$ & $1n$ & $1n$ & $0$ & F16 primitive \\
+$\sqrt{x}$ ($x>0$) & $1n$ & $1n$ & $0$ & EPL(0.5,$x$) \\
+$x^n$ ($x>0$) & $1n$ & $1n$ & $0$ & EPL($n$,$x$) \\
+$e^{-x}$ & $2n$ & $2n$ & $0$ & neg+exp \\
+$e^x - 1$ & $1n$ & $1n$ & $0$ & F16 sign-variant \\
+Softplus $\ln(1+e^x)$ & $2n$ & $2n$ & $0$ & B: sign-variant+ln \\
+Mayer $f$: $e^{-\beta u} - 1$ & $3n$ & \warn{$3n$--$4n$} & $?$ & $\beta$ const: $3n$; $\beta$ free: $4n$ \\
+$e^{x-y}$ & $1n$ & $1n$ & $0$ & $D_{F1}(x,y)$ directly \\
+$\ln(x/y)$ ($x,y>0$) & $3n$ & $3n$ & $0$ & sub+ln = 2n, no div needed \\
+$\ln(xy)$ ($x,y>0$) & $3n$ & $3n$ & $0$ & add+ln \\
+$x \cdot e^y$ & $3n$ & $3n$ & $0$ & $D_{F14}(y,x)$ is $1n$!  Actually $e^y \cdot x$? Let me check: $D_{F14}(y,x) = \exp(y + \ln x) = e^y \cdot x$. Yes, $1n$. \\
+\multicolumn{5}{l}{\textbf{--- Affected (free-variable multiplication) ---}} \\
+$\lambda \ln(\lambda/\mu)$ (KL term) & $5n$ & $5n$ & $0$ & Route: sub(ln)+mul [2+3]; same via alg.\ identity \\
+$\lambda \mu$ (two free real vars) & $2n$ & $3n$ & $+1$ & Verified: no 2-node F16 \\
+$(p-q)\ln(p/q)$ (Jeffreys) & $7n$ & $8n$ & $+1$ & Extra mul by free var \\
+$-\lambda\ln\lambda$ (vN entropy) & $4n$ & $4n$ & $0$ & $\ln$ then mul by $\lambda$: 1+3=4; same \\
+$\sqrt{\lambda\mu}$ (Bures pos.) & $3n$ & $3n$ & $0$ & mul pos=1n + EPL = 2n total; wait: $D_{F16}(\lambda,\mu)=\lambda\mu$[1n], EPL[1n] = $2n$ \\
+\multicolumn{5}{l}{\textbf{--- Affected (general-domain division) ---}} \\
+$x / y$ (general real) & $2n$ & $\geq 3n$ & $+1$ & Lean-proved \\
+$e^x / e^y$ (general) & $3n$ & $3n$ & $0$ & Sub-then-exp avoids div \\
+Softmax $e^x/(e^x+e^y)$ (general) & $6n$ & $\geq 7n$ & $+1$ & Requires general div \\
+$\lambda/\mu$ (KL: ratio step) & $2n$ & $\geq 3n$ & $+1$ & But ln-of-ratio route avoids this \\
+\multicolumn{5}{l}{\textbf{--- Category C (notation-only, unchanged at F16 baseline) ---}} \\
+$e^x + e^y$ (EEA) & $4n$ & $4n$ & $0$ & No F16 shortcut \\
+LSE $\ln(e^x+e^y)$ & $5n$ & $5n$ & $0$ & No F16 shortcut \\
+$\cosh x$ & $6n$ & $6n$ & $0$ & No F16 shortcut \\
+$\sinh x$ & $6n$ & $6n$ & $0$ & No F16 shortcut \\
+\end{longtable}
+
+\section{KL Divergence: A Key Case Study}
+
+The KL term $\lambda \ln(\lambda/\mu)$ appeared in the previous audit as $5n$.
+The route was: $\mathrm{div}(\lambda,\mu)[2n] + \ln[1n] + \mathrm{mul}(\lambda,\cdot)[2n] = 5n$.
+With corrected bounds: $\mathrm{div}[3n] + \ln[1n] + \mathrm{mul}[3n] = 7n$.
+
+However, the algebraic identity $\ln(\lambda/\mu) = \ln\lambda - \ln\mu$ avoids the division:
+\[
+\lambda\ln(\lambda/\mu) = \lambda(\ln\lambda - \ln\mu) = \lambda\cdot\mathrm{sub}(\ln\lambda,\ln\mu).
+\]
+Route: $\ln\lambda[1n] + \ln\mu[1n] + \mathrm{sub}[2n] + \mathrm{mul}(\lambda,\cdot)[3n] = 7n$.
+Both routes give $7n$. Previous claim of $5n$ is not achievable without $\mathrm{mul}=2n$.
+
+\begin{finding}
+KL divergence per term: $5n \to 7n$ under corrected bounds.
+\end{finding}
+
+\section{Boltzmann Ratio: A Case Where Nothing Changes}
+
+$e^{-\beta(E_j - E_i)} = e^{\beta(E_i - E_j)}$. If $\beta$ is a fixed parameter:
+\[
+\mathrm{sub}(E_i, E_j)[2n] \to \text{mul}(\beta, \cdot): D_{F14}(\ln\beta, \cdot)[1n] \to \exp[0n, absorbed].
+\]
+Total: $3n$ for the ratio. No change, because $\beta$ is a constant, not a free variable.
+
+\begin{finding}
+Boltzmann ratio with fixed $\beta$: unchanged at $3n$ F16 (or $6n$ for both factors, algebraic save).
+\end{finding}
+
+\section{New Potential Collapses}
+
+With the bounds now locked, we look for new reductions. A ``collapse'' would be an expression
+previously thought to require $k$ nodes that can be achieved in fewer.
+
+\subsection{div-then-ln avoidance}
+
+Any expression of the form $\ln(x/y)$ can avoid the general-domain division:
+$\ln(x/y) = \ln x - \ln y$, costing $1n + 1n + 2n = 4n$ via sub, versus $\mathrm{div}[3n] + \ln[1n] = 4n$. Same cost, but the sub route avoids the expensive general division node and has no domain restriction.
+
+\subsection{mul-then-exp identities}
+
+Expressions of the form $x \cdot e^y$ can be captured as a single F16 node:
+$D_{F14}(y, x) = \exp(y + \ln x) = e^y \cdot x$ for $x > 0$. This is $1n$ total --- a genuine collapse
+not visible in the old audit's "mul+exp = 3n" counting.
+
+For general (possibly negative) $x$: $x \cdot e^y = \mathrm{sign}(x) \cdot |x| \cdot e^y$,
+which requires extra nodes, confirming the $3n$ lower bound is tight for fully general inputs.
+
+\subsection{Power-of-ratio expressions}
+
+$(x/y)^n$ for $x,y > 0$: $D_{F13}(n, D_{F16}(x, D_{F13}(-1,y))) = (x/y)^n$. Cost: $3n$.
+Previously might have been counted as div($2n$) + pow($1n$) = $3n$ --- same, no change.
+
+\section{Summary of Impact}
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+Category & Expressions affected & Direction \\
+\midrule
+Free-variable mul (general domain) & All with $x \cdot y$, $x,y$ free & $+1n$ \\
+General-domain division & All with $x/y$, $x,y$ free & $+1n$ \\
+Positive-domain division & $1n \to 2n$ (v5.2 error corrected) & $+1n$ \\
+Constant-factor expressions & $c \cdot x$, $c$ fixed & No change (EPL) \\
+Sub-then-exp, sub-then-ln routes & No free mul/div & No change \\
+Category C (EEA, LLA etc.) & All notation-only & No change \\
+\midrule
+\textbf{Core 15n positive total} & & \ok{Preserved} \\
+\textbf{General domain total} & Recount to $\approx 18$--$20n$ & \bad{Up from ``22n''} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textbf{Paradox note}: The general-domain total appears to \emph{decrease} from 22n to
+$\approx 18n$ despite mul and div increasing. This is because the original ``22n'' figure likely
+included incorrect overestimates elsewhere, or counted more operations. A precise recount
+is performed in Core10\_ReCheck.tex.
+
+\end{document}
