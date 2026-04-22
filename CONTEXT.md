@@ -4,7 +4,7 @@
 
 **Build status**: `lake build → Build completed successfully` (all files, 0 errors).
 
-### Fully Lean-verified (0 sorries) — 25 theorems
+### Fully Lean-verified (0 sorries) — 26 theorems
 | Theorem | Lean file | Lean theorem |
 |---------|-----------|--------------|
 | SB(neg) ≥ 2 | NegLowerBound.lean | SB_neg_ge_two |
@@ -26,8 +26,10 @@
 | Real.log analytic on (0, ∞) | InfiniteZerosBarrier.lean | real_log_analyticOnNhd_pos |
 | Depth ≤ 1 EML trees analytic on (0, ∞) | InfiniteZerosBarrier.lean | eml_tree_analytic_depth_le_1 |
 | Depth-1 zeros finite (CEML-T91) | InfiniteZerosBarrier.lean | depth1_finite_zeros_real |
-| **[NEW] WFP EML trees analytic on (0, ∞)** | InfiniteZerosBarrier.lean | eml_tree_analytic (under WellFormedPos) |
-| TheoremRegistry PROVED_COUNT = 25 | TheoremRegistry.lean | (rfl check) |
+| WFP EML trees analytic on (0, ∞) | InfiniteZerosBarrier.lean | eml_tree_analytic (under WellFormedPos) |
+| **[NEW] No exp-outer 2-node div circuit** | DivLowerBound3.lean | no_exp_outer_2node_div |
+| **[NEW] div = 2n on (0,∞)²** | DivLowerBound3.lean | div_two_node_pos_domain |
+| TheoremRegistry PROVED_COUNT = 26 | TheoremRegistry.lean | (rfl check) |
 
 **WellFormedPos condition** (`EMLTree.WellFormedPos`): A tree is WFP at x ∈ (0,∞) if all log arguments evaluate to positive reals. This is a necessary condition — the slit-plane claim is false without it (counterexample: `ceml(const 0, var)` at x > e gives 1 − log x < 0, which is ∉ slitPlane). Under WFP, `t2.evalReal x > 0` means `(t2.eval ↑x).re > 0`, hence `t2.eval ↑x ∈ slitPlane`. ✓
 
@@ -39,11 +41,17 @@
 
 Both remaining sorries require that every EML-k tree has at most finitely many zeros on any bounded interval. This follows from o-minimality of ℝ_exp (Wilkie's theorem, 1996), which is not yet formalized in Mathlib. Until then, the partial result `eml_tree_analytic` (under WFP) + `depth1_finite_zeros_real` stand as the verified foundations.
 
-**New this session**: Slit-plane sorry closed via WellFormedPos condition.
+**New this session (2026-04-21 session A)**: Slit-plane sorry closed via WellFormedPos condition.
 - `EMLTree.WellFormedPos`: new predicate — log arguments must be positive reals on (0,∞)
 - `eml_tree_analytic`: now proved under WFP (0 sorries); slit-plane MapsTo closed
 - `T_EML_WFP_ANALYTIC`: added to TheoremRegistry; PROVED_COUNT 24 → 25
 - Sorry count: 3 → 2
+
+**New this session (2026-04-21 session B)**: T_DIV_EXP_OUTER_LB — partial SB(div) lower bound.
+- `DivLowerBound3.lean`: new file (0 sorries throughout)
+- `no_exp_outer_2node_div`: no 2-node circuit with F13/F14/F15/F16 outer computes div on ℝ²
+- `div_two_node_pos_domain`: D_F16(x, D_F13(-1,y)) = x/y for x,y > 0 (2-node positive UB)
+- PROVED_COUNT 25 → 26; sorry count unchanged (2)
 
 ### Python-certified (not yet Lean)
 | Result | Method | File |

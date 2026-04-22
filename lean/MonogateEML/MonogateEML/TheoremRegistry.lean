@@ -18,7 +18,7 @@ explicitly marked [SORRY] / [CONJECTURE].
 -/
 
 /-- The canonical proved theorem count. Change ONLY when a new Lean proof is added. -/
-def PROVED_COUNT : ℕ := 25
+def PROVED_COUNT : ℕ := 26
 
 /-!
 ## Proved Theorems (24 total)
@@ -171,6 +171,15 @@ Under WFP: t2.evalReal x > 0 means (t2.eval ↑x).re > 0, so t2.eval ↑x ∈ sl
 Lean: InfiniteZerosBarrier.lean (eml_tree_analytic, eml_tree_eval_analyticOnNhd) — 0 sorries
 Status: [PROVED] — slit-plane sorry closed via WellFormedPos condition
 
+### T_DIV_EXP_OUTER_LB — No exp-outer 2-node F16 circuit computes division
+No 2-node F16 circuit with exp-type outer (F13, F14, F15, or F16) computes x/y on all of ℝ².
+Proof: exp-type operators always return positive values; x/y is negative at (x,y) = (−1,2).
+Also proved: D_F16(x, D_F13(−1,y)) = x/y for x,y > 0 (2-node positive-domain upper bound).
+Lean: DivLowerBound3.lean (no_exp_outer_2node_div, div_two_node_pos_domain) — 0 sorries
+Note: Full SB(div,general) ≥ 3 lower bound for F1–F12 outer cases is Python-certified
+      (div_gen_tight_2node_search.py, 4096 circuits × 14 test points) but not yet Lean-proved.
+Status: [PROVED] — exp-outer partial lower bound + positive-domain upper bound
+
 ---
 
 ## Formal Conjectures (NOT counted in PROVED_COUNT)
@@ -198,10 +207,10 @@ Exact cost = 6 is open. The gap [2,6] is the remaining question.
 
 ## FOOTER INSTRUCTION
 
-Update footers to say "25 theorems" (was 24; slit-plane sorry closed via WellFormedPos).
-New addition: T_EML_WFP_ANALYTIC (eml_tree_analytic under WellFormedPos — 0 sorries).
+Update footers to say "26 theorems" (was 25; added T_DIV_EXP_OUTER_LB).
+New addition: T_DIV_EXP_OUTER_LB (no exp-outer 2-node div circuit — 0 sorries, DivLowerBound3.lean).
 Do not increase this number without adding a corresponding Lean proof.
 -/
 
 -- Sanity check: PROVED_COUNT matches the list above
-example : PROVED_COUNT = 25 := rfl
+example : PROVED_COUNT = 26 := rfl
