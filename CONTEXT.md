@@ -25,13 +25,15 @@
 | analytic non-zero → finitely many zeros | InfiniteZerosBarrier.lean | analytic_finite_zeros_compact |
 | TheoremRegistry PROVED_COUNT = 21 | TheoremRegistry.lean | (rfl check) |
 
-### Partial / sorry'd (2 genuine open steps)
+### Partial / sorry'd (4 genuine open steps)
 | Item | Sorry'd step | File | Blocker |
 |------|-------------|------|---------|
-| sin ∉ EML_k (T01 Part C) | eml_tree_analytic (analyticity by induction) | InfiniteZerosBarrier.lean | ~2h Lean |
+| sin ∉ EML_k (T01 Part C) | eml_tree_analytic log ceml/ceml case | InfiniteZerosBarrier.lean | slit-plane membership for deep trees |
 | sin ∉ EML_k (T01 Part D) | sin_not_in_eml (quantitative zero bound) | InfiniteZerosBarrier.lean | O-minimal theory |
 | ELC depth barrier (T48) | sin_not_in_real_EML_k | EMLDepth.lean | depends on T01 |
-| depth-1 zeros finite | depth1_finite_zeros_real | EMLDepth.lean | depends on eml_tree_analytic |
+| depth-1 zeros finite | depth1_finite_zeros_real | EMLDepth.lean | circular import + depends on eml_tree_analytic |
+
+**eml_tree_analytic progress**: Proof structure now complete — base cases (const, var) and exp sub-term of ceml proved; log sub-term: const/var sub-cases proved, ceml/ceml sub-case has 1 remaining sorry (slit-plane membership for deeply-nested log arguments). See `eml_tree_eval_analyticOnNhd` in InfiniteZerosBarrier.lean.
 
 **Progress this session**: `analytic_finite_zeros_compact` fully proved (0 sorry).
 Uses: `Set.Infinite.exists_accPt_of_subset_isCompact` + `AnalyticOnNhd.eqOn_zero_of_preconnected_of_frequently_eq_zero` + `frequently_iff_neBot`.
@@ -40,6 +42,7 @@ Uses: `Set.Infinite.exists_accPt_of_subset_isCompact` + `AnalyticOnNhd.eqOn_zero
 | Result | Method | File |
 |--------|--------|------|
 | SB(mul, general) = 3 | Exhaustive 4112-circuit search | mul_gen_tight_2node_search.py |
+| SB(div, general) = 3 | Exhaustive 4112-circuit search | div_gen_tight_2node_search.py |
 
 ### Not yet formalized
 - T02 (Universality / Weierstrass) — pending
@@ -144,13 +147,13 @@ Smallest subfield of ℝ closed under exp and ln. Countable. Contains all algebr
 |----|-----------|------------|
 | CONJ_NO_OP_24 | Taxonomy closed at exactly 23 operators | Theorem — proved |
 | CONJ_MUL_GEN_TIGHT | SB(mul, general) = 3 | Python-certified (exhaustive 4112-circuit search) + 3-node witness; Lean target: MulLowerBound3.lean |
+| CONJ_DIV_GEN_TIGHT | SB(div, general) = 3 | Python-certified (exhaustive 4112-circuit search) + 3-node witness; Lean target: DivLowerBound3.lean |
 
 ## Open Conjectures
 
 | ID | Statement | Status |
 |----|-----------|--------|
-| EDB-ANALYTIC | eml_tree_analytic sorry in InfiniteZerosBarrier.lean | 2h Lean — top priority |
-| CONJ_DIV_GEN_TIGHT | SB(div, general) = ? (expected: 3) | Python search pending |
+| EDB-ANALYTIC | eml_tree_analytic ceml/ceml log sorry | Partially proved — ceml/ceml slit-plane step remains |
 | CONJ_BOUNDARY_DECIDABLE | SC + EDB ⟹ ELC-membership decidable | Conditional; EDB missing zero-count bound |
 | CONJ_TRIG_DEPTH_TOWER | Tower s₀=1, s₁=sin(1), s₂=sin(sin(1)),… algebraically independent over ε(ℝ) | Open; L1 unconditional, L2 needs GAIL, L3/L4 needs SC |
 | GAIL | If α ∉ ε(ℝ), then sin(α) ∉ ε(ℝ) | Open unconditionally; follows from Schanuel |
@@ -176,6 +179,14 @@ All files in `python/paper/exploration/`:
 | CONJ_MUL_GEN_TIGHT_Resolution.tex | SB(mul,general)=3; exhaustive search + 3-node witness + Lean plan |
 | EDB_Full_Construction.tex | EDB construction: B+(n)=n proved; general EDB partial; eml_tree_analytic sorry plan |
 | Conjecture_Prioritization_Post_MUL.tex | Ranked open conjectures post-MUL; EDB-ANALYTIC is #1 |
+| Conjecture_Prioritization_Post_23_Verified.tex | Post-sprint re-ranking (17 verified); eml_tree_analytic ceml/ceml sorry isolated |
+
+All files in `python/paper/theorems/`:
+
+| File | Content |
+|------|---------|
+| CONJ_MUL_GEN_TIGHT_Final.tex | SB(mul,general)=3 lock-in; lower bound cert + 3-node witness |
+| CONJ_DIV_GEN_TIGHT_Final.tex | SB(div,general)=3 lock-in; lower bound cert + 3-node witness |
 
 ## Version History
 

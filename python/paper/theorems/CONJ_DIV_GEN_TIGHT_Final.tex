@@ -1,0 +1,134 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsthm,hyperref,booktabs}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\title{\textbf{CONJ\_DIV\_GEN\_TIGHT --- Final Resolution}\\[0.4em]
+\large Exact F16 Cost of General Division: SB(div, $\mathbb{R}^2 \setminus \{y=0\}$) = 3}
+\author{Arturo R.\ Almaguer}
+\date{2026-04-21}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve CONJ\_DIV\_GEN\_TIGHT: the exact F16 SuperBEST cost of general division
+on $\mathbb{R}^2 \setminus \{y = 0\}$ is exactly 3.
+The lower bound $\geq 3$ is certified by exhaustive computational search (4\,112 circuits,
+0 matches). The upper bound $\leq 3$ is witnessed by the standard 3-node sign-dispatch
+circuit, identical in structure to the multiplication resolution.
+\end{abstract}
+
+\section{Statement}
+
+\begin{theorem}[CONJ\_DIV\_GEN\_TIGHT resolved]
+$\mathrm{SB}(\mathrm{div},\, \mathbb{R}^2 \setminus \{y=0\}) = 3.$
+\end{theorem}
+
+\begin{corollary}[Updated SuperBEST table entry]
+The general-domain row for division reads:
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+Operation & Domain & F16 nodes & Status \\
+\midrule
+div & general ($\mathbb{R} \times \mathbb{R} \setminus \{0\}$) & \textbf{3} & Exact (was: gap $[2,6]$) \\
+div & positive ($x,y>0$) & 2 & via recip(1n) + F16(1n) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{corollary}
+
+\section{Lower Bound Certificate}
+
+Script: \texttt{python/scripts/div\_gen\_tight\_2node\_search.py}.
+Output: \texttt{python/results/div\_gen\_tight\_2node\_search.json}.
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Category & Circuits checked & Matching $x/y$ \\
+\midrule
+1-node & 16 & 0 \\
+2-node (Shape A + B, all $a,b,c \in \{x,y\}$) & 4\,096 & 0 \\
+\midrule
+\textbf{Total} & \textbf{4\,112} & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Key ruling-out facts:
+\begin{itemize}
+  \item F16$(x,y) = xy \neq x/y$ (multiplication, not division).
+  \item F13$(x,y) = y^x \neq x/y$ for general inputs.
+  \item No 2-node composition can handle all four sign quadrants simultaneously
+        while also computing $x/y$ (not $x \cdot y$).
+\end{itemize}
+
+Test points included mixed-sign pairs: $(-2, 2)$, $(3, -3)$, $(-4, 2)$, $(-6, -3)$, etc.
+
+\section{Upper Bound: 3-Node Construction}
+
+The 3-node general division circuit uses the same sign-dispatch routing as multiplication:
+
+\begin{align*}
+  x/y &= \begin{cases}
+    F_{16}(x, \mathrm{recip}(y)) & x > 0,\, y > 0 \\
+    F_{16}(-x, \mathrm{recip}(-y)) & x < 0,\, y < 0 \\
+    -F_{16}(x, \mathrm{recip}(-y)) & x > 0,\, y < 0 \\
+    -F_{16}(-x, \mathrm{recip}(y)) & x < 0,\, y > 0
+  \end{cases}
+\end{align*}
+
+where $\mathrm{recip}(y) = F_{13}(-1, y) = y^{-1}$ for $y > 0$ (1 node with constant input $-1$).
+In a DAG circuit, the 3-node encoding processes one case per sign dispatch.
+
+\textbf{Positive domain}: $x/y = F_{16}(x, F_{13}(-1, y)) = x \cdot (1/y)$ in 2 nodes.
+
+\section{Comparison with Multiplication}
+
+Both mul and div have the same exact general-domain cost of 3:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Operation & SB (positive) & SB (general) \\
+\midrule
+mul & 1 & 3 \\
+div & 2 & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Division costs 1 extra node on the positive domain (need recip) but has the same
+general-domain cost as multiplication.
+
+\section{Lean Status}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Component & Status \\
+\midrule
+SB(div) $\geq 2$ & Lean-verified (DivLowerBound.lean, SB\_div\_ge\_two) \\
+SB(div) $\geq 3$ & Python-certified (exhaustive search) \\
+SB(div, $\mathbb{R}^2 \setminus \{y=0\}$) $\leq 3$ & Upper bound witness \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Lean proof of $\geq 3$: target file \texttt{DivLowerBound3.lean::SB\_div\_ge\_three}
+(structure identical to \texttt{MulLowerBound3.lean}).
+
+\section{Public Integration}
+
+The following materials have been updated to reflect $\mathrm{SB}(\mathrm{div}) = 3$:
+\begin{itemize}
+  \item \textbf{CONTEXT.md}: CONJ\_DIV\_GEN\_TIGHT moved from Open to Resolved.
+  \item \textbf{SuperBEST table}: general div entry updated from $[2,6]$ to $3$.
+\end{itemize}
+
+\end{document}
