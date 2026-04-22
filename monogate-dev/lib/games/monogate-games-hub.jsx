@@ -144,6 +144,151 @@ const STATUS_CONFIG = {
   concept: { label: "Concept", bg: "#6366F1", dot: false },
 };
 
+// The two flagship experiences. Rendered as big hero cards at the top
+// of the hub; all other games are the compact grid below.
+const FLAGSHIP_IDS = ["fractal-studio", "zen-garden"];
+
+function HeroCard({ game, index, visible }) {
+  const [hovered, setHovered] = useState(false);
+  const nav = useNavigate();
+  const st = STATUS_CONFIG[game.status];
+  const playable = game.status === "play";
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => playable && nav(`/${game.id}`)}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(30px)",
+        transition: `all 0.7s cubic-bezier(0.16,1,0.3,1) ${index * 0.12}s`,
+        background: `linear-gradient(135deg, ${game.color}14, ${game.color}04 40%, transparent 85%)`,
+        border: `1px solid ${hovered ? game.color + "60" : game.color + "25"}`,
+        borderRadius: 18,
+        padding: "28px 32px 26px",
+        cursor: playable ? "pointer" : "default",
+        position: "relative",
+        overflow: "hidden",
+        boxShadow: hovered
+          ? `0 0 40px ${game.color}20, 0 8px 24px rgba(0,0,0,0.4)`
+          : `0 4px 16px rgba(0,0,0,0.3)`,
+      }}
+    >
+      {/* Ambient gradient glow from the top-right */}
+      <div
+        style={{
+          position: "absolute",
+          top: -80, right: -80,
+          width: 260, height: 260,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${game.color}22 0%, transparent 70%)`,
+          pointerEvents: "none",
+          opacity: hovered ? 1 : 0.6,
+          transition: "opacity 0.4s",
+        }}
+      />
+      {/* Top accent bar */}
+      <div
+        style={{
+          position: "absolute", top: 0, left: 0, right: 0,
+          height: 3,
+          background: `linear-gradient(90deg, ${game.color}, ${game.color}00)`,
+          opacity: hovered ? 1 : 0.6,
+          transition: "opacity 0.3s",
+        }}
+      />
+
+      <div style={{ position: "relative", display: "flex", alignItems: "flex-start", gap: 24 }}>
+        {/* Left: giant icon + status */}
+        <div style={{ flex: "0 0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 12, minWidth: 72 }}>
+          <span
+            style={{
+              fontSize: 56,
+              color: game.color,
+              lineHeight: 1,
+              filter: hovered
+                ? `drop-shadow(0 0 18px ${game.color}80)`
+                : `drop-shadow(0 0 6px ${game.color}40)`,
+              transition: "filter 0.4s",
+            }}
+          >
+            {game.icon}
+          </span>
+          <span
+            style={{
+              fontSize: 9, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase",
+              color: "white", background: st.bg, padding: "3px 10px", borderRadius: 99,
+            }}
+          >
+            {st.label}
+          </span>
+        </div>
+
+        {/* Middle: title, tagline, description, teaches */}
+        <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+          <h2
+            style={{
+              fontSize: 26, fontWeight: 700, color: "#F1F5F9",
+              margin: "0 0 4px", letterSpacing: -0.5, lineHeight: 1.15,
+            }}
+          >
+            {game.title}
+          </h2>
+          <p
+            style={{
+              fontSize: 14, color: game.color, margin: "0 0 12px",
+              fontStyle: "italic", opacity: 0.9, fontWeight: 500,
+            }}
+          >
+            {game.tagline}
+          </p>
+          <p
+            style={{
+              fontSize: 13, color: "rgba(226,232,240,0.65)",
+              margin: "0 0 10px", lineHeight: 1.65,
+            }}
+          >
+            {game.desc}
+          </p>
+          <div
+            style={{
+              fontSize: 10, color: "rgba(167,139,250,0.45)",
+              fontFamily: "var(--font-mono, monospace)",
+              letterSpacing: 0.3,
+            }}
+          >
+            teaches: {game.teaches}
+          </div>
+        </div>
+
+        {/* Right: ENTER pill */}
+        <div style={{ flex: "0 0 auto", display: "flex", alignItems: "center" }}>
+          <div
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 6,
+              padding: "10px 20px",
+              border: `1px solid ${game.color}`,
+              color: hovered ? "#08060E" : game.color,
+              background: hovered ? game.color : "transparent",
+              borderRadius: 99,
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: 1.5,
+              textTransform: "uppercase",
+              transition: "all 0.3s",
+              fontFamily: "var(--font-mono, monospace)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            enter →
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LiveEml() {
   const [val, setVal] = useState(0);
   useEffect(() => {
@@ -197,10 +342,10 @@ function GameCard({ game, index, visible }) {
 
 export default function Hub() {
   const [visible, setVisible] = useState(false);
-  const [tab, setTab] = useState("all");
   useEffect(() => { setTimeout(() => setVisible(true), 150); }, []);
 
-  const displayedGames = tab === "all" ? GAMES : GAMES.filter(g => g.category === tab);
+  const flagships = FLAGSHIP_IDS.map(id => GAMES.find(g => g.id === id)).filter(Boolean);
+  const rest = GAMES.filter(g => !FLAGSHIP_IDS.includes(g.id));
   const expCount = GAMES.filter(g => g.category === "experience").length;
   const gameCount = GAMES.filter(g => g.category === "game").length;
 
@@ -303,36 +448,42 @@ export default function Hub() {
           ))}
         </div>
 
-        {/* CATEGORY TABS */}
-        <div style={{ display: "flex", gap: 3, marginBottom: 20, borderBottom: "1px solid rgba(255,255,255,0.04)", paddingBottom: 12,
-          opacity: visible ? 1 : 0, transition: "opacity 0.7s ease 0.35s" }}>
-          {[
-            { id: "all",        label: "All",         count: GAMES.length },
-            { id: "experience", label: "Experiences", count: expCount },
-            { id: "game",       label: "Games",       count: gameCount },
-          ].map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)} style={{
-              padding: "7px 16px", borderRadius: 8, border: "none", cursor: "pointer",
-              background: tab === t.id ? "rgba(124,58,237,0.18)" : "transparent",
-              color: tab === t.id ? "#C4B5FD" : "rgba(226,232,240,0.3)",
-              fontSize: 12, fontWeight: tab === t.id ? 600 : 400, transition: "all 0.2s",
-              outline: tab === t.id ? "1px solid rgba(124,58,237,0.3)" : "none",
-            }}>
-              {t.label} <span style={{ opacity: 0.5, fontSize: 10, marginLeft: 3 }}>{t.count}</span>
-            </button>
+        {/* FLAGSHIPS — two hero cards stacked */}
+        <section
+          style={{
+            marginBottom: 32,
+            display: "flex", flexDirection: "column", gap: 14,
+          }}
+        >
+          {flagships.map((g, i) => (
+            <HeroCard key={g.id} game={g} index={i} visible={visible} />
           ))}
-        </div>
+        </section>
 
-        {/* CARD LIST */}
+        {/* MORE EXPERIMENTS — compact 3-per-row grid */}
         <section style={{ marginBottom: 28 }}>
-          <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 2, textTransform: "uppercase",
-            color: "#059669", marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#059669",
-              boxShadow: "0 0 8px rgba(5,150,105,0.4)", animation: "pulse 2s ease infinite" }} />
-            {tab === "all" ? `All ${GAMES.length} — play now` : tab === "experience" ? `${expCount} experiences — open-ended` : `${gameCount} games — win conditions`}
+          <div
+            style={{
+              display: "flex", alignItems: "center", gap: 12,
+              fontSize: 10, fontWeight: 600, letterSpacing: 2,
+              textTransform: "uppercase", color: "rgba(167,139,250,0.55)",
+              marginBottom: 16,
+              opacity: visible ? 1 : 0,
+              transition: "opacity 0.7s ease 0.5s",
+            }}
+          >
+            <span style={{ flex: 1, height: 1, background: "rgba(167,139,250,0.15)" }} />
+            <span>More Experiments · {rest.length}</span>
+            <span style={{ flex: 1, height: 1, background: "rgba(167,139,250,0.15)" }} />
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {displayedGames.map((g, i) => <GameCard key={g.id} game={g} index={i} visible={visible} />)}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+              gap: 10,
+            }}
+          >
+            {rest.map((g, i) => <GameCard key={g.id} game={g} index={i} visible={visible} />)}
           </div>
         </section>
 
