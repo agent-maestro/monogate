@@ -14,6 +14,9 @@ Core functions (no dependencies):
     add_eml, mul_eml, div_eml, pow_eml, recip_eml,
     IDENTITIES
 
+Equality decision (adaptive-precision, unconditional):
+    monogate.equality — F16Tree, parse, decide, DecisionResult
+
 Neural network classes (requires torch):
     EMLTree, EMLNetwork, fit
 """
@@ -58,7 +61,7 @@ from .core import (
     compare_op,
 )
 
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 
 __all__ = [
     "op",
