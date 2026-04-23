@@ -41,7 +41,7 @@ import Base from '../../layouts/Base.astro';
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem; margin: 16px 0;">
     <thead>
-      <tr style="border-bottom: 1px solid #1c1f2e;">
+      <tr style="border-bottom: 1px solid #e2e2d8;">
         <th style="text-align: left; padding: 8px 10px; color: #6b7280; font-size: 0.75rem;">Function</th>
         <th style="text-align: center; padding: 8px 10px; color: #6b7280; font-size: 0.75rem;">EML depth</th>
         <th style="text-align: left; padding: 8px 10px; color: #6b7280; font-size: 0.75rem;">Status</th>
@@ -73,10 +73,10 @@ import Base from '../../layouts/Base.astro';
         ["floor ⌊x⌋", "∞", "proved", "Countably infinite discontinuities."],
         ["sin(sin(x))", "?", "open", "Convergence is slow. Current search: depth ≤ 4."],
       ].map(([fn, depth, status, note], i) => (
-        <tr style={`border-bottom: 1px solid #0d0f18; ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
-          <td style="padding: 8px 10px; color: #d4d4d4;">{fn}</td>
-          <td style={`padding: 8px 10px; text-align: center; font-weight: 700; color: ${depth === '∞' ? '#fbbf24' : depth === '?' ? '#6b7280' : depth === '0' ? '#4a4d62' : depth === '1' ? '#06b6d4' : depth === '2' ? '#a78bfa' : '#ec4899'};`}>{depth}</td>
-          <td style={`padding: 8px 10px; color: ${status === 'proved' ? '#4ade80' : status === 'computational' ? '#fbbf24' : status === 'open' ? '#f87171' : '#6b7280'}; font-size: 0.8rem;`}>{status}</td>
+        <tr style={`border-bottom: 1px solid #e2e2d8; ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
+          <td style="padding: 8px 10px; color: #1a1a1a;">{fn}</td>
+          <td style={`padding: 8px 10px; text-align: center; font-weight: 700; color: ${depth === '∞' ? '#b45309' : depth === '?' ? '#6b7280' : depth === '0' ? '#6b7280' : depth === '1' ? '#0e7490' : depth === '2' ? '#6d28d9' : '#be185d'};`}>{depth}</td>
+          <td style={`padding: 8px 10px; color: ${status === 'proved' ? '#15803d' : status === 'computational' ? '#b45309' : status === 'open' ? '#f87171' : '#6b7280'}; font-size: 0.8rem;`}>{status}</td>
         </tr>
       ))}
     </tbody>

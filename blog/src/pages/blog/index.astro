@@ -52,11 +52,11 @@ const posts = [
 ];
 
 const tagMeta: Record<string, { color: string; label: string }> = {
-  theorem:     { color: '#4ade80', label: 'theorem' },
+  theorem:     { color: '#15803d', label: 'theorem' },
   conjecture:  { color: '#f87171', label: 'conjecture' },
-  observation: { color: '#fbbf24', label: 'observation' },
-  research:    { color: '#a78bfa', label: 'research' },
-  exposition:  { color: '#06b6d4', label: 'exposition' },
+  observation: { color: '#b45309', label: 'observation' },
+  research:    { color: '#6d28d9', label: 'research' },
+  exposition:  { color: '#0e7490', label: 'exposition' },
   engineering: { color: '#e8a020', label: 'engineering' },
   meta:        { color: '#9ca3af', label: 'meta' },
 };
@@ -75,7 +75,7 @@ const counts = tagOrder.reduce((acc, t) => { acc[t] = posts.filter(p => p.tag ==
     <button
       data-tag="all"
       class="tag-btn active"
-      style={`font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #d4d4d4; background: #d4d4d415; border: 1px solid #d4d4d430; border-radius: 3px; padding: 4px 10px; cursor: pointer;`}
+      style={`font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #1a1a1a; background: #1a1a1a15; border: 1px solid #1a1a1a30; border-radius: 3px; padding: 4px 10px; cursor: pointer;`}
     >all <span style="opacity:0.5">{posts.length}</span></button>
     {tagOrder.map(tag => (
       <button
@@ -92,14 +92,14 @@ const counts = tagOrder.reduce((acc, t) => { acc[t] = posts.filter(p => p.tag ==
         href={p.href}
         data-tag={p.tag}
         class="post-card"
-        style="display: block; border: 1px solid #1c1f2e; border-radius: 8px; padding: 16px 20px; text-decoration: none; color: inherit; background: #0d0f18;"
+        style="display: block; border: 1px solid #e2e2d8; border-radius: 8px; padding: 16px 20px; text-decoration: none; color: inherit; background: #e2e2d8;"
       >
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px;">
-          <div style="font-size: 14px; font-weight: 600; color: #d4d4d4; line-height: 1.4;">{p.title}</div>
+          <div style="font-size: 14px; font-weight: 600; color: #1a1a1a; line-height: 1.4;">{p.title}</div>
           <span style={`font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: ${tagMeta[p.tag].color}; background: ${tagMeta[p.tag].color}15; border: 1px solid ${tagMeta[p.tag].color}30; border-radius: 3px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0;`}>{p.tag}</span>
         </div>
         <div style="font-size: 12px; color: #6b7280; line-height: 1.6;">{p.desc}</div>
-        <div style="font-size: 10px; color: #4a4d62; margin-top: 8px; font-family: monospace;">{p.date}</div>
+        <div style="font-size: 10px; color: #6b7280; margin-top: 8px; font-family: monospace;">{p.date}</div>
       </a>
     ))}
   </div>

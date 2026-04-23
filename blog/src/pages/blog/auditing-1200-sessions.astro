@@ -94,7 +94,7 @@ import Base from '../../layouts/Base.astro';
     We audited every claimed result. The criteria for a theorem:
   </p>
 
-  <ul style="margin: 16px 0 20px 24px; color: #d4d4d4; line-height: 2;">
+  <ul style="margin: 16px 0 20px 24px; color: #1a1a1a; line-height: 2;">
     <li>Complete proof with no gaps</li>
     <li>Checkable: can be verified by running code or following mathematical steps</li>
     <li>Mathematical content: makes a precise claim about mathematical objects</li>
@@ -104,7 +104,7 @@ import Base from '../../layouts/Base.astro';
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px; margin: 24px 0;">
     <thead>
-      <tr style="border-bottom: 1px solid #1c1f2e;">
+      <tr style="border-bottom: 1px solid #e2e2d8;">
         <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Tier</th>
         <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Count</th>
         <th style="text-align: left; padding: 8px 12px; color: #6b7280;">What it means</th>
@@ -112,18 +112,18 @@ import Base from '../../layouts/Base.astro';
     </thead>
     <tbody>
       {[
-        ['THEOREM', 21, 'Complete proof, no gaps', '#4ade80'],
-        ['PROPOSITION', 6, 'Proved, routine', '#6ab0f5'],
+        ['THEOREM', 21, 'Complete proof, no gaps', '#15803d'],
+        ['PROPOSITION', 6, 'Proved, routine', '#0e7490'],
         ['CONJECTURE', 4, 'Stated, believed, unproved', '#e8a020'],
-        ['OBSERVATION', 4, 'Empirical, no proof', '#fbbf24'],
-        ['DEFINITION', 4, 'Choices, not claims', '#a78bfa'],
-        ['SPECULATION', 4, 'Interesting but unfalsifiable', '#4a4d62'],
+        ['OBSERVATION', 4, 'Empirical, no proof', '#b45309'],
+        ['DEFINITION', 4, 'Choices, not claims', '#6d28d9'],
+        ['SPECULATION', 4, 'Interesting but unfalsifiable', '#6b7280'],
       ].map(([tier, count, desc, color]) => (
-        <tr style="border-bottom: 1px solid #1c1f2e12;">
+        <tr style="border-bottom: 1px solid #e2e2d812;">
           <td style="padding: 8px 12px;">
             <span style={`font-family: monospace; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 3px; background: ${color}18; border: 1px solid ${color}; color: ${color};`}>{tier}</span>
           </td>
-          <td style="text-align: right; padding: 8px 12px; color: #d4d4d4; font-weight: 700;">{count}</td>
+          <td style="text-align: right; padding: 8px 12px; color: #1a1a1a; font-weight: 700;">{count}</td>
           <td style="padding: 8px 12px; color: #6b7280; font-size: 12px;">{desc}</td>
         </tr>
       ))}
@@ -143,7 +143,7 @@ import Base from '../../layouts/Base.astro';
     For completeness, the 21 theorems (abbreviated — first 7 from original audit, remainder from subsequent sessions):
   </p>
 
-  <ol style="margin: 16px 0 20px 24px; color: #d4d4d4; line-height: 2.2; font-size: 0.9rem;">
+  <ol style="margin: 16px 0 20px 24px; color: #1a1a1a; line-height: 2.2; font-size: 0.9rem;">
     <li><strong>T01 — EML Universality</strong>: eml generates every elementary function. (Odrzywołek, arXiv:2603.21852)</li>
     <li><strong>T09 — Negation in 2 Nodes — Optimal</strong>: neg(x) = −x in exactly 2 EML-family nodes. 1 node is impossible.</li>
     <li><strong>T10u — Multiplication in 2 Nodes — F16 Optimal</strong>: mul(x,y) in exactly 2 nodes in F16.</li>
