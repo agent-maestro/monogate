@@ -298,41 +298,52 @@
       "id": "activation.sigmoid",
       "name": "Sigmoid activation",
       "category": "tool_function",
-      "description": "σ(x) = exp(x) / (1 + exp(x)). Cheapest construction uses EAL(x, e) = exp(x) + 1 then divides; 5n forward via SuperBEST.",
+      "description": "σ(x) = 1/(1+exp(-x)). TREE cost 6n (strict, no subexpression sharing). DAG cost 5n via σ(x) = exp(x)/(1+exp(x)) with shared exp(x). The 5n number is only valid when the compiler shares exp(x) across numerator and denominator; publish the 6n tree number whenever the semantics is not stated.",
       "status": "empirically_confirmed",
       "eml_metrics": {
-        "superbest_nodes": 5,
-        "superbest_nodes_general": 5,
+        "superbest_nodes": 6,
+        "cost_tree": 6,
+        "cost_dag": 5,
+        "cost_semantics_default": "tree",
+        "superbest_nodes_general": 6,
         "naive_nodes": 19,
-        "savings_percent": 73.7,
+        "savings_percent": 68.4,
         "elc_class": "inside",
         "operator_family": ["EAL"],
-        "verified_by": "python_exact"
+        "verified_by": "python_exact",
+        "cost_notes": "TREE: neg(2) + exp(1) + add(2) + recip(1) = 6. DAG: exp(1) + add(2) + div(2) = 5 with exp shared."
       },
       "neural_metrics": {
-        "forward_nodes": 5,
+        "forward_nodes": 6,
+        "forward_nodes_dag": 5,
         "backward_nodes": 4
       },
-      "tags": ["activation", "elc_interior"]
+      "tags": ["activation", "elc_interior", "cost_semantics_labelled"]
     },
     {
       "id": "optimizer.adam",
       "name": "Adam optimizer step (v5.2 re-audit)",
       "category": "tool_function",
-      "description": "Kingma + Ba 2014 adaptive-moment optimiser. Per parameter per step. Re-audited 2026-04-22 (NN-13): amortising the bias-correction scalars 1-β₁ᵗ and 1-β₂ᵗ across all parameters drops the m_hat and v_hat chains from 5n+5n to 2n+2n, yielding 31n per param per step instead of the original 37n. This is a -16% optimizer-cost correction.",
+      "description": "Kingma + Ba 2014 adaptive-moment optimiser. Per parameter per step. STRICT cost is 37n per param (every parameter pays for its own bias-correction factor pow+sub+div). AMORTIZED cost is 31n per param when the scalars 1-β₁ᵗ and 1-β₂ᵗ are precomputed once per step and shared across every parameter; m_hat and v_hat then each collapse to a single mul by a scalar (2n instead of 5n). Amortized cost is the right number for N >= 2 params; for N=1 use the strict count.",
       "status": "empirically_confirmed",
       "eml_metrics": {
-        "superbest_nodes": 31,
+        "superbest_nodes": 37,
+        "cost_strict": 37,
+        "cost_amortized": 31,
+        "cost_semantics_default": "strict",
+        "amortization_break_even_n_params": 2,
         "elc_class": "inside",
-        "verified_by": "python_exact"
+        "verified_by": "python_exact",
+        "cost_notes": "STRICT (tree): m=8 + v=10 + m_hat=5 + v_hat=5 + theta=9 = 37. AMORTIZED: m_hat and v_hat drop to 2+2 when 1-β^t is computed once per step."
       },
       "neural_metrics": {
         "optimizer": "adam",
-        "optimizer_nodes_per_param_per_step": 31,
+        "optimizer_nodes_per_param_per_step_strict": 37,
+        "optimizer_nodes_per_param_per_step_amortized": 31,
         "forward_nodes": 0,
         "backward_nodes": 0
       },
-      "tags": ["optimizer", "update_rule", "reaudit_v5_2"]
+      "tags": ["optimizer", "update_rule", "reaudit_v5_2", "cost_semantics_labelled"]
     },
     {
       "id": "norm.rmsnorm",
