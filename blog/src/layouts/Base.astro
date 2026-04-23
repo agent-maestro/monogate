@@ -16,6 +16,21 @@ const { title, description, date } = Astro.props;
     {description && <meta name="description" content={description} />}
     <title>{title}</title>
     <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content={title ?? "Monogate — One Operator for All Elementary Functions"} />
+    <meta property="og:description" content={description ?? "16 operators. 15 nodes. 79.5% savings. Proved optimal."} />
+    <meta property="og:image" content="https://monogate.org/og-image.jpg" />
+    <meta property="og:url" content="https://monogate.org" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Monogate" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title ?? "Monogate — One Operator for All Elementary Functions"} />
+    <meta name="twitter:description" content={description ?? "16 operators. 15 nodes. 79.5% savings. Proved optimal."} />
+    <meta name="twitter:image" content="https://monogate.org/og-image.jpg" />
     <style>
       :root {
         --bg: #fafaf8;
