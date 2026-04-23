@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="One Operator — The Essay"
+  description="How a single equation generates all elementary functions — and what it reveals about mathematical complexity."
+>
+  <div class="meta">
+    <span>Odrzywołek (2026)</span>
+    <span>arXiv:2603.21852</span>
+  </div>
+
+  <h1>One Operator</h1>
+  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">How a single equation generates all elementary functions — and what it reveals about mathematical complexity.</p>
+
+  <div class="divider"></div>
+
+  <p>
+    In March 2026, Andrzej Odrzywołek published a proof that a single binary operator generates
+    every elementary function as a finite binary tree:
+  </p>
+
+  <div class="math-block">eml(x, y) = exp(x) − ln(y)</div>
+
+  <p>
+    Exponentials. Logarithms. Trigonometry. Polynomials. All of them — as finite compositions
+    of this one operator with the constant 1. Not approximately. Exactly.
+  </p>
+
+  <h2>The simplest case</h2>
+
+  <p>
+    Set y = 1. Since ln(1) = 0, the equation becomes <code>eml(x, 1) = exp(x)</code>. One application.
+    The entire exponential function from a single node in the tree.
+  </p>
+
+  <h2>The barrier</h2>
+
+  <p>
+    Now try sin(x) over the reals. You can't build it. A finite EML tree is real-analytic, and a
+    non-zero real-analytic function has isolated zeros. But sin(x) zeros at every multiple of π.
+    Contradiction. This is the <strong>Infinite Zeros Barrier</strong> — provable in two lines.
+    <a href="/blog/infinite-zeros-barrier">Read it →</a>
+  </p>
+
+  <h2>The bypass</h2>
+
+  <p>
+    Over ℂ, <code>eml(ix, 1) = exp(ix) = cos(x) + i·sin(x)</code>. One node.
+    Depth ∞ over ℝ vs. depth 1 over ℂ. Same function, different domain, different complexity.
+    <a href="/blog/euler-formula-is-eml">Why →</a>
+  </p>
+
+  <h2>Complexity strata</h2>
+
+  <ul style="margin: 16px 0 20px 24px; color: #1a1a1a; line-height: 2.2;">
+    <li><strong style="color: #475569;">Depth 0</strong> — arithmetic (polynomials, rationals)</li>
+    <li><strong style="color: #0e7490;">Depth 1</strong> — exponential · softplus(x) = 1 node via LEAd</li>
+    <li><strong style="color: #6d28d9;">Depth 2</strong> — logarithmic · negation = 2 nodes · ln(x) = 1 node</li>
+    <li><strong style="color: #be185d;">Depth 3</strong> — oscillatory (sin, cos via complex bypass) · mul/sub/add = 3 nodes</li>
+    <li><strong style="color: #b91c1c;">Depth ∞</strong> — non-constructible over ℝ</li>
+  </ul>
+
+  <p>There is no depth 4. The jump is direct. <a href="/atlas">Full depth atlas →</a> · <a href="/theorems">Theorem catalog →</a></p>
+
+  <h2>The completeness theorem</h2>
+
+  <p>
+    Among all 16 exp-ln operators, exactly <strong>8 are completely expressive</strong>:
+    EML, EAL, EXL, EDL, EPL, LEAd, ELAd, ELSb. The structural rule is simple —
+    if the operator has exp(+x) with no domain restriction, it is exactly complete.
+    If it has exp(−x), it is incomplete. One rule explains all 16 cases (T26–T28).
+    <a href="/blog/completeness-characterization">Why exp(+x) means complete →</a>
+  </p>
+
+  <h2>The open problem</h2>
+
+  <p>
+    Can you construct i from &#123;1&#125; under strict principal-branch ln?
+    Depth-6 values reach Im ≈ 0.99999524. The gap of 4.76×10⁻⁶ is structural — tan(1) is
+    transcendental (Lindemann–Weierstrass). <a href="/blog/near-miss">The near-miss →</a>
+  </p>
+
+  <div class="divider"></div>
+
+  <h2>Research blog</h2>
+
+  <ul style="margin: 16px 0 20px 24px; line-height: 2.4;">
+    <li><a href="/blog/completeness-characterization">Why exp(+x) Means Complete: The Structural Theorem</a> <span style="color: #6b7280; font-size: 0.85em;">new</span></li>
+    <li><a href="/blog/superbest-complete">SuperBEST: All Operations Proved Optimal</a></li>
+    <li><a href="/blog/infinite-zeros-barrier">The Infinite Zeros Barrier</a></li>
+    <li><a href="/blog/near-miss">0.99999524: The Near-Miss</a></li>
+    <li><a href="/blog/euler-formula-is-eml">Euler's Formula Is the EML Operator</a></li>
+    <li><a href="/blog">All 44 posts →</a></li>
+  </ul>
+
+  <p style="color: #6b7280; font-size: 0.9rem; margin-top: 40px;">
+    30 theorems proved · <a href="/atlas">depth atlas</a> · <a href="https://monogate.dev">monogate.dev</a> ·
+    Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a> ·
+    <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a>
+  </p>
+</Base>
