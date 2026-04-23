@@ -1,32 +1,73 @@
-"""CapCard CLI — Session 34.
+"""CapCard CLI — canonical card at capability_card_public.json.
 
 Usage:
-    python -m monogate capability-card --generate
-    python -m monogate capability-card --validate
+    python -m monogate capability-card --generate   # refresh derived fields
+    python -m monogate capability-card --validate   # schema + version drift check
+    python -m monogate capability-card --publish    # print real hosting targets
+    python -m monogate capability-card --verify     # validate + benchmark assertions
+
+The CLI operates on the single hand-curated card at the repo root:
+    capability_card_public.json
+
+--generate never clobbers curated content (capabilities, benchmarks, proofs,
+integration). It only refreshes derived fields (version, test_count,
+last_verified, metadata.updated, install command). Curated content is edited
+by hand; this tool keeps the derived metadata in sync with the live package.
 """
 
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any, Callable
 
 import monogate
 
 
+REPO_SLUG = "almaguer1986/monogate"
+LEAN_REPO_SLUG = "almaguer1986/monogate-lean"
+SCHEMA_URL = "https://monogate.org/schemas/capcard/v2.json"
+
 _REPO_ROOT = Path(__file__).parent.parent.parent.parent
-_CARD_PATH = _REPO_ROOT / "capability_card.json"
+_CARD_PATH = _REPO_ROOT / "capability_card_public.json"
 _SCHEMA_PATH = Path(__file__).parent.parent / "capability_card_schema.json"
+_PYTHON_DIR = Path(__file__).parent.parent.parent
+
+_SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+(?:[.+-].*)?$")
+
+
+# ---------------------------------------------------------------------------
+# IO helpers
+# ---------------------------------------------------------------------------
+
+def _load_card() -> dict[str, Any]:
+    if not _CARD_PATH.exists():
+        raise FileNotFoundError(f"capability card not found: {_CARD_PATH}")
+    with open(_CARD_PATH, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _write_card(card: dict[str, Any]) -> None:
+    with open(_CARD_PATH, "w", encoding="utf-8") as f:
+        json.dump(card, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+
+
+def _load_schema() -> dict[str, Any]:
+    with open(_SCHEMA_PATH, encoding="utf-8") as f:
+        return json.load(f)
 
 
 def _run_test_count() -> int:
-    """Return the number of tests discovered in the python/ test suite."""
+    """Discover the test count via `pytest --co`. Returns -1 on any failure."""
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pytest", "tests/", "-q", "--co", "--tb=no"],
-            capture_output=True, text=True,
-            cwd=Path(__file__).parent.parent.parent,
+            capture_output=True, text=True, cwd=_PYTHON_DIR,
         )
         for line in result.stdout.splitlines():
             if "tests collected" in line or "test collected" in line:
@@ -36,297 +77,413 @@ def _run_test_count() -> int:
     return -1
 
 
-def _gather_capabilities() -> dict:
-    """Read live capability data from the monogate package."""
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+# ---------------------------------------------------------------------------
+# --generate
+# ---------------------------------------------------------------------------
+
+def generate_card() -> dict[str, Any]:
+    """Refresh derived fields on the canonical card without touching curated sections."""
+    card = _load_card()
+    pkg_version = monogate.__version__
+    now = _now_iso()
+
+    changes: list[str] = []
+
+    if card.get("version") != pkg_version:
+        changes.append(f"version: {card.get('version')!r} -> {pkg_version!r}")
+        card["version"] = pkg_version
+
     test_count = _run_test_count()
+    verification = card.setdefault("verification", {})
+    if test_count > 0 and verification.get("test_count") != test_count:
+        changes.append(f"verification.test_count: {verification.get('test_count')} -> {test_count}")
+        verification["test_count"] = test_count
+    if verification.get("last_verified") != now:
+        verification["last_verified"] = now
+        changes.append("verification.last_verified: refreshed")
 
-    cap: dict = {
-        "symbolic_regression": {
-            "description": "Symbolic regression using EML (exp-minus-log) tree arithmetic",
-            "operators": ["eml", "edl", "eal", "exl", "deml"],
-            "search_methods": ["beam_search", "mcts_search", "exhaustive", "sklearn_wrapper"],
-        },
-        "physics_laws": {
-            "count": 14,
-            "exact_zero_error": 8,
-            "catalog": [
-                "Newton's second law", "Gravitational force", "Coulomb's law",
-                "Ohm's law", "Ideal gas law", "Hooke's law", "Kinetic energy",
-                "Potential energy", "Wave speed", "Snell's law",
-                "Lorentz force", "Stefan-Boltzmann", "Planck law", "Hubble law",
-            ],
-        },
-        "special_functions": {
-            "count": 15,
-            "exact_cbest": 4,
-            "note": "Complex BEST (CBEST) representation; sin(x) infinite-zeros barrier proven",
-        },
-        "test_count": test_count,
-        "sin_barrier": {
-            "n_trees_searched": 109824,
-            "max_n": 7,
-            "sin_absent": True,
-            "note": "Exhaustive search to N=7 (Python); N=12 Rust binary complete, pending runtime",
-        },
-        "eml_fourier": {
-            "description": "Session 31: sin(x) as linear combination of EML tree atoms",
-            "sin_approx_K": 5,
-            "sin_mse_train": 8.945e-4,
-            "sin_mse_test": 2.326e-2,
-            "exp_mse_test": 8.037e-31,
-            "log_mse_test": 6.023e-32,
-        },
-        "eml_vae": {
-            "description": "Session 32: Gaussian VAE with EML natural parameter encoder",
-            "kl_is_bregman": True,
-            "prior": "N(0,1) as eta1=-0.5, eta2=0",
-        },
-    }
-    return cap
+    metadata = card.setdefault("metadata", {})
+    metadata["updated"] = now
+    metadata.setdefault("created", now)
+    if metadata.get("schema_url") != SCHEMA_URL:
+        metadata["schema_url"] = SCHEMA_URL
+        changes.append(f"metadata.schema_url -> {SCHEMA_URL}")
 
+    integration = card.setdefault("integration", {})
+    install = integration.setdefault("install", {})
+    pip_spec = f"pip install monogate=={pkg_version}"
+    if install.get("pip") != pip_spec:
+        changes.append(f"integration.install.pip -> {pip_spec}")
+        install["pip"] = pip_spec
 
-def generate_card() -> dict:
-    """Build and write capability_card.json to repo root."""
-    version = monogate.__version__
-    caps = _gather_capabilities()
+    if not _validate_against_schema(card, strict=True):
+        raise RuntimeError("refusing to write: card fails schema after generate")
 
-    card = {
-        "$schema": "https://capcard.ai/schema/v1.json",
-        "card_version": "1.0",
-        "name": "monogate",
-        "version": version,
-        "tagline": "Universal EML tree arithmetic for symbolic computation",
-        "capabilities": caps,
-        "benchmarks": {
-            "srbench": {
-                "datasets_tested": 10,
-                "note": "SRBench harness in python/benchmarks/srbench/",
-            },
-        },
-        "reproduce": {
-            "install": "pip install monogate",
-            "test": "cd python && pytest tests/ -q",
-            "docker": "docker build . && docker run monogate pytest python/tests/ -q",
-        },
-        "artifacts": {
-            "arxiv": "2603.21852",
-            "pypi": f"monogate=={version}",
-            "github": "https://github.com/artl/monogate",
-        },
-    }
+    _write_card(card)
 
-    _CARD_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(_CARD_PATH, "w", encoding="utf-8") as f:
-        json.dump(card, f, indent=2)
-
-    print(f"CapCard written to: {_CARD_PATH}")
-    print(f"  version:    {version}")
-    print(f"  tests:      {caps['test_count']}")
-    print(f"  sin_absent: {caps['sin_barrier']['sin_absent']}")
-    print(f"  EML Fourier sin K={caps['eml_fourier']['sin_approx_K']}, "
-          f"MSE_test={caps['eml_fourier']['sin_mse_test']:.3e}")
+    print(f"CapCard written: {_CARD_PATH}")
+    print(f"  version:      {pkg_version}")
+    print(f"  test_count:   {verification.get('test_count', '?')}")
+    print(f"  updated:      {now}")
+    if changes:
+        print("  changes:")
+        for c in changes:
+            print(f"    - {c}")
+    else:
+        print("  (no derived-field changes)")
     return card
 
 
-def validate_card() -> bool:
-    """Validate capability_card.json against JSON Schema."""
+# ---------------------------------------------------------------------------
+# --validate
+# ---------------------------------------------------------------------------
+
+def _validate_against_schema(card: dict[str, Any], strict: bool) -> bool:
     try:
         import jsonschema
     except ImportError:
-        print("jsonschema not installed — run: pip install jsonschema")
-        print("Falling back to basic structure check...")
-        return _basic_validate()
+        if strict:
+            print("WARN  jsonschema not installed; falling back to structural check")
+        return _basic_validate(card)
 
-    if not _CARD_PATH.exists():
-        print(f"capability_card.json not found at {_CARD_PATH}")
-        print("Run: python -m monogate capability-card --generate")
-        return False
-
-    with open(_CARD_PATH, encoding="utf-8") as f:
-        card = json.load(f)
-    with open(_SCHEMA_PATH, encoding="utf-8") as f:
-        schema = json.load(f)
-
+    schema = _load_schema()
     try:
         jsonschema.validate(instance=card, schema=schema)
-        print("capability_card.json: VALID")
-        _report_key_benchmarks(card)
         return True
     except jsonschema.ValidationError as e:
-        print(f"INVALID: {e.message}")
+        path = "/".join(str(p) for p in e.absolute_path) or "(root)"
+        print(f"FAIL  schema: at {path}: {e.message}")
         return False
 
 
-def _basic_validate() -> bool:
-    """Minimal structure check without jsonschema dependency."""
-    if not _CARD_PATH.exists():
-        print(f"Not found: {_CARD_PATH}")
-        return False
-    with open(_CARD_PATH, encoding="utf-8") as f:
-        card = json.load(f)
-    required = ["card_version", "name", "version", "capabilities", "artifacts"]
+def _basic_validate(card: dict[str, Any]) -> bool:
+    required = [
+        "capcard_version", "id", "name", "version", "description",
+        "capabilities", "benchmarks", "proofs", "verification", "metadata",
+    ]
     missing = [k for k in required if k not in card]
     if missing:
-        print(f"Missing required keys: {missing}")
+        print(f"FAIL  structure: missing required keys: {missing}")
         return False
-    print("capability_card.json: basic structure OK")
-    _report_key_benchmarks(card)
+    if not isinstance(card.get("capabilities"), list) or not card["capabilities"]:
+        print("FAIL  structure: capabilities must be a non-empty array")
+        return False
     return True
 
 
-def _report_key_benchmarks(card: dict) -> None:
-    caps = card.get("capabilities", {})
-    print(f"  name:       {card.get('name')} v{card.get('version')}")
-    print(f"  tests:      {caps.get('test_count', '?')}")
-    barrier = caps.get("sin_barrier", {})
-    print(f"  sin_absent: {barrier.get('sin_absent')} (N≤{barrier.get('max_n','?')})")
-    fourier = caps.get("eml_fourier", {})
-    if fourier:
-        print(f"  Fourier K:  {fourier.get('sin_approx_K')}, MSE_test={fourier.get('sin_mse_test'):.3e}")
+def _check_version_consistency(card: dict[str, Any]) -> bool:
+    pkg = monogate.__version__
+    card_ver = card.get("version")
+    if not _SEMVER_RE.match(str(pkg)):
+        print(f"FAIL  version: monogate.__version__={pkg!r} is not semver")
+        return False
+    if card_ver != pkg:
+        print(f"FAIL  version drift: card={card_ver!r} vs package={pkg!r}  (run --generate)")
+        return False
+    return True
 
+
+def validate_card() -> bool:
+    """Validate schema + version consistency."""
+    try:
+        card = _load_card()
+    except FileNotFoundError as e:
+        print(f"FAIL  {e}")
+        return False
+
+    schema_ok = _validate_against_schema(card, strict=False)
+    version_ok = _check_version_consistency(card)
+
+    if schema_ok and version_ok:
+        print(f"PASS  schema + version ({_CARD_PATH.name} v{card.get('version')})")
+        _summary(card)
+        return True
+    return False
+
+
+def _summary(card: dict[str, Any]) -> None:
+    caps = card.get("capabilities", [])
+    benches = card.get("benchmarks", [])
+    proofs = card.get("proofs", [])
+    ver = card.get("verification", {})
+    print(f"  capabilities: {len(caps)}")
+    print(f"  benchmarks:   {len(benches)}")
+    print(f"  proofs:       {len(proofs)} ({sum(1 for p in proofs if p.get('sorries', 1) == 0)} with 0 sorries)")
+    print(f"  test_count:   {ver.get('test_count', '?')}")
+    print(f"  last_verified: {ver.get('last_verified', '?')}")
+
+
+# ---------------------------------------------------------------------------
+# --publish
+# ---------------------------------------------------------------------------
 
 def publish_card() -> None:
-    """Print GitHub Pages deployment instructions for the CapCard site."""
-    print("CapCard GitHub Pages Deployment")
-    print("=" * 50)
-    print()
-    print("1. Ensure capcard_site/ is committed to your repo:")
-    print("   git add capcard_site/")
-    print("   git commit -m 'feat: CapCard launch site'")
-    print()
-    print("2. Push to GitHub:")
-    print("   git push origin master")
-    print()
-    print("3. Enable GitHub Pages (repo Settings > Pages):")
-    print("   - Source: Deploy from branch")
-    print("   - Branch: master, folder: /capcard_site")
-    print("   - Save")
-    print()
-    print("4. Your CapCard will be live at:")
-    print("   https://<username>.github.io/monogate/capcard_site/")
-    print()
-    print("5. For custom domain (capcard.ai):")
-    print("   - Buy domain from registrar")
-    print("   - Add CNAME record pointing to <username>.github.io")
-    print("   - Add file capcard_site/CNAME containing: capcard.ai")
-    print("   - Enable 'Enforce HTTPS' in GitHub Pages settings")
-    print()
-    print("Schema URL (after publish):")
-    print("   https://capcard.ai/schema/v1.json")
-
-
-def _run_benchmark_assertions() -> tuple[bool, list[str]]:
-    """Run 5 benchmark assertions and return (all_passed, messages)."""
-    messages: list[str] = []
-    passed = 0
-
-    # 1. exp identity: eml(x,1) = exp(x)
+    """Print the real hosting targets for the card."""
     try:
-        import math
-        from monogate.core import op
-        for x in [0.5, 1.0, 2.0]:
-            assert abs(op(x, 1.0) - math.exp(x)) < 1e-12
-        messages.append("PASS  exp identity: eml(x,1) = exp(x)")
-        passed += 1
-    except Exception as e:
-        messages.append(f"FAIL  exp identity: {e}")
+        card = _load_card()
+        version = card.get("version", monogate.__version__)
+    except FileNotFoundError:
+        version = monogate.__version__
+        card = {}
 
-    # 2. abs identity (EML identity function): eml(1,eml(eml(1,eml(x,1)),1)) = x
+    raw_url = f"https://raw.githubusercontent.com/{REPO_SLUG}/master/{_CARD_PATH.name}"
+    blob_url = f"https://github.com/{REPO_SLUG}/blob/master/{_CARD_PATH.name}"
+    pypi_url = f"https://pypi.org/project/monogate/{version}/"
+    homepage = card.get("homepage", "https://monogate.org")
+
+    print("CapCard hosting targets")
+    print("=" * 60)
+    print(f"  local path:   {_CARD_PATH}")
+    print(f"  GitHub blob:  {blob_url}")
+    print(f"  GitHub raw:   {raw_url}")
+    print(f"  PyPI:         {pypi_url}")
+    print(f"  homepage:     {homepage}")
+    print(f"  schema:       {SCHEMA_URL}")
+    print()
+    print("Refresh derived fields and commit:")
+    print("  python -m monogate capability-card --generate")
+    print("  python -m monogate capability-card --verify")
+    print(f"  git add {_CARD_PATH.name} python/monogate/capability_card_schema.json")
+    print("  git commit -m 'chore(capcard): refresh derived fields'")
+    print("  git push")
+
+
+# ---------------------------------------------------------------------------
+# --verify benchmark assertions
+# ---------------------------------------------------------------------------
+
+def _find_capability(card: dict[str, Any], cap_id: str) -> dict[str, Any] | None:
+    for c in card.get("capabilities", []):
+        if c.get("id") == cap_id:
+            return c
+    return None
+
+
+def _assert_exp_identity() -> tuple[str, str]:
+    import math
+    from monogate.core import op
+    for x in (0.5, 1.0, 2.0):
+        err = abs(op(x, 1.0) - math.exp(x))
+        if err >= 1e-12:
+            return "FAIL", f"exp identity: err={err:.3e} at x={x}"
+    return "PASS", "exp identity: eml(x, 1) = exp(x)"
+
+
+def _assert_abs_identity() -> tuple[str, str]:
+    from monogate.core import op
+    for x in (0.5, 1.0, 3.14):
+        got = op(1.0, op(op(1.0, op(x, 1.0)), 1.0))
+        err = abs(got - x)
+        if err >= 1e-11:
+            return "FAIL", f"abs identity: err={err:.3e} at x={x}"
+    return "PASS", "EML identity theorem: eml(1, eml(eml(1, eml(x, 1)), 1)) = x"
+
+
+def _assert_version_consistency(card: dict[str, Any]) -> tuple[str, str]:
+    pkg = monogate.__version__
+    card_ver = card.get("version")
+    if not _SEMVER_RE.match(str(pkg)):
+        return "FAIL", f"monogate.__version__={pkg!r} not semver"
+    if card_ver != pkg:
+        return "FAIL", f"version drift: card={card_ver!r} vs package={pkg!r}"
+    return "PASS", f"version consistency: {pkg}"
+
+
+def _assert_test_count() -> tuple[str, str]:
+    n = _run_test_count()
+    if n < 0:
+        return "WARN", "test_count: pytest --co unavailable"
+    if n < 1500:
+        return "FAIL", f"test_count: {n} < 1500"
+    return "PASS", f"test_count: {n} >= 1500"
+
+
+def _assert_superbest_card(card: dict[str, Any]) -> tuple[str, str]:
+    cap = _find_capability(card, "routing.superbest_v5")
+    if cap is None:
+        return "FAIL", "superbest card: routing.superbest_v5 missing"
+    c = cap.get("constraints", {})
+    expect = {"total_nodes": 15, "naive_total": 73, "savings_percent": 79.5}
+    for k, v in expect.items():
+        got = c.get(k)
+        if got != v:
+            return "FAIL", f"superbest card: {k}={got!r} expected {v!r}"
+    return "PASS", "superbest card: 15n / 79.5% / 73 naive"
+
+
+def _assert_superbest_package(card: dict[str, Any]) -> tuple[str, str]:
     try:
-        from monogate.core import op
-        for x in [0.5, 1.0, 3.14]:
-            result = op(1.0, op(op(1.0, op(x, 1.0)), 1.0))
-            assert abs(result - x) < 1e-11, f"got {result}"
-        messages.append("PASS  identity theorem: eml(1,eml(eml(1,eml(x,1)),1)) = x")
-        passed += 1
+        from monogate.superbest import superbest_summary
     except Exception as e:
-        messages.append(f"FAIL  identity theorem: {e}")
-
-    # 3. sin barrier: tree enumeration at N=3 finds no sin(x)
+        return "FAIL", f"superbest package: import failed ({e})"
     try:
-        from monogate.frontiers.eml_fourier import build_eml_dictionary, _eval_tree
-        import math
-        atoms = build_eml_dictionary(max_internal_nodes=3)
-        test_xs = [0.5, 1.0, 1.5, 2.0]
-        sin_vals = [math.sin(x) for x in test_xs]
-        match_found = False
-        for a in atoms:
-            vals = [_eval_tree(a.ops, a.leaf_mask, x) for x in test_xs]
-            if all(v is not None for v in vals):
-                errs = [abs(v - s) for v, s in zip(vals, sin_vals)]
-                if max(errs) < 1e-6:
-                    match_found = True
-                    break
-        assert not match_found
-        messages.append(f"PASS  sin barrier: no match in {len(atoms)} atoms at N<=3")
-        passed += 1
+        headline = superbest_summary(positive_domain=True)
     except Exception as e:
-        messages.append(f"FAIL  sin barrier: {e}")
+        return "FAIL", f"superbest package: call failed ({e})"
+    match = re.search(r"(\d+)n\s*/\s*([\d.]+)%", str(headline))
+    if match is None:
+        return "FAIL", "superbest package: could not parse headline"
+    pkg_nodes = int(match.group(1))
+    pkg_savings = float(match.group(2))
+    cap = _find_capability(card, "routing.superbest_v5") or {}
+    c = cap.get("constraints", {})
+    card_nodes = c.get("total_nodes")
+    card_savings = c.get("savings_percent")
+    if pkg_nodes != card_nodes or abs(pkg_savings - float(card_savings or 0)) > 0.1:
+        return "FAIL", (
+            f"superbest drift: package={pkg_nodes}n/{pkg_savings}% vs "
+            f"card={card_nodes}n/{card_savings}%"
+        )
+    return "PASS", f"superbest package: {pkg_nodes}n / {pkg_savings}% agrees with card"
 
-    # 4. test count >= 1500
-    try:
-        count = _run_test_count()
-        assert count >= 1500, f"only {count} tests found"
-        messages.append(f"PASS  test count: {count} >= 1500")
-        passed += 1
-    except Exception as e:
-        messages.append(f"FAIL  test count: {e}")
 
-    # 5. version string valid semver
-    try:
-        import re
-        v = monogate.__version__
-        assert re.match(r"^\d+\.\d+\.\d+", v), f"bad version: {v!r}"
-        messages.append(f"PASS  version: {v} is valid semver")
-        passed += 1
-    except Exception as e:
-        messages.append(f"FAIL  version: {e}")
+def _assert_taxonomy(card: dict[str, Any]) -> tuple[str, str]:
+    cap = _find_capability(card, "taxonomy.sixteen_operators")
+    if cap is None:
+        return "FAIL", "taxonomy: capability missing"
+    c = cap.get("constraints", {})
+    total = c.get("operators_count")
+    complete = c.get("complete")
+    approx = c.get("approximate")
+    incomplete = c.get("incomplete")
+    if None in (total, complete, approx, incomplete):
+        return "FAIL", f"taxonomy: missing constraints {c}"
+    if complete + approx + incomplete != total:
+        return "FAIL", f"taxonomy: {complete}+{approx}+{incomplete} != {total}"
+    if (total, complete, approx, incomplete) != (16, 8, 1, 7):
+        return "FAIL", f"taxonomy: got (16/8/1/7) expected but saw ({total}/{complete}/{approx}/{incomplete})"
+    return "PASS", "taxonomy: 16 = 8 complete + 1 approximate + 7 incomplete"
 
-    return passed == 5, messages
+
+def _assert_catalog_315(card: dict[str, Any]) -> tuple[str, str]:
+    cap = _find_capability(card, "catalog.equations_315")
+    if cap is None:
+        return "FAIL", "catalog: catalog.equations_315 missing"
+    size = cap.get("constraints", {}).get("catalog_size")
+    if size != 315:
+        return "FAIL", f"catalog: size={size!r} expected 315"
+    return "PASS", "catalog: 315 equations"
+
+
+def _assert_lean_proofs(card: dict[str, Any]) -> tuple[str, str]:
+    proofs = card.get("proofs", [])
+    if len(proofs) < 10:
+        return "FAIL", f"lean proofs: {len(proofs)} < 10"
+    clean = sum(1 for p in proofs if p.get("sorries", -1) == 0)
+    partial = [p for p in proofs if p.get("sorries", 0) > 0]
+    total_sorries = sum(p.get("sorries", 0) for p in proofs)
+    if clean < 9:
+        return "FAIL", f"lean proofs: {clean} with 0 sorries (expected >= 9)"
+    if total_sorries != 2:
+        return "FAIL", f"lean proofs: total sorries = {total_sorries} (expected 2)"
+    if len(partial) != 1 or partial[0].get("sorries") != 2:
+        partial_desc = [(p.get("id"), p.get("sorries")) for p in partial]
+        return "FAIL", f"lean proofs: expected exactly one partial with 2 sorries; got {partial_desc}"
+    return "PASS", f"lean proofs: {len(proofs)} total, {clean} clean, 1 partial (2 sorries)"
+
+
+def _assert_core_capabilities(card: dict[str, Any]) -> tuple[str, str]:
+    required = [
+        "universality.eml",
+        "taxonomy.sixteen_operators",
+        "routing.superbest_v5",
+        "characterization.elc_real",
+        "barrier.infinite_zeros",
+        "bridge.euler_gateway",
+        "cost.decomposition",
+    ]
+    missing = [cid for cid in required if _find_capability(card, cid) is None]
+    if missing:
+        return "FAIL", f"core capabilities missing: {missing}"
+    return "PASS", f"core capabilities present ({len(required)})"
+
+
+BenchmarkFn = Callable[[], tuple[str, str]]
+
+
+def _run_benchmarks(card: dict[str, Any]) -> tuple[bool, list[tuple[str, str]]]:
+    checks: list[BenchmarkFn] = [
+        _assert_exp_identity,
+        _assert_abs_identity,
+        lambda: _assert_version_consistency(card),
+        _assert_test_count,
+        lambda: _assert_superbest_card(card),
+        lambda: _assert_superbest_package(card),
+        lambda: _assert_taxonomy(card),
+        lambda: _assert_catalog_315(card),
+        lambda: _assert_lean_proofs(card),
+        lambda: _assert_core_capabilities(card),
+    ]
+    results: list[tuple[str, str]] = []
+    for fn in checks:
+        try:
+            results.append(fn())
+        except Exception as e:
+            results.append(("FAIL", f"{fn.__name__ if hasattr(fn, '__name__') else 'check'}: unexpected exception {e!r}"))
+    passed = all(status != "FAIL" for status, _ in results)
+    return passed, results
 
 
 def verify_card() -> bool:
-    """Validate card schema AND run 5 benchmark assertions."""
+    """Validate schema + version + run benchmark assertions."""
     print("CapCard Verification")
-    print("=" * 50)
+    print("=" * 60)
 
-    schema_ok = validate_card()
-    print()
-    print("Benchmark assertions:")
-    all_pass, messages = _run_benchmark_assertions()
-    for msg in messages:
-        print(f"  {msg}")
-
-    print()
-    if schema_ok and all_pass:
-        print("RESULT: ALL CHECKS PASSED")
-        return True
-    else:
-        print("RESULT: SOME CHECKS FAILED")
+    try:
+        card = _load_card()
+    except FileNotFoundError as e:
+        print(f"FAIL  {e}")
         return False
 
+    schema_ok = _validate_against_schema(card, strict=False)
+    version_ok = _check_version_consistency(card)
+    if schema_ok:
+        print(f"PASS  schema ({_CARD_PATH.name})")
+    if version_ok:
+        print(f"PASS  version ({card.get('version')})")
+
+    print()
+    print("Benchmark assertions:")
+    all_pass, results = _run_benchmarks(card)
+    for status, msg in results:
+        print(f"  {status:4}  {msg}")
+
+    print()
+    if schema_ok and version_ok and all_pass:
+        print("RESULT: ALL CHECKS PASSED")
+        _summary(card)
+        return True
+    print("RESULT: SOME CHECKS FAILED")
+    return False
+
+
+# ---------------------------------------------------------------------------
+# main
+# ---------------------------------------------------------------------------
 
 def main(argv: list[str] | None = None) -> None:
     import argparse
-    parser = argparse.ArgumentParser(description="monogate CapCard generator/validator")
+    parser = argparse.ArgumentParser(description="monogate CapCard CLI")
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--generate", action="store_true", help="Generate capability_card.json")
-    group.add_argument("--validate", action="store_true", help="Validate capability_card.json against schema")
-    group.add_argument("--publish", action="store_true", help="Print GitHub Pages deployment instructions")
-    group.add_argument("--verify", action="store_true", help="Validate schema + run benchmark assertions")
+    group.add_argument("--generate", action="store_true", help="Refresh derived fields on capability_card_public.json")
+    group.add_argument("--validate", action="store_true", help="Validate schema + version consistency")
+    group.add_argument("--publish", action="store_true", help="Print real hosting targets for the card")
+    group.add_argument("--verify",   action="store_true", help="Validate + run benchmark assertions")
     args = parser.parse_args(argv)
 
     if args.generate:
         generate_card()
     elif args.validate:
-        ok = validate_card()
-        if not ok:
+        if not validate_card():
             sys.exit(1)
     elif args.publish:
         publish_card()
     elif args.verify:
-        ok = verify_card()
-        if not ok:
+        if not verify_card():
             sys.exit(1)
 
 

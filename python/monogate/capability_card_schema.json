@@ -1,87 +1,183 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://capcard.ai/schema/v1.json",
-  "title": "CapCard v1",
-  "description": "Machine-verifiable capability card for AI-readable software discovery.",
+  "$id": "https://monogate.org/schemas/capcard/v2.json",
+  "title": "Monogate CapCard v2",
+  "description": "Machine-verifiable capability card for the monogate package and research programme.",
   "type": "object",
-  "required": ["card_version", "name", "version", "tagline", "capabilities", "artifacts"],
+  "required": [
+    "capcard_version",
+    "id",
+    "name",
+    "type",
+    "description",
+    "version",
+    "license",
+    "homepage",
+    "repository",
+    "capabilities",
+    "benchmarks",
+    "proofs",
+    "verification",
+    "metadata"
+  ],
   "properties": {
-    "card_version": { "type": "string" },
+    "capcard_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "id": { "type": "string" },
     "name": { "type": "string" },
-    "version": { "type": "string" },
-    "tagline": { "type": "string", "maxLength": 120 },
-    "capabilities": {
+    "type": { "type": "string" },
+    "description": { "type": "string" },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:[.+-].*)?$"
+    },
+    "license": { "type": "string" },
+    "homepage": { "type": "string", "format": "uri" },
+    "repository": { "type": "string", "format": "uri" },
+    "lean_repo": { "type": "string", "format": "uri" },
+    "related_sites": {
       "type": "object",
-      "properties": {
-        "symbolic_regression": {
-          "type": "object",
-          "properties": {
-            "description": { "type": "string" },
-            "operators": { "type": "array", "items": { "type": "string" } },
-            "search_methods": { "type": "array", "items": { "type": "string" } }
-          }
-        },
-        "physics_laws": {
-          "type": "object",
-          "properties": {
-            "count": { "type": "integer" },
-            "exact_zero_error": { "type": "integer" },
-            "catalog": { "type": "array", "items": { "type": "string" } }
-          }
-        },
-        "special_functions": {
-          "type": "object",
-          "properties": {
-            "count": { "type": "integer" },
-            "exact_cbest": { "type": "integer" }
-          }
-        },
-        "test_count": { "type": "integer" },
-        "sin_barrier": {
-          "type": "object",
-          "properties": {
-            "n_trees_searched": { "type": "integer" },
-            "sin_absent": { "type": "boolean" },
-            "max_n": { "type": "integer" }
-          }
-        },
-        "eml_fourier": {
-          "type": "object",
-          "properties": {
-            "sin_approx_K": { "type": "integer" },
-            "sin_mse_train": { "type": "number" },
-            "sin_mse_test": { "type": "number" }
+      "additionalProperties": { "type": "string", "format": "uri" }
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "category", "description", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": [
+              "scientific_claim",
+              "cost_theory",
+              "taxonomy",
+              "lower_bound",
+              "upper_bound",
+              "construction",
+              "empirical_dataset",
+              "conjecture"
+            ]
+          },
+          "description": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": [
+              "proven",
+              "proven_partial",
+              "empirically_confirmed",
+              "conjecture"
+            ]
+          },
+          "constraints": { "type": "object" },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
           }
         }
       }
     },
     "benchmarks": {
-      "type": "object",
-      "properties": {
-        "srbench": {
-          "type": "object",
-          "properties": {
-            "datasets_tested": { "type": "integer" },
-            "mean_r2": { "type": "number" }
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "metric", "value"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "capability_ref": { "type": "string" },
+          "metric": { "type": "string" },
+          "value": {},
+          "unit": { "type": "string" },
+          "direction": {
+            "type": "string",
+            "enum": ["higher_is_better", "lower_is_better"]
+          },
+          "reproducibility": {
+            "type": "object",
+            "properties": {
+              "command": { "type": "string" },
+              "deterministic": { "type": "boolean" }
+            }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "proofs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "statement", "status", "sorries"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "statement": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["proven_machine_verified", "proven_partial"]
+          },
+          "proof_method": { "type": "string" },
+          "lean_file": { "type": "string" },
+          "lean_theorem": { "type": "string" },
+          "sorries": { "type": "integer", "minimum": 0 },
+          "sorries_description": { "type": "string" },
+          "capability_refs": {
+            "type": "array",
+            "items": { "type": "string" }
           }
         }
       }
     },
-    "reproduce": {
+    "verification": {
       "type": "object",
+      "required": ["test_count", "last_verified"],
       "properties": {
-        "install": { "type": "string" },
-        "test": { "type": "string" },
-        "docker": { "type": "string" }
+        "test_count": { "type": "integer", "minimum": 0 },
+        "test_pass_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "last_verified": { "type": "string", "format": "date-time" },
+        "trust_score": {
+          "type": "object",
+          "properties": {
+            "value": { "type": "number", "minimum": 0, "maximum": 1 },
+            "version": { "type": "string" },
+            "notes": { "type": "string" }
+          }
+        }
       }
     },
-    "artifacts": {
+    "integration": {
       "type": "object",
-      "required": ["github"],
       "properties": {
-        "arxiv": { "type": "string" },
-        "pypi": { "type": "string" },
-        "github": { "type": "string" }
+        "install": { "type": "object" },
+        "sdk_languages": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["created", "updated"],
+      "properties": {
+        "created": { "type": "string", "format": "date-time" },
+        "updated": { "type": "string", "format": "date-time" },
+        "schema_url": { "type": "string", "format": "uri" }
       }
     }
   }
