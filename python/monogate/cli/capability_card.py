@@ -38,6 +38,13 @@ _CARD_PATH = _REPO_ROOT / "capability_card_public.json"
 _SCHEMA_PATH = Path(__file__).parent.parent / "capability_card_schema.json"
 _PYTHON_DIR = Path(__file__).parent.parent.parent
 
+# Mirror paths — the card is also served publicly from the Astro blog and a
+# well-known URL so agents can fetch it without guessing the GitHub raw URL.
+_PUBLIC_MIRRORS = (
+    _REPO_ROOT / "blog" / "public" / "capability_card.json",
+    _REPO_ROOT / "blog" / "public" / ".well-known" / "capcard.json",
+)
+
 _SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+(?:[.+-].*)?$")
 _CAPCARD_V3_RE = re.compile(r"^3\.\d+\.\d+$")
 
@@ -127,10 +134,28 @@ def generate_card() -> dict[str, Any]:
 
     _write_card(card)
 
+    # Mirror to public-facing locations so monogate.org/capability_card.json
+    # and monogate.org/.well-known/capcard.json stay in sync with the canonical
+    # card at the repo root.
+    import json as _json
+    mirrored: list[Path] = []
+    for mirror in _PUBLIC_MIRRORS:
+        try:
+            mirror.parent.mkdir(parents=True, exist_ok=True)
+            with open(mirror, "w", encoding="utf-8") as f:
+                _json.dump(card, f, indent=2, ensure_ascii=False)
+                f.write("\n")
+            mirrored.append(mirror)
+        except OSError as e:
+            print(f"WARN  mirror write failed: {mirror} ({e})")
+
     print(f"CapCard written: {_CARD_PATH}")
     print(f"  version:      {pkg_version}")
     print(f"  test_count:   {verification.get('test_count', '?')}")
     print(f"  updated:      {now}")
+    for m in mirrored:
+        rel = m.relative_to(_REPO_ROOT) if m.is_relative_to(_REPO_ROOT) else m
+        print(f"  mirrored:     {rel}")
     if changes:
         print("  changes:")
         for c in changes:
@@ -248,6 +273,8 @@ def publish_card() -> None:
     print(f"  local path:   {_CARD_PATH}")
     print(f"  GitHub blob:  {blob_url}")
     print(f"  GitHub raw:   {raw_url}")
+    print( "  public URL:   https://monogate.org/capability_card.json")
+    print( "  well-known:   https://monogate.org/.well-known/capcard.json")
     print(f"  PyPI:         {pypi_url}")
     print(f"  homepage:     {homepage}")
     print(f"  schema:       {SCHEMA_URL}")

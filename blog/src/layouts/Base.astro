@@ -3,8 +3,56 @@ interface Props {
   title: string;
   description?: string;
   date?: string;
+  type?: "website" | "article";
 }
-const { title, description, date } = Astro.props;
+const { title, description, date, type = "website" } = Astro.props;
+const canonical = Astro.url.pathname.replace(/\/$/, "") || "/";
+const pageUrl = `https://monogate.org${canonical}`;
+
+// Root-level project JSON-LD (shown on every page)
+const projectLd = {
+  "@context": "https://schema.org",
+  "@type": "ResearchProject",
+  name: "Monogate",
+  alternateName: "Monogate Research",
+  description:
+    "EML operator framework for elementary function optimization. " +
+    "One binary operator eml(x, y) = exp(x) - ln(y) generates every elementary " +
+    "function as a finite tree. SuperBEST routing proves 79.5% node savings on " +
+    "the 10 positive-domain primitives; 11 Lean 4 files at 0 sorries verify the " +
+    "core lower bounds.",
+  url: "https://monogate.org",
+  sameAs: [
+    "https://github.com/almaguer1986/monogate",
+    "https://github.com/almaguer1986/monogate-lean",
+    "https://pypi.org/project/monogate/",
+    "https://arxiv.org/abs/2603.21852",
+    "https://monogate.dev",
+  ],
+  codeRepository: "https://github.com/almaguer1986/monogate",
+  author: { "@type": "Organization", name: "Monogate Research" },
+  license: "https://opensource.org/licenses/MIT",
+};
+
+// Per-page Article JSON-LD when `date` is set (blog posts etc.)
+const articleLd = (type === "article" || date) ? {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: title,
+  description: description ?? undefined,
+  datePublished: date ?? undefined,
+  dateModified: date ?? undefined,
+  author: { "@type": "Organization", name: "Monogate Research" },
+  publisher: {
+    "@type": "Organization", name: "Monogate Research",
+    url: "https://monogate.org",
+    logo: { "@type": "ImageObject", url: "https://monogate.org/logo.svg" },
+  },
+  mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
+  url: pageUrl,
+  image: "https://monogate.org/og-image.jpg",
+  isPartOf: { "@type": "Blog", name: "Monogate Research Blog", url: "https://monogate.org/blog" },
+} : null;
 ---
 
 <!doctype html>
@@ -15,22 +63,30 @@ const { title, description, date } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     {description && <meta name="description" content={description} />}
     <title>{title}</title>
+    <link rel="canonical" href={pageUrl} />
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="alternate" type="application/rss+xml" title="Monogate Research Blog" href="/rss.xml" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content={title ?? "Monogate — One Operator for All Elementary Functions"} />
     <meta property="og:description" content={description ?? "16 operators. 15 nodes. 79.5% savings. Proved optimal."} />
     <meta property="og:image" content="https://monogate.org/og-image.jpg" />
-    <meta property="og:url" content="https://monogate.org" />
-    <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:type" content={type} />
     <meta property="og:site_name" content="Monogate" />
+    {date && <meta property="article:published_time" content={date} />}
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title ?? "Monogate — One Operator for All Elementary Functions"} />
     <meta name="twitter:description" content={description ?? "16 operators. 15 nodes. 79.5% savings. Proved optimal."} />
     <meta name="twitter:image" content="https://monogate.org/og-image.jpg" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(projectLd)} />
+    {articleLd && <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
     <style>
       :root {
         --bg: #fafaf8;
