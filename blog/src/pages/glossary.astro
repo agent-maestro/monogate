@@ -1,0 +1,240 @@
+---
+import Base from '../layouts/Base.astro';
+
+type Entry = { term: string; defn: string; see?: string };
+const entries: Entry[] = [
+  { term: "Adam",
+    defn: "Kingma+Ba 2014 optimizer. In EML cost accounting it costs 31 nodes per parameter per step (post-NN-13 re-audit, down from 37 when the bias-correction scalars 1 − βᵗ are shared across parameters).",
+    see: "/blog" },
+  { term: "AM-GM",
+    defn: "Arithmetic mean ≥ geometric mean. In EML nodes the arithmetic mean is 4n and the geometric mean is 3n — so the more expensive tree bounds the cheaper one above.",
+    see: "/blog/olympiad-meets-eml" },
+  { term: "Atlas",
+    defn: "The depth map of elementary functions. Depth 0 (arithmetic), depth 1 (exp, softplus), depth 2 (log, negation), depth 3 (oscillatory via complex bypass), depth ∞ (non-constructible over ℝ).",
+    see: "/atlas" },
+  { term: "Attractor",
+    defn: "A fixed point or cycle that nearby orbits converge to under iteration. Lambert fixed points z_k* of exp are log-attracting.",
+    see: "/blog/phantom-attractor" },
+  { term: "Box-counting dimension",
+    defn: "A fractal-dimension estimator that counts boxes of side s required to cover a set, fit log-log. Used in the S3 morph to measure in-set boundary roughness.",
+    see: "/blog" },
+  { term: "CapCard",
+    defn: "A JSON file that declares a project's verifiable capabilities, costs, proofs, and test coverage. Monogate's card is served at /capability_card.json and /.well-known/capcard.json.",
+    see: "/capability_card.json" },
+  { term: "CapCard v3",
+    defn: "Current schema version. Adds eml_metrics, neural_metrics, agent_usage, and agent_queries so agents can filter tools by computable numbers.",
+    see: "/capability_card.json" },
+  { term: "Cauchy equation",
+    defn: "One of three functional equations — additive f(x+y)=f(x)+f(y), multiplicative f(x+y)=f(x)f(y), logarithmic f(xy)=f(x)+f(y). Their continuous solutions are cx, eᶜˣ, and c·ln x — each a minimal EML tree.",
+    see: "/blog/olympiad-meets-eml" },
+  { term: "Cobweb diagram",
+    defn: "A visualisation for iteration of a real map: y = x line plus f(x), ladder drawn to show orbit. Used in the Conjugacy Viewer.",
+    see: "https://monogate.dev/lab/conjugacy" },
+  { term: "Complete operator",
+    defn: "An F16 operator that can express every elementary function. Eight of the sixteen are complete: EML, EDL, EXL, EAL, EPL, LEAd, ELAd, ELSb.",
+    see: "/framework" },
+  { term: "Completeness theorem (T26–T28)",
+    defn: "An F16 operator is complete iff it contains exp(+x) with no domain restriction on self-composition. One structural rule explains all sixteen cases.",
+    see: "/blog/completeness-characterization" },
+  { term: "Cosh preserves ELC",
+    defn: "cosh/sinh/tanh are arithmetic combinations of exp(±x); the hyperbolic functions stay inside ELC(ℝ). sin/cos do not. Lean-verified in HyperbolicPreservation.lean.",
+    see: "/proofs" },
+  { term: "d(d) = 3",
+    defn: "A placeholder in early drafts now retired. Do not use.",
+    see: "/framework" },
+  { term: "DEML",
+    defn: "deml(x, y) = exp(−x) − ln(y). The negated-exponential variant of EML. One-node representation of exp(−x) (deml(x, 1) = exp(−x)).",
+    see: "/framework" },
+  { term: "Depth hierarchy",
+    defn: "EML-0 ⊊ EML-1 ⊊ … the class of real values / functions constructible in at most k EML node applications. Strict at k = 0, 1; conjecturally strict for all k. Lean-verified at k = 1 (EMLDepth.lean).",
+    see: "/theorems" },
+  { term: "Domain coloring",
+    defn: "A plot of a complex function where hue = argument and brightness = modulus. Used in the Zen Garden renderer.",
+    see: "https://monogate.dev/lab/zen-garden" },
+  { term: "EAL",
+    defn: "eal(x, y) = exp(x) + ln(y). Complete; one-node representation of exp(x) + 1 via EAL(x, e).",
+    see: "/framework" },
+  { term: "EDL",
+    defn: "edl(x, y) = exp(x) / ln(y). Complete; multiplicative counterpart of EML.",
+    see: "/framework" },
+  { term: "ELAd",
+    defn: "elad(a, b) = exp(a + ln b) = eᵃ · b. Hybrid-operator shortcut; 1-node SuperBEST construction for multiplication after one ln setup.",
+    see: "/superbest" },
+  { term: "ELC(ℝ)",
+    defn: "Elementary Log–Constructive class over the reals. The class of real values (or functions) expressible as a finite real EML tree over algebraic constants. Non-oscillatory elementary constants live here.",
+    see: "/framework" },
+  { term: "EMN",
+    defn: "emn(x, y) = ln(y) − exp(x) = −eml(x, y). Approximately complete — generates exp(−x) but not exp(+x) as a finite real tree.",
+    see: "/framework" },
+  { term: "EPL / ELMl",
+    defn: "Power primitive. ELMl(k, x) = exp(k · ln x) = xᵏ is a 1-node F16 operator for x > 0 (UpperBounds.lean).",
+    see: "/proofs" },
+  { term: "EXL",
+    defn: "exl(x, y) = exp(x) · ln(y). Complete; source of the period-3 Sharkovskii regime in the EML family.",
+    see: "/blog/chaos-multiplicative-operators" },
+  { term: "F16",
+    defn: "The sixteen binary operators built from exp(±x), ln(±y), and the four combiners {+, −, ·, /}. Monogate's base operator family.",
+    see: "/framework" },
+  { term: "Feigenbaum δ",
+    defn: "The universal ratio ≈ 4.6692 of successive period-doubling bifurcation intervals. EXL's period-3 cascade gives area ratios 4.60 / 4.44 / 4.45 — within 3.7 % of δ.",
+    see: "/blog/chaos-multiplicative-operators" },
+  { term: "Fractal Studio",
+    defn: "Interactive explorer for the EML-family Mandelbrot sets with visual / audio / sequencer / orbit / morph modes.",
+    see: "https://monogate.dev/lab/fractal-studio" },
+  { term: "Infinite Zeros Barrier (T01)",
+    defn: "No finite real EML tree equals sin over all of ℝ. Any finite EML tree is real-analytic with isolated zeros; sin has zeros at every integer multiple of π.",
+    see: "/theorems" },
+  { term: "Isomorphism family",
+    defn: "A set of equations from different scientific domains sharing the same EML tree. Beer-Lambert / radioactive decay / compound interest form a 5-node isomorphism family.",
+    see: "/blog" },
+  { term: "Lambert W",
+    defn: "Inverse of z·eᶻ. Fixed points of exp on the slit plane are z_k* = −W_k(−1). Multiplier duality (EMLDuality.lean) says deriv(exp)·deriv(log) = 1 at each fixed point.",
+    see: "/proofs" },
+  { term: "Lean 4",
+    defn: "Proof assistant developed by de Moura. Monogate's 12 proof files compile under Lean 4 + Mathlib with zero sorries in 11 files and 2 sorries in one partial file.",
+    see: "/proofs" },
+  { term: "LEAd",
+    defn: "lead(x, y) = ln(exp(x) + y). Softplus primitive; LEAd(x, 1) = softplus(x). 1-node F16 operator.",
+    see: "/superbest" },
+  { term: "LEdiv",
+    defn: "lediv(x, y) = ln(exp(x) / y) = x − ln(y). 1-node F16 operator. Key routing for subtraction.",
+    see: "/superbest" },
+  { term: "Li-Yorke",
+    defn: "Period 3 implies chaos (1975). EXL's c-plane has a ~40 % period-3 region (NN / deep-session S10) — Li-Yorke chaos coexists with visibly stable 3-cycles.",
+    see: "https://monogate.dev/lab/period-map" },
+  { term: "Mandelbrot set",
+    defn: "The set of c-values for which the iteration zₙ₊₁ = op(zₙ, c) stays bounded starting from z₀ = 0. Monogate has eight F16-operator Mandelbrot sets side by side.",
+    see: "https://monogate.dev/lab/mandelbrot-grid" },
+  { term: "Node",
+    defn: "One application of an F16 operator. The unit of computational cost in this framework.",
+    see: "/superbest" },
+  { term: "Olympiad functional equation",
+    defn: "Classical problem class where f is characterised by an identity over (x, y). Their continuous solutions are minimal EML trees.",
+    see: "/blog/olympiad-meets-eml" },
+  { term: "Operator Morph",
+    defn: "Cinematic animation (1−t)·op₁ + t·op₂ that interpolates between two F16 Mandelbrot sets. Reveals non-monotonic area dips near t ≈ 0.4.",
+    see: "https://monogate.dev/lab/morph" },
+  { term: "Period-3 island",
+    defn: "Connected region of the c-plane where the iterate has period 3. EXL has two large mirror-symmetric islands centred at c = −1.392 ± 1.993j (deep-session S11).",
+    see: "https://monogate.dev/lab/period-map" },
+  { term: "Periodic Table of Equations",
+    defn: "Visual organisation of the 315-equation catalog by node count (row) and domain (column). The equation-genome K=5 clustering shows domain purity ~random — equations cluster by math, not by field.",
+    see: "https://monogate.dev/lab/equation-genome" },
+  { term: "PGC",
+    defn: "Positive Growth Criterion. Internal audit rule used during the F16 census.",
+    see: "/framework" },
+  { term: "Power mean",
+    defn: "(aᵖ + bᵖ)^{1/p}. Cost hierarchy: geometric 3n < arithmetic 4n < general p 5n < harmonic 8n.",
+    see: "/blog/olympiad-meets-eml" },
+  { term: "RMSNorm",
+    defn: "LLaMA-style root-mean-square normalisation. 4097n at d = 512 in SuperBEST — 58 % cheaper than LayerNorm's 9728n.",
+    see: "/blog" },
+  { term: "Sharkovskii ordering",
+    defn: "Period 3 ⊢ every other period. A period-3 orbit in an interval map forces orbits of every positive integer period (1964).",
+    see: "/blog/chaos-multiplicative-operators" },
+  { term: "Softplus",
+    defn: "f(x) = ln(1 + eˣ). The cheapest EML-native smooth activation — 1 node via LEAd(x, 1). Its derivative is sigmoid, which is 5n.",
+    see: "/blog" },
+  { term: "Sorry",
+    defn: "A placeholder in a Lean 4 proof that stands in for an unfinished step. Each sorry is one admitted fact.",
+    see: "/proofs" },
+  { term: "SuperBEST",
+    defn: "The optimal routing table mapping common arithmetic operations to the minimal number of F16 nodes. v5.2 positive-domain total is 15n across 10 ops vs 73n naive — 79.5 % savings.",
+    see: "/superbest" },
+  { term: "T01",
+    defn: "The Infinite Zeros Barrier theorem. Partially Lean-verified (analyticity lemmas all at 0 sorries; depth-k zero-count bound waits on o-minimal Mathlib).",
+    see: "/theorems" },
+  { term: "T02",
+    defn: "EML universality — every elementary function equals a finite EML tree over algebraic constants with the Euler Gateway.",
+    see: "/theorems" },
+  { term: "T03",
+    defn: "Euler Gateway: ceml(ix, 1) = exp(ix), so sin / cos are 1-complex-node under complex EML.",
+    see: "/theorems" },
+  { term: "T15",
+    defn: "Weierstrass universality for EML — any continuous function on a compact interval is uniformly approximable by finite EML trees.",
+    see: "/theorems" },
+  { term: "Trust score",
+    defn: "A quantitative summary of how well a project's claims are supported. Monogate's v3 card declares 0.97 (11 Lean-verified files, 4 reproducible benchmarks, 315-equation catalog with zero prediction error).",
+    see: "/capability_card.json" },
+  { term: "Well-known URI",
+    defn: "RFC 8615 convention — discoverable metadata at /.well-known/<name>. Monogate's CapCard is mirrored at /.well-known/capcard.json.",
+    see: "/.well-known/capcard.json" },
+  { term: "Zen Garden",
+    defn: "Living complex-plane EML interpreter with audio-reactive mode and domain-coloring overlays.",
+    see: "https://monogate.dev/lab/zen-garden" },
+];
+entries.sort((a, b) => a.term.localeCompare(b.term));
+
+// Bucket by first letter
+const buckets: Record<string, typeof entries> = {};
+for (const e of entries) {
+  const k = e.term[0].toUpperCase();
+  (buckets[k] ||= []).push(e);
+}
+const letters = Object.keys(buckets).sort();
+---
+
+<Base
+  title="Glossary — Monogate"
+  description="Alphabetical dictionary of every term used across the Monogate project — EML, F16, SuperBEST, ELC, CapCard, the Lean proofs, the lab experiences."
+>
+  <h1>Glossary</h1>
+  <p style="color: #6b7280; font-style: italic; margin: 0 0 20px;">
+    {entries.length} terms. Every one links to the page that explains it in depth.
+  </p>
+
+  <nav class="toc">
+    {letters.map((l) => <a href={`#ch-${l}`}>{l}</a>)}
+  </nav>
+
+  <div class="divider"></div>
+
+  {letters.map((l) => (
+    <section id={`ch-${l}`}>
+      <h2 class="letter">{l}</h2>
+      <dl>
+        {buckets[l].map((e) => (
+          <div class="row">
+            <dt>{e.term}</dt>
+            <dd>
+              {e.defn}{" "}
+              {e.see && <a href={e.see} class="see">→</a>}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  ))}
+
+  <style>
+    nav.toc {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      font-family: var(--mono); font-size: 0.85rem;
+      margin: 0 0 20px; color: var(--muted);
+    }
+    nav.toc a {
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    nav.toc a:hover { border-color: var(--orange); color: var(--orange); text-decoration: none; }
+
+    section h2.letter {
+      font-family: var(--mono);
+      color: var(--orange);
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      margin: 32px 0 10px;
+    }
+    dl { margin: 0; }
+    .row { margin: 0 0 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--border); }
+    .row:last-child { border-bottom: none; }
+    dt { font-weight: 700; color: var(--text); font-family: var(--serif); font-size: 1.05rem; margin-bottom: 3px; }
+    dd { margin: 0; color: var(--text); line-height: 1.7; font-size: 0.95rem; }
+    dd .see { color: var(--cyan); margin-left: 4px; font-family: var(--mono); }
+  </style>
+</Base>

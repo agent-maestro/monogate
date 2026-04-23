@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Manifesto — Monogate"
+  description="One page, 500 words. What Monogate is, what it found, what we built, and what it means — no math, no jargon."
+>
+  <h1>Monogate — Manifesto</h1>
+  <p style="color: #6b7280; font-style: italic; margin: 0 0 24px;">One equation.  Every elementary function.  Proved optimal.</p>
+
+  <div class="divider"></div>
+
+  <h2>What it is</h2>
+  <p>
+    Nearly every number that matters in science can be computed with
+    exponentials and logarithms.  Monogate shows that one equation
+    combines the two into a single building block that is enough to
+    construct <em>every</em> elementary function — sines, Gaussians,
+    growth rates, decay laws, everything — as a finite tree of
+    applications of that one block.
+  </p>
+  <p>
+    Think of it as the NAND gate of continuous mathematics.  NAND is
+    one binary operator that, combined with itself, computes every
+    boolean function.  Our operator does the same thing for
+    elementary real and complex functions.
+  </p>
+
+  <h2>What we found</h2>
+  <p>
+    There are exactly sixteen natural variants of this operator — the
+    full family of two-input functions built from signed exp and signed
+    log.  We mapped all sixteen.  Eight of them are complete in the
+    strict sense (they generate every elementary function); one is
+    approximately complete; the other seven hit real structural
+    barriers.
+  </p>
+  <p>
+    Given a list of common operations (add, multiply, square root,
+    power, reciprocal, and six more), we proved the smallest number of
+    our operator blocks needed to compute each of them — the
+    <strong>SuperBEST routing table</strong>.  On the ten standard
+    arithmetic primitives it takes fifteen blocks where the naïve
+    implementation takes seventy-three.  That's a <strong>79.5 %
+    reduction</strong> in the fundamental compute cost, with
+    mathematical proof.
+  </p>
+
+  <h2>What we proved</h2>
+  <p>
+    We wrote eleven of the core results as machine-checked Lean&nbsp;4
+    proofs.  A program — not a reviewer, not a reputation — verifies
+    every logical step from the axioms of mathematics.  All eleven
+    files compile with zero gaps.  One additional file is honestly
+    partial: two small steps wait on a chapter of real-analysis
+    infrastructure that doesn't exist in the Lean library yet.  See
+    <a href="/proofs">/proofs</a>.
+  </p>
+
+  <h2>What we built</h2>
+  <ul style="margin: 8px 0 20px 24px; line-height: 1.9;">
+    <li><a href="https://monogate.org">monogate.org</a> — research blog, the SuperBEST page, the Lean proofs, the theorem catalog.</li>
+    <li><a href="https://monogate.dev">monogate.dev</a> — interactive lab: fractal explorer, operator morph, equation genome, live SuperBEST cost tools, challenge board.</li>
+    <li><a href="https://pypi.org/project/monogate/">pypi.org/project/monogate</a> — open-source Python package with the full cost theory, 315-equation catalog, neural autodiff, and EML tree trainer.</li>
+    <li><a href="/capability_card.json">capability_card.json</a> — a machine-readable, agent-queryable declaration of every verified claim, served at a public URL so tools can consume it without human intervention.</li>
+    <li><a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a> — the original paper by Odrzywołek.</li>
+  </ul>
+
+  <h2>What it means</h2>
+  <p>
+    If the analysis is right — and every claim on this site is either
+    verified by a computer or flagged as an observation — then
+    low-level continuous compute has an obvious structural optimum,
+    and neural-network and scientific-simulation stacks have been
+    leaving eighty percent of that optimum on the table.  We believe
+    the optimum is real on silicon, not just on paper.  That's the
+    next build.
+  </p>
+
+  <h2>What's next</h2>
+  <ul style="margin: 8px 0 24px 24px; line-height: 1.9;">
+    <li>Hardware: a software model of an on-chip EML cell (16 operations in one cycle).  Error budgets and routing validation are done; an FPGA bring-up is the next chunk.</li>
+    <li>AI integration: the CapCard project — agents pick tools by verified cost, not by prose description.</li>
+    <li>Interactive depth: the Zen Garden and the Equation Genome are in beta.  More to come.</li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <p style="color: #6b7280; font-size: 0.9rem;">
+    Monogate Research · <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a> ·
+    <a href="https://github.com/almaguer1986/monogate">GitHub</a> ·
+    <a href="/proofs">11 verified proofs</a> ·
+    <a href="/capability_card.json">capability_card.json</a>
+  </p>
+</Base>
