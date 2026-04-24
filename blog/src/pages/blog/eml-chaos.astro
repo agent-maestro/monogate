@@ -33,11 +33,11 @@ import Base from '../../layouts/Base.astro';
   <div style="overflow-x: auto; margin: 24px 0;">
     <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px;">
       <thead>
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Operator</th>
-          <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Bounded fraction</th>
-          <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Correlation dim</th>
-          <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Character</th>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <th style="text-align: left; padding: 8px 12px; color: var(--muted);">Operator</th>
+          <th style="text-align: right; padding: 8px 12px; color: var(--muted);">Bounded fraction</th>
+          <th style="text-align: right; padding: 8px 12px; color: var(--muted);">Correlation dim</th>
+          <th style="text-align: left; padding: 8px 12px; color: var(--muted);">Character</th>
         </tr>
       </thead>
       <tbody>
@@ -50,10 +50,10 @@ import Base from '../../layouts/Base.astro';
           ['EDL',  '1.00', 'nan',   'Degenerate (division singularities)'],
         ].map(([op, bounded, dim, char]) => (
           <tr style="border-bottom: 1px solid #e2e2d812;">
-            <td style="padding: 8px 12px; color: #1a1a1a; font-weight: op === 'DEML' || op === 'EMN' ? 700 : 400;">{op}</td>
-            <td style="text-align: right; padding: 8px 12px; color: #1a1a1a;">{bounded}</td>
-            <td style="text-align: right; padding: 8px 12px; color: #15803d; font-weight: 700;">{dim}</td>
-            <td style="padding: 8px 12px; color: #6b7280;">{char}</td>
+            <td style="padding: 8px 12px; color: var(--text); font-weight: op === 'DEML' || op === 'EMN' ? 700 : 400;">{op}</td>
+            <td style="text-align: right; padding: 8px 12px; color: var(--text);">{bounded}</td>
+            <td style="text-align: right; padding: 8px 12px; color: var(--green); font-weight: 700;">{dim}</td>
+            <td style="padding: 8px 12px; color: var(--muted);">{char}</td>
           </tr>
         ))}
       </tbody>
@@ -87,7 +87,7 @@ import Base from '../../layouts/Base.astro';
     route to chaos. Reasons:
   </p>
 
-  <ol style="margin: 16px 0 20px 24px; color: #1a1a1a; line-height: 2;">
+  <ol style="margin: 16px 0 20px 24px; color: var(--text); line-height: 2;">
     <li>No bounded attractor for real k &gt; ln(k) + 1. The exponential growth always dominates.</li>
     <li>Baker domains and wandering domains (in the complex plane) prevent clean period-doubling.</li>
     <li>The Feigenbaum constant (4.669...) applies to maps with a quadratic maximum. The exponential map has no finite critical point.</li>
@@ -109,9 +109,9 @@ import Base from '../../layouts/Base.astro';
   <div style="overflow-x: auto; margin: 24px 0;">
     <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px;">
       <thead>
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Metric</th>
-          <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Value</th>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <th style="text-align: left; padding: 8px 12px; color: var(--muted);">Metric</th>
+          <th style="text-align: right; padding: 8px 12px; color: var(--muted);">Value</th>
         </tr>
       </thead>
       <tbody>
@@ -123,8 +123,8 @@ import Base from '../../layouts/Base.astro';
           ['Max λ', '+2.998'],
         ].map(([metric, val]) => (
           <tr style="border-bottom: 1px solid #e2e2d812;">
-            <td style="padding: 8px 12px; color: #1a1a1a;">{metric}</td>
-            <td style="text-align: right; padding: 8px 12px; color: #15803d; font-weight: 700;">{val}</td>
+            <td style="padding: 8px 12px; color: var(--text);">{metric}</td>
+            <td style="text-align: right; padding: 8px 12px; color: var(--green); font-weight: 700;">{val}</td>
           </tr>
         ))}
       </tbody>
@@ -144,9 +144,9 @@ import Base from '../../layouts/Base.astro';
   <div style="overflow-x: auto; margin: 24px 0;">
     <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px;">
       <thead>
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Session</th>
-          <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Main finding</th>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <th style="text-align: left; padding: 8px 12px; color: var(--muted);">Session</th>
+          <th style="text-align: left; padding: 8px 12px; color: var(--muted);">Main finding</th>
         </tr>
       </thead>
       <tbody>
@@ -156,8 +156,8 @@ import Base from '../../layouts/Base.astro';
           ['C3', 'Lyapunov landscape ↔ Mandelbrot interior: 92.9% / 92.6% correlation.'],
         ].map(([s, finding]) => (
           <tr style="border-bottom: 1px solid #e2e2d812;">
-            <td style="padding: 8px 12px; color: #15803d; font-weight: 700;">{s}</td>
-            <td style="padding: 8px 12px; color: #1a1a1a;">{finding}</td>
+            <td style="padding: 8px 12px; color: var(--green); font-weight: 700;">{s}</td>
+            <td style="padding: 8px 12px; color: var(--text);">{finding}</td>
           </tr>
         ))}
       </tbody>
@@ -166,8 +166,8 @@ import Base from '../../layouts/Base.astro';
 
   <div class="divider"></div>
 
-  <p style="color: #6b7280; font-size: 0.9rem;">
-    Explorer: <a href="https://monogate.dev/explorer?tab=attractor" style="color: #15803d;">monogate.dev/explorer?tab=attractor</a> ·
-    arXiv: <a href="https://arxiv.org/abs/2603.21852" style="color: #15803d;">2603.21852</a>
+  <p style="color: var(--muted); font-size: 0.9rem;">
+    Explorer: <a href="https://monogate.dev/explorer?tab=attractor" style="color: var(--green);">monogate.dev/explorer?tab=attractor</a> ·
+    arXiv: <a href="https://arxiv.org/abs/2603.21852" style="color: var(--green);">2603.21852</a>
   </p>
 </Base>

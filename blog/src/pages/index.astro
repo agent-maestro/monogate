@@ -65,7 +65,7 @@ import Base from '../layouts/Base.astro';
       width: auto;
       margin: 0 auto 36px;
       display: block;
-      filter: invert(1);
+      /* logo.svg is white; no filter needed on dark bg */
     }
     .tagline {
       font-family: var(--serif);
@@ -128,7 +128,7 @@ import Base from '../layouts/Base.astro';
     }
     nav.cards a.card:hover {
       border-color: var(--orange);
-      background: #ffffff;
+      background: var(--surface);
       text-decoration: none;
       transform: translateY(-1px);
     }

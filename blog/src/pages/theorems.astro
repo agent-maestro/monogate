@@ -2,11 +2,11 @@
 import Base from '../layouts/Base.astro';
 
 const TIER_META: Record<string, { color: string; desc: string }> = {
-  THEOREM:     { color: '#15803d', desc: 'Complete, checkable proof. No gaps.' },
-  PROPOSITION: { color: '#0e7490', desc: 'Proved, short or routine.' },
-  CONJECTURE:  { color: '#e8a020', desc: 'Precisely stated, believed true, unproved.' },
-  OBSERVATION: { color: '#b45309', desc: 'Empirical pattern. No proof.' },
-  DEFINITION:  { color: '#6d28d9', desc: 'A new concept or classification choice.' },
+  THEOREM:     { color: 'var(--green)', desc: 'Complete, checkable proof. No gaps.' },
+  PROPOSITION: { color: 'var(--cyan)', desc: 'Proved, short or routine.' },
+  CONJECTURE:  { color: 'var(--orange)', desc: 'Precisely stated, believed true, unproved.' },
+  OBSERVATION: { color: 'var(--orange)', desc: 'Empirical pattern. No proof.' },
+  DEFINITION:  { color: 'var(--violet)', desc: 'A new concept or classification choice.' },
   SPECULATION: { color: '#6b7280', desc: 'Interesting but not currently testable or provable.' },
 };
 
@@ -314,14 +314,14 @@ const obsCount = byTier['OBSERVATION'].length;
 <Base title="Theorem Catalog — monogate.org" description="Honest classification of monogate results. Every result labeled for what it actually is: theorem, proposition, conjecture, or observation.">
 
   <h1>Theorem Catalog</h1>
-  <p style="color: #6b7280; margin-bottom: 6px;">
+  <p style="color: var(--muted); margin-bottom: 6px;">
     Every result is labeled for what it actually is. Proved facts are theorems. Everything else is clearly marked.
   </p>
-  <p style="color: #6b7280; font-size: 0.85rem; margin-bottom: 20px;">
-    <span style="color: #15803d; font-weight: 700;">{theoremCount} theorems</span> ·
-    <span style="color: #0e7490; font-weight: 700;">{propCount} propositions</span> · <!-- T35+T40 reclassified from PROP→THEOREM (R18 audit) -->
-    <span style="color: #e8a020; font-weight: 700;">{conjCount} open conjectures</span> ·
-    <span style="color: #b45309; font-weight: 700;">{obsCount} observations</span>
+  <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 20px;">
+    <span style="color: var(--green); font-weight: 700;">{theoremCount} theorems</span> ·
+    <span style="color: var(--cyan); font-weight: 700;">{propCount} propositions</span> · <!-- T35+T40 reclassified from PROP→THEOREM (R18 audit) -->
+    <span style="color: var(--orange); font-weight: 700;">{conjCount} open conjectures</span> ·
+    <span style="color: var(--orange); font-weight: 700;">{obsCount} observations</span>
   </p>
 
   <!-- tier legend -->
@@ -335,7 +335,7 @@ const obsCount = byTier['OBSERVATION'].length;
 
   <!-- filter buttons -->
   <div id="filter-btns" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px;">
-    <button data-filter="all" class="filter-btn active" style="font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9ca3af; background: #9ca3af15; border: 1px solid #9ca3af30; border-radius: 3px; padding: 4px 10px; cursor: pointer;">
+    <button data-filter="all" class="filter-btn active" style="font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: #9ca3af15; border: 1px solid #9ca3af30; border-radius: 3px; padding: 4px 10px; cursor: pointer;">
       all <span style="opacity:0.5">{results.length}</span>
     </button>
     {TIER_ORDER.map(t => (
@@ -366,29 +366,29 @@ const obsCount = byTier['OBSERVATION'].length;
               <div
                 data-tier={r.tier}
                 class="result-card"
-                style={`background: #e2e2d8; border: 1px solid #e2e2d8; border-radius: 8px; padding: 14px 18px; margin-bottom: 10px; opacity: ${isResolved ? '0.55' : '1'};`}
+                style={`background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin-bottom: 10px; opacity: ${isResolved ? '0.55' : '1'};`}
               >
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px;">
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                    <span style="font-family: monospace; font-size: 10px; color: #6b7280;">{r.id}</span>
-                    <span style={`font-size: 13px; font-weight: 700; color: #1a1a1a; ${isResolved ? 'text-decoration: line-through;' : ''}`}>{r.name}</span>
+                    <span style="font-family: monospace; font-size: 10px; color: var(--muted);">{r.id}</span>
+                    <span style={`font-size: 13px; font-weight: 700; color: var(--text); ${isResolved ? 'text-decoration: line-through;' : ''}`}>{r.name}</span>
                     {isResolved && (
-                      <span style="font-size: 9px; color: #15803d; background: #15803d15; border: 1px solid #15803d30; border-radius: 3px; padding: 2px 6px;">
+                      <span style="font-size: 9px; color: var(--green); background: #15803d15; border: 1px solid #15803d30; border-radius: 3px; padding: 2px 6px;">
                         RESOLVED → {r.resolvedBy}
                       </span>
                     )}
                     {r.lean && (
-                      <span title={`${r.lean.file} / ${r.lean.theorem}`} style={`font-size: 9px; font-weight: 700; letter-spacing: 0.08em; padding: 2px 6px; border-radius: 3px; color: ${r.lean.status === 'verified' ? '#15803d' : '#b45309'}; background: ${r.lean.status === 'verified' ? '#15803d18' : '#b4530918'}; border: 1px solid ${r.lean.status === 'verified' ? '#15803d50' : '#b4530950'};`}>
+                      <span title={`${r.lean.file} / ${r.lean.theorem}`} style={`font-size: 9px; font-weight: 700; letter-spacing: 0.08em; padding: 2px 6px; border-radius: 3px; color: ${r.lean.status === 'verified' ? 'var(--green)' : 'var(--orange)'}; background: ${r.lean.status === 'verified' ? '#15803d18' : '#b4530918'}; border: 1px solid ${r.lean.status === 'verified' ? '#15803d50' : '#b4530950'};`}>
                         {r.lean.status === 'verified' ? 'LEAN ✓' : 'LEAN ~'}
                       </span>
                     )}
                   </div>
                   <span style={`font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: ${tc}; background: ${tc}15; border: 1px solid ${tc}30; border-radius: 3px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0;`}>{r.tier}</span>
                 </div>
-                <div style="font-size: 9px; color: #6b7280; margin-bottom: 7px;">{r.session} · {r.category}</div>
-                <div style="font-size: 11px; color: #9ca3af; line-height: 1.75; margin-bottom: 7px;">{r.statement}</div>
-                <div style="border-top: 1px solid #e2e2d8; padding-top: 7px; font-size: 10px; color: #6b7280; line-height: 1.7;">
-                  <span style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280;">
+                <div style="font-size: 9px; color: var(--muted); margin-bottom: 7px;">{r.session} · {r.category}</div>
+                <div style="font-size: 11px; color: var(--muted); line-height: 1.75; margin-bottom: 7px;">{r.statement}</div>
+                <div style="border-top: 1px solid var(--border); padding-top: 7px; font-size: 10px; color: var(--muted); line-height: 1.7;">
+                  <span style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);">
                     {r.tier === 'THEOREM' || r.tier === 'PROPOSITION' ? 'Proof: ' :
                      r.tier === 'CONJECTURE' ? 'Evidence: ' :
                      r.tier === 'OBSERVATION' ? 'Data: ' : 'Note: '}
@@ -396,10 +396,10 @@ const obsCount = byTier['OBSERVATION'].length;
                   {r.evidence}
                 </div>
                 {r.verify && (
-                  <div style="margin-top: 6px; padding: 5px 10px; background: #12151f; border-radius: 4px; font-family: monospace; font-size: 10px; color: #0e7490; overflow-x: auto; white-space: pre;">{r.verify}</div>
+                  <div style="margin-top: 6px; padding: 5px 10px; background: #12151f; border-radius: 4px; font-family: monospace; font-size: 10px; color: var(--cyan); overflow-x: auto; white-space: pre;">{r.verify}</div>
                 )}
                 {r.deps && (
-                  <div style="margin-top: 5px; font-size: 10px; color: #6b7280;">Depends on: {r.deps}</div>
+                  <div style="margin-top: 5px; font-size: 10px; color: var(--muted);">Depends on: {r.deps}</div>
                 )}
               </div>
             );
@@ -409,12 +409,12 @@ const obsCount = byTier['OBSERVATION'].length;
     })}
   </div>
 
-  <div style="margin-top: 40px; padding-top: 16px; border-top: 1px solid #e2e2d8; font-size: 11px; color: #6b7280;">
+  <div style="margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted);">
     <a href="/">← monogate.org</a> ·
     <a href="/atlas">Atlas →</a> ·
     <a href="/blog">Blog →</a> ·
-    <a href="https://arxiv.org/abs/2603.21852" style="color: #0e7490;">arXiv:2603.21852</a> ·
-    <a href="https://github.com/almaguer1986/monogate-lean" target="_blank" rel="noopener" style="color: #15803d;">Machine-verified proofs (Lean 4) →</a>
+    <a href="https://arxiv.org/abs/2603.21852" style="color: var(--cyan);">arXiv:2603.21852</a> ·
+    <a href="https://github.com/almaguer1986/monogate-lean" target="_blank" rel="noopener" style="color: var(--green);">Machine-verified proofs (Lean 4) →</a>
   </div>
 
 </Base>

@@ -14,7 +14,7 @@ import Base from '../../layouts/Base.astro';
   </div>
 
   <h1>The EML Complexity Census</h1>
-  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+  <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     23 functions classified by their minimum EML approximation depth. Three categories:
     proved, computational observation, and still open.
   </p>
@@ -41,10 +41,10 @@ import Base from '../../layouts/Base.astro';
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem; margin: 16px 0;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 8px 10px; color: #6b7280; font-size: 0.75rem;">Function</th>
-        <th style="text-align: center; padding: 8px 10px; color: #6b7280; font-size: 0.75rem;">EML depth</th>
-        <th style="text-align: left; padding: 8px 10px; color: #6b7280; font-size: 0.75rem;">Status</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 8px 10px; color: var(--muted); font-size: 0.75rem;">Function</th>
+        <th style="text-align: center; padding: 8px 10px; color: var(--muted); font-size: 0.75rem;">EML depth</th>
+        <th style="text-align: left; padding: 8px 10px; color: var(--muted); font-size: 0.75rem;">Status</th>
       </tr>
     </thead>
     <tbody>
@@ -73,16 +73,16 @@ import Base from '../../layouts/Base.astro';
         ["floor ⌊x⌋", "∞", "proved", "Countably infinite discontinuities."],
         ["sin(sin(x))", "?", "open", "Convergence is slow. Current search: depth ≤ 4."],
       ].map(([fn, depth, status, note], i) => (
-        <tr style={`border-bottom: 1px solid #e2e2d8; ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
-          <td style="padding: 8px 10px; color: #1a1a1a;">{fn}</td>
-          <td style={`padding: 8px 10px; text-align: center; font-weight: 700; color: ${depth === '∞' ? '#b45309' : depth === '?' ? '#6b7280' : depth === '0' ? '#6b7280' : depth === '1' ? '#0e7490' : depth === '2' ? '#6d28d9' : '#be185d'};`}>{depth}</td>
-          <td style={`padding: 8px 10px; color: ${status === 'proved' ? '#15803d' : status === 'computational' ? '#b45309' : status === 'open' ? '#f87171' : '#6b7280'}; font-size: 0.8rem;`}>{status}</td>
+        <tr style={`border-bottom: 1px solid var(--border); ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
+          <td style="padding: 8px 10px; color: var(--text);">{fn}</td>
+          <td style={`padding: 8px 10px; text-align: center; font-weight: 700; color: ${depth === '∞' ? 'var(--orange)' : depth === '?' ? '#6b7280' : depth === '0' ? '#6b7280' : depth === '1' ? 'var(--cyan)' : depth === '2' ? 'var(--violet)' : 'var(--pink)'};`}>{depth}</td>
+          <td style={`padding: 8px 10px; color: ${status === 'proved' ? 'var(--green)' : status === 'computational' ? 'var(--orange)' : status === 'open' ? '#f87171' : '#6b7280'}; font-size: 0.8rem;`}>{status}</td>
         </tr>
       ))}
     </tbody>
   </table>
 
-  <p style="font-size: 0.85rem; color: #6b7280;">
+  <p style="font-size: 0.85rem; color: var(--muted);">
     <em>Proved</em>: formal proof exists. <em>Computational</em>: exhaustive or deep search confirms depth, no formal proof.
     <em>Open</em>: depth unknown, active question.
   </p>
@@ -133,7 +133,7 @@ import Base from '../../layouts/Base.astro';
 
   <h3>License</h3>
 
-  <p style="color: #6b7280; font-size: 0.9rem;">
+  <p style="color: var(--muted); font-size: 0.9rem;">
     CC BY 4.0 — free to share and adapt with attribution. ·
     Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
     Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>

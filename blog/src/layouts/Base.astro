@@ -70,6 +70,10 @@ const articleLd = (type === "article" || date) ? {
     <link rel="alternate" type="application/rss+xml" title="Monogate Research Blog" href="/rss.xml" />
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content={title ?? "Monogate — One Operator for All Elementary Functions"} />
     <meta property="og:description" content={description ?? "16 operators. 14 nodes. 80.8% savings. Proved optimal."} />
@@ -90,20 +94,22 @@ const articleLd = (type === "article" || date) ? {
     {articleLd && <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />}
     <style>
       :root {
-        --bg: #fafaf8;
-        --surface: #f4f4f0;
-        --border: #e2e2d8;
-        --text: #1a1a1a;
-        --muted: #6b7280;
-        --accent: #4facfe;
-        --cyan: #0e7490;         /* darkened from #2563eb — AA 5.0:1 on --bg */
-        --pink: #be185d;         /* darkened from #be185d — AA 5.1:1 */
-        --orange: #e8a020;       /* brand, used on the large wordmark only (3:1 for large text) */
-        --green: #15803d;        /* NEW — "savings" highlights; AA 4.5:1 */
-        --violet: #6d28d9;       /* NEW — AA 5.9:1 */
-        --red: #b91c1c;          /* NEW — AA 6.0:1 */
-        --mono: 'Space Mono', monospace;
-        --serif: 'Georgia', serif;
+        /* Dark/gold palette (swapped 2026-04-24 from the warm-paper light theme). */
+        --bg: #0a0a0c;
+        --surface: #12121a;       /* card bg */
+        --border: #1e1e2a;        /* card border */
+        --text: #e8e6e3;
+        --muted: #6b6866;         /* dim text */
+        --accent: #c4a77d;        /* gold — primary accent */
+        --cyan: #7d9ec4;          /* secondary blue */
+        --pink: #d4698b;          /* dark-bg-friendly pink */
+        --orange: #c4a77d;        /* brand: large wordmark now uses gold */
+        --green: #5fb57a;         /* savings highlights on dark */
+        --violet: #a78bfa;        /* dark-bg violet */
+        --red: #f87171;           /* dark-bg red */
+        --glow: rgba(196, 167, 125, 0.15);
+        --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+        --serif: 'Playfair Display', Georgia, serif;
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body {
@@ -112,6 +118,7 @@ const articleLd = (type === "article" || date) ? {
         font-family: var(--serif);
         font-size: 16px;
         line-height: 1.75;
+        font-weight: 400;
         -webkit-font-smoothing: antialiased;
       }
       a { color: var(--accent); text-decoration: none; }
@@ -229,8 +236,8 @@ const articleLd = (type === "article" || date) ? {
         font-size: 1.2em;
         color: var(--accent);
         padding: 20px;
-        background: rgba(79,172,254,0.06);
-        border: 1px solid rgba(79,172,254,0.15);
+        background: rgba(196,167,125,0.06);
+        border: 1px solid rgba(196,167,125,0.18);
         border-radius: 12px;
         margin: 24px 0;
       }

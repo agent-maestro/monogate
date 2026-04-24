@@ -14,11 +14,11 @@ import Base from '../../layouts/Base.astro';
   </div>
 
   <h1>What BEST Routing Actually Saves</h1>
-  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+  <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     Empirical speedups from hybrid EML/EDL/EXL/EAL dispatch. The numbers, honestly reported.
     Updated 2026-04-20 with SuperBEST FINAL table (neg=2n, mul=3n, sub=3n).
     <br />
-    <a href="https://monogate.dev/explorer?tab=benchmarks" style="color: #15803d;">
+    <a href="https://monogate.dev/explorer?tab=benchmarks" style="color: var(--green);">
       → Run the benchmark suite yourself (instant, no login)
     </a>
   </p>
@@ -29,7 +29,7 @@ import Base from '../../layouts/Base.astro';
     The EML operator family has three members:
   </p>
 
-  <ul style="margin: 16px 0 20px 24px; color: #1a1a1a; line-height: 2;">
+  <ul style="margin: 16px 0 20px 24px; color: var(--text); line-height: 2;">
     <li><strong>EML</strong>: <code>exp(x) − ln(y)</code></li>
     <li><strong>EDL</strong>: <code>exp(x) / ln(y)</code></li>
     <li><strong>EXL</strong>: <code>exp(x) · ln(y)</code></li>
@@ -50,11 +50,11 @@ import Base from '../../layouts/Base.astro';
   <div style="overflow-x: auto; margin: 24px 0;">
     <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px;">
       <thead>
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Function</th>
-          <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Pure EML</th>
-          <th style="text-align: right; padding: 8px 12px; color: #15803d;">BEST</th>
-          <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Savings</th>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <th style="text-align: left; padding: 8px 12px; color: var(--muted);">Function</th>
+          <th style="text-align: right; padding: 8px 12px; color: var(--muted);">Pure EML</th>
+          <th style="text-align: right; padding: 8px 12px; color: var(--green);">BEST</th>
+          <th style="text-align: right; padding: 8px 12px; color: var(--muted);">Savings</th>
         </tr>
       </thead>
       <tbody>
@@ -71,10 +71,10 @@ import Base from '../../layouts/Base.astro';
           ['sin(x)',       245, 63, 74],
         ].map(([fn, pure, best, pct]) => (
           <tr style="border-bottom: 1px solid #e2e2d812;">
-            <td style="padding: 8px 12px; color: #1a1a1a;">{fn}</td>
-            <td style="text-align: right; padding: 8px 12px; color: #1a1a1a;">{pure}</td>
-            <td style="text-align: right; padding: 8px 12px; color: #15803d; font-weight: 700;">{best}</td>
-            <td style="text-align: right; padding: 8px 12px; color: #6b7280;">{pct > 0 ? `−${pct}%` : '—'}</td>
+            <td style="padding: 8px 12px; color: var(--text);">{fn}</td>
+            <td style="text-align: right; padding: 8px 12px; color: var(--text);">{pure}</td>
+            <td style="text-align: right; padding: 8px 12px; color: var(--green); font-weight: 700;">{best}</td>
+            <td style="text-align: right; padding: 8px 12px; color: var(--muted);">{pct > 0 ? `−${pct}%` : '—'}</td>
           </tr>
         ))}
       </tbody>
@@ -99,10 +99,10 @@ import Base from '../../layouts/Base.astro';
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px; margin: 24px 0;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Workload</th>
-        <th style="text-align: right; padding: 8px 12px; color: #6b7280;">Node savings</th>
-        <th style="text-align: right; padding: 8px 12px; color: #b45309;">Speedup</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 8px 12px; color: var(--muted);">Workload</th>
+        <th style="text-align: right; padding: 8px 12px; color: var(--muted);">Node savings</th>
+        <th style="text-align: right; padding: 8px 12px; color: var(--orange);">Speedup</th>
       </tr>
     </thead>
     <tbody>
@@ -112,9 +112,9 @@ import Base from '../../layouts/Base.astro';
         ['GELU (Transformer FFN)', '18%', '0.93×'],
       ].map(([wl, savings, speedup]) => (
         <tr style="border-bottom: 1px solid #e2e2d812;">
-          <td style="padding: 8px 12px; color: #1a1a1a;">{wl}</td>
-          <td style="text-align: right; padding: 8px 12px; color: #1a1a1a;">{savings}</td>
-          <td style="text-align: right; padding: 8px 12px; color: #b45309; font-weight: 700;">{speedup}</td>
+          <td style="padding: 8px 12px; color: var(--text);">{wl}</td>
+          <td style="text-align: right; padding: 8px 12px; color: var(--text);">{savings}</td>
+          <td style="text-align: right; padding: 8px 12px; color: var(--orange); font-weight: 700;">{speedup}</td>
         </tr>
       ))}
     </tbody>
@@ -134,10 +134,10 @@ import Base from '../../layouts/Base.astro';
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 13px; margin: 24px 0;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 8px 12px; color: #6b7280;">Backend</th>
-        <th style="text-align: right; padding: 8px 12px; color: #6b7280;">ms/step</th>
-        <th style="text-align: right; padding: 8px 12px; color: #0e7490;">Speedup</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 8px 12px; color: var(--muted);">Backend</th>
+        <th style="text-align: right; padding: 8px 12px; color: var(--muted);">ms/step</th>
+        <th style="text-align: right; padding: 8px 12px; color: var(--cyan);">Speedup</th>
       </tr>
     </thead>
     <tbody>
@@ -148,9 +148,9 @@ import Base from '../../layouts/Base.astro';
         ['Rust (monogate-core)', '1.4', '5.9×'],
       ].map(([backend, ms, speedup]) => (
         <tr style="border-bottom: 1px solid #e2e2d812;">
-          <td style="padding: 8px 12px; color: #1a1a1a;">{backend}</td>
-          <td style="text-align: right; padding: 8px 12px; color: #1a1a1a;">{ms}</td>
-          <td style="text-align: right; padding: 8px 12px; color: #0e7490; font-weight: 700;">{speedup}</td>
+          <td style="padding: 8px 12px; color: var(--text);">{backend}</td>
+          <td style="text-align: right; padding: 8px 12px; color: var(--text);">{ms}</td>
+          <td style="text-align: right; padding: 8px 12px; color: var(--cyan); font-weight: 700;">{speedup}</td>
         </tr>
       ))}
     </tbody>
@@ -176,7 +176,7 @@ import Base from '../../layouts/Base.astro';
 
   <div class="divider"></div>
 
-  <p style="color: #6b7280; font-size: 0.9rem;">
+  <p style="color: var(--muted); font-size: 0.9rem;">
     Install: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
     Rust source: <a href="https://github.com/odrzywolak/monogate">monogate-core/</a>
   </p>

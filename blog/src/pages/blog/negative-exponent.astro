@@ -14,7 +14,7 @@ import Base from '../../layouts/Base.astro';
   </div>
 
   <h1>exp(−x) and the Five-Operator Barrier</h1>
-  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+  <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     The negative exponential appears in almost every physics law. It is blocked for 1-node
     construction in EML and four related operators. DEML is the operator that breaks through.
   </p>
@@ -47,41 +47,41 @@ import Base from '../../layouts/Base.astro';
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.9rem; margin: 16px 0;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 8px 12px; color: #6b7280; font-size: 0.8rem;">Operator</th>
-        <th style="text-align: left; padding: 8px 12px; color: #6b7280; font-size: 0.8rem;">Definition</th>
-        <th style="text-align: left; padding: 8px 12px; color: #6b7280; font-size: 0.8rem;">1-node exp(−x)?</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 8px 12px; color: var(--muted); font-size: 0.8rem;">Operator</th>
+        <th style="text-align: left; padding: 8px 12px; color: var(--muted); font-size: 0.8rem;">Definition</th>
+        <th style="text-align: left; padding: 8px 12px; color: var(--muted); font-size: 0.8rem;">1-node exp(−x)?</th>
       </tr>
     </thead>
     <tbody>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <td style="padding: 8px 12px; color: #1a1a1a;">EML</td>
-        <td style="padding: 8px 12px; color: #6b7280;">exp(x) − ln(y)</td>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 8px 12px; color: var(--text);">EML</td>
+        <td style="padding: 8px 12px; color: var(--muted);">exp(x) − ln(y)</td>
         <td style="padding: 8px 12px; color: #f87171;">blocked</td>
       </tr>
-      <tr style="border-bottom: 1px solid #e2e2d8; background: rgba(255,255,255,0.01);">
-        <td style="padding: 8px 12px; color: #1a1a1a;">EDL</td>
-        <td style="padding: 8px 12px; color: #6b7280;">exp(x) / ln(y)</td>
+      <tr style="border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+        <td style="padding: 8px 12px; color: var(--text);">EDL</td>
+        <td style="padding: 8px 12px; color: var(--muted);">exp(x) / ln(y)</td>
         <td style="padding: 8px 12px; color: #f87171;">blocked</td>
       </tr>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <td style="padding: 8px 12px; color: #1a1a1a;">EXL</td>
-        <td style="padding: 8px 12px; color: #6b7280;">exp(x) · ln(y)</td>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 8px 12px; color: var(--text);">EXL</td>
+        <td style="padding: 8px 12px; color: var(--muted);">exp(x) · ln(y)</td>
         <td style="padding: 8px 12px; color: #f87171;">blocked</td>
       </tr>
-      <tr style="border-bottom: 1px solid #e2e2d8; background: rgba(255,255,255,0.01);">
-        <td style="padding: 8px 12px; color: #1a1a1a;">EAL</td>
-        <td style="padding: 8px 12px; color: #6b7280;">exp(x) + ln(y)</td>
+      <tr style="border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+        <td style="padding: 8px 12px; color: var(--text);">EAL</td>
+        <td style="padding: 8px 12px; color: var(--muted);">exp(x) + ln(y)</td>
         <td style="padding: 8px 12px; color: #f87171;">blocked</td>
       </tr>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <td style="padding: 8px 12px; color: #1a1a1a;">EMN</td>
-        <td style="padding: 8px 12px; color: #6b7280;">exp(x) − ln(−y)</td>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 8px 12px; color: var(--text);">EMN</td>
+        <td style="padding: 8px 12px; color: var(--muted);">exp(x) − ln(−y)</td>
         <td style="padding: 8px 12px; color: #f87171;">blocked</td>
       </tr>
       <tr style="background: rgba(94,196,122,0.04);">
         <td style="padding: 8px 12px; color: #5ec47a; font-weight: 700;">DEML</td>
-        <td style="padding: 8px 12px; color: #6b7280;">exp(−x) − ln(y)</td>
+        <td style="padding: 8px 12px; color: var(--muted);">exp(−x) − ln(y)</td>
         <td style="padding: 8px 12px; color: #5ec47a; font-weight: 700;">✓ one node</td>
       </tr>
     </tbody>
@@ -128,7 +128,7 @@ import Base from '../../layouts/Base.astro';
 
   <h3>License</h3>
 
-  <p style="color: #6b7280; font-size: 0.9rem;">
+  <p style="color: var(--muted); font-size: 0.9rem;">
     CC BY 4.0 — free to share and adapt with attribution. ·
     Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
     Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>

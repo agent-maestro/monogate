@@ -6,7 +6,7 @@ const strata = [
   {
     depth: '0',
     name: 'Arithmetic',
-    color: '#475569',
+    color: 'var(--muted)',
     desc: 'Constants and polynomials. No exp or ln required.',
     entries: [
       { name: 'Integers, rationals',        cost: '0 nodes', proof: null },
@@ -18,7 +18,7 @@ const strata = [
   {
     depth: '1',
     name: 'Exponential',
-    color: '#0e7490',
+    color: 'var(--cyan)',
     desc: 'One application of exp or ln. The native depth of EML.',
     entries: [
       { name: 'exp(x)',                     cost: '1 node (EML)',  proof: 'T03' },
@@ -56,7 +56,7 @@ const strata = [
   {
     depth: '3',
     name: 'Oscillatory (ℂ path)',
-    color: '#be185d',
+    color: 'var(--pink)',
     desc: 'Requires the complex bypass — sin, cos, trig via Euler. Depth-∞ over ℝ, depth-1 to 3 over ℂ.',
     entries: [
       { name: 'sin(x) Taylor, 8 terms',    cost: '101 nodes (real path)', proof: 'T16' },
@@ -68,7 +68,7 @@ const strata = [
   {
     depth: '∞',
     name: 'Non-constructible (ℝ)',
-    color: '#b91c1c',
+    color: 'var(--red)',
     desc: 'Provably unreachable as finite real EML trees. Require either infinite depth or complex domain.',
     entries: [
       { name: 'sin(x)  over ℝ',            cost: '∞ (Infinite Zeros Barrier)', proof: 'T01' },
@@ -126,10 +126,10 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
 <Base title="EML Atlas — monogate.org" description="Classification of mathematical objects and functions by EML depth and node cost. The complete reference for the exp-ln operator family.">
 
   <h1>EML Atlas</h1>
-  <p style="color: #6b7280; font-style: italic; margin-bottom: 8px;">
+  <p style="color: var(--muted); font-style: italic; margin-bottom: 8px;">
     Mathematical objects classified by EML depth and operator cost.
   </p>
-  <p style="color: #6b7280; font-size: 0.85rem; margin-bottom: 32px;">
+  <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 32px;">
     Last updated: 2026-04-20 · SuperBEST v4: 19n, all entries structurally proved · T08+T30+T35+T40 → THEOREM · recip=1n (ELSb), div corrected 1n→2n, sub/mul corrected to 2n
   </p>
 
@@ -137,7 +137,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
 
   <!-- ── DEPTH STRATA ──────────────────────────────────────────────────── -->
   <h2>Depth Strata</h2>
-  <p style="color: #6b7280; margin-bottom: 24px; font-size: 0.9rem;">
+  <p style="color: var(--muted); margin-bottom: 24px; font-size: 0.9rem;">
     EML depth measures how many nested exponentiations a function requires.
     Depth 0 = no exp/ln. Depth 1 = one application. Depth ∞ = impossible as a finite real tree.
   </p>
@@ -150,21 +150,21 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
         </span>
         <span style={`font-size: 1rem; font-weight: 600; color: ${s.color};`}>{s.name}</span>
       </div>
-      <p style="color: #6b7280; font-size: 0.85rem; margin-bottom: 14px;">{s.desc}</p>
+      <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 14px;">{s.desc}</p>
       <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem;">
         <thead>
-          <tr style="border-bottom: 1px solid #e2e2d8;">
-            <th style="text-align: left; padding: 4px 8px 6px 0; color: #6b7280; font-weight: 600; width: 46%;">Object</th>
-            <th style="text-align: left; padding: 4px 8px 6px 8px; color: #6b7280; font-weight: 600; width: 32%;">Cost</th>
-            <th style="text-align: left; padding: 4px 0 6px 8px; color: #6b7280; font-weight: 600;">Ref</th>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <th style="text-align: left; padding: 4px 8px 6px 0; color: var(--muted); font-weight: 600; width: 46%;">Object</th>
+            <th style="text-align: left; padding: 4px 8px 6px 8px; color: var(--muted); font-weight: 600; width: 32%;">Cost</th>
+            <th style="text-align: left; padding: 4px 0 6px 8px; color: var(--muted); font-weight: 600;">Ref</th>
           </tr>
         </thead>
         <tbody>
           {s.entries.map(e => (
-            <tr style="border-bottom: 1px solid #e2e2d8;">
-              <td style="padding: 5px 8px 5px 0; color: #1a1a1a; font-family: var(--mono); font-size: 0.8rem;">{e.name}</td>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 5px 8px 5px 0; color: var(--text); font-family: var(--mono); font-size: 0.8rem;">{e.name}</td>
               <td style={`padding: 5px 8px; color: ${s.color}; font-family: var(--mono); font-size: 0.78rem;`}>{e.cost}</td>
-              <td style="padding: 5px 0 5px 8px; color: #6b7280; font-size: 0.75rem; font-family: var(--mono);">
+              <td style="padding: 5px 0 5px 8px; color: var(--muted); font-size: 0.75rem; font-family: var(--mono);">
                 {e.proof ? <a href="/theorems" style={`color: ${s.color}; opacity: 0.7;`}>{e.proof}</a> : '—'}
               </td>
             </tr>
@@ -178,36 +178,36 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
 
   <!-- ── SUPERBEST TABLE ───────────────────────────────────────────────── -->
   <h2>SuperBEST Routing Table</h2>
-  <p style="color: #6b7280; margin-bottom: 6px; font-size: 0.9rem;">
+  <p style="color: var(--muted); margin-bottom: 6px; font-size: 0.9rem;">
     Minimum node counts across the 16-operator family. All entries proved optimal by exhaustive search (T08).
-    Total: <strong style="color: #15803d;">{totalSuperbest} nodes</strong> vs {totalNaive} naive = <strong style="color: #15803d;">{savings}% savings</strong>.
+    Total: <strong style="color: var(--green);">{totalSuperbest} nodes</strong> vs {totalNaive} naive = <strong style="color: var(--green);">{savings}% savings</strong>.
   </p>
-  <p style="color: #6b7280; font-size: 0.8rem; margin-bottom: 20px;">
+  <p style="color: var(--muted); font-size: 0.8rem; margin-bottom: 20px;">
     * sin/cos column compares 1-node complex path vs 101-node real Taylor path
   </p>
 
   <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 32px;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 6px 8px 8px 0; color: #6b7280; font-weight: 600;">Operation</th>
-        <th style="text-align: left; padding: 6px 8px; color: #6b7280; font-weight: 600;">Best family</th>
-        <th style="text-align: right; padding: 6px 8px; color: #15803d; font-weight: 600;">Nodes</th>
-        <th style="text-align: right; padding: 6px 0 8px 8px; color: #6b7280; font-weight: 600;">Naive</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: var(--muted); font-weight: 600;">Operation</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600;">Best family</th>
+        <th style="text-align: right; padding: 6px 8px; color: var(--green); font-weight: 600;">Nodes</th>
+        <th style="text-align: right; padding: 6px 0 8px 8px; color: var(--muted); font-weight: 600;">Naive</th>
       </tr>
     </thead>
     <tbody>
       {superbest.map(r => (
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: #1a1a1a; font-size: 0.8rem;">{r.op}</td>
-          <td style="padding: 5px 8px; font-family: var(--mono); color: #0e7490; font-size: 0.78rem;">{r.family}</td>
-          <td style="padding: 5px 8px; text-align: right; font-family: var(--mono); color: #15803d; font-weight: 700;">{r.nodes}</td>
-          <td style="padding: 5px 0 5px 8px; text-align: right; font-family: var(--mono); color: #6b7280;">{r.naive}</td>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--text); font-size: 0.8rem;">{r.op}</td>
+          <td style="padding: 5px 8px; font-family: var(--mono); color: var(--cyan); font-size: 0.78rem;">{r.family}</td>
+          <td style="padding: 5px 8px; text-align: right; font-family: var(--mono); color: var(--green); font-weight: 700;">{r.nodes}</td>
+          <td style="padding: 5px 0 5px 8px; text-align: right; font-family: var(--mono); color: var(--muted);">{r.naive}</td>
         </tr>
       ))}
-      <tr style="border-top: 1px solid #e2e2d8; font-weight: 700;">
-        <td style="padding: 8px 8px 4px 0; color: #1a1a1a; font-family: var(--mono);" colspan="2">Total</td>
-        <td style="padding: 8px 8px 4px 8px; text-align: right; color: #15803d; font-family: var(--mono);">{totalSuperbest}</td>
-        <td style="padding: 8px 0 4px 8px; text-align: right; color: #6b7280; font-family: var(--mono);">{totalNaive}</td>
+      <tr style="border-top: 1px solid var(--border); font-weight: 700;">
+        <td style="padding: 8px 8px 4px 0; color: var(--text); font-family: var(--mono);" colspan="2">Total</td>
+        <td style="padding: 8px 8px 4px 8px; text-align: right; color: var(--green); font-family: var(--mono);">{totalSuperbest}</td>
+        <td style="padding: 8px 0 4px 8px; text-align: right; color: var(--muted); font-family: var(--mono);">{totalNaive}</td>
       </tr>
     </tbody>
   </table>
@@ -216,43 +216,43 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
 
   <!-- ── OPERATOR CENSUS ───────────────────────────────────────────────── -->
   <h2>16-Operator Census</h2>
-  <p style="color: #6b7280; margin-bottom: 6px; font-size: 0.9rem;">
+  <p style="color: var(--muted); margin-bottom: 6px; font-size: 0.9rem;">
     Every binary combination of exp(±x) with ln(y) via arithmetic.
     Completeness class determined by the position of negation relative to exp (T26–T28).
   </p>
-  <p style="color: #6b7280; font-size: 0.8rem; margin-bottom: 20px;">
-    <span style="color: #15803d;">■</span> Exactly complete (8) ·
-    <span style="color: #b45309;">■</span> Approximately complete (1) ·
-    <span style="color: #b91c1c;">■</span> Incomplete (7)
+  <p style="color: var(--muted); font-size: 0.8rem; margin-bottom: 20px;">
+    <span style="color: var(--green);">■</span> Exactly complete (8) ·
+    <span style="color: var(--orange);">■</span> Approximately complete (1) ·
+    <span style="color: var(--red);">■</span> Incomplete (7)
   </p>
 
   <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 32px;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 6px 8px 8px 0; color: #6b7280; font-weight: 600; width: 12%;">Name</th>
-        <th style="text-align: left; padding: 6px 8px; color: #6b7280; font-weight: 600; width: 28%;">Formula</th>
-        <th style="text-align: left; padding: 6px 8px; color: #6b7280; font-weight: 600; width: 14%;">Complete?</th>
-        <th style="text-align: left; padding: 6px 0 8px 8px; color: #6b7280; font-weight: 600;">Why</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: var(--muted); font-weight: 600; width: 12%;">Name</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; width: 28%;">Formula</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; width: 14%;">Complete?</th>
+        <th style="text-align: left; padding: 6px 0 8px 8px; color: var(--muted); font-weight: 600;">Why</th>
       </tr>
     </thead>
     <tbody>
       {operators.map(o => {
-        const c = o.complete === 'exact' ? '#15803d' : o.complete === 'approx' ? '#b45309' : '#b91c1c';
+        const c = o.complete === 'exact' ? 'var(--green)' : o.complete === 'approx' ? 'var(--orange)' : 'var(--red)';
         const label = o.complete === 'exact' ? 'YES' : o.complete === 'approx' ? 'APPROX' : 'NO';
         return (
-          <tr style="border-bottom: 1px solid #e2e2d8;">
+          <tr style="border-bottom: 1px solid var(--border);">
             <td style={`padding: 5px 8px 5px 0; font-family: var(--mono); font-weight: 600; color: ${c}; font-size: 0.78rem;`}>{o.name}</td>
-            <td style="padding: 5px 8px; font-family: var(--mono); color: #6b7280; font-size: 0.75rem;">{o.formula}</td>
+            <td style="padding: 5px 8px; font-family: var(--mono); color: var(--muted); font-size: 0.75rem;">{o.formula}</td>
             <td style={`padding: 5px 8px; font-family: var(--mono); font-weight: 700; color: ${c}; font-size: 0.75rem;`}>{label}</td>
-            <td style="padding: 5px 0 5px 8px; color: #6b7280; font-size: 0.73rem; line-height: 1.4;">{o.mechanism}</td>
+            <td style="padding: 5px 0 5px 8px; color: var(--muted); font-size: 0.73rem; line-height: 1.4;">{o.mechanism}</td>
           </tr>
         );
       })}
     </tbody>
   </table>
 
-  <p style="color: #6b7280; font-size: 0.82rem; margin-bottom: 32px;">
-    Structural rule: <em style="color: #1a1a1a;">exp(+x) with no domain restriction ↔ exactly complete</em> (T26, T27, T28).
+  <p style="color: var(--muted); font-size: 0.82rem; margin-bottom: 32px;">
+    Structural rule: <em style="color: var(--text);">exp(+x) with no domain restriction ↔ exactly complete</em> (T26, T27, T28).
     See <a href="/blog/completeness-characterization">Why exp(+x) Means Complete →</a>
   </p>
 
@@ -260,17 +260,17 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
 
   <!-- ── SPECIAL FUNCTIONS ─────────────────────────────────────────────── -->
   <h2>Special Functions — EML Classification</h2>
-  <p style="color: #6b7280; margin-bottom: 20px; font-size: 0.9rem;">
+  <p style="color: var(--muted); margin-bottom: 20px; font-size: 0.9rem;">
     Exact depth and cost over ℝ and ℂ for standard special functions.
   </p>
 
   <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 32px;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 6px 8px 8px 0; color: #6b7280; font-weight: 600; width: 22%;">Function</th>
-        <th style="text-align: center; padding: 6px 8px; color: #6b7280; font-weight: 600; width: 14%;">Depth ℝ</th>
-        <th style="text-align: center; padding: 6px 8px; color: #6b7280; font-weight: 600; width: 14%;">Depth ℂ</th>
-        <th style="text-align: left; padding: 6px 0 8px 8px; color: #6b7280; font-weight: 600;">Notes</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: var(--muted); font-weight: 600; width: 22%;">Function</th>
+        <th style="text-align: center; padding: 6px 8px; color: var(--muted); font-weight: 600; width: 14%;">Depth ℝ</th>
+        <th style="text-align: center; padding: 6px 8px; color: var(--muted); font-weight: 600; width: 14%;">Depth ℂ</th>
+        <th style="text-align: left; padding: 6px 0 8px 8px; color: var(--muted); font-weight: 600;">Notes</th>
       </tr>
     </thead>
     <tbody>
@@ -291,11 +291,11 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
         { fn: 'sigmoid σ(x)', dr: '3', dc: '3', note: '1/(1+e⁻ˣ): 2–3 nodes.' },
         { fn: 'i = √−1', dr: '∞', dc: '∞*', note: 'T17. *Nearest depth-6: gap 4.76×10⁻⁶.' },
       ].map(r => (
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: #1a1a1a; font-size: 0.8rem;">{r.fn}</td>
-          <td style="padding: 5px 8px; text-align: center; font-family: var(--mono); color: #6d28d9; font-size: 0.8rem;">{r.dr}</td>
-          <td style="padding: 5px 8px; text-align: center; font-family: var(--mono); color: #0e7490; font-size: 0.8rem;">{r.dc}</td>
-          <td style="padding: 5px 0 5px 8px; color: #6b7280; font-size: 0.76rem;">{r.note}</td>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--text); font-size: 0.8rem;">{r.fn}</td>
+          <td style="padding: 5px 8px; text-align: center; font-family: var(--mono); color: var(--violet); font-size: 0.8rem;">{r.dr}</td>
+          <td style="padding: 5px 8px; text-align: center; font-family: var(--mono); color: var(--cyan); font-size: 0.8rem;">{r.dc}</td>
+          <td style="padding: 5px 0 5px 8px; color: var(--muted); font-size: 0.76rem;">{r.note}</td>
         </tr>
       ))}
     </tbody>
@@ -305,16 +305,16 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
 
   <!-- ── CALCULUS COSTS ─────────────────────────────────────────────────── -->
   <h2>Calculus Costs</h2>
-  <p style="color: #6b7280; margin-bottom: 20px; font-size: 0.9rem;">
+  <p style="color: var(--muted); margin-bottom: 20px; font-size: 0.9rem;">
     Node counts for standard calculus operations under SuperBEST routing (T08, T25).
   </p>
 
   <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 32px;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 6px 8px 8px 0; color: #6b7280; font-weight: 600; width: 36%;">Operation</th>
-        <th style="text-align: left; padding: 6px 8px; color: #6b7280; font-weight: 600; width: 24%;">Cost</th>
-        <th style="text-align: left; padding: 6px 0 8px 8px; color: #6b7280; font-weight: 600;">Notes</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: var(--muted); font-weight: 600; width: 36%;">Operation</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; width: 24%;">Cost</th>
+        <th style="text-align: left; padding: 6px 0 8px 8px; color: var(--muted); font-weight: 600;">Notes</th>
       </tr>
     </thead>
     <tbody>
@@ -328,10 +328,10 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
         { op: 'Partition function Z = Tr[exp(−βH)]', cost: '2 matrix nodes', note: 'Q-1. Tr + matrix exp.' },
         { op: 'Softmax over N logits', cost: 'N − 1 LEAd + N EML nodes', note: 'T19.' },
       ].map(r => (
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: #1a1a1a; font-size: 0.78rem;">{r.op}</td>
-          <td style="padding: 5px 8px; color: #6d28d9; font-family: var(--mono); font-size: 0.78rem;">{r.cost}</td>
-          <td style="padding: 5px 0 5px 8px; color: #6b7280; font-size: 0.76rem;">{r.note}</td>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--text); font-size: 0.78rem;">{r.op}</td>
+          <td style="padding: 5px 8px; color: var(--violet); font-family: var(--mono); font-size: 0.78rem;">{r.cost}</td>
+          <td style="padding: 5px 0 5px 8px; color: var(--muted); font-size: 0.76rem;">{r.note}</td>
         </tr>
       ))}
     </tbody>
@@ -341,18 +341,18 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
 
   <!-- ── DOMAIN CATALOG HIGHLIGHTS ───────────────────────────────────────── -->
   <h2>Domain Catalog — 295+ Equations</h2>
-  <p style="color: #6b7280; margin-bottom: 6px; font-size: 0.9rem;">
+  <p style="color: var(--muted); margin-bottom: 6px; font-size: 0.9rem;">
     Selected SuperBEST v4 node counts across technology, sports, neural networks, physics, biology, quantum, and finance.
     Full catalog: <a href="/blog/157-equations">295+ Equations →</a>
   </p>
-  <p style="color: #6b7280; font-size: 0.8rem; margin-bottom: 20px;">
+  <p style="color: var(--muted); font-size: 0.8rem; margin-bottom: 20px;">
     Expanded from 157 (Monster Sprint) → 214 (COMP-ALL) → 295+ (domain-2: FIN, INFO, QM, THERMO, CHEM, BIO, ECON sessions).
   </p>
 
   {[
     {
       domain: 'Technology',
-      color: '#0e7490',
+      color: 'var(--cyan)',
       entries: [
         { name: 'PageRank (per page, N pages)',    cost: '5N+4 nodes', note: 'web ranking' },
         { name: 'TF-IDF',                          cost: '7n',        note: 'document relevance' },
@@ -370,7 +370,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     },
     {
       domain: 'Neural Networks',
-      color: '#6d28d9',
+      color: 'var(--violet)',
       entries: [
         { name: 'Softplus ln(1+eˣ)',               cost: '1n via LEAd(x,1)', note: 'cheapest smooth activation' },
         { name: 'Sigmoid σ(x)',                    cost: '7n',               note: 'standard activation' },
@@ -379,7 +379,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     },
     {
       domain: 'Physics',
-      color: '#15803d',
+      color: 'var(--green)',
       entries: [
         { name: "Ohm's law V=IR",                  cost: '2n',   note: 'product of two scalars' },
         { name: 'Kinetic energy ½mv²',             cost: '7n',   note: 'v² = mul chain' },
@@ -388,7 +388,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     },
     {
       domain: 'Biology / Epidemiology',
-      color: '#b45309',
+      color: 'var(--orange)',
       entries: [
         { name: 'Basic reproduction number R₀=β/γ', cost: '2n',  note: 'cheapest important metric' },
         { name: 'SIR model per-step',               cost: '20n', note: 'full epidemic simulation' },
@@ -396,7 +396,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     },
     {
       domain: 'Quantum',
-      color: '#be185d',
+      color: 'var(--pink)',
       entries: [
         { name: 'Fermi-Dirac distribution',          cost: '9n',   note: 'same structure as sigmoid' },
         { name: 'Partition function Z (N terms)',     cost: '6N−3n', note: 'same as softmax denominator' },
@@ -416,10 +416,10 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem;">
         <tbody>
           {sec.entries.map(e => (
-            <tr style="border-bottom: 1px solid #e2e2d8;">
-              <td style="padding: 4px 8px 4px 0; color: #1a1a1a; font-family: var(--mono); font-size: 0.8rem; width: 44%;">{e.name}</td>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 4px 8px 4px 0; color: var(--text); font-family: var(--mono); font-size: 0.8rem; width: 44%;">{e.name}</td>
               <td style={`padding: 4px 8px; color: ${sec.color}; font-family: var(--mono); font-size: 0.78rem; width: 18%;`}>{e.cost}</td>
-              <td style="padding: 4px 0 4px 8px; color: #6b7280; font-size: 0.76rem;">{e.note}</td>
+              <td style="padding: 4px 0 4px 8px; color: var(--muted); font-size: 0.76rem;">{e.note}</td>
             </tr>
           ))}
         </tbody>
@@ -431,22 +431,22 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
 
   <!-- ── COST THEORY ───────────────────────────────────────────────────────── -->
   <h2>Cost Theory</h2>
-  <p style="color: #6b7280; margin-bottom: 6px; font-size: 0.9rem;">
+  <p style="color: var(--muted); margin-bottom: 6px; font-size: 0.9rem;">
     Structural decomposition of SuperBEST node counts. T38–T43.
   </p>
-  <p style="color: #6b7280; font-size: 0.8rem; margin-bottom: 20px;">
+  <p style="color: var(--muted); font-size: 0.8rem; margin-bottom: 20px;">
     Cost(E) = NaiveCost(E) − SharingDiscount(E) − PatternBonus(E)
   </p>
 
-  <h3 style="font-size: 0.9rem; color: #1a1a1a; margin-bottom: 12px;">Structural Classes (T41)</h3>
+  <h3 style="font-size: 0.9rem; color: var(--text); margin-bottom: 12px;">Structural Classes (T41)</h3>
   <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 24px;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 6px 8px 8px 0; color: #6b7280; font-weight: 600; width: 10%;">Class</th>
-        <th style="text-align: left; padding: 6px 8px; color: #6b7280; font-weight: 600; width: 18%;">Signature</th>
-        <th style="text-align: left; padding: 6px 8px; color: #6b7280; font-weight: 600; width: 24%;">Description</th>
-        <th style="text-align: left; padding: 6px 8px; color: #6b7280; font-weight: 600; width: 18%;">Mean cost</th>
-        <th style="text-align: left; padding: 6px 0 8px 8px; color: #6b7280; font-weight: 600;">Example</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: var(--muted); font-weight: 600; width: 10%;">Class</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; width: 18%;">Signature</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; width: 24%;">Description</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; width: 18%;">Mean cost</th>
+        <th style="text-align: left; padding: 6px 0 8px 8px; color: var(--muted); font-weight: 600;">Example</th>
       </tr>
     </thead>
     <tbody>
@@ -456,24 +456,24 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
         { cls: 'C', sig: '(0, 1)', desc: 'Log-ratio (cheapest)', mean: '9.5n', ex: 'Shannon entropy, pH' },
         { cls: 'D', sig: '(1,1)+', desc: 'Mixed exp+log', mean: '20.1n', ex: 'Black-Scholes (47n)' },
       ].map(r => (
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); font-weight: 700; color: #b45309; font-size: 0.82rem;">{r.cls}</td>
-          <td style="padding: 5px 8px; font-family: var(--mono); color: #6b7280; font-size: 0.78rem;">{r.sig}</td>
-          <td style="padding: 5px 8px; color: #1a1a1a; font-size: 0.78rem;">{r.desc}</td>
-          <td style="padding: 5px 8px; font-family: var(--mono); color: #15803d; font-size: 0.78rem;">{r.mean}</td>
-          <td style="padding: 5px 0 5px 8px; color: #6b7280; font-size: 0.76rem;">{r.ex}</td>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); font-weight: 700; color: var(--orange); font-size: 0.82rem;">{r.cls}</td>
+          <td style="padding: 5px 8px; font-family: var(--mono); color: var(--muted); font-size: 0.78rem;">{r.sig}</td>
+          <td style="padding: 5px 8px; color: var(--text); font-size: 0.78rem;">{r.desc}</td>
+          <td style="padding: 5px 8px; font-family: var(--mono); color: var(--green); font-size: 0.78rem;">{r.mean}</td>
+          <td style="padding: 5px 0 5px 8px; color: var(--muted); font-size: 0.76rem;">{r.ex}</td>
         </tr>
       ))}
     </tbody>
   </table>
 
-  <h3 style="font-size: 0.9rem; color: #1a1a1a; margin-bottom: 12px;">Key Cost Facts</h3>
+  <h3 style="font-size: 0.9rem; color: var(--text); margin-bottom: 12px;">Key Cost Facts</h3>
   <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 24px;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 6px 8px 8px 0; color: #6b7280; font-weight: 600; width: 16%;">Theorem</th>
-        <th style="text-align: left; padding: 6px 8px; color: #6b7280; font-weight: 600; width: 28%;">Statement</th>
-        <th style="text-align: left; padding: 6px 0 8px 8px; color: #6b7280; font-weight: 600;">Detail</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: var(--muted); font-weight: 600; width: 16%;">Theorem</th>
+        <th style="text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; width: 28%;">Statement</th>
+        <th style="text-align: left; padding: 6px 0 8px 8px; color: var(--muted); font-weight: 600;">Detail</th>
       </tr>
     </thead>
     <tbody>
@@ -488,22 +488,22 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
         { thm: 'T42 (QCC)',       stmt: 'Cost ≤ O(N²) conjecture',             detail: 'No standard scientific equation exceeds quadratic growth. Open.' },
         { thm: 'T43 (Linear Ceil)', stmt: 'Cost ≤ O(N) conjecture',           detail: 'Linear Ceiling: no standard equation exceeds O(N). Open.' },
       ].map(r => (
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: #6d28d9; font-size: 0.78rem; font-weight: 600;">{r.thm}</td>
-          <td style="padding: 5px 8px; color: #1a1a1a; font-size: 0.78rem; font-family: var(--mono);">{r.stmt}</td>
-          <td style="padding: 5px 0 5px 8px; color: #6b7280; font-size: 0.76rem;">{r.detail}</td>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--violet); font-size: 0.78rem; font-weight: 600;">{r.thm}</td>
+          <td style="padding: 5px 8px; color: var(--text); font-size: 0.78rem; font-family: var(--mono);">{r.stmt}</td>
+          <td style="padding: 5px 0 5px 8px; color: var(--muted); font-size: 0.76rem;">{r.detail}</td>
         </tr>
       ))}
     </tbody>
   </table>
 
-  <h3 style="font-size: 0.9rem; color: #1a1a1a; margin-bottom: 12px;">Pattern Bonus Table (top 6)</h3>
+  <h3 style="font-size: 0.9rem; color: var(--text); margin-bottom: 12px;">Pattern Bonus Table (top 6)</h3>
   <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 24px;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 6px 8px 8px 0; color: #6b7280; font-weight: 600; width: 16%;">Pattern</th>
-        <th style="text-align: right; padding: 6px 8px; color: #15803d; font-weight: 600; width: 14%;">Bonus</th>
-        <th style="text-align: left; padding: 6px 0 8px 8px; color: #6b7280; font-weight: 600;">Formula</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 8px 8px 0; color: var(--muted); font-weight: 600; width: 16%;">Pattern</th>
+        <th style="text-align: right; padding: 6px 8px; color: var(--green); font-weight: 600; width: 14%;">Bonus</th>
+        <th style="text-align: left; padding: 6px 0 8px 8px; color: var(--muted); font-weight: 600;">Formula</th>
       </tr>
     </thead>
     <tbody>
@@ -515,23 +515,23 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
         { pat: 'EML',   bonus: '3', formula: 'exp(x) − ln(y)' },
         { pat: 'EXL',   bonus: '3', formula: 'exp(x) · ln(y)' },
       ].map(r => (
-        <tr style="border-bottom: 1px solid #e2e2d8;">
-          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: #0e7490; font-weight: 600; font-size: 0.8rem;">{r.pat}</td>
-          <td style="padding: 5px 8px; text-align: right; font-family: var(--mono); color: #15803d; font-weight: 700; font-size: 0.8rem;">−{r.bonus}n</td>
-          <td style="padding: 5px 0 5px 8px; font-family: var(--mono); color: #6b7280; font-size: 0.76rem;">{r.formula}</td>
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--cyan); font-weight: 600; font-size: 0.8rem;">{r.pat}</td>
+          <td style="padding: 5px 8px; text-align: right; font-family: var(--mono); color: var(--green); font-weight: 700; font-size: 0.8rem;">−{r.bonus}n</td>
+          <td style="padding: 5px 0 5px 8px; font-family: var(--mono); color: var(--muted); font-size: 0.76rem;">{r.formula}</td>
         </tr>
       ))}
     </tbody>
   </table>
 
-  <p style="color: #6b7280; font-size: 0.82rem; margin-bottom: 32px;">
+  <p style="color: var(--muted); font-size: 0.82rem; margin-bottom: 32px;">
     Blind test validation: 27/30 exact (MAE = 0.20) on held-out fluid dynamics, optics, acoustics, materials, epidemiology equations.
     See <a href="/blog/cost-theory">Cost Theory →</a> and <a href="/blog/157-equations">295+ Equations →</a>
   </p>
 
   <div class="divider"></div>
 
-  <p style="color: #6b7280; font-size: 0.82rem; line-height: 1.9;">
+  <p style="color: var(--muted); font-size: 0.82rem; line-height: 1.9;">
     <a href="/theorems">Theorem catalog →</a> ·
     <a href="/blog">Research blog →</a> ·
     <a href="https://monogate.dev/theorems" target="_blank" rel="noopener noreferrer">Full catalog on monogate.dev ↗</a>

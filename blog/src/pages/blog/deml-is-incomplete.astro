@@ -14,7 +14,7 @@ import Base from '../../layouts/Base.astro';
   </div>
 
   <h1>DEML Is Incomplete</h1>
-  <p style="color: #6b7280; font-style: italic; margin-bottom: 32px;">
+  <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     DEML: deml(x,y) = exp(−x) − ln(y). It gives exp(−x) in one node — an
     improvement over EML for decay functions. But it cannot build exp(+x)
     or neg(x). Here is the proof.
@@ -120,10 +120,10 @@ import Base from '../../layouts/Base.astro';
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem; margin: 16px 0;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">N nodes</th>
-        <th style="text-align: right; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">Trees checked</th>
-        <th style="text-align: right; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">Best error vs −x</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 10px; color: var(--muted); font-size: 0.75rem;">N nodes</th>
+        <th style="text-align: right; padding: 6px 10px; color: var(--muted); font-size: 0.75rem;">Trees checked</th>
+        <th style="text-align: right; padding: 6px 10px; color: var(--muted); font-size: 0.75rem;">Best error vs −x</th>
       </tr>
     </thead>
     <tbody>
@@ -138,16 +138,16 @@ import Base from '../../layouts/Base.astro';
         [15, 109824, "0.88"],
         [17, 732160, "0.84"],
       ].map(([n, trees, err], i) => (
-        <tr style={`border-bottom: 1px solid #e2e2d8; ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
-          <td style="padding: 6px 10px; color: #1a1a1a;">{n}</td>
-          <td style="padding: 6px 10px; text-align: right; color: #6b7280;">{trees.toLocaleString()}</td>
+        <tr style={`border-bottom: 1px solid var(--border); ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
+          <td style="padding: 6px 10px; color: var(--text);">{n}</td>
+          <td style="padding: 6px 10px; text-align: right; color: var(--muted);">{trees.toLocaleString()}</td>
           <td style="padding: 6px 10px; text-align: right; color: #f87171;">{err}</td>
         </tr>
       ))}
     </tbody>
   </table>
 
-  <p style="font-size: 0.85rem; color: #6b7280;">
+  <p style="font-size: 0.85rem; color: var(--muted);">
     The error is <em>not converging to 0</em>. It stalls at ~0.84. This is
     consistent with neg(x) being outside the DEML closure entirely, not just
     requiring a larger tree.
@@ -157,27 +157,27 @@ import Base from '../../layouts/Base.astro';
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem; margin: 16px 0;">
     <thead>
-      <tr style="border-bottom: 1px solid #e2e2d8;">
-        <th style="text-align: left; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">Function</th>
-        <th style="text-align: center; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">DEML</th>
-        <th style="text-align: left; padding: 6px 10px; color: #6b7280; font-size: 0.75rem;">Note</th>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <th style="text-align: left; padding: 6px 10px; color: var(--muted); font-size: 0.75rem;">Function</th>
+        <th style="text-align: center; padding: 6px 10px; color: var(--muted); font-size: 0.75rem;">DEML</th>
+        <th style="text-align: left; padding: 6px 10px; color: var(--muted); font-size: 0.75rem;">Note</th>
       </tr>
     </thead>
     <tbody>
       {[
-        ["exp(−x)", "1 node", "#15803d", "deml(x, 1) — native"],
-        ["x + K", "3 nodes", "#15803d", "deml(K, deml(x, 1)) — K any DEML constant"],
-        ["−ln(x) + K", "3 nodes", "#15803d", "deml(K, x)"],
-        ["exp(−exp(−x))", "5 nodes", "#b45309", "deml(deml(x,1), 1) — composable"],
+        ["exp(−x)", "1 node", "var(--green)", "deml(x, 1) — native"],
+        ["x + K", "3 nodes", "var(--green)", "deml(K, deml(x, 1)) — K any DEML constant"],
+        ["−ln(x) + K", "3 nodes", "var(--green)", "deml(K, x)"],
+        ["exp(−exp(−x))", "5 nodes", "var(--orange)", "deml(deml(x,1), 1) — composable"],
         ["neg(x) = −x", "impossible", "#f87171", "slope −1 unreachable"],
         ["exp(+x)", "impossible", "#f87171", "requires neg(x)"],
         ["add(x, y)", "impossible", "#f87171", "requires neg for general case"],
         ["mul(x, y)", "impossible", "#f87171", "requires exp(+x) and ln"],
       ].map(([fn, cost, color, note], i) => (
-        <tr style={`border-bottom: 1px solid #e2e2d8; ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
-          <td style="padding: 6px 10px; color: #1a1a1a; font-family: monospace;">{fn}</td>
+        <tr style={`border-bottom: 1px solid var(--border); ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
+          <td style="padding: 6px 10px; color: var(--text); font-family: monospace;">{fn}</td>
           <td style={`padding: 6px 10px; text-align: center; color: ${color}; font-weight: 700;`}>{cost}</td>
-          <td style="padding: 6px 10px; color: #6b7280; font-size: 0.8rem;">{note}</td>
+          <td style="padding: 6px 10px; color: var(--muted); font-size: 0.8rem;">{note}</td>
         </tr>
       ))}
     </tbody>
@@ -217,7 +217,7 @@ import Base from '../../layouts/Base.astro';
 
   <h3>License</h3>
 
-  <p style="color: #6b7280; font-size: 0.9rem;">
+  <p style="color: var(--muted); font-size: 0.9rem;">
     CC BY 4.0 — free to share and adapt with attribution. ·
     Code: <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a> ·
     Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a>
