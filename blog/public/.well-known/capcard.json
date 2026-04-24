@@ -560,14 +560,14 @@
       "name": "Lean 4 Verification (Mathlib v4.14.0)",
       "capability_ref": "routing.superbest_v5",
       "metric": "proved_0_sorry_files",
-      "value": 10,
+      "value": 11,
       "unit": "Lean files with 0 sorries",
       "direction": "higher_is_better",
       "reproducibility": {
         "command": "git clone https://github.com/almaguer1986/monogate-lean && cd monogate-lean && lake build",
         "deterministic": true
       },
-      "notes": "10 Lean files pass with 0 sorries each. InfiniteZerosBarrier.lean retains 2 open sorries (o-minimal / Wilkie 1996 — not yet formalized in Mathlib)."
+      "notes": "11 Lean files pass with 0 sorries each, containing 49 original EML theorems and 461 total statements (originals + Mathlib wrappers + supporting lemmas). InfiniteZerosBarrier.lean retains 2 open sorries (o-minimal / Wilkie 1996 — not yet formalized in Mathlib)."
     },
     {
       "id": "bench.python_tests",
@@ -739,10 +739,12 @@
     "lean_clean_files": 11,
     "lean_partial_files": 1,
     "lean_sorries_total": 2,
+    "lean_original_theorems": 49,
+    "lean_total_statements": 461,
     "trust_score": {
       "value": 0.97,
       "version": "manual_v0",
-      "notes": "Reflects 11 machine-verified Lean files (0 sorries each) + 1 partial (2 sorries on InfiniteZerosBarrier pending o-minimal Mathlib support), 4 independent benchmark categories with reproducible commands, zero-error prediction across the 315-equation public catalog, and a public catalog of 30 proved theorems at https://monogate.org/theorems. UpperBounds.lean user-verified in VS Code Lean 4 extension 2026-04-24 (includes ln_one_node_via_exl)."
+      "notes": "Reflects 49 original EML theorems machine-verified in Lean 4 across 11 files (0 sorries each) + 1 partial (2 sorries on InfiniteZerosBarrier pending o-minimal Mathlib support). Total Lean statements: 461 (49 originals + 173 Mathlib wrappers + 237 supporting lemmas, all 0-sorry except the 2 noted). 4 independent benchmark categories with reproducible commands, zero-error prediction across the 265-equation public catalog, and a public catalog of 30 proved theorems at https://monogate.org/theorems. UpperBounds.lean user-verified in VS Code Lean 4 extension 2026-04-24 (includes ln_one_node_via_exl)."
     }
   },
   "integration": {

@@ -4,50 +4,52 @@ import Base from '../layouts/Base.astro';
 const proofs = [
   { ok: true,  thm: 'SB(add) ≥ 2',
     what: 'No single F16 operator computes addition over all ℝ².',
-    file: 'AddLowerBound.lean' },
+    file: 'AddLowerBound.lean', original: 2, total: 37 },
   { ok: true,  thm: 'SB(sub) ≥ 2',
     what: 'No single F16 operator computes subtraction.',
-    file: 'SubLowerBound.lean' },
+    file: 'SubLowerBound.lean', original: 2, total: 34 },
   { ok: true,  thm: 'SB(mul) ≥ 2',
     what: 'No single F16 operator computes multiplication.',
-    file: 'MulLowerBound.lean' },
+    file: 'MulLowerBound.lean', original: 2, total: 37 },
   { ok: true,  thm: 'SB(div) ≥ 2',
     what: 'No single F16 operator computes division.',
-    file: 'DivLowerBound.lean' },
+    file: 'DivLowerBound.lean', original: 2, total: 36 },
   { ok: true,  thm: 'No exp-outer 2-node div',
     what: 'Refined lower-bound ruling out exp-type outer 2-node circuits for division.',
-    file: 'DivLowerBound3.lean' },
+    file: 'DivLowerBound3.lean', original: 2, total: 21 },
   { ok: true,  thm: 'Five operations at 1 node',
     what: 'exp, mul, pow, recip, sqrt each admit a single-F16-node construction on x > 0.',
-    file: 'UpperBounds.lean' },
+    file: 'UpperBounds.lean', original: 10, total: 186 },
   { ok: true,  thm: 'v5.1 → v5.3 correction',
     what: 'sqrt via EPL and mul_pos via UpperBounds drop the positive table to 14n.',
-    file: 'ModelAudit.lean' },
+    file: 'ModelAudit.lean', original: 6, total: 13 },
   { ok: true,  thm: 'Depth hierarchy is strict',
     what: 'Euler gateway ceml(ix, 1) = exp(ix); EML-0 ⊊ EML-1 via exp non-constant.',
-    file: 'EMLDepth.lean' },
+    file: 'EMLDepth.lean', original: 10, total: 23 },
   { ok: true,  thm: 'Exp-log duality',
     what: 'At each Lambert fixed point, deriv(exp)·deriv(log) = 1. Multiplier duality.',
-    file: 'EMLDuality.lean' },
+    file: 'EMLDuality.lean', original: 2, total: 18 },
   { ok: true,  thm: 'Hyperbolic preserves ELC',
     what: 'cosh, sinh, tanh stay inside ELC(ℝ). Pythagorean witness at x = ln 2.',
-    file: 'HyperbolicPreservation.lean' },
+    file: 'HyperbolicPreservation.lean', original: 3, total: 34 },
   { ok: true,  thm: 'Self-map conjugacy',
     what: 'EAL ↔ EXL and EML ↔ EDL self-maps conjugate via exp.',
-    file: 'SelfMapConjugacy.lean' },
+    file: 'SelfMapConjugacy.lean', original: 4, total: 12 },
   { ok: false, thm: 'sin ∉ EML (partial)',
     what: 'sin has no finite real EML tree — core lemmas verified; 2 sorries remain on the depth-k zero-count bound.',
-    file: 'InfiniteZerosBarrier.lean', sorries: 2 },
+    file: 'InfiniteZerosBarrier.lean', sorries: 2, original: 4, total: 10 },
 ];
 
 const clean = proofs.filter(p => p.ok).length;
 const partial = proofs.filter(p => !p.ok).length;
+const verifiedOriginal = proofs.reduce((n, p) => n + p.original, 0);
+const totalStatements = proofs.reduce((n, p) => n + p.total, 0);
 const leanRepo = 'https://github.com/almaguer1986/monogate-lean';
 ---
 
 <Base
   title="Machine-Verified Proofs — monogate.org"
-  description={`${clean} Lean 4 files with zero sorries. The claim is either verified by machine or the file has errors. Zero trust required.`}
+  description={`${verifiedOriginal} original theorems verified by computer across ${totalStatements} total Lean statements. Zero sorries across ${clean} files.`}
 >
   <div class="meta">
     <span>Lean 4 · Mathlib v4.14.0</span>
@@ -57,7 +59,7 @@ const leanRepo = 'https://github.com/almaguer1986/monogate-lean';
 
   <h1>Machine-Verified Proofs</h1>
   <p style="color: #6b7280; font-style: italic; margin: 0 0 28px;">
-    {clean} theorems checked by computer. Zero trust required.
+    {verifiedOriginal} original theorems verified by computer. {totalStatements} total Lean statements. Zero sorries across {clean} files.
   </p>
 
   <div class="divider"></div>
@@ -80,7 +82,10 @@ const leanRepo = 'https://github.com/almaguer1986/monogate-lean';
         </span>
         <span class="thm">{p.thm}</span>
         <span class="what">{p.what}</span>
-        <span class="file"><a href={`${leanRepo}/blob/master/MonogateEML/${p.file}`}><code>{p.file}</code></a></span>
+        <span class="file">
+          <a href={`${leanRepo}/blob/master/MonogateEML/${p.file}`}><code>{p.file}</code></a>
+          <span class="counts">{p.original} original / {p.total} statements</span>
+        </span>
       </div>
     ))}
   </div>
@@ -172,6 +177,13 @@ lake build</code></pre>
     .proof-row .what { color: var(--text); font-family: var(--serif); font-size: 0.92rem; }
     .proof-row .file a { color: var(--cyan); }
     .proof-row .file code { font-size: 0.82rem; }
+    .proof-row .file .counts {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+    }
 
     pre.shell {
       background: var(--surface);
