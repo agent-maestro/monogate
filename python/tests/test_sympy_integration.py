@@ -1,6 +1,7 @@
 """Tests for monogate.sympy_integration.eml_cost."""
 from __future__ import annotations
 
+import pytest
 import sympy as sp
 
 from monogate.sympy_integration import eml_cost
@@ -36,6 +37,8 @@ def test_add_and_mul_are_n_ary() -> None:
     assert eml_cost(x * y) == 2
     # Add(x, y, z) -> 0 + 0 + 0 + 2*(3-1) = 4
     assert eml_cost(x + y + z) == 4
+    # Mul(x, y, z) -> 0 + 0 + 0 + 2*(3-1) = 4 (n-ary contract for *)
+    assert eml_cost(x * y * z) == 4
 
 
 def test_classic_routing_identity() -> None:
@@ -46,6 +49,31 @@ def test_classic_routing_identity() -> None:
     assert eml_cost(expanded) == 4
     assert eml_cost(routed) == 3
     assert eml_cost(routed) < eml_cost(expanded)
+
+
+def test_rejects_non_basic_input() -> None:
+    """eml_cost must reject raw strings (sympify on strings is not safe)."""
+    with pytest.raises(TypeError, match="sp.Basic"):
+        eml_cost("x + 1")             # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="sp.Basic"):
+        eml_cost(42)                  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="sp.Basic"):
+        eml_cost(None)                # type: ignore[arg-type]
+
+
+def test_special_atoms_cost_zero() -> None:
+    """oo, -oo, zoo, nan, pi, E should all be priced as 0 (atoms)."""
+    for atom in (sp.oo, -sp.oo, sp.zoo, sp.nan, sp.pi, sp.E,
+                 sp.Rational(2, 3), sp.Float(1.5)):
+        assert eml_cost(atom) == 0, f"expected 0 for {atom}"
+
+
+def test_piecewise_does_not_crash() -> None:
+    """Piecewise (and any other node with non-trivial args) returns an int."""
+    x = sp.Symbol("x")
+    pw = sp.Piecewise((x, x > 0), (sp.Integer(0), True))
+    cost = eml_cost(pw)
+    assert isinstance(cost, int) and cost >= 0
 
 
 def test_satisfies_sympy_measure_contract() -> None:

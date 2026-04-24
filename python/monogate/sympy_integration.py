@@ -28,19 +28,33 @@ Empirical comparison on a 10-expression test panel
 
     eml_cost as measure:  better in 2/10,  same in 8/10,  never worse.
 
+Input contract
+--------------
+
+``eml_cost`` requires its argument to be an ``sp.Basic`` instance (e.g., the
+result of ``sp.symbols``, ``sp.sympify`` of a trusted source, or any SymPy
+operator application).  It does **not** accept raw strings: SymPy's
+``sympify`` parses strings via Python's ``ast`` module and is not safe on
+untrusted input.  Pass an already-parsed expression to use this function
+safely on data you do not control.
+
 Cost model
 ----------
 
 Costs follow the deep10 / SuperBEST ``23op+FMA`` convention:
 
-    leaf (number / symbol / NumberSymbol):  0
-    exp / log / sqrt:                        1 + cost(arg)
-    Add (n-ary):                             sum(args) + 2 * (n - 1)
-    Mul (n-ary):                             sum(args) + 2 * (n - 1)
-    Pow:                                     1 + cost(base) + cost(exponent)
+    leaf (anything ``is_Atom``):             0
+    exp / log:                                1 + cost(arg)
+    Pow (covers sqrt as Pow(arg, 1/2)):       1 + cost(base) + cost(exponent)
+    Add (n-ary):                              sum(args) + 2 * (n - 1)
+    Mul (n-ary):                              sum(args) + 2 * (n - 1)
     sin / cos / tan / sinh / cosh / tanh
-        (and their inverses):                5 + cost(arg)        (boundary)
-    other (unknown function):                2 + sum(args)        (default)
+        (and their inverses):                 5 + cost(arg)        (boundary)
+    other (unknown function):                 2 + sum(Basic args)  (default)
+
+Non-``sp.Basic`` items inside ``expr.args`` (e.g., Python primitives that
+appear in some legacy SymPy node payloads) contribute zero — the function
+prices SymPy expression structure, not metadata.
 
 The boundary trig cost (5n) is a conservative placeholder reflecting the
 real-arithmetic cost of CORDIC-style approximation; see
@@ -53,6 +67,7 @@ or a standalone PyPI package.
 """
 from __future__ import annotations
 
+from functools import lru_cache
 from typing import Any
 
 try:
@@ -90,13 +105,23 @@ def eml_cost(expr: Any) -> int:
     Parameters
     ----------
     expr
-        A SymPy expression (anything :func:`sympy.sympify` accepts).
+        A SymPy expression (must be an ``sp.Basic`` instance).  Strings are
+        rejected; pre-parse with ``sp.sympify`` from a trusted source if
+        needed.
 
     Returns
     -------
     int
         The EML node count.  Leaves cost 0; inner nodes cost ``1`` to ``5``
         plus their children.
+
+    Raises
+    ------
+    TypeError
+        If ``expr`` is not an ``sp.Basic`` instance.
+    ValueError
+        If the expression is too deeply nested for the default Python
+        recursion limit.
 
     Examples
     --------
@@ -112,12 +137,30 @@ def eml_cost(expr: Any) -> int:
     >>> eml_cost(sp.exp(x + y))              # 1 exp + 1 Add
     3
     """
-    expr = sp.sympify(expr)
-    return _eml_cost_inner(expr)
+    if not isinstance(expr, sp.Basic):
+        raise TypeError(
+            "eml_cost requires a SymPy expression (sp.Basic); received "
+            f"{type(expr).__name__}. Pre-parse strings with sp.sympify "
+            "from a trusted source — sympify is not safe on untrusted input."
+        )
+    try:
+        return _eml_cost_inner(expr)
+    except RecursionError as exc:
+        raise ValueError(
+            "eml_cost: expression too deeply nested for Python's default "
+            "recursion limit. Consider sys.setrecursionlimit() if the depth "
+            "is intentional."
+        ) from exc
 
 
+@lru_cache(maxsize=None)
 def _eml_cost_inner(expr: Any) -> int:
-    if expr.is_Number or expr.is_Symbol or expr.is_NumberSymbol:
+    # Defensive: any non-Basic item that slipped into expr.args contributes
+    # zero structural cost. SymPy is mostly Basic-typed throughout, but some
+    # legacy node payloads (and future additions) may carry Python primitives.
+    if not isinstance(expr, sp.Basic):
+        return 0
+    if expr.is_Atom:
         return 0
 
     func = expr.func
