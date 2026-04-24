@@ -667,11 +667,11 @@
     {
       "id": "lean.model_audit",
       "name": "SuperBEST v5.1 → v5.3 Correction",
-      "statement": "sqrt = 1n (not 2n), mul = 1n positive domain (not 2n); the corrected v5.3 total is 14n vs 73n naive (80.8% savings).",
+      "statement": "sqrt = 1n (not 2n), mul = 1n positive domain (not 2n); the corrected v5.3 total is 14n vs 73n naive (80.8% savings). ln = 1n via the extended-23 EXL operator.",
       "status": "proven_machine_verified",
-      "proof_method": "Explicit 1-node constructions via F13 and F16fn applied to positive-domain closure.",
-      "lean_file": "MonogateEML/ModelAudit.lean",
-      "lean_theorem": "sqrt_is_one_node_positive / mul_is_one_node_positive / superbest_v51_total_overcounted",
+      "proof_method": "Explicit 1-node constructions via F13 and F16fn applied to positive-domain closure; ln=1n via EXL (exp*log) in the extended-23 basis.",
+      "lean_file": "MonogateEML/ModelAudit.lean + MonogateEML/UpperBounds.lean",
+      "lean_theorem": "sqrt_is_one_node_positive / mul_is_one_node_positive / superbest_v51_total_overcounted / ln_one_node_via_exl",
       "sorries": 0,
       "capability_refs": [
         "routing.superbest_v5"
@@ -735,14 +735,14 @@
   "verification": {
     "test_count": 1839,
     "test_pass_rate": 1.0,
-    "last_verified": "2026-04-24T00:18:18Z",
+    "last_verified": "2026-04-24T09:00:00Z",
     "lean_clean_files": 11,
     "lean_partial_files": 1,
     "lean_sorries_total": 2,
     "trust_score": {
       "value": 0.97,
       "version": "manual_v0",
-      "notes": "Reflects 11 machine-verified Lean files (0 sorries each) + 1 partial (2 sorries on InfiniteZerosBarrier pending o-minimal Mathlib support), 4 independent benchmark categories with reproducible commands, zero-error prediction across the 315-equation public catalog, and a public catalog of 30 proved theorems at https://monogate.org/theorems."
+      "notes": "Reflects 11 machine-verified Lean files (0 sorries each) + 1 partial (2 sorries on InfiniteZerosBarrier pending o-minimal Mathlib support), 4 independent benchmark categories with reproducible commands, zero-error prediction across the 315-equation public catalog, and a public catalog of 30 proved theorems at https://monogate.org/theorems. UpperBounds.lean user-verified in VS Code Lean 4 extension 2026-04-24 (includes ln_one_node_via_exl)."
     }
   },
   "integration": {
