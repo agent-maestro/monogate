@@ -144,9 +144,9 @@
   ],
   "totals": {
     "total_positive": {
-      "value": 15,
-      "formula": "exp(1) + ln(1) + recip(1) + div_full_tree(2) + neg(2) + mul(2) + sub(2) + add(2) + sqrt(1) + pow_positive(1) = 15",
-      "note": "div counted as 2n for the full 2-node tree (EXL + ELSb). pow corrected to 1n from X20. sqrt corrected to 1n in v5.2 (EPL/ELMl direct primitive).",
+      "value": 14,
+      "formula": "exp(1) + ln(1) + recip(1) + div_single_elsb(1) + neg(2) + mul(2) + sub(2) + add(2) + sqrt(1) + pow_positive(1) = 14",
+      "note": "div counted as 1n via single ELSb assuming ln(x) precomputed (v5.3 reconciliation; equivalent breakdown uses div=2n full-tree with mul=1n via UpperBounds.lean — both sum to 14n). pow corrected to 1n from X20. sqrt corrected to 1n in v5.2 (EPL/ELMl direct primitive). v5.3 headline: 14n / 80.8% savings.",
       "undefined_ops": []
     },
     "total_general": {
@@ -175,7 +175,7 @@
   },
   "sum_v4": 19,
   "sum_v5": 18,
-  "sum_v5_positive": 15,
+  "sum_v5_positive": 14,
   "v4_entry_count": 10,
   "v5_entry_count": 10,
   "add_gen_v4": 11,
