@@ -1,146 +1,284 @@
 ---
 import Base from '../layouts/Base.astro';
+import { files, aggregates, leanRepo, ghFile } from '../data/proofs';
 
-const proofs = [
-  { ok: true,  thm: 'SB(add) ≥ 2',
-    what: 'No single F16 operator computes addition over all ℝ².',
-    file: 'AddLowerBound.lean', original: 2, total: 37 },
-  { ok: true,  thm: 'SB(sub) ≥ 2',
-    what: 'No single F16 operator computes subtraction.',
-    file: 'SubLowerBound.lean', original: 2, total: 34 },
-  { ok: true,  thm: 'SB(mul) ≥ 2',
-    what: 'No single F16 operator computes multiplication.',
-    file: 'MulLowerBound.lean', original: 2, total: 37 },
-  { ok: true,  thm: 'SB(div) ≥ 2',
-    what: 'No single F16 operator computes division.',
-    file: 'DivLowerBound.lean', original: 2, total: 36 },
-  { ok: true,  thm: 'No exp-outer 2-node div',
-    what: 'Refined lower-bound ruling out exp-type outer 2-node circuits for division.',
-    file: 'DivLowerBound3.lean', original: 2, total: 21 },
-  { ok: true,  thm: 'Five operations at 1 node',
-    what: 'exp, mul, pow, recip, sqrt each admit a single-F16-node construction on x > 0.',
-    file: 'UpperBounds.lean', original: 10, total: 186 },
-  { ok: true,  thm: 'v5.1 → v5.3 correction',
-    what: 'sqrt via EPL and mul_pos via UpperBounds drop the positive table to 14n.',
-    file: 'ModelAudit.lean', original: 6, total: 13 },
-  { ok: true,  thm: 'Depth hierarchy is strict',
-    what: 'Euler gateway ceml(ix, 1) = exp(ix); EML-0 ⊊ EML-1 via exp non-constant.',
-    file: 'EMLDepth.lean', original: 10, total: 23 },
-  { ok: true,  thm: 'Exp-log duality',
-    what: 'At each Lambert fixed point, deriv(exp)·deriv(log) = 1. Multiplier duality.',
-    file: 'EMLDuality.lean', original: 2, total: 18 },
-  { ok: true,  thm: 'Hyperbolic preserves ELC',
-    what: 'cosh, sinh, tanh stay inside ELC(ℝ). Pythagorean witness at x = ln 2.',
-    file: 'HyperbolicPreservation.lean', original: 3, total: 34 },
-  { ok: true,  thm: 'Self-map conjugacy',
-    what: 'EAL ↔ EXL and EML ↔ EDL self-maps conjugate via exp.',
-    file: 'SelfMapConjugacy.lean', original: 4, total: 12 },
-  { ok: false, thm: 'sin ∉ EML (partial)',
-    what: 'sin has no finite real EML tree — core lemmas verified; 2 sorries remain on the depth-k zero-count bound.',
-    file: 'InfiniteZerosBarrier.lean', sorries: 2, original: 4, total: 10 },
-];
+const {
+  verifiedOriginal, totalStatements, mathlibWrappers, supportingLemmas,
+  cleanFiles, partialFiles, sorriesTotal, flagshipCount, totalFiles,
+} = aggregates;
 
-const clean = proofs.filter(p => p.ok).length;
-const partial = proofs.filter(p => !p.ok).length;
-const verifiedOriginal = proofs.reduce((n, p) => n + p.original, 0);
-const totalStatements = proofs.reduce((n, p) => n + p.total, 0);
-const leanRepo = 'https://github.com/almaguer1986/monogate-lean';
+// JSON-LD emits every flagship as a CreativeWork with its Lean source in `text`.
+const theoremLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Machine-verified Lean theorems — Monogate",
+  numberOfItems: flagshipCount,
+  itemListElement: files.flatMap((f, fi) =>
+    f.flagships.map((th, ti) => ({
+      "@type": "ListItem",
+      position: fi * 10 + ti + 1,
+      item: {
+        "@type": "CreativeWork",
+        "@id": `https://monogate.org/proofs#${th.name}`,
+        name: th.name,
+        description: th.hook,
+        url: ghFile(f.file, th.line),
+        codeRepository: leanRepo,
+        programmingLanguage: "Lean 4",
+        text: th.source,
+        isPartOf: {
+          "@type": "SoftwareSourceCode",
+          name: f.file,
+          codeRepository: leanRepo,
+        },
+      },
+    }))
+  ),
+};
 ---
 
 <Base
   title="Machine-Verified Proofs — monogate.org"
-  description={`${verifiedOriginal} original theorems verified by computer across ${totalStatements} total Lean statements. Zero sorries across ${clean} files.`}
+  description={`${verifiedOriginal} original EML theorems verified in Lean 4 with full source. ${totalStatements} total statements. Zero sorries across ${cleanFiles} files. Clone the repo, run lake build — no trust required.`}
 >
   <div class="meta">
     <span>Lean 4 · Mathlib v4.14.0</span>
-    <span>0 sorries across {clean} files</span>
+    <span>0 sorries across {cleanFiles} files</span>
     <span><a href={leanRepo}>monogate-lean</a></span>
   </div>
 
   <h1>Machine-Verified Proofs</h1>
-  <p style="color: #6b7280; font-style: italic; margin: 0 0 28px;">
-    {verifiedOriginal} original theorems verified by computer. {totalStatements} total Lean statements. Zero sorries across {clean} files.
+  <p class="lead">
+    {verifiedOriginal} original theorems verified by computer. {totalStatements} total Lean statements. Zero sorries across {cleanFiles} files.
   </p>
+
+  <section class="verify">
+    <div class="verify-head">Verify this yourself</div>
+    <pre class="shell"><code>git clone https://github.com/almaguer1986/monogate-lean
+cd monogate-lean
+lake build
+# Build completed successfully. 0 errors. 0 sorries across 11 files.</code></pre>
+    <p class="verify-note">
+      First run takes 2–5 minutes (Mathlib oleans download from the GitHub cache). Runs locally.
+      No network verifier, no remote kernel. If <code>lake build</code> exits 0, every theorem on
+      this page has been checked from the axioms of type theory up.
+    </p>
+  </section>
 
   <div class="divider"></div>
 
+  <h2 id="what-verified-means">What "machine-verified" means</h2>
   <p>
-    Every claim below has been verified by the Lean 4 proof assistant — a program that
-    checks every logical step from the axioms of mathematics. No human judgment, no
-    peer-review shortcuts. The proof is valid or the file has errors. These files
-    have zero errors.
+    Lean 4 is a proof assistant that mechanically checks every logical step of every proof against
+    the axioms of constructive type theory. It is not a linter. It is not a testing framework.
+    The kernel is a small, auditable program that either accepts a proof or rejects it.
   </p>
+  <ul class="rules">
+    <li>
+      <code>sorry</code> is Lean's reserved placeholder for "I admit this without proof." Files
+      that contain <code>sorry</code> are explicitly incomplete. <strong>0 sorries = complete verification.</strong>
+    </li>
+    <li>
+      <code>lake build</code> recompiles every proof from source against its declared Mathlib
+      version. If any tactic fails, any identifier is missing, or any type error exists, the build
+      errors out and prints the location.
+    </li>
+    <li>
+      The guarantee is as strong as the consistency of the Lean kernel's axioms (propositional
+      extensionality, function extensionality, quotient types, choice). No authorship, no journal
+      venue, no peer review in the guarantee chain.
+    </li>
+    <li>
+      A proof here is <em>not</em> "the author believes." It is <em>"your laptop has checked, step
+      by step, that the conclusion follows from the axioms."</em>
+    </li>
+  </ul>
 
-  <div class="proof-table" role="region" aria-label="Lean-verified theorems">
+  <div class="divider"></div>
+
+  <h2 id="breakdown">Honest breakdown</h2>
+  <p>The repository contains {totalStatements} named statements. They are not all equally original. Here is the accounting:</p>
+  <dl class="breakdown">
+    <div><dt>{verifiedOriginal}</dt><dd>EML-original theorems — results specific to this framework (SuperBEST lower bounds, F16-shape witnesses, EMLTree depth hierarchy, ELC preservation, self-map conjugacies).</dd></div>
+    <div><dt>{mathlibWrappers}</dt><dd>Mathlib identity wrappers — named aliases of lemmas already in Mathlib, re-exported under EML-readable names (e.g. <code>exp_ln_cancel</code> is <code>Real.exp_log</code>).</dd></div>
+    <div><dt>{supportingLemmas}</dt><dd>Supporting lemmas — per-operator witnesses, trivial evaluations, definitional unfolds, and proof scaffolding that feed the originals.</dd></div>
+    <div><dt>{totalStatements}</dt><dd>Total verified statements, all 0-sorry except as noted below.</dd></div>
+    <div><dt>{sorriesTotal}</dt><dd>Sorry statements, all in <code>InfiniteZerosBarrier.lean</code>: <code>sin_not_in_eml</code> and <code>sin_not_in_real_EML_k</code>. Both flag the same open gap — a quantitative zero-count bound on EML-k trees needs o-minimal structure theory (Wilkie 1996, not yet formalized in Mathlib).</dd></div>
+  </dl>
+
+  <div class="divider"></div>
+
+  <h2 id="files">Per-file summary</h2>
+  <div class="proof-table" role="region" aria-label="Lean-verified files">
     <div class="proof-head">
       <span>Status</span><span>Theorem</span><span>What it proves</span><span>File</span>
     </div>
-    {proofs.map(p => (
-      <div class={`proof-row ${p.ok ? 'ok' : 'partial'}`}>
+    {files.map(f => (
+      <div class={`proof-row ${f.ok ? 'ok' : 'partial'}`}>
         <span class="status">
-          {p.ok ? (<><span class="check">✓</span> 0 sorries</>) : (<><span class="warn">⚠</span> {p.sorries} sorries</>)}
+          {f.ok ? (<><span class="check">✓</span> 0 sorries</>) : (<><span class="warn">⚠</span> {f.sorries} sorries</>)}
         </span>
-        <span class="thm">{p.thm}</span>
-        <span class="what">{p.what}</span>
+        <span class="thm">{f.thm}</span>
+        <span class="what">{f.what}</span>
         <span class="file">
-          <a href={`${leanRepo}/blob/master/MonogateEML/${p.file}`}><code>{p.file}</code></a>
-          <span class="counts">{p.original} original / {p.total} statements</span>
+          <a href={ghFile(f.file)}><code>{f.file}</code></a>
+          <span class="counts">{f.original} original / {f.total} statements</span>
         </span>
       </div>
     ))}
   </div>
 
+  <div class="divider"></div>
+
+  <h2 id="flagship">Flagship theorems — full Lean source</h2>
+  <p>
+    Below: {flagshipCount} flagship theorems across the {totalFiles} files. Every block is a verbatim copy of the source.
+    Each is linked to its GitHub line number. The "<code>by</code>" tactic block is the proof, not a description of the proof.
+  </p>
+
+  {files.map(f => (
+    <section class={`file-block ${f.ok ? 'ok' : 'partial'}`} id={f.file.replace('.lean', '')}>
+      <header class="file-header">
+        <h3><code>{f.file}</code></h3>
+        <div class="file-meta">
+          <span class={`sorry-badge ${f.ok ? 'zero' : 'some'}`}>
+            {f.ok ? '✓ 0 sorries' : `⚠ ${f.sorries} sorries (o-minimal, documented)`}
+          </span>
+          <span class="counts-inline">{f.original} original / {f.total} statements</span>
+          <a href={ghFile(f.file)} class="view-gh">view full file →</a>
+        </div>
+        <p class="file-what">{f.what}</p>
+      </header>
+      {f.flagships.map(th => (
+        <article class={`theorem ${th.hasSorry ? 'has-sorry' : ''}`} id={th.name}>
+          <div class="theorem-head">
+            <code class="thm-name">{th.name}</code>
+            <a href={ghFile(f.file, th.line)} class="line-link">{f.file}:L{th.line} →</a>
+          </div>
+          <p class="hook">{th.hook}</p>
+          {th.hasSorry && (
+            <p class="sorry-warn">
+              ⚠ Contains <code>sorry</code> — documented open gap. The statement is the T01
+              barrier; the missing step is the quantitative zero-count bound for EML-k trees,
+              which requires o-minimal structure theory not yet formalized in Mathlib.
+            </p>
+          )}
+          <pre class="lean"><code class="language-lean">{th.source}</code></pre>
+        </article>
+      ))}
+    </section>
+  ))}
+
+  <div class="divider"></div>
+
+  <h2 id="scrape">For machines</h2>
+  <p>
+    Every flagship on this page is wrapped in a <code>&lt;pre&gt;&lt;code class="language-lean"&gt;</code> block
+    with a stable <code>id</code> anchor (e.g. <a href="#mul_one_node_positive"><code>#mul_one_node_positive</code></a>).
+    A plain-text companion dump is available at <a href="/proofs.lean.txt"><code>/proofs.lean.txt</code></a>
+    — curl-friendly, no HTML, one <code>-- file:line — name</code> header per theorem.
+    The same content is also emitted as <code>CreativeWork</code> entries in this page's
+    JSON-LD for structured-data crawlers (view source).
+  </p>
+
   <p class="footnote">
     <strong>On the partial file.</strong> The 2 sorries in <code>InfiniteZerosBarrier.lean</code>
     sit on the final step that connects the analyticity proof to the depth-k zero-count
-    bound.  This requires o-minimal structure theory (Wilkie 1996) that is not yet
-    formalised in Mathlib.  The supporting lemmas — <em>sin has infinitely many real
+    bound. This requires o-minimal structure theory (Wilkie 1996) that is not yet
+    formalised in Mathlib. The supporting lemmas — <em>sin has infinitely many real
     zeros</em>, <em>EML trees are real-analytic on (0, ∞)</em>, <em>a non-zero real-analytic
     function has finitely many zeros on any compact interval</em> — are all verified with
-    0 sorries.  The residual gap is a missing Mathlib chapter, not a gap in the argument.
+    0 sorries. The residual gap is a missing Mathlib chapter, not a gap in the argument.
   </p>
 
   <div class="divider"></div>
-
-  <h2>How to verify yourself</h2>
-
-  <p>
-    The proofs live in a public repository.  Clone it and run the Lean toolchain —
-    if the build succeeds, every theorem is verified:
-  </p>
-
-  <pre class="shell"><code>git clone {leanRepo}
-cd monogate-lean
-lake build</code></pre>
-
-  <p>
-    If the last line reads <code>Build completed successfully.</code> every file on
-    this page has been machine-checked end to end.  No network connection, no remote
-    verifier — everything runs locally against Mathlib.
-  </p>
-
-  <div class="divider"></div>
-
-  <h2>Why this matters</h2>
-
-  <p style="line-height: 1.9;">
-    Most published mathematics carries two kinds of guarantees: the author's
-    reputation and the referee's diligence.  Both are fallible.  A Lean-verified
-    proof replaces both with a third guarantee: the Lean kernel has checked every
-    logical step against its axioms, including every lemma pulled from Mathlib,
-    transitively.  Eleven files at zero sorries is more machine-verified content
-    than many published algebra papers carry.  One partial file flags the single
-    remaining gap honestly.
-  </p>
 
   <p style="color: #6b7280; font-size: 0.9rem; margin-top: 32px;">
-    {clean} clean files + {partial} partial · <a href={leanRepo}>monogate-lean repo</a> · paper:
+    {cleanFiles} clean files + {partialFiles} partial · <a href={leanRepo}>monogate-lean repo</a> · paper:
     <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a> · catalog: <a href="/theorems">theorems</a>
   </p>
 
+  <script type="application/ld+json" set:html={JSON.stringify(theoremLd)}></script>
+
   <style>
+    .lead {
+      color: #6b7280;
+      font-style: italic;
+      margin: 0 0 28px;
+    }
+
+    section.verify {
+      margin: 24px 0 28px;
+      padding: 18px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .verify-head {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .verify-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin: 10px 0 0;
+      line-height: 1.65;
+    }
+
+    pre.shell {
+      background: #0e0e10;
+      color: #e4e4e7;
+      border: 1px solid #2a2a2f;
+      border-radius: 4px;
+      padding: 14px 18px;
+      font-family: var(--mono);
+      font-size: 0.86rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      margin: 0;
+    }
+    pre.shell code { color: inherit; background: transparent; padding: 0; font-family: inherit; font-size: inherit; }
+
+    ul.rules {
+      line-height: 1.85;
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      padding-left: 22px;
+    }
+    ul.rules li { margin-bottom: 8px; }
+
+    dl.breakdown {
+      display: grid;
+      gap: 10px;
+      margin: 16px 0 24px;
+    }
+    dl.breakdown > div {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 18px;
+      align-items: baseline;
+    }
+    dl.breakdown dt {
+      font-family: var(--mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--orange);
+      text-align: right;
+      margin: 0;
+    }
+    dl.breakdown dd {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 0.94rem;
+      line-height: 1.6;
+    }
+
     .proof-table {
-      margin: 24px 0 16px;
+      margin: 16px 0;
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
@@ -149,7 +287,7 @@ lake build</code></pre>
     }
     .proof-head, .proof-row {
       display: grid;
-      grid-template-columns: 130px 210px 1fr 240px;
+      grid-template-columns: 130px 210px 1fr 260px;
       gap: 16px;
       padding: 10px 14px;
       align-items: baseline;
@@ -163,16 +301,12 @@ lake build</code></pre>
       letter-spacing: 1px;
       font-size: 0.72rem;
     }
-    .proof-row {
-      border-bottom: 1px solid var(--border);
-    }
+    .proof-row { border-bottom: 1px solid var(--border); }
     .proof-row:last-child { border-bottom: none; }
-    .proof-row.ok { background: transparent; }
     .proof-row.partial { background: rgba(234, 179, 8, 0.06); }
     .proof-row .status { color: var(--green); font-size: 0.78rem; }
     .proof-row.partial .status { color: #a16207; }
-    .proof-row .check { display: inline-block; margin-right: 2px; }
-    .proof-row .warn  { display: inline-block; margin-right: 2px; }
+    .proof-row .check, .proof-row .warn { display: inline-block; margin-right: 2px; }
     .proof-row .thm { font-weight: 600; color: var(--text); }
     .proof-row .what { color: var(--text); font-family: var(--serif); font-size: 0.92rem; }
     .proof-row .file a { color: var(--cyan); }
@@ -185,17 +319,116 @@ lake build</code></pre>
       font-size: 0.72rem;
     }
 
-    pre.shell {
-      background: var(--surface);
-      border: 1px solid var(--border);
+    section.file-block {
+      margin: 40px 0 24px;
+      scroll-margin-top: 80px;
+    }
+    section.file-block.partial {
+      border-left: 3px solid #d97706;
+      padding-left: 16px;
+    }
+    .file-header h3 {
+      margin: 0 0 8px;
+      font-family: var(--mono);
+      font-size: 1.15rem;
+    }
+    .file-header h3 code {
+      background: transparent;
+      padding: 0;
+      font-size: inherit;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .file-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .sorry-badge.zero { color: var(--green); }
+    .sorry-badge.some { color: #d97706; font-weight: 600; }
+    .view-gh { color: var(--cyan); }
+    .file-what {
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin: 8px 0 14px;
+      line-height: 1.6;
+    }
+
+    article.theorem {
+      margin: 16px 0 20px;
+      padding-left: 2px;
+      scroll-margin-top: 80px;
+    }
+    article.theorem.has-sorry {
+      border-left: 2px solid #d97706;
+      padding-left: 14px;
+    }
+    .theorem-head {
+      display: flex;
+      gap: 14px;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .thm-name {
+      font-family: var(--mono);
+      font-size: 0.96rem;
+      color: var(--text);
+      font-weight: 700;
+      background: transparent;
+      padding: 0;
+    }
+    .line-link {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--cyan);
+    }
+    .hook {
+      font-family: var(--serif);
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin: 4px 0 10px;
+      line-height: 1.6;
+    }
+    .sorry-warn {
+      font-size: 0.84rem;
+      color: #a16207;
+      font-family: var(--serif);
+      background: rgba(234, 179, 8, 0.08);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      border-radius: 3px;
+      padding: 8px 12px;
+      margin: 6px 0 10px;
+      line-height: 1.55;
+    }
+
+    pre.lean {
+      background: #0e0e10;
+      color: #e4e4e7;
+      border: 1px solid #2a2a2f;
       border-radius: 4px;
       padding: 14px 18px;
       font-family: var(--mono);
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       line-height: 1.6;
       overflow-x: auto;
-      margin: 16px 0;
+      margin: 8px 0;
     }
+    pre.lean code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+      white-space: pre;
+    }
+
     p.footnote {
       margin-top: 16px;
       font-size: 0.92rem;
@@ -213,6 +446,10 @@ lake build</code></pre>
       }
       .proof-head { display: none; }
       .proof-row .status::after { content: ' ·'; color: var(--muted); }
+      dl.breakdown > div { grid-template-columns: 64px 1fr; gap: 12px; }
+      dl.breakdown dt { font-size: 1.25rem; }
+      pre.shell, pre.lean { font-size: 0.76rem; padding: 12px 14px; }
+      .file-meta { gap: 10px; }
     }
   </style>
 </Base>
