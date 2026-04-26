@@ -281,7 +281,7 @@ def test_adam_31n_assertion(canonical_card):
 
 def test_adam_31n_rejects_reverted_37n(mutable_card):
     adam = cc._find_capability(mutable_card, "optimizer.adam")
-    adam["neural_metrics"]["optimizer_nodes_per_param_per_step"] = 37
+    adam["neural_metrics"]["optimizer_nodes_per_param_per_step_amortized"] = 37
     status, _ = cc._assert_adam_31n(mutable_card)
     assert status == "FAIL"
 

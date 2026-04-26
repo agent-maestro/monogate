@@ -464,11 +464,17 @@ def _assert_verification_lean_counts(card: dict[str, Any]) -> tuple[str, str]:
 
 
 def _assert_neural_capabilities(card: dict[str, Any]) -> tuple[str, str]:
-    """v3: softplus / sigmoid / adam / rmsnorm tool_function capabilities carry neural_metrics."""
+    """v3: softplus / sigmoid / adam / rmsnorm tool_function capabilities carry neural_metrics.
+
+    Sigmoid and Adam carry both default and explicitly-labelled cost variants
+    (per commit 426d91c1: tree/dag/strict/amortized). The DAG sigmoid and
+    amortized Adam values are the canonical published ``5n`` / ``31n`` numbers;
+    the unsuffixed fields hold the strict/tree defaults (6n / 37n).
+    """
     required = {
         "activation.softplus": {"forward_nodes": 1},
-        "activation.sigmoid":  {"forward_nodes": 5},
-        "optimizer.adam":      {"optimizer_nodes_per_param_per_step": 31},
+        "activation.sigmoid":  {"forward_nodes_dag": 5},
+        "optimizer.adam":      {"optimizer_nodes_per_param_per_step_amortized": 31},
         "norm.rmsnorm":        {"forward_nodes": 4097},
     }
     missing: list[str] = []
@@ -491,19 +497,24 @@ def _assert_neural_capabilities(card: dict[str, Any]) -> tuple[str, str]:
 
 
 def _assert_adam_31n(card: dict[str, Any]) -> tuple[str, str]:
-    """Explicit check that the post-NN-13 re-audit value propagated."""
+    """Explicit check that the post-NN-13 re-audit amortized value propagated.
+
+    Reads ``optimizer_nodes_per_param_per_step_amortized`` (31n with shared
+    bias-correction scalars across params) and ``eml_metrics.cost_amortized``.
+    The strict/tree value is 37n; the amortized value is the canonical claim.
+    """
     adam = _find_capability(card, "optimizer.adam")
     if adam is None:
         return "FAIL", "optimizer.adam capability missing"
     nm = adam.get("neural_metrics") or {}
-    n = nm.get("optimizer_nodes_per_param_per_step")
+    n = nm.get("optimizer_nodes_per_param_per_step_amortized")
     em = adam.get("eml_metrics") or {}
-    sb = em.get("superbest_nodes")
+    amortized = em.get("cost_amortized")
     if n != 31:
-        return "FAIL", f"Adam per-param-per-step = {n!r}, expected 31 (post-NN-13 re-audit)"
-    if sb is not None and sb != 31:
-        return "FAIL", f"Adam eml_metrics.superbest_nodes = {sb!r}, expected 31"
-    return "PASS", "Adam re-audit: 31n per param per step (post-NN-13)"
+        return "FAIL", f"Adam amortized per-param-per-step = {n!r}, expected 31 (post-NN-13 re-audit)"
+    if amortized is not None and amortized != 31:
+        return "FAIL", f"Adam eml_metrics.cost_amortized = {amortized!r}, expected 31"
+    return "PASS", "Adam re-audit: 31n amortized per param per step (post-NN-13)"
 
 
 BenchmarkFn = Callable[[], tuple[str, str]]

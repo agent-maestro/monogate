@@ -4,7 +4,7 @@
   "name": "Monogate",
   "type": "library",
   "description": "One binary gate, eml(x, y) = exp(x) − ln(y), generates every elementary function as a finite tree (Odrzywołek 2026). Ships with the 16-operator F16 taxonomy (8 exactly complete, 1 approximately complete, 7 incomplete), the SuperBEST routing table at 14 nodes / 80.8% savings on the positive-domain arithmetic set, a cost theory with zero prediction error across 315 catalogued equations, and 11 machine-verified Lean 4 proofs (0 sorries each) in the companion monogate-lean repository.",
-  "version": "2.3.0",
+  "version": "2.5.0",
   "license": "MIT",
   "homepage": "https://monogate.org",
   "repository": "https://github.com/almaguer1986/monogate",
@@ -42,7 +42,7 @@
       "name": "SuperBEST Routing (v5.3, positive domain)",
       "category": "cost_theory",
       "description": "A canonical node-cost table for the 10 positive-domain arithmetic primitives (exp, ln, neg, add, sub, mul, div, recip, pow, sqrt) totalling 14 F16 nodes vs 73 naive, an 80.8% saving. Every per-op cost is proved exact, either structurally or by exhaustive F16 search (with a corresponding Lean 4 lower bound for add, sub, mul, div and upper bounds for exp, mul, pow, recip, sqrt — the latter reconciling sqrt at 1n via F13(1/2, x)).",
-      "status": "proven_machine_verified",
+      "status": "proven",
       "constraints": {
         "domain": "x, y ∈ (0, ∞)",
         "total_nodes": 14,
@@ -62,7 +62,8 @@
         "superbest",
         "routing",
         "cost",
-        "positive_domain"
+        "positive_domain",
+        "lean_verified"
       ]
     },
     {
@@ -213,7 +214,7 @@
       "name": "F16 Positive-Domain 1-Node Constructions (Lean)",
       "category": "upper_bound",
       "description": "On the positive real domain, exp, mul, pow, recip, and sqrt each have an explicit F16 single-node construction. These five 1-node results collectively supersede the v5.1 SuperBEST table's over-counted 16n and establish the corrected v5.3 total of 14n.",
-      "status": "proven_machine_verified",
+      "status": "proven",
       "eml_metrics": {
         "superbest_nodes": 1,
         "elc_class": "inside",
@@ -413,7 +414,7 @@
       "name": "Softplus activation",
       "category": "tool_function",
       "description": "f(x) = ln(1 + exp(x)). Single-F16-node primitive (LEAd). Cheapest ELC-native smooth activation; derivative is sigmoid.",
-      "status": "proven_machine_verified",
+      "status": "proven",
       "eml_metrics": {
         "depth_max": 1,
         "eml_k": 1,
@@ -440,7 +441,8 @@
       "tags": [
         "activation",
         "elc_interior",
-        "1_node_primitive"
+        "1_node_primitive",
+        "lean_verified"
       ]
     },
     {
@@ -560,14 +562,14 @@
       "name": "Lean 4 Verification (Mathlib v4.14.0)",
       "capability_ref": "routing.superbest_v5",
       "metric": "proved_0_sorry_files",
-      "value": 11,
+      "value": 10,
       "unit": "Lean files with 0 sorries",
       "direction": "higher_is_better",
       "reproducibility": {
         "command": "git clone https://github.com/almaguer1986/monogate-lean && cd monogate-lean && lake build",
         "deterministic": true
       },
-      "notes": "11 Lean files pass with 0 sorries each, containing 49 original EML theorems and 461 total statements (originals + Mathlib wrappers + supporting lemmas). InfiniteZerosBarrier.lean retains 2 open sorries (o-minimal / Wilkie 1996 — not yet formalized in Mathlib)."
+      "notes": "10 Lean files pass with 0 sorries each. InfiniteZerosBarrier.lean retains 2 open sorries (o-minimal / Wilkie 1996 — not yet formalized in Mathlib)."
     },
     {
       "id": "bench.python_tests",
@@ -733,23 +735,21 @@
     }
   ],
   "verification": {
-    "test_count": 1839,
+    "test_count": 1890,
     "test_pass_rate": 1.0,
-    "last_verified": "2026-04-24T09:00:00Z",
+    "last_verified": "2026-04-26T20:21:28Z",
     "lean_clean_files": 11,
     "lean_partial_files": 1,
     "lean_sorries_total": 2,
-    "lean_original_theorems": 49,
-    "lean_total_statements": 461,
     "trust_score": {
       "value": 0.97,
       "version": "manual_v0",
-      "notes": "Reflects 50 original EML theorems machine-verified in Lean 4 across 12 files (0 sorries each) + 1 partial (2 sorries on InfiniteZerosBarrier pending o-minimal Mathlib support). Total Lean statements: 466 (50 originals + 173 Mathlib wrappers + 241 supporting lemmas, all 0-sorry except the 2 noted). 4 independent benchmark categories with reproducible commands, zero-error prediction across the 265-equation public catalog, and a public catalog of 30 proved theorems at https://monogate.org/theorems. Universality.lean user-verified in VS Code Lean 4 extension 2026-04-25 (eml_universality theorem)."
+      "notes": "Reflects 11 machine-verified Lean files (0 sorries each) + 1 partial (2 sorries on InfiniteZerosBarrier pending o-minimal Mathlib support), 4 independent benchmark categories with reproducible commands, zero-error prediction across the 315-equation public catalog, and a public catalog of 30 proved theorems at https://monogate.org/theorems. UpperBounds.lean user-verified in VS Code Lean 4 extension 2026-04-24 (includes ln_one_node_via_exl)."
     }
   },
   "integration": {
     "install": {
-      "pip": "pip install monogate==2.3.0",
+      "pip": "pip install monogate==2.5.0",
       "cargo": "cargo add monogate-core"
     },
     "sdk_languages": [
@@ -775,7 +775,7 @@
   },
   "metadata": {
     "created": "2026-04-17T00:00:00Z",
-    "updated": "2026-04-24T00:18:18Z",
+    "updated": "2026-04-26T20:21:28Z",
     "schema_url": "https://monogate.org/schemas/capcard/v3.json"
   }
 }

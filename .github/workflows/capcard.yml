@@ -3,10 +3,10 @@ name: CapCard Verify
 on:
   push:
     paths:
-      - "capability_card.json"
+      - "capability_card_public.json"
   pull_request:
     paths:
-      - "capability_card.json"
+      - "capability_card_public.json"
 
 jobs:
   verify:
@@ -23,4 +23,4 @@ jobs:
         run: pip install capcard-ai
 
       - name: Verify capability card
-        run: capcard verify capability_card.json
+        run: capcard verify capability_card_public.json

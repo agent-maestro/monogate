@@ -37,4 +37,9 @@ jobs:
           pip install -e ".[dev]"
 
       - name: Run pytest
+        env:
+          # Provide BEST routing publicly in CI. The same dispatch table is
+          # documented in the SuperBEST paper section; the private _routing.pkl
+          # is only excluded to keep the build pipeline private, not the values.
+          MONOGATE_ROUTING: '{"exp":"EML","ln":"EXL","pow":"EXL","mul":"EDL","div":"EDL","recip":"EDL","neg":"EDL","sub":"EML","add":"EML"}'
         run: pytest -v --tb=short
