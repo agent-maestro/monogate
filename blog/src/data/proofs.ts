@@ -446,6 +446,31 @@ theorem sin_not_in_eml (k : ℕ) :
   sorry`
       }
     ]
+  },
+  {
+    file: 'Universality.lean',
+    thm: 'EML universality — every EML-elementary function admits an EMLTree witness',
+    what: 'Every function in the EML class (∃k, f ∈ EML_k) admits an explicit EMLTree witness. Composition closure proved constructively via tree substitution: (subst_depth: depth ≤ sum) + (subst_eval: eval composes). Supporting infrastructure includes the EMLTree.subst recursion, IsEMLElementary predicate, and concrete witnesses for const / id / exp / nested exp / exp-of-constant. Verified by user in VS Code lean4 extension 2026-04-25.',
+    original: 1, total: 11, sorries: 0, ok: true,
+    flagships: [
+      {
+        name: 'eml_universality',
+        line: 81,
+        hook: 'The headline theorem — every EML-elementary function admits an EMLTree witness whose evaluation matches the function pointwise. Proof is one-line by definition unfolding; the mathematical content is what FUNCTIONS are EML-elementary, captured by the closure theorem + concrete witnesses.',
+        source: `/-- **EML universality (statement form).** Every EML-elementary function
+    admits an EML routing tree witness whose evaluation matches the
+    function pointwise.
+
+    The proof is one line by unfolding the definition; the mathematical
+    content of universality is in *which* functions are EML-elementary,
+    captured by the witness theorems below + closure under composition. -/
+theorem eml_universality :
+    ∀ f : ℂ → ℂ, IsEMLElementary f → ∃ t : EMLTree, ∀ x, f x = t.eval x := by
+  intro f hf
+  obtain ⟨_, t, _hd, ht⟩ := hf
+  exact ⟨t, ht⟩`
+      }
+    ]
   }
 ];
 
