@@ -211,6 +211,79 @@ theorem rpow_one_node_positive (n x : ℝ) (hx : 0 < x) :
 theorem ln_one_node_via_exl (x : ℝ) :
     Real.exp 0 * Real.log x = Real.log x := by
   rw [Real.exp_zero, one_mul]`
+      },
+      {
+        name: 'f14_identity',
+        line: 106,
+        hook: 'F14 identity — exp(x + log y) = exp(x) · y for y > 0. Computes the exp-times-positive product as a single F14 node.',
+        source: `/-- F14 identity: exp(x + log(y)) = exp(x) · y for y > 0.
+    Useful for computing exp(x) * y with a single F14 node. -/
+theorem f14_identity (x y : ℝ) (hy : 0 < y) :
+    Real.exp (x + Real.log y) = Real.exp x * y := by
+  rw [Real.exp_add, Real.exp_log hy]`
+      },
+      {
+        name: 'f15_identity',
+        line: 116,
+        hook: 'F15 identity — exp(x − log y) = exp(x) / y for y > 0. The division partner of F14.',
+        source: `/-- F15 identity: exp(x − log(y)) = exp(x) / y for y > 0.
+    Useful for computing exp(x) / y with a single F15 node. -/
+theorem f15_identity (x y : ℝ) (hy : 0 < y) :
+    Real.exp (x - Real.log y) = Real.exp x / y := by
+  rw [Real.exp_sub, Real.exp_log hy]`
+      },
+      {
+        name: 'f16_identity',
+        line: 127,
+        hook: 'F16 identity — exp(log x + log y) = x · y for x, y > 0. Named alias of mul_one_node_positive that completes the F13-F16 naming symmetry.',
+        source: `/-- F16 identity: exp(log(x) + log(y)) = x · y for x, y > 0.
+    Named alias of \`mul_one_node_positive\` that completes the F13–F16
+    naming symmetry alongside \`f14_identity\` and \`f15_identity\`. -/
+theorem f16_identity (x y : ℝ) (hx : 0 < x) (hy : 0 < y) :
+    Real.exp (Real.log x + Real.log y) = x * y :=
+  mul_one_node_positive x y hx hy`
+      },
+      {
+        name: 'mul_of_negatives_one_node',
+        line: 140,
+        hook: 'Same-sign negative multiplication is a single F16 node: exp(log(−x) + log(−y)) = x · y for x, y < 0. Extends mul_one_node_positive to the negative quadrant via neg_pos.',
+        source: `/-- Multiplication of two negatives is a single F16 node:
+    exp(log(−x) + log(−y)) = x · y for x, y < 0.
+    Extends \`mul_one_node_positive\` to the same-sign negative domain,
+    using \`neg_pos\` to reduce to the positive case and \`neg_mul_neg\`
+    to close the product. -/
+theorem mul_of_negatives_one_node (x y : ℝ) (hx : x < 0) (hy : y < 0) :
+    Real.exp (Real.log (-x) + Real.log (-y)) = x * y := by
+  have hxp : 0 < -x := neg_pos.mpr hx
+  have hyp : 0 < -y := neg_pos.mpr hy
+  rw [mul_one_node_positive (-x) (-y) hxp hyp]
+  ring`
+      },
+      {
+        name: 'superbest_positive_one_node_ops',
+        line: 153,
+        hook: 'The SuperBEST positive-domain summary theorem — all seven 1-node operations bundled in a single conjunction (exp, mul, pow, recip, sqrt, ln-via-EXL, F14 identity).',
+        source: `/-- All seven 1-node positive-domain results, collected:
+    exp, mul, pow, recip, sqrt, ln (via EXL), and the F14 identity. -/
+theorem superbest_positive_one_node_ops :
+    (∀ x : ℝ, Real.exp x - Real.log 1 = Real.exp x) ∧          -- exp: 1n
+    (∀ x y : ℝ, 0 < x → 0 < y →
+      Real.exp (Real.log x + Real.log y) = x * y) ∧             -- mul: 1n (x,y>0)
+    (∀ n x : ℝ, 0 < x → Real.exp (n * Real.log x) = x ^ n) ∧   -- pow: 1n (x>0)
+    (∀ x : ℝ, 0 < x →
+      Real.exp ((-1) * Real.log x) = 1 / x) ∧                   -- recip: 1n (x>0)
+    (∀ x : ℝ, 0 < x →
+      Real.exp ((1/2) * Real.log x) = Real.sqrt x) ∧             -- sqrt: 1n (x>0)
+    (∀ x : ℝ, Real.exp 0 * Real.log x = Real.log x) ∧           -- ln: 1n via EXL
+    (∀ x y : ℝ, 0 < y →
+      Real.exp (x + Real.log y) = Real.exp x * y) :=             -- f14: exp(x)·y, y>0
+  ⟨fun x => by simp [Real.log_one],
+   mul_one_node_positive,
+   rpow_one_node_positive,
+   recip_one_node_positive,
+   sqrt_one_node_positive',
+   ln_one_node_via_exl,
+   f14_identity⟩`
       }
     ]
   },
@@ -241,6 +314,15 @@ theorem sqrt_is_one_node_positive (x : ℝ) (hx : 0 < x) :
 theorem mul_is_one_node_positive (x y : ℝ) (hx : 0 < x) (hy : 0 < y) :
     Real.exp (Real.log x + Real.log y) = x * y := by
   rw [Real.exp_add, Real.exp_log hx, Real.exp_log hy]`
+      },
+      {
+        name: 'pow_is_one_node_positive',
+        line: 127,
+        hook: 'EPL(n, x) = exp(n · log x) = x^n for x > 0. Closes pow as a single F13 node — the construction that subsumes recip (n = −1), sqrt (n = 1/2), and general powers in the v5.3 audit.',
+        source: `/-- EPL(n, x) = exp(n · log x) = x^n for x > 0 (pow = 1n). -/
+theorem pow_is_one_node_positive (n x : ℝ) (hx : 0 < x) :
+    Real.exp (n * Real.log x) = x ^ n :=
+  rpow_one_node_positive n x hx`
       }
     ]
   },
@@ -335,6 +417,27 @@ theorem sinh_log_two : Real.sinh (Real.log 2) = 3 / 4 := by
 theorem pythagorean_triple_at_log_two :
     (Real.cosh (Real.log 2)) ^ 2 - (Real.sinh (Real.log 2)) ^ 2 = 1 := by
   exact cosh_sq_sub_sinh_sq (Real.log 2)`
+      },
+      {
+        name: 'sinh_as_exp_arithmetic',
+        line: 24,
+        hook: 'The headline ELC-preservation witness — sinh x = (exp x − exp(−x))/2. Makes sinh an arithmetic combination of two exp-applications, hence sinh ∘ ELC ⊆ ELC.',
+        source: `/-- **Explicit ELC-primitive decomposition of sinh**: \`sinh x = (exp x − exp(−x))/2\`.
+    This makes sinh an arithmetic combination of two exp-applications (each
+    one F16 node), hence sinh ∘ ELC ⊆ ELC under the standard ELC definition
+    closed under {+, −, ·, /, exp, log}. -/
+theorem sinh_as_exp_arithmetic (x : ℝ) :
+    Real.sinh x = (Real.exp x - Real.exp (-x)) / 2 := by
+  rw [Real.sinh_eq]`
+      },
+      {
+        name: 'cosh_as_exp_arithmetic',
+        line: 29,
+        hook: 'The cosh partner — cosh x = (exp x + exp(−x))/2. Same ELC-arithmetic decomposition; combined with sinh, gives the full hyperbolic ELC-preservation result.',
+        source: `/-- **Explicit ELC-primitive decomposition of cosh**: \`cosh x = (exp x + exp(−x))/2\`. -/
+theorem cosh_as_exp_arithmetic (x : ℝ) :
+    Real.cosh x = (Real.exp x + Real.exp (-x)) / 2 := by
+  rw [Real.cosh_eq]`
       }
     ]
   },
@@ -375,6 +478,15 @@ theorem eml_edl_conjugacy (x : ℝ) (hx : 0 < x) (hx1 : x ≠ 1) :
       = Real.exp (Real.exp x - Real.log x) := by
   have h_log_ne : Real.log x ≠ 0 := Real.log_ne_zero_of_pos_of_ne_one hx hx1
   rw [Real.exp_sub, Real.log_exp, Real.exp_log hx]`
+      },
+      {
+        name: 'exp_log_round_trip',
+        line: 92,
+        hook: 'The key rewrite used in both EAL↔EXL and EML↔EDL conjugacies — for x > 0, exp(log x) = x. Lifted into the conjugacy namespace as a citable lemma.',
+        source: `/-- The key rewrite used in both conjugacies: for x > 0,
+    exp(log x) = x. -/
+theorem exp_log_round_trip (x : ℝ) (hx : 0 < x) :
+    Real.exp (Real.log x) = x := Real.exp_log hx`
       }
     ]
   },
@@ -469,6 +581,44 @@ theorem eml_universality :
   intro f hf
   obtain ⟨_, t, _hd, ht⟩ := hf
   exact ⟨t, ht⟩`
+      },
+      {
+        name: 'const_isEMLElementary',
+        line: 102,
+        hook: 'Concrete witness — the constant function fun _ => c is EML-elementary at depth 0. The base case for the universality witness ladder.',
+        source: `/-- The constant function is EML-elementary at depth 0. -/
+theorem const_isEMLElementary (c : ℂ) :
+    IsEMLElementary (fun _ : ℂ => c) :=
+  ⟨0, const_in_EML_k c 0⟩`
+      },
+      {
+        name: 'id_isEMLElementary',
+        line: 107,
+        hook: 'Concrete witness — the identity function fun x => x is EML-elementary at depth 0.',
+        source: `/-- The identity function is EML-elementary at depth 0. -/
+theorem id_isEMLElementary : IsEMLElementary (fun x : ℂ => x) :=
+  ⟨0, id_in_EML_k 0⟩`
+      },
+      {
+        name: 'exp_isEMLElementary',
+        line: 111,
+        hook: 'Concrete witness — Complex.exp is EML-elementary at depth 1. The first non-trivial witness in the ladder.',
+        source: `/-- Complex exponential is EML-elementary at depth 1. -/
+theorem exp_isEMLElementary :
+    IsEMLElementary (fun x : ℂ => Complex.exp x) :=
+  ⟨1, exp_in_EML_one⟩`
+      },
+      {
+        name: 'exp_exp_isEMLElementary',
+        line: 120,
+        hook: 'Concrete compositional witness — exp(exp(x)) is EML-elementary at depth ≤ 2 via IsEMLElementary.comp closure. Confirms composition closure ships, not just statement.',
+        source: `/-- exp(exp(x)) is EML-elementary at depth ≤ 2. -/
+theorem exp_exp_isEMLElementary :
+    IsEMLElementary (fun x : ℂ => Complex.exp (Complex.exp x)) := by
+  have h := IsEMLElementary.comp exp_isEMLElementary exp_isEMLElementary
+  -- h : IsEMLElementary ((fun x => exp x) ∘ (fun x => exp x))
+  --     = IsEMLElementary (fun x => exp (exp x)) by comp definition
+  exact h`
       }
     ]
   }
