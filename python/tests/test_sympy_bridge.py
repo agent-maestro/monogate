@@ -92,7 +92,8 @@ class TestToSympy:
         assert result == sympy.Integer(1)
 
     def test_unknown_op_raises(self):
-        tree = {"op": "add", "left": _leaf_x(), "right": _leaf_c(1.0)}
+        # E-186 added many ops including "add". Use a truly-unknown name.
+        tree = {"op": "WAT_UNKNOWN", "left": _leaf_x(), "right": _leaf_c(1.0)}
         with pytest.raises(TypeError, match="unknown op"):
             to_sympy(tree)
 
@@ -125,15 +126,20 @@ class TestFromSympy:
         assert float(result["val"]) == pytest.approx(3.14, abs=1e-5)
 
     def test_exp_x(self):
-        # exp(x) → eml(x, 1)
+        # E-186: from_sympy(exp(x)) returns {"op": "exp", "child": x}.
+        # Round-trip via to_sympy reproduces exp(x) exactly.
+        from monogate.sympy_bridge import to_sympy
         result = from_sympy(sympy.exp(x_sym))
-        assert result["op"] == "eml"
-        assert result["left"]["val"] == "x"
-        assert float(result["right"]["val"]) == pytest.approx(1.0)
+        assert result["op"] in ("exp", "eml"), \
+            f"expected exp or eml node, got {result['op']}"
+        # Numerically equivalent
+        assert sympy.simplify(to_sympy(result) - sympy.exp(x_sym)) == 0
 
-    def test_non_convertible_raises(self):
-        with pytest.raises(NotImplementedError):
-            from_sympy(sympy.sin(x_sym))
+    def test_pne_raises(self):
+        # E-186: PNE expressions raise PfaffianNotEMLError.
+        from monogate.sympy_bridge import PfaffianNotEMLError
+        with pytest.raises(PfaffianNotEMLError):
+            from_sympy(sympy.erf(x_sym))
 
 
 # ── simplify_eml ──────────────────────────────────────────────────────────────

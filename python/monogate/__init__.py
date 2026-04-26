@@ -59,9 +59,10 @@ from .core import (
     EDL_ONE,
     EDL_NEG_ONE,
     compare_op,
+    pow_exl,
 )
 
-__version__ = "2.4.1"
+__version__ = "2.5.0"
 
 
 # Lazy attribute access — keeps the bare `import monogate` lightweight
@@ -334,6 +335,8 @@ try:
         simplify_eml,
         latex_eml,
         verify_identity,
+        node_count,
+        PfaffianNotEMLError,
     )
     __all__ += [
         "to_sympy",
@@ -341,9 +344,21 @@ try:
         "simplify_eml",
         "latex_eml",
         "verify_identity",
+        "node_count",
+        "PfaffianNotEMLError",
     ]
 except ImportError:
     pass  # sympy not installed — bridge unavailable
+
+try:
+    from .pipeline import (  # noqa: F401
+        pipeline,
+        pipeline_batch,
+        PipelineResult,
+    )
+    __all__ += ["pipeline", "pipeline_batch", "PipelineResult"]
+except ImportError:
+    pass  # eml-cost / eml-rewrite not installed — pipeline unavailable
 
 from .leaderboard import (  # noqa: F401
     BenchmarkProblem,
