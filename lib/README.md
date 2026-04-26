@@ -121,6 +121,38 @@ compare(a, b);                                     // per-axis deltas
 Reference: [arXiv:2603.21852](https://arxiv.org/abs/2603.21852) +
 Khovanskii (1991) Pfaffian fewnomials.
 
+### `predict_precision_loss(expr)` — float64 numerical-precision predictor
+
+Added in 1.3.0. Port of Python `eml_cost.predict_precision_loss`
+(eml-cost 0.7.0) — same regression coefficients fit on the E-193
+bench-300-domain corpus (n=379, 5-fold CV R^2 = +0.27, residual log10
+std = 0.77).
+
+```js
+import { predict_precision_loss, FLOAT64_EPS } from 'monogate/cost';
+
+const r = predict_precision_loss('exp(exp(x)) + sin(x**2)');
+r.predicted_max_relerr        // ~ 2.6e-15
+r.predicted_digits_lost       // ~ 1.07 decimal digits lost vs perfect float64
+r.ci95                        // [low, high] — wide, ~factor 30 either way
+r.cv_r2                       // 0.271 (carried for honest reporting)
+```
+
+**Honest framing** (mirrors the Python docstring): modest predictor
+for **rank-ordering and high-risk subtree surfacing**, NOT for
+absolute precision claims. **Not a form recommender** — E-193 Phase 3
+showed only 30% best-pick on algebraically-equivalent rewrite tests,
+well below the 70% product threshold; that recommender was deliberately
+not shipped. Do not use this to choose between
+`1/(1+exp(-x))` and `tanh(x/2)/2 + 1/2`.
+
+**Parity with Python:** 14 of 20 representative test cases produce
+byte-identical predictions; the other 6 differ by up to ~10x because
+SymPy's automatic canonicalizations (e.g. `Mul(1, Pow(x,-1)) → Pow(x,-1)`,
+`Mul(-1, x) ↔ Neg(x)`, `sqrt → Pow(x, 1/2)`) shift count_ops or
+tree_size on the JS-parsed literal tree. All cases stay well within
+each other's 95% prediction interval.
+
 ## Open challenges
 
 These functions have no known EML construction:
