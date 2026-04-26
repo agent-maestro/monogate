@@ -61,7 +61,23 @@ from .core import (
     compare_op,
 )
 
-__version__ = "2.3.0"
+__version__ = "2.4.0"
+
+
+# Optional surface — universality_witness is gated on the [witness]
+# extra (sympy + eml-cost + eml-rewrite + eml-discover). Lazy import
+# so the bare `monogate` install stays dependency-free.
+def __getattr__(name: str):  # type: ignore[no-untyped-def]
+    if name == "universality_witness":
+        from .witness import universality_witness as _uw
+        return _uw
+    if name == "witness_to_dict":
+        from .witness import witness_to_dict as _wtd
+        return _wtd
+    if name == "UniversalityWitness":
+        from .witness import UniversalityWitness as _UW
+        return _UW
+    raise AttributeError(f"module 'monogate' has no attribute {name!r}")
 
 __all__ = [
     "op",

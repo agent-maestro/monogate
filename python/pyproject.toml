@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "monogate"
-version = "2.3.0"
-description = "EML arithmetic — all elementary functions from eml(x,y) = exp(x) − ln(y)"
+version = "2.4.0"
+description = "EML arithmetic — all elementary functions from eml(x,y) = exp(x) − ln(y) — with universality witness, CLI, and Jupyter integration"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Monogate Research" }]
@@ -17,13 +17,48 @@ torch     = ["torch>=2.0"]
 llm       = ["openai>=1.0", "groq>=0.4", "anthropic>=0.20"]
 sympy     = ["sympy>=1.12"]
 streamlit = ["streamlit>=1.32", "matplotlib>=3.8", "numpy>=1.24", "pandas>=2.0"]
-dev       = ["pytest>=7", "torch>=2.0", "mpmath>=1.3", "matplotlib>=3.8", "numpy>=1.24", "scikit-learn>=1.3"]
 docs      = ["mkdocs>=1.5", "mkdocs-material>=9.0", "mkdocstrings[python]>=0.20"]
 
+# 2.4.0 extras — unify the eml-* substrate as optional capabilities.
+# Pure-Python pieces (witness, explore CLI, jupyter) live inside
+# monogate now; the remaining eml-* packages stay as separate
+# PyPI dependencies installed via these extras.
+witness = [
+    "sympy>=1.12",
+    "eml-cost>=0.2.0",
+    "eml-rewrite>=0.4.0",
+    "eml-discover>=0.2.0",
+]
+cli = [
+    "monogate[witness]",
+    "eml-graph>=0.1.0",
+]
+jupyter = [
+    "monogate[witness]",
+    "ipython>=8.0",
+]
+all = [
+    "monogate[cli,jupyter,torch,sympy]",
+]
+
+dev = [
+    "pytest>=7",
+    "torch>=2.0",
+    "mpmath>=1.3",
+    "matplotlib>=3.8",
+    "numpy>=1.24",
+    "scikit-learn>=1.3",
+    "monogate[cli,jupyter]",
+]
+
 [project.scripts]
-monogate-optimize      = "monogate.llm.cli:main"
-monogate-validate      = "monogate.validate:main"
+monogate-optimize        = "monogate.llm.cli:main"
+monogate-validate        = "monogate.validate:main"
 monogate-capability-card = "monogate.cli.capability_card:main"
+monogate-explore         = "monogate.cli.explore:main"
+# Compatibility alias — old eml-explore script keeps working when
+# users install monogate with the [cli] extra.
+eml-explore              = "monogate.cli.explore:main"
 
 [project.urls]
 Homepage   = "https://monogate.dev"

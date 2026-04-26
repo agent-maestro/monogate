@@ -4,6 +4,7 @@ Witness: (x,y) = (6,3), target = x/y = 2.
 Each circuit is proved ≠ div by showing its value at (6,3) ≠ 2.
 """
 import math
+import re
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -104,14 +105,16 @@ def gen_proof(outer, inner, a_s, b_s, c_s, shape, inner_val, result, idx):
     proof = gen_proof_body(outer, inner, a_val, b_val, c_val, shape,
                            inner_val, result, ie, cv, diff)
 
+    # Always unfold all 16 ops — nested same-op cases need both unfoldings,
+    # and unused ops simply don't match. Avoids simp loop detection entirely.
+    all_ops = "D_F1, D_F2, D_F3, D_F4, D_F5, D_F6, D_F7, D_F8, D_F9, D_F10, D_F11, D_F12, D_F13, D_F14, D_F15, D_F16"
     lines = [
         f"private lemma {thm_name} :",
         f"    ¬ (∀ x y : ℝ, {circ_call} = x / y) := by",
         f"  intro h",
         f"  have key := h 6 3",
+        f"  simp only [{all_ops}, Real.log_neg_eq_log] at key",
         f"  norm_num at key",
-        f"  simp only [D_{outer}, D_{inner}] at key",
-        f"  simp only [Real.log_neg_eq_log] at key",
     ] + proof
     return "\n".join(lines)
 
@@ -145,17 +148,125 @@ def log_lt_2_lemma(c_val):
 def log_gt_1_lemma(c_val):
     return f"log{int(c_val)}_gt_1"
 
-def large_result_proof(outer, inner_val, c_val, ie, cv, shape):
-    """Value >> 2. Use exponential lower bounds."""
+def _ie_simplified(ie):
+    """Apply Real.log_neg_eq_log symbolically: Real.log (-N) → Real.log N."""
+    return re.sub(r'Real\.log \(-(\d+)\)', r'Real.log \1', ie)
+
+def _inner_gt3_proof(ie_simp, inner_val):
+    """Return linarith args to prove (3:ℝ) < ie_simp, or None if not applicable."""
+    if inner_val <= 3:
+        return None
+    exp_hint = 'exp6_gt_390' if inner_val > 100 else 'exp3_gt_19'
+    log_hint = None
+    if 'log 6' in ie_simp:
+        log_hint = 'log6_lt_2'
+    elif 'log 3' in ie_simp:
+        log_hint = 'log3_lt_2'
+    hints = [exp_hint] + ([log_hint] if log_hint else [])
+    return f"linarith [{', '.join(hints)}]"
+
+def _log_le_6_proof(ie_simp, inner_val):
+    """Prove Real.log ie_simp ≤ 6, for large inner (ie_simp ≤ exp 6)."""
+    log_ub = 'log6_lt_2' if 'log 6' in ie_simp else 'log3_lt_2'
+    log_lb = 'log6_gt_1' if 'log 6' in ie_simp else 'log3_gt_1'
+
+    # Prove ie_simp > 0
+    if inner_val > 100:
+        pos_proof = f"by linarith [exp6_gt_390, {log_ub}]"
+    else:
+        pos_proof = f"by linarith [exp3_gt_19, {log_ub}]"
+
+    # Prove ie_simp ≤ exp(6): need exp monotonicity when ie has exp(3)
+    if 'Real.exp 6' in ie_simp or 'Real.exp (-6)' in ie_simp:
+        # exp(6) - log(B) ≤ exp(6) needs log(B) ≥ 0, trivial from log_lb
+        # exp(-6) - log(B) ≤ exp(6) trivially since exp(-6) < 1 ≤ exp(6)
+        le_proof = f"by linarith [{log_lb}, exp6_gt_390]"
+    else:
+        # exp(3) - log(B) ≤ exp(6): need exp(3) < exp(6)
+        le_proof = (
+            f"by have h36 := Real.exp_lt_exp.mpr (show (3:ℝ) < 6 from by norm_num); "
+            f"linarith [{log_lb}]"
+        )
+
     return [
-        f"  -- result >> 2; contradiction from positivity and bounds",
-        f"  linarith [exp6_gt_390, Real.log_pos (show (1:ℝ) < {int(c_val)} from by norm_num)]",
+        f"  have hlog_pos : (0 : ℝ) < {ie_simp} := {pos_proof}",
+        f"  have hlog_le_exp6 : {ie_simp} ≤ Real.exp 6 := {le_proof}",
+        f"  have hlog_bd := Real.log_le_log hlog_pos hlog_le_exp6",
+        f"  rw [Real.log_exp] at hlog_bd",
     ]
 
+def large_result_proof(outer, inner_val, c_val, ie, cv, shape):
+    """Value >> 2. Use exp_lt_exp (shape A) or log_le_log (shape B) chain."""
+    c = int(c_val)
+    log_lt = log_lt_2_lemma(c_val)
+    ie_simp = _ie_simplified(ie)
+    gt3 = _inner_gt3_proof(ie_simp, inner_val)
+    c_exp_lb = 'exp6_gt_390' if c == 6 else 'exp3_gt_19'
+
+    if outer in ('F1', 'F2') and gt3 and shape == 'A':
+        # key : Real.exp INNER - Real.log c = 2  (inner is exp-argument)
+        return [
+            f"  -- result >> 2; exp chain: exp(inner) >> exp(3) > 19 > 2+log(c)",
+            f"  have hv : (3 : ℝ) < {ie_simp} := by {gt3}",
+            f"  have hbig : Real.exp 3 < Real.exp ({ie_simp}) := Real.exp_lt_exp.mpr hv",
+            f"  linarith [exp3_gt_19, {log_lt}]",
+        ]
+    elif outer in ('F1', 'F2') and gt3 and shape == 'B':
+        # key : Real.exp c - Real.log INNER = 2  (inner is log-argument)
+        # log(inner) ≤ log(exp 6) = 6, but key says log(inner) = exp(c)-2 >> 6
+        return (
+            [f"  -- result >> 2; log bound: log(inner) ≤ 6 but exp(c)-2 >> 6"] +
+            _log_le_6_proof(ie_simp, inner_val) +
+            [f"  linarith [{c_exp_lb}]"]
+        )
+    elif outer in ('F5', 'F7') and gt3 and shape == 'A':
+        # D_F5(inner, c) = exp(c) - log(inner); inner is log-argument
+        return (
+            [f"  -- result >> 2; log bound on inner"] +
+            _log_le_6_proof(ie_simp, inner_val) +
+            [f"  linarith [{c_exp_lb}]"]
+        )
+    elif outer in ('F5', 'F7') and gt3 and shape == 'B':
+        # D_F5(c, inner) = exp(inner) - log(c); inner is exp-argument
+        return [
+            f"  -- result >> 2; exp chain",
+            f"  have hv : (3 : ℝ) < {ie_simp} := by {gt3}",
+            f"  have hbig : Real.exp 3 < Real.exp ({ie_simp}) := Real.exp_lt_exp.mpr hv",
+            f"  linarith [exp3_gt_19, {log_lt}]",
+        ]
+    else:
+        # Fallback
+        return [
+            f"  -- result >> 2; fallback exp bounds chain",
+            f"  have hbig : Real.exp 6 < Real.exp 388 := Real.exp_lt_exp.mpr (by norm_num)",
+            f"  have hbig2 : Real.exp 388 < Real.exp (Real.exp 6 - Real.log 6) :=",
+            f"    Real.exp_lt_exp.mpr (by linarith [exp6_gt_390, log6_lt_2])",
+            f"  linarith [exp6_gt_390, {log_lt}]",
+        ]
+
 def moderate_large_proof(outer, inner_val, c_val, ie, cv, shape):
-    """Value ∈ (3.5, 50). Use exp3_gt_19 or similar."""
+    """Value ∈ (3.5, 50). Use exp chain or direct linarith."""
     llt2 = log_lt_2_lemma(c_val)
-    if outer in ('F1', 'F2', 'F5', 'F7'):
+    ie_simp = _ie_simplified(ie)
+    gt3 = _inner_gt3_proof(ie_simp, inner_val)
+    c_exp_lb = 'exp6_gt_390' if int(c_val) == 6 else 'exp3_gt_19'
+
+    if outer in ('F1', 'F2', 'F5', 'F7') and gt3 and shape == 'A':
+        # Shape A: key = exp(inner) - log(c) = 2; inner large, use exp chain
+        return [
+            f"  -- result > 3; exp chain contradiction",
+            f"  have hv : (3 : ℝ) < {ie_simp} := by {gt3}",
+            f"  have hbig : Real.exp 3 < Real.exp ({ie_simp}) := Real.exp_lt_exp.mpr hv",
+            f"  linarith [exp3_gt_19, {llt2}]",
+        ]
+    elif outer in ('F1', 'F2', 'F5', 'F7') and gt3 and shape == 'B':
+        # Shape B: key = exp(c) - log(inner) = 2; bound log(inner) ≤ 6
+        return (
+            [f"  -- result > 3; log bound: log(inner) ≤ 6 but exp(c)-2 >> 6"] +
+            _log_le_6_proof(ie_simp, inner_val) +
+            [f"  linarith [{c_exp_lb}]"]
+        )
+    elif outer in ('F1', 'F2', 'F5', 'F7'):
         return [
             f"  -- result > 3 since exp(inner) > exp(3) > 19 and log(c) < 2",
             f"  linarith [exp3_gt_19, {llt2}]",
@@ -184,9 +295,23 @@ def negative_result_proof(outer, inner_val, c_val, ie, cv, shape):
             f"  linarith [Real.exp_pos _, {lgt1}]",
         ]
     elif outer in ('F1', 'F2', 'F5', 'F7'):
+        # inner < 0 (exp(-N) - log(M)); need exp_neg + inv_lt_one to show exp(-N) < 1
+        ie_simp = _ie_simplified(ie)
+        if 'Real.exp (-6)' in ie_simp:
+            exp_neg_lb = 'exp6_gt_390'
+            neg_str = '(-6)'
+        else:
+            exp_neg_lb = 'exp3_gt_19'
+            neg_str = '(-3)'
+        log_in_lb = 'log6_gt_1' if 'log 6' in ie_simp else 'log3_gt_1'
         return [
             f"  -- inner < 0 so exp(inner) < 1 and log(c) > 1; result < 0",
-            f"  nlinarith [Real.exp_one_gt_d9, Real.exp_one_lt_d9, Real.exp_pos ({ie}), {lgt1}]",
+            f"  have hexp_neg : Real.exp ({neg_str} : ℝ) < 1 := by",
+            f"    rw [Real.exp_neg]; exact inv_lt_one (by linarith [{exp_neg_lb}])",
+            f"  have hinner_neg : {ie_simp} < 0 := by linarith [{log_in_lb}]",
+            f"  have hsmall : Real.exp ({ie_simp}) < 1 := by",
+            f"    have := Real.exp_lt_exp.mpr hinner_neg; rwa [Real.exp_zero] at this",
+            f"  linarith [{lgt1}]",
         ]
     else:
         return [
@@ -542,17 +667,25 @@ lines.append("")
 
 # Helper lemmas
 lines.append("""private lemma exp2_gt_7 : (7 : ℝ) < Real.exp 2 := by
-  have h := Real.exp_add 1 1
+  have h : Real.exp 2 = Real.exp 1 * Real.exp 1 := by
+    have := Real.exp_add 1 1; norm_num at this; exact this
   nlinarith [Real.exp_one_gt_d9, Real.exp_pos 1]
 
 private lemma exp3_gt_19 : (19 : ℝ) < Real.exp 3 := by
-  have h12 := Real.exp_add 1 2
-  have h2 := exp2_gt_7
-  nlinarith [Real.exp_one_gt_d9]
+  have h : Real.exp 3 = Real.exp 1 * Real.exp 2 := by
+    have := Real.exp_add 1 2; norm_num at this; exact this
+  nlinarith [Real.exp_one_gt_d9, exp2_gt_7]
 
 private lemma exp6_gt_390 : (390 : ℝ) < Real.exp 6 := by
-  have h33 := Real.exp_add 3 3
-  nlinarith [exp3_gt_19]
+  have h11 : Real.exp 2 = Real.exp 1 * Real.exp 1 := by
+    have := Real.exp_add 1 1; norm_num at this; exact this
+  have h13 : Real.exp 3 = Real.exp 1 * Real.exp 2 := by
+    have := Real.exp_add 1 2; norm_num at this; exact this
+  have h33 : Real.exp 6 = Real.exp 3 * Real.exp 3 := by
+    have := Real.exp_add 3 3; norm_num at this; exact this
+  have he2 : (7.38 : ℝ) < Real.exp 2 := by nlinarith [Real.exp_one_gt_d9, Real.exp_pos 1]
+  have he3 : (20 : ℝ) < Real.exp 3 := by nlinarith [Real.exp_one_gt_d9, Real.exp_pos 1]
+  nlinarith [Real.exp_pos 3]
 
 private lemma log3_gt_1 : (1 : ℝ) < Real.log 3 := by
   have : Real.log (Real.exp 1) < Real.log 3 :=

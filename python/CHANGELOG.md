@@ -4,6 +4,74 @@ All notable changes to `monogate` are documented here.
 
 ---
 
+## [2.4.0] — 2026-04-25 — Universality witness + CLI + Jupyter folded in
+
+### E-129 consolidation
+
+Three previously-standalone packages are now folded into monogate as
+optional capabilities. The standalone GitHub repos
+(`almaguer1986/eml-witness`, `almaguer1986/eml-explore`,
+`almaguer1986/eml-jupyter`) are archived; install via the new
+extras instead.
+
+```bash
+pip install monogate[witness]    # universality_witness API
+pip install monogate[cli]        # + monogate-explore CLI (alias: eml-explore)
+pip install monogate[jupyter]    # + IPython display + %%eml_witness magic
+pip install monogate[all]        # everything
+```
+
+### Added
+
+- **`monogate.witness`** — `universality_witness(expr) →
+  UniversalityWitness` builds a finite, structured certificate
+  combining Pfaffian profile, registry identification, and a
+  cost-monotone canonical-equivalent rewrite path. The
+  `verified_in_lean` field flips to `True` for inputs inside the
+  EML class and points to `MonogateEML/Universality.lean`
+  (user-verified 2026-04-25 in VS Code lean4 extension).
+  Bessel / Airy / Lambert W / hypergeometric stay False because
+  the universality theorem doesn't cover them.
+  `monogate.universality_witness` is a top-level lazy alias for
+  the same function — no extra import required when the
+  `[witness]` extra is installed.
+- **`monogate.cli.explore`** — argparse CLI registered as both
+  `monogate-explore` and the compatibility alias `eml-explore`.
+  Subcommands: `witness`, `analyze`, `identify`, `class`,
+  `corpus`, `example {cross-domain,witness-walkthrough}`.
+  `--json` flag on every subcommand.
+- **`monogate.jupyter`** — `%load_ext monogate.jupyter` installs a
+  rich display formatter for `sp.Basic` (severity-coloured
+  Pfaffian-profile panel beneath every cell output) plus the
+  `%%eml_witness` cell magic. Standalone helpers
+  `render_witness_html(w)` / `render_witness_text(w)` are also
+  exported for embedding outside notebooks.
+
+### Tests
+
+- 37 new cases (12 witness + 12 cli-explore + 13 jupyter)
+  alongside the existing monogate suite. All passing.
+
+### Lean linkage
+
+`MonogateEML/Universality.lean` was added to the public
+`monogate-lean` repo on 2026-04-25 and verified by the user in
+the VS Code lean4 extension that same day. The bundled
+`monogate.witness` API surfaces this verification automatically;
+no further config required.
+
+### Migration notes
+
+- Existing installs of the standalone `eml-witness` / `eml-explore`
+  / `eml-jupyter` packages continue to work; their PyPI / GitHub
+  versions are frozen but functional.
+- New users should install via the extras.
+- `from eml_witness import universality_witness` → `from monogate.witness import universality_witness`.
+- `eml-explore` console script → both names registered (alias).
+- `%load_ext eml_jupyter` → `%load_ext monogate.jupyter`.
+
+---
+
 ## [2.1.6] — 2026-04-17
 
 ### Session 41 — EML Complexity Classification, Bivariate Density, 200-Digit Transcendence
