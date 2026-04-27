@@ -3,7 +3,7 @@
 **`eml(x, y) = exp(x) − ln(y)`** — one binary operator. Open problem: can sin(x) be constructed from it?
 
 Based on [arXiv:2603.21852](https://arxiv.org/abs/2603.21852) (Odrzywołek, 2026).  
-Challenge board: **[monogate.dev](https://monogate.dev)** · [![PyPI](https://img.shields.io/pypi/v/monogate)](https://pypi.org/project/monogate/) · [![Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://monogate.streamlit.app)
+Challenge board: **[monogate.dev](https://monogate.dev)** · [![PyPI](https://img.shields.io/pypi/v/monogate)](https://pypi.org/project/monogate/) · [![Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://monogate.streamlit.app) · [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/almaguer1986/monogate/blob/master/notebooks/demo.ipynb)
 
 ```bash
 pip install monogate          # core — no dependencies
