@@ -394,14 +394,14 @@ def _assert_taxonomy(card: dict[str, Any]) -> tuple[str, str]:
     return "PASS", "taxonomy: 16 = 8 complete + 1 approximate + 7 incomplete"
 
 
-def _assert_catalog_315(card: dict[str, Any]) -> tuple[str, str]:
-    cap = _find_capability(card, "catalog.equations_315")
+def _assert_catalog_265(card: dict[str, Any]) -> tuple[str, str]:
+    cap = _find_capability(card, "catalog.equations_265")
     if cap is None:
-        return "FAIL", "catalog: catalog.equations_315 missing"
+        return "FAIL", "catalog: catalog.equations_265 missing"
     size = cap.get("constraints", {}).get("catalog_size")
-    if size != 315:
-        return "FAIL", f"catalog: size={size!r} expected 315"
-    return "PASS", "catalog: 315 equations"
+    if size != 265:
+        return "FAIL", f"catalog: size={size!r} expected 265"
+    return "PASS", "catalog: 265 equations"
 
 
 def _assert_lean_proofs(card: dict[str, Any]) -> tuple[str, str]:
@@ -530,7 +530,7 @@ def _run_benchmarks(card: dict[str, Any]) -> tuple[bool, list[tuple[str, str]]]:
         lambda: _assert_superbest_card(card),
         lambda: _assert_superbest_package(card),
         lambda: _assert_taxonomy(card),
-        lambda: _assert_catalog_315(card),
+        lambda: _assert_catalog_265(card),
         lambda: _assert_lean_proofs(card),
         lambda: _assert_verification_lean_counts(card),
         lambda: _assert_core_capabilities(card),

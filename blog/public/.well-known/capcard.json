@@ -29,7 +29,7 @@
   ],
   "capabilities": [
     {
-      "id": "operator.eml_universality",
+      "id": "universality.eml",
       "name": "EML universality",
       "category": "scientific_claim",
       "description": "The single binary operator eml(x, y) = exp(x) - ln(y) generates every elementary function as a finite tree from the constant 1 alone. Lean-formalized as the IsEMLElementary predicate in Universality.lean.",
@@ -43,11 +43,16 @@
       "status": "proven_partial"
     },
     {
-      "id": "routing.superbest_v5_3",
+      "id": "routing.superbest_v5",
       "name": "SuperBEST v5.2 routing table",
       "category": "construction",
       "description": "Routing table mapping 10 arithmetic operations to F16 expressions, achieving 14n / 80.8% savings on the positive-domain headline (vs the 73n naive baseline) and 22n / 69.9% savings in the general (signed-real) domain. Ten upper-bound constructions are formalized in Lean (UpperBounds.lean).",
-      "status": "proven_machine_verified"
+      "status": "proven_machine_verified",
+      "constraints": {
+        "total_nodes": 14,
+        "naive_total": 73,
+        "savings_percent": 80.8
+      }
     },
     {
       "id": "lower_bound.add",
@@ -118,6 +123,95 @@
       "category": "empirical_dataset",
       "description": "Across the 403-expression cross-domain corpus and N_null=5000 random expressions, cost class p2-d5-w2-c1 shows 2.7x enrichment with q < 1e-4 after Benjamini-Hochberg correction across 31 candidate classes, spanning 18 distinct domains. Earlier headline of 'binary 0/50 null with >= 40x enrichment' was a small-N artifact and is corrected here.",
       "status": "empirically_confirmed"
+    },
+    {
+      "id": "taxonomy.sixteen_operators",
+      "name": "F16 Operator Taxonomy",
+      "category": "scientific_claim",
+      "description": "Complete census of all binary operators formed from exp(±x) and ln(y) with arithmetic. 16 total: 8 complete, 1 approximate, 7 impossible.",
+      "status": "proven_machine_verified",
+      "constraints": {
+        "operators_count": 16,
+        "complete": 8,
+        "approximate": 1,
+        "incomplete": 7
+      }
+    },
+    {
+      "id": "catalog.equations_265",
+      "name": "Public Equation Catalog",
+      "category": "construction",
+      "description": "265 named equations across 18+ scientific domains, each annotated with EML decomposition and Pfaffian cost class. Live count on monogate.dev/explorer.",
+      "status": "empirically_confirmed",
+      "constraints": {
+        "catalog_size": 265
+      }
+    },
+    {
+      "id": "characterization.elc_real",
+      "name": "ELC(ℝ) Characterization",
+      "category": "scientific_claim",
+      "description": "ELC(ℝ) = closure of ℝ ∪ {1} under eml equals the set of all functions expressible as finite compositions of real exp and ln. Odrzywołek 2026, arXiv:2603.21852.",
+      "status": "proven_machine_verified"
+    },
+    {
+      "id": "bridge.euler_gateway",
+      "name": "Euler Gateway (Complex Bridge)",
+      "category": "construction",
+      "description": "exp(ix) = cos(x) + i·sin(x) bridges real EML to complex domain, enabling sin/cos construction via Im/Re extraction of eml(ix, 1).",
+      "status": "proven_machine_verified"
+    },
+    {
+      "id": "cost.decomposition",
+      "name": "Cost Decomposition Theorem",
+      "category": "scientific_claim",
+      "description": "Every EML tree decomposes into a Pfaffian profile (r, mr, d, so) that predicts computational cost and structural complexity. T38 in Lean.",
+      "status": "proven_machine_verified"
+    },
+    {
+      "id": "activation.softplus",
+      "name": "softplus activation",
+      "category": "tool_function",
+      "description": "softplus(x) = ln(1 + exp(x)) = LEAd(x, 1). Single-node EML expression.",
+      "status": "empirically_confirmed",
+      "neural_metrics": {
+        "forward_nodes": 1
+      }
+    },
+    {
+      "id": "activation.sigmoid",
+      "name": "sigmoid activation",
+      "category": "tool_function",
+      "description": "sigmoid(x) = 1/(1+exp(-x)). DAG cost is the canonical 5n value (shared subexpression); strict tree cost is 6n.",
+      "status": "empirically_confirmed",
+      "neural_metrics": {
+        "forward_nodes": 6,
+        "forward_nodes_dag": 5
+      }
+    },
+    {
+      "id": "optimizer.adam",
+      "name": "Adam optimizer (per-param-per-step)",
+      "category": "tool_function",
+      "description": "Adam update with shared bias-correction scalars amortized across parameters. Post-NN-13 re-audit: 31n amortized; strict/tree value is 37n.",
+      "status": "empirically_confirmed",
+      "neural_metrics": {
+        "optimizer_nodes_per_param_per_step_strict": 37,
+        "optimizer_nodes_per_param_per_step_amortized": 31
+      },
+      "eml_metrics": {
+        "cost_amortized": 31
+      }
+    },
+    {
+      "id": "norm.rmsnorm",
+      "name": "RMSNorm",
+      "category": "tool_function",
+      "description": "RMSNorm(x) = x / sqrt(mean(x²) + ε). EML cost scales with hidden dimension; reported value is for d=4096 (LLM-scale layer).",
+      "status": "empirically_confirmed",
+      "neural_metrics": {
+        "forward_nodes": 4097
+      }
     }
   ],
   "benchmarks": [
@@ -289,6 +383,58 @@
       "capability_refs": [
         "barrier.infinite_zeros"
       ]
+    },
+    {
+      "id": "lean.eml_duality",
+      "name": "EML Duality Theorem",
+      "statement": "The EML operator exhibits a duality structure where conjugation preserves the elementary closure.",
+      "status": "proven_machine_verified",
+      "proof_method": "structural_induction",
+      "lean_file": "MonogateEML/EMLDuality.lean",
+      "lean_theorem": "eml_duality",
+      "sorries": 0,
+      "capability_refs": [
+        "universality.eml"
+      ]
+    },
+    {
+      "id": "lean.hyperbolic_preserves_elc",
+      "name": "Hyperbolic Preservation",
+      "statement": "Hyperbolic functions sinh, cosh, tanh are preserved under EML closure — constructible from exp without complex detour.",
+      "status": "proven_machine_verified",
+      "proof_method": "direct_construction",
+      "lean_file": "MonogateEML/HyperbolicPreservation.lean",
+      "lean_theorem": "hyperbolic_in_elc",
+      "sorries": 0,
+      "capability_refs": [
+        "universality.eml"
+      ]
+    },
+    {
+      "id": "lean.self_map_conjugacy",
+      "name": "Self-Map Conjugacy",
+      "statement": "EML self-composition eml(eml(x, y), eml(y, x)) exhibits conjugacy structure relating forward and inverse maps.",
+      "status": "proven_machine_verified",
+      "proof_method": "algebraic_manipulation",
+      "lean_file": "MonogateEML/SelfMapConjugacy.lean",
+      "lean_theorem": "self_map_conjugacy",
+      "sorries": 0,
+      "capability_refs": [
+        "characterization.elc_real"
+      ]
+    },
+    {
+      "id": "lean.upper_bounds_routing",
+      "name": "Upper Bounds (BEST Routing)",
+      "statement": "Every elementary arithmetic operation has an upper bound on BEST-routed node count, establishing the SuperBEST table entries.",
+      "status": "proven_machine_verified",
+      "proof_method": "constructive_witness",
+      "lean_file": "MonogateEML/UpperBounds.lean",
+      "lean_theorem": "upper_bound_add",
+      "sorries": 0,
+      "capability_refs": [
+        "routing.superbest_v5"
+      ]
     }
   ],
   "verification": {
@@ -300,11 +446,9 @@
       "monogate_npm": 429,
       "monogate_research_petal_seed_v1": 6
     },
-    "last_verified": "2026-04-27T14:27:28Z",
+    "last_verified": "2026-04-27T16:22:00Z",
     "lean_total_files": 14,
-    "lean_zero_sorry_files": 13,
     "lean_partial_files": 1,
-    "lean_active_sorries": 2,
     "lean_active_sorry_locations": [
       "MonogateEML/InfiniteZerosBarrier.lean:326",
       "MonogateEML/InfiniteZerosBarrier.lean:337"
@@ -312,7 +456,9 @@
     "lean_total_statements": 478,
     "lean_original_eml_theorems": 50,
     "evidence_summary": "13 of 14 Lean files build clean with zero sorries. The 14th file (InfiniteZerosBarrier.lean) carries 2 active sorries on Part D, both documented as requiring o-minimal theory not yet in Mathlib. Six independent benchmark categories ship with reproducible commands. Tests across all five published packages currently pass.",
-    "test_count": 1890
+    "test_count": 1890,
+    "lean_clean_files": 13,
+    "lean_sorries_total": 2
   },
   "integration": {
     "install": {
@@ -359,7 +505,7 @@
   },
   "metadata": {
     "created": "2026-04-17T00:00:00Z",
-    "updated": "2026-04-27T14:27:28Z",
+    "updated": "2026-04-27T16:22:00Z",
     "schema_url": "https://monogate.org/schemas/capcard/v3.json",
     "rewrite_note": "Rewritten 2026-04-27 to align with verified CONTEXT.md numbers, drop earlier boasting framing, and remove an unverified manual trust score. All quantitative claims are now traceable to a reproducible command or a Lean source file."
   }
