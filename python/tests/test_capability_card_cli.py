@@ -244,8 +244,8 @@ def test_capcard_version_rejects_v2(mutable_card):
 def test_verification_lean_counts_present(canonical_card):
     v = canonical_card["verification"]
     assert v.get("lean_clean_files") >= 11
-    assert v.get("lean_partial_files") == 1
-    assert v.get("lean_sorries_total") == 2
+    assert v.get("lean_partial_files") == 2
+    assert v.get("lean_sorries_total") == 4
 
 
 def test_verification_lean_counts_assertion_passes(canonical_card):

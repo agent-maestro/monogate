@@ -3,7 +3,7 @@
   "id": "ai.capcard.monogate",
   "name": "Monogate",
   "type": "library",
-  "description": "Open-source mathematics stack built on the EML operator eml(x, y) = exp(x) - ln(y). Includes the Pfaffian-cost analyzer (eml-cost) with three prediction functions for SymPy compile-time, float64 numerical precision loss, and PyTorch per-layer activation behavior. Cross-validated against a Lean 4 formalization with 50 EML-original theorems across 14 files (13 of 14 files carry zero sorry; the 14th carries 2 documented sorries pending o-minimal theory).",
+  "description": "Open-source mathematics stack built on the EML operator eml(x, y) = exp(x) - ln(y). Includes the Pfaffian-cost analyzer (eml-cost) with three prediction functions for SymPy compile-time, float64 numerical precision loss, and PyTorch per-layer activation behavior. Cross-validated against a Lean 4 formalization with 50 EML-original theorems across 16 files (14 of 16 files carry zero sorry; the remaining 2 carry 4 documented sorries total, all blocked on the same Mathlib o-minimal / Khovanskii zero-count gap).",
   "version": "2.5.0",
   "license": "MIT",
   "homepage": "https://monogate.org",
@@ -241,7 +241,7 @@
         "command": "git clone https://github.com/agent-maestro/monogate-lean && cd monogate-lean && lake build",
         "deterministic": true
       },
-      "notes": "13 of 14 files in MonogateEML/ build with zero sorries. The 14th (InfiniteZerosBarrier.lean) carries 2 active sorries on Part D (lines 326 and 337), both documented as requiring o-minimal theory."
+      "notes": "14 of 16 files in MonogateEML/ build with zero sorries. Two files carry sorries: InfiniteZerosBarrier.lean (lines 326, 337 — Part D) and ChainOrderAdditivity.lean (lines 138, 175 — chain_order_additivity + three_tower_min_generating_set). All 4 sorries are blocked on the same Mathlib o-minimal / Khovanskii zero-count gap; one Mathlib advance closes all four."
     },
     {
       "id": "bench.eml_cost_tests",
@@ -446,19 +446,21 @@
       "monogate_npm": 429,
       "monogate_research_petal_seed_v1": 6
     },
-    "last_verified": "2026-04-27T16:14:30Z",
-    "lean_total_files": 14,
-    "lean_partial_files": 1,
+    "last_verified": "2026-04-28T00:00:00Z",
+    "lean_total_files": 16,
+    "lean_partial_files": 2,
     "lean_active_sorry_locations": [
       "MonogateEML/InfiniteZerosBarrier.lean:326",
-      "MonogateEML/InfiniteZerosBarrier.lean:337"
+      "MonogateEML/InfiniteZerosBarrier.lean:337",
+      "MonogateEML/ChainOrderAdditivity.lean:138",
+      "MonogateEML/ChainOrderAdditivity.lean:175"
     ],
     "lean_total_statements": 478,
     "lean_original_eml_theorems": 50,
-    "evidence_summary": "13 of 14 Lean files build clean with zero sorries. The 14th file (InfiniteZerosBarrier.lean) carries 2 active sorries on Part D, both documented as requiring o-minimal theory not yet in Mathlib. Six independent benchmark categories ship with reproducible commands. Tests across all five published packages currently pass.",
+    "evidence_summary": "14 of 16 Lean files build clean with zero sorries. Two files carry sorries: InfiniteZerosBarrier.lean (2, on Part D) and ChainOrderAdditivity.lean (2, on chain_order_additivity + three_tower_min_generating_set). All 4 sorries are blocked on the same Mathlib gap (o-minimal / Khovanskii zero-count); one advance closes all four. Six independent benchmark categories ship with reproducible commands. Tests across all five published packages currently pass.",
     "test_count": 1890,
-    "lean_clean_files": 13,
-    "lean_sorries_total": 2
+    "lean_clean_files": 14,
+    "lean_sorries_total": 4
   },
   "integration": {
     "install": {
