@@ -2,6 +2,10 @@
 import Base from '../../layouts/Base.astro';
 
 const posts = [
+  { href: '/blog/one-operator', title: 'One Operator, All of Applied Mathematics', tag: 'announcement', date: '2026-04-27', desc: 'The NAND gate of continuous math. A single binary operation eml(x, y) = exp(x) − ln(y) generates every elementary function — and the structural fingerprint of an expression turns out to predict where it came from. 578 expressions across 12 domains; the headline class p2-d5-w2-c1 unifies Faraday EMF, Hodgkin-Huxley, HSL color, and the Shannon sinc filter.' },
+  { href: '/blog/dynamics-counter', title: 'The Equation That Counts Physics', tag: 'research', date: '2026-04-27', desc: 'Hand a damped-oscillator equation to a computer and it can tell you, without knowing any physics, that there is one oscillation and one decay inside it. Across 193 expressions and 12 domains, this counter holds at ρ = +0.885 (p = 1.8e-65). 18/18 exact on Pfaffian primitives. The ceiling — FM synthesis at chain order 4 — is the only one of its kind in the corpus.' },
+  { href: '/blog/hear-the-math', title: 'Hear the Math: When Equations Become Sound', tag: 'deep-dive', date: '2026-04-27', desc: 'The best-selling synthesizer in history runs on a Bessel function. The Gibbs phenomenon\'s 9% overshoot is a theorem you can hear. Three interactive demos at 1op.io let you slide the modulation index through a Bessel zero, stack additive partials past a fixed overshoot, and see structural fingerprints as 2D phase portraits.' },
+  { href: '/blog/built-with-claude', title: 'How Claude and I Built a Research Program in Two Weeks', tag: 'deep-dive', date: '2026-04-27', desc: '578 expressions, 50 Lean theorems, 5 PyPI packages, an npm port, a HuggingFace dataset, three websites, four interactive demos. Two weeks. One human. The audit system, the structured memory, the six retractions, the phantom-attractor confabulation — the actual mechanics that made it ship at this pace.' },
   { href: '/blog/two-boundaries', title: 'Two Boundaries of ELC', tag: 'observation', date: '2026-04-23', desc: 'The Elementary Logarithmic Closure is bounded by two structurally independent obstructions: T01 (oscillation / infinite zeros, analytic) and Abel-Ruffini (Galois unsolvability at polynomial degree ≥ 5, algebraic). Two centuries of classical mathematics constraining the same complexity class from independent directions.' },
   { href: '/blog/which-way-does-the-transform-go', title: 'Which Way Does the Transform Go?', tag: 'observation', date: '2026-04-23', desc: 'Five classical integral transforms partition cleanly into three ELC-direction classes. Laplace goes inward (exp(-st) damps oscillations); Fourier and Z-transform stay neutral; Hilbert and Mellin go outward (produce special functions). Direction determined by kernel structure.' },
   { href: '/blog/fma-staircase', title: 'FMA Is the Only Primitive That Matters', tag: 'observation', date: '2026-04-23', desc: 'Measured the node-cost decay across seven basis states on 222 parseable elementary-function equations. One primitive dominates: FMA contributes 7.1 pp on its own; the seven Layer-2 bivariate extensions combined add 0.9 pp. Staircase model AIC-preferred over exponential or polynomial decay.' },
@@ -58,16 +62,18 @@ const posts = [
 ];
 
 const tagMeta: Record<string, { color: string; label: string }> = {
+  announcement:{ color: 'var(--pink)', label: 'announcement' },
   theorem:     { color: 'var(--green)', label: 'theorem' },
   conjecture:  { color: '#f87171', label: 'conjecture' },
   observation: { color: 'var(--orange)', label: 'observation' },
   research:    { color: 'var(--violet)', label: 'research' },
+  'deep-dive': { color: 'var(--cyan)', label: 'deep dive' },
   exposition:  { color: 'var(--cyan)', label: 'exposition' },
   engineering: { color: 'var(--orange)', label: 'engineering' },
   meta:        { color: '#9ca3af', label: 'meta' },
 };
 
-const tagOrder = ['theorem', 'conjecture', 'observation', 'research', 'exposition', 'engineering', 'meta'];
+const tagOrder = ['announcement', 'theorem', 'conjecture', 'observation', 'research', 'deep-dive', 'exposition', 'engineering', 'meta'];
 const counts = tagOrder.reduce((acc, t) => { acc[t] = posts.filter(p => p.tag === t).length; return acc; }, {} as Record<string, number>);
 ---
 

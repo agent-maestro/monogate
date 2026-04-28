@@ -1,11 +1,20 @@
 ---
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
   date?: string;
   type?: "website" | "article";
+  frontmatter?: { title?: string; description?: string; date?: string };
 }
-const { title, description, date, type = "website" } = Astro.props;
+// Astro passes markdown frontmatter via Astro.props.frontmatter, NOT as
+// top-level props. Read both shapes so .astro pages and .md posts (with
+// layout: ../../layouts/Base.astro) both render correct <title>, <meta
+// description>, og:title, og:description, twitter:title, etc.
+const props = Astro.props;
+const title = props.title ?? props.frontmatter?.title ?? "Monogate";
+const description = props.description ?? props.frontmatter?.description;
+const date = props.date ?? props.frontmatter?.date;
+const type = props.type ?? (date ? "article" : "website");
 const canonical = Astro.url.pathname.replace(/\/$/, "") || "/";
 const pageUrl = `https://monogate.org${canonical}`;
 
