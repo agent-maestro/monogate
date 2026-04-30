@@ -3,7 +3,7 @@
   "id": "ai.capcard.monogate",
   "name": "Monogate",
   "type": "library",
-  "description": "Open-source mathematics stack built on the EML operator eml(x, y) = exp(x) - ln(y). Includes the Pfaffian-cost analyzer (eml-cost) with three prediction functions for SymPy compile-time, float64 numerical precision loss, and PyTorch per-layer activation behavior. Cross-validated against a Lean 4 formalization with 50 EML-original theorems across 16 files (14 of 16 files carry zero sorry; the remaining 2 carry 4 documented sorries total, all blocked on the same Mathlib o-minimal / Khovanskii zero-count gap).",
+  "description": "Open-source mathematics stack built on the EML operator eml(x, y) = exp(x) - ln(y). Includes the Pfaffian-cost analyzer (eml-cost) with three prediction functions for SymPy compile-time, float64 numerical precision loss, and PyTorch per-layer activation behavior. Cross-validated against a Lean 4 formalization with 50 EML-original theorems across 17 files (14 of 17 files carry zero sorry; the remaining 3 carry 5 documented sorries total — 4 blocked on the same Mathlib o-minimal / Khovanskii zero-count gap, 1 standard approximation bound deferred to a future Float64 file).",
   "version": "2.5.0",
   "license": "MIT",
   "homepage": "https://monogate.org",
@@ -234,14 +234,14 @@
       "name": "Lean 4 verification (Mathlib v4.14.0)",
       "capability_ref": "operator.eml_universality",
       "metric": "files_with_zero_sorries",
-      "value": 13,
-      "unit": "files of 14",
+      "value": 14,
+      "unit": "files of 17",
       "direction": "higher_is_better",
       "reproducibility": {
         "command": "git clone https://github.com/agent-maestro/monogate-lean && cd monogate-lean && lake build",
         "deterministic": true
       },
-      "notes": "14 of 16 files in MonogateEML/ build with zero sorries. Two files carry sorries: InfiniteZerosBarrier.lean (lines 326, 337 — Part D) and ChainOrderAdditivity.lean (lines 138, 175 — chain_order_additivity + three_tower_min_generating_set). All 4 sorries are blocked on the same Mathlib o-minimal / Khovanskii zero-count gap; one Mathlib advance closes all four."
+      "notes": "14 of 17 files in MonogateEML/ build with zero sorries. Three files carry the remaining 5 documented sorries: InfiniteZerosBarrier.lean (lines 326, 337 - Part D), ChainOrderAdditivity.lean (lines 138, 175 - chain_order_additivity + three_tower_min_generating_set), and Runtime.lean (line 246 - mg_softplus_route_bound_high). Four of those share the same Mathlib o-minimal / Khovanskii zero-count gap; one Mathlib advance closes all four. The remaining one is a saturation-branch approximation bound for the libmonogate softplus routing variant, deferred to a future MonogateEML/Float64.lean."
     },
     {
       "id": "bench.eml_cost_tests",
@@ -446,21 +446,22 @@
       "monogate_npm": 429,
       "monogate_research_petal_seed_v1": 6
     },
-    "last_verified": "2026-04-28T17:28:47Z",
-    "lean_total_files": 16,
-    "lean_partial_files": 2,
+    "last_verified": "2026-04-30T03:37:24Z",
+    "lean_total_files": 17,
+    "lean_partial_files": 3,
     "lean_active_sorry_locations": [
       "MonogateEML/InfiniteZerosBarrier.lean:326",
       "MonogateEML/InfiniteZerosBarrier.lean:337",
       "MonogateEML/ChainOrderAdditivity.lean:138",
-      "MonogateEML/ChainOrderAdditivity.lean:175"
+      "MonogateEML/ChainOrderAdditivity.lean:175",
+      "MonogateEML/Runtime.lean:246"
     ],
-    "lean_total_statements": 478,
+    "lean_total_statements": 496,
     "lean_original_eml_theorems": 50,
-    "evidence_summary": "14 of 16 Lean files build clean with zero sorries. Two files carry sorries: InfiniteZerosBarrier.lean (2, on Part D) and ChainOrderAdditivity.lean (2, on chain_order_additivity + three_tower_min_generating_set). All 4 sorries are blocked on the same Mathlib gap (o-minimal / Khovanskii zero-count); one advance closes all four. Six independent benchmark categories ship with reproducible commands. Tests across all five published packages currently pass.",
+    "evidence_summary": "14 of 17 Lean files build clean with zero sorries. Three files carry sorries: InfiniteZerosBarrier.lean (2, on Part D), ChainOrderAdditivity.lean (2, on chain_order_additivity + three_tower_min_generating_set), and Runtime.lean (1, on mg_softplus_route_bound_high). The first 4 are blocked on the same Mathlib gap (o-minimal / Khovanskii zero-count); one advance closes all four. The 5th is a saturation-branch approximation bound for the libmonogate softplus routing variant, deferred to a future Float64 file. Six independent benchmark categories ship with reproducible commands. Tests across all five published packages currently pass.",
     "test_count": 1890,
     "lean_clean_files": 14,
-    "lean_sorries_total": 4
+    "lean_sorries_total": 5
   },
   "integration": {
     "install": {
@@ -507,8 +508,8 @@
   },
   "metadata": {
     "created": "2026-04-17T00:00:00Z",
-    "updated": "2026-04-28T17:28:47Z",
+    "updated": "2026-04-30T03:37:24Z",
     "schema_url": "https://monogate.org/schemas/capcard/v3.json",
-    "rewrite_note": "Rewritten 2026-04-27 to align with verified CONTEXT.md numbers, drop earlier boasting framing, and remove an unverified manual trust score. All quantitative claims are now traceable to a reproducible command or a Lean source file."
+    "rewrite_note": "Rewritten 2026-04-27 to align with verified CONTEXT.md numbers, drop earlier boasting framing, and remove an unverified manual trust score. All quantitative claims are now traceable to a reproducible command or a Lean source file. Updated 2026-04-29 to reflect Runtime.lean addition (libmonogate runtime correspondence; user-verified `lake build` green; 1 documented sorry on mg_softplus_route_bound_high)."
   }
 }

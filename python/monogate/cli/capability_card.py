@@ -456,10 +456,10 @@ def _assert_verification_lean_counts(card: dict[str, Any]) -> tuple[str, str]:
         return "FAIL", "verification missing one of the required v3 lean fields"
     if clean < 14:
         return "FAIL", f"verification: clean={clean} < 14 (data/lean.md canonical floor)"
-    if partial > 2:
-        return "FAIL", f"verification: partial={partial} > 2 — unexpected partial file"
-    if sorries > 4:
-        return "FAIL", f"verification: sorries={sorries} > 4 — regression vs last audit"
+    if partial > 3:
+        return "FAIL", f"verification: partial={partial} > 3 — unexpected partial file"
+    if sorries > 5:
+        return "FAIL", f"verification: sorries={sorries} > 5 — regression vs last audit"
     return "PASS", f"verification: lean {clean} clean + {partial} partial ({sorries} sorries)"
 
 

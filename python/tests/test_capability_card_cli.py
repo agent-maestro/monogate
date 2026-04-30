@@ -244,8 +244,8 @@ def test_capcard_version_rejects_v2(mutable_card):
 def test_verification_lean_counts_present(canonical_card):
     v = canonical_card["verification"]
     assert v.get("lean_clean_files") >= 11
-    assert v.get("lean_partial_files") == 2
-    assert v.get("lean_sorries_total") == 4
+    assert v.get("lean_partial_files") == 3
+    assert v.get("lean_sorries_total") == 5
 
 
 def test_verification_lean_counts_assertion_passes(canonical_card):
@@ -254,7 +254,7 @@ def test_verification_lean_counts_assertion_passes(canonical_card):
 
 
 def test_verification_lean_counts_rejects_regression(mutable_card):
-    mutable_card["verification"]["lean_sorries_total"] = 5
+    mutable_card["verification"]["lean_sorries_total"] = 6
     status, _ = cc._assert_verification_lean_counts(mutable_card)
     assert status == "FAIL"
 
