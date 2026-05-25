@@ -9,10 +9,12 @@ on:
       - "python/scripts/sync_superbest_canonical.py"
       - "python/scripts/superbest_dag_savings_audit.py"
       - "python/scripts/superbest_dag_optimizer.py"
+      - "python/scripts/superbest_dag_lowering.py"
       - "python/scripts/superbest_expression_frontier.py"
       - "python/tests/test_superbest_canonical_sync.py"
       - "python/tests/test_superbest_dag_savings_audit.py"
       - "python/tests/test_superbest_dag_optimizer.py"
+      - "python/tests/test_superbest_dag_lowering.py"
       - "python/tests/test_superbest_expression_frontier.py"
       - "python/tests/test_capability_card_cli.py"
       - "python/tests/test_best_routing.py"
@@ -20,6 +22,7 @@ on:
       - "python/results/superbest_v5_table.json"
       - "python/results/superbest_frontier_queue_2026_05_24.json"
       - "python/results/superbest_dag_optimizer_2026_05_24.json"
+      - "python/results/superbest_dag_lowering_pass_2026_05_24.json"
       - "python/results/superbest_expression_frontier_2026_05_24.json"
       - "blog/src/data/superbest.json"
       - "capability_card_public.json"
@@ -34,10 +37,12 @@ on:
       - "python/scripts/sync_superbest_canonical.py"
       - "python/scripts/superbest_dag_savings_audit.py"
       - "python/scripts/superbest_dag_optimizer.py"
+      - "python/scripts/superbest_dag_lowering.py"
       - "python/scripts/superbest_expression_frontier.py"
       - "python/tests/test_superbest_canonical_sync.py"
       - "python/tests/test_superbest_dag_savings_audit.py"
       - "python/tests/test_superbest_dag_optimizer.py"
+      - "python/tests/test_superbest_dag_lowering.py"
       - "python/tests/test_superbest_expression_frontier.py"
       - "python/tests/test_capability_card_cli.py"
       - "python/tests/test_best_routing.py"
@@ -45,6 +50,7 @@ on:
       - "python/results/superbest_v5_table.json"
       - "python/results/superbest_frontier_queue_2026_05_24.json"
       - "python/results/superbest_dag_optimizer_2026_05_24.json"
+      - "python/results/superbest_dag_lowering_pass_2026_05_24.json"
       - "python/results/superbest_expression_frontier_2026_05_24.json"
       - "blog/src/data/superbest.json"
       - "capability_card_public.json"
@@ -82,3 +88,4 @@ jobs:
           make superbest-check
           make superbest-dag-optimizer
           make superbest-expression-frontier
+          make superbest-dag-lowering

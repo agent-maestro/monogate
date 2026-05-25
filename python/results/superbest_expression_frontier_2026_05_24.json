@@ -64,7 +64,7 @@
       "expression": "exp(q*k1) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k2) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k3) / (exp(q*k1) + exp(q*k2) + exp(q*k3))",
       "extra_superbest_savings_nodes": 26,
       "family": "softmax_attention",
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(k1, k2, k3, q):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 + _t4)  # shared add, reused 3x\n    _t1 = (_t2 + _t3)  # shared add, reused 3x\n    _t2 = BEST.exp(_t5)  # shared exp, reused 4x\n    _t3 = BEST.exp(_t6)  # shared exp, reused 4x\n    _t4 = BEST.exp(_t7)  # shared exp, reused 4x\n    _t5 = (k1 * q)  # shared mul, reused 4x\n    _t6 = (k2 * q)  # shared mul, reused 4x\n    _t7 = (k3 * q)  # shared mul, reused 4x\n    return ((BEST.div(_t2, _t0) + BEST.div(_t3, _t0)) + BEST.div(_t4, _t0))",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(k1, k2, k3, q):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t5 = (k1 * q)  # shared mul, reused 4x\n    _t6 = (k2 * q)  # shared mul, reused 4x\n    _t7 = (k3 * q)  # shared mul, reused 4x\n    _t2 = BEST.exp(_t5)  # shared exp, reused 4x\n    _t3 = BEST.exp(_t6)  # shared exp, reused 4x\n    _t4 = BEST.exp(_t7)  # shared exp, reused 4x\n    _t1 = (_t2 + _t3)  # shared add, reused 3x\n    _t0 = (_t1 + _t4)  # shared add, reused 3x\n    return ((BEST.div(_t2, _t0) + BEST.div(_t3, _t0)) + BEST.div(_t4, _t0))",
       "shared_nodes": [
         {
           "count": 3,
@@ -150,7 +150,7 @@
       "expression": "exp(q*k1) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k2) / (exp(q*k1) + exp(q*k2) + exp(q*k3))",
       "extra_superbest_savings_nodes": 14,
       "family": "softmax_attention",
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(k1, k2, k3, q):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 + _t4)  # shared add, reused 2x\n    _t1 = (_t2 + _t3)  # shared add, reused 2x\n    _t2 = BEST.exp(_t5)  # shared exp, reused 3x\n    _t3 = BEST.exp(_t6)  # shared exp, reused 3x\n    _t4 = BEST.exp(_t7)  # shared exp, reused 2x\n    _t5 = (k1 * q)  # shared mul, reused 3x\n    _t6 = (k2 * q)  # shared mul, reused 3x\n    _t7 = (k3 * q)  # shared mul, reused 2x\n    return (BEST.div(_t2, _t0) + BEST.div(_t3, _t0))",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(k1, k2, k3, q):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t5 = (k1 * q)  # shared mul, reused 3x\n    _t6 = (k2 * q)  # shared mul, reused 3x\n    _t7 = (k3 * q)  # shared mul, reused 2x\n    _t2 = BEST.exp(_t5)  # shared exp, reused 3x\n    _t3 = BEST.exp(_t6)  # shared exp, reused 3x\n    _t4 = BEST.exp(_t7)  # shared exp, reused 2x\n    _t1 = (_t2 + _t3)  # shared add, reused 2x\n    _t0 = (_t1 + _t4)  # shared add, reused 2x\n    return (BEST.div(_t2, _t0) + BEST.div(_t3, _t0))",
       "shared_nodes": [
         {
           "count": 2,
@@ -236,7 +236,7 @@
       "expression": "1 / (1 + exp(-x)) + (1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))",
       "extra_superbest_savings_nodes": 14,
       "family": "sigmoid_logistic",
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = BEST.div(1, _t1)  # shared div, reused 3x\n    _t1 = (1 + _t2)  # shared add, reused 3x\n    _t2 = BEST.exp(_t3)  # shared exp, reused 3x\n    _t3 = BEST.neg(x)  # shared neg, reused 3x\n    return (_t0 + (_t0 * (1 - _t0)))",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t3 = BEST.neg(x)  # shared neg, reused 3x\n    _t2 = BEST.exp(_t3)  # shared exp, reused 3x\n    _t1 = (1 + _t2)  # shared add, reused 3x\n    _t0 = BEST.div(1, _t1)  # shared div, reused 3x\n    return (_t0 + (_t0 * (1 - _t0)))",
       "shared_nodes": [
         {
           "count": 3,
@@ -290,7 +290,7 @@
       "expression": "exp(q1*k1) / (exp(q1*k1) + exp(q1*k2)) + exp(q1*k2) / (exp(q1*k1) + exp(q1*k2))",
       "extra_superbest_savings_nodes": 10,
       "family": "softmax_attention",
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(k1, k2, q1):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 + _t2)  # shared add, reused 2x\n    _t1 = BEST.exp(_t3)  # shared exp, reused 3x\n    _t2 = BEST.exp(_t4)  # shared exp, reused 3x\n    _t3 = (k1 * q1)  # shared mul, reused 3x\n    _t4 = (k2 * q1)  # shared mul, reused 3x\n    return (BEST.div(_t1, _t0) + BEST.div(_t2, _t0))",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(k1, k2, q1):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t3 = (k1 * q1)  # shared mul, reused 3x\n    _t4 = (k2 * q1)  # shared mul, reused 3x\n    _t1 = BEST.exp(_t3)  # shared exp, reused 3x\n    _t2 = BEST.exp(_t4)  # shared exp, reused 3x\n    _t0 = (_t1 + _t2)  # shared add, reused 2x\n    return (BEST.div(_t1, _t0) + BEST.div(_t2, _t0))",
       "shared_nodes": [
         {
           "count": 2,
@@ -352,7 +352,7 @@
       "expression": "ln(1 + exp(-y*x)) + exp(-y*x) / (1 + exp(-y*x))",
       "extra_superbest_savings_nodes": 10,
       "family": "sigmoid_logistic",
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x, y):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (1 + _t1)  # shared add, reused 2x\n    _t1 = BEST.exp(_t2)  # shared exp, reused 3x\n    _t2 = (_t3 * x)  # shared mul, reused 3x\n    _t3 = BEST.neg(y)  # shared neg, reused 3x\n    return (BEST.div(_t1, _t0) + BEST.ln(_t0))",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x, y):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t3 = BEST.neg(y)  # shared neg, reused 3x\n    _t2 = (_t3 * x)  # shared mul, reused 3x\n    _t1 = BEST.exp(_t2)  # shared exp, reused 3x\n    _t0 = (1 + _t1)  # shared add, reused 2x\n    return (BEST.div(_t1, _t0) + BEST.ln(_t0))",
       "shared_nodes": [
         {
           "count": 2,
@@ -466,7 +466,7 @@
       "expression": "(x * x) + (x * x) * y + (x * x) * (x * x) + (x * x) * (x * x) * z",
       "extra_superbest_savings_nodes": 6,
       "family": "polynomial_basis_reuse",
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x, y, z):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 * _t1)  # shared mul, reused 2x\n    _t1 = (x * x)  # shared mul, reused 6x\n    return ((((_t1 * y) + _t1) + _t0) + (_t0 * z))",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x, y, z):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t1 = (x * x)  # shared mul, reused 6x\n    _t0 = (_t1 * _t1)  # shared mul, reused 2x\n    return ((((_t1 * y) + _t1) + _t0) + (_t0 * z))",
       "shared_nodes": [
         {
           "count": 2,
@@ -504,7 +504,7 @@
       "expression": "(x * x) + (x * x) * x + (x * x) * y + (x * x) * x * z",
       "extra_superbest_savings_nodes": 4,
       "family": "polynomial_basis_reuse",
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x, y, z):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 * x)  # shared mul, reused 2x\n    _t1 = (x * x)  # shared mul, reused 4x\n    return (((_t0 + _t1) + (_t1 * y)) + (_t0 * z))",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x, y, z):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t1 = (x * x)  # shared mul, reused 4x\n    _t0 = (_t1 * x)  # shared mul, reused 2x\n    return (((_t0 + _t1) + (_t1 * y)) + (_t0 * z))",
       "shared_nodes": [
         {
           "count": 2,

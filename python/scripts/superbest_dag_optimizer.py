@@ -145,6 +145,7 @@ def _emit_expr(fp: tuple, temp_by_fp: dict[tuple, str], current: tuple | None = 
 
 def _snippet(fp: tuple, shared: tuple[SharedNode, ...]) -> str:
     temp_by_fp = {node.fingerprint: node.temp for node in shared}
+    emit_order = sorted(shared, key=lambda node: (_subtree_size(node.fingerprint), node.temp))
     args = ", ".join(_vars(fp)) or "x"
     lines = [
         "from monogate import BEST",
@@ -152,7 +153,7 @@ def _snippet(fp: tuple, shared: tuple[SharedNode, ...]) -> str:
         f"def optimized_expr({args}):",
         '    """DAG-aware SuperBEST sketch; expression-level sharing only."""',
     ]
-    for node in shared:
+    for node in emit_order:
         expr = _emit_expr(node.fingerprint, temp_by_fp, current=node.fingerprint)
         lines.append(f"    {node.temp} = {expr}  # shared {node.op}, reused {node.count}x")
     result = _emit_expr(fp, temp_by_fp)
