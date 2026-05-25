@@ -64,6 +64,13 @@ const MODE_DESC = {
   edl:  "EDL only — exp(x)/ln(y) — excels at div and mul, requires e as constant",
 };
 
+const COUNTING_NOTES = [
+  "Tree SuperBEST is the public calculator mode: every occurrence in the expression tree is counted.",
+  "DAG SuperBEST is an internal lowering prototype for shared subexpressions; it can reduce repeated denominators, exp terms, or powers, but it is not used for public headline savings yet.",
+  "div_positive is 2n as a full tree route; mul_positive is 1n only on the positive-domain route.",
+  "General-domain caveats stay visible: div_general is 3n and mul_general is 3n unless a stronger route is explicitly selected.",
+];
+
 // ── Python export helper ──────────────────────────────────────────────────────
 function exprToPython(expr, mode) {
   const ns = mode === "best" ? "BEST" : mode === "eml" ? "EML" : mode === "exl" ? "EXL" : "EDL";
@@ -258,7 +265,58 @@ export default function BestCalc() {
           <span style={{ fontSize: 10, color: C.muted }}>
             {MODE_DESC[mode]}
           </span>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+            gap: 8,
+            marginTop: 2,
+          }}>
+            <div style={{
+              background: C.bg,
+              border: `1px solid ${C.border}`,
+              borderRadius: 6,
+              padding: "9px 10px",
+            }}>
+              <div style={{ fontSize: 9, color: C.accent, fontWeight: 700, marginBottom: 5,
+                textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                Tree SuperBEST
+              </div>
+              <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.55 }}>
+                Current public calculator. Counts each expression-tree occurrence once;
+                no shared-subexpression discount is applied.
+              </div>
+            </div>
+            <div style={{
+              background: C.bg,
+              border: `1px solid ${C.border}`,
+              borderRadius: 6,
+              padding: "9px 10px",
+            }}>
+              <div style={{ fontSize: 9, color: C.blue, fontWeight: 700, marginBottom: 5,
+                textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                DAG SuperBEST
+              </div>
+              <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.55 }}>
+                Internal lowering prototype. Shared nodes are highlighted in research
+                packets, but DAG savings are not public headline claims.
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div style={{ ...card, padding: "10px 16px" }}>
+        <div style={{ fontSize: 9, color: C.muted, textTransform: "uppercase",
+          letterSpacing: "0.06em", marginBottom: 6 }}>
+          counting notes
+        </div>
+        <ul style={{ margin: 0, paddingLeft: 17, display: "grid", gap: 4 }}>
+          {COUNTING_NOTES.map(note => (
+            <li key={note} style={{ fontSize: 10, color: C.muted, lineHeight: 1.55 }}>
+              {note}
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Input + quick buttons */}

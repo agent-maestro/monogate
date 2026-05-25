@@ -92,6 +92,24 @@ The broader SuperBEST surface drift check is:
 make superbest-check
 ```
 
+## SuperBEST counting semantics
+
+The public Explorer calculator reports **Tree SuperBEST** counts. In this mode,
+each operation occurrence in the expression tree is counted once, with no
+shared-subexpression discount.
+
+The research repo also contains **DAG SuperBEST** prototypes for compiler-style
+lowering where repeated denominators, repeated powers, or repeated exponentials
+can be computed once and reused. Those examples are useful internal evidence,
+but they are not public headline savings until the lowering pass and claim
+surface are fully reviewed.
+
+Current public caveats:
+
+- `div_positive = 2n` for the full positive-domain tree route.
+- `mul_positive = 1n` for the positive-domain route only.
+- General-domain `div` and `mul` caveats remain visible in calculator copy.
+
 ## Tech
 
 - [Vite](https://vitejs.dev/) + [React](https://react.dev/) 18
