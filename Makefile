@@ -19,7 +19,7 @@ PY      := cd python && $(PYTHON)
 PYTEST  := cd python && $(PYTHON) -m pytest
 PAPER   := cd python/paper && pdflatex
 
-.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-lowering-ui superbest-primitive-frontier explorer-build reproduce-n11 reproduce-all \
+.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-lowering-ui superbest-primitive-frontier eml-ir-pipeline explorer-build reproduce-n11 reproduce-all \
         paper theory docker-build docker-run \
         clean lint version-check
 
@@ -38,6 +38,7 @@ help:
 	@echo "  make superbest-dag-lowering Run compiler-style SuperBEST DAG lowering checks"
 	@echo "  make superbest-lowering-ui Smoke-test Explorer DAG lowering playground"
 	@echo "  make superbest-primitive-frontier Run bounded primitive-row frontier harness"
+	@echo "  make eml-ir-pipeline Build EML IR v0 DAG/replay packet examples"
 	@echo "  make explorer-build  Install locked Explorer deps and build"
 	@echo "  make reproduce-n11   Verify N=11 exhaustive search"
 	@echo "  make reproduce-all   All reproducibility checks"
@@ -100,6 +101,10 @@ superbest-lowering-ui:
 superbest-primitive-frontier:
 	PYTHONPATH=python $(PYTHON) python/scripts/superbest_primitive_frontier_harness.py --strict
 	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_primitive_frontier_harness.py
+
+eml-ir-pipeline:
+	PYTHONPATH=python $(PYTHON) python/scripts/eml_ir_pipeline.py --strict
+	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_eml_ir_pipeline.py
 
 # ── Reproducibility ────────────────────────────────────────────────────────────
 
