@@ -1,0 +1,263 @@
+{
+  "audit_id": "superbest_dag_savings_audit_2026_05_24",
+  "status": "SUPERBEST_DAG_SAVINGS_AUDIT_COMPLETE",
+  "canonical_row_table_changed": false,
+  "new_row_optimality_claim": false,
+  "public_theorem_claim": false,
+  "open_problem_solved_claim": false,
+  "case_count": 8,
+  "max_extra_superbest_dag_savings_nodes": 9,
+  "average_extra_superbest_dag_savings_nodes": 3.75,
+  "best_case_id": "softmax_three_terms",
+  "results": [
+    {
+      "case_id": "repeat_exp_pair",
+      "family": "repeated_exp",
+      "expression": "exp(x) + exp(x)",
+      "notes": "Smallest useful CSE example: one exp node reused.",
+      "tree_superbest_nodes": 4,
+      "dag_superbest_nodes": 3,
+      "tree_eml_nodes": 13,
+      "dag_eml_nodes": 12,
+      "superbest_dag_delta": 1,
+      "eml_dag_delta": 1,
+      "dag_superbest_vs_tree_eml_delta": 10,
+      "dag_superbest_vs_tree_eml_savings_pct": 76.9,
+      "repeated_subexpression_count": 1,
+      "repeated_subexpressions": [
+        {
+          "op": "exp",
+          "count": 2,
+          "fingerprint": "('op', 'exp', (('var', 'x'),))",
+          "superbest_saved_nodes": 1,
+          "eml_saved_nodes": 1
+        }
+      ],
+      "claim_boundary": "expression_level_dag_savings_not_row_level_cost_change"
+    },
+    {
+      "case_id": "shared_exp_ln_square",
+      "family": "shared_subexpression",
+      "expression": "(exp(x) + ln(x)) * (exp(x) + ln(x))",
+      "notes": "Full inner add subtree is shared in the DAG view.",
+      "tree_superbest_nodes": 9,
+      "dag_superbest_nodes": 5,
+      "tree_eml_nodes": 43,
+      "dag_eml_nodes": 28,
+      "superbest_dag_delta": 4,
+      "eml_dag_delta": 15,
+      "dag_superbest_vs_tree_eml_delta": 38,
+      "dag_superbest_vs_tree_eml_savings_pct": 88.4,
+      "repeated_subexpression_count": 3,
+      "repeated_subexpressions": [
+        {
+          "op": "add",
+          "count": 2,
+          "fingerprint": "('op', 'add', (('op', 'exp', (('var', 'x'),)), ('op', 'ln', (('var', 'x'),))))",
+          "superbest_saved_nodes": 2,
+          "eml_saved_nodes": 11
+        },
+        {
+          "op": "exp",
+          "count": 2,
+          "fingerprint": "('op', 'exp', (('var', 'x'),))",
+          "superbest_saved_nodes": 1,
+          "eml_saved_nodes": 1
+        },
+        {
+          "op": "ln",
+          "count": 2,
+          "fingerprint": "('op', 'ln', (('var', 'x'),))",
+          "superbest_saved_nodes": 1,
+          "eml_saved_nodes": 3
+        }
+      ],
+      "claim_boundary": "expression_level_dag_savings_not_row_level_cost_change"
+    },
+    {
+      "case_id": "sigmoid_reuse",
+      "family": "activation",
+      "expression": "1 / (1 + exp(-x)) + exp(-x) / (1 + exp(-x))",
+      "notes": "Shares exp(-x) and the denominator across two rational terms.",
+      "tree_superbest_nodes": 19,
+      "dag_superbest_nodes": 11,
+      "tree_eml_nodes": 93,
+      "dag_eml_nodes": 62,
+      "superbest_dag_delta": 8,
+      "eml_dag_delta": 31,
+      "dag_superbest_vs_tree_eml_delta": 82,
+      "dag_superbest_vs_tree_eml_savings_pct": 88.2,
+      "repeated_subexpression_count": 3,
+      "repeated_subexpressions": [
+        {
+          "op": "neg",
+          "count": 3,
+          "fingerprint": "('op', 'neg', (('var', 'x'),))",
+          "superbest_saved_nodes": 4,
+          "eml_saved_nodes": 18
+        },
+        {
+          "op": "add",
+          "count": 2,
+          "fingerprint": "('op', 'add', (('const', '1'), ('op', 'exp', (('op', 'neg', (('var', 'x'),)),))))",
+          "superbest_saved_nodes": 2,
+          "eml_saved_nodes": 11
+        },
+        {
+          "op": "exp",
+          "count": 3,
+          "fingerprint": "('op', 'exp', (('op', 'neg', (('var', 'x'),)),))",
+          "superbest_saved_nodes": 2,
+          "eml_saved_nodes": 2
+        }
+      ],
+      "claim_boundary": "expression_level_dag_savings_not_row_level_cost_change"
+    },
+    {
+      "case_id": "softmax_three_terms",
+      "family": "softmax",
+      "expression": "exp(a) / (exp(a) + exp(b) + exp(c)) + exp(b) / (exp(a) + exp(b) + exp(c))",
+      "notes": "Shares exp terms and the normalizer across two softmax outputs.",
+      "tree_superbest_nodes": 22,
+      "dag_superbest_nodes": 13,
+      "tree_eml_nodes": 93,
+      "dag_eml_nodes": 66,
+      "superbest_dag_delta": 9,
+      "eml_dag_delta": 27,
+      "dag_superbest_vs_tree_eml_delta": 80,
+      "dag_superbest_vs_tree_eml_savings_pct": 86.0,
+      "repeated_subexpression_count": 5,
+      "repeated_subexpressions": [
+        {
+          "op": "add",
+          "count": 2,
+          "fingerprint": "('op', 'add', (('op', 'add', (('op', 'exp', (('var', 'a'),)), ('op', 'exp', (('var', 'b'),)))), ('op', 'exp', (('var', 'c'),))))",
+          "superbest_saved_nodes": 2,
+          "eml_saved_nodes": 11
+        },
+        {
+          "op": "add",
+          "count": 2,
+          "fingerprint": "('op', 'add', (('op', 'exp', (('var', 'a'),)), ('op', 'exp', (('var', 'b'),))))",
+          "superbest_saved_nodes": 2,
+          "eml_saved_nodes": 11
+        },
+        {
+          "op": "exp",
+          "count": 3,
+          "fingerprint": "('op', 'exp', (('var', 'a'),))",
+          "superbest_saved_nodes": 2,
+          "eml_saved_nodes": 2
+        },
+        {
+          "op": "exp",
+          "count": 3,
+          "fingerprint": "('op', 'exp', (('var', 'b'),))",
+          "superbest_saved_nodes": 2,
+          "eml_saved_nodes": 2
+        },
+        {
+          "op": "exp",
+          "count": 2,
+          "fingerprint": "('op', 'exp', (('var', 'c'),))",
+          "superbest_saved_nodes": 1,
+          "eml_saved_nodes": 1
+        }
+      ],
+      "claim_boundary": "expression_level_dag_savings_not_row_level_cost_change"
+    },
+    {
+      "case_id": "rational_repeated_denominator",
+      "family": "rational",
+      "expression": "(x + 1) / (x - 1) + (x * x) / (x - 1)",
+      "notes": "Shares denominator and one variable product-like subtree.",
+      "tree_superbest_nodes": 13,
+      "dag_superbest_nodes": 11,
+      "tree_eml_nodes": 75,
+      "dag_eml_nodes": 70,
+      "superbest_dag_delta": 2,
+      "eml_dag_delta": 5,
+      "dag_superbest_vs_tree_eml_delta": 64,
+      "dag_superbest_vs_tree_eml_savings_pct": 85.3,
+      "repeated_subexpression_count": 1,
+      "repeated_subexpressions": [
+        {
+          "op": "sub",
+          "count": 2,
+          "fingerprint": "('op', 'sub', (('var', 'x'), ('const', '1')))",
+          "superbest_saved_nodes": 2,
+          "eml_saved_nodes": 5
+        }
+      ],
+      "claim_boundary": "expression_level_dag_savings_not_row_level_cost_change"
+    },
+    {
+      "case_id": "polynomial_repeated_square",
+      "family": "polynomial",
+      "expression": "(x * x) + (x * x) * y + (x * x) * z",
+      "notes": "Shares x*x across three polynomial terms.",
+      "tree_superbest_nodes": 9,
+      "dag_superbest_nodes": 7,
+      "tree_eml_nodes": 87,
+      "dag_eml_nodes": 61,
+      "superbest_dag_delta": 2,
+      "eml_dag_delta": 26,
+      "dag_superbest_vs_tree_eml_delta": 80,
+      "dag_superbest_vs_tree_eml_savings_pct": 92.0,
+      "repeated_subexpression_count": 1,
+      "repeated_subexpressions": [
+        {
+          "op": "mul",
+          "count": 3,
+          "fingerprint": "('op', 'mul', (('var', 'x'), ('var', 'x')))",
+          "superbest_saved_nodes": 2,
+          "eml_saved_nodes": 26
+        }
+      ],
+      "claim_boundary": "expression_level_dag_savings_not_row_level_cost_change"
+    },
+    {
+      "case_id": "gelu_inner_sketch",
+      "family": "activation",
+      "expression": "x * (1 + tanh(k * (x + c * (x ** 3))))",
+      "notes": "Internal GELU-like sketch; tanh remains an approximation/demo row.",
+      "tree_superbest_nodes": 16,
+      "dag_superbest_nodes": 16,
+      "tree_eml_nodes": 109,
+      "dag_eml_nodes": 109,
+      "superbest_dag_delta": 0,
+      "eml_dag_delta": 0,
+      "dag_superbest_vs_tree_eml_delta": 93,
+      "dag_superbest_vs_tree_eml_savings_pct": 85.3,
+      "repeated_subexpression_count": 0,
+      "repeated_subexpressions": [],
+      "claim_boundary": "expression_level_dag_savings_not_row_level_cost_change"
+    },
+    {
+      "case_id": "log_ratio_shared_shift",
+      "family": "log_rational",
+      "expression": "ln(x + 1) / (x + 1) + 1 / (x + 1)",
+      "notes": "Shares x+1 across log argument and denominators.",
+      "tree_superbest_nodes": 13,
+      "dag_superbest_nodes": 9,
+      "tree_eml_nodes": 77,
+      "dag_eml_nodes": 55,
+      "superbest_dag_delta": 4,
+      "eml_dag_delta": 22,
+      "dag_superbest_vs_tree_eml_delta": 68,
+      "dag_superbest_vs_tree_eml_savings_pct": 88.3,
+      "repeated_subexpression_count": 1,
+      "repeated_subexpressions": [
+        {
+          "op": "add",
+          "count": 3,
+          "fingerprint": "('op', 'add', (('const', '1'), ('var', 'x')))",
+          "superbest_saved_nodes": 4,
+          "eml_saved_nodes": 22
+        }
+      ],
+      "claim_boundary": "expression_level_dag_savings_not_row_level_cost_change"
+    }
+  ],
+  "recommended_next_action": "Prototype a DAG-aware optimizer pass for repeated subexpressions and label browser snippets as expression-level sketches."
+}

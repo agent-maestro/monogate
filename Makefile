@@ -19,7 +19,7 @@ PY      := cd python && $(PYTHON)
 PYTEST  := cd python && $(PYTHON) -m pytest
 PAPER   := cd python/paper && pdflatex
 
-.PHONY: help test test-new superbest-check explorer-build reproduce-n11 reproduce-all \
+.PHONY: help test test-new superbest-check superbest-dag-audit explorer-build reproduce-n11 reproduce-all \
         paper theory docker-build docker-run \
         clean lint version-check
 
@@ -32,6 +32,7 @@ help:
 	@echo "  make test            Run full test suite (662 tests)"
 	@echo "  make test-new        Run only v0.10.0 new tests"
 	@echo "  make superbest-check Check canonical SuperBEST table/public surfaces"
+	@echo "  make superbest-dag-audit Run expression-level SuperBEST DAG savings audit"
 	@echo "  make explorer-build  Install locked Explorer deps and build"
 	@echo "  make reproduce-n11   Verify N=11 exhaustive search"
 	@echo "  make reproduce-all   All reproducibility checks"
@@ -70,6 +71,10 @@ superbest-check:
 
 explorer-build:
 	cd explorer && npm ci && npm run build
+
+superbest-dag-audit:
+	PYTHONPATH=python $(PYTHON) python/scripts/superbest_dag_savings_audit.py --strict
+	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_dag_savings_audit.py
 
 # ── Reproducibility ────────────────────────────────────────────────────────────
 

@@ -76,6 +76,15 @@
   "frontier_rows": [
     {
       "rank": 1,
+      "op": "dag_common_subexpression_optimizer",
+      "queue_status": "NEXT_PRACTICAL_SAVINGS_TARGET",
+      "public_safe": true,
+      "internal_only": false,
+      "why_next": "The row table is close to saturated, but expression-level DAG sharing produced extra SuperBEST savings on repeated denominators, softmax-like terms, and reused powers.",
+      "next_action": "Promote the audit into a DAG-aware optimizer prototype that emits shared temporaries and compares tree vs DAG costs."
+    },
+    {
+      "rank": 2,
       "op": "div",
       "current_positive_cost": 2,
       "current_general_cost": 3,
@@ -86,7 +95,7 @@
       "next_action": "Create a small div accounting note and ensure browser/codegen comments do not imply 1n full-tree division."
     },
     {
-      "rank": 2,
+      "rank": 3,
       "op": "mul",
       "current_positive_cost": 1,
       "current_general_cost": 3,
@@ -97,7 +106,7 @@
       "next_action": "Create a row note that explains positive 1n vs general 3n without implying all-real 1n multiplication."
     },
     {
-      "rank": 3,
+      "rank": 4,
       "op": "browser_code_export",
       "queue_status": "IMPLEMENTATION_CAVEAT",
       "public_safe": false,
@@ -106,7 +115,7 @@
       "next_action": "Label export snippets as construction sketches or replace them with canonical library examples."
     },
     {
-      "rank": 4,
+      "rank": 5,
       "op": "sin_cos",
       "queue_status": "EMPIRICAL_OR_APPROXIMATION_ONLY",
       "public_safe": false,
@@ -115,7 +124,7 @@
       "next_action": "Separate approximation/demo rows from canonical arithmetic-basket rows in the explorer UI."
     },
     {
-      "rank": 5,
+      "rank": 6,
       "op": "frontier_search",
       "queue_status": "DEFERRED_UNTIL_SURFACES_STABLE",
       "public_safe": false,

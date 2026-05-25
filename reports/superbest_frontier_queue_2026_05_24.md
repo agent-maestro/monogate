@@ -26,19 +26,22 @@ This is a table-health and frontier-prioritization pass after the v5.3 surface r
 
 ## Ranked Frontier Queue
 
-1. `div` accounting note.
+1. DAG/common-subexpression optimizer.
+   The row table is close to saturated, but expression-level sharing produced extra savings in the DAG audit. Next action: prototype an optimizer that emits shared temporaries and compares tree versus DAG costs.
+
+2. `div` accounting note.
    The table drift came partly from 1n shortcut language versus 2n full-tree accounting. Next action: create a row-level note that makes the full-tree policy explicit everywhere.
 
-2. `mul` positive/general distinction.
+3. `mul` positive/general distinction.
    Positive `1n` and general `3n` are both useful, but browser and copy surfaces must never blur them into all-real 1n multiplication.
 
-3. Browser code export caveat.
+4. Browser code export caveat.
    The explorer cost tables are synced, but generated snippets are best treated as construction sketches unless upgraded to canonical examples.
 
-4. `sin` / `cos` demo rows.
+5. `sin` / `cos` demo rows.
    Keep approximation/demo rows separate from the 10-op arithmetic headline. These rows are useful for demos, but they are not part of the canonical arithmetic-basket headline.
 
-5. New frontier search.
+6. New frontier search.
    Defer new search until the drift check is adopted in CI/review practice. Once stable, search only rows with explicit open/domain-caveat status.
 
 ## Public-Safe Claims
