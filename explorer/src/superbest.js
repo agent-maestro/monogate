@@ -11,10 +11,12 @@ export const TABLE = {
   exp:    { op:"EML",  nodes:1,  domain:"all x",   construction:"eml(x,1)",               emlNodes:1  },
   expNeg: { op:"DEML", nodes:1,  domain:"all x",   construction:"deml(x,1)",              emlNodes:1  },
   ln:     { op:"EXL",  nodes:1,  domain:"x>0",     construction:"exl(0,x)",               emlNodes:3  },
-  div:    { op:"EXL/ELSb", nodes:2, domain:"x,y>0", construction:"elsb(exl(0,x),y)",      emlNodes:15 },
+  div:    { op:"EXL/ELSb", nodes:2, domain:"x,y>0", construction:"elsb(exl(0,x),y)",      emlNodes:15,
+            note:"div_positive = 2n full tree; general-domain route is 3n. Do not count as 1n unless ln(x) is already shared." },
   recip:  { op:"ELSb", nodes:1,    domain:"x>0",     construction:"elsb(0,x)",             emlNodes:5  },
   neg:    { op:"EXL/DEML", nodes:2, domain:"all x",  construction:"exl(0,deml(x,1))",      emlNodes:9  },
-  mul:    { op:"EPL/ELMl", nodes:1, domain:"x,y>0",  construction:"elml(ln(x),y)",         emlNodes:13 },
+  mul:    { op:"EPL/ELMl", nodes:1, domain:"x,y>0",  construction:"elml(ln(x),y)",         emlNodes:13,
+            note:"mul_positive = 1n positive-domain only; general-domain route is 3n." },
   sub:    { op:"LEdiv/EML", nodes:2, domain:"all x,y", construction:"lediv(x,eml(y,1))",   emlNodes:5  },
   pow:    { op:"EPL/ELMl", nodes:1, domain:"x>0",    construction:"epl(n,x)",              emlNodes:3  },
   add:    { op:"LEdiv/DEML", nodes:2, domain:"all x,y", construction:"lediv(x,deml(y,1))", emlNodes:11 },
@@ -260,4 +262,99 @@ export function runBenchmarks() {
     const pct  = savings(eml, best);
     return { ...b, best, eml, savings: pct };
   });
+}
+
+// ── DAG optimizer prototype presets ──────────────────────────────────────────
+
+export const DAG_BENCHMARKS = [
+  {
+    id:"repeat_exp_pair",
+    label:"exp(x) + exp(x)",
+    family:"repeated_exp",
+    eml:13,
+    treeBest:4,
+    dagBest:3,
+    shared:["exp(x)"],
+    note:"Smallest useful CSE example: one exp node reused.",
+  },
+  {
+    id:"shared_exp_ln_square",
+    label:"(exp(x)+ln(x))²",
+    family:"shared_subexpression",
+    eml:43,
+    treeBest:9,
+    dagBest:5,
+    shared:["exp(x)+ln(x)", "exp(x)", "ln(x)"],
+    note:"Full inner add subtree is shared in the DAG view.",
+  },
+  {
+    id:"sigmoid_reuse",
+    label:"sigmoid reuse pair",
+    family:"activation",
+    eml:93,
+    treeBest:19,
+    dagBest:11,
+    shared:["1+exp(-x)", "exp(-x)", "-x"],
+    note:"Shares exp(-x) and denominator across two rational terms.",
+  },
+  {
+    id:"softmax_three_terms",
+    label:"softmax two outputs",
+    family:"softmax",
+    eml:93,
+    treeBest:22,
+    dagBest:13,
+    shared:["exp(a)+exp(b)+exp(c)", "exp(a)", "exp(b)", "exp(c)"],
+    note:"Shares exp terms and normalizer across two softmax outputs.",
+  },
+  {
+    id:"rational_repeated_denominator",
+    label:"shared rational denominator",
+    family:"rational",
+    eml:75,
+    treeBest:13,
+    dagBest:11,
+    shared:["x-1"],
+    note:"Shares denominator across two rational terms.",
+  },
+  {
+    id:"polynomial_repeated_square",
+    label:"shared x² polynomial",
+    family:"polynomial",
+    eml:87,
+    treeBest:9,
+    dagBest:7,
+    shared:["x*x"],
+    note:"Shares x*x across three polynomial terms.",
+  },
+  {
+    id:"gelu_inner_sketch",
+    label:"GELU inner sketch",
+    family:"activation",
+    eml:109,
+    treeBest:16,
+    dagBest:16,
+    shared:[],
+    note:"Internal sketch only; no repeated subexpression found in this form.",
+  },
+  {
+    id:"log_ratio_shared_shift",
+    label:"ln(x+1)/(x+1)+1/(x+1)",
+    family:"log_rational",
+    eml:77,
+    treeBest:13,
+    dagBest:9,
+    shared:["x+1"],
+    note:"Shares x+1 across log argument and denominators.",
+  },
+];
+
+/** Run expression-level DAG prototype benchmarks. */
+export function runDagBenchmarks() {
+  return DAG_BENCHMARKS.map(b => ({
+    ...b,
+    treeSavings: savings(b.eml, b.treeBest),
+    dagSavings: savings(b.eml, b.dagBest),
+    extraDagSavings: b.treeBest - b.dagBest,
+  }));
 }

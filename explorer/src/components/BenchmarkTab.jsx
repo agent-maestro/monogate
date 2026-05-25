@@ -2,7 +2,7 @@
 // "Run All" to compute 25 preset savings. Shareable, reproducible.
 
 import { useState, useMemo } from "react";
-import { runBenchmarks, savings } from "../superbest.js";
+import { runBenchmarks, runDagBenchmarks, savings } from "../superbest.js";
 
 const C = {
   bg: "#07080f", surface: "#0d0e1c", border: "#191b2e",
@@ -30,28 +30,76 @@ function SavingsBar({ pct, max = 100 }) {
   );
 }
 
+function ModeButton({ active, children, onClick }) {
+  return (
+    <button onClick={onClick} style={{
+      fontSize: 10, fontWeight: 700, padding: "8px 12px", borderRadius: 6,
+      cursor: "pointer", border: `1px solid ${active ? C.accent : C.border}`,
+      background: active ? "rgba(232,160,32,0.12)" : "rgba(255,255,255,0.03)",
+      color: active ? C.accent : C.muted,
+    }}>
+      {children}
+    </button>
+  );
+}
+
+function SharedChip({ children }) {
+  return (
+    <span style={{
+      display: "inline-block", fontSize: 9, padding: "3px 6px",
+      borderRadius: 999, marginRight: 5, marginTop: 3,
+      background: "rgba(106,176,245,0.10)", border: "1px solid rgba(106,176,245,0.24)",
+      color: C.blue, fontFamily: "'Space Mono',monospace",
+    }}>
+      {children}
+    </span>
+  );
+}
+
 export default function BenchmarkTab() {
   const [ran, setRan] = useState(false);
   const [copied, setCopied] = useState(false);
-  const results = useMemo(() => ran ? runBenchmarks() : [], [ran]);
+  const [mode, setMode] = useState("tree");
+  const treeMode = mode === "tree";
+  const results = useMemo(() => {
+    if (!ran) return [];
+    return treeMode ? runBenchmarks() : runDagBenchmarks();
+  }, [ran, treeMode]);
 
   const avgSavings = useMemo(() => {
     if (!results.length) return null;
-    const total = results.reduce((s, r) => s + r.savings, 0);
+    const total = results.reduce((s, r) => s + (treeMode ? r.savings : r.dagSavings), 0);
     return Math.round(total / results.length);
-  }, [results]);
+  }, [results, treeMode]);
 
-  const totalEml  = useMemo(() => results.reduce((s, r) => s + r.eml, 0), [results]);
-  const totalBest = useMemo(() => results.reduce((s, r) => s + r.best, 0), [results]);
-  const overallSavings = useMemo(() => savings(totalEml, totalBest), [totalEml, totalBest]);
+  const totalEml = useMemo(() => results.reduce((s, r) => s + r.eml, 0), [results]);
+  const totalBest = useMemo(
+    () => results.reduce((s, r) => s + (treeMode ? r.best : r.treeBest), 0),
+    [results, treeMode],
+  );
+  const totalDag = useMemo(
+    () => results.reduce((s, r) => s + (treeMode ? 0 : r.dagBest), 0),
+    [results, treeMode],
+  );
+  const totalExtraDag = useMemo(
+    () => results.reduce((s, r) => s + (treeMode ? 0 : r.extraDagSavings), 0),
+    [results, treeMode],
+  );
+  const overallSavings = useMemo(
+    () => savings(totalEml, treeMode ? totalBest : totalDag),
+    [totalEml, totalBest, totalDag, treeMode],
+  );
 
   function copyResults() {
     const lines = [
       "SuperBEST Benchmark Results — monogate.dev",
-      `Overall savings: ${overallSavings}% (${totalEml}n EML → ${totalBest}n SuperBEST)`,
+      `Mode: ${treeMode ? "Tree SuperBEST" : "DAG SuperBEST"}`,
+      `Overall savings: ${overallSavings}% (${totalEml}n EML → ${treeMode ? totalBest : totalDag}n SuperBEST)`,
       "",
-      "Expression,EML nodes,SuperBEST nodes,Savings",
-      ...results.map(r => `${r.label},${r.eml},${r.best},${r.savings}%`),
+      treeMode ? "Expression,EML nodes,SuperBEST nodes,Savings" : "Expression,EML nodes,Tree SuperBEST,DAG SuperBEST,Extra DAG savings",
+      ...results.map(r => treeMode
+        ? `${r.label},${r.eml},${r.best},${r.savings}%`
+        : `${r.label},${r.eml},${r.treeBest},${r.dagBest},${r.extraDagSavings}`),
     ].join("\n");
     navigator.clipboard.writeText(lines).then(() => {
       setCopied(true);
@@ -67,9 +115,15 @@ export default function BenchmarkTab() {
           SuperBEST Benchmark Suite
         </div>
         <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.7 }}>
-          Node counts for 25 standard expressions: pure EML single-operator vs SuperBEST routing.
-          Numbers are exact (operator node counts, not timing). Reproducible on any machine.
+          Node counts for standard expressions. Tree mode shows canonical row routing;
+          DAG mode shows expression-level shared subexpressions. Numbers are operator counts,
+          not timing estimates.
         </div>
+      </div>
+
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
+        <ModeButton active={treeMode} onClick={() => setMode("tree")}>Tree SuperBEST</ModeButton>
+        <ModeButton active={!treeMode} onClick={() => setMode("dag")}>DAG SuperBEST</ModeButton>
       </div>
 
       {/* Run button */}
@@ -87,7 +141,7 @@ export default function BenchmarkTab() {
             RUN ALL BENCHMARKS
           </button>
           <div style={{ fontSize: 9, color: C.muted, marginTop: 10 }}>
-            25 expressions · instant · no network · fully reproducible
+            {treeMode ? "25 tree expressions" : "8 DAG-sharing cases"} · instant · no network · reproducible
           </div>
         </div>
       ) : (
@@ -99,10 +153,10 @@ export default function BenchmarkTab() {
             display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 16,
           }}>
             {[
-              { label: "Overall savings", value: `${overallSavings}%`, col: C.green },
+              { label: treeMode ? "Overall savings" : "DAG savings", value: `${overallSavings}%`, col: C.green },
               { label: "EML total nodes", value: `${totalEml}n`, col: C.muted },
-              { label: "SuperBEST nodes", value: `${totalBest}n`, col: C.green },
-              { label: "Avg savings", value: `${avgSavings}%`, col: C.accent },
+              { label: treeMode ? "SuperBEST nodes" : "Tree SuperBEST", value: `${totalBest}n`, col: treeMode ? C.green : C.muted },
+              { label: treeMode ? "Avg savings" : "Extra DAG saved", value: treeMode ? `${avgSavings}%` : `${totalExtraDag}n`, col: C.accent },
             ].map(({ label, value, col }) => (
               <div key={label} style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 20, fontWeight: 700, color: col }}>{value}</div>
@@ -114,18 +168,21 @@ export default function BenchmarkTab() {
           {/* Table */}
           <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, overflow: "hidden", marginBottom: 12 }}>
             <div style={{
-              display: "grid", gridTemplateColumns: "2fr 70px 80px 1fr",
+              display: "grid", gridTemplateColumns: treeMode ? "2fr 70px 80px 1fr" : "2fr 62px 72px 72px 1.7fr",
               padding: "8px 14px", borderBottom: `1px solid ${C.border}`,
               fontSize: 9, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em",
             }}>
               <span>Expression</span>
               <span style={{ textAlign: "right" }}>EML</span>
-              <span style={{ textAlign: "right" }}>SuperBEST</span>
-              <span style={{ paddingLeft: 8 }}>Savings</span>
+              <span style={{ textAlign: "right" }}>{treeMode ? "SuperBEST" : "Tree"}</span>
+              <span style={{ textAlign: treeMode ? "left" : "right", paddingLeft: treeMode ? 8 : 0 }}>
+                {treeMode ? "Savings" : "DAG"}
+              </span>
+              {!treeMode && <span style={{ paddingLeft: 8 }}>Shared nodes</span>}
             </div>
             {results.map((r, i) => (
               <div key={r.id} style={{
-                display: "grid", gridTemplateColumns: "2fr 70px 80px 1fr",
+                display: "grid", gridTemplateColumns: treeMode ? "2fr 70px 80px 1fr" : "2fr 62px 72px 72px 1.7fr",
                 padding: "7px 14px",
                 background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)",
                 borderBottom: i < results.length - 1 ? `1px solid ${C.border}` : "none",
@@ -136,14 +193,27 @@ export default function BenchmarkTab() {
                 </span>
                 <span style={{ fontSize: 11, color: C.muted, textAlign: "right" }}>{r.eml}n</span>
                 <span style={{
-                  fontSize: 11, color: r.savings > 0 ? C.green : C.muted, textAlign: "right",
-                  fontWeight: r.savings > 50 ? 700 : 400,
+                  fontSize: 11, color: (treeMode ? r.savings : r.treeSavings) > 0 ? C.green : C.muted, textAlign: "right",
+                  fontWeight: (treeMode ? r.savings : r.treeSavings) > 50 ? 700 : 400,
                 }}>
-                  {r.best}n
+                  {treeMode ? r.best : r.treeBest}n
                 </span>
-                <div style={{ paddingLeft: 8 }}>
-                  <SavingsBar pct={r.savings} />
-                </div>
+                {treeMode ? (
+                  <div style={{ paddingLeft: 8 }}>
+                    <SavingsBar pct={r.savings} />
+                  </div>
+                ) : (
+                  <>
+                    <span style={{ fontSize: 11, color: C.green, textAlign: "right", fontWeight: 700 }}>
+                      {r.dagBest}n
+                    </span>
+                    <div style={{ paddingLeft: 8, minHeight: 23 }}>
+                      {r.shared.length ? r.shared.map(s => <SharedChip key={s}>{s}</SharedChip>) : (
+                        <span style={{ fontSize: 9, color: C.muted }}>no repeated subexpression</span>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -177,7 +247,9 @@ export default function BenchmarkTab() {
             SuperBEST routes each operation to its canonical v5.3 construction: exp/ln stay 1n,
             add/sub/neg are 2n guarded mixed routes, mul/pow/sqrt/recip are 1n positive-domain routes,
             and div is 2n in the full positive-domain tree. All displayed costs are integer node counts,
-            not timing estimates.
+            not timing estimates. DAG mode is expression-level sharing only: it does not change canonical
+            row costs. div_positive = 2n full tree; mul_positive = 1n positive-domain only; general-domain
+            caveats remain in force.
           </div>
         </>
       )}
