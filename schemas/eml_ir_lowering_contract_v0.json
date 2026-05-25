@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://monogate.dev/schemas/eml-ir-lowering-contract.v0.json",
+  "title": "EML IR Lowering Contract v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id",
+    "status",
+    "version",
+    "scope",
+    "primitive_set",
+    "determinism_rules",
+    "tree_vs_dag_semantics",
+    "replay_rules",
+    "public_claim_policy",
+    "boundaries"
+  ],
+  "properties": {
+    "contract_id": { "const": "eml_ir_lowering_contract_v0_2026_05_25" },
+    "status": { "const": "INTERNAL_LOWERING_CONTRACT_DRAFT" },
+    "version": { "const": "v0" },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expression_level_only", "host_runtime_only", "compiler_behavior_changed"],
+      "properties": {
+        "expression_level_only": { "const": true },
+        "host_runtime_only": { "const": true },
+        "compiler_behavior_changed": { "const": false }
+      }
+    },
+    "primitive_set": {
+      "type": "array",
+      "minItems": 8,
+      "items": { "type": "string" }
+    },
+    "determinism_rules": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "type": "string" }
+    },
+    "tree_vs_dag_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tree_cost_public_safe", "dag_cost_internal_prototype", "canonical_row_table_changed"],
+      "properties": {
+        "tree_cost_public_safe": { "const": true },
+        "dag_cost_internal_prototype": { "const": true },
+        "canonical_row_table_changed": { "const": false }
+      }
+    },
+    "replay_rules": {
+      "type": "array",
+      "minItems": 5,
+      "items": { "type": "string" }
+    },
+    "public_claim_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["new_public_savings_claim", "public_ready"],
+      "properties": {
+        "new_public_savings_claim": { "const": false },
+        "public_ready": { "const": false }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "internal_only",
+        "deploy_performed",
+        "package_publish_performed",
+        "public_theorem_claim",
+        "formal_verification_claim",
+        "production_marketplace_modified"
+      ],
+      "properties": {
+        "internal_only": { "const": true },
+        "deploy_performed": { "const": false },
+        "package_publish_performed": { "const": false },
+        "public_theorem_claim": { "const": false },
+        "formal_verification_claim": { "const": false },
+        "production_marketplace_modified": { "const": false }
+      }
+    }
+  }
+}

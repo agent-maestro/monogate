@@ -514,6 +514,11 @@ def write_outputs(model: dict[str, Any], out_dir: Path, report_path: Path) -> No
     report_path.write_text(render_report(model), encoding="utf-8")
 
 
+def write_explorer_model(model: dict[str, Any], explorer_model: Path) -> None:
+    explorer_model.parent.mkdir(parents=True, exist_ok=True)
+    explorer_model.write_text(json.dumps(model, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def validate_model(model: dict[str, Any]) -> None:
     if model["status"] != "EML_IR_INSPECTOR_READY":
         raise ValueError("inspector status mismatch")
@@ -539,6 +544,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", type=Path, default=ROOT / "demo/eml_ir_inspector_v0_2026_05_25")
     parser.add_argument("--report", type=Path, default=ROOT / "reports/eml_ir_inspector_v0_2026_05_25.md")
+    parser.add_argument("--explorer-model", type=Path, default=ROOT / "explorer/src/data/eml_ir_inspector_model.json")
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
     model = build_inspector_model()
@@ -549,6 +555,7 @@ def main() -> int:
         if model["boundaries"]["deploy_performed"] is not False:
             raise SystemExit("deploy must be false")
     write_outputs(model, args.out_dir, args.report)
+    write_explorer_model(model, args.explorer_model)
     print("EML_IR_INSPECTOR_OK")
     print(
         "programs={program_count} frames={total_replay_frames} best={best_program_id} extra={best_extra_superbest_savings_nodes}".format(

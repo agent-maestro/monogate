@@ -110,7 +110,8 @@ eml-ir-pipeline:
 eml-ir-inspector:
 	PYTHONPATH=python $(PYTHON) python/scripts/eml_ir_pipeline.py --strict
 	PYTHONPATH=python $(PYTHON) python/scripts/eml_ir_inspector.py --strict
-	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_eml_ir_pipeline.py python/tests/test_eml_ir_inspector.py
+	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_eml_ir_pipeline.py python/tests/test_eml_ir_inspector.py python/tests/test_eml_ir_lowering_contract.py
+	cd explorer && npm run build
 
 # ── Reproducibility ────────────────────────────────────────────────────────────
 

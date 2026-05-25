@@ -12,6 +12,7 @@ from scripts.eml_ir_inspector import (
     build_observatory_card,
     render_html,
     validate_model,
+    write_explorer_model,
     write_outputs,
 )
 
@@ -88,9 +89,19 @@ def test_write_outputs_creates_json_and_html(tmp_path):
     assert "EML IR Inspector v0" in report.read_text()
 
 
+def test_write_explorer_model_creates_importable_json(tmp_path):
+    model = build_inspector_model()
+    out = tmp_path / "src" / "data" / "eml_ir_inspector_model.json"
+    write_explorer_model(model, out)
+    parsed = json.loads(out.read_text())
+    assert parsed["status"] == "EML_IR_INSPECTOR_READY"
+    assert parsed["boundaries"]["external_network_required"] is False
+
+
 def test_cli_strict_writes_demo_packet(tmp_path):
     out_dir = tmp_path / "demo"
     report = tmp_path / "report.md"
+    explorer_model = tmp_path / "explorer" / "model.json"
     proc = subprocess.run(
         [
             sys.executable,
@@ -99,6 +110,8 @@ def test_cli_strict_writes_demo_packet(tmp_path):
             str(out_dir),
             "--report",
             str(report),
+            "--explorer-model",
+            str(explorer_model),
             "--strict",
         ],
         check=True,
@@ -107,4 +120,5 @@ def test_cli_strict_writes_demo_packet(tmp_path):
     )
     assert "EML_IR_INSPECTOR_OK" in proc.stdout
     assert (out_dir / "index.html").exists()
+    assert explorer_model.exists()
     assert json.loads((out_dir / "observatory_card_2026_05_25.json").read_text())["public_ready"] is False
