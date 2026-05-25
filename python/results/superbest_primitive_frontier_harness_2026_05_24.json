@@ -1,0 +1,308 @@
+{
+  "blunt_result": "No canonical primitive row savings unlocked by this bounded harness. The plausible wins remain domain-narrowing, sign/branch-aware variants, or approximation-method work.",
+  "boundary": {
+    "canonical_row_table_changed": false,
+    "deploy_performed": false,
+    "internal_only": true,
+    "new_row_optimality_claim": false,
+    "open_problem_solved_claim": false,
+    "package_publish_performed": false,
+    "public_theorem_claim": false
+  },
+  "branched_reference_only_count": 2,
+  "candidate_count": 9,
+  "candidate_results": [
+    {
+      "arity": 2,
+      "candidate_id": "mul_positive_1n_route",
+      "candidate_nodes": 1,
+      "canonical_nodes": 1,
+      "classification": "CONFIRMED_EXISTING_ROUTE",
+      "empirical_pass": true,
+      "failure_count": 0,
+      "first_failures": [],
+      "grid_count": 20,
+      "notes": "Confirms canonical positive-domain route; not a new primitive saving.",
+      "op": "mul",
+      "pass_count": 20,
+      "public_safe": true,
+      "single_tree": true,
+      "source": "exp(log(x))*y",
+      "target_domain": "positive"
+    },
+    {
+      "arity": 2,
+      "candidate_id": "mul_general_positive_route_attempt",
+      "candidate_nodes": 1,
+      "canonical_nodes": 3,
+      "classification": "INVALID_OR_DOMAIN_LIMITED",
+      "empirical_pass": false,
+      "failure_count": 18,
+      "first_failures": [
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            -5.0
+          ],
+          "kind": "undefined_or_error"
+        },
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            -1.0
+          ],
+          "kind": "undefined_or_error"
+        },
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            -0.25
+          ],
+          "kind": "undefined_or_error"
+        },
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            0.25
+          ],
+          "kind": "undefined_or_error"
+        },
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            1.5
+          ],
+          "kind": "undefined_or_error"
+        }
+      ],
+      "grid_count": 36,
+      "notes": "Expected to fail for x<=0; exact blocker for demoting mul_general.",
+      "op": "mul",
+      "pass_count": 18,
+      "public_safe": false,
+      "single_tree": true,
+      "source": "exp(log(x))*y",
+      "target_domain": "general_nonzero"
+    },
+    {
+      "arity": 2,
+      "candidate_id": "mul_general_sign_branched_reference",
+      "candidate_nodes": 4,
+      "canonical_nodes": 3,
+      "classification": "BRANCHED_REFERENCE_ONLY",
+      "empirical_pass": true,
+      "failure_count": 0,
+      "first_failures": [],
+      "grid_count": 20,
+      "notes": "Works numerically but is not a single SuperBEST primitive tree.",
+      "op": "mul",
+      "pass_count": 20,
+      "public_safe": false,
+      "single_tree": false,
+      "source": "sign(x*y)*exp(log(abs(x))+log(abs(y))) with zero branch",
+      "target_domain": "general_with_zero"
+    },
+    {
+      "arity": 2,
+      "candidate_id": "div_positive_2n_route",
+      "candidate_nodes": 2,
+      "canonical_nodes": 2,
+      "classification": "CONFIRMED_EXISTING_ROUTE",
+      "empirical_pass": true,
+      "failure_count": 0,
+      "first_failures": [],
+      "grid_count": 20,
+      "notes": "Confirms canonical positive-domain full-tree route.",
+      "op": "div",
+      "pass_count": 20,
+      "public_safe": true,
+      "single_tree": true,
+      "source": "exp(log(x))/y",
+      "target_domain": "positive"
+    },
+    {
+      "arity": 2,
+      "candidate_id": "div_general_positive_route_attempt",
+      "candidate_nodes": 2,
+      "canonical_nodes": 3,
+      "classification": "INVALID_OR_DOMAIN_LIMITED",
+      "empirical_pass": false,
+      "failure_count": 18,
+      "first_failures": [
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            -5.0
+          ],
+          "kind": "undefined_or_error"
+        },
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            -1.0
+          ],
+          "kind": "undefined_or_error"
+        },
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            -0.25
+          ],
+          "kind": "undefined_or_error"
+        },
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            0.25
+          ],
+          "kind": "undefined_or_error"
+        },
+        {
+          "error": "ValueError: math domain error",
+          "inputs": [
+            -7.0,
+            1.5
+          ],
+          "kind": "undefined_or_error"
+        }
+      ],
+      "grid_count": 36,
+      "notes": "Expected to fail for x<=0; exact blocker for demoting div_general.",
+      "op": "div",
+      "pass_count": 18,
+      "public_safe": false,
+      "single_tree": true,
+      "source": "exp(log(x))/y",
+      "target_domain": "general_nonzero"
+    },
+    {
+      "arity": 2,
+      "candidate_id": "div_general_sign_branched_reference",
+      "candidate_nodes": 5,
+      "canonical_nodes": 3,
+      "classification": "BRANCHED_REFERENCE_ONLY",
+      "empirical_pass": true,
+      "failure_count": 0,
+      "first_failures": [],
+      "grid_count": 36,
+      "notes": "Works numerically on nonzero denominator but requires sign/abs branching.",
+      "op": "div",
+      "pass_count": 36,
+      "public_safe": false,
+      "single_tree": false,
+      "source": "sign(x*y)*exp(log(abs(x))-log(abs(y)))",
+      "target_domain": "general_nonzero"
+    },
+    {
+      "arity": 2,
+      "candidate_id": "add_general_2n_route",
+      "candidate_nodes": 2,
+      "canonical_nodes": 2,
+      "classification": "CONFIRMED_EXISTING_ROUTE",
+      "empirical_pass": true,
+      "failure_count": 0,
+      "first_failures": [],
+      "grid_count": 20,
+      "notes": "Confirms canonical all-real 2n route.",
+      "op": "add",
+      "pass_count": 20,
+      "public_safe": true,
+      "single_tree": true,
+      "source": "x-log(exp(-y))",
+      "target_domain": "general_with_zero"
+    },
+    {
+      "arity": 2,
+      "candidate_id": "sub_general_2n_route",
+      "candidate_nodes": 2,
+      "canonical_nodes": 2,
+      "classification": "CONFIRMED_EXISTING_ROUTE",
+      "empirical_pass": true,
+      "failure_count": 0,
+      "first_failures": [],
+      "grid_count": 20,
+      "notes": "Confirms canonical all-real 2n route.",
+      "op": "sub",
+      "pass_count": 20,
+      "public_safe": true,
+      "single_tree": true,
+      "source": "x-log(exp(y))",
+      "target_domain": "general_with_zero"
+    },
+    {
+      "arity": 1,
+      "candidate_id": "neg_general_2n_route",
+      "candidate_nodes": 2,
+      "canonical_nodes": 2,
+      "classification": "CONFIRMED_EXISTING_ROUTE",
+      "empirical_pass": true,
+      "failure_count": 0,
+      "first_failures": [],
+      "grid_count": 7,
+      "notes": "Confirms canonical all-real 2n route.",
+      "op": "neg",
+      "pass_count": 7,
+      "public_safe": true,
+      "single_tree": true,
+      "source": "log(exp(-x))",
+      "target_domain": "all_real"
+    }
+  ],
+  "confirmed_existing_route_count": 5,
+  "harness_id": "superbest_primitive_frontier_harness_2026_05_24",
+  "invalid_or_domain_limited_count": 2,
+  "primitive_improvement_candidate_count": 0,
+  "recommended_next_build": {
+    "name": "SUPERBEST_PRIMITIVE_ENUMERATOR_V2",
+    "priority": "P2_AFTER_DAG_LOWERING",
+    "why": "A deeper enumerator could search symbolic primitive trees up to a bounded node count, but current blockers point to domain/sign barriers rather than easy row demotions."
+  },
+  "row_frontier_notes": {
+    "add_general": {
+      "current_nodes": 2,
+      "reason": "Canonical 2n route passes all-real grid; this harness found no 1n all-real candidate.",
+      "status": "NO_1N_CANDIDATE_FOUND_IN_HARNESS",
+      "target_nodes": 1
+    },
+    "div_general": {
+      "current_nodes": 3,
+      "reason": "The 2n positive route uses log(x), so it fails for x<=0. Sign-aware division requires abs/sign branching and zero-denominator handling.",
+      "status": "BLOCKED_BY_NUMERATOR_SIGN_DOMAIN",
+      "target_nodes": 2
+    },
+    "mul_general": {
+      "current_nodes": 3,
+      "reason": "The 1n positive route uses log(x), so it fails for x<=0. Sign-aware versions require abs/sign branching and are not single primitive trees.",
+      "status": "BLOCKED_BY_SIGN_DOMAIN",
+      "target_nodes": 2
+    },
+    "neg_general": {
+      "current_nodes": 2,
+      "reason": "Canonical 2n route passes all-real grid; this harness found no 1n all-real candidate.",
+      "status": "NO_1N_CANDIDATE_FOUND_IN_HARNESS",
+      "target_nodes": 1
+    },
+    "sin_cos": {
+      "current_nodes": null,
+      "reason": "Further sin/cos gains are likely approximation-method work, not a primitive row demotion in this harness.",
+      "status": "NUMERICAL_METHOD_FRONTIER_NOT_PRIMITIVE_ROW",
+      "target_nodes": null
+    },
+    "sub_general": {
+      "current_nodes": 2,
+      "reason": "Canonical 2n route passes all-real grid; this harness found no 1n all-real candidate.",
+      "status": "NO_1N_CANDIDATE_FOUND_IN_HARNESS",
+      "target_nodes": 1
+    }
+  },
+  "status": "SUPERBEST_PRIMITIVE_FRONTIER_HARNESS_COMPLETE"
+}

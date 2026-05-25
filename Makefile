@@ -19,7 +19,7 @@ PY      := cd python && $(PYTHON)
 PYTEST  := cd python && $(PYTHON) -m pytest
 PAPER   := cd python/paper && pdflatex
 
-.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering explorer-build reproduce-n11 reproduce-all \
+.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-primitive-frontier explorer-build reproduce-n11 reproduce-all \
         paper theory docker-build docker-run \
         clean lint version-check
 
@@ -36,6 +36,7 @@ help:
 	@echo "  make superbest-dag-optimizer Run SuperBEST DAG optimizer prototype checks"
 	@echo "  make superbest-expression-frontier Run targeted expression frontier exploration"
 	@echo "  make superbest-dag-lowering Run compiler-style SuperBEST DAG lowering checks"
+	@echo "  make superbest-primitive-frontier Run bounded primitive-row frontier harness"
 	@echo "  make explorer-build  Install locked Explorer deps and build"
 	@echo "  make reproduce-n11   Verify N=11 exhaustive search"
 	@echo "  make reproduce-all   All reproducibility checks"
@@ -90,6 +91,10 @@ superbest-expression-frontier:
 superbest-dag-lowering:
 	PYTHONPATH=python $(PYTHON) python/scripts/superbest_dag_lowering.py --strict
 	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_dag_lowering.py python/tests/test_superbest_dag_optimizer.py python/tests/test_superbest_expression_frontier.py
+
+superbest-primitive-frontier:
+	PYTHONPATH=python $(PYTHON) python/scripts/superbest_primitive_frontier_harness.py --strict
+	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_primitive_frontier_harness.py
 
 # ── Reproducibility ────────────────────────────────────────────────────────────
 
