@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://monogate.dev/schemas/eml_ir_lowering_contract_v1.json",
+  "title": "EML IR Lowering Contract v1",
+  "type": "object",
+  "required": [
+    "contract_id",
+    "status",
+    "primitive_set",
+    "node_identity_rules",
+    "dag_cost_rules",
+    "replay_frame_mapping",
+    "field_bridge_rules",
+    "validity_gates",
+    "boundaries"
+  ],
+  "properties": {
+    "contract_id": {
+      "const": "eml_ir_lowering_contract_v1_2026_05_25"
+    },
+    "status": {
+      "const": "INTERNAL_LOWERING_CONTRACT_V1_DRAFT"
+    },
+    "primitive_set": {
+      "type": "array",
+      "items": {
+        "enum": ["input", "constant", "neg", "add", "sub", "mul", "div", "pow", "exp", "ln", "sqrt", "sin", "cos", "tanh"]
+      },
+      "minItems": 10,
+      "uniqueItems": true
+    },
+    "node_identity_rules": {
+      "type": "object",
+      "required": ["stable_node_ids", "structural_hash_basis", "commutative_canonicalization", "literal_normalization"],
+      "properties": {
+        "stable_node_ids": { "const": "topological_order_n0_n1_n2" },
+        "structural_hash_basis": { "const": "op_kind_normalized_args_normalized_literal" },
+        "commutative_canonicalization": { "const": "sort_add_mul_children_by_structural_hash" },
+        "literal_normalization": { "const": "preserve_exact_source_literal_until_numeric_policy_v2" }
+      }
+    },
+    "dag_cost_rules": {
+      "type": "object",
+      "required": ["tree_cost", "dag_cost", "public_headline_rule"],
+      "properties": {
+        "tree_cost": { "const": "count_every_operation_occurrence" },
+        "dag_cost": { "const": "count_each_structurally_identical_operation_once" },
+        "public_headline_rule": { "const": "tree_superbest_only_until_lowering_review" }
+      }
+    },
+    "replay_frame_mapping": {
+      "type": "object",
+      "required": ["lifecycle_sequence", "operation_frame_state", "terminal_state"],
+      "properties": {
+        "lifecycle_sequence": {
+          "type": "array",
+          "items": { "enum": ["INIT", "READY", "RUNNING", "END", "PARKED"] },
+          "const": ["INIT", "READY", "RUNNING", "END", "PARKED"]
+        },
+        "operation_frame_state": { "const": "RUNNING" },
+        "terminal_state": { "const": "PARKED" }
+      }
+    },
+    "field_bridge_rules": {
+      "type": "object",
+      "required": ["complex_visualization_status", "allowed_examples", "non_claim"],
+      "properties": {
+        "complex_visualization_status": { "const": "visual_intuition_only" },
+        "allowed_examples": {
+          "type": "array",
+          "items": { "enum": ["z", "z_squared", "exp_z", "ln_z", "eml_z_1", "eml_z_z_plus_2"] },
+          "minItems": 6
+        },
+        "non_claim": { "const": "field_view_does_not_validate_lowering_correctness" }
+      }
+    },
+    "validity_gates": {
+      "type": "object",
+      "required": ["schema_valid", "hash_chain_valid", "lifecycle_valid", "domain_annotations_present"],
+      "properties": {
+        "schema_valid": { "const": true },
+        "hash_chain_valid": { "const": true },
+        "lifecycle_valid": { "const": true },
+        "domain_annotations_present": { "const": true }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "required": [
+        "internal_only",
+        "public_ready",
+        "compiler_behavior_changed",
+        "canonical_row_table_changed",
+        "deploy_performed",
+        "package_publish_performed",
+        "production_marketplace_modified",
+        "formal_verification_claim",
+        "certified_safety_claim",
+        "production_controller_claim",
+        "public_theorem_claim"
+      ],
+      "properties": {
+        "internal_only": { "const": true },
+        "public_ready": { "const": false },
+        "compiler_behavior_changed": { "const": false },
+        "canonical_row_table_changed": { "const": false },
+        "deploy_performed": { "const": false },
+        "package_publish_performed": { "const": false },
+        "production_marketplace_modified": { "const": false },
+        "formal_verification_claim": { "const": false },
+        "certified_safety_claim": { "const": false },
+        "production_controller_claim": { "const": false },
+        "public_theorem_claim": { "const": false }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
