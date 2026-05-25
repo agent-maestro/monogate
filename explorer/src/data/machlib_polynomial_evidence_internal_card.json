@@ -1,0 +1,51 @@
+{
+  "card_id": "machlib_polynomial_evidence_internal_card_2026_05_25",
+  "status": "INTERNAL_PROTOTYPE",
+  "title": "MachLib finite root evidence",
+  "summary": "Finite polynomial/root facts are checked; analytic identity theorem remains blocked.",
+  "fact_count": 5,
+  "facts": [
+    {
+      "id": "poly_eval_zero",
+      "lean_name": "MachLib.PolynomialEvidence.Poly.eval_zero",
+      "statement": "eval zero x = 0",
+      "meaning": "The explicit zero polynomial evaluates to zero at every input.",
+      "evidence_class": "MACHLIB_CHECKED"
+    },
+    {
+      "id": "poly_eval_var",
+      "lean_name": "MachLib.PolynomialEvidence.Poly.eval_var",
+      "statement": "eval var x = x",
+      "meaning": "The variable polynomial evaluates to the supplied input.",
+      "evidence_class": "MACHLIB_CHECKED"
+    },
+    {
+      "id": "linear_factor_root",
+      "lean_name": "MachLib.PolynomialEvidence.Poly.eval_linearFactor_at_root",
+      "statement": "eval (x - r) at r = 0",
+      "meaning": "A linear factor vanishes at its named root.",
+      "evidence_class": "MACHLIB_CHECKED"
+    },
+    {
+      "id": "factor_mul_root",
+      "lean_name": "MachLib.PolynomialEvidence.Poly.eval_factorMul_at_root",
+      "statement": "eval ((x - r) * q) at r = 0",
+      "meaning": "Any polynomial multiplied by a vanishing factor vanishes at that root.",
+      "evidence_class": "MACHLIB_CHECKED"
+    },
+    {
+      "id": "repeated_factor_root",
+      "lean_name": "MachLib.PolynomialEvidence.Poly.eval_repeatedFactor_at_root",
+      "statement": "eval ((x - r) * (x - r)) at r = 0",
+      "meaning": "A repeated linear factor also vanishes at its named root.",
+      "evidence_class": "MACHLIB_CHECKED"
+    }
+  ],
+  "analytic_identity_theorem_status": "BLOCKED_NEEDS_ANALYTIC_SUBSTRATE",
+  "boundaries": {
+    "public_ready": false,
+    "marketplace_ready": false,
+    "public_theorem_claim": false,
+    "package_publish_performed": false
+  }
+}

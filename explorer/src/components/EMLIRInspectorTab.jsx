@@ -1,4 +1,5 @@
 import model from "../data/eml_ir_inspector_model.json";
+import polynomialEvidence from "../data/machlib_polynomial_evidence_internal_card.json";
 import { useState } from "react";
 
 const C = {
@@ -275,6 +276,62 @@ export default function EMLIRInspectorTab() {
             fontSize: 10,
             lineHeight: 1.6,
           }}>{best.lowering.python_source}</pre>
+        </div>
+      </div>
+
+      <div style={{
+        background: C.surface,
+        border: `1px solid ${C.border}`,
+        borderRadius: 8,
+        padding: 14,
+        marginTop: 14,
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 10 }}>
+          <div>
+            <div style={{ color: C.accent, fontSize: 13, fontWeight: 700 }}>{polynomialEvidence.title}</div>
+            <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>{polynomialEvidence.summary}</div>
+          </div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            <Chip tone={C.warn}>{polynomialEvidence.status}</Chip>
+            <Chip tone={C.green}>{polynomialEvidence.fact_count} checked facts</Chip>
+            <Chip tone={C.warn}>{polynomialEvidence.analytic_identity_theorem_status}</Chip>
+          </div>
+        </div>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+          gap: 8,
+        }}>
+          {polynomialEvidence.facts.map((fact) => (
+            <div key={fact.id} style={{
+              background: C.bg,
+              border: `1px solid ${C.border}`,
+              borderRadius: 7,
+              padding: 10,
+            }}>
+              <div style={{ color: C.green, fontSize: 10, fontWeight: 700, marginBottom: 5 }}>
+                {fact.evidence_class}
+              </div>
+              <div style={{ color: C.text, fontSize: 11, fontWeight: 700, marginBottom: 5 }}>
+                {fact.statement}
+              </div>
+              <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.6, marginBottom: 6 }}>
+                {fact.meaning}
+              </div>
+              <div style={{ color: C.blue, fontSize: 9, wordBreak: "break-word" }}>
+                {fact.lean_name}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{
+          marginTop: 10,
+          color: C.muted,
+          fontSize: 10,
+          lineHeight: 1.7,
+        }}>
+          Internal evidence only. This panel does not claim analytic continuation, infinite zero-set behavior,
+          public theorem status, package publishing, or marketplace readiness.
         </div>
       </div>
     </div>
