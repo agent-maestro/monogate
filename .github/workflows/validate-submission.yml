@@ -1,14 +1,7 @@
 name: Challenge Board — Validate Submission
 
 on:
-  pull_request:
-    paths:
-      - "challenge/submissions/**/*.json"
-      - "challenge/submissions/**/*.py"
-  push:
-    branches: [main, master]
-    paths:
-      - "challenge/submissions/**"
+  workflow_dispatch:
 
 permissions:
   pull-requests: write

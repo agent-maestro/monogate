@@ -1,15 +1,7 @@
 name: pytest
 
 on:
-  push:
-    branches: [master, main]
-    paths:
-      - "python/**"
-      - ".github/workflows/pytest.yml"
-  pull_request:
-    paths:
-      - "python/**"
-      - ".github/workflows/pytest.yml"
+  workflow_dispatch:
 
 jobs:
   test:

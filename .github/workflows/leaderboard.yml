@@ -1,14 +1,6 @@
 name: Symbolic Regression Leaderboard
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - "python/monogate/leaderboard.py"
-      - "python/monogate/search/**"
-      - "python/scripts/update_leaderboard.py"
-  schedule:
-    - cron: "0 4 * * *"   # daily at 04:00 UTC
   workflow_dispatch:
     inputs:
       n_sim:
