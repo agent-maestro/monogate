@@ -72,7 +72,7 @@
           "fingerprint": "('op', 'ln', (('var', 'x'),))"
         }
       ],
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 + _t2)  # shared add, reused 2x\n    _t1 = BEST.exp(x)  # shared exp, reused 2x\n    _t2 = BEST.ln(x)  # shared ln, reused 2x\n    return (_t0 * _t0)",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t1 = BEST.exp(x)  # shared exp, reused 2x\n    _t2 = BEST.ln(x)  # shared ln, reused 2x\n    _t0 = (_t1 + _t2)  # shared add, reused 2x\n    return (_t0 * _t0)",
       "boundary": {
         "expression_level_only": true,
         "canonical_row_table_changed": false,
@@ -118,7 +118,7 @@
           "fingerprint": "('op', 'neg', (('var', 'x'),))"
         }
       ],
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (1 + _t1)  # shared add, reused 2x\n    _t1 = BEST.exp(_t2)  # shared exp, reused 3x\n    _t2 = BEST.neg(x)  # shared neg, reused 3x\n    return (BEST.div(1, _t0) + BEST.div(_t1, _t0))",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t2 = BEST.neg(x)  # shared neg, reused 3x\n    _t1 = BEST.exp(_t2)  # shared exp, reused 3x\n    _t0 = (1 + _t1)  # shared add, reused 2x\n    return (BEST.div(1, _t0) + BEST.div(_t1, _t0))",
       "boundary": {
         "expression_level_only": true,
         "canonical_row_table_changed": false,
@@ -180,7 +180,7 @@
           "fingerprint": "('op', 'exp', (('var', 'c'),))"
         }
       ],
-      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(a, b, c):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 + _t4)  # shared add, reused 2x\n    _t1 = (_t2 + _t3)  # shared add, reused 2x\n    _t2 = BEST.exp(a)  # shared exp, reused 3x\n    _t3 = BEST.exp(b)  # shared exp, reused 3x\n    _t4 = BEST.exp(c)  # shared exp, reused 2x\n    return (BEST.div(_t2, _t0) + BEST.div(_t3, _t0))",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(a, b, c):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t2 = BEST.exp(a)  # shared exp, reused 3x\n    _t3 = BEST.exp(b)  # shared exp, reused 3x\n    _t4 = BEST.exp(c)  # shared exp, reused 2x\n    _t1 = (_t2 + _t3)  # shared add, reused 2x\n    _t0 = (_t1 + _t4)  # shared add, reused 2x\n    return (BEST.div(_t2, _t0) + BEST.div(_t3, _t0))",
       "boundary": {
         "expression_level_only": true,
         "canonical_row_table_changed": false,
