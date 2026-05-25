@@ -19,7 +19,7 @@ PY      := cd python && $(PYTHON)
 PYTEST  := cd python && $(PYTHON) -m pytest
 PAPER   := cd python/paper && pdflatex
 
-.PHONY: help test test-new reproduce-n11 reproduce-all \
+.PHONY: help test test-new superbest-check explorer-build reproduce-n11 reproduce-all \
         paper theory docker-build docker-run \
         clean lint version-check
 
@@ -31,6 +31,8 @@ help:
 	@echo "─────────────────────────────────────────────────────"
 	@echo "  make test            Run full test suite (662 tests)"
 	@echo "  make test-new        Run only v0.10.0 new tests"
+	@echo "  make superbest-check Check canonical SuperBEST table/public surfaces"
+	@echo "  make explorer-build  Install locked Explorer deps and build"
 	@echo "  make reproduce-n11   Verify N=11 exhaustive search"
 	@echo "  make reproduce-all   All reproducibility checks"
 	@echo "  make paper           Compile preprint.tex → PDF"
@@ -53,6 +55,21 @@ test-new:
 test-search:
 	$(PYTEST) tests/test_mcts.py tests/test_beam.py -v --tb=short 2>/dev/null || \
 	$(PYTEST) tests/ -k "mcts or beam or search" -v --tb=short
+
+superbest-check:
+	@echo "── SuperBEST canonical surface sync check ──"
+	PYTHONPATH=python $(PYTHON) python/scripts/sync_superbest_canonical.py --strict
+	@echo "── SuperBEST regression tests ──"
+	PYTHONPATH=python $(PYTHON) -m pytest -q \
+	    python/tests/test_superbest_canonical_sync.py \
+	    python/tests/test_capability_card_cli.py \
+	    python/tests/test_best_routing.py \
+	    python/tests/test_predict_cost.py
+	@echo "── Explorer build check ──"
+	cd explorer && npm ci && npm run build
+
+explorer-build:
+	cd explorer && npm ci && npm run build
 
 # ── Reproducibility ────────────────────────────────────────────────────────────
 

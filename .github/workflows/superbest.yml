@@ -1,0 +1,65 @@
+name: SuperBEST Surface Drift
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - "Makefile"
+      - "python/monogate/superbest.py"
+      - "python/scripts/sync_superbest_canonical.py"
+      - "python/tests/test_superbest_canonical_sync.py"
+      - "python/tests/test_capability_card_cli.py"
+      - "python/tests/test_best_routing.py"
+      - "python/tests/test_predict_cost.py"
+      - "python/results/superbest_v5_table.json"
+      - "python/results/superbest_frontier_queue_2026_05_24.json"
+      - "blog/src/data/superbest.json"
+      - "capability_card_public.json"
+      - "blog/public/capability_card.json"
+      - "blog/public/.well-known/capcard.json"
+      - "explorer/**"
+      - ".github/workflows/superbest.yml"
+  pull_request:
+    paths:
+      - "Makefile"
+      - "python/monogate/superbest.py"
+      - "python/scripts/sync_superbest_canonical.py"
+      - "python/tests/test_superbest_canonical_sync.py"
+      - "python/tests/test_capability_card_cli.py"
+      - "python/tests/test_best_routing.py"
+      - "python/tests/test_predict_cost.py"
+      - "python/results/superbest_v5_table.json"
+      - "python/results/superbest_frontier_queue_2026_05_24.json"
+      - "blog/src/data/superbest.json"
+      - "capability_card_public.json"
+      - "blog/public/capability_card.json"
+      - "blog/public/.well-known/capcard.json"
+      - "explorer/**"
+      - ".github/workflows/superbest.yml"
+
+jobs:
+  superbest-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: explorer/package-lock.json
+
+      - name: Install Python package + dev deps
+        working-directory: python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run SuperBEST surface drift check
+        run: make superbest-check

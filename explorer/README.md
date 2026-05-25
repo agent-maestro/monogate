@@ -65,9 +65,31 @@ pow(2, 10);      // 1024
 ## Run locally
 
 ```bash
-npm install
+npm ci
 npm run dev
 # → http://localhost:5173
+```
+
+## Validate the production build
+
+The Explorer has its own lockfile. If `vite` is missing, install the locked
+local dependencies before building:
+
+```bash
+npm ci
+npm run build
+```
+
+From the repository root, the equivalent check is:
+
+```bash
+make explorer-build
+```
+
+The broader SuperBEST surface drift check is:
+
+```bash
+make superbest-check
 ```
 
 ## Tech

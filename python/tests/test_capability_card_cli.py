@@ -39,6 +39,14 @@ def isolated_card(tmp_path: Path, canonical_card: dict, monkeypatch: pytest.Monk
     with open(tmp_card, "w", encoding="utf-8") as f:
         json.dump(canonical_card, f, indent=2)
     monkeypatch.setattr(cc, "_CARD_PATH", tmp_card)
+    monkeypatch.setattr(
+        cc,
+        "_PUBLIC_MIRRORS",
+        (
+            tmp_path / "blog_public_capability_card.json",
+            tmp_path / "well_known_capcard.json",
+        ),
+    )
     return tmp_card
 
 
