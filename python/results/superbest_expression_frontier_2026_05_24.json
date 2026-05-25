@@ -1,0 +1,537 @@
+{
+  "best_case_id": "attention_three_logits_three_outputs",
+  "best_dag_vs_tree_eml_savings_pct": 93.4,
+  "boundary": {
+    "canonical_row_table_changed": false,
+    "compiler_integration_implemented": false,
+    "expression_level_only": true,
+    "new_row_optimality_claim": false,
+    "open_problem_solved_claim": false,
+    "public_theorem_claim": false
+  },
+  "case_count": 9,
+  "families": [
+    "polynomial_basis_reuse",
+    "rational_shared_denominator",
+    "sigmoid_logistic",
+    "softmax_attention"
+  ],
+  "family_summary": {
+    "polynomial_basis_reuse": {
+      "best_case_id": "polynomial_basis_degree5",
+      "best_dag_vs_tree_eml_savings_pct": 93.9,
+      "case_count": 2,
+      "max_extra_superbest_savings_nodes": 6,
+      "note": "Useful compiler-lowering target for x^2/x^3 style basis reuse."
+    },
+    "rational_shared_denominator": {
+      "best_case_id": "rational_shifted_basis",
+      "best_dag_vs_tree_eml_savings_pct": 88.9,
+      "case_count": 2,
+      "max_extra_superbest_savings_nodes": 8,
+      "note": "Good frontier for repeated denominators; savings are smaller than softmax but common in real formulas."
+    },
+    "sigmoid_logistic": {
+      "best_case_id": "sigmoid_value_and_derivative",
+      "best_dag_vs_tree_eml_savings_pct": 91.2,
+      "case_count": 2,
+      "max_extra_superbest_savings_nodes": 14,
+      "note": "Strong frontier when the sigmoid value, exp(-x), or 1+exp(-x) is consumed more than once."
+    },
+    "softmax_attention": {
+      "best_case_id": "attention_three_logits_three_outputs",
+      "best_dag_vs_tree_eml_savings_pct": 93.4,
+      "case_count": 3,
+      "max_extra_superbest_savings_nodes": 26,
+      "note": "Highest-value frontier. Repeated exp(logit) and normalizer reuse compound quickly as outputs increase."
+    }
+  },
+  "frontier_id": "superbest_expression_frontier_2026_05_24",
+  "max_extra_superbest_savings_nodes": 26,
+  "ranked_results": [
+    {
+      "boundary": {
+        "canonical_row_table_changed": false,
+        "expression_level_only": true,
+        "new_row_optimality_claim": false,
+        "open_problem_solved_claim": false,
+        "public_theorem_claim": false
+      },
+      "case_id": "attention_three_logits_three_outputs",
+      "dag_eml_nodes": 131,
+      "dag_superbest_nodes": 20,
+      "dag_vs_tree_eml_savings_pct": 93.4,
+      "expression": "exp(q*k1) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k2) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k3) / (exp(q*k1) + exp(q*k2) + exp(q*k3))",
+      "extra_superbest_savings_nodes": 26,
+      "family": "softmax_attention",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(k1, k2, k3, q):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 + _t4)  # shared add, reused 3x\n    _t1 = (_t2 + _t3)  # shared add, reused 3x\n    _t2 = BEST.exp(_t5)  # shared exp, reused 4x\n    _t3 = BEST.exp(_t6)  # shared exp, reused 4x\n    _t4 = BEST.exp(_t7)  # shared exp, reused 4x\n    _t5 = (k1 * q)  # shared mul, reused 4x\n    _t6 = (k2 * q)  # shared mul, reused 4x\n    _t7 = (k3 * q)  # shared mul, reused 4x\n    return ((BEST.div(_t2, _t0) + BEST.div(_t3, _t0)) + BEST.div(_t4, _t0))",
+      "shared_nodes": [
+        {
+          "count": 3,
+          "eml_cost": 11,
+          "fingerprint": "('op', 'add', (('op', 'add', (('op', 'exp', (('op', 'mul', (('var', 'k1'), ('var', 'q'))),)), ('op', 'exp', (('op', 'mul', (('var', 'k2'), ('var', 'q'))),)))), ('op', 'exp', (('op', 'mul', (('var', 'k3'), ('var', 'q'))),))))",
+          "op": "add",
+          "superbest_cost": 2,
+          "temp": "_t0"
+        },
+        {
+          "count": 3,
+          "eml_cost": 11,
+          "fingerprint": "('op', 'add', (('op', 'exp', (('op', 'mul', (('var', 'k1'), ('var', 'q'))),)), ('op', 'exp', (('op', 'mul', (('var', 'k2'), ('var', 'q'))),))))",
+          "op": "add",
+          "superbest_cost": 2,
+          "temp": "_t1"
+        },
+        {
+          "count": 4,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'mul', (('var', 'k1'), ('var', 'q'))),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t2"
+        },
+        {
+          "count": 4,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'mul', (('var', 'k2'), ('var', 'q'))),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t3"
+        },
+        {
+          "count": 4,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'mul', (('var', 'k3'), ('var', 'q'))),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t4"
+        },
+        {
+          "count": 4,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'k1'), ('var', 'q')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t5"
+        },
+        {
+          "count": 4,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'k2'), ('var', 'q')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t6"
+        },
+        {
+          "count": 4,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'k3'), ('var', 'q')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t7"
+        }
+      ],
+      "tree_eml_nodes": 301,
+      "tree_superbest_nodes": 46,
+      "why": "Full three-term softmax sketch; strongest DAG frontier in this pass."
+    },
+    {
+      "boundary": {
+        "canonical_row_table_changed": false,
+        "expression_level_only": true,
+        "new_row_optimality_claim": false,
+        "open_problem_solved_claim": false,
+        "public_theorem_claim": false
+      },
+      "case_id": "attention_three_logits_two_outputs",
+      "dag_eml_nodes": 105,
+      "dag_superbest_nodes": 16,
+      "dag_vs_tree_eml_savings_pct": 91.9,
+      "expression": "exp(q*k1) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k2) / (exp(q*k1) + exp(q*k2) + exp(q*k3))",
+      "extra_superbest_savings_nodes": 14,
+      "family": "softmax_attention",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(k1, k2, k3, q):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 + _t4)  # shared add, reused 2x\n    _t1 = (_t2 + _t3)  # shared add, reused 2x\n    _t2 = BEST.exp(_t5)  # shared exp, reused 3x\n    _t3 = BEST.exp(_t6)  # shared exp, reused 3x\n    _t4 = BEST.exp(_t7)  # shared exp, reused 2x\n    _t5 = (k1 * q)  # shared mul, reused 3x\n    _t6 = (k2 * q)  # shared mul, reused 3x\n    _t7 = (k3 * q)  # shared mul, reused 2x\n    return (BEST.div(_t2, _t0) + BEST.div(_t3, _t0))",
+      "shared_nodes": [
+        {
+          "count": 2,
+          "eml_cost": 11,
+          "fingerprint": "('op', 'add', (('op', 'add', (('op', 'exp', (('op', 'mul', (('var', 'k1'), ('var', 'q'))),)), ('op', 'exp', (('op', 'mul', (('var', 'k2'), ('var', 'q'))),)))), ('op', 'exp', (('op', 'mul', (('var', 'k3'), ('var', 'q'))),))))",
+          "op": "add",
+          "superbest_cost": 2,
+          "temp": "_t0"
+        },
+        {
+          "count": 2,
+          "eml_cost": 11,
+          "fingerprint": "('op', 'add', (('op', 'exp', (('op', 'mul', (('var', 'k1'), ('var', 'q'))),)), ('op', 'exp', (('op', 'mul', (('var', 'k2'), ('var', 'q'))),))))",
+          "op": "add",
+          "superbest_cost": 2,
+          "temp": "_t1"
+        },
+        {
+          "count": 3,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'mul', (('var', 'k1'), ('var', 'q'))),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t2"
+        },
+        {
+          "count": 3,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'mul', (('var', 'k2'), ('var', 'q'))),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t3"
+        },
+        {
+          "count": 2,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'mul', (('var', 'k3'), ('var', 'q'))),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t4"
+        },
+        {
+          "count": 3,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'k1'), ('var', 'q')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t5"
+        },
+        {
+          "count": 3,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'k2'), ('var', 'q')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t6"
+        },
+        {
+          "count": 2,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'k3'), ('var', 'q')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t7"
+        }
+      ],
+      "tree_eml_nodes": 197,
+      "tree_superbest_nodes": 30,
+      "why": "Three-logit softmax with two returned terms; normalizer reuse dominates."
+    },
+    {
+      "boundary": {
+        "canonical_row_table_changed": false,
+        "expression_level_only": true,
+        "new_row_optimality_claim": false,
+        "open_problem_solved_claim": false,
+        "public_theorem_claim": false
+      },
+      "case_id": "sigmoid_value_and_derivative",
+      "dag_eml_nodes": 65,
+      "dag_superbest_nodes": 12,
+      "dag_vs_tree_eml_savings_pct": 91.2,
+      "expression": "1 / (1 + exp(-x)) + (1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))",
+      "extra_superbest_savings_nodes": 14,
+      "family": "sigmoid_logistic",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = BEST.div(1, _t1)  # shared div, reused 3x\n    _t1 = (1 + _t2)  # shared add, reused 3x\n    _t2 = BEST.exp(_t3)  # shared exp, reused 3x\n    _t3 = BEST.neg(x)  # shared neg, reused 3x\n    return (_t0 + (_t0 * (1 - _t0)))",
+      "shared_nodes": [
+        {
+          "count": 3,
+          "eml_cost": 15,
+          "fingerprint": "('op', 'div', (('const', '1'), ('op', 'add', (('const', '1'), ('op', 'exp', (('op', 'neg', (('var', 'x'),)),))))))",
+          "op": "div",
+          "superbest_cost": 2,
+          "temp": "_t0"
+        },
+        {
+          "count": 3,
+          "eml_cost": 11,
+          "fingerprint": "('op', 'add', (('const', '1'), ('op', 'exp', (('op', 'neg', (('var', 'x'),)),))))",
+          "op": "add",
+          "superbest_cost": 2,
+          "temp": "_t1"
+        },
+        {
+          "count": 3,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'neg', (('var', 'x'),)),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t2"
+        },
+        {
+          "count": 3,
+          "eml_cost": 9,
+          "fingerprint": "('op', 'neg', (('var', 'x'),))",
+          "op": "neg",
+          "superbest_cost": 2,
+          "temp": "_t3"
+        }
+      ],
+      "tree_eml_nodes": 137,
+      "tree_superbest_nodes": 26,
+      "why": "Reuses sigmoid value and denominator across value-plus-derivative style expression."
+    },
+    {
+      "boundary": {
+        "canonical_row_table_changed": false,
+        "expression_level_only": true,
+        "new_row_optimality_claim": false,
+        "open_problem_solved_claim": false,
+        "public_theorem_claim": false
+      },
+      "case_id": "attention_two_logits_two_outputs",
+      "dag_eml_nodes": 80,
+      "dag_superbest_nodes": 12,
+      "dag_vs_tree_eml_savings_pct": 91.8,
+      "expression": "exp(q1*k1) / (exp(q1*k1) + exp(q1*k2)) + exp(q1*k2) / (exp(q1*k1) + exp(q1*k2))",
+      "extra_superbest_savings_nodes": 10,
+      "family": "softmax_attention",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(k1, k2, q1):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 + _t2)  # shared add, reused 2x\n    _t1 = BEST.exp(_t3)  # shared exp, reused 3x\n    _t2 = BEST.exp(_t4)  # shared exp, reused 3x\n    _t3 = (k1 * q1)  # shared mul, reused 3x\n    _t4 = (k2 * q1)  # shared mul, reused 3x\n    return (BEST.div(_t1, _t0) + BEST.div(_t2, _t0))",
+      "shared_nodes": [
+        {
+          "count": 2,
+          "eml_cost": 11,
+          "fingerprint": "('op', 'add', (('op', 'exp', (('op', 'mul', (('var', 'k1'), ('var', 'q1'))),)), ('op', 'exp', (('op', 'mul', (('var', 'k2'), ('var', 'q1'))),))))",
+          "op": "add",
+          "superbest_cost": 2,
+          "temp": "_t0"
+        },
+        {
+          "count": 3,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'mul', (('var', 'k1'), ('var', 'q1'))),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t1"
+        },
+        {
+          "count": 3,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'mul', (('var', 'k2'), ('var', 'q1'))),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t2"
+        },
+        {
+          "count": 3,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'k1'), ('var', 'q1')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t3"
+        },
+        {
+          "count": 3,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'k2'), ('var', 'q1')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t4"
+        }
+      ],
+      "tree_eml_nodes": 147,
+      "tree_superbest_nodes": 22,
+      "why": "Two-output attention sketch: repeated logits, exponentials, and normalizer."
+    },
+    {
+      "boundary": {
+        "canonical_row_table_changed": false,
+        "expression_level_only": true,
+        "new_row_optimality_claim": false,
+        "open_problem_solved_claim": false,
+        "public_theorem_claim": false
+      },
+      "case_id": "logistic_loss_pair",
+      "dag_eml_nodes": 63,
+      "dag_superbest_nodes": 11,
+      "dag_vs_tree_eml_savings_pct": 90.8,
+      "expression": "ln(1 + exp(-y*x)) + exp(-y*x) / (1 + exp(-y*x))",
+      "extra_superbest_savings_nodes": 10,
+      "family": "sigmoid_logistic",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x, y):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (1 + _t1)  # shared add, reused 2x\n    _t1 = BEST.exp(_t2)  # shared exp, reused 3x\n    _t2 = (_t3 * x)  # shared mul, reused 3x\n    _t3 = BEST.neg(y)  # shared neg, reused 3x\n    return (BEST.div(_t1, _t0) + BEST.ln(_t0))",
+      "shared_nodes": [
+        {
+          "count": 2,
+          "eml_cost": 11,
+          "fingerprint": "('op', 'add', (('const', '1'), ('op', 'exp', (('op', 'mul', (('op', 'neg', (('var', 'y'),)), ('var', 'x'))),))))",
+          "op": "add",
+          "superbest_cost": 2,
+          "temp": "_t0"
+        },
+        {
+          "count": 3,
+          "eml_cost": 1,
+          "fingerprint": "('op', 'exp', (('op', 'mul', (('op', 'neg', (('var', 'y'),)), ('var', 'x'))),))",
+          "op": "exp",
+          "superbest_cost": 1,
+          "temp": "_t1"
+        },
+        {
+          "count": 3,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('op', 'neg', (('var', 'y'),)), ('var', 'x')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t2"
+        },
+        {
+          "count": 3,
+          "eml_cost": 9,
+          "fingerprint": "('op', 'neg', (('var', 'y'),))",
+          "op": "neg",
+          "superbest_cost": 2,
+          "temp": "_t3"
+        }
+      ],
+      "tree_eml_nodes": 120,
+      "tree_superbest_nodes": 21,
+      "why": "Shares exp(-y*x) and the softplus denominator-like subtree."
+    },
+    {
+      "boundary": {
+        "canonical_row_table_changed": false,
+        "expression_level_only": true,
+        "new_row_optimality_claim": false,
+        "open_problem_solved_claim": false,
+        "public_theorem_claim": false
+      },
+      "case_id": "rational_shifted_basis",
+      "dag_eml_nodes": 82,
+      "dag_superbest_nodes": 14,
+      "dag_vs_tree_eml_savings_pct": 88.9,
+      "expression": "1 / (x + a) + ln(x + a) / (x + a) + exp(x + a) / (x + a)",
+      "extra_superbest_savings_nodes": 8,
+      "family": "rational_shared_denominator",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(a, x):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (a + x)  # shared add, reused 5x\n    return ((BEST.div(1, _t0) + BEST.div(BEST.ln(_t0), _t0)) + BEST.div(BEST.exp(_t0), _t0))",
+      "shared_nodes": [
+        {
+          "count": 5,
+          "eml_cost": 11,
+          "fingerprint": "('op', 'add', (('var', 'a'), ('var', 'x')))",
+          "op": "add",
+          "superbest_cost": 2,
+          "temp": "_t0"
+        }
+      ],
+      "tree_eml_nodes": 126,
+      "tree_superbest_nodes": 22,
+      "why": "Shifted denominator reused by reciprocal, log, and exp terms."
+    },
+    {
+      "boundary": {
+        "canonical_row_table_changed": false,
+        "expression_level_only": true,
+        "new_row_optimality_claim": false,
+        "open_problem_solved_claim": false,
+        "public_theorem_claim": false
+      },
+      "case_id": "rational_three_terms_shared_den",
+      "dag_eml_nodes": 99,
+      "dag_superbest_nodes": 16,
+      "dag_vs_tree_eml_savings_pct": 86.0,
+      "expression": "(x + 1) / (x - 1) + (x * x) / (x - 1) + ln(x - 1) / (x - 1)",
+      "extra_superbest_savings_nodes": 6,
+      "family": "rational_shared_denominator",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (x - 1)  # shared sub, reused 4x\n    return ((BEST.div((1 + x), _t0) + BEST.div((x * x), _t0)) + BEST.div(BEST.ln(_t0), _t0))",
+      "shared_nodes": [
+        {
+          "count": 4,
+          "eml_cost": 5,
+          "fingerprint": "('op', 'sub', (('var', 'x'), ('const', '1')))",
+          "op": "sub",
+          "superbest_cost": 2,
+          "temp": "_t0"
+        }
+      ],
+      "tree_eml_nodes": 114,
+      "tree_superbest_nodes": 22,
+      "why": "Classic shared denominator reuse across rational/log-rational terms."
+    },
+    {
+      "boundary": {
+        "canonical_row_table_changed": false,
+        "expression_level_only": true,
+        "new_row_optimality_claim": false,
+        "open_problem_solved_claim": false,
+        "public_theorem_claim": false
+      },
+      "case_id": "polynomial_basis_degree5",
+      "dag_eml_nodes": 85,
+      "dag_superbest_nodes": 10,
+      "dag_vs_tree_eml_savings_pct": 93.9,
+      "expression": "(x * x) + (x * x) * y + (x * x) * (x * x) + (x * x) * (x * x) * z",
+      "extra_superbest_savings_nodes": 6,
+      "family": "polynomial_basis_reuse",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x, y, z):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 * _t1)  # shared mul, reused 2x\n    _t1 = (x * x)  # shared mul, reused 6x\n    return ((((_t1 * y) + _t1) + _t0) + (_t0 * z))",
+      "shared_nodes": [
+        {
+          "count": 2,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('op', 'mul', (('var', 'x'), ('var', 'x'))), ('op', 'mul', (('var', 'x'), ('var', 'x')))))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t0"
+        },
+        {
+          "count": 6,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'x'), ('var', 'x')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t1"
+        }
+      ],
+      "tree_eml_nodes": 163,
+      "tree_superbest_nodes": 16,
+      "why": "Shares x^2 and x^4-like basis terms across polynomial features."
+    },
+    {
+      "boundary": {
+        "canonical_row_table_changed": false,
+        "expression_level_only": true,
+        "new_row_optimality_claim": false,
+        "open_problem_solved_claim": false,
+        "public_theorem_claim": false
+      },
+      "case_id": "poly_features_shared_square_cube",
+      "dag_eml_nodes": 85,
+      "dag_superbest_nodes": 10,
+      "dag_vs_tree_eml_savings_pct": 92.7,
+      "expression": "(x * x) + (x * x) * x + (x * x) * y + (x * x) * x * z",
+      "extra_superbest_savings_nodes": 4,
+      "family": "polynomial_basis_reuse",
+      "python_snippet": "from monogate import BEST\n\ndef optimized_expr(x, y, z):\n    \"\"\"DAG-aware SuperBEST sketch; expression-level sharing only.\"\"\"\n    _t0 = (_t1 * x)  # shared mul, reused 2x\n    _t1 = (x * x)  # shared mul, reused 4x\n    return (((_t0 + _t1) + (_t1 * y)) + (_t0 * z))",
+      "shared_nodes": [
+        {
+          "count": 2,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('op', 'mul', (('var', 'x'), ('var', 'x'))), ('var', 'x')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t0"
+        },
+        {
+          "count": 4,
+          "eml_cost": 13,
+          "fingerprint": "('op', 'mul', (('var', 'x'), ('var', 'x')))",
+          "op": "mul",
+          "superbest_cost": 1,
+          "temp": "_t1"
+        }
+      ],
+      "tree_eml_nodes": 137,
+      "tree_superbest_nodes": 14,
+      "why": "Shares x^2 and x^3-like factors across feature terms."
+    }
+  ],
+  "recommended_next_build": {
+    "implementation_note": "DAG sharing should run before cost reporting and code export; canonical row costs should remain unchanged.",
+    "name": "SUPERBEST_DAG_LOWERING_PASS_DESIGN",
+    "why": "Savings are now dominated by expression DAG lowering, especially softmax/attention normalizer reuse."
+  },
+  "status": "SUPERBEST_EXPRESSION_FRONTIER_COMPLETE"
+}
