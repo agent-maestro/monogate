@@ -19,7 +19,7 @@ PY      := cd python && $(PYTHON)
 PYTEST  := cd python && $(PYTHON) -m pytest
 PAPER   := cd python/paper && pdflatex
 
-.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-primitive-frontier explorer-build reproduce-n11 reproduce-all \
+.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-lowering-ui superbest-primitive-frontier explorer-build reproduce-n11 reproduce-all \
         paper theory docker-build docker-run \
         clean lint version-check
 
@@ -36,6 +36,7 @@ help:
 	@echo "  make superbest-dag-optimizer Run SuperBEST DAG optimizer prototype checks"
 	@echo "  make superbest-expression-frontier Run targeted expression frontier exploration"
 	@echo "  make superbest-dag-lowering Run compiler-style SuperBEST DAG lowering checks"
+	@echo "  make superbest-lowering-ui Smoke-test Explorer DAG lowering playground"
 	@echo "  make superbest-primitive-frontier Run bounded primitive-row frontier harness"
 	@echo "  make explorer-build  Install locked Explorer deps and build"
 	@echo "  make reproduce-n11   Verify N=11 exhaustive search"
@@ -91,6 +92,10 @@ superbest-expression-frontier:
 superbest-dag-lowering:
 	PYTHONPATH=python $(PYTHON) python/scripts/superbest_dag_lowering.py --strict
 	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_dag_lowering.py python/tests/test_superbest_dag_optimizer.py python/tests/test_superbest_expression_frontier.py
+
+superbest-lowering-ui:
+	node --input-type=module -e "import { lowerDagExpression, defaultDagLoweringPreset } from './explorer/src/superbest.js'; const r = lowerDagExpression(defaultDagLoweringPreset().expression); if (r.status !== 'LOWERED_PRESET' || r.treeSuperbestNodes !== 46 || r.dagSuperbestNodes !== 20 || !r.pythonSource.includes('def lowered_expr') || !r.javascriptSource.includes('function loweredExpr')) throw new Error('Explorer DAG lowering smoke failed'); console.log('SUPERBEST_EXPLORER_LOWERING_SMOKE_OK')"
+	cd explorer && npm run build
 
 superbest-primitive-frontier:
 	PYTHONPATH=python $(PYTHON) python/scripts/superbest_primitive_frontier_harness.py --strict

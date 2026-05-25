@@ -2,7 +2,15 @@
 // "Run All" to compute 25 preset savings. Shareable, reproducible.
 
 import { useState, useMemo } from "react";
-import { runBenchmarks, runDagBenchmarks, savings } from "../superbest.js";
+import {
+  DAG_BENCHMARKS,
+  DAG_LOWERING_PRESETS,
+  defaultDagLoweringPreset,
+  lowerDagExpression,
+  runBenchmarks,
+  runDagBenchmarks,
+  savings,
+} from "../superbest.js";
 
 const C = {
   bg: "#07080f", surface: "#0d0e1c", border: "#191b2e",
@@ -60,11 +68,15 @@ export default function BenchmarkTab() {
   const [ran, setRan] = useState(false);
   const [copied, setCopied] = useState(false);
   const [mode, setMode] = useState("tree");
+  const [lowerInput, setLowerInput] = useState(defaultDagLoweringPreset().expression);
+  const [codeLang, setCodeLang] = useState("python");
+  const [copiedLowering, setCopiedLowering] = useState(false);
   const treeMode = mode === "tree";
   const results = useMemo(() => {
     if (!ran) return [];
     return treeMode ? runBenchmarks() : runDagBenchmarks();
   }, [ran, treeMode]);
+  const lowered = useMemo(() => lowerDagExpression(lowerInput), [lowerInput]);
 
   const avgSavings = useMemo(() => {
     if (!results.length) return null;
@@ -107,6 +119,15 @@ export default function BenchmarkTab() {
     });
   }
 
+  function copyLoweredSource() {
+    const source = codeLang === "python" ? lowered.pythonSource : lowered.javascriptSource;
+    if (!source) return;
+    navigator.clipboard.writeText(source).then(() => {
+      setCopiedLowering(true);
+      setTimeout(() => setCopiedLowering(false), 2500);
+    });
+  }
+
   return (
     <div style={{ color: C.text }}>
       {/* Header */}
@@ -141,7 +162,7 @@ export default function BenchmarkTab() {
             RUN ALL BENCHMARKS
           </button>
           <div style={{ fontSize: 9, color: C.muted, marginTop: 10 }}>
-            {treeMode ? "25 tree expressions" : "8 DAG-sharing cases"} · instant · no network · reproducible
+            {treeMode ? "25 tree expressions" : `${DAG_BENCHMARKS.length} DAG-sharing cases`} · instant · no network · reproducible
           </div>
         </div>
       ) : (
@@ -235,6 +256,159 @@ export default function BenchmarkTab() {
               {copied ? "copied ✓" : "copy results (CSV)"}
             </button>
           </div>
+
+          {!treeMode && (
+            <div style={{
+              background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8,
+              padding: 14, marginTop: 12, marginBottom: 12,
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 10 }}>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: C.accent, marginBottom: 4 }}>
+                    DAG Lowering Playground
+                  </div>
+                  <div style={{ fontSize: 9, color: C.muted, lineHeight: 1.6, maxWidth: 720 }}>
+                    Paste or pick a known expression fixture to see shared temporaries before cost
+                    reporting. The browser demo uses static lowering fixtures; arbitrary parsing
+                    stays in the Python CLI.
+                  </div>
+                </div>
+                <div style={{ fontSize: 9, color: C.blue, fontFamily: "'Space Mono',monospace", alignSelf: "flex-start" }}>
+                  python/scripts/superbest_dag_lowering.py
+                </div>
+              </div>
+
+              <textarea
+                value={lowerInput}
+                onChange={(event) => setLowerInput(event.target.value)}
+                rows={3}
+                spellCheck={false}
+                style={{
+                  width: "100%", resize: "vertical", boxSizing: "border-box",
+                  background: "#080a13", border: `1px solid ${C.border}`, borderRadius: 6,
+                  color: C.text, padding: 10, fontSize: 10, lineHeight: 1.5,
+                  fontFamily: "'Space Mono',monospace", marginBottom: 8,
+                }}
+              />
+
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 12 }}>
+                {DAG_LOWERING_PRESETS.map(preset => (
+                  <button
+                    key={preset.id}
+                    onClick={() => setLowerInput(preset.expression)}
+                    style={{
+                      fontSize: 9, padding: "5px 8px", borderRadius: 5, cursor: "pointer",
+                      background: lowered.id === preset.id ? "rgba(106,176,245,0.12)" : "rgba(255,255,255,0.03)",
+                      border: `1px solid ${lowered.id === preset.id ? C.blue : C.border}`,
+                      color: lowered.id === preset.id ? C.blue : C.muted,
+                    }}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+
+              {lowered.status === "LOWERED_PRESET" ? (
+                <>
+                  <div style={{
+                    display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                    gap: 8, marginBottom: 12,
+                  }}>
+                    {[
+                      { label: "Tree BEST", value: `${lowered.treeSuperbestNodes}n`, color: C.muted },
+                      { label: "DAG BEST", value: `${lowered.dagSuperbestNodes}n`, color: C.green },
+                      { label: "Extra saved", value: `${lowered.extraSuperbestSavingsNodes}n`, color: C.accent },
+                      { label: "Temps", value: lowered.temporaryCount, color: C.blue },
+                    ].map(item => (
+                      <div key={item.label} style={{
+                        border: `1px solid ${C.border}`, borderRadius: 6, padding: "10px 8px",
+                        background: "rgba(255,255,255,0.02)", textAlign: "center",
+                      }}>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: item.color }}>{item.value}</div>
+                        <div style={{ fontSize: 8, color: C.muted, marginTop: 3, textTransform: "uppercase" }}>{item.label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1.05fr 1.2fr", gap: 12 }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: 9, color: C.accent, fontWeight: 700, marginBottom: 6 }}>
+                        Shared temporary plan
+                      </div>
+                      <div style={{ border: `1px solid ${C.border}`, borderRadius: 6, overflow: "hidden" }}>
+                        {lowered.temporaries.map((temp, index) => (
+                          <div key={temp.temp} style={{
+                            display: "grid", gridTemplateColumns: "44px 1fr 56px",
+                            gap: 8, alignItems: "center", padding: "6px 8px",
+                            borderBottom: index < lowered.temporaries.length - 1 ? `1px solid ${C.border}` : "none",
+                            background: index % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent",
+                          }}>
+                            <span style={{ fontSize: 10, color: C.blue, fontFamily: "'Space Mono',monospace" }}>
+                              {temp.temp}
+                            </span>
+                            <span style={{
+                              fontSize: 9, color: C.text, fontFamily: "'Space Mono',monospace",
+                              overflowWrap: "anywhere",
+                            }}>
+                              {temp.source}
+                            </span>
+                            <span style={{ fontSize: 8, color: C.muted, textAlign: "right" }}>
+                              reuse {temp.reuseCount}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ fontSize: 9, color: C.muted, lineHeight: 1.6, marginTop: 8 }}>
+                        {lowered.note}
+                      </div>
+                    </div>
+
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 6 }}>
+                        <div style={{ fontSize: 9, color: C.accent, fontWeight: 700 }}>Lowered code export</div>
+                        <div style={{ display: "flex", gap: 5 }}>
+                          <ModeButton active={codeLang === "python"} onClick={() => setCodeLang("python")}>Python</ModeButton>
+                          <ModeButton active={codeLang === "javascript"} onClick={() => setCodeLang("javascript")}>JS</ModeButton>
+                        </div>
+                      </div>
+                      <pre style={{
+                        margin: 0, minHeight: 190, maxHeight: 260, overflow: "auto",
+                        background: "#06070d", border: `1px solid ${C.border}`, borderRadius: 6,
+                        color: C.text, padding: 10, fontSize: 9, lineHeight: 1.55,
+                      }}>
+                        {codeLang === "python" ? lowered.pythonSource : lowered.javascriptSource}
+                      </pre>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 8 }}>
+                        <span style={{ fontSize: 8, color: C.muted, lineHeight: 1.5 }}>
+                          Canonical row costs are unchanged; this is expression-level sharing.
+                        </span>
+                        <button onClick={copyLoweredSource} style={{
+                          fontSize: 10, padding: "6px 10px", borderRadius: 4, cursor: "pointer",
+                          background: copiedLowering ? "rgba(94,196,122,0.12)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${copiedLowering ? C.green : C.border}`,
+                          color: copiedLowering ? C.green : C.muted,
+                          whiteSpace: "nowrap",
+                        }}>
+                          {copiedLowering ? "copied ✓" : "copy code"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div style={{
+                  border: `1px solid rgba(232,160,32,0.28)`, borderRadius: 6,
+                  background: "rgba(232,160,32,0.06)", color: C.accent,
+                  padding: 10, fontSize: 9, lineHeight: 1.7,
+                }}>
+                  {lowered.message} CLI path:{" "}
+                  <span style={{ fontFamily: "'Space Mono',monospace" }}>
+                    PYTHONPATH=python python python/scripts/superbest_dag_lowering.py "&lt;expr&gt;"
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Methodology */}
           <div style={{

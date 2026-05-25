@@ -398,3 +398,153 @@ export function runDagBenchmarks() {
     extraDagSavings: b.treeBest - b.dagBest,
   }));
 }
+
+// ── DAG lowering playground presets ──────────────────────────────────────────
+
+const LOWERING_BOUNDARY = {
+  expressionLevelOnly: true,
+  canonicalRowTableChanged: false,
+  newRowOptimalityClaim: false,
+  arbitraryBrowserParser: false,
+};
+
+export const DAG_LOWERING_PRESETS = [
+  {
+    id: "attention_three_logits_three_outputs",
+    label: "3-logit attention softmax",
+    expression: "exp(q*k1) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k2) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k3) / (exp(q*k1) + exp(q*k2) + exp(q*k3))",
+    args: ["k1", "k2", "k3", "q"],
+    treeEmlNodes: 301,
+    treeSuperbestNodes: 46,
+    dagSuperbestNodes: 20,
+    extraSuperbestSavingsNodes: 26,
+    temporaries: [
+      { temp: "_t5", source: "(k1 * q)", reuseCount: 4, superbestCost: 1 },
+      { temp: "_t6", source: "(k2 * q)", reuseCount: 4, superbestCost: 1 },
+      { temp: "_t7", source: "(k3 * q)", reuseCount: 4, superbestCost: 1 },
+      { temp: "_t2", source: "BEST.exp(_t5)", reuseCount: 4, superbestCost: 1 },
+      { temp: "_t3", source: "BEST.exp(_t6)", reuseCount: 4, superbestCost: 1 },
+      { temp: "_t4", source: "BEST.exp(_t7)", reuseCount: 4, superbestCost: 1 },
+      { temp: "_t1", source: "(_t2 + _t3)", reuseCount: 3, superbestCost: 2 },
+      { temp: "_t0", source: "(_t1 + _t4)", reuseCount: 3, superbestCost: 2 },
+    ],
+    finalExpr: "((BEST.div(_t2, _t0) + BEST.div(_t3, _t0)) + BEST.div(_t4, _t0))",
+    note: "Strongest current lowering fixture: repeated logits, exponentials, and softmax normalizer.",
+  },
+  {
+    id: "sigmoid_value_and_derivative",
+    label: "sigmoid value + derivative",
+    expression: "1 / (1 + exp(-x)) + (1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))",
+    args: ["x"],
+    treeEmlNodes: 137,
+    treeSuperbestNodes: 26,
+    dagSuperbestNodes: 12,
+    extraSuperbestSavingsNodes: 14,
+    temporaries: [
+      { temp: "_t3", source: "BEST.neg(x)", reuseCount: 3, superbestCost: 2 },
+      { temp: "_t2", source: "BEST.exp(_t3)", reuseCount: 3, superbestCost: 1 },
+      { temp: "_t1", source: "(1 + _t2)", reuseCount: 3, superbestCost: 2 },
+      { temp: "_t0", source: "BEST.div(1, _t1)", reuseCount: 3, superbestCost: 2 },
+    ],
+    finalExpr: "(_t0 + (_t0 * (1 - _t0)))",
+    note: "Reuses exp(-x), the denominator, and the sigmoid value.",
+  },
+  {
+    id: "repeat_exp_pair",
+    label: "exp(x) + exp(x)",
+    expression: "exp(x) + exp(x)",
+    args: ["x"],
+    treeEmlNodes: 13,
+    treeSuperbestNodes: 4,
+    dagSuperbestNodes: 3,
+    extraSuperbestSavingsNodes: 1,
+    temporaries: [
+      { temp: "_t0", source: "BEST.exp(x)", reuseCount: 2, superbestCost: 1 },
+    ],
+    finalExpr: "(_t0 + _t0)",
+    note: "Smallest CSE fixture: one shared exponential.",
+  },
+  {
+    id: "softmax_three_terms",
+    label: "single softmax term",
+    expression: "exp(x) / (exp(x) + exp(y) + exp(z))",
+    args: ["x", "y", "z"],
+    treeEmlNodes: 41,
+    treeSuperbestNodes: 10,
+    dagSuperbestNodes: 9,
+    extraSuperbestSavingsNodes: 1,
+    temporaries: [
+      { temp: "_t0", source: "BEST.exp(x)", reuseCount: 2, superbestCost: 1 },
+    ],
+    finalExpr: "BEST.div(_t0, ((_t0 + BEST.exp(y)) + BEST.exp(z)))",
+    note: "Single-output softmax term; stronger savings appear once several outputs share the normalizer.",
+  },
+];
+
+function normalizeExpression(expression) {
+  return expression
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replaceAll("math.exp", "exp")
+    .replaceAll("best.exp", "exp")
+    .replaceAll("best.div", "/")
+    .replaceAll("best.neg", "-");
+}
+
+function jsSourceForPreset(preset) {
+  const args = preset.args.join(", ");
+  const lines = [
+    `function loweredExpr(${args}) {`,
+    "  const BEST = {",
+    "    div: (x, y) => x / y,",
+    "    neg: x => -x,",
+    "  };",
+  ];
+  for (const temp of preset.temporaries) {
+    lines.push(`  const ${temp.temp} = ${temp.source.replaceAll("BEST.exp", "Math.exp")};`);
+  }
+  lines.push(`  return ${preset.finalExpr.replaceAll("BEST.exp", "Math.exp")};`);
+  lines.push("}");
+  return lines.join("\n");
+}
+
+function pythonSourceForPreset(preset) {
+  const args = preset.args.join(", ");
+  return [
+    "from monogate import BEST",
+    "",
+    `def lowered_expr(${args}):`,
+    '    """SuperBEST DAG-lowered expression; shared temporaries first."""',
+    ...preset.temporaries.map(temp => `    ${temp.temp} = ${temp.source}`),
+    `    return ${preset.finalExpr}`,
+  ].join("\n");
+}
+
+export function lowerDagExpression(expression) {
+  const needle = normalizeExpression(expression || "");
+  const preset = DAG_LOWERING_PRESETS.find(p => (
+    p.id.toLowerCase() === (expression || "").trim().toLowerCase()
+    || p.label.toLowerCase() === (expression || "").trim().toLowerCase()
+    || normalizeExpression(p.expression) === needle
+  ));
+  if (!preset) {
+    return {
+      status: "UNRECOGNIZED_EXPRESSION",
+      message: "The browser prototype currently lowers the listed preset expressions. Use the Python CLI for arbitrary expression parsing.",
+      boundary: LOWERING_BOUNDARY,
+    };
+  }
+  return {
+    ...preset,
+    status: "LOWERED_PRESET",
+    temporaryCount: preset.temporaries.length,
+    dagSavingsPct: savings(preset.treeEmlNodes, preset.dagSuperbestNodes),
+    pythonSource: pythonSourceForPreset(preset),
+    javascriptSource: jsSourceForPreset(preset),
+    boundary: LOWERING_BOUNDARY,
+  };
+}
+
+export function defaultDagLoweringPreset() {
+  return DAG_LOWERING_PRESETS[0];
+}
