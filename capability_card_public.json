@@ -46,14 +46,21 @@
     },
     {
       "id": "routing.superbest_v5",
-      "name": "SuperBEST v5.2 routing table",
+      "name": "SuperBEST v5.3 routing table",
       "category": "construction",
-      "description": "Routing table mapping 10 arithmetic operations to F16 expressions, achieving 14n / 80.8% savings on the positive-domain headline (vs the 73n naive baseline) and 22n / 69.9% savings in the general (signed-real) domain. Ten upper-bound constructions are formalized in Lean (UpperBounds.lean).",
+      "description": "Routing table mapping 10 positive-domain arithmetic operations to F16 expressions, achieving 14n / 80.8% savings vs the 73n naive baseline, plus a general-domain 8-op basket at 16n / 74.2% savings vs the 62n naive baseline. Library, blog, browser, and capability-card surfaces are synchronized from monogate.superbest.",
       "status": "proven_machine_verified",
       "constraints": {
         "total_nodes": 14,
         "naive_total": 73,
-        "savings_percent": 80.8
+        "savings_percent": 80.8,
+        "positive_total_nodes": 14,
+        "positive_naive_total": 73,
+        "positive_savings_percent": 80.8,
+        "general_total_nodes": 16,
+        "general_naive_total": 62,
+        "general_savings_percent": 74.2,
+        "canonical_source": "python/monogate/superbest.py"
       }
     },
     {
@@ -248,17 +255,17 @@
   "benchmarks": [
     {
       "id": "bench.superbest_table",
-      "name": "SuperBEST v5.2 routing table values",
+      "name": "SuperBEST v5.3 routing table values",
       "capability_ref": "routing.superbest_v5_3",
       "metric": "node_count_positive_domain",
       "value": 14,
       "unit": "F16 nodes",
       "direction": "lower_is_better",
       "reproducibility": {
-        "command": "cat blog/src/data/superbest.json | python -c \"import json,sys; d=json.load(sys.stdin); print(d['totals']['positive_headline'])\"",
+        "command": "python python/scripts/sync_superbest_canonical.py --strict",
         "deterministic": true
       },
-      "notes": "Headline: 14n positive (80.8 percent vs 73n naive). General domain: 22n (69.9 percent). Source: blog/src/data/superbest.json v5.2."
+      "notes": "Headline: 14n positive-domain 10-op basket (80.8 percent vs 73n naive). General domain: 16n 8-op basket (74.2 percent vs 62n naive). Source: blog/src/data/superbest.json v5.3 synchronized from monogate.superbest."
     },
     {
       "id": "bench.lean_zero_sorry_files",

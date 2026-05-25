@@ -236,8 +236,8 @@ export default function TransformerDemo() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 4, fontSize: 9 }}>
             {[
               { op: "exp",   eml: 1,  best: 1,  via: "EML" },
-              { op: "add",   eml: 11, best: 11, via: "EML" },
-              { op: "recip", eml: 5,  best: 2,  via: "EDL" },
+              { op: "add",   eml: 11, best: 2,  via: "EML" },
+              { op: "recip", eml: 5,  best: 1,  via: "EDL" },
             ].map(({ op, eml, best, via }) => (
               <div key={op} style={{ background: C.bg, borderRadius: 4, padding: "5px 8px", border: `1px solid ${C.border}` }}>
                 <div style={{ color: C.text }}>{op}</div>
@@ -298,4 +298,3 @@ export default function TransformerDemo() {
     </div>
   );
 }
-

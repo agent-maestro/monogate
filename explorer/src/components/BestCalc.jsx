@@ -58,7 +58,7 @@ const MODES = [
 ];
 
 const MODE_DESC = {
-  best: "Routes each op to its optimal operator — 71.2% fewer nodes on average (SuperBEST FINAL)",
+  best: "Routes each op to the canonical v5.3 table — 14n / 80.8% positive headline, 16n / 74.2% general basket",
   eml:  "Pure EML — exp(x)−ln(y) for every node",
   exl:  "EXL only — exp(x)·ln(y) — excels at ln and pow, incomplete for add/sub",
   edl:  "EDL only — exp(x)/ln(y) — excels at div and mul, requires e as constant",

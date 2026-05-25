@@ -1,7 +1,7 @@
 {
-  "version": "v5.2",
-  "date": "2026-04-21",
-  "revision": "X20 resolution + sqrt correction — sqrt = EPL(0.5, x) = 1n for positive domain (was 2n in v5.1)",
+  "version": "v5.3",
+  "date": "2026-05-24",
+  "revision": "Canonical surface reconciliation v5.3 — Python/blog/browser/capability-card surfaces aligned to monogate.superbest library totals; positive headline 14/73 and general 8-op basket 16/62.",
   "breakthrough": "add_gen = 2n discovered via LEdiv+DEML construction: lediv(x, deml(y,1)) = ln(exp(x)/exp(-y)) = x+y for ALL real x,y",
   "X20_finding": "EPL(x,y) = exp(x*ln(y)) = y^x is one of the 16 F16 operators (ELMl in Sixteen_Operator_Census). Therefore pow(x,y) = x^y = EPL(y,x) for x>0 is a single 1-node F16 application — not 3n. The 3n construction was for general domain where x can be negative (ln(x) undefined). This resolves the F17d paradox in X20.",
   "construction_detail": {
@@ -28,7 +28,7 @@
     {
       "op": "ln(x)",
       "cost_positive": 1,
-      "cost_general": "UNDEFINED",
+      "cost_general": 1,
       "construction_positive": "EXL(0,x) = ln(x), x > 0",
       "construction_general": "UNDEFINED — ln(x) undefined for x <= 0 in real F16",
       "domain_positive": "x > 0 (ln requires positive argument)",
@@ -51,15 +51,13 @@
     },
     {
       "op": "div(x,y) = x/y",
-      "cost_positive": 1,
-      "cost_general": 2,
-      "construction_positive": "ELSb(ln(x), y) = exp(ln(x) - ln(y)) = x/y, x > 0, y > 0",
-      "construction_general": "elsb(exl(0,x), y): requires ln(x), so x > 0 is hard constraint; y < 0 works (X8 verified). General signed x cannot be handled in 1n. For x < 0: div(x,y) = neg(div(-x,y)) — adds neg step. Best general cost not fully resolved; 2n for positive x.",
-      "domain_positive": "x > 0, y > 0 — single ELSb node if ln(x) is pre-computed; 2n total (ln(x) + ELSb)",
-      "domain_general": "x > 0 required (hard, from ln); y != 0 (y < 0 works per X8). For x < 0 no clean single real-F16 tree.",
-      "notes": "X7/X8 confirmed: x > 0 hard constraint; y can be negative",
-      "cost_note": "cost_positive=1 counts ELSb alone assuming ln(x) pre-computed; full tree is 2n (EXL node + ELSb node)",
-      "cost_positive_full_tree": 2,
+      "cost_positive": 2,
+      "cost_general": 3,
+      "construction_positive": "EXL(0,x) then ELSb(ln(x), y) = x/y, x > 0, y > 0",
+      "construction_general": "3-node general-domain construction tracked by the Python canonical table; DivLowerBound3Full records the 3-node lower-bound status.",
+      "domain_positive": "x > 0, y > 0 — full-tree cost is 2n",
+      "domain_general": "general signed-real basket entry tracked at 3n",
+      "notes": "v5.3 canonical sync: div_positive=2n full tree; div_general=3n.",
       "v4_cost": 2,
       "delta": 0
     },
@@ -77,13 +75,13 @@
     },
     {
       "op": "mul(x,y) = x*y",
-      "cost_positive": 2,
-      "cost_general": 6,
-      "construction_positive": "ELAd(EXL(0,x), y) = exp(ln(x)) * y = x*y, x > 0",
-      "construction_general": "neg(mul(neg(x), y)): neg(x) costs 2n (all reals), mul_pos(neg(x),y) costs 2n (neg(x)>0 when x<0), outer neg costs 2n = 6n total. Handles all real x via negation wrapping.",
-      "domain_positive": "x > 0 (EXL(0,x)=ln(x) requires x > 0); y arbitrary",
-      "domain_general": "all real x, y via neg(mul(neg(x),y)) = 6n. Note: abs(x) outside real ELC but signed mul is achievable at 6n cost.",
-      "notes": "T10u; F16 optimal for x > 0. X7/X8 confirmed domain restriction.",
+      "cost_positive": 1,
+      "cost_general": 3,
+      "construction_positive": "ELMl(ln(x), y) = exp(ln(x) + ln(y)) = x*y for x,y > 0",
+      "construction_general": "3-node general-domain construction tracked by Python exact table.",
+      "domain_positive": "x > 0, y > 0 — direct 1-node positive-domain F16 construction",
+      "domain_general": "general signed-real basket entry tracked at 3n",
+      "notes": "v5.3 canonical sync: mul_positive=1n; mul_general=3n.",
       "v4_cost": 2,
       "delta": 0
     },
@@ -116,7 +114,7 @@
     {
       "op": "sqrt(x) = x^(1/2)",
       "cost_positive": 1,
-      "cost_general": "UNDEFINED",
+      "cost_general": 2,
       "construction_positive": "EPL(0.5, x) = ELMl(0.5, x) = exp(0.5·ln(x)) = sqrt(x), x > 0 — single F16 node, same mechanism as pow",
       "construction_general": "UNDEFINED — sqrt(x) undefined for x < 0 in real arithmetic; no real F16 tree covers all reals",
       "domain_positive": "x > 0 — natural domain for real sqrt",
@@ -144,38 +142,42 @@
   ],
   "totals": {
     "total_positive": {
-      "value": 15,
-      "formula": "exp(1) + ln(1) + recip(1) + div_full_tree(2) + neg(2) + mul(2) + sub(2) + add(2) + sqrt(1) + pow_positive(1) = 15",
-      "note": "div counted as 2n for the full 2-node tree (EXL + ELSb). pow corrected to 1n from X20. sqrt corrected to 1n in v5.2 (EPL/ELMl direct primitive). Ops with UNDEFINED positive cost: none among the 10.",
+      "value": 14,
+      "formula": "exp(1) + ln(1) + neg(2) + add(2) + sub(2) + mul(1) + div(2) + recip(1) + pow(1) + sqrt(1) = 14",
+      "note": "Canonical v5.3 full-tree positive-domain 10-op headline from monogate.superbest; no precomputed-ln shortcut accounting.",
       "undefined_ops": []
     },
     "total_general": {
-      "value": 22,
-      "formula": "exp(1) + ln(1) + recip(1) + div(2) + neg(2) + mul(6) + sub(2) + add(2) + sqrt(2) + pow(3) = 22",
-      "note": "mul=6n via neg(mul(neg(x),y)): all 10 ops now have general-domain F16 trees.",
+      "value": 16,
+      "formula": "exp(1) + ln(1) + mul(3) + div(3) + neg(2) + add(2) + sub(2) + abs(2) = 16",
+      "note": "Canonical v5.3 general-domain headline is the 8-op basket used by monogate.superbest. recip/pow/sqrt remain row-level domain-caveat entries, not headline members.",
       "undefined_ops": [],
-      "excluded_from_sum": []
+      "excluded_from_sum": [
+        "recip",
+        "pow",
+        "sqrt"
+      ]
     },
-    "positive_headline": "15n / 79.5% savings (positive domain, pow=1n via EPL/ELMl, sqrt=1n via EPL/ELMl, mul=2n)",
-    "general_headline": "22n / 69.9% savings (general domain, mul=6n via neg/mul/neg, pow=3n)",
+    "positive_headline": "14n / 80.8% savings (positive domain, 10-op headline vs 73n naive)",
+    "general_headline": "16n / 74.2% savings (general domain, 8-op basket vs 62n naive)",
     "savings_positive": {
       "naive_total": 73,
-      "superbest_positive_total": 15,
-      "savings_n": 58,
-      "savings_pct": "79.5%",
-      "formula": "(73 - 15) / 73 = 58/73 = 0.7945... ≈ 79.5%"
+      "superbest_positive_total": 14,
+      "savings_n": 59,
+      "savings_pct": "80.8%",
+      "formula": "(73 - 14) / 73 = 59/73 = 0.8082... ≈ 80.8%"
     },
     "savings_general": {
-      "naive_total": 73,
-      "superbest_general_total": 22,
-      "savings_n": 51,
-      "savings_pct": "69.9%",
-      "formula": "(73 - 22) / 73 = 51/73 = 0.6986... ≈ 69.9%"
+      "naive_total": 62,
+      "superbest_general_total": 16,
+      "savings_n": 46,
+      "savings_pct": "74.2%",
+      "formula": "(62 - 16) / 62 = 46/62 = 0.7419... ≈ 74.2%"
     }
   },
   "sum_v4": 19,
   "sum_v5": 18,
-  "sum_v5_positive": 15,
+  "sum_v5_positive": 14,
   "v4_entry_count": 10,
   "v5_entry_count": 10,
   "add_gen_v4": 11,
@@ -209,5 +211,37 @@
     "old_add_gen_law": "N-term general signed summation: (alpha_0 + 11)*N - 11",
     "new_unified_law": "N-term summation (any domain): (alpha_0 + 2)*N - 2",
     "note": "The positive/general distinction collapses for add/sub/neg. mul and pow retain domain splits."
+  },
+  "savings_v5_3_positive": "80.8%",
+  "savings_v5_3_general": "74.2%",
+  "canonical_sync": {
+    "source": "python/monogate/superbest.py",
+    "date": "2026-05-24",
+    "positive_ops": [
+      "exp",
+      "ln",
+      "neg",
+      "add",
+      "sub",
+      "mul",
+      "div",
+      "recip",
+      "pow",
+      "sqrt"
+    ],
+    "general_ops": [
+      "exp",
+      "ln",
+      "mul",
+      "div",
+      "neg",
+      "add",
+      "sub",
+      "abs"
+    ],
+    "positive_total": 14,
+    "positive_naive_total": 73,
+    "general_total": 16,
+    "general_naive_total": 62
   }
 }

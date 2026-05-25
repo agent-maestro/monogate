@@ -16,11 +16,11 @@ const PILL = {
 const SOLVED = [
   { fn: "exp(x)",   bestN: 1,  emlN: 1,  op: "EML", note: "eml(x, 1) — identity" },
   { fn: "ln(x)",    bestN: 1,  emlN: 3,  op: "EXL", note: "1-node EXL: exl(1, x)" },
-  { fn: "x / y",   bestN: 1,  emlN: 15, op: "EDL", note: "1-node EDL division" },
-  { fn: "pow(x,n)", bestN: 3,  emlN: 15, op: "EXL", note: "3-node EXL construction" },
-  { fn: "sqrt(x)", bestN: 3,  emlN: 15, op: "EXL", note: "pow(x, 0.5) via EXL" },
-  { fn: "x × y",   bestN: 7,  emlN: 13, op: "EDL", note: "7-node EDL construction" },
-  { fn: "x + y",   bestN: 11, emlN: 11, op: "EML", note: "11-node EML (no improvement possible for add)" },
+  { fn: "x / y",   bestN: 2,  emlN: 15, op: "EDL", note: "2-node full-tree positive route" },
+  { fn: "pow(x,n)", bestN: 1,  emlN: 3,  op: "EXL", note: "1-node EPL/ELMl positive route" },
+  { fn: "sqrt(x)", bestN: 1,  emlN: 8,  op: "EXL", note: "1-node EPL positive route" },
+  { fn: "x × y",   bestN: 1,  emlN: 13, op: "EDL", note: "1-node positive-domain construction" },
+  { fn: "x + y",   bestN: 2,  emlN: 11, op: "EML", note: "2-node LEdiv/DEML construction" },
 ];
 
 // ── Open challenges ────────────────────────────────────────────────────────────

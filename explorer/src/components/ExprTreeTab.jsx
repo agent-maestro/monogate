@@ -544,10 +544,10 @@ export default function ExprTreeTab() {
                   SuperBEST Routing
                 </div>
                 {[
-                  { family: "EXL", ops: "ln, pow, mul, neg, sqrt, sin, cos", note: "exp×log — 1–3n" },
-                  { family: "EML", ops: "exp, sub",                          note: "exp−log — 1–3n" },
-                  { family: "EAL", ops: "add",                                note: "exp+log — 3n" },
-                  { family: "EDL", ops: "div, recip",                         note: "exp÷log — 1–2n" },
+                  { family: "EXL", ops: "ln, div, neg, sin, cos",             note: "log-visible mixed routes" },
+                  { family: "EML", ops: "exp, sub",                           note: "exp/log mixed routes" },
+                  { family: "EAL", ops: "add, mul, pow, sqrt, abs",            note: "v5.3 canonical 1–2n routes" },
+                  { family: "EDL", ops: "recip",                              note: "1n reciprocal route" },
                 ].map(({ family, ops, note }) => (
                   <div key={family} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
                     <span style={{

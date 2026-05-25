@@ -388,10 +388,8 @@ export default function OptimizeTab() {
         </div>
         <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.7 }}>
           Paste a Python / NumPy / PyTorch snippet or class definition. Each math op
-          is routed to the cheapest operator — EXL for{" "}
-          <code style={{ color: C.text }}>pow / ln</code>, EDL for{" "}
-          <code style={{ color: C.text }}>div / mul</code>, EML for{" "}
-          <code style={{ color: C.text }}>add / sub</code>.{" "}
+          is routed to the canonical v5.3 table — 14n / 80.8% on the positive
+          10-op headline and 16n / 74.2% on the general 8-op basket.{" "}
           {apiStatus === "available"
             ? <span style={{ color: C.green }}>Using real Python best_optimize() via local API.</span>
             : <span>Start <code style={{ color: C.text }}>python api/main.py</code> for Python backend.</span>
@@ -655,7 +653,7 @@ export default function OptimizeTab() {
         <div style={{ ...card, color: C.muted, fontSize: 11, lineHeight: 1.9 }}>
           <div style={{ marginBottom: 8, color: C.text, fontSize: 10 }}>What this tool does:</div>
           <div>① Scans your code for <code>math.*</code> / <code>np.*</code> / <code>torch.*</code> operations</div>
-          <div>② Routes each to the cheapest operator (EXL for pow/ln, EDL for div/mul, EML for add/sub)</div>
+          <div>② Routes each to the canonical v5.3 SuperBEST cost table</div>
           <div>③ Reports node count reduction — directly proportional to exp/ln call savings</div>
           <div>④ For classes with multiple methods, shows per-function savings in a collapsible view</div>
           <div>⑤ Generates a side-by-side diff + ready-to-paste Python snippet</div>

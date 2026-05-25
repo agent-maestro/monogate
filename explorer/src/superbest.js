@@ -1,6 +1,8 @@
 /**
  * superbest.js — SuperBEST routing engine for browser
- * Full routing table: neg=2n, mul=3n, sub=3n (2026-04-20 final)
+ * Canonical v5.3 routing table synced from python/monogate/superbest.py.
+ * Positive headline: 14n / 80.8% vs 73n naive.
+ * General headline: 16n / 74.2% vs 62n naive over the 8-op basket.
  * <5KB, zero dependencies.
  */
 
@@ -9,37 +11,37 @@ export const TABLE = {
   exp:    { op:"EML",  nodes:1,  domain:"all x",   construction:"eml(x,1)",               emlNodes:1  },
   expNeg: { op:"DEML", nodes:1,  domain:"all x",   construction:"deml(x,1)",              emlNodes:1  },
   ln:     { op:"EXL",  nodes:1,  domain:"x>0",     construction:"exl(0,x)",               emlNodes:3  },
-  div:    { op:"EDL",  nodes:1,  domain:"y≠0",     construction:"edl(x,y)",               emlNodes:15 },
-  recip:  { op:"EDL",  nodes:2,  domain:"x≠0",     construction:"edl(0,eml(x,1))",        emlNodes:5  },
-  neg:    { op:"EXL",  nodes:2,  domain:"all x",   construction:"exl(0,deml(x,1))",       emlNodes:6  },
-  mul:    { op:"EXL",  nodes:3,  domain:"x>0",     construction:"exl(exl(0,x),eml(y,1))", emlNodes:13 },
-  sub:    { op:"EML",  nodes:3,  domain:"x>0",     construction:"eml(exl(0,x),eml(y,1))", emlNodes:5  },
-  pow:    { op:"EXL",  nodes:3,  domain:"x>0",     construction:"eml(exl(ln(n),x),1)",    emlNodes:15 },
-  add:    { op:"EAL",  nodes:3,  domain:"x>0",     construction:"eal(exl(0,x),eml(y,1))", emlNodes:11 },
+  div:    { op:"EXL/ELSb", nodes:2, domain:"x,y>0", construction:"elsb(exl(0,x),y)",      emlNodes:15 },
+  recip:  { op:"ELSb", nodes:1,    domain:"x>0",     construction:"elsb(0,x)",             emlNodes:5  },
+  neg:    { op:"EXL/DEML", nodes:2, domain:"all x",  construction:"exl(0,deml(x,1))",      emlNodes:9  },
+  mul:    { op:"EPL/ELMl", nodes:1, domain:"x,y>0",  construction:"elml(ln(x),y)",         emlNodes:13 },
+  sub:    { op:"LEdiv/EML", nodes:2, domain:"all x,y", construction:"lediv(x,eml(y,1))",   emlNodes:5  },
+  pow:    { op:"EPL/ELMl", nodes:1, domain:"x>0",    construction:"epl(n,x)",              emlNodes:3  },
+  add:    { op:"LEdiv/DEML", nodes:2, domain:"all x,y", construction:"lediv(x,deml(y,1))", emlNodes:11 },
   addGen: { op:"EML",  nodes:11, domain:"all x,y", construction:"EML single-op",          emlNodes:11 },
-  sqrt:   { op:"EXL",  nodes:3,  domain:"x≥0",     construction:"eml(exl(0.5,ln(x)),1)",  emlNodes:15 },
+  sqrt:   { op:"EPL",  nodes:1,  domain:"x>0",     construction:"epl(0.5,x)",             emlNodes:8  },
   sin:    { op:"EXL",  nodes:63, domain:"all x",   construction:"8-term Taylor (EXL pow)", emlNodes:245},
   cos:    { op:"EXL",  nodes:63, domain:"all x",   construction:"8-term Taylor (EXL pow)", emlNodes:245},
-  abs:    { op:"EXL",  nodes:6,  domain:"all x",   construction:"sqrt(mul(x,x))",          emlNodes:9  },
+  abs:    { op:"EPL",  nodes:2,  domain:"all x",   construction:"2-node EPL construction", emlNodes:5  },
 };
 
-// ── Node costs (SuperBEST FINAL) ──────────────────────────────────────────────
+// ── Node costs (SuperBEST v5.3 canonical sync) ────────────────────────────────
 export const COSTS = {
-  exp:1, ln:1, div:1, pow:3, mul:3, sub:3, neg:2, add:3, sqrt:3,
-  sin:63, cos:63, recip:2, abs:6,
+  exp:1, ln:1, div:2, pow:1, mul:1, sub:2, neg:2, add:2, sqrt:1,
+  sin:63, cos:63, recip:1, abs:2,
 };
 
 // ── EML single-operator baseline ──────────────────────────────────────────────
 export const EML_COSTS = {
-  exp:1, ln:3, div:15, pow:15, mul:13, sub:5, neg:6, add:11, sqrt:15,
-  sin:245, cos:245, recip:5, abs:9,
+  exp:1, ln:3, div:15, pow:3, mul:13, sub:5, neg:9, add:11, sqrt:8,
+  sin:245, cos:245, recip:5, abs:5,
 };
 
 // ── Operator family for coloring ──────────────────────────────────────────────
 export const FAMILY = {
-  exp:"EML", ln:"EXL", div:"EDL", pow:"EXL", mul:"EXL",
-  sub:"EML", neg:"EXL", add:"EAL", sqrt:"EXL", sin:"EXL",
-  cos:"EXL", recip:"EDL", abs:"EXL",
+  exp:"EML", ln:"EXL", div:"EXL/ELSb", pow:"EPL/ELMl", mul:"EPL/ELMl",
+  sub:"LEdiv/EML", neg:"EXL/DEML", add:"LEdiv/DEML", sqrt:"EPL", sin:"EXL",
+  cos:"EXL", recip:"ELSb", abs:"EPL",
 };
 
 /** Count SuperBEST nodes for a {opName: count} map. */
@@ -152,37 +154,31 @@ function buildBody(op, fmt, a = "x", b = "y") {
   const one  = fmt.rust ? "1f64" : "1.0";
 
   switch (op) {
-    case "mul": // exl(exl(0,x), eml(y,1)): x*y requires x>0
+    case "mul": // canonical display: elml(ln(x), y), x,y>0
+      return ret + `${a} * ${b} ${fmt.lineComment} EPL/ELMl canonical positive-domain route [1n]\n`;
+    case "sub": // lediv(x, eml(y,1)): x-y for all reals
       return (
-        mkVar("_ln_x", `${ln(fmt, a)} ${fmt.lineComment} EXL: ln(x) [1n]`) +
         mkVar("_exp_y", `${expp(fmt, b)} ${fmt.lineComment} EML: exp(y) [1n]`) +
-        ret + `${expp(fmt, "_ln_x")} * ${ln(fmt, "_exp_y")} ${fmt.lineComment} EXL: x*y [1n]\n`
-      );
-    case "sub": // eml(exl(0,x), eml(y,1)): x-y requires x>0
-      return (
-        mkVar("_ln_x", `${ln(fmt, a)} ${fmt.lineComment} EXL: ln(x) [1n]`) +
-        mkVar("_exp_y", `${expp(fmt, b)} ${fmt.lineComment} EML: exp(y) [1n]`) +
-        ret + `${expp(fmt, "_ln_x")} - ${ln(fmt, "_exp_y")} ${fmt.lineComment} EML: x-y [1n]\n`
+        ret + `${a} - ${ln(fmt, "_exp_y")} ${fmt.lineComment} LEdiv: x-y [1n]\n`
       );
     case "neg": // exl(0, deml(x,1)): -x all domain
       return (
         mkVar("_t", `${expp(fmt, `-${a}`)} ${fmt.lineComment} DEML: exp(-x) [1n]`) +
         ret + `${expp(fmt, zero)} * ${ln(fmt, "_t")} ${fmt.lineComment} EXL: -x [1n]\n`
       );
-    case "div": // edl(x,y): x/y
-      return ret + `${expp(fmt, ln(fmt, a))} / ${ln(fmt, expp(fmt, b))} ${fmt.lineComment} EDL: x/y [1n]\n`;
-    case "recip": // edl(0, eml(x,1)): 1/x
-      return (
-        mkVar("_t", `${expp(fmt, a)} - ${ln(fmt, one)} ${fmt.lineComment} EML: exp(x) [1n]`) +
-        ret + `${expp(fmt, zero)} / ${ln(fmt, "_t")} ${fmt.lineComment} EDL: 1/x [1n]\n`
-      );
-    case "pow": // eml(exl(ln(n),x), 1): x^n
-      return ret + `${expp(fmt, `${ln(fmt, b)} * ${ln(fmt, a)}`)} ${fmt.lineComment} EXL: x^n [3n]\n`;
-    case "add": // eal(exl(0,x), eml(y,1)): x+y requires x>0
+    case "div": // exl(0,x) then elsb(ln(x),y): x/y
       return (
         mkVar("_ln_x", `${ln(fmt, a)} ${fmt.lineComment} EXL: ln(x) [1n]`) +
-        mkVar("_exp_y", `${expp(fmt, b)} ${fmt.lineComment} EML: exp(y) [1n]`) +
-        ret + `${expp(fmt, "_ln_x")} + ${ln(fmt, "_exp_y")} ${fmt.lineComment} EAL: x+y [1n]\n`
+        ret + `${expp(fmt, `_ln_x - ${ln(fmt, b)}`)} ${fmt.lineComment} ELSb: x/y [1n]\n`
+      );
+    case "recip": // elsb(0,x): 1/x
+      return ret + `${expp(fmt, `${zero} - ${ln(fmt, a)}`)} ${fmt.lineComment} ELSb: 1/x [1n]\n`;
+    case "pow": // epl(n,x): x^n
+      return ret + `${expp(fmt, `${b} * ${ln(fmt, a)}`)} ${fmt.lineComment} EPL/ELMl: x^n [1n]\n`;
+    case "add": // lediv(x, deml(y,1)): x+y for all reals
+      return (
+        mkVar("_exp_neg_y", `${expp(fmt, `-${b}`)} ${fmt.lineComment} DEML: exp(-y) [1n]`) +
+        ret + `${a} - ${ln(fmt, "_exp_neg_y")} ${fmt.lineComment} LEdiv: x+y [1n]\n`
       );
     case "ln": // exl(0, x)
       return ret + `${expp(fmt, zero)} * ${ln(fmt, a)} ${fmt.lineComment} EXL: ln(x) [1n]\n`;

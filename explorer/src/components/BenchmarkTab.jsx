@@ -174,9 +174,10 @@ export default function BenchmarkTab() {
             <span style={{ color: C.accent, fontWeight: 700 }}>Methodology:</span>{" "}
             Node counts are operator-graph sizes — the number of EML-family gate evaluations.
             EML baseline uses the single best operator per operation (pure EML, no routing).
-            SuperBEST routes each operation to its optimal operator: EXL for mul/pow/neg, EML for exp/sub,
-            EAL for add, EDL for div/recip. Numbers verified by exhaustive N-level search; see
-            addendum_neg_optimality.md. All counts are exact integers, not estimates.
+            SuperBEST routes each operation to its canonical v5.3 construction: exp/ln stay 1n,
+            add/sub/neg are 2n guarded mixed routes, mul/pow/sqrt/recip are 1n positive-domain routes,
+            and div is 2n in the full positive-domain tree. All displayed costs are integer node counts,
+            not timing estimates.
           </div>
         </>
       )}

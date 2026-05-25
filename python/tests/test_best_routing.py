@@ -118,10 +118,8 @@ class TestBestPow:
             assert abs(BEST.pow(x, 1) - x) < TOL
 
     def test_pow_n_zero_domain_constraint(self):
-        # EXL pow uses log(n) internally — n=0 is outside the domain.
-        # x^0 = 1 must be handled by caller or a guard, not EXL.pow.
-        with pytest.raises((ValueError, ZeroDivisionError, OverflowError)):
-            BEST.pow(2.0, 0)
+        # The current BEST route handles the algebraic identity x^0 = 1.
+        assert abs(BEST.pow(2.0, 0) - 1.0) < TOL
 
     def test_pow_fractional_base(self):
         assert abs(BEST.pow(0.5, 2) - 0.25) < TOL
@@ -171,9 +169,8 @@ class TestBestDiv:
             assert abs(BEST.div(x, x) - 1.0) < TOL
 
     def test_div_singularity_at_x_equals_one(self):
-        # x=1 is outside div_edl domain — documents the EDL singularity
-        with pytest.raises((ValueError, ZeroDivisionError, OverflowError)):
-            BEST.div(1.0, 4.0)
+        # The current BEST route handles x=1 without the older EDL singularity.
+        assert abs(BEST.div(1.0, 4.0) - 0.25) < TOL
 
 
 # ── recip ─────────────────────────────────────────────────────────────────────
@@ -213,9 +210,8 @@ class TestBestNeg:
             assert abs(neg_eml(neg_eml(x)) - x) < TOL
 
     def test_neg_domain_rejects_zero(self):
-        # x=0 hits EDL singularity directly
-        with pytest.raises((ValueError, ZeroDivisionError, OverflowError)):
-            BEST.neg(0.0)
+        # The current BEST route handles zero directly.
+        assert abs(BEST.neg(0.0)) < TOL
 
 
 # ── sub ───────────────────────────────────────────────────────────────────────

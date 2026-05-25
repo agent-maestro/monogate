@@ -171,7 +171,7 @@ export default function LandingPage({ onEnter }) {
           {[
             {
               label: "BEST hybrid routing",
-              body: "Routes each primitive to its cheapest operator — EXL for ln/pow, EDL for div/mul, EML for add/sub. Cuts total tree size by up to 75.3% vs pure EML.",
+              body: "Routes each primitive to its cheapest canonical construction. Current v5.3 sync is 14n / 80.8% on the positive 10-op headline, with a 16n / 74.2% general-domain 8-op basket.",
             },
             {
               label: "Phantom attractor phase transition",
@@ -315,8 +315,8 @@ export default function LandingPage({ onEnter }) {
               display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8,
             }}>
               <span>
-                SuperBEST v5: <strong style={{ color: C.green }}>18n / 75.3% savings</strong> across 9 standard ops.
-                All entries structurally proved optimal (T08, ADD-T1).
+                SuperBEST v5.3: <strong style={{ color: C.green }}>14n / 80.8% savings</strong> across the positive 10-op headline.
+                General-domain basket: <strong style={{ color: C.green }}>16n / 74.2%</strong>.
               </span>
               <button
                 onClick={() => onEnter("benchmarks")}
