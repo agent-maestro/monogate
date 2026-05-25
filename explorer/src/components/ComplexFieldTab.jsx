@@ -218,6 +218,42 @@ export default function ComplexFieldTab() {
         </div>
       </div>
 
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+        gap: 10,
+        marginBottom: 14,
+      }}>
+        <a href="?tab=ir" style={{
+          background: C.surface,
+          border: `1px solid ${C.border}`,
+          borderRadius: 8,
+          padding: 12,
+          color: C.text,
+          textDecoration: "none",
+        }}>
+          <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, marginBottom: 5 }}>
+            Field {"->"} IR bridge
+          </div>
+          <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>
+            Open the IR beta view to inspect how expressions become shared nodes, guarded replay frames,
+            and lowering sketches.
+          </div>
+        </a>
+        <div style={{
+          background: C.surface,
+          border: `1px solid ${C.border}`,
+          borderRadius: 8,
+          padding: 12,
+          color: C.muted,
+          fontSize: 10,
+          lineHeight: 1.7,
+        }}>
+          Color tracks complex phase. Contours track magnitude. Overlays mark simple axes, unit-circle,
+          periodic, and branch-cut cues where relevant.
+        </div>
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "minmax(260px, 1fr) minmax(250px, 330px)", gap: 14, alignItems: "start" }}>
         <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 14 }}>
           <FieldCanvas preset={preset} scale={scale} contours={contours} overlay={overlay} />

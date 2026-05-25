@@ -1,4 +1,5 @@
 import model from "../data/eml_ir_inspector_model.json";
+import { useState } from "react";
 
 const C = {
   bg: "#07080f",
@@ -107,7 +108,8 @@ function Timeline({ program }) {
 
 export default function EMLIRInspectorTab() {
   const programs = model.programs;
-  const selected = programs.find((row) => row.program_id === model.best_program_id) ?? programs[0];
+  const [selectedId, setSelectedId] = useState(model.best_program_id);
+  const selected = programs.find((row) => row.program_id === selectedId) ?? programs[0];
   const best = selected;
 
   return (
@@ -148,6 +150,42 @@ export default function EMLIRInspectorTab() {
         until the lowering contract and product copy are reviewed.
       </div>
 
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+        gap: 10,
+        marginBottom: 14,
+      }}>
+        <a href="?tab=field" style={{
+          background: C.surface,
+          border: `1px solid ${C.border}`,
+          borderRadius: 8,
+          padding: 12,
+          color: C.text,
+          textDecoration: "none",
+        }}>
+          <div style={{ color: C.accent, fontSize: 11, fontWeight: 700, marginBottom: 5 }}>
+            IR {"->"} Field bridge
+          </div>
+          <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>
+            Open the complex field view to see the visual grammar behind EML slices such as eml(z, 1)
+            and eml(z, z + 2).
+          </div>
+        </a>
+        <div style={{
+          background: C.surface,
+          border: `1px solid ${C.border}`,
+          borderRadius: 8,
+          padding: 12,
+          color: C.muted,
+          fontSize: 10,
+          lineHeight: 1.7,
+        }}>
+          <strong style={{ color: C.text }}>Example chooser:</strong> select a program below to inspect its DAG,
+          replay timeline, and lowering sketch.
+        </div>
+      </div>
+
       <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, overflow: "hidden", marginBottom: 14 }}>
         <div style={{
           display: "grid",
@@ -162,26 +200,36 @@ export default function EMLIRInspectorTab() {
         }}>
           <span>Program</span><span>Family</span><span>Tree</span><span>DAG</span><span>Extra</span>
         </div>
-        {programs.map((program, index) => (
-          <div key={program.program_id} style={{
+        {programs.map((program, index) => {
+          const active = program.program_id === best.program_id;
+          return (
+          <button key={program.program_id} onClick={() => setSelectedId(program.program_id)} style={{
             display: "grid",
             gridTemplateColumns: "minmax(160px,1.2fr) 1fr 80px 80px 90px",
             gap: 8,
             padding: "9px 12px",
             borderTop: `1px solid ${C.border}`,
-            background: program.program_id === best.program_id ? "rgba(232,160,32,0.055)" : index % 2 ? "rgba(255,255,255,0.012)" : "transparent",
+            borderLeft: "none",
+            borderRight: "none",
+            borderBottom: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "left",
+            background: active ? "rgba(232,160,32,0.075)" : index % 2 ? "rgba(255,255,255,0.012)" : "transparent",
             fontSize: 10,
             alignItems: "center",
+            fontFamily: "inherit",
           }}>
-            <span style={{ color: program.program_id === best.program_id ? C.accent : C.text, wordBreak: "break-word" }}>{program.program_id}</span>
+            <span style={{ color: active ? C.accent : C.text, wordBreak: "break-word" }}>{program.program_id}</span>
             <span style={{ color: C.muted }}>{program.family}</span>
             <span style={{ color: C.text }}>{program.tree_superbest_nodes}</span>
             <span style={{ color: C.blue }}>{program.dag_superbest_nodes}</span>
             <span style={{ color: program.extra_superbest_savings_nodes > 0 ? C.green : C.muted }}>
               {program.extra_superbest_savings_nodes}
             </span>
-          </div>
-        ))}
+          </button>
+          );
+        })}
       </div>
 
       <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 14, marginBottom: 14 }}>

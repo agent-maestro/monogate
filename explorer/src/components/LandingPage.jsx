@@ -89,8 +89,9 @@ export default function LandingPage({ onEnter }) {
             margin: "0 0 24px", lineHeight: 1.6, maxWidth: 540,
           }}>
             A symbolic math optimizer built on a single binary operator.
-            Calculate, verify, search, and benchmark EML expressions across
-            nine tools. For the 8-operator fractal zoo, see monogate.dev/lab.
+            Calculate, verify, search, benchmark, inspect IR, and visualize
+            EML-adjacent complex fields. For the 8-operator fractal zoo, see
+            monogate.dev/lab.
           </p>
 
           <code style={{
@@ -123,7 +124,7 @@ export default function LandingPage({ onEnter }) {
             Open Explorer →
           </button>
           <span style={{ fontSize: 10, color: C.muted }}>
-            calculator · tree visualizer · optimizer
+            calculator · tree visualizer · IR beta · field view
           </span>
         </div>
 
@@ -172,6 +173,14 @@ export default function LandingPage({ onEnter }) {
             {
               label: "BEST hybrid routing",
               body: "Routes each primitive to its cheapest canonical construction. Current v5.3 sync is 14n / 80.8% on the positive 10-op headline, with a 16n / 74.2% general-domain 8-op basket.",
+            },
+            {
+              label: "Inspectable IR prototype",
+              body: "The IR beta view turns EML expressions into replayable DAG-like artifacts: shared nodes, guard annotations, timeline frames, and lowered code sketches. It stays labeled as an internal prototype until the lowering contract is mature.",
+            },
+            {
+              label: "Complex field visual bridge",
+              body: "The field view uses domain coloring to make phase, magnitude, periodicity, and branch behavior visible for simple complex functions and EML slices.",
             },
             {
               label: "Phantom attractor phase transition",
@@ -371,6 +380,8 @@ export default function LandingPage({ onEnter }) {
         <Section label="Jump to">
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             <NavLink label="✦ calc"      tab="calc"      onEnter={onEnter} accent />
+            <NavLink label="IR beta"     tab="ir"        onEnter={onEnter} />
+            <NavLink label="field"       tab="field"     onEnter={onEnter} />
             <NavLink label="⚙ opt"       tab="opt"       onEnter={onEnter} />
             <NavLink label="⬡ nerf"      tab="nerf"      onEnter={onEnter} />
             <NavLink label="✦ viz"       tab="viz"       onEnter={onEnter} />
