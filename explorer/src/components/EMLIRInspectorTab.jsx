@@ -1,5 +1,6 @@
 import model from "../data/eml_ir_inspector_model.json";
 import polynomialEvidence from "../data/machlib_polynomial_evidence_internal_card.json";
+import finiteZeroPacket from "../data/machlib_finite_zero_packet_internal_card.json";
 import { useState } from "react";
 
 const C = {
@@ -332,6 +333,62 @@ export default function EMLIRInspectorTab() {
         }}>
           Internal evidence only. This panel does not claim analytic continuation, infinite zero-set behavior,
           public theorem status, package publishing, or marketplace readiness.
+        </div>
+      </div>
+
+      <div style={{
+        background: C.surface,
+        border: `1px solid ${C.border}`,
+        borderRadius: 8,
+        padding: 14,
+        marginTop: 14,
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 10 }}>
+          <div>
+            <div style={{ color: C.accent, fontSize: 13, fontWeight: 700 }}>{finiteZeroPacket.title}</div>
+            <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>{finiteZeroPacket.summary}</div>
+          </div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            <Chip tone={C.warn}>{finiteZeroPacket.status}</Chip>
+            <Chip tone={C.green}>{finiteZeroPacket.sample_count} root samples</Chip>
+            <Chip tone={C.warn}>{finiteZeroPacket.next_research_gate}</Chip>
+          </div>
+        </div>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+          gap: 8,
+        }}>
+          {finiteZeroPacket.samples.map((sample) => (
+            <div key={sample.sample_id} style={{
+              background: C.bg,
+              border: `1px solid ${C.border}`,
+              borderRadius: 7,
+              padding: 10,
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap", marginBottom: 5 }}>
+                <span style={{ color: C.green, fontSize: 10, fontWeight: 700 }}>{sample.evidence_class}</span>
+                <span style={{ color: C.accent, fontSize: 10 }}>root {sample.root_witness}</span>
+              </div>
+              <div style={{ color: C.blue, fontSize: 11, fontWeight: 700, marginBottom: 5, wordBreak: "break-word" }}>
+                {sample.polynomial}
+              </div>
+              <div style={{ color: C.text, fontSize: 10, lineHeight: 1.6, marginBottom: 6 }}>
+                {sample.statement}
+              </div>
+              <div style={{ color: C.muted, fontSize: 9, wordBreak: "break-word" }}>
+                {sample.lean_name}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{
+          marginTop: 10,
+          color: C.muted,
+          fontSize: 10,
+          lineHeight: 1.7,
+        }}>
+          This is a finite sample packet only. Degree/root-count reasoning is still a separate blocked feasibility gate.
         </div>
       </div>
     </div>

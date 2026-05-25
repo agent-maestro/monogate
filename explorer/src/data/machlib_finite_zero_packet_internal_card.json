@@ -1,0 +1,57 @@
+{
+  "card_id": "machlib_finite_zero_packet_internal_card_2026_05_25",
+  "status": "INTERNAL_PROTOTYPE",
+  "title": "MachLib finite zero packet v1",
+  "summary": "Five small polynomial/root samples are checked in Lean over the tiny MachLib polynomial AST.",
+  "packet_id": "machlib_finite_zero_packet_v1_2026_05_25",
+  "sample_count": 5,
+  "samples": [
+    {
+      "sample_id": "zero_poly_everywhere",
+      "polynomial": "0",
+      "root_witness": "x",
+      "lean_name": "MachLib.FiniteZeroPacket.sample_zero_poly_root",
+      "statement": "eval zero x = 0",
+      "evidence_class": "MACHLIB_CHECKED"
+    },
+    {
+      "sample_id": "linear_factor_at_named_root",
+      "polynomial": "x - r",
+      "root_witness": "r",
+      "lean_name": "MachLib.FiniteZeroPacket.sample_linear_factor_root",
+      "statement": "eval (x - r) r = 0",
+      "evidence_class": "MACHLIB_CHECKED"
+    },
+    {
+      "sample_id": "factor_product_left_root",
+      "polynomial": "(x - r) * q(x)",
+      "root_witness": "r",
+      "lean_name": "MachLib.FiniteZeroPacket.sample_factor_product_left_root",
+      "statement": "eval ((x - r) * q) r = 0",
+      "evidence_class": "MACHLIB_CHECKED"
+    },
+    {
+      "sample_id": "repeated_factor_at_named_root",
+      "polynomial": "(x - r) * (x - r)",
+      "root_witness": "r",
+      "lean_name": "MachLib.FiniteZeroPacket.sample_repeated_factor_root",
+      "statement": "eval ((x - r) * (x - r)) r = 0",
+      "evidence_class": "MACHLIB_CHECKED"
+    },
+    {
+      "sample_id": "two_factor_right_root",
+      "polynomial": "(x - r) * (x - s)",
+      "root_witness": "s",
+      "lean_name": "MachLib.FiniteZeroPacket.sample_two_factor_right_root",
+      "statement": "eval ((x - r) * (x - s)) s = 0",
+      "evidence_class": "MACHLIB_CHECKED"
+    }
+  ],
+  "next_research_gate": "POLYNOMIAL_DEGREE_ROOT_COUNT_FEASIBILITY_BLOCKED",
+  "boundaries": {
+    "public_ready": false,
+    "marketplace_ready": false,
+    "public_theorem_claim": false,
+    "package_publish_performed": false
+  }
+}
