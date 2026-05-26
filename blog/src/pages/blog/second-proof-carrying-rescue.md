@@ -102,3 +102,5 @@ control finite-evaluation pressure.
 That matters for every future backend where unbounded mathematical elegance
 eventually meets fixed hardware: microcontrollers, FPGAs, DSP kernels, and
 eventually ASIC paths.
+
+Next in the series: [`The Third Proof-Carrying Rescue`](/blog/third-proof-carrying-rescue).

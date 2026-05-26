@@ -221,6 +221,12 @@ overflow-pressure fixture, and MachLib bridges that transition to output safety.
 See [`/blog/second-proof-carrying-rescue`](/blog/second-proof-carrying-rescue)
 and the compact [`rescue status table`](/blog/proof-carrying-rescue-status).
 
+The third proof-carrying rescue handles the subtler finite-trap case:
+`phantom_attractor -> interior_sample`. The packet shows low-precision stalling,
+higher-precision sensitivity, and an escape witness without claiming a true
+local optimum. See
+[`/blog/third-proof-carrying-rescue`](/blog/third-proof-carrying-rescue).
+
 ## Next Target
 
 The next frontier is not a bigger random search. It is control over

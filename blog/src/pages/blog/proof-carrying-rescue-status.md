@@ -17,7 +17,7 @@ events and named rescue operators. This is the current status table.
 | --- | --- | --- | --- | --- | --- |
 | `domain_wall` | `log_domain_lift` | `log_domain_rescue` | packet + tests | closed packet bridge | [first rescue](/blog/first-proof-carrying-rescue) |
 | `overflow_wall` | `guard_clamp` | `guard_rescue` | packet + tests | closed packet bridge | [second rescue](/blog/second-proof-carrying-rescue) |
-| `phantom_attractor` | `precision_escape` | `interior_sample` | intervention benchmark only | pair obligation bridge | next target |
+| `phantom_attractor` | `precision_escape` | `interior_sample` | packet + tests | closed packet bridge with explicit event witness | [third rescue](/blog/third-proof-carrying-rescue) |
 | `saturation_shelf` | `saturation_deshelf` | `corner_concentration` | intervention benchmark only | pair obligation bridge | next target |
 
 ## Reading The Table
@@ -29,19 +29,22 @@ generated report, and regression tests.
 transition to its obligation and a nonempty transition-graph witness, without
 adding a new `sorry`.
 
+`closed packet bridge with explicit event witness` means the bridge is closed,
+but the theorem requires both the event witness and transition witness. That is
+the current honest shape for phantom-attractor evidence.
+
 `pair obligation bridge` means the named intervention is present in the broader
 paired benchmark and MachLib obligation map, but it does not yet have the
-narrow source-fixture packet that the first two rescues have.
+narrow source-fixture packet that the first three rescues have.
 
 ## Next Frontier
 
-The next hard target is:
+The next target is:
 
 ```text
-phantom_attractor -> precision_escape -> interior_sample
+saturation_shelf -> saturation_deshelf -> corner_concentration
 ```
 
-That one needs more care because a phantom attractor is not simply "invalid
-domain" or "overflow." It is a suspicious finite trap. The evidence packet will
-need to show precision sensitivity, replay stability, and an escape path back
-to an interior event.
+That one should show a finite output collapsed onto a clamp shelf, then a
+deshelf replay that restores measurable boundary structure without claiming a
+global optimizer win.
