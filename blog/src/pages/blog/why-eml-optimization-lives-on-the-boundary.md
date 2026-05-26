@@ -117,6 +117,22 @@ only have different event counts; they should have different transition weather.
 The research question becomes whether successful EML optimization is a process
 of moving unsafe boundary events into proof-carrying rescue events.
 
+Forge now names those moves as rescue operators:
+
+| Operator | Target transition | Obligation |
+| --- | --- | --- |
+| `log_domain_lift` | `domain_wall -> log_domain_rescue` | positive-coordinate preservation |
+| `guard_clamp` | `overflow_wall -> guard_rescue` | output safety |
+| `precision_escape` | `phantom_attractor -> interior_sample` | precision sensitivity |
+| `saturation_deshelf` | `saturation_shelf -> corner_concentration` | clamp invariant |
+
+The paired intervention benchmark runs a raw baseline and an intervened run with
+the same dimension, depth, sample count, and seed. It compares survival,
+bad-event count, rescued-event count, transition entropy, and dominant flow.
+This is still conservative: simulated, analysis-only, and not an optimizer
+release claim. But it changes the research object from "what did the optimizer
+hit?" to "can Forge steer boundary dynamics?"
+
 ## Why This Matters
 
 Most symbolic optimizers treat tree search as if useful expressions are spread
@@ -161,20 +177,27 @@ contract:
 - valid transition graphs map to boundary-dynamics obligations
 - `domain_wall -> log_domain_rescue` maps to positive-coordinate preservation
 - `overflow_wall -> guard_rescue` maps to output safety
+- `log_domain_lift` intervention pairs map to positive-coordinate obligations
+- `guard_clamp` intervention pairs map to output-safety obligations
+- `precision_escape` intervention pairs map to precision obligations
+- `saturation_deshelf` intervention pairs map to clamp obligations
 
 ## Next Target
 
-The next frontier is not a bigger random search. It is a proof-carrying
-log-domain search discipline:
+The next frontier is not a bigger random search. It is control over
+boundary-event dynamics:
 
 ```text
-positive coordinate transform
-  -> guarded EML evaluation
+raw boundary event
+  -> rescue operator
+  -> transformed transition graph
   -> replay packet
-  -> boundary transition graph
-  -> MachLib domain-preservation obligation
-  -> Explorer audit surface
+  -> MachLib intervention obligation
+  -> Explorer / electronics audit surface
 ```
 
 That is the line where EML stops being only a beautiful single-operator trick and
 becomes an optimizer architecture for the high-dimensional world.
+
+Put sharply: EML optimization is not merely search over expressions; it is
+control over boundary-event dynamics.
