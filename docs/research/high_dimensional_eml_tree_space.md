@@ -196,3 +196,9 @@ This regenerates:
 - useful-volume census;
 - formalization bridge and Lean/MachLib stubs;
 - IR evidence packet corpus.
+
+Public-facing synthesis draft:
+
+```text
+docs/research/why_eml_optimization_lives_on_the_boundary.md
+```
