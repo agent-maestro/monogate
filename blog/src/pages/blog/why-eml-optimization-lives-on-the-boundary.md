@@ -34,6 +34,8 @@ terminal dimension -> boundary concentration -> log-domain cliffs -> exp overflo
 
 The current evidence suite emits:
 
+- Course 006 optimization-boundary simulator packets
+- Forge boundary-optimizer benchmark packets
 - high-dimensional corner-concentration packets
 - Forge attractor trace packets
 - Forge heuristic frontier packets
@@ -63,6 +65,28 @@ The first stdlib/examples benchmark currently finds 9 candidate functions across
 82 analyzed functions. The candidates are concentrated in high-drift examples,
 softplus/mish, logarithmic base conversion, and Box-Muller transforms.
 
+There is now also a Course 006 simulator contract:
+
+```text
+dimension/depth input
+  -> EML tree-space sampler
+  -> boundary classifier
+  -> guard/log-domain mode
+  -> replay packet
+```
+
+The public electronics lab treats the Trainer Board as a tactile control
+surface for this experiment: the potentiometer selects dimension, a mode switch
+selects raw/guarded/log-domain candidate behavior, LEDs/OLED-style readouts show
+finite survival and guard pressure, and the dashboard exports an evidence
+packet. It remains simulated courseware until a separate hardware runbook and
+capture packet exist.
+
+Forge backs the same contract with
+`tools/boundary_optimizer_benchmark.py`. That benchmark runs the same dimensions,
+modes, seeds, and packet fields as the simulator, so the UI is no longer just an
+illustration. It is a replay surface for a reproducible research packet.
+
 ## Why This Matters
 
 Most symbolic optimizers treat tree search as if useful expressions are spread
@@ -91,6 +115,13 @@ The harder targets remain:
 
 - ball/cube volume collapse
 - guarded lowering domain preservation
+
+The queue also has packet-level bridge obligations for the new Course 006
+contract:
+
+- valid guarded boundary packets expose a nonnegative finite-survival metric
+- valid log-domain candidate packets expose a nonnegative finite-survival metric
+- benchmark counts can witness the `BoundaryDominatesCenter` predicate
 
 ## Next Target
 
