@@ -1,0 +1,165 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="Frontier Research — monogate.org"
+  description="Active Monogate research fronts: boundary concentration, proof-carrying rescue packets, Forge replay artifacts, and MachLib obligations."
+>
+  <section class="frontier-hero">
+    <p class="eyebrow">Monogate Research</p>
+    <h1>Frontier map</h1>
+    <p class="lede">
+      The current frontier is not a single theorem. It is a repeatable loop:
+      Forge emits evidence, monogate.dev inspects it, MachLib names the proof
+      obligations, and monogate.org keeps the public claim boundary honest.
+    </p>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow">Active instrument</p>
+    <h2>Proof-carrying rescue suite</h2>
+    <p>
+      The rescue suite tracks four optimizer boundary events through named
+      rescue operators and replayable witness packets. The generated Explorer
+      fixture is derived from the Forge manifest and replay JSON.
+    </p>
+    <div class="links">
+      <a href="https://monogate.dev/explorer/rescue-suite">Open Explorer</a>
+      <a href="/blog/proof-carrying-rescue-suite-v0">Read v0 note</a>
+      <a href="/blog/how-to-read-the-rescue-suite">Read the guide</a>
+    </div>
+  </section>
+
+  <section class="grid" aria-label="Frontier research fronts">
+    <article>
+      <p class="tag">geometry</p>
+      <h2>Boundary concentration</h2>
+      <p>
+        High-dimensional search space pushes useful structure toward sparse
+        boundary regions. This is the substrate behind corner concentration,
+        phantom attractors, and rescue-triggered optimization traces.
+      </p>
+      <a href="/blog/why-eml-optimization-lives-on-the-boundary">Read the boundary essay</a>
+    </article>
+
+    <article>
+      <p class="tag">forge</p>
+      <h2>Replayable rescue packets</h2>
+      <p>
+        Forge now emits a suite manifest, replay result, markdown summary, and
+        Explorer fixture from one command. The goal is repeatable research
+        artifacts, not screenshots or hand-entered tables.
+      </p>
+      <code>forge rescue --suite --strict</code>
+    </article>
+
+    <article>
+      <p class="tag">machlib</p>
+      <h2>Proof obligations</h2>
+      <p>
+        The suite routes each rescue lane to a named MachLib obligation. The
+        current public claim is obligation routing plus packet witnesses, not
+        completed semantic-rewrite proofs.
+      </p>
+      <a href="/blog/proof-carrying-rescue-status">See status table</a>
+    </article>
+
+    <article>
+      <p class="tag">claim boundary</p>
+      <h2>What is claimed</h2>
+      <p>
+        We claim generated analysis artifacts, simulated traces, replay checks,
+        and explicit proof-obligation names. We do not yet claim production
+        optimizer rewrites, hardware observations, or fully discharged formal
+        proofs for the whole suite.
+      </p>
+    </article>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow">Next pressure point</p>
+    <h2>Move one lane from routed to discharged</h2>
+    <p>
+      The cleanest first target is the log-domain lane:
+      <code>PositiveCoordinateObligation</code>. It is narrow, inspectable, and
+      close to the mathematical heart of the rescue idea: transform invalid
+      raw coordinates into a positive internal coordinate path.
+    </p>
+  </section>
+
+  <style>
+    .frontier-hero {
+      padding: 36px 0 20px;
+    }
+    .eyebrow,
+    .tag {
+      margin: 0 0 8px;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--orange);
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: 2.2rem;
+      line-height: 1.1;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+      line-height: 1.25;
+    }
+    .lede,
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .lede {
+      max-width: 720px;
+      font-size: 1.02rem;
+    }
+    .panel,
+    article {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .links a,
+    article a {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+    }
+    .links a {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 10px;
+      text-decoration: none;
+    }
+    code {
+      overflow-wrap: anywhere;
+    }
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      h1 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</Base>

@@ -28,10 +28,11 @@ https://monogate.dev/explorer/rescue-suite
 It can be replayed with:
 
 ```text
-python tools/proof_carrying_rescue_replay.py \
-  reports/proof_carrying_rescue_suite_v0_2026_05_26.json \
-  --strict
+forge rescue --suite --strict
 ```
+
+That emits the manifest, the replay result, the markdown summary, and the
+generated fixture consumed by the Explorer.
 
 ## What the Manifest Says
 
@@ -94,3 +95,5 @@ source fixture
 ```
 
 The next surface should be an Explorer/dashboard view over this exact manifest.
+That surface is now live; the broader frontier map is at
+[`/research/frontier`](/research/frontier).

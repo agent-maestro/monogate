@@ -15,26 +15,23 @@ The v0 rescue suite is complete.
 Forge now emits one manifest for all four proof-carrying rescue lanes:
 
 ```text
-tools/proof_carrying_rescue_suite.py
+forge rescue --suite --strict
 ```
 
-Forge also replays that manifest with:
+That command writes the manifest, replay result, markdown summary, and
+dev-facing Explorer fixture:
 
 ```text
-tools/proof_carrying_rescue_replay.py
+reports/proof_carrying_rescue_suite_v0_2026_05_26.json
+reports/proof_carrying_rescue_replay_v0_2026_05_26.json
+reports/proof_carrying_rescue_suite_v0_2026_05_26.md
+reports/proof_carrying_rescue_explorer_fixture_v0_2026_05_26.json
 ```
 
 The interactive software inspection surface lives at:
 
 ```text
 https://monogate.dev/explorer/rescue-suite
-```
-
-The manifest is:
-
-```text
-reports/proof_carrying_rescue_suite_v0_2026_05_26.json
-reports/proof_carrying_rescue_suite_v0_2026_05_26.md
 ```
 
 ## The Four Lanes
