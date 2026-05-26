@@ -227,6 +227,13 @@ higher-precision sensitivity, and an escape witness without claiming a true
 local optimum. See
 [`/blog/third-proof-carrying-rescue`](/blog/third-proof-carrying-rescue).
 
+The fourth proof-carrying rescue completes the v0 suite with
+`saturation_shelf -> corner_concentration`: finite clamp-shelf collapse replayed
+as measurable pre-clamp boundary pressure. See
+[`/blog/fourth-proof-carrying-rescue`](/blog/fourth-proof-carrying-rescue) and
+the suite manifest note at
+[`/blog/proof-carrying-rescue-suite-v0`](/blog/proof-carrying-rescue-suite-v0).
+
 ## Next Target
 
 The next frontier is not a bigger random search. It is control over

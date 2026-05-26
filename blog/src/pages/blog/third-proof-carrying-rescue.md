@@ -100,3 +100,5 @@ like success. A proof-carrying optimizer needs to say, "this trace is finite,
 but the finite evidence is suspicious."
 
 The third rescue gives Monogate a first packet shape for that suspicion.
+
+Next in the series: [`The Fourth Proof-Carrying Rescue`](/blog/fourth-proof-carrying-rescue).

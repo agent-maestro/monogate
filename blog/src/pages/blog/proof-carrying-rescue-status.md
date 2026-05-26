@@ -18,7 +18,7 @@ events and named rescue operators. This is the current status table.
 | `domain_wall` | `log_domain_lift` | `log_domain_rescue` | packet + tests | closed packet bridge | [first rescue](/blog/first-proof-carrying-rescue) |
 | `overflow_wall` | `guard_clamp` | `guard_rescue` | packet + tests | closed packet bridge | [second rescue](/blog/second-proof-carrying-rescue) |
 | `phantom_attractor` | `precision_escape` | `interior_sample` | packet + tests | closed packet bridge with explicit event witness | [third rescue](/blog/third-proof-carrying-rescue) |
-| `saturation_shelf` | `saturation_deshelf` | `corner_concentration` | intervention benchmark only | pair obligation bridge | next target |
+| `saturation_shelf` | `saturation_deshelf` | `corner_concentration` | packet + tests | closed packet bridge with explicit event witness | [fourth rescue](/blog/fourth-proof-carrying-rescue) |
 
 ## Reading The Table
 
@@ -33,18 +33,16 @@ adding a new `sorry`.
 but the theorem requires both the event witness and transition witness. That is
 the current honest shape for phantom-attractor evidence.
 
-`pair obligation bridge` means the named intervention is present in the broader
-paired benchmark and MachLib obligation map, but it does not yet have the
-narrow source-fixture packet that the first three rescues have.
+The four-lane suite manifest is published as
+[`Proof-Carrying Rescue Suite v0`](/blog/proof-carrying-rescue-suite-v0).
 
 ## Next Frontier
 
-The next target is:
+The next target is no longer another one-off rescue. It is unification:
 
 ```text
-saturation_shelf -> saturation_deshelf -> corner_concentration
+four packets -> one manifest -> Explorer/dashboard/replay surface
 ```
 
-That one should show a finite output collapsed onto a clamp shelf, then a
-deshelf replay that restores measurable boundary structure without claiming a
-global optimizer win.
+That manifest becomes the stable artifact for future visual surfaces and deeper
+MachLib proofs.
