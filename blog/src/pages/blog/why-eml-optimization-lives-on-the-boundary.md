@@ -87,6 +87,23 @@ Forge backs the same contract with
 modes, seeds, and packet fields as the simulator, so the UI is no longer just an
 illustration. It is a replay surface for a reproducible research packet.
 
+The next step was to stop calling every failure a generic boundary hit. Forge
+and the simulator now share a boundary-event taxonomy:
+
+| Event | Meaning | Obligation direction |
+| --- | --- | --- |
+| `corner_concentration` | sample lives near a cube face/corner | boundary-dominance counting |
+| `domain_wall` | evaluation crosses a declared input domain | domain preservation |
+| `overflow_wall` | evaluation pressure predicts non-finite behavior | bounded evaluation |
+| `saturation_shelf` | finite output collapses onto a clamp plateau | clamp invariant |
+| `phantom_attractor` | suspicious finite interior trap candidate | precision sensitivity |
+| `guard_rescue` | guarded mode survives a raw-mode failure | output safety |
+| `log_domain_rescue` | log-domain candidate survives a raw-mode failure | positive-coordinate preservation |
+
+Every Course 006 trace preview frame now carries `event_class`, and every run
+packet carries `event_counts`. That makes the simulator timeline, Forge
+benchmark table, and MachLib obligation map talk about the same object.
+
 ## Why This Matters
 
 Most symbolic optimizers treat tree search as if useful expressions are spread
@@ -122,6 +139,12 @@ contract:
 - valid guarded boundary packets expose a nonnegative finite-survival metric
 - valid log-domain candidate packets expose a nonnegative finite-survival metric
 - benchmark counts can witness the `BoundaryDominatesCenter` predicate
+- `domain_wall` maps to domain preservation
+- `overflow_wall` maps to bounded evaluation
+- `saturation_shelf` maps to clamp invariants
+- `phantom_attractor` maps to precision-sensitivity obligations
+- `guard_rescue` maps to output safety
+- `log_domain_rescue` maps to positive-coordinate preservation
 
 ## Next Target
 
