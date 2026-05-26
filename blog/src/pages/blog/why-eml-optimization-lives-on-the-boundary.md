@@ -104,6 +104,19 @@ Every Course 006 trace preview frame now carries `event_class`, and every run
 packet carries `event_counts`. That makes the simulator timeline, Forge
 benchmark table, and MachLib obligation map talk about the same object.
 
+The new layer is the transition graph. Instead of only counting event classes,
+packets now count flows:
+
+```text
+from_event -> to_event -> count
+```
+
+They also export `transition_entropy` and `dominant_transition`. This is the
+first hint of a boundary dynamics substrate: healthy guarded runs should not
+only have different event counts; they should have different transition weather.
+The research question becomes whether successful EML optimization is a process
+of moving unsafe boundary events into proof-carrying rescue events.
+
 ## Why This Matters
 
 Most symbolic optimizers treat tree search as if useful expressions are spread
@@ -145,6 +158,9 @@ contract:
 - `phantom_attractor` maps to precision-sensitivity obligations
 - `guard_rescue` maps to output safety
 - `log_domain_rescue` maps to positive-coordinate preservation
+- valid transition graphs map to boundary-dynamics obligations
+- `domain_wall -> log_domain_rescue` maps to positive-coordinate preservation
+- `overflow_wall -> guard_rescue` maps to output safety
 
 ## Next Target
 
@@ -155,6 +171,7 @@ log-domain search discipline:
 positive coordinate transform
   -> guarded EML evaluation
   -> replay packet
+  -> boundary transition graph
   -> MachLib domain-preservation obligation
   -> Explorer audit surface
 ```
