@@ -17,7 +17,7 @@ events and named rescue operators. This is the current status table.
 | --- | --- | --- | --- | --- | --- |
 | `domain_wall` | `log_domain_lift` | `log_domain_rescue` | packet + tests + registry | concrete witness + closed packet bridge | `concrete_sample_invariant` |
 | `overflow_wall` | `guard_clamp` | `guard_rescue` | packet + tests + registry | concrete witness + closed packet bridge | `concrete_sample_invariant` |
-| `phantom_attractor` | `precision_escape` | `interior_sample` | packet + tests | closed packet bridge with explicit event witness | `packet_bridge_only` |
+| `phantom_attractor` | `precision_escape` | `interior_sample` | packet + tests + registry | concrete witness + closed packet bridge with explicit event witness | `concrete_sample_invariant` |
 | `saturation_shelf` | `saturation_deshelf` | `corner_concentration` | packet + tests + registry | concrete witness + closed packet bridge with explicit event witness | `concrete_sample_invariant` |
 
 ## Reading The Table
@@ -29,7 +29,8 @@ generated report, and regression tests.
 connecting a valid packet transition to its obligation and a sample-level
 theorem that discharges the concrete local obligation. The log-domain lane has
 a positive-coordinate witness. The guard-clamp lane now has an output-safety
-witness. The saturation-deshelf lane has a clamp-invariant witness.
+witness. The precision-escape lane has a local precision-sensitivity witness.
+The saturation-deshelf lane has a clamp-invariant witness.
 
 `closed packet bridge with explicit event witness` means the bridge is closed,
 but the theorem requires both the event witness and transition witness. That is
@@ -39,10 +40,10 @@ The saturation-deshelf lane also has a concrete clamp-invariant witness now,
 but it remains more cautious in public copy because deshelf moves a trace off a
 saturation shelf rather than simply ending in a rescue-normal event.
 
-The precision-escape lane is explicitly weaker in v0. It remains
-`packet_bridge_only`: Forge can replay and inspect the escape packet, and
-MachLib can route the obligation through the packet bridge, but there is not
-yet a concrete sample-invariant theorem for that lane.
+The precision-escape witness is local: it records that low precision reported a
+stalled gradient, while the higher-precision replay exposed a nonzero escape
+signal and moved the sample from `phantom_attractor` to `interior_sample`. It
+does not claim a convergence theorem.
 
 The four-lane suite manifest is published as
 [`Proof-Carrying Rescue Suite v0`](/blog/proof-carrying-rescue-suite-v0).
