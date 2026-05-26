@@ -4,6 +4,13 @@ Date: 2026-05-25
 
 Status: `INTERNAL_LOWERING_CONTRACT_V1_DRAFT`
 
+First code-backed artifact:
+
+```text
+lib/src/ir.js
+docs/research/eml_ir_v1_replay_artifact.md
+```
+
 ## Purpose
 
 This contract defines the next stable boundary for the EML IR prototype:
