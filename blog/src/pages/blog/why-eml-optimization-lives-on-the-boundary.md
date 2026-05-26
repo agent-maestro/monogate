@@ -209,6 +209,12 @@ That theorem does not add a new axiom and does not use `sorry`. It is small, but
 it matters because it marks the bridge from sampled trace evidence into an
 actual formal object MachLib can quantify over.
 
+The first proof-carrying rescue packet now specializes that bridge to
+`domain_wall -> log_domain_rescue`. Forge emits a trace for a positive-domain
+EML fixture, applies `log_domain_lift`, records finite recovery, and points at
+MachLib's positive-coordinate obligation. See
+[`/blog/first-proof-carrying-rescue`](/blog/first-proof-carrying-rescue).
+
 ## Next Target
 
 The next frontier is not a bigger random search. It is control over
