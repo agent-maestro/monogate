@@ -27,7 +27,14 @@ def main() -> int:
 
     if args.strict:
         regimes = {row["regime"] for row in packet["summary"]}
-        expected = {"naive_gradient", "regularized_gradient", "guarded_gradient", "boundary_aware_gradient", "random_search"}
+        expected = {
+            "naive_gradient",
+            "regularized_gradient",
+            "guarded_gradient",
+            "boundary_aware_gradient",
+            "log_domain_gradient",
+            "random_search",
+        }
         if regimes != expected:
             raise SystemExit(f"unexpected regimes: {sorted(regimes)}")
         if packet["boundaries"]["optimizer_release_claim"]:

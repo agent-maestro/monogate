@@ -11,7 +11,8 @@ Steps per regime: `80`
 | regularized_gradient | domain_failed | n/a | 80 | 0 | 0 | 0 |
 | guarded_gradient | saturated | 4.866e+02 | 0 | 0 | 80 | 80 |
 | boundary_aware_gradient | saturated | 2.472e+17 | 0 | 0 | 80 | 80 |
-| random_search | saturated | 5.768e-01 | 0 | 10 | 63 | 70 |
+| log_domain_gradient | saturated | 8.684e-02 | 0 | 0 | 78 | 80 |
+| random_search | saturated | 1.783e-02 | 1 | 6 | 64 | 73 |
 
 ## MachLib / Lean Obligations
 

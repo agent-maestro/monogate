@@ -73,12 +73,13 @@ optimizer run -> terminal vector statistics -> replay packet -> attractor/collap
 
 ## Forge Trace Packet
 
-`python/scripts/forge_attractor_trace_packet.py` now compares five regimes:
+`python/scripts/forge_attractor_trace_packet.py` now compares six regimes:
 
 - `naive_gradient`
 - `regularized_gradient`
 - `guarded_gradient`
 - `boundary_aware_gradient`
+- `log_domain_gradient`
 - `random_search`
 
 Run:
@@ -122,10 +123,10 @@ reports/forge_heuristic_frontier_2026_05_26.json
 reports/forge_heuristic_frontier_2026_05_26.md
 ```
 
-This packet makes the next optimizer question concrete: guarded and
-boundary-aware traces preserve finite execution, but saturation still dominates
-as depth rises. The recommended next experiment is log-domain
-parameterization, with random search kept as a control.
+This packet makes the next optimizer question concrete: guarded,
+boundary-aware, and log-domain traces preserve finite execution, but
+saturation still dominates as depth rises. Log-domain parameterization is now
+a first-class Forge baseline candidate; random search stays as a control.
 
 ## MachLib / Lean Bridge
 

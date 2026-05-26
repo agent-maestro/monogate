@@ -150,6 +150,11 @@ def _terminal_stats(leaves: list[float], boundary_epsilon: float = 0.05) -> dict
     }
 
 
+def _materialize_log_domain_leaves(params: list[float], clamp: float = 4.0) -> list[float]:
+    """Map unconstrained optimizer parameters to positive terminal leaves."""
+    return [math.exp(max(min(x, clamp), -clamp)) for x in params]
+
+
 def _trace_loss(
     leaves: list[float],
     target: float,
@@ -182,10 +187,39 @@ def _trace_loss(
     return loss, output, None
 
 
-def _finite_difference_gradient(
-    leaves: list[float],
+def _parameter_loss(
+    params: list[float],
     target: float,
     *,
+    log_domain: bool,
+    clamp_domain: bool,
+    clamp_exp: bool,
+    l2: float,
+    boundary_penalty: float,
+    saturation_penalty: float,
+    saturation_limit: float,
+) -> tuple[float, float | None, str | None, list[float]]:
+    leaves = _materialize_log_domain_leaves(params) if log_domain else params
+    loss, output, event = _trace_loss(
+        leaves,
+        target,
+        clamp_domain=clamp_domain,
+        clamp_exp=clamp_exp,
+        l2=l2,
+        boundary_penalty=boundary_penalty,
+        saturation_penalty=saturation_penalty,
+        saturation_limit=saturation_limit,
+    )
+    if log_domain and math.isfinite(loss):
+        loss += l2 * sum(x * x for x in params)
+    return loss, output, event, leaves
+
+
+def _finite_difference_gradient(
+    params: list[float],
+    target: float,
+    *,
+    log_domain: bool = False,
     clamp_domain: bool,
     clamp_exp: bool,
     l2: float,
@@ -195,14 +229,15 @@ def _finite_difference_gradient(
     eps: float = 1e-4,
 ) -> list[float]:
     grad: list[float] = []
-    for i in range(len(leaves)):
-        plus = list(leaves)
-        minus = list(leaves)
+    for i in range(len(params)):
+        plus = list(params)
+        minus = list(params)
         plus[i] += eps
         minus[i] -= eps
-        lp, _, _ = _trace_loss(
+        lp, _, _, _ = _parameter_loss(
             plus,
             target,
+            log_domain=log_domain,
             clamp_domain=clamp_domain,
             clamp_exp=clamp_exp,
             l2=l2,
@@ -210,9 +245,10 @@ def _finite_difference_gradient(
             saturation_penalty=saturation_penalty,
             saturation_limit=saturation_limit,
         )
-        lm, _, _ = _trace_loss(
+        lm, _, _, _ = _parameter_loss(
             minus,
             target,
+            log_domain=log_domain,
             clamp_domain=clamp_domain,
             clamp_exp=clamp_exp,
             l2=l2,
@@ -241,17 +277,22 @@ def run_optimizer_trace(
 
     Regimes are intentionally simple and dependency-free:
     `naive_gradient`, `regularized_gradient`, `guarded_gradient`,
-    `boundary_aware_gradient`, and `random_search`.
+    `boundary_aware_gradient`, `log_domain_gradient`, and `random_search`.
     """
     rng = random.Random(seed)
     leaf_dimension = 2**depth
-    positive_init = regime in {"guarded_gradient", "boundary_aware_gradient", "random_search"}
-    leaves = [rng.uniform(0.1, 2.0) if positive_init else rng.uniform(-1.0, 1.0) for _ in range(leaf_dimension)]
-    clamp_domain = regime in {"guarded_gradient", "boundary_aware_gradient"}
-    clamp_exp = regime in {"guarded_gradient", "boundary_aware_gradient"}
-    l2 = 1e-3 if regime in {"regularized_gradient", "boundary_aware_gradient"} else 0.0
-    boundary_penalty = 0.05 if regime == "boundary_aware_gradient" else 0.0
-    saturation_penalty = 0.05 if regime == "boundary_aware_gradient" else 0.0
+    log_domain = regime == "log_domain_gradient"
+    positive_init = regime in {"guarded_gradient", "boundary_aware_gradient", "log_domain_gradient", "random_search"}
+    params = [
+        math.log(rng.uniform(0.1, 2.0)) if log_domain else rng.uniform(0.1, 2.0) if positive_init else rng.uniform(-1.0, 1.0)
+        for _ in range(leaf_dimension)
+    ]
+    leaves = _materialize_log_domain_leaves(params) if log_domain else list(params)
+    clamp_domain = regime in {"guarded_gradient", "boundary_aware_gradient", "log_domain_gradient"}
+    clamp_exp = regime in {"guarded_gradient", "boundary_aware_gradient", "log_domain_gradient"}
+    l2 = 1e-3 if regime in {"regularized_gradient", "boundary_aware_gradient", "log_domain_gradient"} else 0.0
+    boundary_penalty = 0.05 if regime in {"boundary_aware_gradient", "log_domain_gradient"} else 0.0
+    saturation_penalty = 0.05 if regime in {"boundary_aware_gradient", "log_domain_gradient"} else 0.0
 
     events = {"domain_failed": 0, "overflowed": 0, "saturated": 0, "boundary_hit": 0}
     frames = []
@@ -274,11 +315,13 @@ def run_optimizer_trace(
                 saturation_limit=saturation_limit,
             )
             if loss < best_loss:
+                params = candidate
                 leaves = candidate
         else:
-            loss, output, event = _trace_loss(
-                leaves,
+            loss, output, event, leaves = _parameter_loss(
+                params,
                 target,
+                log_domain=log_domain,
                 clamp_domain=clamp_domain,
                 clamp_exp=clamp_exp,
                 l2=l2,
@@ -313,8 +356,9 @@ def run_optimizer_trace(
 
         if regime != "random_search":
             grad = _finite_difference_gradient(
-                leaves,
+                params,
                 target,
+                log_domain=log_domain,
                 clamp_domain=clamp_domain,
                 clamp_exp=clamp_exp,
                 l2=l2,
@@ -322,9 +366,12 @@ def run_optimizer_trace(
                 saturation_penalty=saturation_penalty,
                 saturation_limit=saturation_limit,
             )
-            leaves = [x - learning_rate * g for x, g in zip(leaves, grad)]
+            params = [x - learning_rate * g for x, g in zip(params, grad)]
             if regime == "boundary_aware_gradient":
-                leaves = [max(min(x, 2.0), 0.05) for x in leaves]
+                params = [max(min(x, 2.0), 0.05) for x in params]
+            elif regime == "log_domain_gradient":
+                params = [max(min(x, 4.0), -4.0) for x in params]
+            leaves = _materialize_log_domain_leaves(params) if log_domain else list(params)
 
     stats = _terminal_stats(leaves)
     if final_output is None:
@@ -381,6 +428,7 @@ def run_forge_attractor_trace_packet(
         "regularized_gradient",
         "guarded_gradient",
         "boundary_aware_gradient",
+        "log_domain_gradient",
         "random_search",
     ]
     traces = [
@@ -427,7 +475,7 @@ def run_forge_attractor_trace_packet(
 def run_forge_heuristic_frontier_packet(
     *,
     depths: Iterable[int] = range(2, 6),
-    regimes: Iterable[str] = ("guarded_gradient", "boundary_aware_gradient", "random_search"),
+    regimes: Iterable[str] = ("guarded_gradient", "boundary_aware_gradient", "log_domain_gradient", "random_search"),
     seeds: Iterable[int] = range(20260526, 20260531),
     steps: int = 60,
     target: float = math.pi,
@@ -486,9 +534,10 @@ def run_forge_heuristic_frontier_packet(
         "ranked_regime_depths": ranked,
         "trace_refs": trace_refs,
         "recommendations": [
-            "Prefer boundary-aware guarded search as the next Forge baseline when formal domain preservation matters.",
+            "Treat log-domain parameterization as the next Forge baseline candidate when saturation dominates guarded search.",
+            "Prefer boundary-aware guarded search when formal domain preservation matters and log-domain transforms are unavailable.",
             "Keep random search as a control, not as a release heuristic.",
-            "Add log-domain parameterization before broadening depth beyond this sampled packet.",
+            "Broaden depth only after replay packets show reduced saturation pressure.",
         ],
         "boundaries": {
             "sampled_evidence_only": True,

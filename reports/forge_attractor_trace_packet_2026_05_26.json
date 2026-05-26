@@ -5,7 +5,7 @@
   "target": 3.141592653589793,
   "seed": 20260526,
   "steps": 80,
-  "regime_count": 5,
+  "regime_count": 6,
   "traces": [
     {
       "schema_version": "monogate.forge_attractor_trace.v1",
@@ -350,79 +350,164 @@
     {
       "schema_version": "monogate.forge_attractor_trace.v1",
       "trace": {
-        "regime": "random_search",
+        "regime": "log_domain_gradient",
         "depth": 3,
         "leaf_dimension": 8,
         "target": 3.141592653589793,
         "seed": 20260530,
         "steps": 80,
         "final_label": "saturated",
-        "final_output": 33.2424068354839,
-        "final_loss": 906.0590144129172,
-        "best_loss": 0.5768007076910909,
+        "final_output": 371978.68221330195,
+        "final_loss": 145283837847.6434,
+        "best_loss": 0.08684497689122658,
         "domain_failures": 0,
-        "overflow_events": 10,
-        "saturation_events": 63,
+        "overflow_events": 0,
+        "saturation_events": 78,
         "boundary_hits": 80,
-        "finite_steps": 70,
-        "terminal_boundary_fraction": 0.625,
-        "terminal_min": 0.2531295658715368,
-        "terminal_max": 1.7596035581872624
+        "finite_steps": 80,
+        "terminal_boundary_fraction": 0.375,
+        "terminal_min": 0.01831563888873418,
+        "terminal_max": 7.883326145441571
       },
       "frames": [
         {
           "step": 0,
-          "loss": 1.5424539434595777e+19,
-          "output": 3927408746.1419663,
+          "loss": 0.08684497689122658,
+          "output": 3.1621381089169245,
           "event": null,
-          "terminal_boundary_fraction": 0.25,
-          "terminal_min": 0.1707468422258755,
-          "terminal_max": 1.8185669649338188
+          "terminal_boundary_fraction": 0.5,
+          "terminal_min": 0.3226530101124012,
+          "terminal_max": 1.7469730950264182
         },
         {
           "step": 1,
-          "loss": 2.2929038735612146e+87,
-          "output": 4.788427584877122e+43,
+          "loss": 0.2420717682751657,
+          "output": 2.748513004287141,
           "event": null,
-          "terminal_boundary_fraction": 0.25,
-          "terminal_min": 0.1707468422258755,
-          "terminal_max": 1.8185669649338188
+          "terminal_boundary_fraction": 0.5,
+          "terminal_min": 0.32266031695025155,
+          "terminal_max": 1.752410760667822
         },
         {
           "step": 2,
-          "loss": 2.6711649433397578e+26,
-          "output": 16343698918362.344,
+          "loss": 388.218140699547,
+          "output": 22.639433860413888,
           "event": null,
-          "terminal_boundary_fraction": 0.25,
-          "terminal_min": 0.1707468422258755,
-          "terminal_max": 1.8185669649338188
+          "terminal_boundary_fraction": 0.5,
+          "terminal_min": 0.32265402289029244,
+          "terminal_max": 1.6087183679377777
         },
         {
           "step": 4,
-          "loss": 2.486036985107153e+20,
-          "output": 15767171547.547243,
+          "loss": 539.0393158587248,
+          "output": -19.94599957339466,
           "event": null,
           "terminal_boundary_fraction": 0.5,
-          "terminal_min": 0.19148607648363988,
-          "terminal_max": 1.9688689234542638
+          "terminal_min": 0.20639705429043184,
+          "terminal_max": 3.998740004689042
         },
         {
           "step": 9,
-          "loss": 204973690487768.12,
-          "output": 14316905.40736817,
+          "loss": 380.2853365691682,
+          "output": -16.300859321788742,
           "event": null,
-          "terminal_boundary_fraction": 0.625,
-          "terminal_min": 0.10432224864411366,
-          "terminal_max": 1.8929967706404018
+          "terminal_boundary_fraction": 0.5,
+          "terminal_min": 0.25869042232648287,
+          "terminal_max": 3.0911303737810276
         },
         {
           "step": 79,
-          "loss": 906.0590144129172,
-          "output": 33.2424068354839,
+          "loss": 145283837847.6434,
+          "output": 371978.68221330195,
           "event": null,
-          "terminal_boundary_fraction": 0.625,
-          "terminal_min": 0.2531295658715368,
-          "terminal_max": 1.7596035581872624
+          "terminal_boundary_fraction": 0.25,
+          "terminal_min": 0.02084020627456498,
+          "terminal_max": 2.9001136169572654
+        }
+      ],
+      "boundaries": {
+        "sampled_evidence_only": true,
+        "optimizer_release_claim": false,
+        "phantom_attractor_proof": false,
+        "hardware_claim": false
+      }
+    },
+    {
+      "schema_version": "monogate.forge_attractor_trace.v1",
+      "trace": {
+        "regime": "random_search",
+        "depth": 3,
+        "leaf_dimension": 8,
+        "target": 3.141592653589793,
+        "seed": 20260531,
+        "steps": 80,
+        "final_label": "saturated",
+        "final_output": 2.5443096246907404e+113,
+        "final_loss": 6.473511466293936e+226,
+        "best_loss": 0.017831437793085016,
+        "domain_failures": 1,
+        "overflow_events": 6,
+        "saturation_events": 64,
+        "boundary_hits": 80,
+        "finite_steps": 73,
+        "terminal_boundary_fraction": 0.5,
+        "terminal_min": 0.3803576957603252,
+        "terminal_max": 1.7744737316612726
+      },
+      "frames": [
+        {
+          "step": 0,
+          "loss": 2.6618747089719555e+28,
+          "output": 163152527071205.94,
+          "event": null,
+          "terminal_boundary_fraction": 0.5,
+          "terminal_min": 0.27869381731287957,
+          "terminal_max": 1.9844039987139426
+        },
+        {
+          "step": 1,
+          "loss": 1.394872329049981e+202,
+          "output": 1.1810471324422159e+101,
+          "event": null,
+          "terminal_boundary_fraction": 0.5,
+          "terminal_min": 0.27869381731287957,
+          "terminal_max": 1.9844039987139426
+        },
+        {
+          "step": 2,
+          "loss": 1.3643667909304655,
+          "output": 1.9735315289347237,
+          "event": null,
+          "terminal_boundary_fraction": 0.375,
+          "terminal_min": 0.10241301188505618,
+          "terminal_max": 1.9818466571957356
+        },
+        {
+          "step": 4,
+          "loss": 702703.951077839,
+          "output": 841.4159815489198,
+          "event": null,
+          "terminal_boundary_fraction": 0.375,
+          "terminal_min": 0.10241301188505618,
+          "terminal_max": 1.9818466571957356
+        },
+        {
+          "step": 9,
+          "loss": 1.480251037021016e+133,
+          "output": 3.847403068331957e+66,
+          "event": null,
+          "terminal_boundary_fraction": 0.375,
+          "terminal_min": 0.10241301188505618,
+          "terminal_max": 1.9818466571957356
+        },
+        {
+          "step": 79,
+          "loss": 6.473511466293936e+226,
+          "output": 2.5443096246907404e+113,
+          "event": null,
+          "terminal_boundary_fraction": 0.5,
+          "terminal_min": 0.3803576957603252,
+          "terminal_max": 1.7744737316612726
         }
       ],
       "boundaries": {
@@ -471,13 +556,22 @@
       "finite_steps": 80
     },
     {
+      "regime": "log_domain_gradient",
+      "label": "saturated",
+      "best_loss": 0.08684497689122658,
+      "domain_failures": 0,
+      "overflow_events": 0,
+      "saturation_events": 78,
+      "finite_steps": 80
+    },
+    {
       "regime": "random_search",
       "label": "saturated",
-      "best_loss": 0.5768007076910909,
-      "domain_failures": 0,
-      "overflow_events": 10,
-      "saturation_events": 63,
-      "finite_steps": 70
+      "best_loss": 0.017831437793085016,
+      "domain_failures": 1,
+      "overflow_events": 6,
+      "saturation_events": 64,
+      "finite_steps": 73
     }
   ],
   "machlib_lean_obligations": [

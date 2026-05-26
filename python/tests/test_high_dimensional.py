@@ -52,6 +52,7 @@ def test_forge_attractor_trace_packet_compares_regimes():
         "regularized_gradient",
         "guarded_gradient",
         "boundary_aware_gradient",
+        "log_domain_gradient",
         "random_search",
     }
     assert packet["boundaries"]["formal_verification_claim"] is False
@@ -65,7 +66,7 @@ def test_forge_heuristic_frontier_compares_depths_and_regimes():
 
     assert packet["schema_version"] == "monogate.forge_heuristic_frontier.v1"
     assert depths == {2, 3}
-    assert {"guarded_gradient", "boundary_aware_gradient", "random_search"} <= regimes
+    assert {"guarded_gradient", "boundary_aware_gradient", "log_domain_gradient", "random_search"} <= regimes
     assert packet["ranked_regime_depths"]
     assert packet["boundaries"]["optimizer_release_claim"] is False
 
