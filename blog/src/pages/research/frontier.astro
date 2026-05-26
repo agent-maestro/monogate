@@ -61,11 +61,11 @@ import Base from '../../layouts/Base.astro';
       <h2>Proof obligations</h2>
       <p>
         The suite routes each rescue lane to a named MachLib obligation. The
-        current public claim is obligation routing plus packet witnesses. All
-        four lanes are now at the concrete-sample-invariant tier: log-domain
-        positivity, guard-clamp output safety, precision-escape sensitivity,
-        and saturation-deshelf clamp invariance. Full semantic-rewrite proofs
-        remain future work.
+        current public claim is obligation routing plus packet witnesses. The
+        log-domain lane now has a restricted semantic rewrite theorem for a
+        small witness-shaped class. Guard-clamp, precision escape, and
+        saturation-deshelf remain concrete-sample-invariant lanes. Full
+        unrestricted semantic-rewrite proofs remain future work.
       </p>
       <a href="/blog/proof-carrying-rescue-status">See status table</a>
     </article>
@@ -86,11 +86,10 @@ import Base from '../../layouts/Base.astro';
     <p class="eyebrow">Next pressure point</p>
     <h2>Move from witnesses to semantics</h2>
     <p>
-      All four v0 lanes now have concrete sample-level witnesses: log-domain
-      positivity, guard-clamp output safety, precision-escape sensitivity, and
-      saturation-deshelf clamp invariance. The next pressure point is connecting
-      one of those witnesses to a fuller semantic statement about arbitrary
-      rescued programs.
+      The first semantic step above local witnesses is now in place:
+      `log_domain_lift` has a restricted semantic rewrite theorem for its small
+      witness class. The next pressure point is widening that theorem from the
+      witness class toward a larger family of rescued log-domain programs.
     </p>
   </section>
 

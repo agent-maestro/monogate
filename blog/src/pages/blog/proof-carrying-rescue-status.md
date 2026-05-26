@@ -15,7 +15,7 @@ events and named rescue operators. This is the current status table.
 
 | Boundary event | Rescue operator | Rescue event | Forge evidence | MachLib bridge | Semantic tier |
 | --- | --- | --- | --- | --- | --- |
-| `domain_wall` | `log_domain_lift` | `log_domain_rescue` | packet + tests + registry | concrete witness + closed packet bridge | `concrete_sample_invariant` |
+| `domain_wall` | `log_domain_lift` | `log_domain_rescue` | packet + tests + registry | restricted semantic rewrite + concrete witness + closed packet bridge | `restricted_semantic_rewrite` |
 | `overflow_wall` | `guard_clamp` | `guard_rescue` | packet + tests + registry | concrete witness + closed packet bridge | `concrete_sample_invariant` |
 | `phantom_attractor` | `precision_escape` | `interior_sample` | packet + tests + registry | concrete witness + closed packet bridge with explicit event witness | `concrete_sample_invariant` |
 | `saturation_shelf` | `saturation_deshelf` | `corner_concentration` | packet + tests + registry | concrete witness + closed packet bridge with explicit event witness | `concrete_sample_invariant` |
@@ -24,6 +24,11 @@ events and named rescue operators. This is the current status table.
 
 `packet + tests` means Forge has a dedicated source fixture, trace tool,
 generated report, and regression tests.
+
+`restricted semantic rewrite` means MachLib has a theorem for a stated,
+narrow program class. For `log_domain_lift`, that class is the witness-shaped
+log-domain rescue where a raw domain-wall sample is rewritten into a positive
+internal coordinate with a `log_domain_rescue` event.
 
 `concrete witness + closed packet bridge` means MachLib has both a theorem
 connecting a valid packet transition to its obligation and a sample-level
@@ -60,6 +65,6 @@ four packets -> one manifest -> obligation registry -> approval gate -> Explorer
 ```
 
 The registry says which obligations are routed, witnessed, concretely proven,
-CI guarded, public-copy safe, semantically tiered, or blocked. The approval gate
+semantically tiered, CI guarded, public-copy safe, or blocked. The approval gate
 decides whether the generated artifacts may be surfaced or deployed while
-keeping the full semantic-rewrite claim false.
+keeping the unrestricted semantic-rewrite claim false.
