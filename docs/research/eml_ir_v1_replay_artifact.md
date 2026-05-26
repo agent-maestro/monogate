@@ -17,8 +17,12 @@ It exposes:
 
 ```js
 import {
+  certifyLowering,
+  checkSampledEquivalence,
   normalizeDag,
   emitReplayPacket,
+  lowerDagToJS,
+  lowerDagToPython,
   validateReplayPacket,
 } from "monogate/ir";
 ```
@@ -58,6 +62,10 @@ INIT -> READY -> RUNNING -> END -> PARKED
 
 - Hash-chains replay frames with stable local hashes.
 - Validates replay lifecycle, hash chain, and RUNNING-frame annotations.
+- Lowers DAGs to JavaScript and Python sketches.
+- Evaluates DAGs directly on finite sample points.
+- Compares lowered JavaScript against the DAG interpreter and emits sampled
+  equivalence evidence.
 
 ## Example
 
@@ -71,6 +79,21 @@ dag.dag_cost;  // 3
 The repeated `exp(x)` subtree is one DAG node, but the artifact keeps the
 tree-vs-DAG distinction explicit.
 
+Lowering certificate:
+
+```js
+const cert = certifyLowering("exp(x) + exp(x)", {
+  samples: [{ x: 1 }, { x: 2 }],
+});
+
+cert.equivalence.behavioral_equivalence_sampled; // true
+cert.lowering.javascript.source;                 // function lowered(x) { ... }
+cert.lowering.python.source;                     // def lowered(x): ...
+```
+
+This is sampled evidence only. It is not a formal equivalence theorem and not a
+compiler release.
+
 ## Validation
 
 ```bash
@@ -82,16 +105,16 @@ Current result:
 
 ```text
 6 test files passed
-434 tests passed
+438 tests passed
 ```
 
 ## Next Research Step
 
-Connect this artifact to one visible Explorer panel:
+Next ladder:
 
 ```text
-input expression -> DAG table -> replay packet -> field bridge
+sampled equivalence
+-> symbolic equivalence for arithmetic-only expressions
+-> MachLib theorem stubs
+-> Lean proof obligations
 ```
-
-The important review gate is that Explorer must continue to describe the field
-view as a visual intuition bridge, not a correctness validator.

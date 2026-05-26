@@ -19,6 +19,10 @@ This contract defines the next stable boundary for the EML IR prototype:
 
 It does not change compiler behavior. It does not change the canonical SuperBEST table. It gives Explorer, SuperBEST DAG experiments, and future Forge lowering work a shared language.
 
+The first implementation now reaches sampled lowering evidence:
+
+`expression -> normalized DAG nodes -> guarded replay frames -> lowered JS/Python sketches -> sampled equivalence record`
+
 ## Primitive Set
 
 The v1 primitive set is:
