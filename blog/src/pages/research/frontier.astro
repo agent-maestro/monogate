@@ -22,7 +22,8 @@ import Base from '../../layouts/Base.astro';
     <p>
       The rescue suite tracks four optimizer boundary events through named
       rescue operators and replayable witness packets. The generated Explorer
-      fixture is derived from the Forge manifest and replay JSON.
+      fixture is derived from the Forge manifest, replay JSON, obligation
+      registry, and approval gate.
     </p>
     <div class="links">
       <a href="https://monogate.dev/explorer/rescue-suite">Open Explorer</a>
@@ -47,9 +48,10 @@ import Base from '../../layouts/Base.astro';
       <p class="tag">forge</p>
       <h2>Replayable rescue packets</h2>
       <p>
-        Forge now emits a suite manifest, replay result, markdown summary, and
-        Explorer fixture from one command. The goal is repeatable research
-        artifacts, not screenshots or hand-entered tables.
+        Forge now emits a suite manifest, replay result, obligation registry,
+        approval gate, markdown summary, and Explorer fixture from one command.
+        The goal is repeatable research artifacts, not screenshots or
+        hand-entered tables.
       </p>
       <code>forge rescue --suite --strict</code>
     </article>
@@ -60,8 +62,10 @@ import Base from '../../layouts/Base.astro';
       <p>
         The suite routes each rescue lane to a named MachLib obligation. The
         current public claim is obligation routing plus packet witnesses. The
-        log-domain lane also has a concrete positive-coordinate witness theorem;
-        full semantic-rewrite proofs remain future work.
+        log-domain lane has a concrete positive-coordinate witness theorem, and
+        the guard-clamp lane has a concrete output-safety witness theorem, and
+        the saturation-deshelf lane has a concrete clamp-invariant witness
+        theorem. Full semantic-rewrite proofs remain future work.
       </p>
       <a href="/blog/proof-carrying-rescue-status">See status table</a>
     </article>
@@ -80,13 +84,14 @@ import Base from '../../layouts/Base.astro';
 
   <section class="panel">
     <p class="eyebrow">Next pressure point</p>
-    <h2>Connect the concrete witness to semantics</h2>
+    <h2>Move from witnesses to semantics</h2>
     <p>
-      The first target is now split cleanly: the log-domain lane has a concrete
-      positive-coordinate witness theorem, while the broader abstract packet
-      bridge remains the route into <code>PositiveCoordinateObligation</code>.
-      The next pressure point is connecting that concrete witness to a fuller
-      semantic statement about arbitrary rescued programs.
+      Three lanes now have concrete sample-level witnesses: log-domain
+      positivity, guard-clamp output safety, and saturation-deshelf clamp
+      invariance. The next pressure point is connecting those witnesses to
+      fuller semantic statements about arbitrary rescued programs, while keeping
+      precision escape marked as routed and witnessed but not yet concretely
+      proven.
     </p>
   </section>
 
