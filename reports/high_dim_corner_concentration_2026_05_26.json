@@ -1,0 +1,107 @@
+{
+  "schema_version": "monogate.high_dim_corner_concentration.v1",
+  "seed": 20260526,
+  "samples_per_depth": 2000,
+  "boundary_epsilon": 0.05,
+  "saturation_limit": 10.0,
+  "interpretation": {
+    "hypersphere_cube_ratio": "Analytic V(unit ball) / V([-1,1]^d).",
+    "boundary_shell_fraction": "Sample fraction with at least one terminal coordinate within epsilon of a cube face.",
+    "middle_ball_fraction": "Sample fraction inside radius 0.5*sqrt(d), a crude middle-of-cube proxy.",
+    "raw_domain_valid_fraction": "Raw [-1,1] terminal vectors that evaluate without log-domain failure.",
+    "positive_non_saturated_fraction": "Positive-domain terminal vectors that evaluate finite with |output| <= saturation_limit.",
+    "useful_volume_proxy": "Finite positive-domain fraction times non-saturated fraction; not a proof of useful symbolic solutions."
+  },
+  "rows": [
+    {
+      "depth": 1,
+      "leaf_dimension": 2,
+      "samples": 2000,
+      "hypersphere_cube_ratio": 0.7853981633974484,
+      "boundary_shell_fraction": 0.0875,
+      "middle_ball_fraction": 0.39,
+      "raw_domain_valid_fraction": 0.4795,
+      "positive_finite_fraction": 1.0,
+      "positive_non_saturated_fraction": 1.0,
+      "useful_volume_proxy": 1.0
+    },
+    {
+      "depth": 2,
+      "leaf_dimension": 4,
+      "samples": 2000,
+      "hypersphere_cube_ratio": 0.3084251375340426,
+      "boundary_shell_fraction": 0.1755,
+      "middle_ball_fraction": 0.329,
+      "raw_domain_valid_fraction": 0.233,
+      "positive_finite_fraction": 1.0,
+      "positive_non_saturated_fraction": 0.366,
+      "useful_volume_proxy": 0.366
+    },
+    {
+      "depth": 3,
+      "leaf_dimension": 8,
+      "samples": 2000,
+      "hypersphere_cube_ratio": 0.01585434424381551,
+      "boundary_shell_fraction": 0.348,
+      "middle_ball_fraction": 0.2225,
+      "raw_domain_valid_fraction": 0.057,
+      "positive_finite_fraction": 0.9185,
+      "positive_non_saturated_fraction": 0.1115,
+      "useful_volume_proxy": 0.10241275
+    },
+    {
+      "depth": 4,
+      "leaf_dimension": 16,
+      "samples": 2000,
+      "hypersphere_cube_ratio": 3.590860448591515e-06,
+      "boundary_shell_fraction": 0.5465,
+      "middle_ball_fraction": 0.1315,
+      "raw_domain_valid_fraction": 0.0015,
+      "positive_finite_fraction": 0.253,
+      "positive_non_saturated_fraction": 0.031,
+      "useful_volume_proxy": 0.007843
+    },
+    {
+      "depth": 5,
+      "leaf_dimension": 32,
+      "samples": 2000,
+      "hypersphere_cube_ratio": 1.0018864616362735e-15,
+      "boundary_shell_fraction": 0.8195,
+      "middle_ball_fraction": 0.043,
+      "raw_domain_valid_fraction": 0.0,
+      "positive_finite_fraction": 0.018,
+      "positive_non_saturated_fraction": 0.0055,
+      "useful_volume_proxy": 9.899999999999998e-05
+    },
+    {
+      "depth": 6,
+      "leaf_dimension": 64,
+      "samples": 2000,
+      "hypersphere_cube_ratio": 1.6699538010382586e-39,
+      "boundary_shell_fraction": 0.9675,
+      "middle_ball_fraction": 0.01,
+      "raw_domain_valid_fraction": 0.0,
+      "positive_finite_fraction": 0.0,
+      "positive_non_saturated_fraction": 0.0,
+      "useful_volume_proxy": 0.0
+    },
+    {
+      "depth": 7,
+      "leaf_dimension": 128,
+      "samples": 2000,
+      "hypersphere_cube_ratio": 1.5217226682213393e-96,
+      "boundary_shell_fraction": 0.9995,
+      "middle_ball_fraction": 0.0,
+      "raw_domain_valid_fraction": 0.0,
+      "positive_finite_fraction": 0.0,
+      "positive_non_saturated_fraction": 0.0,
+      "useful_volume_proxy": 0.0
+    }
+  ],
+  "boundaries": {
+    "sampled_evidence_only": true,
+    "phantom_attractor_proof": false,
+    "optimizer_release_claim": false,
+    "hardware_claim": false
+  }
+}
