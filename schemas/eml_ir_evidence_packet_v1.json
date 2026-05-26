@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://monogate.dev/schemas/eml_ir_evidence_packet_v1.json",
+  "title": "EML IR Evidence Packet v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_expression",
+    "dag",
+    "replay",
+    "lowering",
+    "checks",
+    "research_status",
+    "status_levels",
+    "boundaries",
+    "packet_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "monogate.eml_ir.evidence_packet.v1"
+    },
+    "source_expression": {
+      "type": ["string", "object"]
+    },
+    "dag": {
+      "type": "object",
+      "required": ["schema_version", "root", "nodes", "tree_cost", "dag_cost", "boundaries"]
+    },
+    "replay": {
+      "type": "object",
+      "required": ["schema_version", "frames", "boundaries"]
+    },
+    "lowering": {
+      "type": "object",
+      "required": ["javascript", "python"]
+    },
+    "checks": {
+      "type": "object",
+      "required": ["replay_validation", "structural_lowering", "sampled_equivalence"],
+      "properties": {
+        "replay_validation": {
+          "type": "object",
+          "required": ["ok", "errors"],
+          "properties": {
+            "ok": { "type": "boolean" },
+            "errors": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "structural_lowering": {
+          "type": "object",
+          "required": ["schema_version", "structural_lowering_verified", "rows", "boundaries"],
+          "properties": {
+            "schema_version": { "const": "monogate.eml_ir.structural_lowering.v1" },
+            "structural_lowering_verified": { "type": "boolean" },
+            "rows": { "type": "array" },
+            "boundaries": { "type": "object" }
+          }
+        },
+        "sampled_equivalence": {
+          "type": "object",
+          "required": ["schema_version", "behavioral_equivalence_sampled", "rows", "boundaries"],
+          "properties": {
+            "schema_version": { "const": "monogate.eml_ir.sampled_equivalence.v1" },
+            "behavioral_equivalence_sampled": { "type": "boolean" },
+            "rows": { "type": "array" },
+            "boundaries": { "type": "object" }
+          }
+        }
+      }
+    },
+    "research_status": {
+      "type": "object",
+      "required": ["overall", "public_ready", "labels", "reason"],
+      "properties": {
+        "overall": { "enum": ["verified", "sampled", "prototype", "blocked"] },
+        "public_ready": { "type": "boolean" },
+        "labels": {
+          "type": "array",
+          "items": { "enum": ["verified", "sampled", "prototype", "blocked"] }
+        },
+        "reason": { "type": "string" }
+      }
+    },
+    "status_levels": {
+      "type": "object",
+      "required": ["verified", "sampled", "prototype", "blocked"]
+    },
+    "boundaries": {
+      "type": "object",
+      "required": [
+        "public_savings_claim",
+        "formal_verification_claim",
+        "compiler_release_claim",
+        "sampled_evidence_only",
+        "structural_contract_only"
+      ],
+      "properties": {
+        "public_savings_claim": { "const": false },
+        "formal_verification_claim": { "const": false },
+        "compiler_release_claim": { "const": false },
+        "sampled_evidence_only": { "const": true },
+        "structural_contract_only": { "const": true }
+      }
+    },
+    "packet_hash": {
+      "type": "string",
+      "pattern": "^fnv1a64:[0-9a-f]{16}$"
+    }
+  },
+  "additionalProperties": false
+}

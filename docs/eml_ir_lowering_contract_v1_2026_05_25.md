@@ -15,13 +15,13 @@ docs/research/eml_ir_v1_replay_artifact.md
 
 This contract defines the next stable boundary for the EML IR prototype:
 
-`expression -> normalized DAG nodes -> guarded replay frames -> lowered sketches -> visual field bridge`
+`expression -> normalized DAG nodes -> guarded replay frames -> lowered sketches -> evidence packet -> visual field bridge`
 
 It does not change compiler behavior. It does not change the canonical SuperBEST table. It gives Explorer, SuperBEST DAG experiments, and future Forge lowering work a shared language.
 
-The first implementation now reaches sampled lowering evidence:
+The implementation now reaches structural and sampled lowering evidence:
 
-`expression -> normalized DAG nodes -> guarded replay frames -> lowered JS/Python sketches -> sampled equivalence record`
+`expression -> normalized DAG nodes -> guarded replay frames -> lowered JS/Python sketches -> structural lowering gate -> sampled equivalence record -> research status`
 
 ## Primitive Set
 
@@ -95,7 +95,38 @@ An IR artifact is reviewable only when:
 - replay hash chain is present;
 - lifecycle order is valid;
 - domain annotations are present where required;
+- per-node JS/Python lowering rules are present for every DAG node;
+- sampled equivalence is labeled as finite evidence only;
 - Tree-vs-DAG savings are labeled correctly.
+
+## Evidence Packet
+
+The public-safe internal packet schema is:
+
+```text
+monogate.eml_ir.evidence_packet.v1
+```
+
+It carries:
+
+- `dag`
+- `replay`
+- `lowering`
+- `checks.replay_validation`
+- `checks.structural_lowering`
+- `checks.sampled_equivalence`
+- `research_status`
+- explicit boundary flags
+
+Research status labels have fixed meaning:
+
+- `verified`: the replay or structural contract gate passed.
+- `sampled`: finite numerical samples passed.
+- `prototype`: useful internal artifact, not public theorem/certification.
+- `blocked`: required gate failed or is missing.
+
+An evidence packet may contain `verified` and still remain `public_ready: false`
+when the only evidence is structural-contract coverage plus finite samples.
 
 ## Boundaries
 
