@@ -1,0 +1,54 @@
+{
+  "schema_version": "monogate.high_dim_formalization_bridge.v1",
+  "obligation_count": 4,
+  "obligations": [
+    {
+      "id": "HD001_ball_cube_ratio_tends_zero",
+      "status": "stub",
+      "informal_statement": "The volume ratio V(unit_ball_d) / V([-1,1]^d) tends to zero as d tends to infinity.",
+      "lean_name": "high_dim_ball_cube_ratio_tends_zero",
+      "lean_statement": "theorem high_dim_ball_cube_ratio_tends_zero : Tendsto ballCubeRatio atTop (\ud835\udcdd 0) := by",
+      "depends_on": [
+        "Gamma asymptotics",
+        "volume formula for Euclidean balls"
+      ]
+    },
+    {
+      "id": "HD002_cube_boundary_shell_tends_one",
+      "status": "stub",
+      "informal_statement": "For fixed epsilon in (0,1), the cube boundary-shell probability tends to one.",
+      "lean_name": "cube_boundary_shell_probability_tends_one",
+      "lean_statement": "theorem cube_boundary_shell_probability_tends_one (\u03b5 : Real) (h\u03b5 : 0 < \u03b5 \u2227 \u03b5 < 1) : Tendsto (fun d => 1 - (1 - \u03b5)^d) atTop (\ud835\udcdd 1) := by",
+      "depends_on": [
+        "geometric decay"
+      ]
+    },
+    {
+      "id": "HD003_first_layer_log_domain_survival",
+      "status": "stub",
+      "informal_statement": "For independent symmetric terminal leaves, raw first-layer EML right-child log-domain survival decays exponentially.",
+      "lean_name": "eml_first_layer_log_domain_survival_decay",
+      "lean_statement": "theorem eml_first_layer_log_domain_survival_decay (d : Nat) : firstLayerSurvival d = (1 / 2 : Real) ^ (2 ^ (d - 1)) := by",
+      "depends_on": [
+        "independence of right children",
+        "symmetric positivity probability"
+      ]
+    },
+    {
+      "id": "HD004_guarded_lowering_domain_preservation",
+      "status": "stub",
+      "informal_statement": "Guarded EML lowering preserves declared positive-domain obligations through replay packets.",
+      "lean_name": "guarded_lowering_preserves_domain_annotations",
+      "lean_statement": "theorem guarded_lowering_preserves_domain_annotations (p : ReplayPacket) : ValidGuards p -> DomainPreserved p := by",
+      "depends_on": [
+        "EML IR replay schema",
+        "domain annotation semantics"
+      ]
+    }
+  ],
+  "boundaries": {
+    "theorem_stub_only": true,
+    "formal_verification_claim": false,
+    "mathlib_dependency_claim": false
+  }
+}

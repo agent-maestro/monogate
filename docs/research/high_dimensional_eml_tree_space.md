@@ -115,3 +115,54 @@ The first formalization queue should stay small:
 4. Connect guarded lowering packets to domain-preservation obligations.
 
 These are theorem obligations, not completed theorem claims.
+
+## Useful Volume Census
+
+`python/scripts/high_dim_useful_volume_census.py` extends the geometry probe
+from finite/non-saturated behavior to target-adjacent behavior.
+
+Run:
+
+```bash
+make high-d-useful-volume
+```
+
+Outputs:
+
+```text
+reports/high_dim_useful_volume_census_2026_05_26.json
+reports/high_dim_useful_volume_census_2026_05_26.md
+```
+
+The census samples `raw_cube`, `positive_box`, and `guarded_cube`
+distributions against small targets such as `0`, `1`, `sqrt2`, `e`, and `pi`.
+The key field is `target_adjacent_fraction`: the sampled fraction that is
+finite, non-saturated, and within tolerance of the target.
+
+## Evidence Corpus
+
+`make ir-evidence-corpus` writes stable EML IR evidence packets to:
+
+```text
+reports/evidence_packets/
+```
+
+The current corpus covers shared subexpressions, domain guards, exponent ratios,
+trig pairs, and saturation probes. Each packet remains explicitly labeled as
+sampled/internal evidence, not a formal verification claim.
+
+## Frontier Suite
+
+Run the full high-D frontier suite with:
+
+```bash
+make frontier-high-d
+```
+
+This regenerates:
+
+- corner-concentration packet;
+- Forge attractor trace packet;
+- useful-volume census;
+- formalization bridge;
+- IR evidence packet corpus.

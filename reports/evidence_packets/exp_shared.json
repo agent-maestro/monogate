@@ -1,0 +1,330 @@
+{
+  "schema_version": "monogate.eml_ir.evidence_packet.v1",
+  "source_expression": "exp(x) + exp(x)",
+  "dag": {
+    "schema_version": "monogate.eml_ir.v1",
+    "source": "exp(x) + exp(x)",
+    "root": "n2",
+    "nodes": [
+      {
+        "id": "n0",
+        "op_kind": "input",
+        "args": [],
+        "literal": "x",
+        "structural_hash": "fnv1a64:972cdb3f224eb289",
+        "domain_annotations": [],
+        "tree_cost": 0
+      },
+      {
+        "id": "n1",
+        "op_kind": "exp",
+        "args": [
+          "n0"
+        ],
+        "literal": null,
+        "structural_hash": "fnv1a64:8c4c545aee070aad",
+        "domain_annotations": [],
+        "tree_cost": 1
+      },
+      {
+        "id": "n2",
+        "op_kind": "add",
+        "args": [
+          "n1",
+          "n1"
+        ],
+        "literal": null,
+        "structural_hash": "fnv1a64:733be1cc17ec7bf9",
+        "domain_annotations": [],
+        "tree_cost": 2
+      }
+    ],
+    "tree_cost": 4,
+    "dag_cost": 3,
+    "boundaries": {
+      "internal_contract": "EML IR Lowering Contract v1",
+      "public_savings_claim": false,
+      "formal_verification_claim": false,
+      "compiler_release_claim": false
+    }
+  },
+  "replay": {
+    "schema_version": "monogate.eml_ir.replay.v1",
+    "lifecycle": [
+      "INIT",
+      "READY",
+      "RUNNING",
+      "END",
+      "PARKED"
+    ],
+    "root": "n2",
+    "tree_cost": 4,
+    "dag_cost": 3,
+    "frames": [
+      {
+        "schema_version": "monogate.eml_ir.replay.v1",
+        "frame_index": 0,
+        "frame_id": "irv1_0000",
+        "replay_hash_prev": "GENESIS",
+        "lifecycle_state": "INIT",
+        "what_happened": "IR replay packet initialized.",
+        "replay_hash": "fnv1a64:358b8e654cc92239"
+      },
+      {
+        "schema_version": "monogate.eml_ir.replay.v1",
+        "frame_index": 1,
+        "frame_id": "irv1_0001",
+        "replay_hash_prev": "fnv1a64:358b8e654cc92239",
+        "lifecycle_state": "READY",
+        "root": "n2",
+        "node_count": 3,
+        "tree_cost": 4,
+        "dag_cost": 3,
+        "what_happened": "Normalized DAG is ready for operation replay.",
+        "replay_hash": "fnv1a64:e1e359fac3c73a89"
+      },
+      {
+        "schema_version": "monogate.eml_ir.replay.v1",
+        "frame_index": 2,
+        "frame_id": "irv1_0002",
+        "replay_hash_prev": "fnv1a64:e1e359fac3c73a89",
+        "lifecycle_state": "RUNNING",
+        "node_id": "n0",
+        "op_kind": "input",
+        "args": [],
+        "literal": "x",
+        "structural_hash": "fnv1a64:972cdb3f224eb289",
+        "domain_annotations": [],
+        "guard_action": "PASS",
+        "what_happened": "input replayed without domain annotation.",
+        "replay_hash": "fnv1a64:f9872d9c44f0a5c7"
+      },
+      {
+        "schema_version": "monogate.eml_ir.replay.v1",
+        "frame_index": 3,
+        "frame_id": "irv1_0003",
+        "replay_hash_prev": "fnv1a64:f9872d9c44f0a5c7",
+        "lifecycle_state": "RUNNING",
+        "node_id": "n1",
+        "op_kind": "exp",
+        "args": [
+          "n0"
+        ],
+        "literal": null,
+        "structural_hash": "fnv1a64:8c4c545aee070aad",
+        "domain_annotations": [],
+        "guard_action": "PASS",
+        "what_happened": "exp replayed without domain annotation.",
+        "replay_hash": "fnv1a64:1e08bd275f5f8335"
+      },
+      {
+        "schema_version": "monogate.eml_ir.replay.v1",
+        "frame_index": 4,
+        "frame_id": "irv1_0004",
+        "replay_hash_prev": "fnv1a64:1e08bd275f5f8335",
+        "lifecycle_state": "RUNNING",
+        "node_id": "n2",
+        "op_kind": "add",
+        "args": [
+          "n1",
+          "n1"
+        ],
+        "literal": null,
+        "structural_hash": "fnv1a64:733be1cc17ec7bf9",
+        "domain_annotations": [],
+        "guard_action": "PASS",
+        "what_happened": "add replayed without domain annotation.",
+        "replay_hash": "fnv1a64:34b6876527ae41b3"
+      },
+      {
+        "schema_version": "monogate.eml_ir.replay.v1",
+        "frame_index": 5,
+        "frame_id": "irv1_0005",
+        "replay_hash_prev": "fnv1a64:34b6876527ae41b3",
+        "lifecycle_state": "END",
+        "what_happened": "All normalized DAG nodes replayed.",
+        "replay_hash": "fnv1a64:a88ecc7310a11e4b"
+      },
+      {
+        "schema_version": "monogate.eml_ir.replay.v1",
+        "frame_index": 6,
+        "frame_id": "irv1_0006",
+        "replay_hash_prev": "fnv1a64:a88ecc7310a11e4b",
+        "lifecycle_state": "PARKED",
+        "what_happened": "Explicit terminal replay boundary.",
+        "replay_hash": "fnv1a64:18737c080703e8dd"
+      }
+    ],
+    "boundaries": {
+      "internal_contract": "EML IR Lowering Contract v1",
+      "public_savings_claim": false,
+      "formal_verification_claim": false,
+      "compiler_release_claim": false
+    }
+  },
+  "lowering": {
+    "javascript": {
+      "language": "javascript",
+      "function_name": "lowered",
+      "inputs": [
+        "x"
+      ],
+      "source": "function lowered(x) {\n  const n0 = x;\n  const n1 = Math.exp(n0);\n  const n2 = (n1 + n1);\n  return n2;\n}"
+    },
+    "python": {
+      "language": "python",
+      "function_name": "lowered",
+      "inputs": [
+        "x"
+      ],
+      "source": "import math\n\ndef lowered(x):\n    n0 = x\n    n1 = math.exp(n0)\n    n2 = (n1 + n1)\n    return n2"
+    }
+  },
+  "checks": {
+    "replay_validation": {
+      "ok": true,
+      "errors": []
+    },
+    "structural_lowering": {
+      "schema_version": "monogate.eml_ir.structural_lowering.v1",
+      "method": "per_node_direct_lowering_rule_presence",
+      "node_count": 3,
+      "verified_node_count": 3,
+      "structural_lowering_verified": true,
+      "rows": [
+        {
+          "node_id": "n0",
+          "op_kind": "input",
+          "javascript_rule": "literal_or_input",
+          "python_rule": "literal_or_input",
+          "structural_lowering_verified": true
+        },
+        {
+          "node_id": "n1",
+          "op_kind": "exp",
+          "javascript_rule": "JS_OP.exp",
+          "python_rule": "PY_OP.exp",
+          "structural_lowering_verified": true
+        },
+        {
+          "node_id": "n2",
+          "op_kind": "add",
+          "javascript_rule": "JS_OP.add",
+          "python_rule": "PY_OP.add",
+          "structural_lowering_verified": true
+        }
+      ],
+      "boundaries": {
+        "structural_contract_only": true,
+        "host_float_semantics_claim": false,
+        "formal_verification_claim": false,
+        "compiler_release_claim": false
+      }
+    },
+    "sampled_equivalence": {
+      "schema_version": "monogate.eml_ir.sampled_equivalence.v1",
+      "method": "dag_interpreter_vs_lowered_javascript",
+      "inputs": [
+        "x"
+      ],
+      "tolerance": 1e-12,
+      "sample_count": 5,
+      "valid_sample_count": 5,
+      "invalid_sample_count": 0,
+      "max_abs_error": 0,
+      "behavioral_equivalence_sampled": true,
+      "rows": [
+        {
+          "sample": {
+            "x": 0.25
+          },
+          "interpreted": 2.568050833375483,
+          "lowered": 2.568050833375483,
+          "abs_error": 0,
+          "valid": true
+        },
+        {
+          "sample": {
+            "x": 0.75
+          },
+          "interpreted": 4.23400003322535,
+          "lowered": 4.23400003322535,
+          "abs_error": 0,
+          "valid": true
+        },
+        {
+          "sample": {
+            "x": 1.25
+          },
+          "interpreted": 6.980685914923683,
+          "lowered": 6.980685914923683,
+          "abs_error": 0,
+          "valid": true
+        },
+        {
+          "sample": {
+            "x": 2
+          },
+          "interpreted": 14.7781121978613,
+          "lowered": 14.7781121978613,
+          "abs_error": 0,
+          "valid": true
+        },
+        {
+          "sample": {
+            "x": 3
+          },
+          "interpreted": 40.171073846375336,
+          "lowered": 40.171073846375336,
+          "abs_error": 0,
+          "valid": true
+        }
+      ],
+      "boundaries": {
+        "sampled_evidence_only": true,
+        "formal_verification_claim": false,
+        "compiler_release_claim": false
+      }
+    }
+  },
+  "research_status": {
+    "overall": "prototype",
+    "public_ready": false,
+    "labels": [
+      "verified",
+      "sampled",
+      "prototype"
+    ],
+    "reason": "Replay and structural lowering gates pass, with sampled numerical evidence; this is still not a public theorem or compiler release."
+  },
+  "status_levels": {
+    "verified": {
+      "public_label": "verified",
+      "public_ready": true,
+      "meaning": "Mechanically checked or directly structural within the declared contract."
+    },
+    "sampled": {
+      "public_label": "sampled",
+      "public_ready": false,
+      "meaning": "Finite numerical evidence only; useful as a regression signal, not a proof."
+    },
+    "prototype": {
+      "public_label": "prototype",
+      "public_ready": false,
+      "meaning": "Internal research artifact with explicit non-claim boundaries."
+    },
+    "blocked": {
+      "public_label": "blocked",
+      "public_ready": false,
+      "meaning": "Known missing prerequisite or failed gate."
+    }
+  },
+  "boundaries": {
+    "public_savings_claim": false,
+    "formal_verification_claim": false,
+    "compiler_release_claim": false,
+    "sampled_evidence_only": true,
+    "structural_contract_only": true
+  },
+  "packet_hash": "fnv1a64:efb21526811ac1bf"
+}

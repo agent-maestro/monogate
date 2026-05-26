@@ -1,8 +1,10 @@
 from monogate.high_dimensional import (
+    build_high_dim_formalization_bridge,
     hypersphere_cube_ratio,
     run_forge_attractor_trace_packet,
     run_corner_concentration_probe,
     run_optimizer_trace,
+    run_useful_volume_census,
 )
 
 
@@ -53,3 +55,24 @@ def test_forge_attractor_trace_packet_compares_regimes():
     }
     assert packet["boundaries"]["formal_verification_claim"] is False
     assert len(packet["machlib_lean_obligations"]) >= 3
+
+
+def test_useful_volume_census_has_target_rows():
+    packet = run_useful_volume_census(depths=[1, 2], samples=120, seed=23)
+    rows = packet["rows"]
+
+    assert packet["schema_version"] == "monogate.high_dim_useful_volume_census.v1"
+    assert packet["boundaries"]["symbolic_usefulness_proof"] is False
+    assert {row["distribution"] for row in rows} == {"raw_cube", "positive_box", "guarded_cube"}
+    assert {"pi", "e", "sqrt2", "zero", "one"} <= {row["target"] for row in rows}
+    assert all(0 <= row["target_adjacent_fraction"] <= 1 for row in rows)
+
+
+def test_formalization_bridge_is_stub_only():
+    packet = build_high_dim_formalization_bridge()
+
+    assert packet["schema_version"] == "monogate.high_dim_formalization_bridge.v1"
+    assert packet["obligation_count"] >= 4
+    assert packet["boundaries"]["formal_verification_claim"] is False
+    assert all(item["status"] == "stub" for item in packet["obligations"])
+    assert any("Tendsto" in item["lean_statement"] for item in packet["obligations"])

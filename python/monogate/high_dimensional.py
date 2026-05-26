@@ -51,6 +51,15 @@ class OptimizerTrace:
     terminal_max: float
 
 
+TARGETS = {
+    "zero": 0.0,
+    "one": 1.0,
+    "sqrt2": math.sqrt(2.0),
+    "e": math.e,
+    "pi": math.pi,
+}
+
+
 def hypersphere_cube_ratio(dimension: int) -> float:
     """Return V(unit d-ball) / V([-1, 1]^d)."""
     if dimension < 1:
@@ -415,6 +424,135 @@ def run_forge_attractor_trace_packet(
     }
 
 
+def run_useful_volume_census(
+    *,
+    depths: Iterable[int] = range(1, 7),
+    targets: dict[str, float] | None = None,
+    samples: int = 2000,
+    seed: int = 20260526,
+    tolerance: float = 0.1,
+    saturation_limit: float = 10.0,
+) -> dict:
+    """Estimate target-adjacent finite volume across EML tree depths."""
+    rng = random.Random(seed)
+    target_map = targets or TARGETS
+    distributions = {
+        "raw_cube": lambda n: [rng.uniform(-1.0, 1.0) for _ in range(n)],
+        "positive_box": lambda n: [rng.uniform(0.1, 2.0) for _ in range(n)],
+        "guarded_cube": lambda n: [rng.uniform(-1.0, 1.0) for _ in range(n)],
+    }
+    rows = []
+
+    for depth in depths:
+        leaf_dimension = 2**depth
+        for distribution, sampler in distributions.items():
+            for target_name, target_value in target_map.items():
+                finite = 0
+                non_saturated = 0
+                target_adjacent = 0
+                best_abs_error = math.inf
+                for _ in range(samples):
+                    leaves = sampler(leaf_dimension)
+                    if distribution == "guarded_cube":
+                        value, event = _eval_guarded_eml_tree(leaves, clamp_domain=True, clamp_exp=True)
+                        if event:
+                            continue
+                    else:
+                        try:
+                            value = eval_full_eml_tree(leaves)
+                        except (ValueError, OverflowError):
+                            continue
+                    if value is None or not math.isfinite(value):
+                        continue
+                    finite += 1
+                    abs_error = abs(value - target_value)
+                    best_abs_error = min(best_abs_error, abs_error)
+                    if abs(value) <= saturation_limit:
+                        non_saturated += 1
+                        if abs_error <= tolerance:
+                            target_adjacent += 1
+
+                finite_fraction = finite / samples
+                non_saturated_fraction = non_saturated / samples
+                adjacent_fraction = target_adjacent / samples
+                rows.append({
+                    "depth": depth,
+                    "leaf_dimension": leaf_dimension,
+                    "distribution": distribution,
+                    "target": target_name,
+                    "target_value": target_value,
+                    "samples": samples,
+                    "finite_fraction": finite_fraction,
+                    "non_saturated_fraction": non_saturated_fraction,
+                    "target_adjacent_fraction": adjacent_fraction,
+                    "useful_volume_ratio": adjacent_fraction,
+                    "best_abs_error": None if not math.isfinite(best_abs_error) else best_abs_error,
+                })
+
+    return {
+        "schema_version": "monogate.high_dim_useful_volume_census.v1",
+        "seed": seed,
+        "samples_per_case": samples,
+        "tolerance": tolerance,
+        "saturation_limit": saturation_limit,
+        "targets": target_map,
+        "rows": rows,
+        "boundaries": {
+            "sampled_evidence_only": True,
+            "symbolic_usefulness_proof": False,
+            "optimizer_release_claim": False,
+            "hardware_claim": False,
+        },
+    }
+
+
+def build_high_dim_formalization_bridge() -> dict:
+    obligations = [
+        {
+            "id": "HD001_ball_cube_ratio_tends_zero",
+            "status": "stub",
+            "informal_statement": "The volume ratio V(unit_ball_d) / V([-1,1]^d) tends to zero as d tends to infinity.",
+            "lean_name": "high_dim_ball_cube_ratio_tends_zero",
+            "lean_statement": "theorem high_dim_ball_cube_ratio_tends_zero : Tendsto ballCubeRatio atTop (𝓝 0) := by",
+            "depends_on": ["Gamma asymptotics", "volume formula for Euclidean balls"],
+        },
+        {
+            "id": "HD002_cube_boundary_shell_tends_one",
+            "status": "stub",
+            "informal_statement": "For fixed epsilon in (0,1), the cube boundary-shell probability tends to one.",
+            "lean_name": "cube_boundary_shell_probability_tends_one",
+            "lean_statement": "theorem cube_boundary_shell_probability_tends_one (ε : Real) (hε : 0 < ε ∧ ε < 1) : Tendsto (fun d => 1 - (1 - ε)^d) atTop (𝓝 1) := by",
+            "depends_on": ["geometric decay"],
+        },
+        {
+            "id": "HD003_first_layer_log_domain_survival",
+            "status": "stub",
+            "informal_statement": "For independent symmetric terminal leaves, raw first-layer EML right-child log-domain survival decays exponentially.",
+            "lean_name": "eml_first_layer_log_domain_survival_decay",
+            "lean_statement": "theorem eml_first_layer_log_domain_survival_decay (d : Nat) : firstLayerSurvival d = (1 / 2 : Real) ^ (2 ^ (d - 1)) := by",
+            "depends_on": ["independence of right children", "symmetric positivity probability"],
+        },
+        {
+            "id": "HD004_guarded_lowering_domain_preservation",
+            "status": "stub",
+            "informal_statement": "Guarded EML lowering preserves declared positive-domain obligations through replay packets.",
+            "lean_name": "guarded_lowering_preserves_domain_annotations",
+            "lean_statement": "theorem guarded_lowering_preserves_domain_annotations (p : ReplayPacket) : ValidGuards p -> DomainPreserved p := by",
+            "depends_on": ["EML IR replay schema", "domain annotation semantics"],
+        },
+    ]
+    return {
+        "schema_version": "monogate.high_dim_formalization_bridge.v1",
+        "obligation_count": len(obligations),
+        "obligations": obligations,
+        "boundaries": {
+            "theorem_stub_only": True,
+            "formal_verification_claim": False,
+            "mathlib_dependency_claim": False,
+        },
+    }
+
+
 def run_corner_concentration_probe(
     *,
     depths: Iterable[int] = range(1, 8),
@@ -563,4 +701,58 @@ def write_trace_outputs(packet: dict, output_json: Path, output_markdown: Path) 
             "",
         ]
     )
+    output_markdown.write_text("\n".join(lines), encoding="utf-8")
+
+
+def write_useful_volume_outputs(packet: dict, output_json: Path, output_markdown: Path) -> None:
+    output_json.parent.mkdir(parents=True, exist_ok=True)
+    output_markdown.parent.mkdir(parents=True, exist_ok=True)
+    output_json.write_text(json.dumps(packet, indent=2) + "\n", encoding="utf-8")
+    lines = [
+        "# High-D Useful Volume Census",
+        "",
+        f"Schema: `{packet['schema_version']}`",
+        f"Samples per case: `{packet['samples_per_case']}`",
+        f"Tolerance: `{packet['tolerance']}`",
+        "",
+        "| depth | distribution | target | finite | non-saturated | target-adjacent | best abs error |",
+        "|---:|---|---|---:|---:|---:|---:|",
+    ]
+    for row in packet["rows"]:
+        best = row["best_abs_error"]
+        best_text = "n/a" if best is None else f"{best:.3e}"
+        lines.append(
+            f"| {row['depth']} | {row['distribution']} | {row['target']} | "
+            f"{row['finite_fraction']:.3f} | {row['non_saturated_fraction']:.3f} | "
+            f"{row['target_adjacent_fraction']:.4f} | {best_text} |"
+        )
+    lines.extend([
+        "",
+        "Target-adjacent volume is sampled evidence only. It is a useful frontier",
+        "signal for Forge heuristics, not a proof of symbolic reachability.",
+        "",
+    ])
+    output_markdown.write_text("\n".join(lines), encoding="utf-8")
+
+
+def write_formalization_bridge_outputs(packet: dict, output_json: Path, output_markdown: Path) -> None:
+    output_json.parent.mkdir(parents=True, exist_ok=True)
+    output_markdown.parent.mkdir(parents=True, exist_ok=True)
+    output_json.write_text(json.dumps(packet, indent=2) + "\n", encoding="utf-8")
+    lines = ["# High-D Formalization Bridge", "", f"Schema: `{packet['schema_version']}`", ""]
+    for item in packet["obligations"]:
+        lines.extend([
+            f"## {item['id']}",
+            "",
+            f"Status: `{item['status']}`",
+            "",
+            item["informal_statement"],
+            "",
+            "```lean",
+            item["lean_statement"],
+            "  sorry",
+            "```",
+            "",
+        ])
+    lines.append("These are theorem stubs, not completed formal proofs.")
     output_markdown.write_text("\n".join(lines), encoding="utf-8")
