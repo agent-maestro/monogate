@@ -2,6 +2,7 @@ from monogate.high_dimensional import (
     build_high_dim_formalization_bridge,
     hypersphere_cube_ratio,
     run_forge_attractor_trace_packet,
+    run_forge_heuristic_frontier_packet,
     run_corner_concentration_probe,
     run_optimizer_trace,
     run_useful_volume_census,
@@ -55,6 +56,18 @@ def test_forge_attractor_trace_packet_compares_regimes():
     }
     assert packet["boundaries"]["formal_verification_claim"] is False
     assert len(packet["machlib_lean_obligations"]) >= 3
+
+
+def test_forge_heuristic_frontier_compares_depths_and_regimes():
+    packet = run_forge_heuristic_frontier_packet(depths=[2, 3], seeds=[31, 32], steps=6)
+    regimes = {row["regime"] for row in packet["rows"]}
+    depths = {row["depth"] for row in packet["rows"]}
+
+    assert packet["schema_version"] == "monogate.forge_heuristic_frontier.v1"
+    assert depths == {2, 3}
+    assert {"guarded_gradient", "boundary_aware_gradient", "random_search"} <= regimes
+    assert packet["ranked_regime_depths"]
+    assert packet["boundaries"]["optimizer_release_claim"] is False
 
 
 def test_useful_volume_census_has_target_rows():

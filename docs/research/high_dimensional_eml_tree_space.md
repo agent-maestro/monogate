@@ -104,6 +104,29 @@ This is the bridge from geometry to optimizer behavior. It gives Forge a
 replayable measurement surface for boundary-aware heuristics without claiming
 those heuristics are production-ready.
 
+## Forge Heuristic Frontier
+
+`python/scripts/forge_heuristic_frontier.py` runs the guarded, boundary-aware,
+and random-search regimes across multiple depths and seeds.
+
+Run:
+
+```bash
+make forge-heuristic-frontier
+```
+
+Outputs:
+
+```text
+reports/forge_heuristic_frontier_2026_05_26.json
+reports/forge_heuristic_frontier_2026_05_26.md
+```
+
+This packet makes the next optimizer question concrete: guarded and
+boundary-aware traces preserve finite execution, but saturation still dominates
+as depth rises. The recommended next experiment is log-domain
+parameterization, with random search kept as a control.
+
 ## MachLib / Lean Bridge
 
 The first formalization queue should stay small:
@@ -115,6 +138,11 @@ The first formalization queue should stay small:
 4. Connect guarded lowering packets to domain-preservation obligations.
 
 These are theorem obligations, not completed theorem claims.
+`make high-d-formalization` also emits draft-only Lean/MachLib stub files under:
+
+```text
+reports/formalization_stubs/high_dimensional/
+```
 
 ## Useful Volume Census
 
@@ -163,6 +191,7 @@ This regenerates:
 
 - corner-concentration packet;
 - Forge attractor trace packet;
+- Forge heuristic frontier packet;
 - useful-volume census;
-- formalization bridge;
+- formalization bridge and Lean/MachLib stubs;
 - IR evidence packet corpus.

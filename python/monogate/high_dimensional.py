@@ -424,6 +424,81 @@ def run_forge_attractor_trace_packet(
     }
 
 
+def run_forge_heuristic_frontier_packet(
+    *,
+    depths: Iterable[int] = range(2, 6),
+    regimes: Iterable[str] = ("guarded_gradient", "boundary_aware_gradient", "random_search"),
+    seeds: Iterable[int] = range(20260526, 20260531),
+    steps: int = 60,
+    target: float = math.pi,
+) -> dict:
+    """Compare candidate Forge heuristics across several tree dimensions."""
+    depth_list = list(depths)
+    regime_list = list(regimes)
+    seed_list = list(seeds)
+    rows = []
+    trace_refs = []
+    for depth in depth_list:
+        for regime in regime_list:
+            traces = [run_optimizer_trace(regime=regime, depth=depth, target=target, seed=seed, steps=steps) for seed in seed_list]
+            best_losses = [item["trace"]["best_loss"] for item in traces if item["trace"]["best_loss"] is not None]
+            finite_fractions = [item["trace"]["finite_steps"] / item["trace"]["steps"] for item in traces]
+            saturation_rates = [item["trace"]["saturation_events"] / item["trace"]["steps"] for item in traces]
+            domain_failure_rates = [item["trace"]["domain_failures"] / item["trace"]["steps"] for item in traces]
+            converged = sum(item["trace"]["final_label"] == "converged" for item in traces)
+            row = {
+                "depth": depth,
+                "leaf_dimension": 2**depth,
+                "regime": regime,
+                "runs": len(traces),
+                "converged_runs": converged,
+                "mean_best_loss": None if not best_losses else sum(best_losses) / len(best_losses),
+                "best_loss": None if not best_losses else min(best_losses),
+                "mean_finite_fraction": sum(finite_fractions) / len(finite_fractions),
+                "mean_saturation_rate": sum(saturation_rates) / len(saturation_rates),
+                "mean_domain_failure_rate": sum(domain_failure_rates) / len(domain_failure_rates),
+            }
+            rows.append(row)
+            trace_refs.append(
+                {
+                    "depth": depth,
+                    "regime": regime,
+                    "labels": [item["trace"]["final_label"] for item in traces],
+                    "best_losses": [item["trace"]["best_loss"] for item in traces],
+                }
+            )
+
+    ranked = sorted(
+        rows,
+        key=lambda row: (
+            -(row["converged_runs"] / row["runs"]),
+            row["mean_best_loss"] if row["mean_best_loss"] is not None else math.inf,
+            row["mean_saturation_rate"],
+            row["mean_domain_failure_rate"],
+        ),
+    )
+    return {
+        "schema_version": "monogate.forge_heuristic_frontier.v1",
+        "target": target,
+        "steps": steps,
+        "seed_count": len(seed_list),
+        "rows": rows,
+        "ranked_regime_depths": ranked,
+        "trace_refs": trace_refs,
+        "recommendations": [
+            "Prefer boundary-aware guarded search as the next Forge baseline when formal domain preservation matters.",
+            "Keep random search as a control, not as a release heuristic.",
+            "Add log-domain parameterization before broadening depth beyond this sampled packet.",
+        ],
+        "boundaries": {
+            "sampled_evidence_only": True,
+            "optimizer_release_claim": False,
+            "formal_verification_claim": False,
+            "hardware_claim": False,
+        },
+    }
+
+
 def run_useful_volume_census(
     *,
     depths: Iterable[int] = range(1, 7),
@@ -551,6 +626,53 @@ def build_high_dim_formalization_bridge() -> dict:
             "mathlib_dependency_claim": False,
         },
     }
+
+
+def write_formalization_stub_files(packet: dict, output_dir: Path) -> None:
+    """Write draft-only Lean/MachLib stub files for the bridge obligations."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    readme_lines = [
+        "# High-D Formalization Stubs",
+        "",
+        "Generated from `monogate.high_dim_formalization_bridge.v1`.",
+        "",
+        "These files are draft theorem targets only. They intentionally contain",
+        "`sorry` placeholders and make no formal verification claim.",
+        "",
+        "| obligation | file | status |",
+        "|---|---|---|",
+    ]
+    for item in packet["obligations"]:
+        filename = f"{item['id']}.lean"
+        theorem_line = (
+            item["lean_statement"]
+            .replace("𝓝", "nhds")
+            .replace("ε", "eps")
+            .replace("hε", "heps")
+            .replace("∧", "And")
+        )
+        source = "\n".join(
+            [
+                "-- Auto-generated high-dimensional EML formalization stub.",
+                "-- Draft target only: no proof claim is attached to this file.",
+                "",
+                "import MachLib.Basic",
+                "import MachLib.EML",
+                "",
+                "namespace MachLib.HighDimensional",
+                "",
+                f"/-- {item['informal_statement']} -/",
+                theorem_line,
+                "  sorry",
+                "",
+                "end MachLib.HighDimensional",
+                "",
+            ]
+        )
+        (output_dir / filename).write_text(source, encoding="utf-8")
+        readme_lines.append(f"| {item['id']} | `{filename}` | {item['status']} |")
+    readme_lines.append("")
+    (output_dir / "README.md").write_text("\n".join(readme_lines), encoding="utf-8")
 
 
 def run_corner_concentration_probe(
@@ -755,4 +877,40 @@ def write_formalization_bridge_outputs(packet: dict, output_json: Path, output_m
             "",
         ])
     lines.append("These are theorem stubs, not completed formal proofs.")
+    output_markdown.write_text("\n".join(lines), encoding="utf-8")
+
+
+def write_heuristic_frontier_outputs(packet: dict, output_json: Path, output_markdown: Path) -> None:
+    output_json.parent.mkdir(parents=True, exist_ok=True)
+    output_markdown.parent.mkdir(parents=True, exist_ok=True)
+    output_json.write_text(json.dumps(packet, indent=2) + "\n", encoding="utf-8")
+    lines = [
+        "# Forge Heuristic Frontier",
+        "",
+        f"Schema: `{packet['schema_version']}`",
+        f"Steps per run: `{packet['steps']}`",
+        f"Seeds per case: `{packet['seed_count']}`",
+        "",
+        "| depth | regime | converged | mean best loss | finite | saturation | domain fail |",
+        "|---:|---|---:|---:|---:|---:|---:|",
+    ]
+    for row in packet["rows"]:
+        mean_loss = row["mean_best_loss"]
+        loss_text = "n/a" if mean_loss is None else f"{mean_loss:.3e}"
+        lines.append(
+            f"| {row['depth']} | {row['regime']} | {row['converged_runs']}/{row['runs']} | "
+            f"{loss_text} | {row['mean_finite_fraction']:.2f} | "
+            f"{row['mean_saturation_rate']:.2f} | {row['mean_domain_failure_rate']:.2f} |"
+        )
+    lines.extend(["", "## Recommendations", ""])
+    for item in packet["recommendations"]:
+        lines.append(f"- {item}")
+    lines.extend(
+        [
+            "",
+            "This packet is sampled evidence only. It compares candidate Forge",
+            "heuristics; it does not promote any optimizer to release status.",
+            "",
+        ]
+    )
     output_markdown.write_text("\n".join(lines), encoding="utf-8")

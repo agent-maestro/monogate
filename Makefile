@@ -19,7 +19,7 @@ PY      := cd python && $(PYTHON)
 PYTEST  := cd python && $(PYTHON) -m pytest
 PAPER   := cd python/paper && pdflatex
 
-.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-lowering-ui superbest-primitive-frontier eml-ir-pipeline eml-ir-inspector high-d-corner-probe forge-attractor-trace high-d-useful-volume high-d-formalization ir-evidence-corpus frontier-high-d explorer-build reproduce-n11 reproduce-all \
+.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-lowering-ui superbest-primitive-frontier eml-ir-pipeline eml-ir-inspector high-d-corner-probe forge-attractor-trace forge-heuristic-frontier high-d-useful-volume high-d-formalization ir-evidence-corpus frontier-high-d explorer-build reproduce-n11 reproduce-all \
         paper theory docker-build docker-run \
         clean lint version-check
 
@@ -42,6 +42,7 @@ help:
 	@echo "  make eml-ir-inspector Build local EML IR inspector packet"
 	@echo "  make high-d-corner-probe Run sampled high-dimensional EML tree-space probe"
 	@echo "  make forge-attractor-trace Run sampled optimizer regime trace packet"
+	@echo "  make forge-heuristic-frontier Run sampled Forge heuristic comparison"
 	@echo "  make high-d-useful-volume Run target-adjacent useful-volume census"
 	@echo "  make high-d-formalization Emit high-D MachLib/Lean theorem stubs"
 	@echo "  make ir-evidence-corpus Generate stable IR evidence packet corpus"
@@ -127,6 +128,10 @@ forge-attractor-trace:
 	PYTHONPATH=python $(PYTHON) python/scripts/forge_attractor_trace_packet.py --strict
 	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_high_dimensional.py
 
+forge-heuristic-frontier:
+	PYTHONPATH=python $(PYTHON) python/scripts/forge_heuristic_frontier.py --strict
+	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_high_dimensional.py
+
 high-d-useful-volume:
 	PYTHONPATH=python $(PYTHON) python/scripts/high_dim_useful_volume_census.py --strict
 	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_high_dimensional.py
@@ -138,7 +143,7 @@ high-d-formalization:
 ir-evidence-corpus:
 	cd lib && node scripts/generate_ir_evidence_corpus.mjs
 
-frontier-high-d: high-d-corner-probe forge-attractor-trace high-d-useful-volume high-d-formalization ir-evidence-corpus
+frontier-high-d: high-d-corner-probe forge-attractor-trace forge-heuristic-frontier high-d-useful-volume high-d-formalization ir-evidence-corpus
 
 # ── Reproducibility ────────────────────────────────────────────────────────────
 
