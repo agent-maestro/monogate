@@ -13,12 +13,12 @@ featured: false
 Monogate's high-dimensional optimizer work is organized around named boundary
 events and named rescue operators. This is the current status table.
 
-| Boundary event | Rescue operator | Rescue event | Forge evidence | MachLib bridge | Public note |
+| Boundary event | Rescue operator | Rescue event | Forge evidence | MachLib bridge | Semantic tier |
 | --- | --- | --- | --- | --- | --- |
-| `domain_wall` | `log_domain_lift` | `log_domain_rescue` | packet + tests + registry | concrete witness + closed packet bridge | [first rescue](/blog/first-proof-carrying-rescue) |
-| `overflow_wall` | `guard_clamp` | `guard_rescue` | packet + tests + registry | concrete witness + closed packet bridge | [second rescue](/blog/second-proof-carrying-rescue) |
-| `phantom_attractor` | `precision_escape` | `interior_sample` | packet + tests | closed packet bridge with explicit event witness | [third rescue](/blog/third-proof-carrying-rescue) |
-| `saturation_shelf` | `saturation_deshelf` | `corner_concentration` | packet + tests + registry | concrete witness + closed packet bridge with explicit event witness | [fourth rescue](/blog/fourth-proof-carrying-rescue) |
+| `domain_wall` | `log_domain_lift` | `log_domain_rescue` | packet + tests + registry | concrete witness + closed packet bridge | `concrete_sample_invariant` |
+| `overflow_wall` | `guard_clamp` | `guard_rescue` | packet + tests + registry | concrete witness + closed packet bridge | `concrete_sample_invariant` |
+| `phantom_attractor` | `precision_escape` | `interior_sample` | packet + tests | closed packet bridge with explicit event witness | `packet_bridge_only` |
+| `saturation_shelf` | `saturation_deshelf` | `corner_concentration` | packet + tests + registry | concrete witness + closed packet bridge with explicit event witness | `concrete_sample_invariant` |
 
 ## Reading The Table
 
@@ -29,7 +29,7 @@ generated report, and regression tests.
 connecting a valid packet transition to its obligation and a sample-level
 theorem that discharges the concrete local obligation. The log-domain lane has
 a positive-coordinate witness. The guard-clamp lane now has an output-safety
-witness.
+witness. The saturation-deshelf lane has a clamp-invariant witness.
 
 `closed packet bridge with explicit event witness` means the bridge is closed,
 but the theorem requires both the event witness and transition witness. That is
@@ -38,6 +38,11 @@ the current honest shape for phantom-attractor evidence.
 The saturation-deshelf lane also has a concrete clamp-invariant witness now,
 but it remains more cautious in public copy because deshelf moves a trace off a
 saturation shelf rather than simply ending in a rescue-normal event.
+
+The precision-escape lane is explicitly weaker in v0. It remains
+`packet_bridge_only`: Forge can replay and inspect the escape packet, and
+MachLib can route the obligation through the packet bridge, but there is not
+yet a concrete sample-invariant theorem for that lane.
 
 The four-lane suite manifest is published as
 [`Proof-Carrying Rescue Suite v0`](/blog/proof-carrying-rescue-suite-v0).
@@ -54,5 +59,6 @@ four packets -> one manifest -> obligation registry -> approval gate -> Explorer
 ```
 
 The registry says which obligations are routed, witnessed, concretely proven,
-CI guarded, public-copy safe, or blocked. The approval gate decides whether the
-generated artifacts may be surfaced or deployed.
+CI guarded, public-copy safe, semantically tiered, or blocked. The approval gate
+decides whether the generated artifacts may be surfaced or deployed while
+keeping the full semantic-rewrite claim false.
