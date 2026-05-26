@@ -1,0 +1,102 @@
+{
+  "card_id": "machlib_polynomial_workbench_v21_internal_card_2026_05_25",
+  "status": "INTERNAL_PROTOTYPE",
+  "title": "MachLib polynomial evidence workbench v21",
+  "summary": "Expression or coefficient inputs are converted into bounded root evidence packets with explicit target-inventory and eFrog dry-run boundaries.",
+  "packet_id": "machlib_polynomial_evidence_workbench_v21_2026_05_25",
+  "default_input": {
+    "source_kind": "efrog_dry_run_expression",
+    "source_text": "x^2 - 15*x + 56",
+    "coeffs": [56, -15, 1],
+    "root_limit": 6,
+    "denominator_limit": 4
+  },
+  "result": {
+    "workbench_status": "CERTIFICATE_IMPORTED_FROM_QUADRATIC_RESIDUAL",
+    "v16_search_status": "BLOCKED",
+    "v16_blocker": "NO_COMPLETE_LINEAR_FACTORIZATION_FOUND_WITHIN_BOUND",
+    "v18_classification": "RATIONAL_DISCRIMINANT_SQUARE_FACTORABLE",
+    "v18_rational_roots": [7, 8],
+    "v19_validation_status": "PASS",
+    "degree_bound": 2,
+    "expected_root_count": 2,
+    "root_count_induction_target_status": "DEFINED_NOT_PROVED"
+  },
+  "packets": [
+    {
+      "id": "v21_workbench_packet",
+      "label": "Workbench packet",
+      "path": "machlib/product_readiness/machlib_polynomial_evidence_workbench_v21_2026_05_25.json",
+      "status": "PASS",
+      "meaning": "The end-to-end local packet for expression/coefficients to bounded root evidence."
+    },
+    {
+      "id": "v22_explorer_export",
+      "label": "Explorer root packet export",
+      "path": "machlib/product_readiness/machlib_explorer_root_packet_export_v22_2026_05_25.json",
+      "status": "PASS",
+      "meaning": "A UI-safe packet shape for showing checked roots and blocked theorem gates."
+    },
+    {
+      "id": "v23_target_inventory",
+      "label": "Root-count target inventory",
+      "path": "machlib/product_readiness/machlib_root_count_target_inventory_v23_2026_05_25.json",
+      "status": "DEFINED_NOT_PROVED",
+      "meaning": "The next theorem bridge inventory: normalized products, root-list cardinality, and induction targets."
+    },
+    {
+      "id": "v24_validation_bridge",
+      "label": "Certificate validation bridge",
+      "path": "machlib/product_readiness/machlib_certificate_validation_bridge_v24_2026_05_25.json",
+      "status": "PASS",
+      "meaning": "Executable certificate checks replace one layer of informal trust with local validation."
+    },
+    {
+      "id": "v25_efrog_dry_run",
+      "label": "eFrog adapter dry-run",
+      "path": "machlib/product_readiness/machlib_efrog_polynomial_adapter_dry_run_v25_2026_05_25.json",
+      "status": "DRY_RUN_ONLY",
+      "meaning": "A future eFrog handoff shape without changing eFrog or Forge behavior."
+    }
+  ],
+  "example_inputs": [
+    {
+      "label": "quadratic residual import",
+      "input": "x^2 - 15*x + 56",
+      "coeffs": [56, -15, 1],
+      "roots": [7, 8],
+      "status": "PASS_AFTER_QUADRATIC_RESIDUAL_IMPORT"
+    },
+    {
+      "label": "coefficient packet",
+      "input": "6,-5,1",
+      "coeffs": [6, -5, 1],
+      "roots": [2, 3],
+      "status": "PASS"
+    },
+    {
+      "label": "factored expression",
+      "input": "(x-2)*(x-3)",
+      "coeffs": [6, -5, 1],
+      "roots": [2, 3],
+      "status": "PASS"
+    }
+  ],
+  "next_theorem_bridge": [
+    "Prove normalized product degree growth for arbitrary normalized mulCoeff.",
+    "Derive root-list union/cardinality instead of relying on packet certificates.",
+    "Replace remaining bridge assumptions with integral-domain/product-evaluation facts where feasible.",
+    "Keep eFrog and Forge as certificate emitters only until a reviewed integration exists."
+  ],
+  "boundaries": {
+    "public_ready": false,
+    "marketplace_ready": false,
+    "general_root_count_theorem_proved": false,
+    "root_count_induction_target_proved": false,
+    "arbitrary_root_discovery_claim": false,
+    "forge_compiler_behavior_changed": false,
+    "efrog_behavior_changed": false,
+    "public_theorem_claim": false,
+    "package_publish_performed": false
+  }
+}

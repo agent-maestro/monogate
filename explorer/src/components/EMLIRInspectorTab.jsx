@@ -1,6 +1,7 @@
 import model from "../data/eml_ir_inspector_model.json";
 import polynomialEvidence from "../data/machlib_polynomial_evidence_internal_card.json";
 import finiteZeroPacket from "../data/machlib_finite_zero_packet_internal_card.json";
+import polynomialWorkbench from "../data/machlib_polynomial_workbench_v21_internal_card.json";
 import { useState } from "react";
 
 const C = {
@@ -104,6 +105,125 @@ function Timeline({ program }) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function WorkbenchPacketPanel() {
+  const [exampleIndex, setExampleIndex] = useState(0);
+  const example = polynomialWorkbench.example_inputs[exampleIndex] ?? polynomialWorkbench.example_inputs[0];
+  const result = polynomialWorkbench.result;
+
+  return (
+    <div style={{
+      background: C.surface,
+      border: `1px solid ${C.border}`,
+      borderRadius: 8,
+      padding: 14,
+      marginTop: 14,
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 10 }}>
+        <div>
+          <div style={{ color: C.accent, fontSize: 13, fontWeight: 700 }}>{polynomialWorkbench.title}</div>
+          <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>{polynomialWorkbench.summary}</div>
+        </div>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          <Chip tone={C.warn}>{polynomialWorkbench.status}</Chip>
+          <Chip tone={C.green}>{result.v19_validation_status}</Chip>
+          <Chip tone={C.warn}>{result.root_count_induction_target_status}</Chip>
+        </div>
+      </div>
+
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
+        gap: 10,
+        marginBottom: 10,
+      }}>
+        <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 7, padding: 10 }}>
+          <div style={{ color: C.text, fontSize: 11, fontWeight: 700, marginBottom: 8 }}>
+            Workbench route
+          </div>
+          <div style={{ display: "grid", gap: 6 }}>
+            <Chip tone={C.muted}>v16 bounded search: {result.v16_search_status}</Chip>
+            <Chip tone={C.blue}>v18 residual: {result.v18_classification}</Chip>
+            <Chip tone={C.green}>v19 imported validation: {result.v19_validation_status}</Chip>
+          </div>
+          <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7, marginTop: 9 }}>
+            v16 intentionally stays bounded. The quadratic residual bridge imports a certificate for roots
+            {` ${result.v18_rational_roots.join(", ")}`} without claiming arbitrary root discovery.
+          </div>
+        </div>
+
+        <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 7, padding: 10 }}>
+          <div style={{ color: C.text, fontSize: 11, fontWeight: 700, marginBottom: 8 }}>
+            Example packet preview
+          </div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
+            {polynomialWorkbench.example_inputs.map((row, index) => (
+              <button
+                key={row.label}
+                type="button"
+                onClick={() => setExampleIndex(index)}
+                style={{
+                  border: `1px solid ${index === exampleIndex ? C.accent : C.border}`,
+                  borderRadius: 5,
+                  background: index === exampleIndex ? "rgba(232,160,32,0.07)" : C.surface,
+                  color: index === exampleIndex ? C.accent : C.muted,
+                  fontFamily: "inherit",
+                  fontSize: 10,
+                  padding: "5px 7px",
+                  cursor: "pointer",
+                }}
+              >
+                {row.label}
+              </button>
+            ))}
+          </div>
+          <div style={{ color: C.blue, fontSize: 11, wordBreak: "break-word", marginBottom: 6 }}>
+            {example.input}
+          </div>
+          <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>
+            coeffs [{example.coeffs.join(", ")}] · roots [{example.roots.join(", ")}] · {example.status}
+          </div>
+        </div>
+      </div>
+
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))",
+        gap: 8,
+      }}>
+        {polynomialWorkbench.packets.map((packet) => (
+          <div key={packet.id} style={{
+            background: C.bg,
+            border: `1px solid ${packet.status === "PASS" ? "rgba(94,196,122,0.35)" : C.border}`,
+            borderRadius: 7,
+            padding: 10,
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 5 }}>
+              <span style={{ color: C.text, fontSize: 11, fontWeight: 700 }}>{packet.label}</span>
+              <span style={{ color: packet.status === "PASS" ? C.green : C.warn, fontSize: 9 }}>{packet.status}</span>
+            </div>
+            <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.6, marginBottom: 6 }}>{packet.meaning}</div>
+            <div style={{ color: C.blue, fontSize: 9, wordBreak: "break-word" }}>{packet.path}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ marginTop: 10, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 10 }}>
+        <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>
+          <strong style={{ color: C.text }}>Next theorem bridge:</strong>
+          <ul style={{ margin: "6px 0 0", paddingLeft: 18 }}>
+            {polynomialWorkbench.next_theorem_bridge.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </div>
+        <div style={{ color: C.muted, fontSize: 10, lineHeight: 1.7 }}>
+          <strong style={{ color: C.text }}>Boundaries:</strong>{" "}
+          internal prototype only; no general root-count theorem, arbitrary root discovery, Forge/eFrog behavior
+          change, public theorem claim, package publish, or marketplace readiness.
+        </div>
+      </div>
     </div>
   );
 }
@@ -391,6 +511,8 @@ export default function EMLIRInspectorTab() {
           This is a finite sample packet only. Degree/root-count reasoning is still a separate blocked feasibility gate.
         </div>
       </div>
+
+      <WorkbenchPacketPanel />
     </div>
   );
 }
