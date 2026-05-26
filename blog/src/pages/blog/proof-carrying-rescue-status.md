@@ -35,6 +35,8 @@ the current honest shape for phantom-attractor evidence.
 
 The four-lane suite manifest is published as
 [`Proof-Carrying Rescue Suite v0`](/blog/proof-carrying-rescue-suite-v0).
+The manifest reading guide is
+[`How to Read the Rescue Suite`](/blog/how-to-read-the-rescue-suite).
 
 ## Next Frontier
 

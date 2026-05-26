@@ -18,6 +18,12 @@ Forge now emits one manifest for all four proof-carrying rescue lanes:
 tools/proof_carrying_rescue_suite.py
 ```
 
+Forge also replays that manifest with:
+
+```text
+tools/proof_carrying_rescue_replay.py
+```
+
 The manifest is:
 
 ```text
@@ -58,3 +64,6 @@ raw boundary event
 
 The next phase is unification: use the manifest as the stable artifact for
 Explorer, dashboards, future electronics courseware, and deeper MachLib proofs.
+
+For the practical contract, see
+[`How to Read the Rescue Suite`](/blog/how-to-read-the-rescue-suite).
