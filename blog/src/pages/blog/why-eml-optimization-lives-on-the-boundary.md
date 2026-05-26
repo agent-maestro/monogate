@@ -133,6 +133,27 @@ This is still conservative: simulated, analysis-only, and not an optimizer
 release claim. But it changes the research object from "what did the optimizer
 hit?" to "can Forge steer boundary dynamics?"
 
+Forge now has the first small boundary calculus for those traces. A transition
+is an observed `A -> B` event move. Two transitions compose only when the middle
+event matches:
+
+```text
+(A -> B) ; (B -> C) = A -> C
+```
+
+That lets a replay packet talk about an actual path through event space, not
+just a bag of failures. The first normal form is rescue-normal: a path ending in
+`interior_sample`, `guard_rescue`, or `log_domain_rescue`. That is not a global
+optimality claim. It is a claim that the observed boundary path ended in a class
+with a replay/proof direction.
+
+There is also a new useful-volume census. It samples depth and dimension grids
+and asks a blunt question: how much sampled EML tree space is finite,
+non-saturated, and rescue-normal? The report exports useful, finite, invalid,
+saturated, boundary, and center ratios by depth/dimension. The early answer has
+the expected shape: as effective coordinate count rises, useful volume collapses
+while boundary concentration dominates.
+
 ## Why This Matters
 
 Most symbolic optimizers treat tree search as if useful expressions are spread
@@ -181,6 +202,12 @@ contract:
 - `guard_clamp` intervention pairs map to output-safety obligations
 - `precision_escape` intervention pairs map to precision obligations
 - `saturation_deshelf` intervention pairs map to clamp obligations
+
+The first closed foothold is now in place too: any packet-level
+`PacketHasTransition p A B` witness gives a nonempty transition-graph witness.
+That theorem does not add a new axiom and does not use `sorry`. It is small, but
+it matters because it marks the bridge from sampled trace evidence into an
+actual formal object MachLib can quantify over.
 
 ## Next Target
 
