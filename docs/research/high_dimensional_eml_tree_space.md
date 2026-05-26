@@ -70,3 +70,48 @@ The next useful step is to feed Forge optimizer traces through the same packet:
 ```text
 optimizer run -> terminal vector statistics -> replay packet -> attractor/collapse label
 ```
+
+## Forge Trace Packet
+
+`python/scripts/forge_attractor_trace_packet.py` now compares five regimes:
+
+- `naive_gradient`
+- `regularized_gradient`
+- `guarded_gradient`
+- `boundary_aware_gradient`
+- `random_search`
+
+Run:
+
+```bash
+make forge-attractor-trace
+```
+
+Outputs:
+
+```text
+reports/forge_attractor_trace_packet_2026_05_26.json
+reports/forge_attractor_trace_packet_2026_05_26.md
+```
+
+The packet labels each run as one of:
+
+```text
+converged | transient | collapsed | domain_failed | overflowed | saturated
+```
+
+This is the bridge from geometry to optimizer behavior. It gives Forge a
+replayable measurement surface for boundary-aware heuristics without claiming
+those heuristics are production-ready.
+
+## MachLib / Lean Bridge
+
+The first formalization queue should stay small:
+
+1. Prove `V(unit_ball_d) / V([-1,1]^d) -> 0`.
+2. Prove cube boundary-shell probability `1 - (1 - epsilon)^d -> 1`.
+3. Prove first-layer raw EML log-domain survival decays exponentially for
+   independent symmetric terminal leaves.
+4. Connect guarded lowering packets to domain-preservation obligations.
+
+These are theorem obligations, not completed theorem claims.

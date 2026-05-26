@@ -19,7 +19,7 @@ PY      := cd python && $(PYTHON)
 PYTEST  := cd python && $(PYTHON) -m pytest
 PAPER   := cd python/paper && pdflatex
 
-.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-lowering-ui superbest-primitive-frontier eml-ir-pipeline eml-ir-inspector high-d-corner-probe explorer-build reproduce-n11 reproduce-all \
+.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-lowering-ui superbest-primitive-frontier eml-ir-pipeline eml-ir-inspector high-d-corner-probe forge-attractor-trace explorer-build reproduce-n11 reproduce-all \
         paper theory docker-build docker-run \
         clean lint version-check
 
@@ -41,6 +41,7 @@ help:
 	@echo "  make eml-ir-pipeline Build EML IR v0 DAG/replay packet examples"
 	@echo "  make eml-ir-inspector Build local EML IR inspector packet"
 	@echo "  make high-d-corner-probe Run sampled high-dimensional EML tree-space probe"
+	@echo "  make forge-attractor-trace Run sampled optimizer regime trace packet"
 	@echo "  make explorer-build  Install locked Explorer deps and build"
 	@echo "  make reproduce-n11   Verify N=11 exhaustive search"
 	@echo "  make reproduce-all   All reproducibility checks"
@@ -116,6 +117,10 @@ eml-ir-inspector:
 
 high-d-corner-probe:
 	PYTHONPATH=python $(PYTHON) python/scripts/high_dim_corner_concentration.py --strict
+	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_high_dimensional.py
+
+forge-attractor-trace:
+	PYTHONPATH=python $(PYTHON) python/scripts/forge_attractor_trace_packet.py --strict
 	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_high_dimensional.py
 
 # ── Reproducibility ────────────────────────────────────────────────────────────

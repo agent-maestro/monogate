@@ -29,6 +29,28 @@ class DepthProbe:
     useful_volume_proxy: float
 
 
+@dataclass(frozen=True)
+class OptimizerTrace:
+    regime: str
+    depth: int
+    leaf_dimension: int
+    target: float
+    seed: int
+    steps: int
+    final_label: str
+    final_output: float | None
+    final_loss: float | None
+    best_loss: float | None
+    domain_failures: int
+    overflow_events: int
+    saturation_events: int
+    boundary_hits: int
+    finite_steps: int
+    terminal_boundary_fraction: float
+    terminal_min: float
+    terminal_max: float
+
+
 def hypersphere_cube_ratio(dimension: int) -> float:
     """Return V(unit d-ball) / V([-1, 1]^d)."""
     if dimension < 1:
@@ -79,6 +101,318 @@ def eval_full_eml_tree(leaves: list[float], domain_epsilon: float = 1e-12) -> fl
             nxt.append(value)
         level = nxt
     return level[0]
+
+
+def _eval_guarded_eml_tree(
+    leaves: list[float],
+    *,
+    clamp_domain: bool = False,
+    clamp_exp: bool = False,
+    domain_epsilon: float = 1e-9,
+) -> tuple[float | None, str | None]:
+    level = list(leaves)
+    try:
+        while len(level) > 1:
+            nxt: list[float] = []
+            for i in range(0, len(level), 2):
+                x = level[i]
+                y = level[i + 1]
+                if clamp_domain:
+                    y = max(y, domain_epsilon)
+                elif y <= domain_epsilon:
+                    return None, "domain_failed"
+                if clamp_exp:
+                    x = max(min(x, 20.0), -20.0)
+                value = math.exp(x) - math.log(y)
+                if not math.isfinite(value):
+                    return None, "overflowed"
+                nxt.append(value)
+            level = nxt
+        return level[0], None
+    except OverflowError:
+        return None, "overflowed"
+
+
+def _terminal_stats(leaves: list[float], boundary_epsilon: float = 0.05) -> dict:
+    return {
+        "terminal_boundary_fraction": sum(abs(x) >= 1 - boundary_epsilon for x in leaves) / len(leaves),
+        "terminal_min": min(leaves),
+        "terminal_max": max(leaves),
+    }
+
+
+def _trace_loss(
+    leaves: list[float],
+    target: float,
+    *,
+    clamp_domain: bool,
+    clamp_exp: bool,
+    l2: float,
+    boundary_penalty: float,
+    saturation_penalty: float,
+    saturation_limit: float,
+) -> tuple[float, float | None, str | None]:
+    output, event = _eval_guarded_eml_tree(leaves, clamp_domain=clamp_domain, clamp_exp=clamp_exp)
+    if event:
+        return 1e6 + sum(abs(x) for x in leaves), None, event
+    assert output is not None
+    try:
+        loss = (output - target) ** 2
+        loss += l2 * sum(x * x for x in leaves)
+    except OverflowError:
+        return 1e12, output, "overflowed"
+    if boundary_penalty:
+        loss += boundary_penalty * sum(max(0.0, abs(x) - 0.90) ** 2 for x in leaves)
+    if saturation_penalty and abs(output) > saturation_limit:
+        try:
+            loss += saturation_penalty * (abs(output) - saturation_limit) ** 2
+        except OverflowError:
+            return 1e12, output, "overflowed"
+    if not math.isfinite(loss):
+        return 1e12, output, "overflowed"
+    return loss, output, None
+
+
+def _finite_difference_gradient(
+    leaves: list[float],
+    target: float,
+    *,
+    clamp_domain: bool,
+    clamp_exp: bool,
+    l2: float,
+    boundary_penalty: float,
+    saturation_penalty: float,
+    saturation_limit: float,
+    eps: float = 1e-4,
+) -> list[float]:
+    grad: list[float] = []
+    for i in range(len(leaves)):
+        plus = list(leaves)
+        minus = list(leaves)
+        plus[i] += eps
+        minus[i] -= eps
+        lp, _, _ = _trace_loss(
+            plus,
+            target,
+            clamp_domain=clamp_domain,
+            clamp_exp=clamp_exp,
+            l2=l2,
+            boundary_penalty=boundary_penalty,
+            saturation_penalty=saturation_penalty,
+            saturation_limit=saturation_limit,
+        )
+        lm, _, _ = _trace_loss(
+            minus,
+            target,
+            clamp_domain=clamp_domain,
+            clamp_exp=clamp_exp,
+            l2=l2,
+            boundary_penalty=boundary_penalty,
+            saturation_penalty=saturation_penalty,
+            saturation_limit=saturation_limit,
+        )
+        g = (lp - lm) / (2 * eps)
+        if not math.isfinite(g):
+            g = 0.0
+        grad.append(max(min(g, 100.0), -100.0))
+    return grad
+
+
+def run_optimizer_trace(
+    *,
+    regime: str,
+    depth: int = 3,
+    target: float = math.pi,
+    seed: int = 20260526,
+    steps: int = 80,
+    learning_rate: float = 0.01,
+    saturation_limit: float = 10.0,
+) -> dict:
+    """Run one small optimizer trace and return a replayable packet.
+
+    Regimes are intentionally simple and dependency-free:
+    `naive_gradient`, `regularized_gradient`, `guarded_gradient`,
+    `boundary_aware_gradient`, and `random_search`.
+    """
+    rng = random.Random(seed)
+    leaf_dimension = 2**depth
+    positive_init = regime in {"guarded_gradient", "boundary_aware_gradient", "random_search"}
+    leaves = [rng.uniform(0.1, 2.0) if positive_init else rng.uniform(-1.0, 1.0) for _ in range(leaf_dimension)]
+    clamp_domain = regime in {"guarded_gradient", "boundary_aware_gradient"}
+    clamp_exp = regime in {"guarded_gradient", "boundary_aware_gradient"}
+    l2 = 1e-3 if regime in {"regularized_gradient", "boundary_aware_gradient"} else 0.0
+    boundary_penalty = 0.05 if regime == "boundary_aware_gradient" else 0.0
+    saturation_penalty = 0.05 if regime == "boundary_aware_gradient" else 0.0
+
+    events = {"domain_failed": 0, "overflowed": 0, "saturated": 0, "boundary_hit": 0}
+    frames = []
+    best_loss = math.inf
+    final_output: float | None = None
+    final_loss: float | None = None
+    finite_steps = 0
+
+    for step in range(steps):
+        if regime == "random_search":
+            candidate = [rng.uniform(0.1, 2.0) for _ in range(leaf_dimension)]
+            loss, output, event = _trace_loss(
+                candidate,
+                target,
+                clamp_domain=False,
+                clamp_exp=False,
+                l2=0.0,
+                boundary_penalty=0.0,
+                saturation_penalty=0.0,
+                saturation_limit=saturation_limit,
+            )
+            if loss < best_loss:
+                leaves = candidate
+        else:
+            loss, output, event = _trace_loss(
+                leaves,
+                target,
+                clamp_domain=clamp_domain,
+                clamp_exp=clamp_exp,
+                l2=l2,
+                boundary_penalty=boundary_penalty,
+                saturation_penalty=saturation_penalty,
+                saturation_limit=saturation_limit,
+            )
+
+        if event:
+            events[event] += 1
+        else:
+            finite_steps += 1
+            final_output = output
+            final_loss = loss
+            best_loss = min(best_loss, loss)
+            if output is not None and abs(output) > saturation_limit:
+                events["saturated"] += 1
+
+        stats = _terminal_stats(leaves)
+        if stats["terminal_boundary_fraction"] > 0:
+            events["boundary_hit"] += 1
+        if step in {0, 1, 2, 4, 9, steps - 1}:
+            frames.append(
+                {
+                    "step": step,
+                    "loss": None if not math.isfinite(loss) else loss,
+                    "output": output,
+                    "event": event,
+                    **stats,
+                }
+            )
+
+        if regime != "random_search":
+            grad = _finite_difference_gradient(
+                leaves,
+                target,
+                clamp_domain=clamp_domain,
+                clamp_exp=clamp_exp,
+                l2=l2,
+                boundary_penalty=boundary_penalty,
+                saturation_penalty=saturation_penalty,
+                saturation_limit=saturation_limit,
+            )
+            leaves = [x - learning_rate * g for x, g in zip(leaves, grad)]
+            if regime == "boundary_aware_gradient":
+                leaves = [max(min(x, 2.0), 0.05) for x in leaves]
+
+    stats = _terminal_stats(leaves)
+    if final_output is None:
+        label = "domain_failed" if events["domain_failed"] >= events["overflowed"] else "overflowed"
+    elif final_loss is not None and final_loss < 1e-4:
+        label = "converged"
+    elif events["saturated"] > steps / 3:
+        label = "saturated"
+    elif finite_steps < steps / 2:
+        label = "collapsed"
+    else:
+        label = "transient"
+
+    trace = OptimizerTrace(
+        regime=regime,
+        depth=depth,
+        leaf_dimension=leaf_dimension,
+        target=target,
+        seed=seed,
+        steps=steps,
+        final_label=label,
+        final_output=final_output,
+        final_loss=final_loss,
+        best_loss=None if not math.isfinite(best_loss) else best_loss,
+        domain_failures=events["domain_failed"],
+        overflow_events=events["overflowed"],
+        saturation_events=events["saturated"],
+        boundary_hits=events["boundary_hit"],
+        finite_steps=finite_steps,
+        **stats,
+    )
+    return {
+        "schema_version": "monogate.forge_attractor_trace.v1",
+        "trace": asdict(trace),
+        "frames": frames,
+        "boundaries": {
+            "sampled_evidence_only": True,
+            "optimizer_release_claim": False,
+            "phantom_attractor_proof": False,
+            "hardware_claim": False,
+        },
+    }
+
+
+def run_forge_attractor_trace_packet(
+    *,
+    depth: int = 3,
+    target: float = math.pi,
+    seed: int = 20260526,
+    steps: int = 80,
+) -> dict:
+    regimes = [
+        "naive_gradient",
+        "regularized_gradient",
+        "guarded_gradient",
+        "boundary_aware_gradient",
+        "random_search",
+    ]
+    traces = [
+        run_optimizer_trace(regime=regime, depth=depth, target=target, seed=seed + index, steps=steps)
+        for index, regime in enumerate(regimes)
+    ]
+    return {
+        "schema_version": "monogate.forge_attractor_trace_packet.v1",
+        "depth": depth,
+        "leaf_dimension": 2**depth,
+        "target": target,
+        "seed": seed,
+        "steps": steps,
+        "regime_count": len(regimes),
+        "traces": traces,
+        "summary": [
+            {
+                "regime": item["trace"]["regime"],
+                "label": item["trace"]["final_label"],
+                "best_loss": item["trace"]["best_loss"],
+                "domain_failures": item["trace"]["domain_failures"],
+                "overflow_events": item["trace"]["overflow_events"],
+                "saturation_events": item["trace"]["saturation_events"],
+                "finite_steps": item["trace"]["finite_steps"],
+            }
+            for item in traces
+        ],
+        "machlib_lean_obligations": [
+            "Prove V(unit_ball_d) / V([-1,1]^d) -> 0.",
+            "Prove cube boundary-shell probability 1 - (1 - epsilon)^d -> 1.",
+            "For independent symmetric leaves, prove raw right-child positivity probability decays exponentially by first EML layer.",
+            "Connect guarded lowering packets to domain-preservation obligations.",
+        ],
+        "boundaries": {
+            "sampled_evidence_only": True,
+            "optimizer_release_claim": False,
+            "phantom_attractor_proof": False,
+            "formal_verification_claim": False,
+            "hardware_claim": False,
+        },
+    }
 
 
 def run_corner_concentration_probe(
@@ -186,6 +520,46 @@ def write_probe_outputs(packet: dict, output_json: Path, output_markdown: Path) 
             "This is sampled evidence only. It measures the geometry pressure that makes",
             "EML tree optimization brittle in high-dimensional terminal space; it does",
             "not prove a phantom-attractor theorem or make a hardware claim.",
+            "",
+        ]
+    )
+    output_markdown.write_text("\n".join(lines), encoding="utf-8")
+
+
+def write_trace_outputs(packet: dict, output_json: Path, output_markdown: Path) -> None:
+    output_json.parent.mkdir(parents=True, exist_ok=True)
+    output_markdown.parent.mkdir(parents=True, exist_ok=True)
+    output_json.write_text(json.dumps(packet, indent=2) + "\n", encoding="utf-8")
+
+    lines = [
+        "# Forge Attractor Trace Packet",
+        "",
+        f"Schema: `{packet['schema_version']}`",
+        f"Depth: `{packet['depth']}`",
+        f"Leaf dimension: `{packet['leaf_dimension']}`",
+        f"Steps per regime: `{packet['steps']}`",
+        "",
+        "| regime | label | best loss | domain failures | overflow | saturation | finite steps |",
+        "|---|---|---:|---:|---:|---:|---:|",
+    ]
+    for row in packet["summary"]:
+        best = row["best_loss"]
+        best_text = "n/a" if best is None else f"{best:.3e}"
+        lines.append(
+            f"| {row['regime']} | {row['label']} | {best_text} | "
+            f"{row['domain_failures']} | {row['overflow_events']} | "
+            f"{row['saturation_events']} | {row['finite_steps']} |"
+        )
+    lines.extend(["", "## MachLib / Lean Obligations", ""])
+    for item in packet["machlib_lean_obligations"]:
+        lines.append(f"- {item}")
+    lines.extend(
+        [
+            "",
+            "This packet compares optimizer regimes against the same high-dimensional",
+            "EML terminal geometry. It is sampled evidence only and does not claim a",
+            "phantom-attractor theorem, optimizer release, hardware result, or formal",
+            "verification.",
             "",
         ]
     )
