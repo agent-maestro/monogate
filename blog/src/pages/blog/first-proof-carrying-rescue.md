@@ -118,3 +118,5 @@ source fixture
 
 That is the direction Monogate is building toward: optimization that emits
 evidence, not just output.
+
+Next in the series: [`The Second Proof-Carrying Rescue`](/blog/second-proof-carrying-rescue).

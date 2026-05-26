@@ -215,6 +215,12 @@ EML fixture, applies `log_domain_lift`, records finite recovery, and points at
 MachLib's positive-coordinate obligation. See
 [`/blog/first-proof-carrying-rescue`](/blog/first-proof-carrying-rescue).
 
+The second proof-carrying rescue specializes the same pattern to
+`overflow_wall -> guard_rescue`. Forge now emits a guard-clamp packet for an
+overflow-pressure fixture, and MachLib bridges that transition to output safety.
+See [`/blog/second-proof-carrying-rescue`](/blog/second-proof-carrying-rescue)
+and the compact [`rescue status table`](/blog/proof-carrying-rescue-status).
+
 ## Next Target
 
 The next frontier is not a bigger random search. It is control over
