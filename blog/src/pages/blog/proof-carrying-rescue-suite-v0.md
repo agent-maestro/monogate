@@ -24,6 +24,12 @@ Forge also replays that manifest with:
 tools/proof_carrying_rescue_replay.py
 ```
 
+The interactive software inspection surface lives at:
+
+```text
+https://monogate.dev/explorer/rescue-suite
+```
+
 The manifest is:
 
 ```text
