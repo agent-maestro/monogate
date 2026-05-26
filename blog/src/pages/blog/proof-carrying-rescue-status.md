@@ -27,7 +27,8 @@ generated report, and regression tests.
 
 `closed packet bridge` means MachLib has a theorem connecting a valid packet
 transition to its obligation and a nonempty transition-graph witness, without
-adding a new `sorry`.
+adding a new `sorry`. For the log-domain lane, MachLib also has a concrete
+positive-coordinate witness theorem for the sample-level obligation.
 
 `closed packet bridge with explicit event witness` means the bridge is closed,
 but the theorem requires both the event witness and transition witness. That is
