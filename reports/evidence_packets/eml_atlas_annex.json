@@ -1,0 +1,82 @@
+{
+  "artifactId": "eml-atlas-annex",
+  "claimBoundary": "Generated annex classifies selected Atlas-style identities; it does not replace monogate.org/atlas or create public theorem/RH/physics/SuperBEST claims.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "deploy_performed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "modular_form_theorem_claim": false,
+    "package_publish_performed": false,
+    "physics_theorem_claim": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "quantum_group_theorem_claim": false,
+    "rh_proof_claim": false,
+    "theorem_proof_claim": false
+  },
+  "evidencePaths": [
+    "python/scripts/eml_atlas_annex.py",
+    "python/results/eml_atlas_annex/eml_atlas_annex_2026_05_27.json",
+    "reports/eml_a1_atlas_evidence_annex_2026_05_27.md",
+    "reports/evidence_packets/eml_atlas_annex.json"
+  ],
+  "nonClaims": [
+    "The monogate.org Atlas remains the canonical public Atlas.",
+    "This annex is an internal evidence and claim-hygiene layer.",
+    "No RH proof, physics theorem, modular-form theorem, quantum-group theorem, or public SuperBEST claim is made.",
+    "No Forge/compiler behavior changes are made.",
+    "No package publish or deploy is performed by this script."
+  ],
+  "replayStatus": "pass",
+  "reviewDecision": "candidate_only",
+  "reviewHighlights": [
+    "Classifies exact identities separately from rewrites, observations, and blocked conjectural statements.",
+    "Catches the Mellin/polylog missing-lambda-factor boundary.",
+    "Keeps monogate.org/atlas as the canonical public Atlas."
+  ],
+  "reviewNotes": "Candidate-only internal generated annex.",
+  "reviewReasons": [
+    "Useful as a reviewer annex before any Atlas-like claim is surfaced publicly."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "classification_counts": {
+      "conjectural_or_blocked": 1,
+      "exact_identity": 4,
+      "standard_rewrite": 6
+    },
+    "entry_count": 11,
+    "promote_to_public_atlas": false,
+    "public_atlas_source": "https://monogate.org/atlas"
+  },
+  "semanticStrength": "atlas_identity_classifier_candidate_no_public_claim_change",
+  "sourceReportPath": "reports/eml_a1_atlas_evidence_annex_2026_05_27.md",
+  "timeline": [
+    {
+      "detail": "Public source fixed to https://monogate.org/atlas.",
+      "label": "Atlas source",
+      "status": "pass"
+    },
+    {
+      "detail": "Seed entries validated by deterministic numeric witnesses.",
+      "label": "Identity checks",
+      "status": "pass"
+    },
+    {
+      "detail": "Public promotion and theorem/proof flags remain false.",
+      "label": "Claim boundary",
+      "status": "pass"
+    }
+  ],
+  "title": "EML-A1 Atlas Evidence Annex",
+  "validationCommands": [
+    "python python/scripts/eml_atlas_annex.py --build --strict",
+    "python -m pytest -q python/tests/test_eml_atlas_annex.py"
+  ],
+  "validationStatus": "pass"
+}
