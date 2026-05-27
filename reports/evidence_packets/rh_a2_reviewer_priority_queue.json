@@ -1,0 +1,43 @@
+{
+  "artifactId": "rh-a2-reviewer-priority-queue",
+  "claimBoundary": "Private reviewer planning queue only; no public approval, deployment, trading, hardware, or compiler behavior claim.",
+  "claimFlags": {
+    "automatic_reviewer_approval": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "deploy_performed": false,
+    "financial_advice_claim": false,
+    "hardware_action_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_sprint_approval_claim": false,
+    "trade_performed": false
+  },
+  "nonClaims": [
+    "RH-A2 is a private reviewer planning queue, not public approval.",
+    "RH-A2 does not prove claims, deploy, trade, operate hardware, or change compiler behavior.",
+    "RH-A2 ranking is deterministic planning guidance, not automatic sprint authorization."
+  ],
+  "replayStatus": "not_applicable",
+  "reviewDecision": "private_reviewer_queue_recorded",
+  "reviewHighlights": [
+    "Ranks RH-A1 claim review packets by blocker severity, lane leverage, and validator readiness.",
+    "Turns review packets into concrete next sprint recommendations.",
+    "Keeps approval and action flags false."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "deployPerformed": false,
+    "publicApprovalPerformed": false,
+    "queueItemCount": 9,
+    "topClaimId": "r11-compiler-lowering-correctness",
+    "topNextSprint": "R12 generated lowering stubs"
+  },
+  "semanticStrength": "deterministic_priority_queue_no_public_approval_claim",
+  "title": "RH-A2 Reviewer Priority Queue",
+  "validationCommands": [
+    "python python/scripts/rh_a2_reviewer_priority_queue.py --build --strict",
+    "python -m pytest -q python/tests/test_rh_a2_reviewer_priority_queue.py"
+  ],
+  "validationStatus": "pass"
+}

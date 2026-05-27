@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate Reviewer Priority Queue v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "queueId",
+    "generatedAt",
+    "sourceReviewPath",
+    "items",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.reviewer_priority_queue.v0" },
+    "queueId": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "minLength": 1 },
+    "sourceReviewPath": { "type": "string", "minLength": 1 },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "rank",
+          "claimId",
+          "priority",
+          "score",
+          "nextSprint",
+          "nextValidator",
+          "claimFlags"
+        ],
+        "properties": {
+          "rank": { "type": "integer", "minimum": 1 },
+          "claimId": { "type": "string", "minLength": 1 },
+          "priority": { "enum": ["critical", "high", "medium", "low"] },
+          "score": { "type": "integer", "minimum": 0 },
+          "nextSprint": { "type": "string", "minLength": 1 },
+          "nextValidator": { "type": "string", "minLength": 1 },
+          "claimFlags": {
+            "type": "object",
+            "additionalProperties": { "const": false }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
