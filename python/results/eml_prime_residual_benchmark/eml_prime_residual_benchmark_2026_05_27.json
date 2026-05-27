@@ -1,0 +1,398 @@
+{
+  "benchmarkId": "eml_a2_prime_residual_gamma_scan_v0",
+  "claimFlags": {
+    "benchmark_generalization_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-27",
+  "fixture": {
+    "primeCountUpToMax": 30,
+    "residualMax": 4.355436158442458,
+    "residualMin": -7.44554493062283,
+    "residualMseAgainstZero": 6.407915447587885,
+    "sampleCount": 800,
+    "xMax": 120.0,
+    "xMin": 4.0
+  },
+  "interpretation": {
+    "nullResultAcceptable": true,
+    "resultLabel": "candidate_supports_eml_frequency_localization_on_fixed_fixture",
+    "summary": "On this fixed psi(x)-x fixture, the EML-shaped one-parameter scan lands closer to the first known zeta-zero frequency; the profiled standard basis has lower MSE because it fits two amplitudes at each frequency."
+  },
+  "negativeControls": [
+    {
+      "emlBestGamma": 25.588235294117645,
+      "emlErrorFromFirstKnownZero": 11.453510153117644,
+      "label": "shuffled_residual",
+      "nonClaim": "Negative controls are context checks, not proof of specificity.",
+      "standardBestGamma": 5.0,
+      "standardErrorFromFirstKnownZero": 9.134725141,
+      "status": "context_only"
+    },
+    {
+      "emlBestGamma": 5.963704630788485,
+      "emlErrorFromFirstKnownZero": 8.171020510211516,
+      "label": "gaussian_bumps",
+      "nonClaim": "Negative controls are context checks, not proof of specificity.",
+      "standardBestGamma": 5.0,
+      "standardErrorFromFirstKnownZero": 9.134725141,
+      "status": "context_only"
+    }
+  ],
+  "nonClaims": [
+    "This benchmark does not prove RH.",
+    "This benchmark does not discover zeta zeros.",
+    "This benchmark does not prove an EML grammar theorem.",
+    "This benchmark does not promote any Atlas entry publicly.",
+    "This benchmark does not change Forge/compiler behavior.",
+    "Null results are acceptable for future runs."
+  ],
+  "scan": {
+    "comparison": {
+      "complexityRatioStandardToEml": 5.0,
+      "emlCloserToFirstKnownZero": true,
+      "mseGapStandardMinusEml": -0.08628461605402382,
+      "standardLowerMse": true
+    },
+    "eml": {
+      "bestGamma": 14.087043521760881,
+      "bestMse": 5.339289386058876,
+      "errorFromFirstKnownZero": 0.0476816192391194,
+      "freeParameterCount": 1,
+      "grammarOperatorNodes": 1,
+      "model": "single_eml_frequency"
+    },
+    "gammaMax": 40.0,
+    "gammaMin": 5.0,
+    "gammaSteps": 2000,
+    "knownFirstZetaZeroGamma": 14.134725141,
+    "lossSamples": [
+      {
+        "emlMse": 13.306050397046386,
+        "gamma": 5.0,
+        "standardMse": 5.773042495178061
+      },
+      {
+        "emlMse": 10.942935532171113,
+        "gamma": 5.577788894447224,
+        "standardMse": 5.853314301321418
+      },
+      {
+        "emlMse": 8.384438999880967,
+        "gamma": 6.173086543271635,
+        "standardMse": 5.9001122768053165
+      },
+      {
+        "emlMse": 10.411741667717875,
+        "gamma": 6.768384192096048,
+        "standardMse": 5.931593876929864
+      },
+      {
+        "emlMse": 6.593917499937505,
+        "gamma": 7.36368184092046,
+        "standardMse": 5.959296487808431
+      },
+      {
+        "emlMse": 9.89088726038606,
+        "gamma": 7.9589794897448725,
+        "standardMse": 5.966846793250031
+      },
+      {
+        "emlMse": 6.485996043110731,
+        "gamma": 8.554277138569285,
+        "standardMse": 5.964578251713849
+      },
+      {
+        "emlMse": 9.05180272184831,
+        "gamma": 9.149574787393696,
+        "standardMse": 5.961789433460633
+      },
+      {
+        "emlMse": 7.094612078526045,
+        "gamma": 9.74487243621811,
+        "standardMse": 5.939455724149525
+      },
+      {
+        "emlMse": 7.760137751124187,
+        "gamma": 10.322661330665333,
+        "standardMse": 5.896193893874633
+      },
+      {
+        "emlMse": 7.983609935951333,
+        "gamma": 10.917958979489745,
+        "standardMse": 5.837871617274101
+      },
+      {
+        "emlMse": 6.422503245229722,
+        "gamma": 11.513256628314156,
+        "standardMse": 5.7538979730545226
+      },
+      {
+        "emlMse": 8.624637553066437,
+        "gamma": 12.10855427713857,
+        "standardMse": 5.6347097924308835
+      },
+      {
+        "emlMse": 5.50610129544086,
+        "gamma": 12.703851925962981,
+        "standardMse": 5.4857818826231854
+      },
+      {
+        "emlMse": 8.60816055915206,
+        "gamma": 13.299149574787394,
+        "standardMse": 5.332625486454626
+      },
+      {
+        "emlMse": 5.994341049814738,
+        "gamma": 13.894447223611806,
+        "standardMse": 5.25333210038933
+      },
+      {
+        "emlMse": 7.137662833504304,
+        "gamma": 14.489744872436217,
+        "standardMse": 5.321153166606218
+      },
+      {
+        "emlMse": 7.614635465119522,
+        "gamma": 15.067533766883441,
+        "standardMse": 5.490894078331105
+      },
+      {
+        "emlMse": 5.942879912387034,
+        "gamma": 15.662831415707855,
+        "standardMse": 5.666473631440875
+      },
+      {
+        "emlMse": 7.968942419690418,
+        "gamma": 16.258129064532266,
+        "standardMse": 5.78913314557628
+      },
+      {
+        "emlMse": 5.870919435371073,
+        "gamma": 16.853426713356676,
+        "standardMse": 5.865995633039228
+      },
+      {
+        "emlMse": 7.6918654291222195,
+        "gamma": 17.44872436218109,
+        "standardMse": 5.899650298714766
+      },
+      {
+        "emlMse": 6.111584683049873,
+        "gamma": 18.044022011005502,
+        "standardMse": 5.8912881522024705
+      },
+      {
+        "emlMse": 7.1858803758503065,
+        "gamma": 18.639319659829916,
+        "standardMse": 5.856797733172552
+      },
+      {
+        "emlMse": 6.614576077844809,
+        "gamma": 19.23461730865433,
+        "standardMse": 5.796726456295762
+      },
+      {
+        "emlMse": 6.436325009373993,
+        "gamma": 19.82991495747874,
+        "standardMse": 5.713594843839412
+      },
+      {
+        "emlMse": 7.398959323459685,
+        "gamma": 20.407703851925962,
+        "standardMse": 5.6566465994485675
+      },
+      {
+        "emlMse": 5.807842594896936,
+        "gamma": 21.003001500750376,
+        "standardMse": 5.6760151218725605
+      },
+      {
+        "emlMse": 7.494549001982725,
+        "gamma": 21.59829914957479,
+        "standardMse": 5.766406277264719
+      },
+      {
+        "emlMse": 6.041991634655715,
+        "gamma": 22.1935967983992,
+        "standardMse": 5.869561531117495
+      },
+      {
+        "emlMse": 7.085741477485749,
+        "gamma": 22.788894447223612,
+        "standardMse": 5.933409185903679
+      },
+      {
+        "emlMse": 6.402913489686322,
+        "gamma": 23.384192096048025,
+        "standardMse": 5.9369109803740026
+      },
+      {
+        "emlMse": 6.640448923828164,
+        "gamma": 23.979489744872435,
+        "standardMse": 5.895212923264691
+      },
+      {
+        "emlMse": 6.8667244569059935,
+        "gamma": 24.574787393696848,
+        "standardMse": 5.8538431079878
+      },
+      {
+        "emlMse": 6.083812338556374,
+        "gamma": 25.152576288144072,
+        "standardMse": 5.858442961088931
+      },
+      {
+        "emlMse": 7.166488091127834,
+        "gamma": 25.747873936968485,
+        "standardMse": 5.922453274260459
+      },
+      {
+        "emlMse": 6.071694352199675,
+        "gamma": 26.343171585792895,
+        "standardMse": 6.016520807071779
+      },
+      {
+        "emlMse": 6.96672013748894,
+        "gamma": 26.93846923461731,
+        "standardMse": 6.095797002600718
+      },
+      {
+        "emlMse": 6.291783877246372,
+        "gamma": 27.53376688344172,
+        "standardMse": 6.139203534652072
+      },
+      {
+        "emlMse": 6.748573161902608,
+        "gamma": 28.12906453226613,
+        "standardMse": 6.150451027625738
+      },
+      {
+        "emlMse": 6.490836107378019,
+        "gamma": 28.724362181090545,
+        "standardMse": 6.133693050173498
+      },
+      {
+        "emlMse": 6.490040625131872,
+        "gamma": 29.319659829914958,
+        "standardMse": 6.095388742289254
+      },
+      {
+        "emlMse": 6.779742198187669,
+        "gamma": 29.91495747873937,
+        "standardMse": 6.061578522145626
+      },
+      {
+        "emlMse": 6.167770188368445,
+        "gamma": 30.492746373186595,
+        "standardMse": 6.061025897693478
+      },
+      {
+        "emlMse": 6.929992679044918,
+        "gamma": 31.088044022011005,
+        "standardMse": 6.09192286740029
+      },
+      {
+        "emlMse": 6.171368677720412,
+        "gamma": 31.683341670835418,
+        "standardMse": 6.122309370328335
+      },
+      {
+        "emlMse": 6.813555858054952,
+        "gamma": 32.27863931965983,
+        "standardMse": 6.126195898805106
+      },
+      {
+        "emlMse": 6.337242495711227,
+        "gamma": 32.873936968484244,
+        "standardMse": 6.114218470266812
+      },
+      {
+        "emlMse": 6.544105825673341,
+        "gamma": 33.46923461730866,
+        "standardMse": 6.117576614665125
+      },
+      {
+        "emlMse": 6.646254367920713,
+        "gamma": 34.06453226613307,
+        "standardMse": 6.147652949120823
+      },
+      {
+        "emlMse": 6.283915042295402,
+        "gamma": 34.65982991495748,
+        "standardMse": 6.1907120120090005
+      },
+      {
+        "emlMse": 6.774889879197437,
+        "gamma": 35.2376188094047,
+        "standardMse": 6.23231063913493
+      },
+      {
+        "emlMse": 6.285885121951617,
+        "gamma": 35.832916458229114,
+        "standardMse": 6.272530456632974
+      },
+      {
+        "emlMse": 6.63148304500439,
+        "gamma": 36.42821410705353,
+        "standardMse": 6.311846222529782
+      },
+      {
+        "emlMse": 6.473422665156603,
+        "gamma": 37.02351175587794,
+        "standardMse": 6.351016641385074
+      },
+      {
+        "emlMse": 6.450703482723921,
+        "gamma": 37.618809404702354,
+        "standardMse": 6.3851260821999505
+      },
+      {
+        "emlMse": 6.525228170988843,
+        "gamma": 38.21410705352676,
+        "standardMse": 6.404259644103658
+      },
+      {
+        "emlMse": 6.508431845742682,
+        "gamma": 38.80940470235117,
+        "standardMse": 6.405018765292243
+      },
+      {
+        "emlMse": 6.419156015599515,
+        "gamma": 39.40470235117559,
+        "standardMse": 6.393298217492039
+      },
+      {
+        "emlMse": 6.56395522511096,
+        "gamma": 40.0,
+        "standardMse": 6.375506440965071
+      }
+    ],
+    "standard": {
+      "bestGamma": 13.929464732366183,
+      "bestMse": 5.2530047700048526,
+      "errorFromFirstKnownZero": 0.20526040863381745,
+      "freeParameterCount": 3,
+      "grammarOperatorNodes": 5,
+      "model": "profiled_sqrt_cos_sin",
+      "profiledCoefficients": [
+        -0.13233253255834787,
+        -0.1416716863576856
+      ]
+    }
+  },
+  "schemaVersion": "monogate.eml_prime_residual_benchmark.v0",
+  "status": "EML_PRIME_RESIDUAL_BENCHMARK_PASS"
+}

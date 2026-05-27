@@ -1,0 +1,82 @@
+{
+  "artifactId": "eml-prime-residual-benchmark",
+  "claimBoundary": "Fixed-fixture grammar benchmark only; no RH proof, zeta-zero discovery, theorem, or public Atlas promotion claim.",
+  "claimFlags": {
+    "benchmark_generalization_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "deploy_performed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "package_publish_performed": false,
+    "production_controller_claim": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "evidencePaths": [
+    "python/scripts/eml_prime_residual_benchmark.py",
+    "python/results/eml_prime_residual_benchmark/eml_prime_residual_benchmark_2026_05_27.json",
+    "reports/eml_a2_prime_residual_benchmark_2026_05_27.md",
+    "reports/evidence_packets/eml_prime_residual_benchmark.json"
+  ],
+  "nonClaims": [
+    "This benchmark does not prove RH.",
+    "This benchmark does not discover zeta zeros.",
+    "This benchmark does not prove an EML grammar theorem.",
+    "This benchmark does not promote any Atlas entry publicly.",
+    "This benchmark does not change Forge/compiler behavior.",
+    "Null results are acceptable for future runs."
+  ],
+  "replayStatus": "pass",
+  "reviewDecision": "candidate_only",
+  "reviewHighlights": [
+    "Compares one EML-shaped frequency parameter with a profiled standard trigonometric basis.",
+    "Records both localization error and MSE instead of forcing a one-number verdict.",
+    "Includes deterministic negative controls marked context-only."
+  ],
+  "reviewNotes": "Internal benchmark artifact. Results should be treated as one fixture, not a theorem.",
+  "reviewReasons": [
+    "High-upside falsifiable EML grammar-compression experiment, kept candidate-only."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "benchmark_id": "eml_a2_prime_residual_gamma_scan_v0",
+    "eml_best_gamma": 14.087043521760881,
+    "eml_error_from_first_known_zero": 0.0476816192391194,
+    "known_first_zeta_zero_gamma": 14.134725141,
+    "null_result_acceptable": true,
+    "standard_best_gamma": 13.929464732366183,
+    "standard_error_from_first_known_zero": 0.20526040863381745
+  },
+  "semanticStrength": "prime_residual_grammar_benchmark_candidate_no_rh_claim",
+  "sourceReportPath": "reports/eml_a2_prime_residual_benchmark_2026_05_27.md",
+  "timeline": [
+    {
+      "detail": "Generated deterministic psi(x)-x residual on x in [4, 120].",
+      "label": "Fixture",
+      "status": "pass"
+    },
+    {
+      "detail": "Scanned 2000 gamma values for EML and standard bases.",
+      "label": "Gamma scan",
+      "status": "pass"
+    },
+    {
+      "detail": "RH/theorem/discovery/promotion flags remain false.",
+      "label": "Claim boundary",
+      "status": "pass"
+    }
+  ],
+  "title": "EML-A2 Prime Residual Benchmark",
+  "validationCommands": [
+    "python python/scripts/eml_prime_residual_benchmark.py --build --strict",
+    "python -m pytest -q python/tests/test_eml_prime_residual_benchmark.py"
+  ],
+  "validationStatus": "pass"
+}
