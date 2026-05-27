@@ -1,0 +1,60 @@
+{
+  "blockedClaims": [
+    "No public performance or energy savings claim.",
+    "No formal verification or theorem claim.",
+    "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+    "No claim that EML is preferable for this case."
+  ],
+  "caseId": "ln_from_eml_v0",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "comparison": {
+    "eml": {
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 14.2421875,
+      "maxAbsError": 0.0,
+      "maxRelError": 0.0,
+      "nanOrInfCount": 0,
+      "operatorCount": 3,
+      "sampleCount": 2048
+    },
+    "standard": {
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 2.6171875,
+      "maxAbsError": 0.0,
+      "maxRelError": 0.0,
+      "nanOrInfCount": 0,
+      "operatorCount": 1,
+      "sampleCount": 2048
+    }
+  },
+  "date": "2026-05-27",
+  "expression": "eml(1, eml(eml(1, y), 1))",
+  "family": "atlas_exact_identity",
+  "nonClaims": [
+    "This packet records deterministic finite-precision measurements only.",
+    "This packet does not claim public savings, proof correctness, or hardware performance.",
+    "Recommendation is local to this fixture and sample grid."
+  ],
+  "packetType": "eml_cost_packet_v0",
+  "ranges": {
+    "y": {
+      "max": 1000000000.0,
+      "min": 1e-09
+    }
+  },
+  "recommendation": "use_standard",
+  "schemaVersion": "monogate.eml_cost_packet.v0",
+  "stabilityScore": 1.0,
+  "standardExpression": "ln(y)"
+}

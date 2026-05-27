@@ -1,0 +1,60 @@
+{
+  "blockedClaims": [
+    "No public performance or energy savings claim.",
+    "No formal verification or theorem claim.",
+    "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+    "No claim that EML is preferable for this case."
+  ],
+  "caseId": "gaussian_energy_v0",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "comparison": {
+    "eml": {
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 6.99267578125,
+      "maxAbsError": 0.0,
+      "maxRelError": 0.0,
+      "nanOrInfCount": 0,
+      "operatorCount": 7,
+      "sampleCount": 2048
+    },
+    "standard": {
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 3.78125,
+      "maxAbsError": 0.0,
+      "maxRelError": 0.0,
+      "nanOrInfCount": 0,
+      "operatorCount": 4,
+      "sampleCount": 2048
+    }
+  },
+  "date": "2026-05-27",
+  "expression": "exp(-(x * x)) + exp(-(x * x))",
+  "family": "forge_efrog_fixture",
+  "nonClaims": [
+    "This packet records deterministic finite-precision measurements only.",
+    "This packet does not claim public savings, proof correctness, or hardware performance.",
+    "Recommendation is local to this fixture and sample grid."
+  ],
+  "packetType": "eml_cost_packet_v0",
+  "ranges": {
+    "x": {
+      "max": 30.0,
+      "min": -30.0
+    }
+  },
+  "recommendation": "use_standard",
+  "schemaVersion": "monogate.eml_cost_packet.v0",
+  "stabilityScore": 1.0,
+  "standardExpression": "2 * exp(-(x * x))"
+}

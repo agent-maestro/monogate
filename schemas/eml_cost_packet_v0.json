@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "blockedClaims": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "caseId": {
+      "type": "string"
+    },
+    "claimFlags": {
+      "additionalProperties": {
+        "const": false
+      },
+      "type": "object"
+    },
+    "comparison": {
+      "additionalProperties": false,
+      "properties": {
+        "eml": {
+          "$ref": "#/$defs/implementationMetrics"
+        },
+        "standard": {
+          "$ref": "#/$defs/implementationMetrics"
+        }
+      },
+      "required": [
+        "eml",
+        "standard"
+      ],
+      "type": "object"
+    },
+    "date": {
+      "type": "string"
+    },
+    "family": {
+      "type": "string"
+    },
+    "nonClaims": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "packetType": {
+      "const": "eml_cost_packet_v0"
+    },
+    "recommendation": {
+      "enum": [
+        "use_eml",
+        "use_standard",
+        "use_hybrid",
+        "research_only"
+      ]
+    },
+    "schemaVersion": {
+      "const": "monogate.eml_cost_packet.v0"
+    },
+    "stabilityScore": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "caseId",
+    "family",
+    "comparison",
+    "stabilityScore",
+    "recommendation",
+    "blockedClaims",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "type": "object",
+  "$defs": {
+    "implementationMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "finiteRatio": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "latencyNsPerSample": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "maxAbsError": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "maxRelError": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "nanOrInfCount": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "operatorCount": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sampleCount": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sampleCount",
+        "finiteRatio",
+        "nanOrInfCount",
+        "maxAbsError",
+        "maxRelError",
+        "latencyNsPerSample",
+        "operatorCount"
+      ],
+      "type": "object"
+    }
+  }
+}

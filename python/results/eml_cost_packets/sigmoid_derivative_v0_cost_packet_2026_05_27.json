@@ -1,0 +1,61 @@
+{
+  "blockedClaims": [
+    "No public performance or energy savings claim.",
+    "No formal verification or theorem claim.",
+    "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+    "No claim that EML is preferable for this case.",
+    "No claim that the EML form is numerically superior."
+  ],
+  "caseId": "sigmoid_derivative_v0",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "comparison": {
+    "eml": {
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 6.7890625,
+      "maxAbsError": 5.551115123125783e-17,
+      "maxRelError": 3.494354962375931e-16,
+      "nanOrInfCount": 0,
+      "operatorCount": 10,
+      "sampleCount": 2048
+    },
+    "standard": {
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 11.85986328125,
+      "maxAbsError": 0.0,
+      "maxRelError": 0.0,
+      "nanOrInfCount": 0,
+      "operatorCount": 4,
+      "sampleCount": 2048
+    }
+  },
+  "date": "2026-05-27",
+  "expression": "(1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))",
+  "family": "sigmoid_logistic",
+  "nonClaims": [
+    "This packet records deterministic finite-precision measurements only.",
+    "This packet does not claim public savings, proof correctness, or hardware performance.",
+    "Recommendation is local to this fixture and sample grid."
+  ],
+  "packetType": "eml_cost_packet_v0",
+  "ranges": {
+    "x": {
+      "max": 80.0,
+      "min": -80.0
+    }
+  },
+  "recommendation": "use_standard",
+  "schemaVersion": "monogate.eml_cost_packet.v0",
+  "stabilityScore": 1.0,
+  "standardExpression": "stable_sigmoid(x) * (1 - stable_sigmoid(x))"
+}
