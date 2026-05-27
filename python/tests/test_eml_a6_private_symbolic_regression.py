@@ -29,6 +29,15 @@ def test_private_run_writes_json_report_and_evidence(tmp_path):
     validate_private_run(result)
 
 
+def test_validate_private_run_allows_captured_pysr_run(tmp_path):
+    result = build_private_run(tmp_path / "out", tmp_path / "reports", tmp_path / "evidence")["result"]
+    result["status"] = "EML_A6_PRIVATE_SYMBOLIC_REGRESSION_PYSR_RUN_PASS"
+    result["pysr"]["fullRunPerformed"] = True
+    result["claimFlags"]["pysr_run_claim"] = True
+    result["pysrRun"] = {"runs": [{}, {}, {}, {}, {}, {}], "targetComparison": {}}
+    validate_private_run(result)
+
+
 def test_cli_build_strict(tmp_path):
     proc = subprocess.run(
         [

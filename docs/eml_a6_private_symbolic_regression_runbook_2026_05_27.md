@@ -1,7 +1,7 @@
 # EML-A6 Private Symbolic Regression Runbook
 
 Date: 2026-05-27
-Status: PRIVATE_RUNBOOK_READY
+Status: PRIVATE_RUNBOOK_READY_WITH_FIRST_PYSR_RUN
 Visibility: private
 
 ## Purpose
@@ -16,18 +16,19 @@ The experiment compares:
 
 on the fixed `psi(x) - x` residual fixture used by A2/A5.
 
-## Current Blocker
+## Current Environment
 
-PySR is not installed in the current environment. The checked A6 artifact
-records:
+An isolated environment now exists at:
 
 ```text
-pysr_available = false
-fullRunPerformed = false
+.venv-a6-pysr
 ```
 
-This is intentional. Do not claim a full symbolic-regression run until the
-runner has produced captured artifacts.
+It installed PySR 1.5.10 and a private Julia 1.11.9 runtime under the venv's
+Julia environment. This environment is intentionally ignored by git.
+
+The normal repo Python environment may still report `pysr_available = false`;
+the private A6 run should be executed through `.venv-a6-pysr`.
 
 ## Environment Plan
 
@@ -46,34 +47,67 @@ the private environment and record the exact versions in the run artifact.
 
 ## Intended One-Command Run
 
-The current private harness is:
+The current private harness can be run in non-PySR mode:
 
 ```bash
 python python/scripts/eml_a6_private_symbolic_regression.py --build --strict
 ```
 
-When PySR is installed, extend this harness rather than creating a separate
-untracked notebook. The command should remain the public entrypoint for local
-validation, with an explicit flag for the expensive run if needed:
+The bounded private PySR run command is:
 
 ```bash
+source .venv-a6-pysr/bin/activate
+PYTHONPATH=python \
 python python/scripts/eml_a6_private_symbolic_regression.py \
   --build \
   --run-pysr \
-  --max-runtime-seconds 900 \
+  --max-runtime-seconds 600 \
   --seed 20260527 \
+  --niterations 50 \
+  --maxsize 18 \
+  --n-samples 800 \
   --strict
 ```
 
-The `--run-pysr` flag is not implemented yet. Add it only when the environment
-is ready.
+## First Private PySR Result
+
+The first captured A6 run completed on 2026-05-27.
+
+Target fixture result:
+
+```text
+EML holdout MSE:      3.638040
+Standard holdout MSE: 3.431470
+EML lower holdout:    false
+EML complexity:       17
+Standard complexity:  16
+```
+
+Controls:
+
+```text
+shuffled residual:
+  EML holdout MSE      4.358986
+  standard holdout MSE 4.389154
+
+Gaussian bumps:
+  EML holdout MSE      0.572400
+  standard holdout MSE 0.054920
+```
+
+Interpretation:
+
+This first real PySR run does not show a robust EML grammar advantage. The
+standard grammar wins the target holdout and strongly wins the Gaussian control.
+That is a useful truth-finding result and should be treated as a constraint on
+future claims, not as a failure of the project.
 
 ## Required Captured Artifacts
 
-The real run should write:
+The captured run writes:
 
-- `python/results/eml_a6_private_symbolic_regression/eml_a6_pysr_run_2026_05_27.json`
-- `reports/eml_a6_private_symbolic_regression_pysr_run_2026_05_27.md`
+- `python/results/eml_a6_private_symbolic_regression/eml_a6_private_symbolic_regression_2026_05_27.json`
+- `reports/eml_a6_private_symbolic_regression_2026_05_27.md`
 - `reports/evidence_packets/eml_a6_private_symbolic_regression.json`
 - model hall-of-fame tables for both grammars
 - train/holdout residual metrics
@@ -113,7 +147,7 @@ not merely whether it produces beautiful expressions.
 
 ## Claim Boundary
 
-The real A6 run may claim only:
+The A6 run may claim only:
 
 - a private symbolic-regression experiment ran
 - these expressions and metrics were observed on these fixtures
@@ -139,4 +173,3 @@ A6 becomes interesting if:
 
 A6 is also useful if it fails. A clean null result would tell us the prime
 residual lane is mostly notation/beauty rather than a real search advantage.
-
