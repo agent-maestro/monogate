@@ -58,6 +58,7 @@ REQUIRED_VALIDATORS_BY_TYPE = {
     "external_theory": ["claim_decomposition", "domain_expert_review", "contradiction_scan", "formal_derivation_check"],
     "hardware": ["live_capture_packet", "device_identity", "calibration_context", "replay_comparison"],
     "compiler_correctness": ["generated_stub_validation", "semantic_equivalence_tests", "formal_compiler_proof"],
+    "generated_stub_validation": ["r12_generated_stub_packet", "runtime_bakeoff", "scoped_semantic_proof"],
     "proof_status": ["machlib_lake_build", "proof_scope_review", "domain_assumption_check"],
     "ai_answer": ["source_attribution", "expert_review", "replay_or_validator_when_applicable"],
     "redteam_robustness": ["rampart_redteam_packet", "adapter_coverage_review", "regression_ci_guard"],
@@ -69,6 +70,7 @@ BLOCKED_CLAIMS_BY_TYPE = {
     "external_theory": ["theory_of_everything_endorsement", "physics_unification_claim", "metaphysical_closure_claim"],
     "hardware": ["hardware_validated_without_live_capture", "production_controller_claim"],
     "compiler_correctness": ["compiler_correctness_without_proof", "runtime_semantic_equivalence_without_validation"],
+    "generated_stub_validation": ["compiler_correctness_claim", "production_lowering_claim", "semantic_equivalence_claim"],
     "proof_status": ["general_theorem_claim_beyond_checked_witness"],
     "ai_answer": ["authoritative_guidance_without_sources_or_review"],
     "redteam_robustness": ["certified_safety_claim", "comprehensive_robustness_claim", "production_security_claim"],
@@ -92,8 +94,12 @@ def infer_evidence_strength(claim: dict[str, Any]) -> str:
         return "none"
     if claim_type == "proof_status" and ("checked" in summary or "witness" in summary):
         return "small_checked_witness"
+    if claim_type == "compiler_correctness" and any("eml_r12" in path or "generated_stub" in path for path in paths):
+        return "validated_replay_or_packet"
     if claim_type in {"performance", "compiler_correctness"} and any("r10" in path or "r11" in path for path in paths):
         return "local_measurement_only"
+    if claim_type == "generated_stub_validation" and any("eml_r12" in path or "generated_stub" in path for path in paths):
+        return "validated_replay_or_packet"
     if claim_type == "forecasting" and any("pm_a1" in path for path in paths):
         return "fixture_only"
     if claim_type == "hardware" and "simulated" in summary:
@@ -121,6 +127,8 @@ def decision_for(claim: dict[str, Any], evidence_strength: str) -> str:
         return "blocked_public_claim"
     if claim_type == "redteam_robustness" and evidence_strength == "fixture_red_team_pass":
         return "candidate_only"
+    if claim_type == "generated_stub_validation" and evidence_strength == "validated_replay_or_packet":
+        return "candidate_only"
     if claim_type == "proof_status" and evidence_strength == "small_checked_witness":
         return "approved_bounded_public_claim"
     if requested == "public":
@@ -136,18 +144,21 @@ def allowed_surface(decision: str) -> str:
     return "private"
 
 
-def next_action(decision: str, claim_type: str) -> str:
+def next_action(decision: str, claim_type: str, evidence_strength: str) -> str:
     if decision == "approved_bounded_public_claim":
         return "surface only the bounded scoped claim with domain assumptions and evidence paths"
     if decision == "human_review_required":
         return "attach sources, reviewer notes, and a validator before any public surface"
     if decision == "blocked_public_claim":
+        if claim_type == "compiler_correctness" and evidence_strength == "validated_replay_or_packet":
+            return "run runtime bakeoff and scoped semantic proof before compiler correctness claims"
         return {
             "performance": "run broader runtime bakeoff before making any public performance claim",
             "forecasting": "build calibration ledger and keep all trade decisions human-reviewed",
             "external_theory": "decompose into small claims and run contradiction/formalization review",
             "hardware": "collect live capture packet before claiming hardware validation",
             "compiler_correctness": "validate generated stubs and prove scoped semantics before compiler claims",
+            "generated_stub_validation": "run runtime bakeoff and scoped semantic proof before compiler claims",
             "redteam_robustness": "fix failing red-team adapter coverage before making any public robustness claim",
         }.get(claim_type, "keep private until supporting evidence exists")
     return "keep as candidate packet until required validators pass"
@@ -179,6 +190,8 @@ def non_claims_for(claim_type: str) -> list[str]:
         non_claims.extend(["No hardware validation without live capture.", "No production controller claim."])
     if claim_type == "compiler_correctness":
         non_claims.extend(["No compiler correctness claim.", "No runtime semantic equivalence proof."])
+    if claim_type == "generated_stub_validation":
+        non_claims.extend(["No compiler correctness claim.", "No production lowering claim.", "No formal semantic equivalence claim."])
     if claim_type == "performance":
         non_claims.extend(["No general performance superiority claim.", "No public savings claim."])
     if claim_type == "proof_status":
@@ -192,6 +205,9 @@ def review_claim(claim: dict[str, Any]) -> dict[str, Any]:
     evidence_strength = infer_evidence_strength(claim)
     decision = decision_for(claim, evidence_strength)
     claim_type = claim["claimType"]
+    required_validators = REQUIRED_VALIDATORS_BY_TYPE.get(claim_type, ["human_review"])
+    if claim_type == "compiler_correctness" and evidence_strength == "validated_replay_or_packet":
+        required_validators = ["runtime_bakeoff", "scoped_semantic_proof", "formal_compiler_proof"]
     return {
         "schemaVersion": REVIEW_PACKET_SCHEMA_VERSION,
         "packetType": "claim_review_packet_v0",
@@ -207,10 +223,10 @@ def review_claim(claim: dict[str, Any]) -> dict[str, Any]:
         "allowedSurface": allowed_surface(decision),
         "evidencePaths": claim.get("evidencePaths", []),
         "evidenceSummary": claim.get("evidenceSummary", ""),
-        "requiredValidators": REQUIRED_VALIDATORS_BY_TYPE.get(claim_type, ["human_review"]),
+        "requiredValidators": required_validators,
         "blockedClaims": BLOCKED_CLAIMS_BY_TYPE.get(claim_type, ["unsupported_public_claim"]),
         "reviewNotes": review_notes(claim, evidence_strength, decision),
-        "nextAction": next_action(decision, claim_type),
+        "nextAction": next_action(decision, claim_type, evidence_strength),
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": non_claims_for(claim_type),
     }

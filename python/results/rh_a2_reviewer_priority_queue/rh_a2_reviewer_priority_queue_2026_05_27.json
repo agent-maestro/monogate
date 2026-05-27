@@ -34,52 +34,6 @@
     "items": [
       {
         "allValidators": [
-          "generated_stub_validation",
-          "semantic_equivalence_tests",
-          "formal_compiler_proof"
-        ],
-        "allowedSurface": "private",
-        "blockedClaims": [
-          "compiler_correctness_without_proof",
-          "runtime_semantic_equivalence_without_validation"
-        ],
-        "blockerCategory": "compiler_correctness_without_proof",
-        "claim": "R11 proves compiler lowering correctness for EML expressions.",
-        "claimFlags": {
-          "automatic_reviewer_approval": false,
-          "certified_safety_claim": false,
-          "compiler_behavior_changed": false,
-          "deploy_performed": false,
-          "financial_advice_claim": false,
-          "hardware_action_performed": false,
-          "production_controller_claim": false,
-          "public_ready": false,
-          "public_sprint_approval_claim": false,
-          "trade_performed": false
-        },
-        "claimId": "r11-compiler-lowering-correctness",
-        "claimType": "compiler_correctness",
-        "decision": "blocked_public_claim",
-        "evidencePaths": [
-          "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md"
-        ],
-        "evidenceStrength": "local_measurement_only",
-        "nextAction": "validate generated stubs and prove scoped semantics before compiler claims",
-        "nextSprint": "R12 generated lowering stubs",
-        "nextValidator": "generated_stub_validation",
-        "priority": "high",
-        "rank": 1,
-        "score": 78,
-        "scoreReasons": [
-          "blocked_public_claim:+30",
-          "lane:compiler:+18",
-          "evidence_gap:local_measurement_only:+12",
-          "clear_r12_unlock:+18"
-        ],
-        "sourceLane": "compiler"
-      },
-      {
-        "allValidators": [
           "rampart_redteam_packet",
           "adapter_coverage_review",
           "regression_ci_guard"
@@ -116,7 +70,7 @@
         "nextSprint": "RT-A2 local RAMPART adapter",
         "nextValidator": "rampart_redteam_packet",
         "priority": "high",
-        "rank": 2,
+        "rank": 1,
         "score": 72,
         "scoreReasons": [
           "blocked_public_claim:+30",
@@ -164,7 +118,7 @@
         "nextSprint": "PM-A1B calibration ledger",
         "nextValidator": "pm_a1_forecast_packet",
         "priority": "high",
-        "rank": 3,
+        "rank": 2,
         "score": 68,
         "scoreReasons": [
           "blocked_public_claim:+30",
@@ -211,7 +165,7 @@
         "nextSprint": "EE-A2 live capture packet",
         "nextValidator": "live_capture_packet",
         "priority": "high",
-        "rank": 4,
+        "rank": 3,
         "score": 65,
         "scoreReasons": [
           "blocked_public_claim:+30",
@@ -258,7 +212,7 @@
         "nextSprint": "R10B runtime bakeoff",
         "nextValidator": "r10_cost_stability",
         "priority": "high",
-        "rank": 5,
+        "rank": 4,
         "score": 64,
         "scoreReasons": [
           "blocked_public_claim:+30",
@@ -267,6 +221,52 @@
           "runtime_bakeoff:+10"
         ],
         "sourceLane": "eml"
+      },
+      {
+        "allValidators": [
+          "runtime_bakeoff",
+          "scoped_semantic_proof",
+          "formal_compiler_proof"
+        ],
+        "allowedSurface": "private",
+        "blockedClaims": [
+          "compiler_correctness_without_proof",
+          "runtime_semantic_equivalence_without_validation"
+        ],
+        "blockerCategory": "compiler_correctness_without_proof",
+        "claim": "R11 proves compiler lowering correctness for EML expressions.",
+        "claimFlags": {
+          "automatic_reviewer_approval": false,
+          "certified_safety_claim": false,
+          "compiler_behavior_changed": false,
+          "deploy_performed": false,
+          "financial_advice_claim": false,
+          "hardware_action_performed": false,
+          "production_controller_claim": false,
+          "public_ready": false,
+          "public_sprint_approval_claim": false,
+          "trade_performed": false
+        },
+        "claimId": "r11-compiler-lowering-correctness",
+        "claimType": "compiler_correctness",
+        "decision": "blocked_public_claim",
+        "evidencePaths": [
+          "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
+          "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
+          "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+        ],
+        "evidenceStrength": "validated_replay_or_packet",
+        "nextAction": "run runtime bakeoff and scoped semantic proof before compiler correctness claims",
+        "nextSprint": "R10B runtime bakeoff",
+        "nextValidator": "runtime_bakeoff",
+        "priority": "medium",
+        "rank": 5,
+        "score": 48,
+        "scoreReasons": [
+          "blocked_public_claim:+30",
+          "lane:compiler:+18"
+        ],
+        "sourceLane": "compiler"
       },
       {
         "allValidators": [
@@ -405,6 +405,52 @@
       },
       {
         "allValidators": [
+          "r12_generated_stub_packet",
+          "runtime_bakeoff",
+          "scoped_semantic_proof"
+        ],
+        "allowedSurface": "candidate",
+        "blockedClaims": [
+          "compiler_correctness_claim",
+          "production_lowering_claim",
+          "semantic_equivalence_claim"
+        ],
+        "blockerCategory": "runtime_bakeoff_or_semantic_proof_missing",
+        "claim": "R12 generated lowering stubs validate on deterministic fixture grids.",
+        "claimFlags": {
+          "automatic_reviewer_approval": false,
+          "certified_safety_claim": false,
+          "compiler_behavior_changed": false,
+          "deploy_performed": false,
+          "financial_advice_claim": false,
+          "hardware_action_performed": false,
+          "production_controller_claim": false,
+          "public_ready": false,
+          "public_sprint_approval_claim": false,
+          "trade_performed": false
+        },
+        "claimId": "r12-generated-stubs-validate-on-fixtures",
+        "claimType": "generated_stub_validation",
+        "decision": "candidate_only",
+        "evidencePaths": [
+          "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
+          "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+        ],
+        "evidenceStrength": "validated_replay_or_packet",
+        "nextAction": "keep as candidate packet until required validators pass",
+        "nextSprint": "R10B runtime bakeoff",
+        "nextValidator": "r12_generated_stub_packet",
+        "priority": "low",
+        "rank": 9,
+        "score": 28,
+        "scoreReasons": [
+          "candidate_only:+10",
+          "lane:compiler:+18"
+        ],
+        "sourceLane": "compiler"
+      },
+      {
+        "allValidators": [
           "claim_decomposition",
           "domain_expert_review",
           "contradiction_scan",
@@ -441,7 +487,7 @@
         "nextSprint": "X1 external theory claim decomposition",
         "nextValidator": "claim_decomposition",
         "priority": "low",
-        "rank": 9,
+        "rank": 10,
         "score": 23,
         "scoreReasons": [
           "blocked_public_claim:+30",
@@ -462,7 +508,7 @@
     "summary": {
       "byLane": {
         "ai_answer": 1,
-        "compiler": 1,
+        "compiler": 2,
         "electronics": 1,
         "eml": 1,
         "external_theory": 1,
@@ -471,18 +517,18 @@
         "redteam": 2
       },
       "byPriority": {
-        "high": 5,
-        "low": 3,
-        "medium": 1
+        "high": 4,
+        "low": 4,
+        "medium": 2
       },
       "claimFlagsAllFalse": true,
       "compilerBehaviorChanged": false,
       "deployPerformed": false,
       "hardwareActionPerformed": false,
       "publicApprovalPerformed": false,
-      "queueItemCount": 9,
-      "topClaimId": "r11-compiler-lowering-correctness",
-      "topNextSprint": "R12 generated lowering stubs",
+      "queueItemCount": 10,
+      "topClaimId": "command-cockpit-robust-to-private-leakage",
+      "topNextSprint": "RT-A2 local RAMPART adapter",
       "tradePerformed": false
     }
   },
@@ -492,7 +538,7 @@
   "summary": {
     "byLane": {
       "ai_answer": 1,
-      "compiler": 1,
+      "compiler": 2,
       "electronics": 1,
       "eml": 1,
       "external_theory": 1,
@@ -501,18 +547,18 @@
       "redteam": 2
     },
     "byPriority": {
-      "high": 5,
-      "low": 3,
-      "medium": 1
+      "high": 4,
+      "low": 4,
+      "medium": 2
     },
     "claimFlagsAllFalse": true,
     "compilerBehaviorChanged": false,
     "deployPerformed": false,
     "hardwareActionPerformed": false,
     "publicApprovalPerformed": false,
-    "queueItemCount": 9,
-    "topClaimId": "r11-compiler-lowering-correctness",
-    "topNextSprint": "R12 generated lowering stubs",
+    "queueItemCount": 10,
+    "topClaimId": "command-cockpit-robust-to-private-leakage",
+    "topNextSprint": "RT-A2 local RAMPART adapter",
     "tradePerformed": false
   }
 }

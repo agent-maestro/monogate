@@ -59,9 +59,11 @@
       "artifactType": "compiler_artifact",
       "requestedSurface": "public",
       "evidencePaths": [
-        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md"
+        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
+        "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
       ],
-      "evidenceSummary": "R11 emits candidate lowering plans only and does not change compiler behavior.",
+      "evidenceSummary": "R11 emits candidate lowering plans and R12 generated fixture stubs validate on deterministic grids; compiler correctness is still not proved.",
       "sourceLane": "compiler"
     },
     {
@@ -112,6 +114,19 @@
       ],
       "evidenceSummary": "RT-A1 fixture fail because no implemented command cockpit adapter exists yet.",
       "sourceLane": "redteam"
+    },
+    {
+      "claimId": "r12-generated-stubs-validate-on-fixtures",
+      "claim": "R12 generated lowering stubs validate on deterministic fixture grids.",
+      "claimType": "generated_stub_validation",
+      "artifactType": "compiler_artifact",
+      "requestedSurface": "public",
+      "evidencePaths": [
+        "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+      ],
+      "evidenceSummary": "R12 generated seven Python fixture stubs from R11 plans and validated them on deterministic grids; no compiler correctness or production lowering claim.",
+      "sourceLane": "compiler"
     }
   ]
 }

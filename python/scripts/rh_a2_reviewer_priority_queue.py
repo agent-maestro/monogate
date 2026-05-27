@@ -57,6 +57,7 @@ LANE_WEIGHTS = {
 
 SPRINT_BY_CLAIM_TYPE = {
     "compiler_correctness": "R12 generated lowering stubs",
+    "generated_stub_validation": "R10B runtime bakeoff",
     "redteam_robustness": "RT-A2 local RAMPART adapter",
     "forecasting": "PM-A1B calibration ledger",
     "hardware": "EE-A2 live capture packet",
@@ -68,6 +69,7 @@ SPRINT_BY_CLAIM_TYPE = {
 
 BLOCKER_BY_CLAIM_TYPE = {
     "compiler_correctness": "compiler_correctness_without_proof",
+    "generated_stub_validation": "runtime_bakeoff_or_semantic_proof_missing",
     "redteam_robustness": "redteam_adapter_or_coverage_gap",
     "forecasting": "calibration_missing",
     "hardware": "live_capture_missing",
@@ -152,6 +154,9 @@ def score_packet(packet: dict[str, Any]) -> tuple[int, list[str]]:
 def queue_item(packet: dict[str, Any]) -> dict[str, Any]:
     score, reasons = score_packet(packet)
     validators = packet.get("requiredValidators", ["human_review"])
+    next_sprint = SPRINT_BY_CLAIM_TYPE.get(packet["claimType"], "manual_review")
+    if packet["claimType"] == "compiler_correctness" and validators and validators[0] == "runtime_bakeoff":
+        next_sprint = "R10B runtime bakeoff"
     return {
         "rank": 0,
         "claimId": packet["claimId"],
@@ -166,7 +171,7 @@ def queue_item(packet: dict[str, Any]) -> dict[str, Any]:
         "blockerCategory": BLOCKER_BY_CLAIM_TYPE.get(packet["claimType"], "unknown_blocker"),
         "nextValidator": validators[0],
         "allValidators": validators,
-        "nextSprint": SPRINT_BY_CLAIM_TYPE.get(packet["claimType"], "manual_review"),
+        "nextSprint": next_sprint,
         "nextAction": packet["nextAction"],
         "claim": packet["claim"],
         "blockedClaims": packet.get("blockedClaims", []),

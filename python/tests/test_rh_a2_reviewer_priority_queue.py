@@ -43,7 +43,7 @@ def test_score_prioritizes_compiler_and_redteam_blockers(tmp_path):
     ai_score, _ = score_packet(packets["ai-answer-ready-for-publication"])
     assert compiler_score > ai_score
     assert redteam_score > ai_score
-    assert "clear_r12_unlock:+18" in compiler_reasons
+    assert "lane:compiler:+18" in compiler_reasons
     assert "redteam_bridge:+14" in redteam_reasons
 
 
@@ -79,7 +79,7 @@ def test_build_queue_outputs_private_planning_artifacts(tmp_path):
     assert Path(built["feed_path"]).exists()
 
 
-def test_compiler_claim_routes_to_r12_generated_stubs(tmp_path):
+def test_compiler_claim_routes_to_runtime_bakeoff_after_r12(tmp_path):
     review = build_review(tmp_path)
     payload = build_queue(
         Path(review["result_path"]),
@@ -89,9 +89,24 @@ def test_compiler_claim_routes_to_r12_generated_stubs(tmp_path):
         tmp_path / "feeds",
     )["payload"]
     item = item_by_claim(payload["queue"]["items"], "r11-compiler-lowering-correctness")
-    assert item["nextSprint"] == "R12 generated lowering stubs"
-    assert item["nextValidator"] == "generated_stub_validation"
-    assert item["priority"] in {"critical", "high"}
+    assert item["nextSprint"] == "R10B runtime bakeoff"
+    assert item["nextValidator"] == "runtime_bakeoff"
+    assert item["priority"] in {"high", "medium"}
+
+
+def test_r12_candidate_routes_to_runtime_bakeoff(tmp_path):
+    review = build_review(tmp_path)
+    payload = build_queue(
+        Path(review["result_path"]),
+        tmp_path / "rh_a2",
+        tmp_path / "reports",
+        tmp_path / "evidence",
+        tmp_path / "feeds",
+    )["payload"]
+    item = item_by_claim(payload["queue"]["items"], "r12-generated-stubs-validate-on-fixtures")
+    assert item["nextSprint"] == "R10B runtime bakeoff"
+    assert item["nextValidator"] == "r12_generated_stub_packet"
+    assert item["blockerCategory"] == "runtime_bakeoff_or_semantic_proof_missing"
 
 
 def test_redteam_failure_routes_to_rt_a2(tmp_path):

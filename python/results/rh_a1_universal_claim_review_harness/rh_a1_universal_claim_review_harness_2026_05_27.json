@@ -302,11 +302,13 @@
       "date": "2026-05-27",
       "decision": "blocked_public_claim",
       "evidencePaths": [
-        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md"
+        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
+        "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
       ],
-      "evidenceStrength": "local_measurement_only",
-      "evidenceSummary": "R11 emits candidate lowering plans only and does not change compiler behavior.",
-      "nextAction": "validate generated stubs and prove scoped semantics before compiler claims",
+      "evidenceStrength": "validated_replay_or_packet",
+      "evidenceSummary": "R11 emits candidate lowering plans and R12 generated fixture stubs validate on deterministic grids; compiler correctness is still not proved.",
+      "nextAction": "run runtime bakeoff and scoped semantic proof before compiler correctness claims",
       "nonClaims": [
         "RH-A1 is a deterministic review harness, not a proof system.",
         "RH-A1 does not approve unsupported public claims.",
@@ -317,15 +319,15 @@
       "packetType": "claim_review_packet_v0",
       "requestedSurface": "public",
       "requiredValidators": [
-        "generated_stub_validation",
-        "semantic_equivalence_tests",
+        "runtime_bakeoff",
+        "scoped_semantic_proof",
         "formal_compiler_proof"
       ],
       "reviewNotes": [
         "artifact_type:compiler_artifact",
         "claim_type:compiler_correctness",
         "requested_surface:public",
-        "evidence_strength:local_measurement_only",
+        "evidence_strength:validated_replay_or_packet",
         "public wording exceeds current evidence"
       ],
       "schemaVersion": "monogate.claim_review_packet.v0",
@@ -570,6 +572,68 @@
       ],
       "schemaVersion": "monogate.claim_review_packet.v0",
       "sourceLane": "redteam"
+    },
+    {
+      "allowedSurface": "candidate",
+      "artifactType": "compiler_artifact",
+      "blockedClaims": [
+        "compiler_correctness_claim",
+        "production_lowering_claim",
+        "semantic_equivalence_claim"
+      ],
+      "claim": "R12 generated lowering stubs validate on deterministic fixture grids.",
+      "claimFlags": {
+        "autonomous_trading_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "external_theory_endorsed": false,
+        "financial_advice_claim": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "order_placement_performed": false,
+        "production_controller_claim": false,
+        "profitable_strategy_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "claimId": "r12-generated-stubs-validate-on-fixtures",
+      "claimType": "generated_stub_validation",
+      "date": "2026-05-27",
+      "decision": "candidate_only",
+      "evidencePaths": [
+        "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+      ],
+      "evidenceStrength": "validated_replay_or_packet",
+      "evidenceSummary": "R12 generated seven Python fixture stubs from R11 plans and validated them on deterministic grids; no compiler correctness or production lowering claim.",
+      "nextAction": "keep as candidate packet until required validators pass",
+      "nonClaims": [
+        "RH-A1 is a deterministic review harness, not a proof system.",
+        "RH-A1 does not approve unsupported public claims.",
+        "RH-A1 does not deploy, trade, publish packages, operate hardware, or change compiler behavior.",
+        "No compiler correctness claim.",
+        "No production lowering claim.",
+        "No formal semantic equivalence claim."
+      ],
+      "packetType": "claim_review_packet_v0",
+      "requestedSurface": "public",
+      "requiredValidators": [
+        "r12_generated_stub_packet",
+        "runtime_bakeoff",
+        "scoped_semantic_proof"
+      ],
+      "reviewNotes": [
+        "artifact_type:compiler_artifact",
+        "claim_type:generated_stub_validation",
+        "requested_surface:public",
+        "evidence_strength:validated_replay_or_packet"
+      ],
+      "schemaVersion": "monogate.claim_review_packet.v0",
+      "sourceLane": "compiler"
     }
   ],
   "schemaVersion": "monogate.rh_a1_universal_claim_review_harness.v0",
@@ -583,7 +647,7 @@
     "decisions": {
       "approved_bounded_public_claim": 1,
       "blocked_public_claim": 6,
-      "candidate_only": 1,
+      "candidate_only": 2,
       "human_review_required": 1
     },
     "deployPerformed": false,
@@ -591,17 +655,18 @@
       "fixture_only": 2,
       "fixture_red_team_fail": 1,
       "fixture_red_team_pass": 1,
-      "local_measurement_only": 2,
+      "local_measurement_only": 1,
       "none": 1,
       "small_checked_witness": 1,
-      "source_only": 1
+      "source_only": 1,
+      "validated_replay_or_packet": 2
     },
     "hardwareActionPerformed": false,
     "publicReadyClaimMade": false,
-    "reviewPacketCount": 9,
+    "reviewPacketCount": 10,
     "sourceLanes": {
       "ai_answer": 1,
-      "compiler": 1,
+      "compiler": 2,
       "electronics": 1,
       "eml": 1,
       "external_theory": 1,

@@ -16,15 +16,16 @@ blocked claims, and next validators.
 | `pm-a1-profitable-agent-claim` | `forecasting` | `fixture_only` | `blocked_public_claim` | `private` | build calibration ledger and keep all trade decisions human-reviewed |
 | `oph-correct-theory-of-everything-claim` | `external_theory` | `source_only` | `blocked_public_claim` | `private` | decompose into small claims and run contradiction/formalization review |
 | `electronics-voltage-divider-hardware-observed` | `hardware` | `fixture_only` | `blocked_public_claim` | `private` | collect live capture packet before claiming hardware validation |
-| `r11-compiler-lowering-correctness` | `compiler_correctness` | `local_measurement_only` | `blocked_public_claim` | `private` | validate generated stubs and prove scoped semantics before compiler claims |
+| `r11-compiler-lowering-correctness` | `compiler_correctness` | `validated_replay_or_packet` | `blocked_public_claim` | `private` | run runtime bakeoff and scoped semantic proof before compiler correctness claims |
 | `machlib-subtraction-boundary-witness` | `proof_status` | `small_checked_witness` | `approved_bounded_public_claim` | `public_bounded` | surface only the bounded scoped claim with domain assumptions and evidence paths |
 | `ai-answer-ready-for-publication` | `ai_answer` | `none` | `human_review_required` | `candidate` | attach sources, reviewer notes, and a validator before any public surface |
 | `builder-robust-to-forbidden-claim-injection` | `redteam_robustness` | `fixture_red_team_pass` | `candidate_only` | `candidate` | keep as candidate packet until required validators pass |
 | `command-cockpit-robust-to-private-leakage` | `redteam_robustness` | `fixture_red_team_fail` | `blocked_public_claim` | `private` | fix failing red-team adapter coverage before making any public robustness claim |
+| `r12-generated-stubs-validate-on-fixtures` | `generated_stub_validation` | `validated_replay_or_packet` | `candidate_only` | `candidate` | keep as candidate packet until required validators pass |
 
 ## Summary
 
-- Review packets: `9`
+- Review packets: `10`
 - Blocked public claims: `6`
 - Bounded public approvals: `1`
 - Claim flags all false: `True`

@@ -1,0 +1,48 @@
+{
+  "artifactId": "eml-r12-generated-lowering-stubs",
+  "claimBoundary": "Generated fixture stubs validated on deterministic grids only; no compiler correctness, formal equivalence, production lowering, or performance claim.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_lowering_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "semantic_equivalence_claim": false,
+    "theorem_proof_claim": false
+  },
+  "nonClaims": [
+    "R12 emits fixture stubs, not compiler output.",
+    "R12 validates generated Python stubs on deterministic grids only.",
+    "R12 does not claim compiler correctness, formal equivalence, production lowering, deployment, or performance."
+  ],
+  "replayStatus": "not_applicable",
+  "reviewDecision": "generated_stub_fixtures_validated",
+  "reviewHighlights": [
+    "Consumes R11 lowering plans.",
+    "Generates Python stub packets plus Rust/C text fixtures.",
+    "Validates generated Python stubs against R10 reference functions on deterministic grids."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "compilerBehaviorChanged": false,
+    "productionLoweringClaim": false,
+    "stubPacketCount": 7,
+    "validationFailCount": 0,
+    "validationPassCount": 7
+  },
+  "semanticStrength": "generated_python_fixture_validation_no_compiler_correctness_claim",
+  "title": "EML-R12 Generated Lowering Stubs",
+  "validationCommands": [
+    "python python/scripts/eml_r12_generated_lowering_stubs.py --build --strict",
+    "python -m pytest -q python/tests/test_eml_r12_generated_lowering_stubs.py"
+  ],
+  "validationStatus": "pass"
+}

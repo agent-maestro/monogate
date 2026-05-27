@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Generated Stub Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "caseId",
+    "sourceExpression",
+    "loweredExpression",
+    "pythonFunctionName",
+    "pythonSource",
+    "validation",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_generated_stub_packet.v0" },
+    "packetType": { "const": "eml_generated_stub_packet_v0" },
+    "caseId": { "type": "string", "minLength": 1 },
+    "sourceExpression": { "type": "string", "minLength": 1 },
+    "loweredExpression": { "type": "string", "minLength": 1 },
+    "pythonFunctionName": { "type": "string", "minLength": 1 },
+    "pythonSource": { "type": "string", "minLength": 1 },
+    "validation": {
+      "type": "object",
+      "required": ["status", "sampleCount", "maxAbsError", "maxRelError"],
+      "properties": {
+        "status": { "enum": ["pass", "fail"] },
+        "sampleCount": { "type": "integer", "minimum": 1 },
+        "maxAbsError": { "type": "number", "minimum": 0 },
+        "maxRelError": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

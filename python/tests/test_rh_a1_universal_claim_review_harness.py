@@ -72,10 +72,21 @@ def test_hardware_observed_claim_requires_live_capture():
 def test_compiler_correctness_claim_is_blocked():
     packet = review_claim(claim_by_id("r11-compiler-lowering-correctness"))
     assert packet["decision"] == "blocked_public_claim"
-    assert packet["evidenceStrength"] == "local_measurement_only"
+    assert packet["evidenceStrength"] == "validated_replay_or_packet"
     assert "compiler_correctness_without_proof" in packet["blockedClaims"]
+    assert "runtime_bakeoff" in packet["requiredValidators"]
+    assert "scoped_semantic_proof" in packet["requiredValidators"]
     assert "formal_compiler_proof" in packet["requiredValidators"]
     assert packet["claimFlags"]["compiler_correctness_claim"] is False
+
+
+def test_r12_generated_stub_validation_is_candidate_only():
+    packet = review_claim(claim_by_id("r12-generated-stubs-validate-on-fixtures"))
+    assert packet["decision"] == "candidate_only"
+    assert packet["evidenceStrength"] == "validated_replay_or_packet"
+    assert packet["allowedSurface"] == "candidate"
+    assert "compiler_correctness_claim" in packet["blockedClaims"]
+    assert "runtime_bakeoff" in packet["requiredValidators"]
 
 
 def test_machlib_witness_gets_bounded_public_approval_only():
