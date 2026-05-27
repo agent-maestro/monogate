@@ -1,0 +1,250 @@
+{
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "date": "2026-05-27",
+  "entries": [
+    {
+      "artifactId": "gaussian-energy-v0",
+      "blockedPublicClaims": [
+        "certified_safety_claim",
+        "formal_verification_claim",
+        "hardware_observed",
+        "production_controller_claim",
+        "public_savings_claim",
+        "range_safety_proved_claim",
+        "theorem_proof_claim"
+      ],
+      "checkedBy": null,
+      "claimBoundary": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+      "family": "forge_efrog_fixture",
+      "kind": "range_safety",
+      "nextAction": "Attach runtime guard, sampled replay evidence, or MachLib range proof.",
+      "obligationId": "gaussian_energy_v0:range:x:declared-safe-range",
+      "programId": "gaussian_energy_v0",
+      "proofArtifact": null,
+      "proofTarget": "input_range_respected",
+      "requirement": null,
+      "status": "candidate_only",
+      "trigger": "safe_range"
+    },
+    {
+      "artifactId": "sigmoid-derivative-v0",
+      "blockedPublicClaims": [
+        "certified_safety_claim",
+        "formal_verification_claim",
+        "hardware_observed",
+        "production_controller_claim",
+        "public_savings_claim",
+        "range_safety_proved_claim",
+        "theorem_proof_claim"
+      ],
+      "checkedBy": "MachLib.Real.sigmoid_denominator_nonzero",
+      "claimBoundary": "This checked witness discharges one local denominator-nonzero obligation; it is not complete EML safety, compiler correctness, or a public savings claim.",
+      "family": "sigmoid_logistic",
+      "kind": "domain",
+      "nextAction": "Keep witness linked and do not promote broad claims.",
+      "obligationId": "sigmoid_derivative_v0:domain:n5:div-denominator-nonzero",
+      "programId": "sigmoid_derivative_v0",
+      "proofArtifact": "MachLib/EMLDomainSafety.lean",
+      "proofTarget": "denominator_nonzero",
+      "requirement": "denominator_nonzero",
+      "status": "checked_small_witness",
+      "trigger": "div"
+    },
+    {
+      "artifactId": "sigmoid-derivative-v0",
+      "blockedPublicClaims": [
+        "certified_safety_claim",
+        "formal_verification_claim",
+        "hardware_observed",
+        "production_controller_claim",
+        "public_savings_claim",
+        "range_safety_proved_claim",
+        "theorem_proof_claim"
+      ],
+      "checkedBy": null,
+      "claimBoundary": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+      "family": "sigmoid_logistic",
+      "kind": "range_safety",
+      "nextAction": "Attach runtime guard, sampled replay evidence, or MachLib range proof.",
+      "obligationId": "sigmoid_derivative_v0:range:x:declared-safe-range",
+      "programId": "sigmoid_derivative_v0",
+      "proofArtifact": null,
+      "proofTarget": "input_range_respected",
+      "requirement": null,
+      "status": "candidate_only",
+      "trigger": "safe_range"
+    },
+    {
+      "artifactId": "softplus-pair-v0",
+      "blockedPublicClaims": [
+        "certified_safety_claim",
+        "formal_verification_claim",
+        "hardware_observed",
+        "production_controller_claim",
+        "public_savings_claim",
+        "range_safety_proved_claim",
+        "theorem_proof_claim"
+      ],
+      "checkedBy": "MachLib.Real.softplus_pair_log_argument_positive",
+      "claimBoundary": "This checked witness discharges one local log-argument positivity obligation; it is not complete EML safety, compiler correctness, or a public savings claim.",
+      "family": "softplus_logsumexp",
+      "kind": "domain",
+      "nextAction": "Keep witness linked and do not promote broad claims.",
+      "obligationId": "softplus_pair_v0:domain:n5:ln-argument-positive",
+      "programId": "softplus_pair_v0",
+      "proofArtifact": "MachLib/EMLDomainSafety.lean",
+      "proofTarget": "log_argument_positive",
+      "requirement": "argument_positive",
+      "status": "checked_small_witness",
+      "trigger": "ln"
+    },
+    {
+      "artifactId": "softplus-pair-v0",
+      "blockedPublicClaims": [
+        "certified_safety_claim",
+        "formal_verification_claim",
+        "hardware_observed",
+        "production_controller_claim",
+        "public_savings_claim",
+        "range_safety_proved_claim",
+        "theorem_proof_claim"
+      ],
+      "checkedBy": null,
+      "claimBoundary": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+      "family": "softplus_logsumexp",
+      "kind": "range_safety",
+      "nextAction": "Attach runtime guard, sampled replay evidence, or MachLib range proof.",
+      "obligationId": "softplus_pair_v0:range:a:declared-safe-range",
+      "programId": "softplus_pair_v0",
+      "proofArtifact": null,
+      "proofTarget": "input_range_respected",
+      "requirement": null,
+      "status": "candidate_only",
+      "trigger": "safe_range"
+    },
+    {
+      "artifactId": "softplus-pair-v0",
+      "blockedPublicClaims": [
+        "certified_safety_claim",
+        "formal_verification_claim",
+        "hardware_observed",
+        "production_controller_claim",
+        "public_savings_claim",
+        "range_safety_proved_claim",
+        "theorem_proof_claim"
+      ],
+      "checkedBy": null,
+      "claimBoundary": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+      "family": "softplus_logsumexp",
+      "kind": "range_safety",
+      "nextAction": "Attach runtime guard, sampled replay evidence, or MachLib range proof.",
+      "obligationId": "softplus_pair_v0:range:b:declared-safe-range",
+      "programId": "softplus_pair_v0",
+      "proofArtifact": null,
+      "proofTarget": "input_range_respected",
+      "requirement": null,
+      "status": "candidate_only",
+      "trigger": "safe_range"
+    }
+  ],
+  "nextProofTargets": [
+    {
+      "artifactId": "gaussian-energy-v0",
+      "blockedPublicClaims": [
+        "certified_safety_claim",
+        "formal_verification_claim",
+        "hardware_observed",
+        "production_controller_claim",
+        "public_savings_claim",
+        "range_safety_proved_claim",
+        "theorem_proof_claim"
+      ],
+      "checkedBy": null,
+      "claimBoundary": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+      "family": "forge_efrog_fixture",
+      "kind": "range_safety",
+      "nextAction": "Attach runtime guard, sampled replay evidence, or MachLib range proof.",
+      "obligationId": "gaussian_energy_v0:range:x:declared-safe-range",
+      "programId": "gaussian_energy_v0",
+      "proofArtifact": null,
+      "proofTarget": "input_range_respected",
+      "requirement": null,
+      "status": "candidate_only",
+      "trigger": "safe_range"
+    },
+    {
+      "artifactId": "sigmoid-derivative-v0",
+      "blockedPublicClaims": [
+        "certified_safety_claim",
+        "formal_verification_claim",
+        "hardware_observed",
+        "production_controller_claim",
+        "public_savings_claim",
+        "range_safety_proved_claim",
+        "theorem_proof_claim"
+      ],
+      "checkedBy": null,
+      "claimBoundary": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+      "family": "sigmoid_logistic",
+      "kind": "range_safety",
+      "nextAction": "Attach runtime guard, sampled replay evidence, or MachLib range proof.",
+      "obligationId": "sigmoid_derivative_v0:range:x:declared-safe-range",
+      "programId": "sigmoid_derivative_v0",
+      "proofArtifact": null,
+      "proofTarget": "input_range_respected",
+      "requirement": null,
+      "status": "candidate_only",
+      "trigger": "safe_range"
+    },
+    {
+      "artifactId": "softplus-pair-v0",
+      "blockedPublicClaims": [
+        "certified_safety_claim",
+        "formal_verification_claim",
+        "hardware_observed",
+        "production_controller_claim",
+        "public_savings_claim",
+        "range_safety_proved_claim",
+        "theorem_proof_claim"
+      ],
+      "checkedBy": null,
+      "claimBoundary": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+      "family": "softplus_logsumexp",
+      "kind": "range_safety",
+      "nextAction": "Attach runtime guard, sampled replay evidence, or MachLib range proof.",
+      "obligationId": "softplus_pair_v0:range:a:declared-safe-range",
+      "programId": "softplus_pair_v0",
+      "proofArtifact": null,
+      "proofTarget": "input_range_respected",
+      "requirement": null,
+      "status": "candidate_only",
+      "trigger": "safe_range"
+    }
+  ],
+  "nonClaims": [
+    "The registry is an internal proof-work queue, not a proof.",
+    "Checked witnesses are local obligations, not complete EML safety.",
+    "The registry does not change Forge/compiler behavior."
+  ],
+  "schemaVersion": "monogate.eml_proof_obligation_registry.v0",
+  "status": "candidate_only",
+  "summary": {
+    "blocked_public_claim_count": 7,
+    "checked_domain_obligation_count": 2,
+    "checked_witness_count": 2,
+    "domain_obligation_count": 2,
+    "obligation_count": 6,
+    "range_safety_obligation_count": 4,
+    "unresolved_obligation_count": 4
+  }
+}

@@ -10,6 +10,7 @@ import pytest
 
 from scripts.eml_packet_builder import (
     DEFAULT_CLAIM_FLAGS,
+    build_obligation_registry,
     build_evidence_packet,
     build_result,
     load_packet,
@@ -127,7 +128,25 @@ def test_div_expression_generates_domain_obligation():
     result = build_result(fixture_packet("sigmoid_derivative_v0"))
     cards = result["obligations"]["cards"]
     assert any(card["trigger"] == "div" for card in cards)
-    assert all(card["status"] == "candidate_only" for card in cards)
+    assert any(card["status"] == "checked_small_witness" for card in cards)
+    assert result["domainSafety"]["summary"]["checked_obligation_count"] == 1
+    assert result["domainSafety"]["domainRequirements"][0]["checkedBy"] == "MachLib.Real.sigmoid_denominator_nonzero"
+
+
+def test_obligation_registry_tracks_checked_and_unresolved_work():
+    results = [
+        build_result(fixture_packet("gaussian_energy_v0")),
+        build_result(fixture_packet("sigmoid_derivative_v0")),
+        build_result(fixture_packet("softplus_pair_v0")),
+    ]
+    registry = build_obligation_registry(results)
+    assert registry["schemaVersion"] == "monogate.eml_proof_obligation_registry.v0"
+    assert registry["summary"]["obligation_count"] == 6
+    assert registry["summary"]["domain_obligation_count"] == 2
+    assert registry["summary"]["checked_witness_count"] == 2
+    assert registry["summary"]["unresolved_obligation_count"] == 4
+    assert all(entry["status"] != "checked_small_witness" for entry in registry["nextProofTargets"])
+    assert registry["claimFlags"]["compiler_behavior_changed"] is False
 
 
 def test_safe_ranges_generate_range_obligations():
@@ -199,6 +218,8 @@ def test_cli_direct_expression_writes_outputs(tmp_path):
             str(tmp_path / "obligations"),
             "--proof-status-dir",
             str(tmp_path / "proof_status"),
+            "--registry-dir",
+            str(tmp_path / "registry"),
             "--strict",
         ],
         check=True,
@@ -239,6 +260,8 @@ def test_cli_build_fixtures(tmp_path):
             str(tmp_path / "obligations"),
             "--proof-status-dir",
             str(tmp_path / "proof_status"),
+            "--registry-dir",
+            str(tmp_path / "registry"),
             "--strict",
         ],
         check=True,
@@ -250,3 +273,7 @@ def test_cli_build_fixtures(tmp_path):
     assert len(list((tmp_path / "evidence").glob("*.json"))) >= 3
     assert len(list((tmp_path / "obligations").glob("*/*_obligations.lean"))) >= 3
     assert len(list((tmp_path / "obligations").glob("*/*_machlib_stub_manifest.json"))) >= 3
+    registries = list((tmp_path / "registry").glob("*.json"))
+    assert len(registries) == 1
+    registry = json.loads(registries[0].read_text())
+    assert registry["summary"]["checked_witness_count"] == 0

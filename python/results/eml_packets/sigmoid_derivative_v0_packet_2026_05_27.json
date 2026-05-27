@@ -18,21 +18,29 @@
       "production_controller_claim",
       "public_savings_claim",
       "range_safety_proved_claim",
-      "theorem_proof_claim",
-      "total_domain_safety_claim"
+      "theorem_proof_claim"
     ],
-    "checkedObligations": [],
+    "checkedObligations": [
+      {
+        "checkedBy": "MachLib.Real.sigmoid_denominator_nonzero",
+        "kind": "domain",
+        "obligationId": "sigmoid_derivative_v0:domain:n5:div-denominator-nonzero",
+        "proofArtifact": "MachLib/EMLDomainSafety.lean",
+        "proofSummary": "For all x, exp(-x) is positive, so 1 + exp(-x) is positive and therefore nonzero.",
+        "proofTarget": "denominator_nonzero"
+      }
+    ],
     "domainRequirements": [
       {
         "blockedPublicClaim": "division denominator may be zero",
-        "checkedBy": null,
+        "checkedBy": "MachLib.Real.sigmoid_denominator_nonzero",
         "nodeId": "n5",
         "possibleSafeRewrite": "Introduce a guard or range proof before division.",
-        "proofArtifact": null,
-        "proofSummary": null,
+        "proofArtifact": "MachLib/EMLDomainSafety.lean",
+        "proofSummary": "For all x, exp(-x) is positive, so 1 + exp(-x) is positive and therefore nonzero.",
         "requirement": "denominator_nonzero",
         "requirementId": "sigmoid_derivative_v0:domain:n5:div-denominator-nonzero",
-        "status": "unresolved",
+        "status": "checked_small_witness",
         "trigger": "div"
       }
     ],
@@ -58,22 +66,16 @@
     "schemaVersion": "monogate.eml_domain_safety_lens.v0",
     "status": "candidate_only",
     "summary": {
-      "blocked_public_claim_count": 8,
-      "checked_domain_requirement_count": 0,
-      "checked_obligation_count": 0,
+      "blocked_public_claim_count": 7,
+      "checked_domain_requirement_count": 1,
+      "checked_obligation_count": 1,
       "domain_requirement_count": 1,
-      "proved_count": 0,
+      "proved_count": 1,
       "range_assumption_count": 1,
       "safe_rewrite_candidate_count": 2,
-      "unresolved_obligation_count": 2
+      "unresolved_obligation_count": 1
     },
     "unresolvedObligations": [
-      {
-        "kind": "domain",
-        "obligationId": "sigmoid_derivative_v0:domain:n5:div-denominator-nonzero",
-        "proofTarget": "denominator_nonzero",
-        "reason": "This card records a proof obligation; it does not prove the denominator condition."
-      },
       {
         "kind": "range_safety",
         "obligationId": "sigmoid_derivative_v0:range:x:declared-safe-range",
@@ -330,13 +332,16 @@
   "obligations": {
     "cards": [
       {
+        "checkedBy": "MachLib.Real.sigmoid_denominator_nonzero",
         "description": "Division node requires evidence that the denominator is not zero over declared inputs/ranges.",
         "kind": "domain",
         "nodeId": "n5",
-        "nonClaim": "This card records a proof obligation; it does not prove the denominator condition.",
+        "nonClaim": "This checked witness discharges one local denominator-nonzero obligation; it is not complete EML safety, compiler correctness, or a public savings claim.",
         "obligationId": "sigmoid_derivative_v0:domain:n5:div-denominator-nonzero",
+        "proofArtifact": "MachLib/EMLDomainSafety.lean",
+        "proofSummary": "For all x, exp(-x) is positive, so 1 + exp(-x) is positive and therefore nonzero.",
         "proofTarget": "denominator_nonzero",
-        "status": "candidate_only",
+        "status": "checked_small_witness",
         "trigger": "div"
       },
       {
@@ -360,7 +365,7 @@
     "summary": {
       "count": 2,
       "domain_count": 1,
-      "proved_count": 0,
+      "proved_count": 1,
       "range_safety_count": 1
     }
   },
@@ -697,7 +702,17 @@
     "semanticStrength": "eml_expression_packet_candidate_no_public_savings_claim",
     "validationStatus": "pass"
   },
-  "safeRewriteProposals": [],
+  "safeRewriteProposals": [
+    {
+      "blockedAction": "Do not change compiler lowering or public savings claims from this witness alone.",
+      "nodeId": "n5",
+      "proofArtifact": "MachLib/EMLDomainSafety.lean",
+      "proposal": "Mark this denominator_nonzero guard as proof-backed in review surfaces.",
+      "proposalId": "sigmoid_derivative_v0:div:checked-domain-rewrite",
+      "requirementId": "sigmoid_derivative_v0:domain:n5:div-denominator-nonzero",
+      "status": "candidate_no_compiler_change"
+    }
+  ],
   "schemaVersion": "monogate.eml_packet_builder.result.v0",
   "sourcePacket": {
     "claim_flags": {

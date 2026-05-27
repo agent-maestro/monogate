@@ -4,7 +4,7 @@
 Input: expression metadata packet.
 Output: EML IR, replay summary, Evidence Packet v0, and a short report.
 
-This is EML-R2/R6/R7/R8-R11 plumbing. It does not change Forge/compiler
+This is EML-R2/R6/R7/R8-R14 plumbing. It does not change Forge/compiler
 behavior and does not create public savings, formal verification, or hardware
 claims.
 """
@@ -28,6 +28,7 @@ DATE = "2026-05-27"
 SCHEMA_VERSION = "monogate.eml_expression_packet.v0"
 RESULT_SCHEMA_VERSION = "monogate.eml_packet_builder.result.v0"
 PROOF_STATUS_SCHEMA_VERSION = "monogate.eml_proof_status_manifest.v0"
+OBLIGATION_REGISTRY_SCHEMA_VERSION = "monogate.eml_proof_obligation_registry.v0"
 FORBIDDEN_TRUE_FLAGS = [
     "public_ready",
     "public_savings_claim",
@@ -314,7 +315,7 @@ def _build_safe_rewrite_proposals(result: dict[str, Any]) -> list[dict[str, Any]
                 "status": "candidate_no_compiler_change",
                 "nodeId": requirement.get("nodeId"),
                 "requirementId": requirement["requirementId"],
-                "proposal": "Mark this log-domain guard as proof-backed in review surfaces.",
+                "proposal": f"Mark this {requirement['requirement']} guard as proof-backed in review surfaces.",
                 "blockedAction": "Do not change compiler lowering or public savings claims from this witness alone.",
                 "proofArtifact": requirement.get("proofArtifact"),
             }
@@ -389,6 +390,92 @@ def _build_machlib_stub_manifest(result: dict[str, Any], stub_relpath: str) -> d
             "Lean stub export is not a proof.",
             "Lean stub export is not a MachLib build result.",
             "Lean stub export does not change Forge/compiler behavior.",
+        ],
+    }
+
+
+def _registry_next_action(card: dict[str, Any]) -> str:
+    if card["status"] == "checked_small_witness":
+        return "Keep witness linked and do not promote broad claims."
+    if card["kind"] == "range_safety":
+        return "Attach runtime guard, sampled replay evidence, or MachLib range proof."
+    if card["trigger"] == "div":
+        return "Prove denominator nonzero or add a guard before division."
+    if card["trigger"] == "ln":
+        return "Prove log argument positive or route through a log-domain guard."
+    if card["trigger"] == "sqrt":
+        return "Prove argument nonnegative or route through a nonnegative guard."
+    return "Classify the proof target and add a specific witness plan."
+
+
+def build_obligation_registry(results: list[dict[str, Any]]) -> dict[str, Any]:
+    entries = []
+    for result in sorted(results, key=lambda item: item["sourcePacket"]["program_id"]):
+        packet = result["sourcePacket"]
+        domain_by_id = {
+            item["requirementId"]: item
+            for item in result["domainSafety"]["domainRequirements"]
+        }
+        for card in result["obligations"]["cards"]:
+            requirement = domain_by_id.get(card["obligationId"])
+            entries.append(
+                {
+                    "obligationId": card["obligationId"],
+                    "programId": packet["program_id"],
+                    "artifactId": result["artifactId"],
+                    "family": packet["family"],
+                    "kind": card["kind"],
+                    "trigger": card["trigger"],
+                    "proofTarget": card["proofTarget"],
+                    "status": card["status"],
+                    "checkedBy": card.get("checkedBy"),
+                    "proofArtifact": card.get("proofArtifact"),
+                    "claimBoundary": card["nonClaim"],
+                    "blockedPublicClaims": result["domainSafety"]["blockedPublicClaims"],
+                    "nextAction": _registry_next_action(card),
+                    "requirement": requirement.get("requirement") if requirement else None,
+                }
+            )
+    checked = [entry for entry in entries if entry["status"] == "checked_small_witness"]
+    unresolved = [entry for entry in entries if entry["status"] != "checked_small_witness"]
+    domain_entries = [entry for entry in entries if entry["kind"] == "domain"]
+    next_targets = [
+        entry
+        for entry in unresolved
+        if entry["kind"] == "domain"
+    ] or unresolved
+    return {
+        "schemaVersion": OBLIGATION_REGISTRY_SCHEMA_VERSION,
+        "date": DATE,
+        "status": "candidate_only",
+        "entries": entries,
+        "summary": {
+            "obligation_count": len(entries),
+            "domain_obligation_count": len(domain_entries),
+            "range_safety_obligation_count": sum(1 for entry in entries if entry["kind"] == "range_safety"),
+            "checked_witness_count": len(checked),
+            "unresolved_obligation_count": len(unresolved),
+            "checked_domain_obligation_count": sum(1 for entry in domain_entries if entry["status"] == "checked_small_witness"),
+            "blocked_public_claim_count": len(
+                sorted({claim for entry in entries for claim in entry["blockedPublicClaims"]})
+            ),
+        },
+        "nextProofTargets": next_targets[:3],
+        "claimFlags": {
+            "public_ready": False,
+            "public_savings_claim": False,
+            "hardware_observed": False,
+            "formal_verification_claim": False,
+            "theorem_proof_claim": False,
+            "certified_safety_claim": False,
+            "production_controller_claim": False,
+            "compiler_behavior_changed": False,
+            "forge_behavior_changed": False,
+        },
+        "nonClaims": [
+            "The registry is an internal proof-work queue, not a proof.",
+            "Checked witnesses are local obligations, not complete EML safety.",
+            "The registry does not change Forge/compiler behavior.",
         ],
     }
 
@@ -726,6 +813,14 @@ def write_outputs(
     }
 
 
+def write_obligation_registry(results: list[dict[str, Any]], registry_dir: Path) -> Path:
+    registry_dir.mkdir(parents=True, exist_ok=True)
+    registry = build_obligation_registry(results)
+    path = registry_dir / f"eml_proof_obligation_registry_{DATE.replace('-', '_')}.json"
+    path.write_text(json.dumps(registry, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
 def build_one(
     packet: dict[str, Any],
     out_dir: Path,
@@ -755,6 +850,7 @@ def main() -> int:
     parser.add_argument("--evidence-dir", type=Path, default=ROOT / "reports/evidence_packets")
     parser.add_argument("--obligation-dir", type=Path, default=ROOT / "reports/eml_obligations")
     parser.add_argument("--proof-status-dir", type=Path, default=ROOT / "reports/eml_proof_status")
+    parser.add_argument("--registry-dir", type=Path, default=ROOT / "reports/eml_obligation_registry")
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
 
@@ -766,8 +862,10 @@ def main() -> int:
             build_one(packet, args.out_dir, args.report_dir, args.evidence_dir, args.obligation_dir, args.proof_status_dir)
             for packet in packets
         ]
+        registry_path = write_obligation_registry([item["result"] for item in built], args.registry_dir)
         print("EML_PACKET_BUILDER_FIXTURES_OK")
         print(f"packets={len(built)}")
+        print(f"registry={registry_path}")
         return 0
 
     packet = load_packet(args.packet) if args.packet else packet_from_cli(args)

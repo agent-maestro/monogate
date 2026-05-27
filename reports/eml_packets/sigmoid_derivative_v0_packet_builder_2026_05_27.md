@@ -36,14 +36,14 @@ Status: `EML_PACKET_BUILDER_CANDIDATE_PASS`
 
 - Domain obligations: `1`
 - Range-safety obligations: `1`
-- Proved obligations: `0`
+- Proved obligations: `1`
 
 ## Domain Safety Lens
 
-- Unresolved obligations: `2`
-- Checked obligations: `0`
+- Unresolved obligations: `1`
+- Checked obligations: `1`
 - Candidate safe rewrites: `2`
-- Blocked public claims: `8`
+- Blocked public claims: `7`
 
 ## Non-Claims
 
