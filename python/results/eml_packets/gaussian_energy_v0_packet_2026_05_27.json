@@ -176,6 +176,33 @@
     ],
     "schemaVersion": "eml-ir.v0"
   },
+  "obligations": {
+    "cards": [
+      {
+        "description": "Input x declares range [-8.0, 8.0]; downstream runtime or proof work must preserve this boundary.",
+        "input": "x",
+        "kind": "range_safety",
+        "nonClaim": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+        "obligationId": "gaussian_energy_v0:range:x:declared-safe-range",
+        "proofTarget": "input_range_respected",
+        "status": "candidate_only",
+        "trigger": "safe_range"
+      }
+    ],
+    "nonClaims": [
+      "Obligation cards are not proofs.",
+      "Range cards are not hardware observations.",
+      "Domain cards are not formal verification claims."
+    ],
+    "schemaVersion": "monogate.eml_obligation_cards.v0",
+    "status": "candidate_only",
+    "summary": {
+      "count": 1,
+      "domain_count": 0,
+      "proved_count": 0,
+      "range_safety_count": 1
+    }
+  },
   "replay": {
     "frameCount": 8,
     "frames": [

@@ -255,6 +255,43 @@
     ],
     "schemaVersion": "eml-ir.v0"
   },
+  "obligations": {
+    "cards": [
+      {
+        "description": "Division node requires evidence that the denominator is not zero over declared inputs/ranges.",
+        "kind": "domain",
+        "nodeId": "n5",
+        "nonClaim": "This card records a proof obligation; it does not prove the denominator condition.",
+        "obligationId": "sigmoid_derivative_v0:domain:n5:div-denominator-nonzero",
+        "proofTarget": "denominator_nonzero",
+        "status": "candidate_only",
+        "trigger": "div"
+      },
+      {
+        "description": "Input x declares range [-12.0, 12.0]; downstream runtime or proof work must preserve this boundary.",
+        "input": "x",
+        "kind": "range_safety",
+        "nonClaim": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+        "obligationId": "sigmoid_derivative_v0:range:x:declared-safe-range",
+        "proofTarget": "input_range_respected",
+        "status": "candidate_only",
+        "trigger": "safe_range"
+      }
+    ],
+    "nonClaims": [
+      "Obligation cards are not proofs.",
+      "Range cards are not hardware observations.",
+      "Domain cards are not formal verification claims."
+    ],
+    "schemaVersion": "monogate.eml_obligation_cards.v0",
+    "status": "candidate_only",
+    "summary": {
+      "count": 2,
+      "domain_count": 1,
+      "proved_count": 0,
+      "range_safety_count": 1
+    }
+  },
   "replay": {
     "frameCount": 10,
     "frames": [

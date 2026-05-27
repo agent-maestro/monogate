@@ -55,6 +55,7 @@ def test_evidence_packet_matches_public_packet_shape():
     assert evidence["claimFlags"]["public_ready"] is False
     assert evidence["claimFlags"]["hardware_observed"] is False
     assert evidence["claimFlags"]["public_savings_claim"] is False
+    assert evidence["semanticReview"]["obligation_count"] == result["obligations"]["summary"]["count"]
 
 
 def test_replay_hash_chain_is_preserved():
@@ -63,6 +64,29 @@ def test_replay_hash_chain_is_preserved():
     assert frames[0]["replay_hash_prev"] is None
     for prev, cur in zip(frames, frames[1:]):
         assert cur["replay_hash_prev"] == prev["replay_hash"]
+
+
+def test_ln_expression_generates_domain_obligation():
+    result = build_result(fixture_packet("softplus_pair_v0"))
+    cards = result["obligations"]["cards"]
+    assert any(card["trigger"] == "ln" for card in cards)
+    assert result["obligations"]["summary"]["domain_count"] >= 1
+    assert result["obligations"]["summary"]["proved_count"] == 0
+
+
+def test_div_expression_generates_domain_obligation():
+    result = build_result(fixture_packet("sigmoid_derivative_v0"))
+    cards = result["obligations"]["cards"]
+    assert any(card["trigger"] == "div" for card in cards)
+    assert all(card["status"] == "candidate_only" for card in cards)
+
+
+def test_safe_ranges_generate_range_obligations():
+    packet = fixture_packet("gaussian_energy_v0")
+    result = build_result(packet)
+    cards = result["obligations"]["cards"]
+    assert any(card["kind"] == "range_safety" and card["input"] == "x" for card in cards)
+    assert result["obligations"]["summary"]["range_safety_count"] == len(packet["safe_ranges"])
 
 
 def test_public_savings_claim_flip_is_blocked():

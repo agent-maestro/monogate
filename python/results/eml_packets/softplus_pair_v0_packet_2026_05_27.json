@@ -123,6 +123,53 @@
     "reusedNodes": [],
     "schemaVersion": "eml-ir.v0"
   },
+  "obligations": {
+    "cards": [
+      {
+        "description": "Log node requires evidence that its argument is positive over declared inputs/ranges.",
+        "kind": "domain",
+        "nodeId": "n5",
+        "nonClaim": "This card records a proof obligation; it does not prove positivity.",
+        "obligationId": "softplus_pair_v0:domain:n5:ln-argument-positive",
+        "proofTarget": "log_argument_positive",
+        "status": "candidate_only",
+        "trigger": "ln"
+      },
+      {
+        "description": "Input a declares range [-10.0, 10.0]; downstream runtime or proof work must preserve this boundary.",
+        "input": "a",
+        "kind": "range_safety",
+        "nonClaim": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+        "obligationId": "softplus_pair_v0:range:a:declared-safe-range",
+        "proofTarget": "input_range_respected",
+        "status": "candidate_only",
+        "trigger": "safe_range"
+      },
+      {
+        "description": "Input b declares range [-10.0, 10.0]; downstream runtime or proof work must preserve this boundary.",
+        "input": "b",
+        "kind": "range_safety",
+        "nonClaim": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+        "obligationId": "softplus_pair_v0:range:b:declared-safe-range",
+        "proofTarget": "input_range_respected",
+        "status": "candidate_only",
+        "trigger": "safe_range"
+      }
+    ],
+    "nonClaims": [
+      "Obligation cards are not proofs.",
+      "Range cards are not hardware observations.",
+      "Domain cards are not formal verification claims."
+    ],
+    "schemaVersion": "monogate.eml_obligation_cards.v0",
+    "status": "candidate_only",
+    "summary": {
+      "count": 3,
+      "domain_count": 1,
+      "proved_count": 0,
+      "range_safety_count": 2
+    }
+  },
   "replay": {
     "frameCount": 8,
     "frames": [

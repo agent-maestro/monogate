@@ -19,6 +19,7 @@ Status: `EML_PACKET_BUILDER_CANDIDATE_PASS`
 - DAG edges: `10`
 - Reused nodes: `6`
 - Replay frames: `10`
+- Obligation cards: `2`
 - Public tree SuperBEST baseline: `17`
 - Internal DAG SuperBEST candidate: `10`
 
@@ -28,6 +29,12 @@ Status: `EML_PACKET_BUILDER_CANDIDATE_PASS`
 - Validation: `pass`
 - Replay: `pass`
 - Semantic strength: `eml_expression_packet_candidate_no_public_savings_claim`
+
+## Obligation Cards
+
+- Domain obligations: `1`
+- Range-safety obligations: `1`
+- Proved obligations: `0`
 
 ## Non-Claims
 

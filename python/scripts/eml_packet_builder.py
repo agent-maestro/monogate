@@ -85,6 +85,66 @@ def _timeline(frames: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
+def _build_obligations(packet: dict[str, Any], ir: dict[str, Any]) -> list[dict[str, Any]]:
+    obligations: list[dict[str, Any]] = []
+    program_id = packet["program_id"]
+    for node in ir["nodes"]:
+        op = node.get("op")
+        if op == "div":
+            obligations.append(
+                {
+                    "obligationId": f"{program_id}:domain:{node['id']}:div-denominator-nonzero",
+                    "kind": "domain",
+                    "status": "candidate_only",
+                    "trigger": "div",
+                    "nodeId": node["id"],
+                    "description": "Division node requires evidence that the denominator is not zero over declared inputs/ranges.",
+                    "proofTarget": "denominator_nonzero",
+                    "nonClaim": "This card records a proof obligation; it does not prove the denominator condition.",
+                }
+            )
+        elif op == "ln":
+            obligations.append(
+                {
+                    "obligationId": f"{program_id}:domain:{node['id']}:ln-argument-positive",
+                    "kind": "domain",
+                    "status": "candidate_only",
+                    "trigger": "ln",
+                    "nodeId": node["id"],
+                    "description": "Log node requires evidence that its argument is positive over declared inputs/ranges.",
+                    "proofTarget": "log_argument_positive",
+                    "nonClaim": "This card records a proof obligation; it does not prove positivity.",
+                }
+            )
+        elif op == "sqrt":
+            obligations.append(
+                {
+                    "obligationId": f"{program_id}:domain:{node['id']}:sqrt-argument-nonnegative",
+                    "kind": "domain",
+                    "status": "candidate_only",
+                    "trigger": "sqrt",
+                    "nodeId": node["id"],
+                    "description": "Square-root node requires evidence that its argument is nonnegative over declared inputs/ranges.",
+                    "proofTarget": "sqrt_argument_nonnegative",
+                    "nonClaim": "This card records a proof obligation; it does not prove nonnegativity.",
+                }
+            )
+    for name, bounds in sorted(packet.get("safe_ranges", {}).items()):
+        obligations.append(
+            {
+                "obligationId": f"{program_id}:range:{name}:declared-safe-range",
+                "kind": "range_safety",
+                "status": "candidate_only",
+                "trigger": "safe_range",
+                "input": name,
+                "description": f"Input {name} declares range [{bounds['min']}, {bounds['max']}]; downstream runtime or proof work must preserve this boundary.",
+                "proofTarget": "input_range_respected",
+                "nonClaim": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
+            }
+        )
+    return obligations
+
+
 def packet_from_cli(args: argparse.Namespace) -> dict[str, Any]:
     if not args.expression:
         raise ValueError("--expression is required when --packet is not provided")
@@ -172,6 +232,7 @@ def build_result(packet: dict[str, Any]) -> dict[str, Any]:
         if node.get("reuse_count", 1) > 1
     ]
     edges = _edges(ir["nodes"])
+    obligations = _build_obligations(packet, ir)
     return {
         "schemaVersion": RESULT_SCHEMA_VERSION,
         "artifactId": artifact_id(packet["program_id"]),
@@ -221,6 +282,22 @@ def build_result(packet: dict[str, Any]) -> dict[str, Any]:
                 "No package publish or deploy.",
             ],
         },
+        "obligations": {
+            "schemaVersion": "monogate.eml_obligation_cards.v0",
+            "status": "candidate_only",
+            "cards": obligations,
+            "summary": {
+                "count": len(obligations),
+                "domain_count": sum(1 for item in obligations if item["kind"] == "domain"),
+                "range_safety_count": sum(1 for item in obligations if item["kind"] == "range_safety"),
+                "proved_count": 0,
+            },
+            "nonClaims": [
+                "Obligation cards are not proofs.",
+                "Range cards are not hardware observations.",
+                "Domain cards are not formal verification claims.",
+            ],
+        },
         "validationCommands": [
             "python python/scripts/eml_packet_builder.py --build-fixtures --strict",
             "python -m pytest -q python/tests/test_eml_packet_builder.py",
@@ -247,6 +324,9 @@ def build_evidence_packet(result: dict[str, Any]) -> dict[str, Any]:
             "edge_count": result["ir"]["edgeCount"],
             "reused_node_count": len(result["ir"]["reusedNodes"]),
             "frame_count": result["replay"]["frameCount"],
+            "obligation_count": result["obligations"]["summary"]["count"],
+            "domain_obligation_count": result["obligations"]["summary"]["domain_count"],
+            "range_safety_obligation_count": result["obligations"]["summary"]["range_safety_count"],
             "public_savings_claim": False,
             "internal_extra_dag_savings_nodes": result["costs"]["internalExtraDagSavingsNodes"],
         },
@@ -260,6 +340,7 @@ def build_evidence_packet(result: dict[str, Any]) -> dict[str, Any]:
         "reviewHighlights": [
             "Built from an EML Expression Packet v0 input.",
             "Generated EML IR and replay frames with the existing IR substrate pipeline.",
+            "Generated candidate proof-obligation cards for domain and range boundaries.",
             "Kept public savings and hardware/proof claims false.",
         ],
         "validationCommands": result["validationCommands"],
@@ -307,6 +388,7 @@ def render_report(result: dict[str, Any], evidence: dict[str, Any]) -> str:
             f"- DAG edges: `{result['ir']['edgeCount']}`",
             f"- Reused nodes: `{len(result['ir']['reusedNodes'])}`",
             f"- Replay frames: `{result['replay']['frameCount']}`",
+            f"- Obligation cards: `{result['obligations']['summary']['count']}`",
             f"- Public tree SuperBEST baseline: `{result['costs']['canonicalPublicTreeSuperbestNodes']}`",
             f"- Internal DAG SuperBEST candidate: `{result['costs']['internalDagSuperbestNodes']}`",
             "",
@@ -316,6 +398,12 @@ def render_report(result: dict[str, Any], evidence: dict[str, Any]) -> str:
             f"- Validation: `{evidence['validationStatus']}`",
             f"- Replay: `{evidence['replayStatus']}`",
             f"- Semantic strength: `{evidence['semanticStrength']}`",
+            "",
+            "## Obligation Cards",
+            "",
+            f"- Domain obligations: `{result['obligations']['summary']['domain_count']}`",
+            f"- Range-safety obligations: `{result['obligations']['summary']['range_safety_count']}`",
+            f"- Proved obligations: `{result['obligations']['summary']['proved_count']}`",
             "",
             "## Non-Claims",
             "",
