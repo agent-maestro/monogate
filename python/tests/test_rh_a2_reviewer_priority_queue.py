@@ -39,7 +39,7 @@ def test_score_prioritizes_compiler_and_redteam_blockers(tmp_path):
     review = build_review(tmp_path)["payload"]
     packets = {packet["claimId"]: packet for packet in review["reviewPackets"]}
     compiler_score, compiler_reasons = score_packet(packets["r11-compiler-lowering-correctness"])
-    redteam_score, redteam_reasons = score_packet(packets["command-cockpit-robust-to-private-leakage"])
+    redteam_score, redteam_reasons = score_packet(packets["builder-robust-to-forbidden-claim-injection"])
     ai_score, _ = score_packet(packets["ai-answer-ready-for-publication"])
     assert compiler_score > ai_score
     assert redteam_score > ai_score
@@ -109,7 +109,7 @@ def test_r12_candidate_routes_to_runtime_bakeoff(tmp_path):
     assert item["blockerCategory"] == "runtime_bakeoff_or_semantic_proof_missing"
 
 
-def test_redteam_failure_routes_to_rt_a2(tmp_path):
+def test_redteam_local_adapter_pass_routes_to_regression_guard(tmp_path):
     review = build_review(tmp_path)
     payload = build_queue(
         Path(review["result_path"]),
@@ -119,8 +119,8 @@ def test_redteam_failure_routes_to_rt_a2(tmp_path):
         tmp_path / "feeds",
     )["payload"]
     item = item_by_claim(payload["queue"]["items"], "command-cockpit-robust-to-private-leakage")
-    assert item["nextSprint"] == "RT-A2 local RAMPART adapter"
-    assert item["nextValidator"] == "rampart_redteam_packet"
+    assert item["nextSprint"] == "RT-A3 red-team regression CI guard"
+    assert item["nextValidator"] == "adapter_coverage_review"
     assert item["blockerCategory"] == "redteam_adapter_or_coverage_gap"
 
 

@@ -15,54 +15,6 @@
   "items": [
     {
       "allValidators": [
-        "rampart_redteam_packet",
-        "adapter_coverage_review",
-        "regression_ci_guard"
-      ],
-      "allowedSurface": "private",
-      "blockedClaims": [
-        "certified_safety_claim",
-        "comprehensive_robustness_claim",
-        "production_security_claim"
-      ],
-      "blockerCategory": "redteam_adapter_or_coverage_gap",
-      "claim": "The future command cockpit is robust against private reviewer leakage.",
-      "claimFlags": {
-        "automatic_reviewer_approval": false,
-        "certified_safety_claim": false,
-        "compiler_behavior_changed": false,
-        "deploy_performed": false,
-        "financial_advice_claim": false,
-        "hardware_action_performed": false,
-        "production_controller_claim": false,
-        "public_ready": false,
-        "public_sprint_approval_claim": false,
-        "trade_performed": false
-      },
-      "claimId": "command-cockpit-robust-to-private-leakage",
-      "claimType": "redteam_robustness",
-      "decision": "blocked_public_claim",
-      "evidencePaths": [
-        "reports/evidence_packets/rt_a1_rampart_compatibility_spike.json",
-        "python/results/rampart_redteam_packets/command-cockpit-leakage-attempt-fail_rampart_redteam_packet_2026_05_27.json"
-      ],
-      "evidenceStrength": "fixture_red_team_fail",
-      "nextAction": "fix failing red-team adapter coverage before making any public robustness claim",
-      "nextSprint": "RT-A2 local RAMPART adapter",
-      "nextValidator": "rampart_redteam_packet",
-      "priority": "high",
-      "rank": 1,
-      "score": 72,
-      "scoreReasons": [
-        "blocked_public_claim:+30",
-        "lane:redteam:+16",
-        "evidence_gap:fixture_red_team_fail:+12",
-        "redteam_bridge:+14"
-      ],
-      "sourceLane": "redteam"
-    },
-    {
-      "allValidators": [
         "pm_a1_forecast_packet",
         "calibration_ledger",
         "human_market_review"
@@ -99,7 +51,7 @@
       "nextSprint": "PM-A1B calibration ledger",
       "nextValidator": "pm_a1_forecast_packet",
       "priority": "high",
-      "rank": 2,
+      "rank": 1,
       "score": 68,
       "scoreReasons": [
         "blocked_public_claim:+30",
@@ -146,7 +98,7 @@
       "nextSprint": "EE-A2 live capture packet",
       "nextValidator": "live_capture_packet",
       "priority": "high",
-      "rank": 3,
+      "rank": 2,
       "score": 65,
       "scoreReasons": [
         "blocked_public_claim:+30",
@@ -193,7 +145,7 @@
       "nextSprint": "R10B runtime bakeoff",
       "nextValidator": "r10_cost_stability",
       "priority": "high",
-      "rank": 4,
+      "rank": 3,
       "score": 64,
       "scoreReasons": [
         "blocked_public_claim:+30",
@@ -241,7 +193,7 @@
       "nextSprint": "R10B runtime bakeoff",
       "nextValidator": "runtime_bakeoff",
       "priority": "medium",
-      "rank": 5,
+      "rank": 4,
       "score": 48,
       "scoreReasons": [
         "blocked_public_claim:+30",
@@ -287,7 +239,7 @@
       "nextSprint": "RT-A2 local RAMPART adapter",
       "nextValidator": "rampart_redteam_packet",
       "priority": "medium",
-      "rank": 6,
+      "rank": 5,
       "score": 40,
       "scoreReasons": [
         "candidate_only:+10",
@@ -332,7 +284,7 @@
       "nextSprint": "Atlas bounded public surfacing",
       "nextValidator": "machlib_lake_build",
       "priority": "low",
-      "rank": 7,
+      "rank": 6,
       "score": 29,
       "scoreReasons": [
         "bounded_public_approval_ready:+12",
@@ -374,7 +326,7 @@
       "nextSprint": "PB-A2 sourced AI answer intake",
       "nextValidator": "source_attribution",
       "priority": "low",
-      "rank": 8,
+      "rank": 7,
       "score": 28,
       "scoreReasons": [
         "human_review_required:+18",
@@ -422,13 +374,60 @@
       "nextSprint": "R10B runtime bakeoff",
       "nextValidator": "r12_generated_stub_packet",
       "priority": "low",
-      "rank": 9,
+      "rank": 8,
       "score": 28,
       "scoreReasons": [
         "candidate_only:+10",
         "lane:compiler:+18"
       ],
       "sourceLane": "compiler"
+    },
+    {
+      "allValidators": [
+        "adapter_coverage_review",
+        "regression_ci_guard"
+      ],
+      "allowedSurface": "candidate",
+      "blockedClaims": [
+        "certified_safety_claim",
+        "comprehensive_robustness_claim",
+        "production_security_claim"
+      ],
+      "blockerCategory": "redteam_adapter_or_coverage_gap",
+      "claim": "The future command cockpit is robust against private reviewer leakage.",
+      "claimFlags": {
+        "automatic_reviewer_approval": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "deploy_performed": false,
+        "financial_advice_claim": false,
+        "hardware_action_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_sprint_approval_claim": false,
+        "trade_performed": false
+      },
+      "claimId": "command-cockpit-robust-to-private-leakage",
+      "claimType": "redteam_robustness",
+      "decision": "candidate_only",
+      "evidencePaths": [
+        "reports/evidence_packets/rt_a1_rampart_compatibility_spike.json",
+        "python/results/rampart_redteam_packets/command-cockpit-leakage-attempt-fail_rampart_redteam_packet_2026_05_27.json",
+        "reports/evidence_packets/rt_a2_local_rampart_adapter.json",
+        "python/results/rampart_redteam_packets/command-cockpit-private-reviewer-leakage-pass_rampart_redteam_packet_2026_05_27.json"
+      ],
+      "evidenceStrength": "local_red_team_pass",
+      "nextAction": "keep as candidate packet until required validators pass",
+      "nextSprint": "RT-A3 red-team regression CI guard",
+      "nextValidator": "adapter_coverage_review",
+      "priority": "low",
+      "rank": 9,
+      "score": 26,
+      "scoreReasons": [
+        "candidate_only:+10",
+        "lane:redteam:+16"
+      ],
+      "sourceLane": "redteam"
     },
     {
       "allValidators": [
@@ -498,8 +497,8 @@
       "redteam": 2
     },
     "byPriority": {
-      "high": 4,
-      "low": 4,
+      "high": 3,
+      "low": 5,
       "medium": 2
     },
     "claimFlagsAllFalse": true,
@@ -508,8 +507,8 @@
     "hardwareActionPerformed": false,
     "publicApprovalPerformed": false,
     "queueItemCount": 10,
-    "topClaimId": "command-cockpit-robust-to-private-leakage",
-    "topNextSprint": "RT-A2 local RAMPART adapter",
+    "topClaimId": "pm-a1-profitable-agent-claim",
+    "topNextSprint": "PM-A1B calibration ledger",
     "tradePerformed": false
   }
 }

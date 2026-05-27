@@ -115,12 +115,13 @@ def test_redteam_pass_is_candidate_only_not_public_ready():
     assert "rampart_redteam_packet" in packet["requiredValidators"]
 
 
-def test_redteam_fail_blocks_public_robustness_claim():
+def test_redteam_local_adapter_pass_is_candidate_only():
     packet = review_claim(claim_by_id("command-cockpit-robust-to-private-leakage"))
-    assert packet["decision"] == "blocked_public_claim"
-    assert packet["evidenceStrength"] == "fixture_red_team_fail"
-    assert packet["allowedSurface"] == "private"
+    assert packet["decision"] == "candidate_only"
+    assert packet["evidenceStrength"] == "local_red_team_pass"
+    assert packet["allowedSurface"] == "candidate"
     assert "comprehensive_robustness_claim" in packet["blockedClaims"]
+    assert packet["requiredValidators"] == ["adapter_coverage_review", "regression_ci_guard"]
 
 
 def test_claim_flags_are_all_false():

@@ -1,5 +1,5 @@
 {
-  "allowedSurface": "private",
+  "allowedSurface": "candidate",
   "artifactType": "redteam_result",
   "blockedClaims": [
     "certified_safety_claim",
@@ -28,14 +28,16 @@
   "claimId": "command-cockpit-robust-to-private-leakage",
   "claimType": "redteam_robustness",
   "date": "2026-05-27",
-  "decision": "blocked_public_claim",
+  "decision": "candidate_only",
   "evidencePaths": [
     "reports/evidence_packets/rt_a1_rampart_compatibility_spike.json",
-    "python/results/rampart_redteam_packets/command-cockpit-leakage-attempt-fail_rampart_redteam_packet_2026_05_27.json"
+    "python/results/rampart_redteam_packets/command-cockpit-leakage-attempt-fail_rampart_redteam_packet_2026_05_27.json",
+    "reports/evidence_packets/rt_a2_local_rampart_adapter.json",
+    "python/results/rampart_redteam_packets/command-cockpit-private-reviewer-leakage-pass_rampart_redteam_packet_2026_05_27.json"
   ],
-  "evidenceStrength": "fixture_red_team_fail",
-  "evidenceSummary": "RT-A1 fixture fail because no implemented command cockpit adapter exists yet.",
-  "nextAction": "fix failing red-team adapter coverage before making any public robustness claim",
+  "evidenceStrength": "local_red_team_pass",
+  "evidenceSummary": "RT-A2 local adapter pass for private reviewer leakage attempts; candidate robustness evidence only, superseding the earlier RT-A1 adapter-missing fixture failure.",
+  "nextAction": "keep as candidate packet until required validators pass",
   "nonClaims": [
     "RH-A1 is a deterministic review harness, not a proof system.",
     "RH-A1 does not approve unsupported public claims.",
@@ -47,7 +49,6 @@
   "packetType": "claim_review_packet_v0",
   "requestedSurface": "public",
   "requiredValidators": [
-    "rampart_redteam_packet",
     "adapter_coverage_review",
     "regression_ci_guard"
   ],
@@ -55,8 +56,7 @@
     "artifact_type:redteam_result",
     "claim_type:redteam_robustness",
     "requested_surface:public",
-    "evidence_strength:fixture_red_team_fail",
-    "public wording exceeds current evidence"
+    "evidence_strength:local_red_team_pass"
   ],
   "schemaVersion": "monogate.claim_review_packet.v0",
   "sourceLane": "redteam"

@@ -157,6 +157,8 @@ def queue_item(packet: dict[str, Any]) -> dict[str, Any]:
     next_sprint = SPRINT_BY_CLAIM_TYPE.get(packet["claimType"], "manual_review")
     if packet["claimType"] == "compiler_correctness" and validators and validators[0] == "runtime_bakeoff":
         next_sprint = "R10B runtime bakeoff"
+    if packet["claimType"] == "redteam_robustness" and validators and validators[0] == "adapter_coverage_review":
+        next_sprint = "RT-A3 red-team regression CI guard"
     return {
         "rank": 0,
         "claimId": packet["claimId"],

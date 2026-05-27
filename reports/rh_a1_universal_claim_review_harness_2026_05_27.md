@@ -20,13 +20,13 @@ blocked claims, and next validators.
 | `machlib-subtraction-boundary-witness` | `proof_status` | `small_checked_witness` | `approved_bounded_public_claim` | `public_bounded` | surface only the bounded scoped claim with domain assumptions and evidence paths |
 | `ai-answer-ready-for-publication` | `ai_answer` | `none` | `human_review_required` | `candidate` | attach sources, reviewer notes, and a validator before any public surface |
 | `builder-robust-to-forbidden-claim-injection` | `redteam_robustness` | `fixture_red_team_pass` | `candidate_only` | `candidate` | keep as candidate packet until required validators pass |
-| `command-cockpit-robust-to-private-leakage` | `redteam_robustness` | `fixture_red_team_fail` | `blocked_public_claim` | `private` | fix failing red-team adapter coverage before making any public robustness claim |
+| `command-cockpit-robust-to-private-leakage` | `redteam_robustness` | `local_red_team_pass` | `candidate_only` | `candidate` | keep as candidate packet until required validators pass |
 | `r12-generated-stubs-validate-on-fixtures` | `generated_stub_validation` | `validated_replay_or_packet` | `candidate_only` | `candidate` | keep as candidate packet until required validators pass |
 
 ## Summary
 
 - Review packets: `10`
-- Blocked public claims: `6`
+- Blocked public claims: `5`
 - Bounded public approvals: `1`
 - Claim flags all false: `True`
 - Trade performed: `False`

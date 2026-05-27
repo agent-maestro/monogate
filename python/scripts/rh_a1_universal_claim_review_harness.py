@@ -106,6 +106,10 @@ def infer_evidence_strength(claim: dict[str, Any]) -> str:
         return "fixture_only"
     if claim_type == "external_theory":
         return "source_only"
+    if claim_type == "redteam_robustness" and "local adapter" in summary and "pass" in summary:
+        return "local_red_team_pass"
+    if claim_type == "redteam_robustness" and "local adapter" in summary and "fail" in summary:
+        return "local_red_team_fail"
     if claim_type == "redteam_robustness" and "fixture" in summary and "fail" in summary:
         return "fixture_red_team_fail"
     if claim_type == "redteam_robustness" and "fixture" in summary and "pass" in summary:
@@ -125,7 +129,9 @@ def decision_for(claim: dict[str, Any], evidence_strength: str) -> str:
         return "human_review_required"
     if claim_type == "redteam_robustness" and evidence_strength == "fixture_red_team_fail":
         return "blocked_public_claim"
-    if claim_type == "redteam_robustness" and evidence_strength == "fixture_red_team_pass":
+    if claim_type == "redteam_robustness" and evidence_strength == "local_red_team_fail":
+        return "blocked_public_claim"
+    if claim_type == "redteam_robustness" and evidence_strength in {"fixture_red_team_pass", "local_red_team_pass"}:
         return "candidate_only"
     if claim_type == "generated_stub_validation" and evidence_strength == "validated_replay_or_packet":
         return "candidate_only"
@@ -208,6 +214,8 @@ def review_claim(claim: dict[str, Any]) -> dict[str, Any]:
     required_validators = REQUIRED_VALIDATORS_BY_TYPE.get(claim_type, ["human_review"])
     if claim_type == "compiler_correctness" and evidence_strength == "validated_replay_or_packet":
         required_validators = ["runtime_bakeoff", "scoped_semantic_proof", "formal_compiler_proof"]
+    if claim_type == "redteam_robustness" and evidence_strength == "local_red_team_pass":
+        required_validators = ["adapter_coverage_review", "regression_ci_guard"]
     return {
         "schemaVersion": REVIEW_PACKET_SCHEMA_VERSION,
         "packetType": "claim_review_packet_v0",
