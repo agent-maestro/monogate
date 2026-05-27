@@ -23,7 +23,9 @@
     "python/scripts/eml_atlas_annex.py",
     "python/results/eml_atlas_annex/eml_atlas_annex_2026_05_27.json",
     "reports/eml_a1_atlas_evidence_annex_2026_05_27.md",
-    "reports/evidence_packets/eml_atlas_annex.json"
+    "reports/evidence_packets/eml_atlas_annex.json",
+    "reports/eml_atlas_annex_machlib_stubs/eml_atlas_annex_exact_identity_stubs.lean",
+    "reports/eml_atlas_annex_machlib_stubs/eml_atlas_annex_exact_identity_stub_manifest.json"
   ],
   "nonClaims": [
     "The monogate.org Atlas remains the canonical public Atlas.",
@@ -46,13 +48,59 @@
   "schemaVersion": "monogate.evidence_public_packet.v0",
   "semanticReview": {
     "classification_counts": {
-      "conjectural_or_blocked": 1,
-      "exact_identity": 4,
-      "standard_rewrite": 6
+      "conjectural_or_blocked": 3,
+      "exact_identity": 9,
+      "heuristic_analogy": 5,
+      "numeric_observation": 5,
+      "standard_rewrite": 13
     },
-    "entry_count": 11,
+    "entry_count": 35,
+    "next_proof_targets": [
+      {
+        "action": "candidate_machlib_witness",
+        "atlasObject": "Bose-Einstein denominator",
+        "id": "bose_boundary",
+        "status": "candidate_only_not_proved"
+      },
+      {
+        "action": "candidate_machlib_witness",
+        "atlasObject": "constants e and 0",
+        "id": "constants_zero_and_e",
+        "status": "candidate_only_not_proved"
+      },
+      {
+        "action": "candidate_machlib_witness",
+        "atlasObject": "Euler null state",
+        "id": "euler_null_state",
+        "status": "candidate_only_not_proved"
+      },
+      {
+        "action": "candidate_machlib_witness",
+        "atlasObject": "exp(x)",
+        "id": "exp_from_eml",
+        "status": "candidate_only_not_proved"
+      },
+      {
+        "action": "candidate_machlib_witness",
+        "atlasObject": "Fermi-Dirac denominator",
+        "id": "fermi_boundary",
+        "status": "candidate_only_not_proved"
+      }
+    ],
     "promote_to_public_atlas": false,
-    "public_atlas_source": "https://monogate.org/atlas"
+    "public_atlas_source": "https://monogate.org/atlas",
+    "review_queue_summary": {
+      "actionCounts": {
+        "blocked_public_claim": 3,
+        "candidate_machlib_witness": 9,
+        "keep_private_expository_only": 5,
+        "keep_private_symbolic_or_numeric_verifier": 13,
+        "needs_reproduction_benchmark": 5
+      },
+      "candidateMachlibWitnessCount": 5,
+      "publicPromotionCount": 0,
+      "queueCount": 35
+    }
   },
   "semanticStrength": "atlas_identity_classifier_candidate_no_public_claim_change",
   "sourceReportPath": "reports/eml_a1_atlas_evidence_annex_2026_05_27.md",

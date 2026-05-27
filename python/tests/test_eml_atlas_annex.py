@@ -27,7 +27,9 @@ def test_seed_entries_cover_expected_classifications():
     assert "exact_identity" in classifications
     assert "standard_rewrite" in classifications
     assert "conjectural_or_blocked" in classifications
-    assert len(SEED_ENTRIES) >= 10
+    assert "numeric_observation" in classifications
+    assert "heuristic_analogy" in classifications
+    assert len(SEED_ENTRIES) >= 30
 
 
 def test_exp_and_boundary_entries_validate():
@@ -61,11 +63,33 @@ def test_build_annex_writes_result_report_and_evidence(tmp_path):
     built = build_annex(tmp_path / "out", tmp_path / "reports", tmp_path / "evidence")
     payload = json.loads(Path(built["result_path"]).read_text(encoding="utf-8"))
     evidence = json.loads(Path(built["evidence_path"]).read_text(encoding="utf-8"))
+    stub_manifest = json.loads(Path(built["stub_manifest_path"]).read_text(encoding="utf-8"))
     assert payload["status"] == "EML_ATLAS_ANNEX_PASS"
     assert payload["publicAtlasSource"] == "https://monogate.org/atlas"
+    assert payload["reviewQueueSummary"]["queueCount"] == payload["entryCount"]
+    assert payload["reviewQueueSummary"]["publicPromotionCount"] == 0
+    assert len(payload["nextProofTargets"]) >= 5
     assert evidence["reviewDecision"] == "candidate_only"
     assert evidence["claimFlags"]["rh_proof_claim"] is False
+    assert stub_manifest["status"] == "candidate_only"
+    assert stub_manifest["claimFlags"]["theorem_proof_claim"] is False
     validate_annex(payload)
+
+
+def test_review_queue_routes_exact_identities_to_candidate_witnesses(tmp_path):
+    payload = build_annex(tmp_path / "out", tmp_path / "reports", tmp_path / "evidence")["payload"]
+    exact_entries = [item for item in payload["entries"] if item["classification"] == "exact_identity"]
+    assert len(exact_entries) >= 5
+    assert all(item["reviewAction"]["action"] == "candidate_machlib_witness" for item in exact_entries)
+    assert all(item["promoteToPublicAtlas"] is False for item in payload["reviewQueue"])
+
+
+def test_machlib_stubs_are_candidate_only_strings(tmp_path):
+    built = build_annex(tmp_path / "out", tmp_path / "reports", tmp_path / "evidence")
+    stub_text = Path(built["stub_path"]).read_text(encoding="utf-8")
+    assert "candidate-only" in stub_text
+    assert "def exp_from_eml_candidate_obligation" in stub_text
+    assert "theorem " not in stub_text
 
 
 def test_no_claim_flags_flip(tmp_path):

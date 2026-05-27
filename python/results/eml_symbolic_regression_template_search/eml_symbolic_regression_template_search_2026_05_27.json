@@ -1,0 +1,172 @@
+{
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "eml_grammar_theorem_claim": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "pysr_run_claim": false,
+    "rh_proof_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-27",
+  "fixture": {
+    "primeCountUpToMax": 30,
+    "residualMax": 4.355436158442458,
+    "residualMin": -7.44554493062283,
+    "residualMseAgainstZero": 6.407915447587885,
+    "sampleCount": 800,
+    "xMax": 120.0,
+    "xMin": 4.0
+  },
+  "interpretation": {
+    "fullPysrRunPerformed": false,
+    "resultLabel": "candidate_template_search_not_full_symbolic_regression",
+    "reviewFinding": "promising_but_not_decisive",
+    "summary": "The EML critical-line template remains a compact candidate and leads the simple complexity-adjusted score on this fixture, but the template search is intentionally ambiguous: a wrong-exponent control localizes slightly closer, and low-MSE baselines show that MSE alone is not evidence of structure."
+  },
+  "nonClaims": [
+    "This search does not prove RH.",
+    "This search does not discover zeta zeros.",
+    "This search is not a full PySR run.",
+    "This search does not prove an EML grammar theorem.",
+    "This search does not promote any Atlas entry publicly.",
+    "This search does not change Forge/compiler behavior."
+  ],
+  "rankings": {
+    "byCandidateComplexityAdjustedScore": [
+      "eml_critical_one_node",
+      "standard_profiled_sqrt_cos_sin",
+      "plain_profiled_cos_sin",
+      "eml_wrong_exponent_07",
+      "eml_wrong_exponent_03"
+    ],
+    "byComplexityAdjustedScore": [
+      "constant_baseline",
+      "eml_critical_one_node",
+      "standard_profiled_sqrt_cos_sin",
+      "plain_profiled_cos_sin",
+      "eml_wrong_exponent_07",
+      "eml_wrong_exponent_03"
+    ],
+    "byLocalization": [
+      "eml_wrong_exponent_03",
+      "eml_critical_one_node",
+      "plain_profiled_cos_sin",
+      "standard_profiled_sqrt_cos_sin",
+      "eml_wrong_exponent_07"
+    ],
+    "byMse": [
+      "constant_baseline",
+      "standard_profiled_sqrt_cos_sin",
+      "eml_critical_one_node",
+      "plain_profiled_cos_sin",
+      "eml_wrong_exponent_07",
+      "eml_wrong_exponent_03"
+    ]
+  },
+  "scan": {
+    "gammaMax": 40.0,
+    "gammaMin": 5.0,
+    "gammaSteps": 2000,
+    "knownFirstZetaZeroGamma": 14.134725141
+  },
+  "schemaVersion": "monogate.eml_symbolic_regression_template_search.v0",
+  "searchId": "eml_a5_template_search_v0",
+  "status": "EML_SYMBOLIC_REGRESSION_TEMPLATE_SEARCH_PASS",
+  "templates": [
+    {
+      "bestGamma": 14.087043521760881,
+      "bestMse": 5.339289386058876,
+      "complexityAdjustedScore": 5.389289386058876,
+      "description": "-2 Re(x^(1/2+i gamma)/(1/2+i gamma))",
+      "errorFromFirstKnownZero": 0.0476816192391194,
+      "family": "eml",
+      "freeParameterCount": 1,
+      "grammarOperatorNodes": 1,
+      "id": "eml_critical_one_node",
+      "profiledCoefficients": [],
+      "status": "candidate_template"
+    },
+    {
+      "bestGamma": 13.929464732366183,
+      "bestMse": 5.2530047700048526,
+      "complexityAdjustedScore": 5.5030047700048526,
+      "description": "sqrt(x) * (A cos(gamma log x) + B sin(gamma log x)) with profiled amplitudes",
+      "errorFromFirstKnownZero": 0.20526040863381745,
+      "family": "standard",
+      "freeParameterCount": 3,
+      "grammarOperatorNodes": 5,
+      "id": "standard_profiled_sqrt_cos_sin",
+      "profiledCoefficients": [
+        -0.13233253255834787,
+        -0.1416716863576856
+      ],
+      "status": "candidate_template"
+    },
+    {
+      "bestGamma": 14.104552276138069,
+      "bestMse": 5.814424718236256,
+      "complexityAdjustedScore": 5.864424718236256,
+      "description": "-2 Re(x^(0.3+i gamma)/(0.3+i gamma))",
+      "errorFromFirstKnownZero": 0.030172864861931714,
+      "family": "negative_control",
+      "freeParameterCount": 1,
+      "grammarOperatorNodes": 1,
+      "id": "eml_wrong_exponent_03",
+      "profiledCoefficients": [],
+      "status": "candidate_template"
+    },
+    {
+      "bestGamma": 20.95047523761881,
+      "bestMse": 5.769475450086024,
+      "complexityAdjustedScore": 5.819475450086024,
+      "description": "-2 Re(x^(0.7+i gamma)/(0.7+i gamma))",
+      "errorFromFirstKnownZero": 6.81575009661881,
+      "family": "negative_control",
+      "freeParameterCount": 1,
+      "grammarOperatorNodes": 1,
+      "id": "eml_wrong_exponent_07",
+      "profiledCoefficients": [],
+      "status": "candidate_template"
+    },
+    {
+      "bestGamma": 14.052026013006504,
+      "bestMse": 5.461535254633136,
+      "complexityAdjustedScore": 5.611535254633137,
+      "description": "A cos(gamma log x) + B sin(gamma log x) with no sqrt(x) envelope",
+      "errorFromFirstKnownZero": 0.08269912799349655,
+      "family": "negative_control",
+      "freeParameterCount": 3,
+      "grammarOperatorNodes": 3,
+      "id": "plain_profiled_cos_sin",
+      "profiledCoefficients": [
+        -0.33162777288213297,
+        -1.3343800631528795
+      ],
+      "status": "candidate_template"
+    },
+    {
+      "bestGamma": null,
+      "bestMse": 3.555751648771152,
+      "complexityAdjustedScore": 3.555751648771152,
+      "description": "mean residual baseline",
+      "errorFromFirstKnownZero": null,
+      "family": "baseline",
+      "freeParameterCount": 1,
+      "grammarOperatorNodes": 0,
+      "id": "constant_baseline",
+      "profiledCoefficients": [
+        -1.6888350419199423
+      ],
+      "status": "baseline"
+    }
+  ]
+}

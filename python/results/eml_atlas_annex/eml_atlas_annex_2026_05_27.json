@@ -12,10 +12,22 @@
     "public_savings_claim": false,
     "theorem_proof_claim": false
   },
+  "claimPromotionPolicy": {
+    "defaultDecision": "candidate_only",
+    "publicAtlasPromotionPerformed": false,
+    "publicPromotionRequires": [
+      "reviewer approval",
+      "domain notes",
+      "evidence packet",
+      "no forbidden claim flags"
+    ]
+  },
   "classificationCounts": {
-    "conjectural_or_blocked": 1,
-    "exact_identity": 4,
-    "standard_rewrite": 6
+    "conjectural_or_blocked": 3,
+    "exact_identity": 9,
+    "heuristic_analogy": 5,
+    "numeric_observation": 5,
+    "standard_rewrite": 13
   },
   "date": "2026-05-27",
   "entries": [
@@ -89,8 +101,157 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "candidate_machlib_witness",
+        "priority": 1,
+        "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card."
+      },
       "sampleCount": 3,
       "standardForm": "exp(x)",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "ln(y) from EML",
+      "claimBoundary": "Requires y > 0 on the real branch.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "exact_identity",
+      "emlForm": "eml(1, eml(eml(1, y), 1))",
+      "id": "ln_from_eml",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "absError": 2.220446049250313e-16,
+          "expected": {
+            "imag": 0.0,
+            "real": -1.3862943611198906
+          },
+          "label": "y=0.25",
+          "observed": {
+            "imag": 0.0,
+            "real": -1.3862943611198904
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        },
+        {
+          "absError": 2.220446049250313e-16,
+          "expected": {
+            "imag": 0.0,
+            "real": 0.4054651081081644
+          },
+          "label": "y=1.5",
+          "observed": {
+            "imag": 0.0,
+            "real": 0.40546510810816416
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        },
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 1.9459101490553132
+          },
+          "label": "y=7.0",
+          "observed": {
+            "imag": 0.0,
+            "real": 1.9459101490553132
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "candidate_machlib_witness",
+        "priority": 1,
+        "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card."
+      },
+      "sampleCount": 3,
+      "standardForm": "ln(y)",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "constants e and 0",
+      "claimBoundary": "Definition-level constant identities only.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "exact_identity",
+      "emlForm": "eml(1,1), eml(1, eml(eml(1,1),1))",
+      "id": "constants_zero_and_e",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 2.718281828459045
+          },
+          "label": "e",
+          "observed": {
+            "imag": 0.0,
+            "real": 2.718281828459045
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        },
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 0.0
+          },
+          "label": "zero",
+          "observed": {
+            "imag": 0.0,
+            "real": 0.0
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "candidate_machlib_witness",
+        "priority": 1,
+        "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card."
+      },
+      "sampleCount": 2,
+      "standardForm": "e, 0",
       "validationStatus": "pass"
     },
     {
@@ -163,6 +324,11 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "candidate_machlib_witness",
+        "priority": 1,
+        "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card."
+      },
       "sampleCount": 3,
       "standardForm": "exp(x) - 1",
       "validationStatus": "pass"
@@ -237,8 +403,92 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "candidate_machlib_witness",
+        "priority": 1,
+        "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card."
+      },
       "sampleCount": 3,
       "standardForm": "exp(x) + 1",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Maxwell-Boltzmann boundary",
+      "claimBoundary": "Boundary rewrite only; no new statistical-mechanics theorem is claimed.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "exact_identity",
+      "emlForm": "eml(x, 1)",
+      "id": "maxwell_boundary",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 0.36787944117144233
+          },
+          "label": "x=-1.0",
+          "observed": {
+            "imag": 0.0,
+            "real": 0.36787944117144233
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        },
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 1.2840254166877414
+          },
+          "label": "x=0.25",
+          "observed": {
+            "imag": 0.0,
+            "real": 1.2840254166877414
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        },
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 7.38905609893065
+          },
+          "label": "x=2.0",
+          "observed": {
+            "imag": 0.0,
+            "real": 7.38905609893065
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "candidate_machlib_witness",
+        "priority": 1,
+        "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card."
+      },
+      "sampleCount": 3,
+      "standardForm": "exp(x)",
       "validationStatus": "pass"
     },
     {
@@ -311,8 +561,157 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "candidate_machlib_witness",
+        "priority": 1,
+        "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card."
+      },
       "sampleCount": 3,
       "standardForm": "v - u",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Euler null state",
+      "claimBoundary": "Complex principal-branch identity; no topology or physics theorem is claimed.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "exact_identity",
+      "emlForm": "eml(i*pi, exp(-1)) = 0",
+      "id": "euler_null_state",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "absError": 1.2246467991473532e-16,
+          "expected": {
+            "imag": 0.0,
+            "real": 0.0
+          },
+          "label": "i*pi, exp(-1)",
+          "observed": {
+            "imag": 1.2246467991473532e-16,
+            "real": 0.0
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "candidate_machlib_witness",
+        "priority": 1,
+        "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card."
+      },
+      "sampleCount": 1,
+      "standardForm": "exp(i*pi) + 1 = 0",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "prime signature log recovery",
+      "claimBoundary": "Requires p > 1; signature notation does not prove prime-distribution claims.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "exact_identity",
+      "emlForm": "eml(ln(ln(p)), 1)",
+      "id": "prime_signature_log_recovery",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 0.6931471805599453
+          },
+          "label": "p=2",
+          "observed": {
+            "imag": 0.0,
+            "real": 0.6931471805599453
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        },
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 1.0986122886681098
+          },
+          "label": "p=3",
+          "observed": {
+            "imag": 0.0,
+            "real": 1.0986122886681098
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        },
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 2.833213344056216
+          },
+          "label": "p=17",
+          "observed": {
+            "imag": 0.0,
+            "real": 2.833213344056216
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        },
+        {
+          "absError": 0.0,
+          "expected": {
+            "imag": 0.0,
+            "real": 4.61512051684126
+          },
+          "label": "p=101",
+          "observed": {
+            "imag": 0.0,
+            "real": 4.61512051684126
+          },
+          "pass": true,
+          "tolerance": 1e-09
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "candidate_machlib_witness",
+        "priority": 1,
+        "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card."
+      },
+      "sampleCount": 4,
+      "standardForm": "ln(p)",
       "validationStatus": "pass"
     },
     {
@@ -427,6 +826,11 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
       "sampleCount": 6,
       "standardForm": "exp(d/dt) - 1",
       "validationStatus": "pass"
@@ -501,6 +905,11 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
       "sampleCount": 3,
       "standardForm": "(q^n - 1) / (q - 1), q=exp(x)",
       "validationStatus": "pass"
@@ -575,6 +984,11 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
       "sampleCount": 3,
       "standardForm": "exp(exp(x) - 1)",
       "validationStatus": "pass"
@@ -649,6 +1063,11 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
       "sampleCount": 3,
       "standardForm": "1 - exp(2*pi*i*n*tau)",
       "validationStatus": "pass"
@@ -744,6 +1163,11 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
       "sampleCount": 6,
       "standardForm": "Integral x^(s-1)/(exp(x)-lambda) dx = Gamma(s)*Li_s(lambda)/lambda",
       "validationStatus": "pass"
@@ -818,6 +1242,11 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
       "sampleCount": 3,
       "standardForm": "x^rho",
       "validationStatus": "pass"
@@ -864,12 +1293,847 @@
       ],
       "promoteToPublicAtlas": false,
       "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "blocked_public_claim",
+        "priority": 5,
+        "rationale": "Must stay blocked unless a separate proof, benchmark, or reviewer decision changes the boundary."
+      },
       "sampleCount": 2,
       "standardForm": "|x^rho| = sqrt(x) for non-trivial zeros on Re(rho)=1/2",
       "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Chebyshev theta via prime signatures",
+      "claimBoundary": "Finite-sum rewrite only; no prime number theorem claim.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "standard_rewrite",
+      "emlForm": "sum_{p <= x} eml(sigma(p), 1)",
+      "id": "theta_prime_signature_sum",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
+      "sampleCount": 1,
+      "standardForm": "theta(x) = sum_{p <= x} ln(p)",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Chebyshev psi via prime signatures",
+      "claimBoundary": "Finite-sum rewrite only; no explicit-formula proof.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "standard_rewrite",
+      "emlForm": "sum_{p^k <= x} eml(sigma(p), 1)",
+      "id": "psi_prime_power_sum",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
+      "sampleCount": 1,
+      "standardForm": "psi(x) = sum_{p^k <= x} ln(p)",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "prime number theorem signature form",
+      "claimBoundary": "Asymptotic theorem restatement only; no proof or improved bound.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "standard_rewrite",
+      "emlForm": "pi(x) ~ x / eml(sigma(x), 1)",
+      "id": "prime_number_theorem_signature",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
+      "sampleCount": 1,
+      "standardForm": "pi(x) ~ x / ln(x)",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "polylog/Lerch extension",
+      "claimBoundary": "Named-function mapping only; no new special-function theorem.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "standard_rewrite",
+      "emlForm": "Mellin kernel with exp/log boundary parameters",
+      "id": "polylog_lerch_extension",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
+      "sampleCount": 1,
+      "standardForm": "Gamma(s) Phi(z,s,a)",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "statistical mechanics triad",
+      "claimBoundary": "Pedagogical boundary pattern; no new physics theorem.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "heuristic_analogy",
+      "emlForm": "eml(x, exp(-1)), eml(x, 1), eml(x, e)",
+      "id": "stat_mechanics_triad",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_expository_only",
+        "priority": 4,
+        "rationale": "Good explanatory lens, not a verifier or theorem lane."
+      },
+      "sampleCount": 1,
+      "standardForm": "Fermi, Maxwell, Bose denominators",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Stefan-Boltzmann zeta(4) bridge",
+      "claimBoundary": "Classical identity restatement; no new physical derivation.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "standard_rewrite",
+      "emlForm": "Integral x^3/eml(x,e) dx",
+      "id": "stefan_boltzmann_zeta4",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
+      "sampleCount": 1,
+      "standardForm": "Integral x^3/(exp(x)-1) dx = pi^4/15",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "arithmetic gas partition function",
+      "claimBoundary": "Known Bost-Connes style analogy; no theorem claim.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "heuristic_analogy",
+      "emlForm": "Euler product factors as EML exponentials",
+      "id": "arithmetic_gas_partition",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_expository_only",
+        "priority": 4,
+        "rationale": "Good explanatory lens, not a verifier or theorem lane."
+      },
+      "sampleCount": 1,
+      "standardForm": "zeta as bosonic partition function",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Dedekind eta EML product",
+      "claimBoundary": "Numerical/product observation; no modular-form theorem.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "numeric_observation",
+      "emlForm": "product of -eml(2*pi*i*n*tau, e) factors",
+      "id": "dedekind_eta_product_numeric",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "needs_reproduction_benchmark",
+        "priority": 3,
+        "rationale": "Observation should remain internal until the benchmark is independently reproducible."
+      },
+      "sampleCount": 1,
+      "standardForm": "eta(tau) product",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "string eta critical-dimension note",
+      "claimBoundary": "Pedagogical analogy; no string-theory theorem.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "heuristic_analogy",
+      "emlForm": "eta factors routed through EML product factors",
+      "id": "string_eta_critical_dimension",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_expository_only",
+        "priority": 4,
+        "rationale": "Good explanatory lens, not a verifier or theorem lane."
+      },
+      "sampleCount": 1,
+      "standardForm": "eta(tau)^-24 and zeta regularization",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "quaternionic null sphere",
+      "claimBoundary": "Quaternionic identity candidate needs dedicated algebra verifier.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "numeric_observation",
+      "emlForm": "eml(q, exp(-1)) = 0",
+      "id": "quaternionic_null_sphere",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "needs_reproduction_benchmark",
+        "priority": 3,
+        "rationale": "Observation should remain internal until the benchmark is independently reproducible."
+      },
+      "sampleCount": 1,
+      "standardForm": "exp(q) = -1 for pure |q| = pi",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Hopf fibration null analogy",
+      "claimBoundary": "Analogy only; octonionic case is blocked until formalized.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "heuristic_analogy",
+      "emlForm": "EML null sets across C/H/O",
+      "id": "hopf_fibration_null_analogy",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_expository_only",
+        "priority": 4,
+        "rationale": "Good explanatory lens, not a verifier or theorem lane."
+      },
+      "sampleCount": 1,
+      "standardForm": "division-algebra null-set dimensions",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "GUE spacing null result",
+      "claimBoundary": "Recorded null result; no spectral correspondence claim.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "numeric_observation",
+      "emlForm": "prime-signature gap experiment",
+      "id": "gue_spacing_null_result",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "needs_reproduction_benchmark",
+        "priority": 3,
+        "rationale": "Observation should remain internal until the benchmark is independently reproducible."
+      },
+      "sampleCount": 1,
+      "standardForm": "Delta sigma(p) vs zeta zero spacings",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "prime signature sequence",
+      "claimBoundary": "Coordinate projection only; no prime-distribution theorem.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "numeric_observation",
+      "emlForm": "zero of eml(x,p)",
+      "id": "prime_signature_sequence",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "needs_reproduction_benchmark",
+        "priority": 3,
+        "rationale": "Observation should remain internal until the benchmark is independently reproducible."
+      },
+      "sampleCount": 1,
+      "standardForm": "sigma(p)=ln(ln(p))",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Mellin deformation family",
+      "claimBoundary": "Uses corrected polylog factor; no zero-free-region claim.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "standard_rewrite",
+      "emlForm": "Integral x^(s-1)/eml(x, exp(log(lambda))) dx",
+      "id": "mellin_deformation_family",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
+      "sampleCount": 1,
+      "standardForm": "Integral x^(s-1)/(exp(x)-lambda) dx",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "D_n operator family",
+      "claimBoundary": "Exploratory family; not validated as universal algebra.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "heuristic_analogy",
+      "emlForm": "higher-order duality engine",
+      "id": "operator_family_dn",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_expository_only",
+        "priority": 4,
+        "rationale": "Good explanatory lens, not a verifier or theorem lane."
+      },
+      "sampleCount": 1,
+      "standardForm": "exp(n*x) - (ln y)^n",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Heaviside operational calculus",
+      "claimBoundary": "Operator-domain proof remains future work.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "standard_rewrite",
+      "emlForm": "eml(D, e)",
+      "id": "finite_difference_heaviside",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "keep_private_symbolic_or_numeric_verifier",
+        "priority": 2,
+        "rationale": "Useful Atlas support material, but needs domain notes before public promotion."
+      },
+      "sampleCount": 1,
+      "standardForm": "exp(D) - 1 = Delta",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "SuperBEST cost boundary",
+      "claimBoundary": "Blocked from public promotion without cost-lab evidence.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "conjectural_or_blocked",
+      "emlForm": "Atlas cost claims routed through evidence packets",
+      "id": "superbest_cost_boundary",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "blocked_public_claim",
+        "priority": 5,
+        "rationale": "Must stay blocked unless a separate proof, benchmark, or reviewer decision changes the boundary."
+      },
+      "sampleCount": 1,
+      "standardForm": "public tree cost vs internal DAG cost",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "symbolic regression prediction",
+      "claimBoundary": "Benchmark-only; no theorem or zeta-zero discovery claim.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "numeric_observation",
+      "emlForm": "EML-shaped critical-line basis",
+      "id": "symbolic_regression_prediction",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "needs_reproduction_benchmark",
+        "priority": 3,
+        "rationale": "Observation should remain internal until the benchmark is independently reproducible."
+      },
+      "sampleCount": 1,
+      "standardForm": "template search on psi(x)-x",
+      "validationStatus": "pass"
+    },
+    {
+      "atlasObject": "Riemann-EML dictionary",
+      "claimBoundary": "Dictionary is notation/grammar unless separately proved.",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "classification": "conjectural_or_blocked",
+      "emlForm": "dictionary of Dirichlet, Euler product, xi, explicit formula",
+      "id": "riemann_eml_dictionary",
+      "nonClaims": [
+        "This annex does not replace the public monogate.org Atlas.",
+        "This annex does not create a theorem/proof claim.",
+        "This annex does not create a public SuperBEST savings claim.",
+        "This annex does not prove RH, physics theorems, modular-form theorems, or quantum-group theorems."
+      ],
+      "numericChecks": [
+        {
+          "label": "review-queue-only",
+          "nonClaim": "This entry is classified for review routing only; no numeric or proof validation is asserted.",
+          "pass": true
+        }
+      ],
+      "promoteToPublicAtlas": false,
+      "publicAtlasSource": "https://monogate.org/atlas",
+      "reviewAction": {
+        "action": "blocked_public_claim",
+        "priority": 5,
+        "rationale": "Must stay blocked unless a separate proof, benchmark, or reviewer decision changes the boundary."
+      },
+      "sampleCount": 1,
+      "standardForm": "zeta identities rewritten in EML grammar",
+      "validationStatus": "pass"
     }
   ],
-  "entryCount": 11,
+  "entryCount": 35,
+  "nextProofTargets": [
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "Bose-Einstein denominator",
+      "id": "bose_boundary",
+      "status": "candidate_only_not_proved"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "constants e and 0",
+      "id": "constants_zero_and_e",
+      "status": "candidate_only_not_proved"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "Euler null state",
+      "id": "euler_null_state",
+      "status": "candidate_only_not_proved"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "exp(x)",
+      "id": "exp_from_eml",
+      "status": "candidate_only_not_proved"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "Fermi-Dirac denominator",
+      "id": "fermi_boundary",
+      "status": "candidate_only_not_proved"
+    }
+  ],
   "nonClaims": [
     "The monogate.org Atlas remains the canonical public Atlas.",
     "This annex is an internal evidence and claim-hygiene layer.",
@@ -878,6 +2142,370 @@
     "No package publish or deploy is performed by this script."
   ],
   "publicAtlasSource": "https://monogate.org/atlas",
+  "reviewQueue": [
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "Bose-Einstein denominator",
+      "classification": "exact_identity",
+      "id": "bose_boundary",
+      "priority": 1,
+      "promoteToPublicAtlas": false,
+      "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "constants e and 0",
+      "classification": "exact_identity",
+      "id": "constants_zero_and_e",
+      "priority": 1,
+      "promoteToPublicAtlas": false,
+      "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "Euler null state",
+      "classification": "exact_identity",
+      "id": "euler_null_state",
+      "priority": 1,
+      "promoteToPublicAtlas": false,
+      "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "exp(x)",
+      "classification": "exact_identity",
+      "id": "exp_from_eml",
+      "priority": 1,
+      "promoteToPublicAtlas": false,
+      "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "Fermi-Dirac denominator",
+      "classification": "exact_identity",
+      "id": "fermi_boundary",
+      "priority": 1,
+      "promoteToPublicAtlas": false,
+      "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "ln(y) from EML",
+      "classification": "exact_identity",
+      "id": "ln_from_eml",
+      "priority": 1,
+      "promoteToPublicAtlas": false,
+      "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "Maxwell-Boltzmann boundary",
+      "classification": "exact_identity",
+      "id": "maxwell_boundary",
+      "priority": 1,
+      "promoteToPublicAtlas": false,
+      "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "prime signature log recovery",
+      "classification": "exact_identity",
+      "id": "prime_signature_log_recovery",
+      "priority": 1,
+      "promoteToPublicAtlas": false,
+      "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "candidate_machlib_witness",
+      "atlasObject": "linear subtraction boundary",
+      "classification": "exact_identity",
+      "id": "subtraction_boundary",
+      "priority": 1,
+      "promoteToPublicAtlas": false,
+      "rationale": "Small exact identity suitable for a future checked witness or explicit blocked proof card.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "Bell exponential generating function",
+      "classification": "standard_rewrite",
+      "id": "bell_generating_rewrite",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "Dedekind eta product factor",
+      "classification": "standard_rewrite",
+      "id": "dedekind_eta_factor",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "Heaviside operational calculus",
+      "classification": "standard_rewrite",
+      "id": "finite_difference_heaviside",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "forward difference operator",
+      "classification": "standard_rewrite",
+      "id": "forward_difference_operator",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "Mellin deformation family",
+      "classification": "standard_rewrite",
+      "id": "mellin_deformation_family",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "Mellin/polylog EML kernel",
+      "classification": "standard_rewrite",
+      "id": "mellin_polylog_correction",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "polylog/Lerch extension",
+      "classification": "standard_rewrite",
+      "id": "polylog_lerch_extension",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "prime number theorem signature form",
+      "classification": "standard_rewrite",
+      "id": "prime_number_theorem_signature",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "Chebyshev psi via prime signatures",
+      "classification": "standard_rewrite",
+      "id": "psi_prime_power_sum",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "q-integers",
+      "classification": "standard_rewrite",
+      "id": "q_integer_ratio",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "Stefan-Boltzmann zeta(4) bridge",
+      "classification": "standard_rewrite",
+      "id": "stefan_boltzmann_zeta4",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "Chebyshev theta via prime signatures",
+      "classification": "standard_rewrite",
+      "id": "theta_prime_signature_sum",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_symbolic_or_numeric_verifier",
+      "atlasObject": "zeta explicit-formula term",
+      "classification": "standard_rewrite",
+      "id": "zeta_explicit_formula_rewrite",
+      "priority": 2,
+      "promoteToPublicAtlas": false,
+      "rationale": "Useful Atlas support material, but needs domain notes before public promotion.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "needs_reproduction_benchmark",
+      "atlasObject": "Dedekind eta EML product",
+      "classification": "numeric_observation",
+      "id": "dedekind_eta_product_numeric",
+      "priority": 3,
+      "promoteToPublicAtlas": false,
+      "rationale": "Observation should remain internal until the benchmark is independently reproducible.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "needs_reproduction_benchmark",
+      "atlasObject": "GUE spacing null result",
+      "classification": "numeric_observation",
+      "id": "gue_spacing_null_result",
+      "priority": 3,
+      "promoteToPublicAtlas": false,
+      "rationale": "Observation should remain internal until the benchmark is independently reproducible.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "needs_reproduction_benchmark",
+      "atlasObject": "prime signature sequence",
+      "classification": "numeric_observation",
+      "id": "prime_signature_sequence",
+      "priority": 3,
+      "promoteToPublicAtlas": false,
+      "rationale": "Observation should remain internal until the benchmark is independently reproducible.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "needs_reproduction_benchmark",
+      "atlasObject": "quaternionic null sphere",
+      "classification": "numeric_observation",
+      "id": "quaternionic_null_sphere",
+      "priority": 3,
+      "promoteToPublicAtlas": false,
+      "rationale": "Observation should remain internal until the benchmark is independently reproducible.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "needs_reproduction_benchmark",
+      "atlasObject": "symbolic regression prediction",
+      "classification": "numeric_observation",
+      "id": "symbolic_regression_prediction",
+      "priority": 3,
+      "promoteToPublicAtlas": false,
+      "rationale": "Observation should remain internal until the benchmark is independently reproducible.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_expository_only",
+      "atlasObject": "arithmetic gas partition function",
+      "classification": "heuristic_analogy",
+      "id": "arithmetic_gas_partition",
+      "priority": 4,
+      "promoteToPublicAtlas": false,
+      "rationale": "Good explanatory lens, not a verifier or theorem lane.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_expository_only",
+      "atlasObject": "Hopf fibration null analogy",
+      "classification": "heuristic_analogy",
+      "id": "hopf_fibration_null_analogy",
+      "priority": 4,
+      "promoteToPublicAtlas": false,
+      "rationale": "Good explanatory lens, not a verifier or theorem lane.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_expository_only",
+      "atlasObject": "D_n operator family",
+      "classification": "heuristic_analogy",
+      "id": "operator_family_dn",
+      "priority": 4,
+      "promoteToPublicAtlas": false,
+      "rationale": "Good explanatory lens, not a verifier or theorem lane.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_expository_only",
+      "atlasObject": "statistical mechanics triad",
+      "classification": "heuristic_analogy",
+      "id": "stat_mechanics_triad",
+      "priority": 4,
+      "promoteToPublicAtlas": false,
+      "rationale": "Good explanatory lens, not a verifier or theorem lane.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "keep_private_expository_only",
+      "atlasObject": "string eta critical-dimension note",
+      "classification": "heuristic_analogy",
+      "id": "string_eta_critical_dimension",
+      "priority": 4,
+      "promoteToPublicAtlas": false,
+      "rationale": "Good explanatory lens, not a verifier or theorem lane.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "blocked_public_claim",
+      "atlasObject": "RH modulus statement",
+      "classification": "conjectural_or_blocked",
+      "id": "rh_modulus_boundary",
+      "priority": 5,
+      "promoteToPublicAtlas": false,
+      "rationale": "Must stay blocked unless a separate proof, benchmark, or reviewer decision changes the boundary.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "blocked_public_claim",
+      "atlasObject": "Riemann-EML dictionary",
+      "classification": "conjectural_or_blocked",
+      "id": "riemann_eml_dictionary",
+      "priority": 5,
+      "promoteToPublicAtlas": false,
+      "rationale": "Must stay blocked unless a separate proof, benchmark, or reviewer decision changes the boundary.",
+      "validationStatus": "pass"
+    },
+    {
+      "action": "blocked_public_claim",
+      "atlasObject": "SuperBEST cost boundary",
+      "classification": "conjectural_or_blocked",
+      "id": "superbest_cost_boundary",
+      "priority": 5,
+      "promoteToPublicAtlas": false,
+      "rationale": "Must stay blocked unless a separate proof, benchmark, or reviewer decision changes the boundary.",
+      "validationStatus": "pass"
+    }
+  ],
+  "reviewQueueSummary": {
+    "actionCounts": {
+      "blocked_public_claim": 3,
+      "candidate_machlib_witness": 9,
+      "keep_private_expository_only": 5,
+      "keep_private_symbolic_or_numeric_verifier": 13,
+      "needs_reproduction_benchmark": 5
+    },
+    "candidateMachlibWitnessCount": 5,
+    "publicPromotionCount": 0,
+    "queueCount": 35
+  },
   "schemaVersion": "monogate.eml_atlas_annex.v0",
   "status": "EML_ATLAS_ANNEX_PASS"
 }
