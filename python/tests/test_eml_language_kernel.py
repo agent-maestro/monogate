@@ -12,6 +12,8 @@ import pytest
 from scripts.eml_language_kernel import (
     EmlLanguageError,
     build_fixtures,
+    build_canonical_comparisons,
+    canonicalize_expression,
     language_to_expression_packet,
     normalize_expression,
     parse_program,
@@ -31,11 +33,33 @@ def test_normalizes_eml_and_softplus():
     assert normalized == "exp(x) - ln(ln(1 + exp(y)))"
 
 
+def test_canonical_equivalence_for_eml_expansion():
+    left = canonicalize_expression("eml(x, y)")
+    right = canonicalize_expression("exp(x) - ln(y)")
+    assert left["canonicalHash"] == right["canonicalHash"]
+    assert left["expansionTags"][0]["operator"] == "eml"
+
+
+def test_canonical_equivalence_for_softplus_expansion():
+    left = canonicalize_expression("softplus(x)")
+    right = canonicalize_expression("ln(1 + exp(x))")
+    assert left["canonicalHash"] == right["canonicalHash"]
+    assert left["canonicalAst"] == right["canonicalAst"]
+
+
+def test_canonicalization_sorts_commutative_add_and_mul():
+    assert canonicalize_expression("x + y")["canonicalHash"] == canonicalize_expression("y + x")["canonicalHash"]
+    assert canonicalize_expression("x * y")["canonicalHash"] == canonicalize_expression("y * x")["canonicalHash"]
+
+
 def test_parse_softplus_pair_program():
     program = parse_program(load_fixture("softplus_pair_v0.eml"))
     assert program["schemaVersion"] == "monogate.eml_language_kernel.v0"
     assert program["program_id"] == "softplus_pair_v0"
     assert program["normalized_expression"] == "ln(exp(a) + exp(b))"
+    assert program["canonicalHash"].startswith("sha256:")
+    assert program["surfaceAst"]["kind"] == "op"
+    assert program["expandedAst"] == program["ast"]
     assert program["guards"][0]["kind"] == "positive"
     assert program["inputs"][0]["range"] == {"min": -10.0, "max": 10.0}
 
@@ -46,6 +70,7 @@ def test_parse_let_guard_and_eml_primitive():
     assert program["lets"][0]["normalized_expression"] == "ln(1 + exp(y))"
     assert program["guards"][0]["expression"] == "ln(1 + exp(y))"
     assert program["normalized_expression"] == "exp(x) - ln(ln(1 + exp(y)))"
+    assert [tag["operator"] for tag in program["expansionTags"]] == ["softplus", "eml"]
 
 
 def test_language_program_emits_expression_packet():
@@ -90,6 +115,16 @@ def test_build_fixtures_writes_language_and_packets(tmp_path):
     assert len(list((tmp_path / "language").glob("*_language_2026_05_27.json"))) >= 5
     assert len(list((tmp_path / "packets").glob("*_expression_packet_2026_05_27.json"))) >= 5
     assert len(list((tmp_path / "reports").glob("*_language_kernel_2026_05_27.md"))) >= 5
+    assert (tmp_path / "language" / "eml_language_canonical_comparisons_2026_05_27.json").exists()
+    assert result["comparisons"]["summary"]["equivalent_count"] == 5
+
+
+def test_canonical_comparison_report_has_expected_pairs():
+    comparisons = build_canonical_comparisons()
+    labels = {item["label"] for item in comparisons["comparisons"]}
+    assert "eml primitive expansion" in labels
+    assert "softplus expansion" in labels
+    assert all(item["equivalentByCanonicalization"] for item in comparisons["comparisons"])
 
 
 def test_cli_build_fixtures(tmp_path):
@@ -114,4 +149,3 @@ def test_cli_build_fixtures(tmp_path):
     manifest_path = Path(proc.stdout.strip().split("manifest=", 1)[1])
     manifest = json.loads(manifest_path.read_text())
     assert manifest["status"] == "EML_LANGUAGE_KERNEL_FIXTURES_PASS"
-

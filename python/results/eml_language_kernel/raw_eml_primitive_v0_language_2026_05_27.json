@@ -25,6 +25,33 @@
     "kind": "op",
     "op": "sub"
   },
+  "canonicalAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "var",
+            "name": "x"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "kind": "var",
+            "name": "y"
+          }
+        ],
+        "kind": "op",
+        "op": "ln"
+      }
+    ],
+    "kind": "op",
+    "op": "sub"
+  },
+  "canonicalHash": "sha256:870e00c09ae3236174b70fbb1dd0f27bef57c85481259c8180923991ad9e922c",
   "claim_flags": {
     "certified_safety_claim": false,
     "compiler_behavior_changed": false,
@@ -37,6 +64,38 @@
     "public_savings_claim": false,
     "theorem_proof_claim": false
   },
+  "expandedAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "var",
+            "name": "x"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "kind": "var",
+            "name": "y"
+          }
+        ],
+        "kind": "op",
+        "op": "ln"
+      }
+    ],
+    "kind": "op",
+    "op": "sub"
+  },
+  "expansionTags": [
+    {
+      "expandsTo": "exp(x) - ln(y)",
+      "operator": "eml"
+    }
+  ],
   "family": "eml_primitive",
   "guards": [
     {
@@ -73,5 +132,20 @@
   "program_id": "raw_eml_primitive_v0",
   "schemaVersion": "monogate.eml_language_kernel.v0",
   "source": "program raw_eml_primitive_v0\nfamily eml_primitive\nmeaning Raw EML primitive fixture normalized into exp-minus-log form.\nsource_repo monogate\ninput x unit dimensionless range -4 4\ninput y unit dimensionless range 0.1 10\nguard positive(y)\nreturn eml(x, y)\n",
-  "source_repo": "monogate"
+  "source_repo": "monogate",
+  "surfaceAst": {
+    "args": [
+      {
+        "kind": "var",
+        "name": "x"
+      },
+      {
+        "kind": "var",
+        "name": "y"
+      }
+    ],
+    "kind": "op",
+    "op": "eml"
+  },
+  "surface_expression": "eml(x, y)"
 }

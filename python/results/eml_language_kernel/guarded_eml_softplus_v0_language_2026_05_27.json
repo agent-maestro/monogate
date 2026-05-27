@@ -47,6 +47,55 @@
     "kind": "op",
     "op": "sub"
   },
+  "canonicalAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "var",
+            "name": "x"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "kind": "var",
+                        "name": "y"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "exp"
+                  },
+                  {
+                    "kind": "const",
+                    "value": 1
+                  }
+                ],
+                "kind": "op",
+                "op": "add"
+              }
+            ],
+            "kind": "op",
+            "op": "ln"
+          }
+        ],
+        "kind": "op",
+        "op": "ln"
+      }
+    ],
+    "kind": "op",
+    "op": "sub"
+  },
+  "canonicalHash": "sha256:6a6fbd514b2283fdb15e2b1a58bf1a84ddbe379bf2b63c013f48860b636ca2f3",
   "claim_flags": {
     "certified_safety_claim": false,
     "compiler_behavior_changed": false,
@@ -59,6 +108,64 @@
     "public_savings_claim": false,
     "theorem_proof_claim": false
   },
+  "expandedAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "var",
+            "name": "x"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "const",
+                    "value": 1
+                  },
+                  {
+                    "args": [
+                      {
+                        "kind": "var",
+                        "name": "y"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "exp"
+                  }
+                ],
+                "kind": "op",
+                "op": "add"
+              }
+            ],
+            "kind": "op",
+            "op": "ln"
+          }
+        ],
+        "kind": "op",
+        "op": "ln"
+      }
+    ],
+    "kind": "op",
+    "op": "sub"
+  },
+  "expansionTags": [
+    {
+      "expandsTo": "ln(1 + exp(x))",
+      "operator": "softplus"
+    },
+    {
+      "expandsTo": "exp(x) - ln(y)",
+      "operator": "eml"
+    }
+  ],
   "family": "guarded_eml",
   "guards": [
     {
@@ -101,5 +208,20 @@
   "program_id": "guarded_eml_softplus_v0",
   "schemaVersion": "monogate.eml_language_kernel.v0",
   "source": "program guarded_eml_softplus_v0\nfamily guarded_eml\nmeaning Guarded EML fixture with let binding and softplus positivity.\nsource_repo monogate\ninput x unit dimensionless range -4 4\ninput y unit dimensionless range -8 8\nlet y_safe = softplus(y)\nguard positive(y_safe)\nreturn eml(x, y_safe)\n",
-  "source_repo": "monogate"
+  "source_repo": "monogate",
+  "surfaceAst": {
+    "args": [
+      {
+        "kind": "var",
+        "name": "x"
+      },
+      {
+        "kind": "var",
+        "name": "y_safe"
+      }
+    ],
+    "kind": "op",
+    "op": "eml"
+  },
+  "surface_expression": "eml(x, y_safe)"
 }

@@ -31,6 +31,39 @@
     "kind": "op",
     "op": "ln"
   },
+  "canonicalAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "kind": "var",
+                "name": "a"
+              }
+            ],
+            "kind": "op",
+            "op": "exp"
+          },
+          {
+            "args": [
+              {
+                "kind": "var",
+                "name": "b"
+              }
+            ],
+            "kind": "op",
+            "op": "exp"
+          }
+        ],
+        "kind": "op",
+        "op": "add"
+      }
+    ],
+    "kind": "op",
+    "op": "ln"
+  },
+  "canonicalHash": "sha256:d69591fc0d62cb7d8c6bfb8c53cb91e7a841217261d70c6e6813fc7aac95e58a",
   "claim_flags": {
     "certified_safety_claim": false,
     "compiler_behavior_changed": false,
@@ -43,6 +76,39 @@
     "public_savings_claim": false,
     "theorem_proof_claim": false
   },
+  "expandedAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "kind": "var",
+                "name": "a"
+              }
+            ],
+            "kind": "op",
+            "op": "exp"
+          },
+          {
+            "args": [
+              {
+                "kind": "var",
+                "name": "b"
+              }
+            ],
+            "kind": "op",
+            "op": "exp"
+          }
+        ],
+        "kind": "op",
+        "op": "add"
+      }
+    ],
+    "kind": "op",
+    "op": "ln"
+  },
+  "expansionTags": [],
   "family": "softplus_logsumexp",
   "guards": [
     {
@@ -79,5 +145,38 @@
   "program_id": "softplus_pair_v0",
   "schemaVersion": "monogate.eml_language_kernel.v0",
   "source": "program softplus_pair_v0\nfamily softplus_logsumexp\nmeaning Small log-sum-exp style expression for EML language kernel intake.\nsource_repo monogate\ninput a unit dimensionless range -10 10\ninput b unit dimensionless range -10 10\nguard positive(exp(a) + exp(b))\nreturn ln(exp(a) + exp(b))\n",
-  "source_repo": "monogate"
+  "source_repo": "monogate",
+  "surfaceAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "kind": "var",
+                "name": "a"
+              }
+            ],
+            "kind": "op",
+            "op": "exp"
+          },
+          {
+            "args": [
+              {
+                "kind": "var",
+                "name": "b"
+              }
+            ],
+            "kind": "op",
+            "op": "exp"
+          }
+        ],
+        "kind": "op",
+        "op": "add"
+      }
+    ],
+    "kind": "op",
+    "op": "ln"
+  },
+  "surface_expression": "ln(exp(a) + exp(b))"
 }

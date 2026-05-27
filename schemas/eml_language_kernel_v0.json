@@ -9,10 +9,15 @@
     "program_id",
     "family",
     "source",
+    "surface_expression",
     "normalized_expression",
     "inputs",
     "guards",
     "lets",
+    "surfaceAst",
+    "expandedAst",
+    "canonicalAst",
+    "canonicalHash",
     "claim_flags"
   ],
   "properties": {
@@ -23,6 +28,7 @@
     },
     "family": { "type": "string", "minLength": 1 },
     "source": { "type": "string", "minLength": 1 },
+    "surface_expression": { "type": "string", "minLength": 1 },
     "physical_meaning": { "type": "string" },
     "source_repo": { "type": "string" },
     "normalized_expression": { "type": "string", "minLength": 1 },
@@ -76,6 +82,22 @@
       }
     },
     "ast": { "type": "object" },
+    "surfaceAst": { "type": "object" },
+    "expandedAst": { "type": "object" },
+    "canonicalAst": { "type": "object" },
+    "canonicalHash": { "type": "string" },
+    "expansionTags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["operator", "expandsTo"],
+        "properties": {
+          "operator": { "type": "string" },
+          "expandsTo": { "type": "string" }
+        }
+      }
+    },
     "lowering": { "type": "object" },
     "claim_flags": {
       "type": "object",

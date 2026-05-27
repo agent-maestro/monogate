@@ -1,0 +1,916 @@
+{
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "comparisons": [
+    {
+      "claimBoundary": "Structural canonicalization only; not a semantic proof or compiler rewrite claim.",
+      "equivalentByCanonicalization": true,
+      "label": "eml primitive expansion",
+      "left": {
+        "canonicalAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "y"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "canonicalHash": "sha256:870e00c09ae3236174b70fbb1dd0f27bef57c85481259c8180923991ad9e922c",
+        "expandedAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "y"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "expandedExpression": "exp(x) - ln(y)",
+        "expansionTags": [
+          {
+            "expandsTo": "exp(x) - ln(y)",
+            "operator": "eml"
+          }
+        ],
+        "surfaceAst": {
+          "args": [
+            {
+              "kind": "var",
+              "name": "x"
+            },
+            {
+              "kind": "var",
+              "name": "y"
+            }
+          ],
+          "kind": "op",
+          "op": "eml"
+        },
+        "surfaceExpression": "eml(x, y)"
+      },
+      "right": {
+        "canonicalAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "y"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "canonicalHash": "sha256:870e00c09ae3236174b70fbb1dd0f27bef57c85481259c8180923991ad9e922c",
+        "expandedAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "y"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "expandedExpression": "exp(x) - ln(y)",
+        "expansionTags": [],
+        "surfaceAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "y"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "surfaceExpression": "exp(x) - ln(y)"
+      }
+    },
+    {
+      "claimBoundary": "Structural canonicalization only; not a semantic proof or compiler rewrite claim.",
+      "equivalentByCanonicalization": true,
+      "label": "softplus expansion",
+      "left": {
+        "canonicalAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "x"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "exp"
+                },
+                {
+                  "kind": "const",
+                  "value": 1
+                }
+              ],
+              "kind": "op",
+              "op": "add"
+            }
+          ],
+          "kind": "op",
+          "op": "ln"
+        },
+        "canonicalHash": "sha256:37a573a048a7e72ee7cce8ead6248c574e8164f218530b93cfaaea8bc6d725b7",
+        "expandedAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "const",
+                  "value": 1
+                },
+                {
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "x"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "exp"
+                }
+              ],
+              "kind": "op",
+              "op": "add"
+            }
+          ],
+          "kind": "op",
+          "op": "ln"
+        },
+        "expandedExpression": "ln(1 + exp(x))",
+        "expansionTags": [
+          {
+            "expandsTo": "ln(1 + exp(x))",
+            "operator": "softplus"
+          }
+        ],
+        "surfaceAst": {
+          "args": [
+            {
+              "kind": "var",
+              "name": "x"
+            }
+          ],
+          "kind": "op",
+          "op": "softplus"
+        },
+        "surfaceExpression": "softplus(x)"
+      },
+      "right": {
+        "canonicalAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "x"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "exp"
+                },
+                {
+                  "kind": "const",
+                  "value": 1
+                }
+              ],
+              "kind": "op",
+              "op": "add"
+            }
+          ],
+          "kind": "op",
+          "op": "ln"
+        },
+        "canonicalHash": "sha256:37a573a048a7e72ee7cce8ead6248c574e8164f218530b93cfaaea8bc6d725b7",
+        "expandedAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "const",
+                  "value": 1
+                },
+                {
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "x"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "exp"
+                }
+              ],
+              "kind": "op",
+              "op": "add"
+            }
+          ],
+          "kind": "op",
+          "op": "ln"
+        },
+        "expandedExpression": "ln(1 + exp(x))",
+        "expansionTags": [],
+        "surfaceAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "const",
+                  "value": 1
+                },
+                {
+                  "args": [
+                    {
+                      "kind": "var",
+                      "name": "x"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "exp"
+                }
+              ],
+              "kind": "op",
+              "op": "add"
+            }
+          ],
+          "kind": "op",
+          "op": "ln"
+        },
+        "surfaceExpression": "ln(1 + exp(x))"
+      }
+    },
+    {
+      "claimBoundary": "Structural canonicalization only; not a semantic proof or compiler rewrite claim.",
+      "equivalentByCanonicalization": true,
+      "label": "guarded softplus EML expanded shape",
+      "left": {
+        "canonicalAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "args": [
+                        {
+                          "args": [
+                            {
+                              "kind": "var",
+                              "name": "y"
+                            }
+                          ],
+                          "kind": "op",
+                          "op": "exp"
+                        },
+                        {
+                          "kind": "const",
+                          "value": 1
+                        }
+                      ],
+                      "kind": "op",
+                      "op": "add"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "ln"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "canonicalHash": "sha256:6a6fbd514b2283fdb15e2b1a58bf1a84ddbe379bf2b63c013f48860b636ca2f3",
+        "expandedAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "args": [
+                        {
+                          "kind": "const",
+                          "value": 1
+                        },
+                        {
+                          "args": [
+                            {
+                              "kind": "var",
+                              "name": "y"
+                            }
+                          ],
+                          "kind": "op",
+                          "op": "exp"
+                        }
+                      ],
+                      "kind": "op",
+                      "op": "add"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "ln"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "expandedExpression": "exp(x) - ln(ln(1 + exp(y)))",
+        "expansionTags": [
+          {
+            "expandsTo": "exp(x) - ln(y)",
+            "operator": "eml"
+          },
+          {
+            "expandsTo": "ln(1 + exp(x))",
+            "operator": "softplus"
+          }
+        ],
+        "surfaceAst": {
+          "args": [
+            {
+              "kind": "var",
+              "name": "x"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "y"
+                }
+              ],
+              "kind": "op",
+              "op": "softplus"
+            }
+          ],
+          "kind": "op",
+          "op": "eml"
+        },
+        "surfaceExpression": "eml(x, softplus(y))"
+      },
+      "right": {
+        "canonicalAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "args": [
+                        {
+                          "args": [
+                            {
+                              "kind": "var",
+                              "name": "y"
+                            }
+                          ],
+                          "kind": "op",
+                          "op": "exp"
+                        },
+                        {
+                          "kind": "const",
+                          "value": 1
+                        }
+                      ],
+                      "kind": "op",
+                      "op": "add"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "ln"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "canonicalHash": "sha256:6a6fbd514b2283fdb15e2b1a58bf1a84ddbe379bf2b63c013f48860b636ca2f3",
+        "expandedAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "args": [
+                        {
+                          "kind": "const",
+                          "value": 1
+                        },
+                        {
+                          "args": [
+                            {
+                              "kind": "var",
+                              "name": "y"
+                            }
+                          ],
+                          "kind": "op",
+                          "op": "exp"
+                        }
+                      ],
+                      "kind": "op",
+                      "op": "add"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "ln"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "expandedExpression": "exp(x) - ln(ln(1 + exp(y)))",
+        "expansionTags": [],
+        "surfaceAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "x"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "args": [
+                        {
+                          "kind": "const",
+                          "value": 1
+                        },
+                        {
+                          "args": [
+                            {
+                              "kind": "var",
+                              "name": "y"
+                            }
+                          ],
+                          "kind": "op",
+                          "op": "exp"
+                        }
+                      ],
+                      "kind": "op",
+                      "op": "add"
+                    }
+                  ],
+                  "kind": "op",
+                  "op": "ln"
+                }
+              ],
+              "kind": "op",
+              "op": "ln"
+            }
+          ],
+          "kind": "op",
+          "op": "sub"
+        },
+        "surfaceExpression": "exp(x) - ln(ln(1 + exp(y)))"
+      }
+    },
+    {
+      "claimBoundary": "Structural canonicalization only; not a semantic proof or compiler rewrite claim.",
+      "equivalentByCanonicalization": true,
+      "label": "commutative add canonicalization",
+      "left": {
+        "canonicalAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "a"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "b"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            }
+          ],
+          "kind": "op",
+          "op": "add"
+        },
+        "canonicalHash": "sha256:23d43f8e3d2d42a143388c180823be9d567fc81e16439b444acb142f3c6d7c3c",
+        "expandedAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "a"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "b"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            }
+          ],
+          "kind": "op",
+          "op": "add"
+        },
+        "expandedExpression": "exp(a) + exp(b)",
+        "expansionTags": [],
+        "surfaceAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "a"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "b"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            }
+          ],
+          "kind": "op",
+          "op": "add"
+        },
+        "surfaceExpression": "exp(a) + exp(b)"
+      },
+      "right": {
+        "canonicalAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "a"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "b"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            }
+          ],
+          "kind": "op",
+          "op": "add"
+        },
+        "canonicalHash": "sha256:23d43f8e3d2d42a143388c180823be9d567fc81e16439b444acb142f3c6d7c3c",
+        "expandedAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "b"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "a"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            }
+          ],
+          "kind": "op",
+          "op": "add"
+        },
+        "expandedExpression": "exp(b) + exp(a)",
+        "expansionTags": [],
+        "surfaceAst": {
+          "args": [
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "b"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            },
+            {
+              "args": [
+                {
+                  "kind": "var",
+                  "name": "a"
+                }
+              ],
+              "kind": "op",
+              "op": "exp"
+            }
+          ],
+          "kind": "op",
+          "op": "add"
+        },
+        "surfaceExpression": "exp(b) + exp(a)"
+      }
+    },
+    {
+      "claimBoundary": "Structural canonicalization only; not a semantic proof or compiler rewrite claim.",
+      "equivalentByCanonicalization": true,
+      "label": "commutative mul canonicalization",
+      "left": {
+        "canonicalAst": {
+          "args": [
+            {
+              "kind": "var",
+              "name": "x"
+            },
+            {
+              "kind": "var",
+              "name": "y"
+            }
+          ],
+          "kind": "op",
+          "op": "mul"
+        },
+        "canonicalHash": "sha256:c2aa9acb966e083d76ab86a4e081012517e80703c75728244beb658475204cbc",
+        "expandedAst": {
+          "args": [
+            {
+              "kind": "var",
+              "name": "x"
+            },
+            {
+              "kind": "var",
+              "name": "y"
+            }
+          ],
+          "kind": "op",
+          "op": "mul"
+        },
+        "expandedExpression": "x * y",
+        "expansionTags": [],
+        "surfaceAst": {
+          "args": [
+            {
+              "kind": "var",
+              "name": "x"
+            },
+            {
+              "kind": "var",
+              "name": "y"
+            }
+          ],
+          "kind": "op",
+          "op": "mul"
+        },
+        "surfaceExpression": "x * y"
+      },
+      "right": {
+        "canonicalAst": {
+          "args": [
+            {
+              "kind": "var",
+              "name": "x"
+            },
+            {
+              "kind": "var",
+              "name": "y"
+            }
+          ],
+          "kind": "op",
+          "op": "mul"
+        },
+        "canonicalHash": "sha256:c2aa9acb966e083d76ab86a4e081012517e80703c75728244beb658475204cbc",
+        "expandedAst": {
+          "args": [
+            {
+              "kind": "var",
+              "name": "y"
+            },
+            {
+              "kind": "var",
+              "name": "x"
+            }
+          ],
+          "kind": "op",
+          "op": "mul"
+        },
+        "expandedExpression": "y * x",
+        "expansionTags": [],
+        "surfaceAst": {
+          "args": [
+            {
+              "kind": "var",
+              "name": "y"
+            },
+            {
+              "kind": "var",
+              "name": "x"
+            }
+          ],
+          "kind": "op",
+          "op": "mul"
+        },
+        "surfaceExpression": "y * x"
+      }
+    }
+  ],
+  "date": "2026-05-27",
+  "nonClaims": [
+    "Canonical equivalence is structural normalization, not semantic proof.",
+    "Canonical equivalence does not change compiler lowering.",
+    "Canonical equivalence does not create public savings claims."
+  ],
+  "schemaVersion": "monogate.eml_canonical_comparison.v0",
+  "status": "EML_CANONICAL_COMPARISONS_PASS",
+  "summary": {
+    "comparison_count": 5,
+    "equivalent_count": 5
+  }
+}

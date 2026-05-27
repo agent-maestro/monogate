@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import ast
 import copy
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -86,6 +87,23 @@ def normalize_expression(text: str, lets: dict[str, ast.AST] | None = None) -> s
     return _unparse(normalized)
 
 
+def _call_name(node: ast.AST) -> str | None:
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+        return node.func.id
+    return None
+
+
+def _collect_expansion_tags(text: str) -> list[dict[str, str]]:
+    tags = []
+    for node in ast.walk(_parse_expr(text)):
+        name = _call_name(node)
+        if name == "eml":
+            tags.append({"operator": "eml", "expandsTo": "exp(x) - ln(y)"})
+        elif name == "softplus":
+            tags.append({"operator": "softplus", "expandsTo": "ln(1 + exp(x))"})
+    return tags
+
+
 def _expr_ast(node: ast.AST) -> dict[str, Any]:
     if isinstance(node, ast.Name):
         return {"kind": "var", "name": node.id}
@@ -107,6 +125,35 @@ def _expr_ast(node: ast.AST) -> dict[str, Any]:
     if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
         return {"kind": "op", "op": node.func.id, "args": [_expr_ast(arg) for arg in node.args]}
     raise EmlLanguageError(f"unsupported AST node: {ast.dump(node)}")
+
+
+def _canonical_ast(node: dict[str, Any]) -> dict[str, Any]:
+    if node["kind"] != "op":
+        return node
+    args = [_canonical_ast(arg) for arg in node["args"]]
+    if node["op"] in {"add", "mul"}:
+        args = sorted(args, key=lambda item: json.dumps(item, sort_keys=True, separators=(",", ":")))
+    return {"kind": "op", "op": node["op"], "args": args}
+
+
+def _canonical_hash(node: dict[str, Any]) -> str:
+    material = json.dumps(node, sort_keys=True, separators=(",", ":")).encode()
+    return "sha256:" + hashlib.sha256(material).hexdigest()
+
+
+def canonicalize_expression(text: str, lets: dict[str, ast.AST] | None = None) -> dict[str, Any]:
+    expanded = normalize_expression(text, lets)
+    expanded_ast = _expr_ast(_parse_expr(expanded))
+    canonical_ast = _canonical_ast(expanded_ast)
+    return {
+        "surfaceExpression": text,
+        "expandedExpression": expanded,
+        "surfaceAst": _expr_ast(_parse_expr(text)),
+        "expandedAst": expanded_ast,
+        "canonicalAst": canonical_ast,
+        "canonicalHash": _canonical_hash(canonical_ast),
+        "expansionTags": _collect_expansion_tags(text),
+    }
 
 
 def _parse_input(line: str) -> dict[str, Any]:
@@ -184,18 +231,27 @@ def parse_program(source: str) -> dict[str, Any]:
     if not program_id or not family or not return_expr or not inputs:
         raise EmlLanguageError("program, family, input, and return are required")
     normalized = normalize_expression(return_expr, let_asts)
+    canonical = canonicalize_expression(return_expr, let_asts)
+    expansion_tags = [tag for item in lets for tag in _collect_expansion_tags(item["expression"])]
+    expansion_tags.extend(canonical["expansionTags"])
     return {
         "schemaVersion": SCHEMA_VERSION,
         "program_id": program_id,
         "family": family,
         "source": source,
+        "surface_expression": return_expr,
         "physical_meaning": meaning or f"EML language program {program_id}.",
         "source_repo": source_repo,
         "normalized_expression": normalized,
         "inputs": inputs,
         "guards": guards,
         "lets": lets,
-        "ast": _expr_ast(_parse_expr(normalized)),
+        "surfaceAst": canonical["surfaceAst"],
+        "expandedAst": canonical["expandedAst"],
+        "canonicalAst": canonical["canonicalAst"],
+        "canonicalHash": canonical["canonicalHash"],
+        "expansionTags": expansion_tags,
+        "ast": canonical["expandedAst"],
         "claim_flags": dict(DEFAULT_CLAIM_FLAGS),
         "nonClaims": [
             "EML Language Kernel output is candidate-only.",
@@ -246,6 +302,11 @@ def render_report(program: dict[str, Any], packet: dict[str, Any]) -> str:
             "",
             f"`{program['normalized_expression']}`",
             "",
+            "## Canonical Form",
+            "",
+            f"- Canonical hash: `{program['canonicalHash']}`",
+            f"- Expansion tags: `{len(program['expansionTags'])}`",
+            "",
             "## Guards",
             "",
             *[
@@ -268,6 +329,79 @@ def render_report(program: dict[str, Any], packet: dict[str, Any]) -> str:
             "",
         ]
     )
+
+
+def compare_expressions(label: str, left: str, right: str) -> dict[str, Any]:
+    left_canonical = canonicalize_expression(left)
+    right_canonical = canonicalize_expression(right)
+    return {
+        "label": label,
+        "left": left_canonical,
+        "right": right_canonical,
+        "equivalentByCanonicalization": left_canonical["canonicalHash"] == right_canonical["canonicalHash"],
+        "claimBoundary": "Structural canonicalization only; not a semantic proof or compiler rewrite claim.",
+    }
+
+
+def build_canonical_comparisons() -> dict[str, Any]:
+    comparisons = [
+        compare_expressions("eml primitive expansion", "eml(x, y)", "exp(x) - ln(y)"),
+        compare_expressions("softplus expansion", "softplus(x)", "ln(1 + exp(x))"),
+        compare_expressions(
+            "guarded softplus EML expanded shape",
+            "eml(x, softplus(y))",
+            "exp(x) - ln(ln(1 + exp(y)))",
+        ),
+        compare_expressions("commutative add canonicalization", "exp(a) + exp(b)", "exp(b) + exp(a)"),
+        compare_expressions("commutative mul canonicalization", "x * y", "y * x"),
+    ]
+    return {
+        "schemaVersion": "monogate.eml_canonical_comparison.v0",
+        "date": DATE,
+        "status": "EML_CANONICAL_COMPARISONS_PASS",
+        "comparisons": comparisons,
+        "summary": {
+            "comparison_count": len(comparisons),
+            "equivalent_count": sum(1 for item in comparisons if item["equivalentByCanonicalization"]),
+        },
+        "claimFlags": dict(DEFAULT_CLAIM_FLAGS),
+        "nonClaims": [
+            "Canonical equivalence is structural normalization, not semantic proof.",
+            "Canonical equivalence does not change compiler lowering.",
+            "Canonical equivalence does not create public savings claims.",
+        ],
+    }
+
+
+def render_comparison_report(payload: dict[str, Any]) -> str:
+    lines = [
+        "# EML-L2 Canonical Operator Tree Comparisons",
+        "",
+        f"Date: {DATE}",
+        "",
+        f"Status: `{payload['status']}`",
+        "",
+        "| Pair | Equivalent | Left hash | Right hash |",
+        "|---|---:|---|---|",
+    ]
+    for item in payload["comparisons"]:
+        lines.append(
+            f"| {item['label']} | `{item['equivalentByCanonicalization']}` | "
+            f"`{item['left']['canonicalHash']}` | `{item['right']['canonicalHash']}` |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Boundary",
+            "",
+            "- Structural canonicalization only.",
+            "- No semantic proof claim.",
+            "- No compiler rewrite claim.",
+            "- No public savings claim.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
 
 
 def build_one(source_path: Path, out_dir: Path, packet_dir: Path, report_dir: Path) -> dict[str, Any]:
@@ -296,6 +430,11 @@ def build_one(source_path: Path, out_dir: Path, packet_dir: Path, report_dir: Pa
 
 def build_fixtures(fixtures_dir: Path, out_dir: Path, packet_dir: Path, report_dir: Path) -> dict[str, Any]:
     built = [build_one(path, out_dir, packet_dir, report_dir) for path in sorted(fixtures_dir.glob("*.eml"))]
+    comparisons = build_canonical_comparisons()
+    comparison_path = out_dir / f"eml_language_canonical_comparisons_{DATE.replace('-', '_')}.json"
+    comparison_report_path = report_dir / f"eml_language_canonical_comparisons_{DATE.replace('-', '_')}.md"
+    comparison_path.write_text(json.dumps(comparisons, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    comparison_report_path.write_text(render_comparison_report(comparisons), encoding="utf-8")
     manifest = {
         "schemaVersion": "monogate.eml_language_kernel_fixture_manifest.v0",
         "date": DATE,
@@ -308,15 +447,24 @@ def build_fixtures(fixtures_dir: Path, out_dir: Path, packet_dir: Path, report_d
                 "normalized_expression": item["program"]["normalized_expression"],
                 "guard_count": len(item["program"]["guards"]),
                 "let_count": len(item["program"]["lets"]),
+                "canonical_hash": item["program"]["canonicalHash"],
+                "expansion_tag_count": len(item["program"]["expansionTags"]),
                 "paths": item["paths"],
             }
             for item in built
         ],
+        "canonicalComparisonPath": str(comparison_path),
         "claimFlags": dict(DEFAULT_CLAIM_FLAGS),
     }
     manifest_path = out_dir / f"eml_language_kernel_manifest_{DATE.replace('-', '_')}.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return {"manifest": manifest, "manifest_path": str(manifest_path), "built": built}
+    return {
+        "manifest": manifest,
+        "manifest_path": str(manifest_path),
+        "comparisons": comparisons,
+        "comparison_path": str(comparison_path),
+        "built": built,
+    }
 
 
 def main() -> int:
@@ -349,4 +497,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

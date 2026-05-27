@@ -57,6 +57,65 @@
     "kind": "op",
     "op": "add"
   },
+  "canonicalAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  },
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  }
+                ],
+                "kind": "op",
+                "op": "mul"
+              }
+            ],
+            "kind": "op",
+            "op": "neg"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  },
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  }
+                ],
+                "kind": "op",
+                "op": "mul"
+              }
+            ],
+            "kind": "op",
+            "op": "neg"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      }
+    ],
+    "kind": "op",
+    "op": "add"
+  },
+  "canonicalHash": "sha256:551c36f3c7a9a800aa83d84c3cdaabe33c774353bb4d8f52da15911571de6d3d",
   "claim_flags": {
     "certified_safety_claim": false,
     "compiler_behavior_changed": false,
@@ -69,6 +128,65 @@
     "public_savings_claim": false,
     "theorem_proof_claim": false
   },
+  "expandedAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  },
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  }
+                ],
+                "kind": "op",
+                "op": "mul"
+              }
+            ],
+            "kind": "op",
+            "op": "neg"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  },
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  }
+                ],
+                "kind": "op",
+                "op": "mul"
+              }
+            ],
+            "kind": "op",
+            "op": "neg"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      }
+    ],
+    "kind": "op",
+    "op": "add"
+  },
+  "expansionTags": [],
   "family": "forge_efrog_fixture",
   "guards": [],
   "inputs": [
@@ -92,5 +210,64 @@
   "program_id": "gaussian_energy_v0",
   "schemaVersion": "monogate.eml_language_kernel.v0",
   "source": "program gaussian_energy_v0\nfamily forge_efrog_fixture\nmeaning Gaussian-like repeated energy fixture for shared-node and replay inspection.\nsource_repo monogate\ninput x unit dimensionless range -8 8\nreturn exp(-(x * x)) + exp(-(x * x))\n",
-  "source_repo": "monogate"
+  "source_repo": "monogate",
+  "surfaceAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  },
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  }
+                ],
+                "kind": "op",
+                "op": "mul"
+              }
+            ],
+            "kind": "op",
+            "op": "neg"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  },
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  }
+                ],
+                "kind": "op",
+                "op": "mul"
+              }
+            ],
+            "kind": "op",
+            "op": "neg"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      }
+    ],
+    "kind": "op",
+    "op": "add"
+  },
+  "surface_expression": "exp(-(x * x)) + exp(-(x * x))"
 }

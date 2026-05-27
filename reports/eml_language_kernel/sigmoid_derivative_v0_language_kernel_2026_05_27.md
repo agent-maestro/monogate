@@ -8,6 +8,11 @@ Status: `EML_LANGUAGE_KERNEL_CANDIDATE_PASS`
 
 `1 / (1 + exp(-x)) * (1 - 1 / (1 + exp(-x)))`
 
+## Canonical Form
+
+- Canonical hash: `sha256:6eda998b3070f828b704bcef4476dfc764d8f4fe76ea0ee985036fb6b699606a`
+- Expansion tags: `0`
+
 ## Guards
 
 - `nonzero` on `1 + exp(-x)`

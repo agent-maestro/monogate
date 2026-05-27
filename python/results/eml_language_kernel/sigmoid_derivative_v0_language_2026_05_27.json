@@ -87,6 +87,95 @@
     "kind": "op",
     "op": "mul"
   },
+  "canonicalAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "const",
+            "value": 1
+          },
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "kind": "var",
+                        "name": "x"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "neg"
+                  }
+                ],
+                "kind": "op",
+                "op": "exp"
+              },
+              {
+                "kind": "const",
+                "value": 1
+              }
+            ],
+            "kind": "op",
+            "op": "add"
+          }
+        ],
+        "kind": "op",
+        "op": "div"
+      },
+      {
+        "args": [
+          {
+            "kind": "const",
+            "value": 1
+          },
+          {
+            "args": [
+              {
+                "kind": "const",
+                "value": 1
+              },
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "kind": "var",
+                            "name": "x"
+                          }
+                        ],
+                        "kind": "op",
+                        "op": "neg"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "exp"
+                  },
+                  {
+                    "kind": "const",
+                    "value": 1
+                  }
+                ],
+                "kind": "op",
+                "op": "add"
+              }
+            ],
+            "kind": "op",
+            "op": "div"
+          }
+        ],
+        "kind": "op",
+        "op": "sub"
+      }
+    ],
+    "kind": "op",
+    "op": "mul"
+  },
+  "canonicalHash": "sha256:6eda998b3070f828b704bcef4476dfc764d8f4fe76ea0ee985036fb6b699606a",
   "claim_flags": {
     "certified_safety_claim": false,
     "compiler_behavior_changed": false,
@@ -99,6 +188,95 @@
     "public_savings_claim": false,
     "theorem_proof_claim": false
   },
+  "expandedAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "const",
+            "value": 1
+          },
+          {
+            "args": [
+              {
+                "kind": "const",
+                "value": 1
+              },
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "kind": "var",
+                        "name": "x"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "neg"
+                  }
+                ],
+                "kind": "op",
+                "op": "exp"
+              }
+            ],
+            "kind": "op",
+            "op": "add"
+          }
+        ],
+        "kind": "op",
+        "op": "div"
+      },
+      {
+        "args": [
+          {
+            "kind": "const",
+            "value": 1
+          },
+          {
+            "args": [
+              {
+                "kind": "const",
+                "value": 1
+              },
+              {
+                "args": [
+                  {
+                    "kind": "const",
+                    "value": 1
+                  },
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "kind": "var",
+                            "name": "x"
+                          }
+                        ],
+                        "kind": "op",
+                        "op": "neg"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "exp"
+                  }
+                ],
+                "kind": "op",
+                "op": "add"
+              }
+            ],
+            "kind": "op",
+            "op": "div"
+          }
+        ],
+        "kind": "op",
+        "op": "sub"
+      }
+    ],
+    "kind": "op",
+    "op": "mul"
+  },
+  "expansionTags": [],
   "family": "sigmoid_logistic",
   "guards": [
     {
@@ -127,5 +305,94 @@
   "program_id": "sigmoid_derivative_v0",
   "schemaVersion": "monogate.eml_language_kernel.v0",
   "source": "program sigmoid_derivative_v0\nfamily sigmoid_logistic\nmeaning Derivative-shaped logistic fixture with repeated sigmoid subexpressions.\nsource_repo monogate\ninput x unit dimensionless range -12 12\nguard nonzero(1 + exp(-x))\nreturn (1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))\n",
-  "source_repo": "monogate"
+  "source_repo": "monogate",
+  "surfaceAst": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "const",
+            "value": 1
+          },
+          {
+            "args": [
+              {
+                "kind": "const",
+                "value": 1
+              },
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "kind": "var",
+                        "name": "x"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "neg"
+                  }
+                ],
+                "kind": "op",
+                "op": "exp"
+              }
+            ],
+            "kind": "op",
+            "op": "add"
+          }
+        ],
+        "kind": "op",
+        "op": "div"
+      },
+      {
+        "args": [
+          {
+            "kind": "const",
+            "value": 1
+          },
+          {
+            "args": [
+              {
+                "kind": "const",
+                "value": 1
+              },
+              {
+                "args": [
+                  {
+                    "kind": "const",
+                    "value": 1
+                  },
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "kind": "var",
+                            "name": "x"
+                          }
+                        ],
+                        "kind": "op",
+                        "op": "neg"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "exp"
+                  }
+                ],
+                "kind": "op",
+                "op": "add"
+              }
+            ],
+            "kind": "op",
+            "op": "div"
+          }
+        ],
+        "kind": "op",
+        "op": "sub"
+      }
+    ],
+    "kind": "op",
+    "op": "mul"
+  },
+  "surface_expression": "(1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))"
 }

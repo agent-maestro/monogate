@@ -8,6 +8,11 @@ Status: `EML_LANGUAGE_KERNEL_CANDIDATE_PASS`
 
 `exp(x) - ln(y)`
 
+## Canonical Form
+
+- Canonical hash: `sha256:870e00c09ae3236174b70fbb1dd0f27bef57c85481259c8180923991ad9e922c`
+- Expansion tags: `1`
+
 ## Guards
 
 - `positive` on `y`
