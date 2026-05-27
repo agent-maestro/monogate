@@ -30,7 +30,7 @@ def claim_by_id(claim_id: str):
 
 def test_fixture_covers_core_lanes():
     lanes = {claim["sourceLane"] for claim in fixture_claims()}
-    assert {"eml", "prediction_market", "external_theory", "electronics", "compiler", "machlib", "ai_answer"}.issubset(lanes)
+    assert {"eml", "prediction_market", "external_theory", "electronics", "compiler", "machlib", "ai_answer", "redteam"}.issubset(lanes)
 
 
 def test_eml_general_speed_claim_is_blocked():
@@ -93,6 +93,23 @@ def test_ai_answer_without_evidence_requires_human_review():
     assert packet["evidenceStrength"] == "none"
     assert packet["allowedSurface"] == "candidate"
     assert "no evidence paths attached" in packet["reviewNotes"]
+
+
+def test_redteam_pass_is_candidate_only_not_public_ready():
+    packet = review_claim(claim_by_id("builder-robust-to-forbidden-claim-injection"))
+    assert packet["decision"] == "candidate_only"
+    assert packet["evidenceStrength"] == "fixture_red_team_pass"
+    assert packet["allowedSurface"] == "candidate"
+    assert "certified_safety_claim" in packet["blockedClaims"]
+    assert "rampart_redteam_packet" in packet["requiredValidators"]
+
+
+def test_redteam_fail_blocks_public_robustness_claim():
+    packet = review_claim(claim_by_id("command-cockpit-robust-to-private-leakage"))
+    assert packet["decision"] == "blocked_public_claim"
+    assert packet["evidenceStrength"] == "fixture_red_team_fail"
+    assert packet["allowedSurface"] == "private"
+    assert "comprehensive_robustness_claim" in packet["blockedClaims"]
 
 
 def test_claim_flags_are_all_false():

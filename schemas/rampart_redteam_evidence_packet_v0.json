@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate RAMPART Red-Team Evidence Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "resultId",
+    "targetAgent",
+    "attackCategory",
+    "evaluatorVerdict",
+    "recommendedRhAction",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.rampart_redteam_evidence_packet.v0" },
+    "packetType": { "const": "rampart_redteam_evidence_packet_v0" },
+    "resultId": { "type": "string", "minLength": 1 },
+    "targetAgent": { "type": "string", "minLength": 1 },
+    "attackCategory": { "type": "string", "minLength": 1 },
+    "evaluatorVerdict": { "enum": ["pass", "fail"] },
+    "recommendedRhAction": {
+      "enum": ["candidate_only", "human_review_required", "blocked_public_claim"]
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

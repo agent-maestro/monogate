@@ -1,0 +1,62 @@
+{
+  "allowedSurface": "candidate",
+  "artifactType": "redteam_result",
+  "blockedClaims": [
+    "certified_safety_claim",
+    "comprehensive_robustness_claim",
+    "production_security_claim"
+  ],
+  "claim": "The Evidence Packet Builder has fixture evidence against forbidden claim flag injection.",
+  "claimFlags": {
+    "autonomous_trading_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "external_theory_endorsed": false,
+    "financial_advice_claim": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "order_placement_performed": false,
+    "production_controller_claim": false,
+    "profitable_strategy_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "claimId": "builder-robust-to-forbidden-claim-injection",
+  "claimType": "redteam_robustness",
+  "date": "2026-05-27",
+  "decision": "candidate_only",
+  "evidencePaths": [
+    "reports/evidence_packets/rt_a1_rampart_compatibility_spike.json",
+    "python/results/rampart_redteam_packets/builder-forbidden-claim-flag-injection-pass_rampart_redteam_packet_2026_05_27.json"
+  ],
+  "evidenceStrength": "fixture_red_team_pass",
+  "evidenceSummary": "RT-A1 fixture pass for forbidden claim flag injection; candidate robustness evidence only.",
+  "nextAction": "keep as candidate packet until required validators pass",
+  "nonClaims": [
+    "RH-A1 is a deterministic review harness, not a proof system.",
+    "RH-A1 does not approve unsupported public claims.",
+    "RH-A1 does not deploy, trade, publish packages, operate hardware, or change compiler behavior.",
+    "No certified safety claim.",
+    "No comprehensive robustness claim.",
+    "No production security claim."
+  ],
+  "packetType": "claim_review_packet_v0",
+  "requestedSurface": "public",
+  "requiredValidators": [
+    "rampart_redteam_packet",
+    "adapter_coverage_review",
+    "regression_ci_guard"
+  ],
+  "reviewNotes": [
+    "artifact_type:redteam_result",
+    "claim_type:redteam_robustness",
+    "requested_surface:public",
+    "evidence_strength:fixture_red_team_pass"
+  ],
+  "schemaVersion": "monogate.claim_review_packet.v0",
+  "sourceLane": "redteam"
+}

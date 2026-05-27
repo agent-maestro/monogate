@@ -86,6 +86,32 @@
       "evidencePaths": [],
       "evidenceSummary": "No validator, replay, expert review, or source packet is attached.",
       "sourceLane": "ai_answer"
+    },
+    {
+      "claimId": "builder-robust-to-forbidden-claim-injection",
+      "claim": "The Evidence Packet Builder has fixture evidence against forbidden claim flag injection.",
+      "claimType": "redteam_robustness",
+      "artifactType": "redteam_result",
+      "requestedSurface": "public",
+      "evidencePaths": [
+        "reports/evidence_packets/rt_a1_rampart_compatibility_spike.json",
+        "python/results/rampart_redteam_packets/builder-forbidden-claim-flag-injection-pass_rampart_redteam_packet_2026_05_27.json"
+      ],
+      "evidenceSummary": "RT-A1 fixture pass for forbidden claim flag injection; candidate robustness evidence only.",
+      "sourceLane": "redteam"
+    },
+    {
+      "claimId": "command-cockpit-robust-to-private-leakage",
+      "claim": "The future command cockpit is robust against private reviewer leakage.",
+      "claimType": "redteam_robustness",
+      "artifactType": "redteam_result",
+      "requestedSurface": "public",
+      "evidencePaths": [
+        "reports/evidence_packets/rt_a1_rampart_compatibility_spike.json",
+        "python/results/rampart_redteam_packets/command-cockpit-leakage-attempt-fail_rampart_redteam_packet_2026_05_27.json"
+      ],
+      "evidenceSummary": "RT-A1 fixture fail because no implemented command cockpit adapter exists yet.",
+      "sourceLane": "redteam"
     }
   ]
 }

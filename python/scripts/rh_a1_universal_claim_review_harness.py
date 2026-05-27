@@ -60,6 +60,7 @@ REQUIRED_VALIDATORS_BY_TYPE = {
     "compiler_correctness": ["generated_stub_validation", "semantic_equivalence_tests", "formal_compiler_proof"],
     "proof_status": ["machlib_lake_build", "proof_scope_review", "domain_assumption_check"],
     "ai_answer": ["source_attribution", "expert_review", "replay_or_validator_when_applicable"],
+    "redteam_robustness": ["rampart_redteam_packet", "adapter_coverage_review", "regression_ci_guard"],
 }
 
 BLOCKED_CLAIMS_BY_TYPE = {
@@ -70,6 +71,7 @@ BLOCKED_CLAIMS_BY_TYPE = {
     "compiler_correctness": ["compiler_correctness_without_proof", "runtime_semantic_equivalence_without_validation"],
     "proof_status": ["general_theorem_claim_beyond_checked_witness"],
     "ai_answer": ["authoritative_guidance_without_sources_or_review"],
+    "redteam_robustness": ["certified_safety_claim", "comprehensive_robustness_claim", "production_security_claim"],
 }
 
 
@@ -98,6 +100,10 @@ def infer_evidence_strength(claim: dict[str, Any]) -> str:
         return "fixture_only"
     if claim_type == "external_theory":
         return "source_only"
+    if claim_type == "redteam_robustness" and "fixture" in summary and "fail" in summary:
+        return "fixture_red_team_fail"
+    if claim_type == "redteam_robustness" and "fixture" in summary and "pass" in summary:
+        return "fixture_red_team_pass"
     return "validated_replay_or_packet"
 
 
@@ -111,6 +117,10 @@ def decision_for(claim: dict[str, Any], evidence_strength: str) -> str:
         return "blocked_public_claim"
     if claim_type == "ai_answer" and evidence_strength == "none":
         return "human_review_required"
+    if claim_type == "redteam_robustness" and evidence_strength == "fixture_red_team_fail":
+        return "blocked_public_claim"
+    if claim_type == "redteam_robustness" and evidence_strength == "fixture_red_team_pass":
+        return "candidate_only"
     if claim_type == "proof_status" and evidence_strength == "small_checked_witness":
         return "approved_bounded_public_claim"
     if requested == "public":
@@ -138,6 +148,7 @@ def next_action(decision: str, claim_type: str) -> str:
             "external_theory": "decompose into small claims and run contradiction/formalization review",
             "hardware": "collect live capture packet before claiming hardware validation",
             "compiler_correctness": "validate generated stubs and prove scoped semantics before compiler claims",
+            "redteam_robustness": "fix failing red-team adapter coverage before making any public robustness claim",
         }.get(claim_type, "keep private until supporting evidence exists")
     return "keep as candidate packet until required validators pass"
 
@@ -172,6 +183,8 @@ def non_claims_for(claim_type: str) -> list[str]:
         non_claims.extend(["No general performance superiority claim.", "No public savings claim."])
     if claim_type == "proof_status":
         non_claims.extend(["No theorem claim beyond the named checked witness.", "No complete EML semantics claim."])
+    if claim_type == "redteam_robustness":
+        non_claims.extend(["No certified safety claim.", "No comprehensive robustness claim.", "No production security claim."])
     return non_claims
 
 
