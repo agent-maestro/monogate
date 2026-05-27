@@ -1,0 +1,96 @@
+{
+  "ast": {
+    "args": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  },
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  }
+                ],
+                "kind": "op",
+                "op": "mul"
+              }
+            ],
+            "kind": "op",
+            "op": "neg"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  },
+                  {
+                    "kind": "var",
+                    "name": "x"
+                  }
+                ],
+                "kind": "op",
+                "op": "mul"
+              }
+            ],
+            "kind": "op",
+            "op": "neg"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      }
+    ],
+    "kind": "op",
+    "op": "add"
+  },
+  "claim_flags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "family": "forge_efrog_fixture",
+  "guards": [],
+  "inputs": [
+    {
+      "name": "x",
+      "range": {
+        "max": 8.0,
+        "min": -8.0
+      },
+      "unit": "dimensionless"
+    }
+  ],
+  "lets": [],
+  "nonClaims": [
+    "EML Language Kernel output is candidate-only.",
+    "Normalization does not change Forge/compiler behavior.",
+    "No public savings, formal verification, or theorem claim is made."
+  ],
+  "normalized_expression": "exp(-(x * x)) + exp(-(x * x))",
+  "physical_meaning": "Gaussian-like repeated energy fixture for shared-node and replay inspection.",
+  "program_id": "gaussian_energy_v0",
+  "schemaVersion": "monogate.eml_language_kernel.v0",
+  "source": "program gaussian_energy_v0\nfamily forge_efrog_fixture\nmeaning Gaussian-like repeated energy fixture for shared-node and replay inspection.\nsource_repo monogate\ninput x unit dimensionless range -8 8\nreturn exp(-(x * x)) + exp(-(x * x))\n",
+  "source_repo": "monogate"
+}

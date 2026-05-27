@@ -1,0 +1,131 @@
+{
+  "ast": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "const",
+            "value": 1
+          },
+          {
+            "args": [
+              {
+                "kind": "const",
+                "value": 1
+              },
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "kind": "var",
+                        "name": "x"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "neg"
+                  }
+                ],
+                "kind": "op",
+                "op": "exp"
+              }
+            ],
+            "kind": "op",
+            "op": "add"
+          }
+        ],
+        "kind": "op",
+        "op": "div"
+      },
+      {
+        "args": [
+          {
+            "kind": "const",
+            "value": 1
+          },
+          {
+            "args": [
+              {
+                "kind": "const",
+                "value": 1
+              },
+              {
+                "args": [
+                  {
+                    "kind": "const",
+                    "value": 1
+                  },
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "kind": "var",
+                            "name": "x"
+                          }
+                        ],
+                        "kind": "op",
+                        "op": "neg"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "exp"
+                  }
+                ],
+                "kind": "op",
+                "op": "add"
+              }
+            ],
+            "kind": "op",
+            "op": "div"
+          }
+        ],
+        "kind": "op",
+        "op": "sub"
+      }
+    ],
+    "kind": "op",
+    "op": "mul"
+  },
+  "claim_flags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "family": "sigmoid_logistic",
+  "guards": [
+    {
+      "expression": "1 + exp(-x)",
+      "kind": "nonzero"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "x",
+      "range": {
+        "max": 12.0,
+        "min": -12.0
+      },
+      "unit": "dimensionless"
+    }
+  ],
+  "lets": [],
+  "nonClaims": [
+    "EML Language Kernel output is candidate-only.",
+    "Normalization does not change Forge/compiler behavior.",
+    "No public savings, formal verification, or theorem claim is made."
+  ],
+  "normalized_expression": "1 / (1 + exp(-x)) * (1 - 1 / (1 + exp(-x)))",
+  "physical_meaning": "Derivative-shaped logistic fixture with repeated sigmoid subexpressions.",
+  "program_id": "sigmoid_derivative_v0",
+  "schemaVersion": "monogate.eml_language_kernel.v0",
+  "source": "program sigmoid_derivative_v0\nfamily sigmoid_logistic\nmeaning Derivative-shaped logistic fixture with repeated sigmoid subexpressions.\nsource_repo monogate\ninput x unit dimensionless range -12 12\nguard nonzero(1 + exp(-x))\nreturn (1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))\n",
+  "source_repo": "monogate"
+}

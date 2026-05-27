@@ -1,0 +1,9 @@
+program guarded_eml_softplus_v0
+family guarded_eml
+meaning Guarded EML fixture with let binding and softplus positivity.
+source_repo monogate
+input x unit dimensionless range -4 4
+input y unit dimensionless range -8 8
+let y_safe = softplus(y)
+guard positive(y_safe)
+return eml(x, y_safe)

@@ -1,0 +1,105 @@
+{
+  "ast": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "var",
+            "name": "x"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "kind": "const",
+                    "value": 1
+                  },
+                  {
+                    "args": [
+                      {
+                        "kind": "var",
+                        "name": "y"
+                      }
+                    ],
+                    "kind": "op",
+                    "op": "exp"
+                  }
+                ],
+                "kind": "op",
+                "op": "add"
+              }
+            ],
+            "kind": "op",
+            "op": "ln"
+          }
+        ],
+        "kind": "op",
+        "op": "ln"
+      }
+    ],
+    "kind": "op",
+    "op": "sub"
+  },
+  "claim_flags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "family": "guarded_eml",
+  "guards": [
+    {
+      "expression": "ln(1 + exp(y))",
+      "kind": "positive"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "x",
+      "range": {
+        "max": 4.0,
+        "min": -4.0
+      },
+      "unit": "dimensionless"
+    },
+    {
+      "name": "y",
+      "range": {
+        "max": 8.0,
+        "min": -8.0
+      },
+      "unit": "dimensionless"
+    }
+  ],
+  "lets": [
+    {
+      "expression": "softplus(y)",
+      "name": "y_safe",
+      "normalized_expression": "ln(1 + exp(y))"
+    }
+  ],
+  "nonClaims": [
+    "EML Language Kernel output is candidate-only.",
+    "Normalization does not change Forge/compiler behavior.",
+    "No public savings, formal verification, or theorem claim is made."
+  ],
+  "normalized_expression": "exp(x) - ln(ln(1 + exp(y)))",
+  "physical_meaning": "Guarded EML fixture with let binding and softplus positivity.",
+  "program_id": "guarded_eml_softplus_v0",
+  "schemaVersion": "monogate.eml_language_kernel.v0",
+  "source": "program guarded_eml_softplus_v0\nfamily guarded_eml\nmeaning Guarded EML fixture with let binding and softplus positivity.\nsource_repo monogate\ninput x unit dimensionless range -4 4\ninput y unit dimensionless range -8 8\nlet y_safe = softplus(y)\nguard positive(y_safe)\nreturn eml(x, y_safe)\n",
+  "source_repo": "monogate"
+}

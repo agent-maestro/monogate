@@ -1,0 +1,8 @@
+program raw_eml_primitive_v0
+family eml_primitive
+meaning Raw EML primitive fixture normalized into exp-minus-log form.
+source_repo monogate
+input x unit dimensionless range -4 4
+input y unit dimensionless range 0.1 10
+guard positive(y)
+return eml(x, y)

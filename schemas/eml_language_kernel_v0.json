@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://monogate.dev/schemas/eml_language_kernel_v0.json",
+  "title": "EML Language Kernel v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "program_id",
+    "family",
+    "source",
+    "normalized_expression",
+    "inputs",
+    "guards",
+    "lets",
+    "claim_flags"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_language_kernel.v0" },
+    "program_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*_v[0-9]+$"
+    },
+    "family": { "type": "string", "minLength": 1 },
+    "source": { "type": "string", "minLength": 1 },
+    "physical_meaning": { "type": "string" },
+    "source_repo": { "type": "string" },
+    "normalized_expression": { "type": "string", "minLength": 1 },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "unit"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "unit": { "type": "string" },
+          "range": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["min", "max"],
+            "properties": {
+              "min": { "type": "number" },
+              "max": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "guards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["kind", "expression"],
+        "properties": {
+          "kind": { "type": "string" },
+          "expression": { "type": "string" }
+        }
+      }
+    },
+    "lets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "expression", "normalized_expression"],
+        "properties": {
+          "name": { "type": "string" },
+          "expression": { "type": "string" },
+          "normalized_expression": { "type": "string" }
+        }
+      }
+    },
+    "ast": { "type": "object" },
+    "lowering": { "type": "object" },
+    "claim_flags": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

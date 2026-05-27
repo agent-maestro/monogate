@@ -1,0 +1,77 @@
+{
+  "ast": {
+    "args": [
+      {
+        "args": [
+          {
+            "kind": "var",
+            "name": "x"
+          }
+        ],
+        "kind": "op",
+        "op": "exp"
+      },
+      {
+        "args": [
+          {
+            "kind": "var",
+            "name": "y"
+          }
+        ],
+        "kind": "op",
+        "op": "ln"
+      }
+    ],
+    "kind": "op",
+    "op": "sub"
+  },
+  "claim_flags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "family": "eml_primitive",
+  "guards": [
+    {
+      "expression": "y",
+      "kind": "positive"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "x",
+      "range": {
+        "max": 4.0,
+        "min": -4.0
+      },
+      "unit": "dimensionless"
+    },
+    {
+      "name": "y",
+      "range": {
+        "max": 10.0,
+        "min": 0.1
+      },
+      "unit": "dimensionless"
+    }
+  ],
+  "lets": [],
+  "nonClaims": [
+    "EML Language Kernel output is candidate-only.",
+    "Normalization does not change Forge/compiler behavior.",
+    "No public savings, formal verification, or theorem claim is made."
+  ],
+  "normalized_expression": "exp(x) - ln(y)",
+  "physical_meaning": "Raw EML primitive fixture normalized into exp-minus-log form.",
+  "program_id": "raw_eml_primitive_v0",
+  "schemaVersion": "monogate.eml_language_kernel.v0",
+  "source": "program raw_eml_primitive_v0\nfamily eml_primitive\nmeaning Raw EML primitive fixture normalized into exp-minus-log form.\nsource_repo monogate\ninput x unit dimensionless range -4 4\ninput y unit dimensionless range 0.1 10\nguard positive(y)\nreturn eml(x, y)\n",
+  "source_repo": "monogate"
+}

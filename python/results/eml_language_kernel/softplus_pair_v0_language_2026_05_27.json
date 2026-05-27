@@ -1,0 +1,83 @@
+{
+  "ast": {
+    "args": [
+      {
+        "args": [
+          {
+            "args": [
+              {
+                "kind": "var",
+                "name": "a"
+              }
+            ],
+            "kind": "op",
+            "op": "exp"
+          },
+          {
+            "args": [
+              {
+                "kind": "var",
+                "name": "b"
+              }
+            ],
+            "kind": "op",
+            "op": "exp"
+          }
+        ],
+        "kind": "op",
+        "op": "add"
+      }
+    ],
+    "kind": "op",
+    "op": "ln"
+  },
+  "claim_flags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "family": "softplus_logsumexp",
+  "guards": [
+    {
+      "expression": "exp(a) + exp(b)",
+      "kind": "positive"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "a",
+      "range": {
+        "max": 10.0,
+        "min": -10.0
+      },
+      "unit": "dimensionless"
+    },
+    {
+      "name": "b",
+      "range": {
+        "max": 10.0,
+        "min": -10.0
+      },
+      "unit": "dimensionless"
+    }
+  ],
+  "lets": [],
+  "nonClaims": [
+    "EML Language Kernel output is candidate-only.",
+    "Normalization does not change Forge/compiler behavior.",
+    "No public savings, formal verification, or theorem claim is made."
+  ],
+  "normalized_expression": "ln(exp(a) + exp(b))",
+  "physical_meaning": "Small log-sum-exp style expression for EML language kernel intake.",
+  "program_id": "softplus_pair_v0",
+  "schemaVersion": "monogate.eml_language_kernel.v0",
+  "source": "program softplus_pair_v0\nfamily softplus_logsumexp\nmeaning Small log-sum-exp style expression for EML language kernel intake.\nsource_repo monogate\ninput a unit dimensionless range -10 10\ninput b unit dimensionless range -10 10\nguard positive(exp(a) + exp(b))\nreturn ln(exp(a) + exp(b))\n",
+  "source_repo": "monogate"
+}
