@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "monogate.rh_a1_claim_fixtures.v0",
+  "date": "2026-05-27",
+  "claims": [
+    {
+      "claimId": "eml-softplus-general-speed-claim",
+      "claim": "EML is faster than standard math for softplus.",
+      "claimType": "performance",
+      "artifactType": "eml_expression",
+      "requestedSurface": "public",
+      "evidencePaths": [
+        "reports/eml_r10_cost_stability_lab_2026_05_27.md",
+        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md"
+      ],
+      "evidenceSummary": "R10/R11 route softplus toward standard logaddexp rather than pure EML.",
+      "sourceLane": "eml"
+    },
+    {
+      "claimId": "pm-a1-profitable-agent-claim",
+      "claim": "The prediction-market agent can identify profitable Polymarket/Kalshi trades.",
+      "claimType": "forecasting",
+      "artifactType": "prediction_market_forecast",
+      "requestedSurface": "public",
+      "evidencePaths": [
+        "reports/pm_a1_prediction_market_evidence_agent_2026_05_27.md",
+        "reports/evidence_packets/pm_a1_prediction_market_evidence_agent.json"
+      ],
+      "evidenceSummary": "PM-A1 is fixture-backed, read-only, low-confidence, and explicitly requires human review.",
+      "sourceLane": "prediction_market"
+    },
+    {
+      "claimId": "oph-correct-theory-of-everything-claim",
+      "claim": "Observer Patch Holography is the correct theory of everything.",
+      "claimType": "external_theory",
+      "artifactType": "external_claim",
+      "requestedSurface": "public",
+      "evidencePaths": [
+        "https://floatingpragma.io/oph/"
+      ],
+      "evidenceSummary": "The external page makes maximal TOE, physics-unification, and metaphysical claims; Monogate has not independently validated them.",
+      "sourceLane": "external_theory"
+    },
+    {
+      "claimId": "electronics-voltage-divider-hardware-observed",
+      "claim": "The voltage divider packet has been validated on live hardware.",
+      "claimType": "hardware",
+      "artifactType": "hardware_packet",
+      "requestedSurface": "public",
+      "evidencePaths": [
+        "monogate-electronics/product_readiness/evidence_bridge_2026_05_27.json"
+      ],
+      "evidenceSummary": "The electronics bridge currently contains simulated EE math packets and keeps hardware observation flags false.",
+      "sourceLane": "electronics"
+    },
+    {
+      "claimId": "r11-compiler-lowering-correctness",
+      "claim": "R11 proves compiler lowering correctness for EML expressions.",
+      "claimType": "compiler_correctness",
+      "artifactType": "compiler_artifact",
+      "requestedSurface": "public",
+      "evidencePaths": [
+        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md"
+      ],
+      "evidenceSummary": "R11 emits candidate lowering plans only and does not change compiler behavior.",
+      "sourceLane": "compiler"
+    },
+    {
+      "claimId": "machlib-subtraction-boundary-witness",
+      "claim": "MachLib has a small checked witness for eml(log(v), exp(u)) = v - u under v > 0.",
+      "claimType": "proof_status",
+      "artifactType": "proof_note",
+      "requestedSurface": "public",
+      "evidencePaths": [
+        "machlib/foundations/MachLib/HighDimensional.lean",
+        "reports/eml_r12_r14_registry_second_witness_coverage_2026_05_27.md"
+      ],
+      "evidenceSummary": "The context records a checked small witness for the subtraction boundary identity, scoped to the stated domain.",
+      "sourceLane": "machlib"
+    },
+    {
+      "claimId": "ai-answer-ready-for-publication",
+      "claim": "This AI-generated explanation is ready to publish as authoritative technical guidance.",
+      "claimType": "ai_answer",
+      "artifactType": "ai_answer",
+      "requestedSurface": "public",
+      "evidencePaths": [],
+      "evidenceSummary": "No validator, replay, expert review, or source packet is attached.",
+      "sourceLane": "ai_answer"
+    }
+  ]
+}

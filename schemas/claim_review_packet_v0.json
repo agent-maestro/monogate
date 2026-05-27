@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate Claim Review Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "claimId",
+    "claim",
+    "claimType",
+    "artifactType",
+    "requestedSurface",
+    "decision",
+    "evidenceStrength",
+    "allowedSurface",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.claim_review_packet.v0" },
+    "packetType": { "const": "claim_review_packet_v0" },
+    "claimId": { "type": "string", "minLength": 1 },
+    "claim": { "type": "string", "minLength": 1 },
+    "claimType": { "type": "string", "minLength": 1 },
+    "artifactType": { "type": "string", "minLength": 1 },
+    "requestedSurface": { "enum": ["private", "candidate", "public"] },
+    "decision": {
+      "enum": [
+        "approved_bounded_public_claim",
+        "candidate_only",
+        "human_review_required",
+        "blocked_public_claim"
+      ]
+    },
+    "evidenceStrength": {
+      "enum": [
+        "none",
+        "source_only",
+        "fixture_only",
+        "local_measurement_only",
+        "small_checked_witness",
+        "validated_replay_or_packet",
+        "externally_validated"
+      ]
+    },
+    "allowedSurface": { "enum": ["private", "candidate", "public_bounded"] },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

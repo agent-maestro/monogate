@@ -1,0 +1,63 @@
+{
+  "allowedSurface": "private",
+  "artifactType": "prediction_market_forecast",
+  "blockedClaims": [
+    "financial_advice",
+    "profitable_strategy",
+    "autonomous_trading"
+  ],
+  "claim": "The prediction-market agent can identify profitable Polymarket/Kalshi trades.",
+  "claimFlags": {
+    "autonomous_trading_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "external_theory_endorsed": false,
+    "financial_advice_claim": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "order_placement_performed": false,
+    "production_controller_claim": false,
+    "profitable_strategy_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "claimId": "pm-a1-profitable-agent-claim",
+  "claimType": "forecasting",
+  "date": "2026-05-27",
+  "decision": "blocked_public_claim",
+  "evidencePaths": [
+    "reports/pm_a1_prediction_market_evidence_agent_2026_05_27.md",
+    "reports/evidence_packets/pm_a1_prediction_market_evidence_agent.json"
+  ],
+  "evidenceStrength": "fixture_only",
+  "evidenceSummary": "PM-A1 is fixture-backed, read-only, low-confidence, and explicitly requires human review.",
+  "nextAction": "build calibration ledger and keep all trade decisions human-reviewed",
+  "nonClaims": [
+    "RH-A1 is a deterministic review harness, not a proof system.",
+    "RH-A1 does not approve unsupported public claims.",
+    "RH-A1 does not deploy, trade, publish packages, operate hardware, or change compiler behavior.",
+    "No financial advice.",
+    "No profitable strategy claim.",
+    "No autonomous trading claim."
+  ],
+  "packetType": "claim_review_packet_v0",
+  "requestedSurface": "public",
+  "requiredValidators": [
+    "pm_a1_forecast_packet",
+    "calibration_ledger",
+    "human_market_review"
+  ],
+  "reviewNotes": [
+    "artifact_type:prediction_market_forecast",
+    "claim_type:forecasting",
+    "requested_surface:public",
+    "evidence_strength:fixture_only",
+    "public wording exceeds current evidence"
+  ],
+  "schemaVersion": "monogate.claim_review_packet.v0",
+  "sourceLane": "prediction_market"
+}
