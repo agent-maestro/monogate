@@ -27,8 +27,11 @@ def test_gate_records_checked_exp_witness(tmp_path):
     result = build_gate(Path(annex["result_path"]), tmp_path / "gate", tmp_path / "reports", tmp_path / "evidence")["result"]
     checked = {item["entryId"]: item for item in result["checkedWitnesses"]}
     assert checked["exp_from_eml"]["machlibName"] == "MachLib.Real.atlas_exp_from_eml_witness"
+    assert checked["subtraction_boundary"]["machlibName"] == "MachLib.Real.atlas_subtraction_boundary_witness"
     exp_decision = next(item for item in result["decisions"] if item["id"] == "exp_from_eml")
+    sub_decision = next(item for item in result["decisions"] if item["id"] == "subtraction_boundary")
     assert exp_decision["publicEducationCandidate"] is True
+    assert sub_decision["proofStatus"] == "checked_machlib_witness_available"
 
 
 def test_gate_writes_json_report_and_evidence(tmp_path):

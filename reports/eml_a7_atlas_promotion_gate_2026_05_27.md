@@ -14,6 +14,7 @@ Status: `EML_ATLAS_PROMOTION_GATE_PASS`
 ## Checked Witnesses
 
 - `exp_from_eml` -> `MachLib.Real.atlas_exp_from_eml_witness` (`checked_by_lake_build`)
+- `subtraction_boundary` -> `MachLib.Real.atlas_subtraction_boundary_witness` (`checked_by_lake_build`)
 
 ## Non-Claims
 

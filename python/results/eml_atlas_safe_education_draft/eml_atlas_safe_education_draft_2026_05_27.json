@@ -1,0 +1,143 @@
+{
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "physics_theorem_claim": false,
+    "production_controller_claim": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "public_superbest_claim_change": false,
+    "rh_proof_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-27",
+  "draftCount": 7,
+  "drafts": [
+    {
+      "formula": "eml(x, 1) = exp(x)",
+      "id": "exp_from_eml",
+      "nonClaims": [
+        "This draft does not modify monogate.org/atlas.",
+        "This draft does not claim a new theorem.",
+        "This draft does not claim physics, RH, zeta-zero, or public SuperBEST results."
+      ],
+      "plainLanguage": "When the second input is 1, EML returns the ordinary exponential because ln(1) is 0.",
+      "proofStatus": "checked_machlib_witness_available",
+      "publicPromotionPerformed": false,
+      "reviewStatus": "draft_needs_human_review",
+      "sourceBucket": "safe_public_education_candidate",
+      "title": "Exponential As One EML Call"
+    },
+    {
+      "formula": "eml(x, e) = exp(x) - 1",
+      "id": "bose_boundary",
+      "nonClaims": [
+        "This draft does not modify monogate.org/atlas.",
+        "This draft does not claim a new theorem.",
+        "This draft does not claim physics, RH, zeta-zero, or public SuperBEST results."
+      ],
+      "plainLanguage": "When the second input is e, EML produces exp(x) - 1. This is a familiar denominator shape in classical formulas, but here it is only being shown as a rewrite.",
+      "proofStatus": "not_a_current_proof_target",
+      "publicPromotionPerformed": false,
+      "reviewStatus": "draft_needs_human_review",
+      "sourceBucket": "safe_public_education_candidate",
+      "title": "The exp(x) - 1 Boundary"
+    },
+    {
+      "formula": "eml(x, exp(-1)) = exp(x) + 1",
+      "id": "fermi_boundary",
+      "nonClaims": [
+        "This draft does not modify monogate.org/atlas.",
+        "This draft does not claim a new theorem.",
+        "This draft does not claim physics, RH, zeta-zero, or public SuperBEST results."
+      ],
+      "plainLanguage": "When the second input is exp(-1), EML produces exp(x) + 1. The draft may mention the familiar denominator shape, but must not claim new physics.",
+      "proofStatus": "not_a_current_proof_target",
+      "publicPromotionPerformed": false,
+      "reviewStatus": "draft_needs_human_review",
+      "sourceBucket": "safe_public_education_candidate",
+      "title": "The exp(x) + 1 Boundary"
+    },
+    {
+      "formula": "eml(x, 1) = exp(x)",
+      "id": "maxwell_boundary",
+      "nonClaims": [
+        "This draft does not modify monogate.org/atlas.",
+        "This draft does not claim a new theorem.",
+        "This draft does not claim physics, RH, zeta-zero, or public SuperBEST results."
+      ],
+      "plainLanguage": "When the second input is 1, EML lands on exp(x). This overlaps with exp_from_eml and should be kept short if surfaced.",
+      "proofStatus": "not_a_current_proof_target",
+      "publicPromotionPerformed": false,
+      "reviewStatus": "draft_needs_human_review",
+      "sourceBucket": "safe_public_education_candidate",
+      "title": "The Classical exp(x) Boundary"
+    },
+    {
+      "formula": "eml(log(v), exp(u)) = v - u, for v > 0",
+      "id": "subtraction_boundary",
+      "nonClaims": [
+        "This draft does not modify monogate.org/atlas.",
+        "This draft does not claim a new theorem.",
+        "This draft does not claim physics, RH, zeta-zero, or public SuperBEST results."
+      ],
+      "plainLanguage": "If v is positive, feeding log(v) and exp(u) into EML collapses back to v - u.",
+      "proofStatus": "checked_machlib_witness_available",
+      "publicPromotionPerformed": false,
+      "reviewStatus": "draft_needs_human_review",
+      "sourceBucket": "safe_public_education_candidate",
+      "title": "Subtraction As A Boundary"
+    },
+    {
+      "formula": "[n]_q = eml(n*x, e) / eml(x, e), q = exp(x)",
+      "id": "q_integer_ratio",
+      "nonClaims": [
+        "This draft does not modify monogate.org/atlas.",
+        "This draft does not claim a new theorem.",
+        "This draft does not claim physics, RH, zeta-zero, or public SuperBEST results."
+      ],
+      "plainLanguage": "With q = exp(x), a q-integer can be written as a ratio of two EML boundary evaluations.",
+      "proofStatus": "not_a_current_proof_target",
+      "publicPromotionPerformed": false,
+      "reviewStatus": "draft_needs_human_review",
+      "sourceBucket": "safe_public_education_candidate",
+      "title": "Q-Integers As An EML Ratio"
+    },
+    {
+      "formula": "eml(eml(x, e), 1) = exp(exp(x) - 1)",
+      "id": "bell_generating_rewrite",
+      "nonClaims": [
+        "This draft does not modify monogate.org/atlas.",
+        "This draft does not claim a new theorem.",
+        "This draft does not claim physics, RH, zeta-zero, or public SuperBEST results."
+      ],
+      "plainLanguage": "A nested EML expression reproduces the exponential generating function shape for Bell numbers.",
+      "proofStatus": "not_a_current_proof_target",
+      "publicPromotionPerformed": false,
+      "reviewStatus": "draft_needs_human_review",
+      "sourceBucket": "safe_public_education_candidate",
+      "title": "Bell Generating Function Shape"
+    }
+  ],
+  "nonClaims": [
+    "This artifact is draft copy only.",
+    "This artifact does not modify or deploy monogate.org/atlas.",
+    "This artifact does not make theorem, RH, physics, or SuperBEST claims.",
+    "Every draft still needs human review before publication."
+  ],
+  "policy": {
+    "allowedUse": "draft_copy_for_review_only",
+    "publicPromotionPerformed": false,
+    "requiresMuseOrReviewerReview": true
+  },
+  "schemaVersion": "monogate.eml_atlas_safe_education_draft.v0",
+  "sourceGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "status": "EML_ATLAS_SAFE_EDUCATION_DRAFT_PASS"
+}

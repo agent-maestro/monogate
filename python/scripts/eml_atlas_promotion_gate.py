@@ -40,7 +40,7 @@ PROOF_TARGETS = {
     "exp_from_eml": "checked_machlib_witness_available",
     "ln_from_eml": "candidate_machlib_witness",
     "constants_zero_and_e": "candidate_machlib_witness",
-    "subtraction_boundary": "candidate_machlib_witness",
+    "subtraction_boundary": "checked_machlib_witness_available",
     "prime_signature_log_recovery": "candidate_machlib_witness",
 }
 
@@ -103,6 +103,11 @@ def build_gate(annex_path: Path, out_dir: Path, report_dir: Path, evidence_dir: 
             {
                 "entryId": "exp_from_eml",
                 "machlibName": "MachLib.Real.atlas_exp_from_eml_witness",
+                "status": "checked_by_lake_build",
+            },
+            {
+                "entryId": "subtraction_boundary",
+                "machlibName": "MachLib.Real.atlas_subtraction_boundary_witness",
                 "status": "checked_by_lake_build",
             }
         ],
@@ -174,7 +179,7 @@ def build_evidence_packet(result: dict[str, Any]) -> dict[str, Any]:
         "nonClaims": result["nonClaims"],
         "reviewHighlights": [
             "Separates public education candidates from proof targets and blocked statements.",
-            "Records exp_from_eml as the first checked MachLib Atlas witness.",
+            "Records exp_from_eml and subtraction_boundary as checked MachLib Atlas witnesses.",
         ],
         "validationCommands": [
             "python python/scripts/eml_atlas_promotion_gate.py --build --strict",
@@ -216,8 +221,9 @@ def validate_gate(result: dict[str, Any]) -> None:
     if result["bucketCounts"].get("blocked_or_conjectural", 0) < 1:
         raise ValueError("expected blocked bucket")
     checked = {item["entryId"]: item for item in result["checkedWitnesses"]}
-    if checked.get("exp_from_eml", {}).get("status") != "checked_by_lake_build":
-        raise ValueError("expected exp_from_eml checked witness")
+    for entry_id in ["exp_from_eml", "subtraction_boundary"]:
+        if checked.get(entry_id, {}).get("status") != "checked_by_lake_build":
+            raise ValueError(f"expected checked witness: {entry_id}")
     for key, value in result.get("claimFlags", {}).items():
         if value is not False:
             raise ValueError(f"claim flag must remain false: {key}")
