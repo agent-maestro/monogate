@@ -1,0 +1,57 @@
+{
+  "atlasGate": {
+    "atlasId": "not_in_atlas_gate",
+    "bucket": "not_in_atlas_gate",
+    "proofStatus": "not_a_current_proof_target",
+    "publicEducationCandidate": false,
+    "publicPromotionPerformed": false
+  },
+  "blockedClaims": [
+    "No public performance or energy savings claim.",
+    "No formal verification or theorem claim.",
+    "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+    "No claim that EML is preferable for this case.",
+    "No compiler correctness claim.",
+    "No deployment or package publication claim.",
+    "No claim that this plan is production lowering."
+  ],
+  "caseId": "gaussian_energy_v0",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "costRecommendation": "use_standard",
+  "date": "2026-05-27",
+  "fallbackImplementation": "2 * exp(-(x * x))",
+  "loweringDecision": "emit_standard",
+  "nonClaims": [
+    "This plan is a candidate reviewer artifact, not compiler output.",
+    "This plan does not change Forge/compiler/runtime behavior.",
+    "This plan does not make public savings, proof, or production claims."
+  ],
+  "packetType": "eml_lowering_plan_packet_v0",
+  "precisionCaveats": [
+    "finite_precision_result_is_local_to_r10_sample_grid"
+  ],
+  "reasonCodes": [
+    "r10_recommendation:use_standard",
+    "standard_has_lower_local_latency",
+    "standard_has_lower_static_operator_count",
+    "no_atlas_gate_entry"
+  ],
+  "requiredGuards": [
+    "x_in_[-30.0,30.0]"
+  ],
+  "schemaVersion": "monogate.eml_lowering_plan_packet.v0",
+  "selectedImplementation": "2 * exp(-(x * x))",
+  "sourceExpression": "exp(-(x * x)) + exp(-(x * x))",
+  "standardExpression": "2 * exp(-(x * x))"
+}

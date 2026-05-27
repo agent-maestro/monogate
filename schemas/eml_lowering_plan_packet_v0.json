@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "atlasGate": {
+      "additionalProperties": false,
+      "properties": {
+        "atlasId": {
+          "type": "string"
+        },
+        "bucket": {
+          "type": "string"
+        },
+        "proofStatus": {
+          "type": "string"
+        },
+        "publicEducationCandidate": {
+          "type": "boolean"
+        },
+        "publicPromotionPerformed": {
+          "const": false
+        }
+      },
+      "required": [
+        "atlasId",
+        "bucket",
+        "proofStatus",
+        "publicEducationCandidate",
+        "publicPromotionPerformed"
+      ],
+      "type": "object"
+    },
+    "blockedClaims": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "caseId": {
+      "type": "string"
+    },
+    "claimFlags": {
+      "additionalProperties": {
+        "const": false
+      },
+      "type": "object"
+    },
+    "costRecommendation": {
+      "enum": [
+        "use_eml",
+        "use_standard",
+        "use_hybrid",
+        "research_only"
+      ]
+    },
+    "date": {
+      "type": "string"
+    },
+    "fallbackImplementation": {
+      "type": "string"
+    },
+    "loweringDecision": {
+      "enum": [
+        "emit_eml",
+        "emit_standard",
+        "emit_hybrid",
+        "block_lowering"
+      ]
+    },
+    "nonClaims": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "packetType": {
+      "const": "eml_lowering_plan_packet_v0"
+    },
+    "precisionCaveats": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "reasonCodes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "requiredGuards": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "monogate.eml_lowering_plan_packet.v0"
+    },
+    "selectedImplementation": {
+      "type": "string"
+    },
+    "sourceExpression": {
+      "type": "string"
+    },
+    "standardExpression": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "caseId",
+    "sourceExpression",
+    "standardExpression",
+    "costRecommendation",
+    "loweringDecision",
+    "selectedImplementation",
+    "fallbackImplementation",
+    "reasonCodes",
+    "requiredGuards",
+    "precisionCaveats",
+    "blockedClaims",
+    "atlasGate",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "type": "object"
+}

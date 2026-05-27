@@ -1,0 +1,455 @@
+{
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "date": "2026-05-27",
+  "nonClaims": [
+    "R11 does not compile or lower code.",
+    "R11 does not change Forge/compiler/runtime behavior.",
+    "R11 does not make public performance, proof, or production claims."
+  ],
+  "plans": [
+    {
+      "atlasGate": {
+        "atlasId": "exp_from_eml",
+        "bucket": "safe_public_education_candidate",
+        "proofStatus": "checked_machlib_witness_available",
+        "publicEducationCandidate": true,
+        "publicPromotionPerformed": false
+      },
+      "blockedClaims": [
+        "No public performance or energy savings claim.",
+        "No formal verification or theorem claim.",
+        "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+        "No claim that EML is preferable for this case.",
+        "No compiler correctness claim.",
+        "No deployment or package publication claim.",
+        "No claim that this plan is production lowering."
+      ],
+      "caseId": "exp_from_eml_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "costRecommendation": "use_hybrid",
+      "date": "2026-05-27",
+      "fallbackImplementation": "exp(x)",
+      "loweringDecision": "emit_hybrid",
+      "nonClaims": [
+        "This plan is a candidate reviewer artifact, not compiler output.",
+        "This plan does not change Forge/compiler/runtime behavior.",
+        "This plan does not make public savings, proof, or production claims."
+      ],
+      "packetType": "eml_lowering_plan_packet_v0",
+      "precisionCaveats": [
+        "finite_precision_result_is_local_to_r10_sample_grid"
+      ],
+      "reasonCodes": [
+        "r10_recommendation:use_hybrid",
+        "standard_has_lower_local_latency",
+        "checked_machlib_witness_available",
+        "atlas_safe_education_candidate_only"
+      ],
+      "requiredGuards": [
+        "x_in_[-20.0,20.0]"
+      ],
+      "schemaVersion": "monogate.eml_lowering_plan_packet.v0",
+      "selectedImplementation": "preserve EML packet identity; lower runtime call to exp(x)",
+      "sourceExpression": "eml(x, 1)",
+      "standardExpression": "exp(x)"
+    },
+    {
+      "atlasGate": {
+        "atlasId": "subtraction_boundary",
+        "bucket": "safe_public_education_candidate",
+        "proofStatus": "checked_machlib_witness_available",
+        "publicEducationCandidate": true,
+        "publicPromotionPerformed": false
+      },
+      "blockedClaims": [
+        "No public performance or energy savings claim.",
+        "No formal verification or theorem claim.",
+        "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+        "No claim that EML is preferable for this case.",
+        "No claim that the EML form is numerically superior.",
+        "No compiler correctness claim.",
+        "No deployment or package publication claim.",
+        "No claim that this plan is production lowering."
+      ],
+      "caseId": "subtraction_boundary_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "costRecommendation": "use_standard",
+      "date": "2026-05-27",
+      "fallbackImplementation": "v - u",
+      "loweringDecision": "emit_standard",
+      "nonClaims": [
+        "This plan is a candidate reviewer artifact, not compiler output.",
+        "This plan does not change Forge/compiler/runtime behavior.",
+        "This plan does not make public savings, proof, or production claims."
+      ],
+      "packetType": "eml_lowering_plan_packet_v0",
+      "precisionCaveats": [
+        "finite_precision_result_is_local_to_r10_sample_grid",
+        "eml_form_has_higher_relative_error_on_current_grid"
+      ],
+      "reasonCodes": [
+        "r10_recommendation:use_standard",
+        "standard_has_lower_relative_error",
+        "standard_has_lower_local_latency",
+        "standard_has_lower_static_operator_count",
+        "checked_machlib_witness_available",
+        "atlas_safe_education_candidate_only"
+      ],
+      "requiredGuards": [
+        "u_in_[-12.0,12.0]",
+        "v_in_[0.05,50.0]",
+        "positive_log_argument"
+      ],
+      "schemaVersion": "monogate.eml_lowering_plan_packet.v0",
+      "selectedImplementation": "v - u",
+      "sourceExpression": "eml(ln(v), exp(u))",
+      "standardExpression": "v - u"
+    },
+    {
+      "atlasGate": {
+        "atlasId": "bose_boundary",
+        "bucket": "safe_public_education_candidate",
+        "proofStatus": "not_a_current_proof_target",
+        "publicEducationCandidate": true,
+        "publicPromotionPerformed": false
+      },
+      "blockedClaims": [
+        "No public performance or energy savings claim.",
+        "No formal verification or theorem claim.",
+        "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+        "No claim that EML is preferable for this case.",
+        "No claim that the EML form is numerically superior.",
+        "No compiler correctness claim.",
+        "No deployment or package publication claim.",
+        "No claim that this plan is production lowering."
+      ],
+      "caseId": "bose_boundary_expm1_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "costRecommendation": "use_standard",
+      "date": "2026-05-27",
+      "fallbackImplementation": "expm1(x)",
+      "loweringDecision": "emit_standard",
+      "nonClaims": [
+        "This plan is a candidate reviewer artifact, not compiler output.",
+        "This plan does not change Forge/compiler/runtime behavior.",
+        "This plan does not make public savings, proof, or production claims."
+      ],
+      "packetType": "eml_lowering_plan_packet_v0",
+      "precisionCaveats": [
+        "finite_precision_result_is_local_to_r10_sample_grid",
+        "eml_form_has_higher_relative_error_on_current_grid",
+        "exp(x)-1_cancels_near_zero; prefer_expm1"
+      ],
+      "reasonCodes": [
+        "r10_recommendation:use_standard",
+        "standard_has_lower_relative_error",
+        "standard_has_lower_local_latency",
+        "atlas_safe_education_candidate_only"
+      ],
+      "requiredGuards": [
+        "x_in_[-1e-08,1e-08]",
+        "near_zero_requires_expm1_lowering"
+      ],
+      "schemaVersion": "monogate.eml_lowering_plan_packet.v0",
+      "selectedImplementation": "expm1(x)",
+      "sourceExpression": "eml(x, e)",
+      "standardExpression": "expm1(x)"
+    },
+    {
+      "atlasGate": {
+        "atlasId": "ln_from_eml",
+        "bucket": "proof_target",
+        "proofStatus": "candidate_machlib_witness",
+        "publicEducationCandidate": false,
+        "publicPromotionPerformed": false
+      },
+      "blockedClaims": [
+        "No public performance or energy savings claim.",
+        "No formal verification or theorem claim.",
+        "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+        "No claim that EML is preferable for this case.",
+        "No compiler correctness claim.",
+        "No deployment or package publication claim.",
+        "No claim that this plan is production lowering."
+      ],
+      "caseId": "ln_from_eml_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "costRecommendation": "use_standard",
+      "date": "2026-05-27",
+      "fallbackImplementation": "log(y)",
+      "loweringDecision": "emit_standard",
+      "nonClaims": [
+        "This plan is a candidate reviewer artifact, not compiler output.",
+        "This plan does not change Forge/compiler/runtime behavior.",
+        "This plan does not make public savings, proof, or production claims."
+      ],
+      "packetType": "eml_lowering_plan_packet_v0",
+      "precisionCaveats": [
+        "finite_precision_result_is_local_to_r10_sample_grid",
+        "nested_eml_log_recovery_is_deeper_than_direct_log"
+      ],
+      "reasonCodes": [
+        "r10_recommendation:use_standard",
+        "standard_has_lower_local_latency",
+        "standard_has_lower_static_operator_count"
+      ],
+      "requiredGuards": [
+        "y_in_[1e-09,1000000000.0]",
+        "positive_log_argument"
+      ],
+      "schemaVersion": "monogate.eml_lowering_plan_packet.v0",
+      "selectedImplementation": "log(y)",
+      "sourceExpression": "eml(1, eml(eml(1, y), 1))",
+      "standardExpression": "ln(y)"
+    },
+    {
+      "atlasGate": {
+        "atlasId": "not_in_atlas_gate",
+        "bucket": "not_in_atlas_gate",
+        "proofStatus": "not_a_current_proof_target",
+        "publicEducationCandidate": false,
+        "publicPromotionPerformed": false
+      },
+      "blockedClaims": [
+        "No public performance or energy savings claim.",
+        "No formal verification or theorem claim.",
+        "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+        "No claim that EML is preferable for this case.",
+        "No claim that the EML form is numerically superior.",
+        "No compiler correctness claim.",
+        "No deployment or package publication claim.",
+        "No claim that this plan is production lowering."
+      ],
+      "caseId": "softplus_pair_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "costRecommendation": "use_standard",
+      "date": "2026-05-27",
+      "fallbackImplementation": "logaddexp(a, b)",
+      "loweringDecision": "emit_standard",
+      "nonClaims": [
+        "This plan is a candidate reviewer artifact, not compiler output.",
+        "This plan does not change Forge/compiler/runtime behavior.",
+        "This plan does not make public savings, proof, or production claims."
+      ],
+      "packetType": "eml_lowering_plan_packet_v0",
+      "precisionCaveats": [
+        "finite_precision_result_is_local_to_r10_sample_grid",
+        "eml_form_has_higher_relative_error_on_current_grid",
+        "plain_log_sum_exp_can_overflow_outside_current_grid"
+      ],
+      "reasonCodes": [
+        "r10_recommendation:use_standard",
+        "standard_has_lower_relative_error",
+        "standard_has_lower_local_latency",
+        "standard_has_lower_static_operator_count",
+        "no_atlas_gate_entry"
+      ],
+      "requiredGuards": [
+        "a_in_[-100.0,100.0]",
+        "b_in_[-100.0,100.0]",
+        "use_logaddexp_to_avoid_exp_overflow"
+      ],
+      "schemaVersion": "monogate.eml_lowering_plan_packet.v0",
+      "selectedImplementation": "logaddexp(a, b)",
+      "sourceExpression": "ln(exp(a) + exp(b))",
+      "standardExpression": "logaddexp(a, b)"
+    },
+    {
+      "atlasGate": {
+        "atlasId": "not_in_atlas_gate",
+        "bucket": "not_in_atlas_gate",
+        "proofStatus": "not_a_current_proof_target",
+        "publicEducationCandidate": false,
+        "publicPromotionPerformed": false
+      },
+      "blockedClaims": [
+        "No public performance or energy savings claim.",
+        "No formal verification or theorem claim.",
+        "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+        "No claim that EML is preferable for this case.",
+        "No claim that the EML form is numerically superior.",
+        "No compiler correctness claim.",
+        "No deployment or package publication claim.",
+        "No claim that this plan is production lowering."
+      ],
+      "caseId": "sigmoid_derivative_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "costRecommendation": "use_standard",
+      "date": "2026-05-27",
+      "fallbackImplementation": "stable_sigmoid(x) * (1 - stable_sigmoid(x))",
+      "loweringDecision": "emit_standard",
+      "nonClaims": [
+        "This plan is a candidate reviewer artifact, not compiler output.",
+        "This plan does not change Forge/compiler/runtime behavior.",
+        "This plan does not make public savings, proof, or production claims."
+      ],
+      "packetType": "eml_lowering_plan_packet_v0",
+      "precisionCaveats": [
+        "finite_precision_result_is_local_to_r10_sample_grid",
+        "eml_form_has_higher_relative_error_on_current_grid"
+      ],
+      "reasonCodes": [
+        "r10_recommendation:use_standard",
+        "standard_has_lower_relative_error",
+        "standard_has_lower_static_operator_count",
+        "no_atlas_gate_entry"
+      ],
+      "requiredGuards": [
+        "x_in_[-80.0,80.0]",
+        "use_stable_sigmoid_for_large_magnitude_inputs"
+      ],
+      "schemaVersion": "monogate.eml_lowering_plan_packet.v0",
+      "selectedImplementation": "stable_sigmoid(x) * (1 - stable_sigmoid(x))",
+      "sourceExpression": "(1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))",
+      "standardExpression": "stable_sigmoid(x) * (1 - stable_sigmoid(x))"
+    },
+    {
+      "atlasGate": {
+        "atlasId": "not_in_atlas_gate",
+        "bucket": "not_in_atlas_gate",
+        "proofStatus": "not_a_current_proof_target",
+        "publicEducationCandidate": false,
+        "publicPromotionPerformed": false
+      },
+      "blockedClaims": [
+        "No public performance or energy savings claim.",
+        "No formal verification or theorem claim.",
+        "No hardware, GPU, FPGA, analog, or embedded measurement claim.",
+        "No claim that EML is preferable for this case.",
+        "No compiler correctness claim.",
+        "No deployment or package publication claim.",
+        "No claim that this plan is production lowering."
+      ],
+      "caseId": "gaussian_energy_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "forge_behavior_changed": false,
+        "formal_verification_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "theorem_proof_claim": false
+      },
+      "costRecommendation": "use_standard",
+      "date": "2026-05-27",
+      "fallbackImplementation": "2 * exp(-(x * x))",
+      "loweringDecision": "emit_standard",
+      "nonClaims": [
+        "This plan is a candidate reviewer artifact, not compiler output.",
+        "This plan does not change Forge/compiler/runtime behavior.",
+        "This plan does not make public savings, proof, or production claims."
+      ],
+      "packetType": "eml_lowering_plan_packet_v0",
+      "precisionCaveats": [
+        "finite_precision_result_is_local_to_r10_sample_grid"
+      ],
+      "reasonCodes": [
+        "r10_recommendation:use_standard",
+        "standard_has_lower_local_latency",
+        "standard_has_lower_static_operator_count",
+        "no_atlas_gate_entry"
+      ],
+      "requiredGuards": [
+        "x_in_[-30.0,30.0]"
+      ],
+      "schemaVersion": "monogate.eml_lowering_plan_packet.v0",
+      "selectedImplementation": "2 * exp(-(x * x))",
+      "sourceExpression": "exp(-(x * x)) + exp(-(x * x))",
+      "standardExpression": "2 * exp(-(x * x))"
+    }
+  ],
+  "schemaVersion": "monogate.eml_r11_hybrid_lowering_planner.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceCostLabPath": "/home/monogate/monogate/monogate/python/results/eml_r10_cost_stability_lab/eml_r10_cost_stability_lab_2026_05_27.json",
+  "status": "EML_R11_HYBRID_LOWERING_PLANNER_PASS",
+  "summary": {
+    "compilerBehaviorChanged": false,
+    "decisions": {
+      "emit_hybrid": 1,
+      "emit_standard": 6
+    },
+    "forgeBehaviorChanged": false,
+    "planCount": 7,
+    "publicPromotionPerformed": false
+  }
+}
