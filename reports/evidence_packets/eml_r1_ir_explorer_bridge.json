@@ -1,0 +1,78 @@
+{
+  "artifactId": "eml-r1-ir-explorer-bridge",
+  "claimBoundary": "EML-R1 surfaces an existing IR/replay artifact for inspection. DAG savings remain internal candidate evidence, not a new public savings claim.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_verification_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "theorem_proof_claim": false
+  },
+  "evidencePaths": [
+    "python/scripts/eml_ir_pipeline.py",
+    "python/scripts/eml_r1_ir_explorer_bridge.py",
+    "python/results/eml_r1_ir_explorer_bridge_2026_05_27.json",
+    "reports/eml_r1_ir_explorer_bridge_2026_05_27.md",
+    "reports/evidence_packets/eml_r1_ir_explorer_bridge.json"
+  ],
+  "nonClaims": [
+    "No new public savings claim.",
+    "No Forge compiler behavior change.",
+    "No formal verification or theorem proof claim.",
+    "No production controller or certified safety claim.",
+    "No hardware observation.",
+    "No package publish or deploy."
+  ],
+  "replayStatus": "pass",
+  "reviewDecision": "candidate_only",
+  "reviewHighlights": [
+    "Reuses the existing EML IR substrate pipeline.",
+    "Shows a real DAG/shared-node fixture with replay frames.",
+    "Keeps DAG savings as internal candidate evidence."
+  ],
+  "reviewNotes": "Candidate-only bridge from EML IR to the Explorer. Reviewer approval for local surfacing only.",
+  "reviewReasons": [
+    "Useful for the public/dev inspector because it makes EML IR concrete without expanding claims."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "edge_count": 23,
+    "frame_count": 17,
+    "internal_extra_dag_savings_nodes": 26,
+    "node_count": 17,
+    "program_id": "attention_three_logits_three_outputs_v0",
+    "public_savings_claim": false,
+    "reused_node_count": 12,
+    "source_expression": "exp(q*k1) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k2) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k3) / (exp(q*k1) + exp(q*k2) + exp(q*k3))"
+  },
+  "semanticStrength": "eml_ir_explorer_bridge_candidate_no_public_savings_claim",
+  "sourceReportPath": "reports/eml_r1_ir_explorer_bridge_2026_05_27.md",
+  "timeline": [
+    {
+      "detail": "Canonical attention fixture selected from existing substrate work.",
+      "label": "IR selected",
+      "status": "pass"
+    },
+    {
+      "detail": "Replay hash predecessor chain validated by the underlying IR pipeline.",
+      "label": "Replay checked",
+      "status": "pass"
+    },
+    {
+      "detail": "Public savings claim remains false.",
+      "label": "Claim boundary",
+      "status": "pass"
+    }
+  ],
+  "title": "EML-R1 IR Explorer Bridge",
+  "validationCommands": [
+    "python python/scripts/eml_r1_ir_explorer_bridge.py --strict",
+    "python -m pytest -q python/tests/test_eml_r1_ir_explorer_bridge.py"
+  ],
+  "validationStatus": "pass"
+}

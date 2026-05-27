@@ -1,0 +1,1097 @@
+{
+  "artifactId": "eml-r1-ir-explorer-bridge",
+  "claimBoundary": {
+    "boundaryText": "EML-R1 surfaces an existing IR/replay artifact for inspection. DAG savings remain internal candidate evidence, not a new public savings claim.",
+    "candidateOnly": true,
+    "compilerBehaviorChanged": false,
+    "deployPerformed": false,
+    "forgeBehaviorChanged": false,
+    "formalVerificationClaim": false,
+    "packagePublishPerformed": false,
+    "publicReady": false,
+    "publicSavingsClaim": false,
+    "theoremProofClaim": false
+  },
+  "costs": {
+    "canonicalPublicTreeEmlNodes": 301,
+    "canonicalPublicTreeSuperbestNodes": 46,
+    "costModel": "superbest_v5_3_expression_dag",
+    "internalDagEmlNodes": 131,
+    "internalDagSuperbestNodes": 20,
+    "internalExtraDagSavingsNodes": 26,
+    "publicSavingsClaim": false,
+    "treeToDagEmlRatio": 0.4352,
+    "treeToDagSuperbestRatio": 0.4348
+  },
+  "date": "2026-05-27",
+  "evidencePaths": [
+    "python/scripts/eml_ir_pipeline.py",
+    "python/scripts/eml_r1_ir_explorer_bridge.py",
+    "python/results/eml_r1_ir_explorer_bridge_2026_05_27.json",
+    "reports/eml_r1_ir_explorer_bridge_2026_05_27.md",
+    "reports/evidence_packets/eml_r1_ir_explorer_bridge.json"
+  ],
+  "ir": {
+    "edgeCount": 23,
+    "edges": [
+      {
+        "from": "n0",
+        "op": "mul",
+        "to": "n2"
+      },
+      {
+        "from": "n1",
+        "op": "mul",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "op": "exp",
+        "to": "n3"
+      },
+      {
+        "from": "n4",
+        "op": "mul",
+        "to": "n5"
+      },
+      {
+        "from": "n1",
+        "op": "mul",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "op": "exp",
+        "to": "n6"
+      },
+      {
+        "from": "n3",
+        "op": "add",
+        "to": "n7"
+      },
+      {
+        "from": "n6",
+        "op": "add",
+        "to": "n7"
+      },
+      {
+        "from": "n8",
+        "op": "mul",
+        "to": "n9"
+      },
+      {
+        "from": "n1",
+        "op": "mul",
+        "to": "n9"
+      },
+      {
+        "from": "n9",
+        "op": "exp",
+        "to": "n10"
+      },
+      {
+        "from": "n7",
+        "op": "add",
+        "to": "n11"
+      },
+      {
+        "from": "n10",
+        "op": "add",
+        "to": "n11"
+      },
+      {
+        "from": "n3",
+        "op": "div",
+        "to": "n12"
+      },
+      {
+        "from": "n11",
+        "op": "div",
+        "to": "n12"
+      },
+      {
+        "from": "n6",
+        "op": "div",
+        "to": "n13"
+      },
+      {
+        "from": "n11",
+        "op": "div",
+        "to": "n13"
+      },
+      {
+        "from": "n12",
+        "op": "add",
+        "to": "n14"
+      },
+      {
+        "from": "n13",
+        "op": "add",
+        "to": "n14"
+      },
+      {
+        "from": "n10",
+        "op": "div",
+        "to": "n15"
+      },
+      {
+        "from": "n11",
+        "op": "div",
+        "to": "n15"
+      },
+      {
+        "from": "n14",
+        "op": "add",
+        "to": "n16"
+      },
+      {
+        "from": "n15",
+        "op": "add",
+        "to": "n16"
+      }
+    ],
+    "lowering": {
+      "final_expr": "((BEST.div(_t2, _t0) + BEST.div(_t3, _t0)) + BEST.div(_t4, _t0))",
+      "javascript_source": "function loweredExpr(k1, k2, k3, q) {\n  const BEST = {\n    div: (x, y) => x / y,\n    neg: x => -x,\n  };\n  const _t5 = (k1 * q);\n  const _t6 = (k2 * q);\n  const _t7 = (k3 * q);\n  const _t2 = Math.exp(_t5);\n  const _t3 = Math.exp(_t6);\n  const _t4 = Math.exp(_t7);\n  const _t1 = (_t2 + _t3);\n  const _t0 = (_t1 + _t4);\n  return ((BEST.div(_t2, _t0) + BEST.div(_t3, _t0)) + BEST.div(_t4, _t0));\n}",
+      "python_source": "from monogate import BEST\n\ndef lowered_expr(k1, k2, k3, q):\n    \"\"\"SuperBEST DAG-lowered expression; shared temporaries first.\"\"\"\n    _t5 = (k1 * q)\n    _t6 = (k2 * q)\n    _t7 = (k3 * q)\n    _t2 = BEST.exp(_t5)\n    _t3 = BEST.exp(_t6)\n    _t4 = BEST.exp(_t7)\n    _t1 = (_t2 + _t3)\n    _t0 = (_t1 + _t4)\n    return ((BEST.div(_t2, _t0) + BEST.div(_t3, _t0)) + BEST.div(_t4, _t0))",
+      "temporaries": [
+        {
+          "eml_cost": 13,
+          "op": "mul",
+          "reuse_count": 4,
+          "source": "(k1 * q)",
+          "subtree_size": 3,
+          "superbest_cost": 1,
+          "temp": "_t5"
+        },
+        {
+          "eml_cost": 13,
+          "op": "mul",
+          "reuse_count": 4,
+          "source": "(k2 * q)",
+          "subtree_size": 3,
+          "superbest_cost": 1,
+          "temp": "_t6"
+        },
+        {
+          "eml_cost": 13,
+          "op": "mul",
+          "reuse_count": 4,
+          "source": "(k3 * q)",
+          "subtree_size": 3,
+          "superbest_cost": 1,
+          "temp": "_t7"
+        },
+        {
+          "eml_cost": 1,
+          "op": "exp",
+          "reuse_count": 4,
+          "source": "BEST.exp(_t5)",
+          "subtree_size": 4,
+          "superbest_cost": 1,
+          "temp": "_t2"
+        },
+        {
+          "eml_cost": 1,
+          "op": "exp",
+          "reuse_count": 4,
+          "source": "BEST.exp(_t6)",
+          "subtree_size": 4,
+          "superbest_cost": 1,
+          "temp": "_t3"
+        },
+        {
+          "eml_cost": 1,
+          "op": "exp",
+          "reuse_count": 4,
+          "source": "BEST.exp(_t7)",
+          "subtree_size": 4,
+          "superbest_cost": 1,
+          "temp": "_t4"
+        },
+        {
+          "eml_cost": 11,
+          "op": "add",
+          "reuse_count": 3,
+          "source": "(_t2 + _t3)",
+          "subtree_size": 9,
+          "superbest_cost": 2,
+          "temp": "_t1"
+        },
+        {
+          "eml_cost": 11,
+          "op": "add",
+          "reuse_count": 3,
+          "source": "(_t1 + _t4)",
+          "subtree_size": 14,
+          "superbest_cost": 2,
+          "temp": "_t0"
+        }
+      ],
+      "temporary_count": 8
+    },
+    "nodeCount": 17,
+    "nodes": [
+      {
+        "args": [],
+        "eml_cost": 0,
+        "id": "n0",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 4,
+        "source": "k1",
+        "superbest_cost": 0
+      },
+      {
+        "args": [],
+        "eml_cost": 0,
+        "id": "n1",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 12,
+        "source": "q",
+        "superbest_cost": 0
+      },
+      {
+        "args": [
+          "n0",
+          "n1"
+        ],
+        "eml_cost": 13,
+        "id": "n2",
+        "kind": "operation",
+        "op": "mul",
+        "reuse_count": 4,
+        "source": "mul(n0, n1)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [
+          "n2"
+        ],
+        "eml_cost": 1,
+        "id": "n3",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 4,
+        "source": "exp(n2)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [],
+        "eml_cost": 0,
+        "id": "n4",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 4,
+        "source": "k2",
+        "superbest_cost": 0
+      },
+      {
+        "args": [
+          "n4",
+          "n1"
+        ],
+        "eml_cost": 13,
+        "id": "n5",
+        "kind": "operation",
+        "op": "mul",
+        "reuse_count": 4,
+        "source": "mul(n4, n1)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [
+          "n5"
+        ],
+        "eml_cost": 1,
+        "id": "n6",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 4,
+        "source": "exp(n5)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [
+          "n3",
+          "n6"
+        ],
+        "eml_cost": 11,
+        "id": "n7",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 3,
+        "source": "add(n3, n6)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [],
+        "eml_cost": 0,
+        "id": "n8",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 4,
+        "source": "k3",
+        "superbest_cost": 0
+      },
+      {
+        "args": [
+          "n8",
+          "n1"
+        ],
+        "eml_cost": 13,
+        "id": "n9",
+        "kind": "operation",
+        "op": "mul",
+        "reuse_count": 4,
+        "source": "mul(n8, n1)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [
+          "n9"
+        ],
+        "eml_cost": 1,
+        "id": "n10",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 4,
+        "source": "exp(n9)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [
+          "n7",
+          "n10"
+        ],
+        "eml_cost": 11,
+        "id": "n11",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 3,
+        "source": "add(n7, n10)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n3",
+          "n11"
+        ],
+        "eml_cost": 15,
+        "id": "n12",
+        "kind": "operation",
+        "op": "div",
+        "reuse_count": 1,
+        "source": "div(n3, n11)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n6",
+          "n11"
+        ],
+        "eml_cost": 15,
+        "id": "n13",
+        "kind": "operation",
+        "op": "div",
+        "reuse_count": 1,
+        "source": "div(n6, n11)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n12",
+          "n13"
+        ],
+        "eml_cost": 11,
+        "id": "n14",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 1,
+        "source": "add(n12, n13)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n10",
+          "n11"
+        ],
+        "eml_cost": 15,
+        "id": "n15",
+        "kind": "operation",
+        "op": "div",
+        "reuse_count": 1,
+        "source": "div(n10, n11)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n14",
+          "n15"
+        ],
+        "eml_cost": 11,
+        "id": "n16",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 1,
+        "source": "add(n14, n15)",
+        "superbest_cost": 2
+      }
+    ],
+    "outputNode": "n16",
+    "reusedNodes": [
+      {
+        "id": "n0",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 4,
+        "source": "k1"
+      },
+      {
+        "id": "n1",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 12,
+        "source": "q"
+      },
+      {
+        "id": "n2",
+        "kind": "operation",
+        "op": "mul",
+        "reuse_count": 4,
+        "source": "mul(n0, n1)"
+      },
+      {
+        "id": "n3",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 4,
+        "source": "exp(n2)"
+      },
+      {
+        "id": "n4",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 4,
+        "source": "k2"
+      },
+      {
+        "id": "n5",
+        "kind": "operation",
+        "op": "mul",
+        "reuse_count": 4,
+        "source": "mul(n4, n1)"
+      },
+      {
+        "id": "n6",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 4,
+        "source": "exp(n5)"
+      },
+      {
+        "id": "n7",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 3,
+        "source": "add(n3, n6)"
+      },
+      {
+        "id": "n8",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 4,
+        "source": "k3"
+      },
+      {
+        "id": "n9",
+        "kind": "operation",
+        "op": "mul",
+        "reuse_count": 4,
+        "source": "mul(n8, n1)"
+      },
+      {
+        "id": "n10",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 4,
+        "source": "exp(n9)"
+      },
+      {
+        "id": "n11",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 3,
+        "source": "add(n7, n10)"
+      }
+    ],
+    "schemaVersion": "eml-ir.v0"
+  },
+  "replay": {
+    "frameCount": 17,
+    "frames": [
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0000",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "program accepted by local parser",
+        "input": null,
+        "kernel_id": "eml_ir_loader",
+        "lifecycle_state": "INIT",
+        "monotonic_tick": 0,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:d4687aa326c77604d50f99c7713cd3d049838429f76c7cfd3571d608079b9e40",
+        "replay_hash_prev": null,
+        "requested_output": null,
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": null,
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 0
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0001",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "DAG nodes assigned stable ids",
+        "input": null,
+        "kernel_id": "eml_ir_dag",
+        "lifecycle_state": "READY",
+        "monotonic_tick": 1,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:2ae97cbdf4b536336c0168c7ce1ce590975d185132e1f03a53cc8846368826cc",
+        "replay_hash_prev": "sha256:d4687aa326c77604d50f99c7713cd3d049838429f76c7cfd3571d608079b9e40",
+        "requested_output": null,
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": null,
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 1
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0002",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n0",
+            "n1"
+          ]
+        },
+        "kernel_id": "mul",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 2,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:a79803e743b902c56f219ec9afdc1c5b1e3b859b5cab52accfaf3ccfc663afe8",
+        "replay_hash_prev": "sha256:2ae97cbdf4b536336c0168c7ce1ce590975d185132e1f03a53cc8846368826cc",
+        "requested_output": "n2",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n2",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 2
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0003",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n2"
+          ]
+        },
+        "kernel_id": "exp",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 3,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:e2810fca11d40ebcf403158b20719a01df4a3237bc21aeaa8b78e2ec2839f8e5",
+        "replay_hash_prev": "sha256:a79803e743b902c56f219ec9afdc1c5b1e3b859b5cab52accfaf3ccfc663afe8",
+        "requested_output": "n3",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n3",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 3
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0004",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n4",
+            "n1"
+          ]
+        },
+        "kernel_id": "mul",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 4,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:66864461c6a1158768ba2ca7e4e533fce68d72bbacc6471e8965efb1a0b91ae1",
+        "replay_hash_prev": "sha256:e2810fca11d40ebcf403158b20719a01df4a3237bc21aeaa8b78e2ec2839f8e5",
+        "requested_output": "n5",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n5",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 4
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0005",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n5"
+          ]
+        },
+        "kernel_id": "exp",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 5,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:e88950bd359dc276c379ab9fae1aa12d3b3cd72668461245cfee72eff367e473",
+        "replay_hash_prev": "sha256:66864461c6a1158768ba2ca7e4e533fce68d72bbacc6471e8965efb1a0b91ae1",
+        "requested_output": "n6",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n6",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 5
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0006",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n3",
+            "n6"
+          ]
+        },
+        "kernel_id": "add",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 6,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:e5feec694f21cfa5cbfa1ec9f0e65d8e2be83036289f5845b81d0fcd942bf84c",
+        "replay_hash_prev": "sha256:e88950bd359dc276c379ab9fae1aa12d3b3cd72668461245cfee72eff367e473",
+        "requested_output": "n7",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n7",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 6
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0007",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n8",
+            "n1"
+          ]
+        },
+        "kernel_id": "mul",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 7,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:d6347b05e9725e1b55073d84efe79f65acc44128e4c9708f41e81c2a9cf0c4f3",
+        "replay_hash_prev": "sha256:e5feec694f21cfa5cbfa1ec9f0e65d8e2be83036289f5845b81d0fcd942bf84c",
+        "requested_output": "n9",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n9",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 7
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0008",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n9"
+          ]
+        },
+        "kernel_id": "exp",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 8,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:2abf748633c5ff823f1af3c5f6523450f2d6b3989a9b17bfbefdfadb7d1b1b23",
+        "replay_hash_prev": "sha256:d6347b05e9725e1b55073d84efe79f65acc44128e4c9708f41e81c2a9cf0c4f3",
+        "requested_output": "n10",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n10",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 8
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0009",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n7",
+            "n10"
+          ]
+        },
+        "kernel_id": "add",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 9,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:f54e4b2bad71e5818b6fe7d96fe72c57250e6242a289c7f16a9508a31e016ebf",
+        "replay_hash_prev": "sha256:2abf748633c5ff823f1af3c5f6523450f2d6b3989a9b17bfbefdfadb7d1b1b23",
+        "requested_output": "n11",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n11",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 9
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0010",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "division node; denominator domain is not proven by this prototype",
+        "input": {
+          "args": [
+            "n3",
+            "n11"
+          ]
+        },
+        "kernel_id": "div",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 10,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:60e33e5381648df42ba2e33cad3abc550d106f9d58b581645a164c6b275a1517",
+        "replay_hash_prev": "sha256:f54e4b2bad71e5818b6fe7d96fe72c57250e6242a289c7f16a9508a31e016ebf",
+        "requested_output": "n12",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n12",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 10
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0011",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "division node; denominator domain is not proven by this prototype",
+        "input": {
+          "args": [
+            "n6",
+            "n11"
+          ]
+        },
+        "kernel_id": "div",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 11,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:90b5c8ef3e2e2f6541e94ce232da0ce59d31b8af79c705701a374e2bc9e02cd5",
+        "replay_hash_prev": "sha256:60e33e5381648df42ba2e33cad3abc550d106f9d58b581645a164c6b275a1517",
+        "requested_output": "n13",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n13",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 11
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0012",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n12",
+            "n13"
+          ]
+        },
+        "kernel_id": "add",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 12,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:b8e1183e138992a964c240c10b52d47dcda2b4bbf5ee8eeeebbaad692949c017",
+        "replay_hash_prev": "sha256:90b5c8ef3e2e2f6541e94ce232da0ce59d31b8af79c705701a374e2bc9e02cd5",
+        "requested_output": "n14",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n14",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 12
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0013",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "division node; denominator domain is not proven by this prototype",
+        "input": {
+          "args": [
+            "n10",
+            "n11"
+          ]
+        },
+        "kernel_id": "div",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 13,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:893af5052eb5485a1171a80f82317a75f3b0de6cb58ed372021fb86afe1bf889",
+        "replay_hash_prev": "sha256:b8e1183e138992a964c240c10b52d47dcda2b4bbf5ee8eeeebbaad692949c017",
+        "requested_output": "n15",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n15",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 13
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0014",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n14",
+            "n15"
+          ]
+        },
+        "kernel_id": "add",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 14,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:65bba97ebf323d60c7a40ba54943c77cf3a8ee7d9f660d235e783e63773a26aa",
+        "replay_hash_prev": "sha256:893af5052eb5485a1171a80f82317a75f3b0de6cb58ed372021fb86afe1bf889",
+        "requested_output": "n16",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n16",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 14
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0015",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "output node n16 reached",
+        "input": null,
+        "kernel_id": "eml_ir_runtime",
+        "lifecycle_state": "END",
+        "monotonic_tick": 15,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:4d89ed4e3d77af380ba658e96d28b02f406b30959d2ebf36a85026f815efa11c",
+        "replay_hash_prev": "sha256:65bba97ebf323d60c7a40ba54943c77cf3a8ee7d9f660d235e783e63773a26aa",
+        "requested_output": "n16",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n16",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 15
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "attention_three_logits_three_outputs_v0:f0016",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "explicit replay terminal boundary",
+        "input": null,
+        "kernel_id": "eml_ir_runtime",
+        "lifecycle_state": "PARKED",
+        "monotonic_tick": 16,
+        "program_id": "attention_three_logits_three_outputs_v0",
+        "replay_hash": "sha256:d2de754837f309c831cdf978ec0de5af5a403a84a6bb388d77ff2497757c2e9d",
+        "replay_hash_prev": "sha256:4d89ed4e3d77af380ba658e96d28b02f406b30959d2ebf36a85026f815efa11c",
+        "requested_output": "n16",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n16",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 16
+      }
+    ],
+    "hashChainValid": true,
+    "packetId": "attention_three_logits_three_outputs_v0:replay_packet_v0",
+    "terminalState": "PARKED",
+    "timeline": [
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0000",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "program accepted by local parser",
+        "kernel_id": "eml_ir_loader",
+        "replay_hash": "sha256:d4687aa326c77604d50f99c7713cd3d049838429f76c7cfd3571d608079b9e40",
+        "state": "INIT",
+        "tick": 0,
+        "what_happened": "The selected EML expression enters the replay runtime."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0001",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "DAG nodes assigned stable ids",
+        "kernel_id": "eml_ir_dag",
+        "replay_hash": "sha256:2ae97cbdf4b536336c0168c7ce1ce590975d185132e1f03a53cc8846368826cc",
+        "state": "READY",
+        "tick": 1,
+        "what_happened": "Stable DAG node identifiers are assigned before node replay begins."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0002",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "mul",
+        "replay_hash": "sha256:a79803e743b902c56f219ec9afdc1c5b1e3b859b5cab52accfaf3ccfc663afe8",
+        "state": "RUNNING",
+        "tick": 2,
+        "what_happened": "The mul node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0003",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "exp",
+        "replay_hash": "sha256:e2810fca11d40ebcf403158b20719a01df4a3237bc21aeaa8b78e2ec2839f8e5",
+        "state": "RUNNING",
+        "tick": 3,
+        "what_happened": "The exp node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0004",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "mul",
+        "replay_hash": "sha256:66864461c6a1158768ba2ca7e4e533fce68d72bbacc6471e8965efb1a0b91ae1",
+        "state": "RUNNING",
+        "tick": 4,
+        "what_happened": "The mul node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0005",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "exp",
+        "replay_hash": "sha256:e88950bd359dc276c379ab9fae1aa12d3b3cd72668461245cfee72eff367e473",
+        "state": "RUNNING",
+        "tick": 5,
+        "what_happened": "The exp node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0006",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "add",
+        "replay_hash": "sha256:e5feec694f21cfa5cbfa1ec9f0e65d8e2be83036289f5845b81d0fcd942bf84c",
+        "state": "RUNNING",
+        "tick": 6,
+        "what_happened": "The add node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0007",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "mul",
+        "replay_hash": "sha256:d6347b05e9725e1b55073d84efe79f65acc44128e4c9708f41e81c2a9cf0c4f3",
+        "state": "RUNNING",
+        "tick": 7,
+        "what_happened": "The mul node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0008",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "exp",
+        "replay_hash": "sha256:2abf748633c5ff823f1af3c5f6523450f2d6b3989a9b17bfbefdfadb7d1b1b23",
+        "state": "RUNNING",
+        "tick": 8,
+        "what_happened": "The exp node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0009",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "add",
+        "replay_hash": "sha256:f54e4b2bad71e5818b6fe7d96fe72c57250e6242a289c7f16a9508a31e016ebf",
+        "state": "RUNNING",
+        "tick": 9,
+        "what_happened": "The add node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0010",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "division node; denominator domain is not proven by this prototype",
+        "kernel_id": "div",
+        "replay_hash": "sha256:60e33e5381648df42ba2e33cad3abc550d106f9d58b581645a164c6b275a1517",
+        "state": "RUNNING",
+        "tick": 10,
+        "what_happened": "A division node is replayed with a domain annotation, not a proof."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0011",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "division node; denominator domain is not proven by this prototype",
+        "kernel_id": "div",
+        "replay_hash": "sha256:90b5c8ef3e2e2f6541e94ce232da0ce59d31b8af79c705701a374e2bc9e02cd5",
+        "state": "RUNNING",
+        "tick": 11,
+        "what_happened": "A division node is replayed with a domain annotation, not a proof."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0012",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "add",
+        "replay_hash": "sha256:b8e1183e138992a964c240c10b52d47dcda2b4bbf5ee8eeeebbaad692949c017",
+        "state": "RUNNING",
+        "tick": 12,
+        "what_happened": "The add node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0013",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "division node; denominator domain is not proven by this prototype",
+        "kernel_id": "div",
+        "replay_hash": "sha256:893af5052eb5485a1171a80f82317a75f3b0de6cb58ed372021fb86afe1bf889",
+        "state": "RUNNING",
+        "tick": 13,
+        "what_happened": "A division node is replayed with a domain annotation, not a proof."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0014",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "add",
+        "replay_hash": "sha256:65bba97ebf323d60c7a40ba54943c77cf3a8ee7d9f660d235e783e63773a26aa",
+        "state": "RUNNING",
+        "tick": 14,
+        "what_happened": "The add node replays as a static expression step."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0015",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "output node n16 reached",
+        "kernel_id": "eml_ir_runtime",
+        "replay_hash": "sha256:4d89ed4e3d77af380ba658e96d28b02f406b30959d2ebf36a85026f815efa11c",
+        "state": "END",
+        "tick": 15,
+        "what_happened": "The output node is reached and the trace emits END."
+      },
+      {
+        "frame_id": "attention_three_logits_three_outputs_v0:f0016",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "explicit replay terminal boundary",
+        "kernel_id": "eml_ir_runtime",
+        "replay_hash": "sha256:d2de754837f309c831cdf978ec0de5af5a403a84a6bb388d77ff2497757c2e9d",
+        "state": "PARKED",
+        "tick": 16,
+        "what_happened": "The replay packet parks at an explicit terminal boundary."
+      }
+    ]
+  },
+  "schemaVersion": "monogate.eml_r1.ir_explorer_bridge.v0",
+  "selectedProgram": {
+    "arguments": [
+      "k1",
+      "k2",
+      "k3",
+      "q"
+    ],
+    "family": "softmax_attention",
+    "programId": "attention_three_logits_three_outputs_v0",
+    "sourceExpression": "exp(q*k1) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k2) / (exp(q*k1) + exp(q*k2) + exp(q*k3)) + exp(q*k3) / (exp(q*k1) + exp(q*k2) + exp(q*k3))",
+    "whySelected": "Existing EML IR substrate fixture with visible DAG sharing and replay frames."
+  },
+  "status": "EML_R1_IR_EXPLORER_BRIDGE_CANDIDATE_PASS",
+  "validationCommands": [
+    "python python/scripts/eml_r1_ir_explorer_bridge.py --strict",
+    "python -m pytest -q python/tests/test_eml_r1_ir_explorer_bridge.py"
+  ]
+}
