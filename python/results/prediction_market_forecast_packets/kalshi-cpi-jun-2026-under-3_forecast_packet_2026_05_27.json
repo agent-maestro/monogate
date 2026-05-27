@@ -1,0 +1,120 @@
+{
+  "agentProbability": 0.4936,
+  "calibrationStatus": {
+    "eligibleForBrierScoreAfterResolution": true,
+    "eligibleForLogLossAfterResolution": true,
+    "outcomeKnown": false
+  },
+  "category": "macro",
+  "claimFlags": {
+    "authenticated_trading_used": false,
+    "autonomous_trading_claim": false,
+    "certified_safety_claim": false,
+    "financial_advice_claim": false,
+    "order_placement_performed": false,
+    "production_controller_claim": false,
+    "profitable_strategy_claim": false,
+    "public_ready": false,
+    "theorem_proof_claim": false,
+    "trade_recommendation_claim": false
+  },
+  "confidence": "low",
+  "date": "2026-05-27",
+  "estimatedEdge": 0.0336,
+  "evidence": [
+    {
+      "probabilitySignal": 0.56,
+      "sourceId": "recent-cpi-trend",
+      "sourceType": "public_statistical_series",
+      "stalenessDays": 12,
+      "summary": "Recent CPI prints have been trending toward the high-2% range.",
+      "weight": 0.33
+    },
+    {
+      "probabilitySignal": 0.51,
+      "sourceId": "nowcast-basket",
+      "sourceType": "model_snapshot",
+      "stalenessDays": 4,
+      "summary": "A simple nowcast basket is near the threshold and should not be treated as decisive.",
+      "weight": 0.22
+    },
+    {
+      "probabilitySignal": 0.43,
+      "sourceId": "energy-volatility-risk",
+      "sourceType": "risk_note",
+      "stalenessDays": 2,
+      "summary": "Energy components add upside risk before the release.",
+      "weight": 0.18
+    }
+  ],
+  "evidenceQuality": {
+    "evidenceItemCount": 3,
+    "evidenceQuality": "medium",
+    "staleEvidenceCount": 0,
+    "totalEvidenceWeight": 0.73
+  },
+  "executionPolicy": {
+    "authenticatedTradingUsed": false,
+    "humanApprovalRequired": true,
+    "orderPlacementDisabled": true,
+    "readOnly": true,
+    "tradingKeysRequired": false
+  },
+  "forecastContributions": [
+    {
+      "contribution": 0.1932,
+      "probabilitySignal": 0.46,
+      "sourceId": "market_price_prior",
+      "weight": 0.42
+    },
+    {
+      "contribution": 0.1848,
+      "probabilitySignal": 0.56,
+      "sourceId": "recent-cpi-trend",
+      "weight": 0.33
+    },
+    {
+      "contribution": 0.1122,
+      "probabilitySignal": 0.51,
+      "sourceId": "nowcast-basket",
+      "weight": 0.22
+    },
+    {
+      "contribution": 0.0774,
+      "probabilitySignal": 0.43,
+      "sourceId": "energy-volatility-risk",
+      "weight": 0.18
+    }
+  ],
+  "liquidityUsd": 125000.0,
+  "marketId": "kalshi-cpi-jun-2026-under-3",
+  "marketPrice": 0.46,
+  "nonClaims": [
+    "PM-A1 is not financial advice.",
+    "PM-A1 does not claim profitable prediction or market edge.",
+    "PM-A1 does not place orders or use authenticated trading endpoints.",
+    "PM-A1 requires human review before any trade decision.",
+    "PM-A1 uses deterministic fixture data by default, not live market execution."
+  ],
+  "packetType": "prediction_market_forecast_packet_v0",
+  "platform": "kalshi",
+  "question": "Will the next reported US CPI year-over-year value be below 3.0%?",
+  "resolution": {
+    "ambiguityFlags": [],
+    "closeTime": "2026-06-10T12:30:00Z",
+    "parsedBoundary": {
+      "hasDeadline": true,
+      "hasNamedResolutionSource": true,
+      "requiresExactResolverWordingReview": false
+    },
+    "resolutionCriteriaUnderstood": true,
+    "resolutionSource": "Bureau of Labor Statistics CPI release",
+    "settlementRisk": "low"
+  },
+  "reviewFlags": [
+    "edge_below_review_threshold",
+    "low_confidence_forecast"
+  ],
+  "schemaVersion": "monogate.prediction_market_forecast_packet.v0",
+  "tradePermission": "human_review_required"
+}

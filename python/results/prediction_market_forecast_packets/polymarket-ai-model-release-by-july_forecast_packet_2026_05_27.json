@@ -1,0 +1,125 @@
+{
+  "agentProbability": 0.3894,
+  "calibrationStatus": {
+    "eligibleForBrierScoreAfterResolution": true,
+    "eligibleForLogLossAfterResolution": true,
+    "outcomeKnown": false
+  },
+  "category": "technology",
+  "claimFlags": {
+    "authenticated_trading_used": false,
+    "autonomous_trading_claim": false,
+    "certified_safety_claim": false,
+    "financial_advice_claim": false,
+    "order_placement_performed": false,
+    "production_controller_claim": false,
+    "profitable_strategy_claim": false,
+    "public_ready": false,
+    "theorem_proof_claim": false,
+    "trade_recommendation_claim": false
+  },
+  "confidence": "low",
+  "date": "2026-05-27",
+  "estimatedEdge": -0.0006,
+  "evidence": [
+    {
+      "probabilitySignal": 0.44,
+      "sourceId": "product-cadence",
+      "sourceType": "historical_baseline",
+      "stalenessDays": 30,
+      "summary": "Release cadence suggests a plausible window, but naming criteria are strict.",
+      "weight": 0.24
+    },
+    {
+      "probabilitySignal": 0.36,
+      "sourceId": "public-rumor-filter",
+      "sourceType": "risk_note",
+      "stalenessDays": 2,
+      "summary": "Most current evidence is rumor-like and should receive low weight.",
+      "weight": 0.12
+    },
+    {
+      "probabilitySignal": 0.34,
+      "sourceId": "ambiguous-flagship-definition",
+      "sourceType": "resolution_risk",
+      "stalenessDays": 0,
+      "summary": "The word flagship creates settlement ambiguity unless resolver wording is very specific.",
+      "weight": 0.18
+    }
+  ],
+  "evidenceQuality": {
+    "evidenceItemCount": 3,
+    "evidenceQuality": "low",
+    "staleEvidenceCount": 1,
+    "totalEvidenceWeight": 0.54
+  },
+  "executionPolicy": {
+    "authenticatedTradingUsed": false,
+    "humanApprovalRequired": true,
+    "orderPlacementDisabled": true,
+    "readOnly": true,
+    "tradingKeysRequired": false
+  },
+  "forecastContributions": [
+    {
+      "contribution": 0.1638,
+      "probabilitySignal": 0.39,
+      "sourceId": "market_price_prior",
+      "weight": 0.42
+    },
+    {
+      "contribution": 0.1056,
+      "probabilitySignal": 0.44,
+      "sourceId": "product-cadence",
+      "weight": 0.24
+    },
+    {
+      "contribution": 0.0432,
+      "probabilitySignal": 0.36,
+      "sourceId": "public-rumor-filter",
+      "weight": 0.12
+    },
+    {
+      "contribution": 0.0612,
+      "probabilitySignal": 0.34,
+      "sourceId": "ambiguous-flagship-definition",
+      "weight": 0.18
+    }
+  ],
+  "liquidityUsd": 43000.0,
+  "marketId": "polymarket-ai-model-release-by-july",
+  "marketPrice": 0.39,
+  "nonClaims": [
+    "PM-A1 is not financial advice.",
+    "PM-A1 does not claim profitable prediction or market edge.",
+    "PM-A1 does not place orders or use authenticated trading endpoints.",
+    "PM-A1 requires human review before any trade decision.",
+    "PM-A1 uses deterministic fixture data by default, not live market execution."
+  ],
+  "packetType": "prediction_market_forecast_packet_v0",
+  "platform": "polymarket",
+  "question": "Will a named frontier AI lab release a new flagship model by July 31, 2026?",
+  "resolution": {
+    "ambiguityFlags": [
+      "flagship",
+      "named"
+    ],
+    "closeTime": "2026-07-31T23:59:59Z",
+    "parsedBoundary": {
+      "hasDeadline": true,
+      "hasNamedResolutionSource": true,
+      "requiresExactResolverWordingReview": true
+    },
+    "resolutionCriteriaUnderstood": true,
+    "resolutionSource": "Official company announcement and market resolver rules",
+    "settlementRisk": "medium"
+  },
+  "reviewFlags": [
+    "review_resolution_ambiguity",
+    "edge_below_review_threshold",
+    "low_liquidity_market",
+    "low_confidence_forecast"
+  ],
+  "schemaVersion": "monogate.prediction_market_forecast_packet.v0",
+  "tradePermission": "human_review_required"
+}

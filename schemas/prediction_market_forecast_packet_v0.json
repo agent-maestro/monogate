@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate Prediction Market Forecast Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "marketId",
+    "platform",
+    "question",
+    "marketPrice",
+    "agentProbability",
+    "estimatedEdge",
+    "confidence",
+    "tradePermission",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.prediction_market_forecast_packet.v0" },
+    "packetType": { "const": "prediction_market_forecast_packet_v0" },
+    "marketId": { "type": "string", "minLength": 1 },
+    "platform": { "enum": ["kalshi", "polymarket", "fixture"] },
+    "question": { "type": "string", "minLength": 1 },
+    "marketPrice": { "type": "number", "minimum": 0, "maximum": 1 },
+    "agentProbability": { "type": "number", "minimum": 0, "maximum": 1 },
+    "estimatedEdge": { "type": "number" },
+    "confidence": { "enum": ["low", "medium", "high"] },
+    "tradePermission": { "const": "human_review_required" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

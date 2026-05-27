@@ -1,0 +1,49 @@
+{
+  "artifactId": "pm-a1-prediction-market-evidence-agent",
+  "claimBoundary": "Read-only candidate forecast packets only; no financial advice, autonomous trading, or profitable strategy claim.",
+  "claimFlags": {
+    "authenticated_trading_used": false,
+    "autonomous_trading_claim": false,
+    "certified_safety_claim": false,
+    "financial_advice_claim": false,
+    "order_placement_performed": false,
+    "production_controller_claim": false,
+    "profitable_strategy_claim": false,
+    "public_ready": false,
+    "theorem_proof_claim": false,
+    "trade_recommendation_claim": false
+  },
+  "nonClaims": [
+    "PM-A1 is not financial advice.",
+    "PM-A1 does not claim profitable prediction or market edge.",
+    "PM-A1 does not place orders or use authenticated trading endpoints.",
+    "PM-A1 requires human review before any trade decision.",
+    "PM-A1 uses deterministic fixture data by default, not live market execution."
+  ],
+  "replayStatus": "not_applicable",
+  "reviewDecision": "read_only_candidate_forecast_packets_recorded",
+  "reviewHighlights": [
+    "Parses market resolution criteria into a reviewable boundary.",
+    "Combines market price and fixture evidence into a deterministic candidate probability.",
+    "Keeps trade permission at human_review_required for every packet.",
+    "Creates calibration-ready logs without placing orders."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "authenticatedTradingUsed": false,
+    "forecastPacketCount": 4,
+    "humanReviewRequired": true,
+    "orderPlacementPerformed": false,
+    "platforms": [
+      "kalshi",
+      "polymarket"
+    ]
+  },
+  "semanticStrength": "read_only_fixture_forecast_packets_no_trading_claim",
+  "title": "PM-A1 Read-Only Prediction Market Evidence Agent",
+  "validationCommands": [
+    "python python/scripts/pm_a1_prediction_market_evidence_agent.py --build --strict",
+    "python -m pytest -q python/tests/test_pm_a1_prediction_market_evidence_agent.py"
+  ],
+  "validationStatus": "pass"
+}
