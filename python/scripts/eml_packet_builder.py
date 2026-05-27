@@ -4,8 +4,9 @@
 Input: expression metadata packet.
 Output: EML IR, replay summary, Evidence Packet v0, and a short report.
 
-This is EML-R2/R6/R7 plumbing. It does not change Forge/compiler behavior and
-does not create public savings, formal verification, or hardware claims.
+This is EML-R2/R6/R7/R8-R11 plumbing. It does not change Forge/compiler
+behavior and does not create public savings, formal verification, or hardware
+claims.
 """
 
 from __future__ import annotations
@@ -26,6 +27,7 @@ from scripts.eml_ir_pipeline import build_ir, validate_ir  # noqa: E402
 DATE = "2026-05-27"
 SCHEMA_VERSION = "monogate.eml_expression_packet.v0"
 RESULT_SCHEMA_VERSION = "monogate.eml_packet_builder.result.v0"
+PROOF_STATUS_SCHEMA_VERSION = "monogate.eml_proof_status_manifest.v0"
 FORBIDDEN_TRUE_FLAGS = [
     "public_ready",
     "public_savings_claim",
@@ -85,7 +87,45 @@ def _timeline(frames: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
-def _build_obligations(packet: dict[str, Any], ir: dict[str, Any]) -> list[dict[str, Any]]:
+def _load_proof_statuses(program_id: str, proof_status_dir: Path | None) -> dict[str, dict[str, Any]]:
+    if proof_status_dir is None or not proof_status_dir.exists():
+        return {}
+    statuses: dict[str, dict[str, Any]] = {}
+    for path in sorted(proof_status_dir.glob(f"{program_id}*_proof_status_*.json")):
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+        if manifest.get("schemaVersion") != PROOF_STATUS_SCHEMA_VERSION:
+            raise ValueError(f"invalid proof status schema in {path}")
+        if manifest.get("programId") != program_id:
+            raise ValueError(f"proof status program mismatch in {path}")
+        for item in manifest.get("obligations", []):
+            obligation_id = item.get("obligationId")
+            if not isinstance(obligation_id, str) or not obligation_id:
+                raise ValueError(f"invalid obligationId in {path}")
+            statuses[obligation_id] = {**item, "manifestPath": str(path)}
+    return statuses
+
+
+def _apply_proof_status(card: dict[str, Any], proof_statuses: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    proof_status = proof_statuses.get(card["obligationId"])
+    if proof_status is None:
+        return card
+    if proof_status.get("status") != "checked_small_witness":
+        raise ValueError(f"unsupported proof status for {card['obligationId']}: {proof_status.get('status')}")
+    return {
+        **card,
+        "status": "checked_small_witness",
+        "checkedBy": proof_status["checkedBy"],
+        "proofArtifact": proof_status["proofArtifact"],
+        "proofSummary": proof_status["proofSummary"],
+        "nonClaim": proof_status["nonClaim"],
+    }
+
+
+def _build_obligations(
+    packet: dict[str, Any],
+    ir: dict[str, Any],
+    proof_statuses: dict[str, dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     obligations: list[dict[str, Any]] = []
     program_id = packet["program_id"]
     for node in ir["nodes"]:
@@ -142,7 +182,8 @@ def _build_obligations(packet: dict[str, Any], ir: dict[str, Any]) -> list[dict[
                 "nonClaim": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof.",
             }
         )
-    return obligations
+    statuses = proof_statuses or {}
+    return [_apply_proof_status(card, statuses) for card in obligations]
 
 
 def _domain_requirement_for_card(card: dict[str, Any]) -> dict[str, Any] | None:
@@ -169,9 +210,12 @@ def _domain_requirement_for_card(card: dict[str, Any]) -> dict[str, Any] | None:
         "nodeId": card.get("nodeId"),
         "trigger": card["trigger"],
         "requirement": requirement,
-        "status": "unresolved",
+        "status": card["status"] if card["status"] == "checked_small_witness" else "unresolved",
         "blockedPublicClaim": blocker,
         "possibleSafeRewrite": rewrite,
+        "checkedBy": card.get("checkedBy"),
+        "proofArtifact": card.get("proofArtifact"),
+        "proofSummary": card.get("proofSummary"),
     }
 
 
@@ -201,6 +245,19 @@ def _build_domain_safety(packet: dict[str, Any], obligations: list[dict[str, Any
             "reason": card["nonClaim"],
         }
         for card in obligations
+        if card["status"] != "checked_small_witness"
+    ]
+    checked = [
+        {
+            "obligationId": card["obligationId"],
+            "kind": card["kind"],
+            "proofTarget": card["proofTarget"],
+            "checkedBy": card.get("checkedBy"),
+            "proofArtifact": card.get("proofArtifact"),
+            "proofSummary": card.get("proofSummary"),
+        }
+        for card in obligations
+        if card["status"] == "checked_small_witness"
     ]
     blocked_public_claims = [
         "public_savings_claim",
@@ -210,7 +267,7 @@ def _build_domain_safety(packet: dict[str, Any], obligations: list[dict[str, Any
         "certified_safety_claim",
         "production_controller_claim",
     ]
-    if domain_requirements:
+    if any(item["status"] != "checked_small_witness" for item in domain_requirements):
         blocked_public_claims.append("total_domain_safety_claim")
     if range_assumptions:
         blocked_public_claims.append("range_safety_proved_claim")
@@ -220,6 +277,7 @@ def _build_domain_safety(packet: dict[str, Any], obligations: list[dict[str, Any
         "domainRequirements": domain_requirements,
         "rangeAssumptions": range_assumptions,
         "unresolvedObligations": unresolved,
+        "checkedObligations": checked,
         "possibleSafeRewrites": [
             item["possibleSafeRewrite"]
             for item in [*domain_requirements, *range_assumptions]
@@ -229,9 +287,13 @@ def _build_domain_safety(packet: dict[str, Any], obligations: list[dict[str, Any
             "domain_requirement_count": len(domain_requirements),
             "range_assumption_count": len(range_assumptions),
             "unresolved_obligation_count": len(unresolved),
+            "checked_obligation_count": len(checked),
+            "checked_domain_requirement_count": sum(
+                1 for item in domain_requirements if item["status"] == "checked_small_witness"
+            ),
             "safe_rewrite_candidate_count": len(domain_requirements) + len(range_assumptions),
             "blocked_public_claim_count": len(set(blocked_public_claims)),
-            "proved_count": 0,
+            "proved_count": len(checked),
         },
         "nonClaims": [
             "The domain safety lens is deterministic classification, not proof.",
@@ -239,6 +301,25 @@ def _build_domain_safety(packet: dict[str, Any], obligations: list[dict[str, Any
             "Range assumptions are declared metadata, not hardware observations.",
         ],
     }
+
+
+def _build_safe_rewrite_proposals(result: dict[str, Any]) -> list[dict[str, Any]]:
+    proposals = []
+    for requirement in result["domainSafety"]["domainRequirements"]:
+        if requirement["status"] != "checked_small_witness":
+            continue
+        proposals.append(
+            {
+                "proposalId": f"{result['sourcePacket']['program_id']}:{requirement['trigger']}:checked-domain-rewrite",
+                "status": "candidate_no_compiler_change",
+                "nodeId": requirement.get("nodeId"),
+                "requirementId": requirement["requirementId"],
+                "proposal": "Mark this log-domain guard as proof-backed in review surfaces.",
+                "blockedAction": "Do not change compiler lowering or public savings claims from this witness alone.",
+                "proofArtifact": requirement.get("proofArtifact"),
+            }
+        )
+    return proposals
 
 
 def _lean_name(text: str) -> str:
@@ -295,7 +376,8 @@ def _build_machlib_stub_manifest(result: dict[str, Any], stub_relpath: str) -> d
         "artifactId": result["artifactId"],
         "stubPath": stub_relpath,
         "obligationCount": result["obligations"]["summary"]["count"],
-        "provedCount": 0,
+        "provedCount": result["obligations"]["summary"]["proved_count"],
+        "checkedWitnessCount": result["domainSafety"]["summary"]["checked_obligation_count"],
         "claimFlags": {
             "formal_verification_claim": False,
             "theorem_proof_claim": False,
@@ -375,7 +457,7 @@ def validate_expression_packet(packet: dict[str, Any]) -> None:
             raise ValueError(f"forbidden claim flag must be false: {key}")
 
 
-def build_result(packet: dict[str, Any]) -> dict[str, Any]:
+def build_result(packet: dict[str, Any], proof_status_dir: Path | None = ROOT / "reports/eml_proof_status") -> dict[str, Any]:
     validate_expression_packet(packet)
     ir = build_ir(packet["program_id"], packet["expression"])
     validate_ir(ir)
@@ -398,9 +480,10 @@ def build_result(packet: dict[str, Any]) -> dict[str, Any]:
         if node.get("reuse_count", 1) > 1
     ]
     edges = _edges(ir["nodes"])
-    obligations = _build_obligations(packet, ir)
+    proof_statuses = _load_proof_statuses(packet["program_id"], proof_status_dir)
+    obligations = _build_obligations(packet, ir, proof_statuses)
     domain_safety = _build_domain_safety(packet, obligations)
-    return {
+    result = {
         "schemaVersion": RESULT_SCHEMA_VERSION,
         "artifactId": artifact_id(packet["program_id"]),
         "date": DATE,
@@ -457,7 +540,7 @@ def build_result(packet: dict[str, Any]) -> dict[str, Any]:
                 "count": len(obligations),
                 "domain_count": sum(1 for item in obligations if item["kind"] == "domain"),
                 "range_safety_count": sum(1 for item in obligations if item["kind"] == "range_safety"),
-                "proved_count": 0,
+                "proved_count": sum(1 for item in obligations if item["status"] == "checked_small_witness"),
             },
             "nonClaims": [
                 "Obligation cards are not proofs.",
@@ -471,6 +554,8 @@ def build_result(packet: dict[str, Any]) -> dict[str, Any]:
             "python -m pytest -q python/tests/test_eml_packet_builder.py",
         ],
     }
+    result["safeRewriteProposals"] = _build_safe_rewrite_proposals(result)
+    return result
 
 
 def build_evidence_packet(result: dict[str, Any]) -> dict[str, Any]:
@@ -498,6 +583,8 @@ def build_evidence_packet(result: dict[str, Any]) -> dict[str, Any]:
             "domain_requirement_count": result["domainSafety"]["summary"]["domain_requirement_count"],
             "range_assumption_count": result["domainSafety"]["summary"]["range_assumption_count"],
             "blocked_public_claim_count": result["domainSafety"]["summary"]["blocked_public_claim_count"],
+            "checked_obligation_count": result["domainSafety"]["summary"]["checked_obligation_count"],
+            "checked_domain_requirement_count": result["domainSafety"]["summary"]["checked_domain_requirement_count"],
             "public_savings_claim": False,
             "internal_extra_dag_savings_nodes": result["costs"]["internalExtraDagSavingsNodes"],
         },
@@ -513,6 +600,7 @@ def build_evidence_packet(result: dict[str, Any]) -> dict[str, Any]:
             "Generated EML IR and replay frames with the existing IR substrate pipeline.",
             "Generated candidate proof-obligation cards for domain and range boundaries.",
             "Classified domain requirements, range assumptions, blocked claims, and candidate safe rewrites.",
+            f"Loaded {result['domainSafety']['summary']['checked_obligation_count']} checked small witness(es).",
             "Kept public savings and hardware/proof claims false.",
         ],
         "validationCommands": result["validationCommands"],
@@ -582,6 +670,7 @@ def render_report(result: dict[str, Any], evidence: dict[str, Any]) -> str:
             "## Domain Safety Lens",
             "",
             f"- Unresolved obligations: `{result['domainSafety']['summary']['unresolved_obligation_count']}`",
+            f"- Checked obligations: `{result['domainSafety']['summary']['checked_obligation_count']}`",
             f"- Candidate safe rewrites: `{result['domainSafety']['summary']['safe_rewrite_candidate_count']}`",
             f"- Blocked public claims: `{result['domainSafety']['summary']['blocked_public_claim_count']}`",
             "",
@@ -643,8 +732,9 @@ def build_one(
     report_dir: Path,
     evidence_dir: Path,
     obligation_dir: Path,
+    proof_status_dir: Path | None = ROOT / "reports/eml_proof_status",
 ) -> dict[str, Any]:
-    result = build_result(packet)
+    result = build_result(packet, proof_status_dir)
     paths = write_outputs(result, out_dir, report_dir, evidence_dir, obligation_dir)
     return {"result": result, "paths": {key: str(value) for key, value in paths.items()}}
 
@@ -664,6 +754,7 @@ def main() -> int:
     parser.add_argument("--report-dir", type=Path, default=ROOT / "reports/eml_packets")
     parser.add_argument("--evidence-dir", type=Path, default=ROOT / "reports/evidence_packets")
     parser.add_argument("--obligation-dir", type=Path, default=ROOT / "reports/eml_obligations")
+    parser.add_argument("--proof-status-dir", type=Path, default=ROOT / "reports/eml_proof_status")
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
 
@@ -671,13 +762,16 @@ def main() -> int:
         packets = [load_packet(path) for path in sorted(args.fixtures_dir.glob("*.json"))]
         if args.strict and len(packets) < 3:
             raise SystemExit("strict mode requires at least 3 fixture packets")
-        built = [build_one(packet, args.out_dir, args.report_dir, args.evidence_dir, args.obligation_dir) for packet in packets]
+        built = [
+            build_one(packet, args.out_dir, args.report_dir, args.evidence_dir, args.obligation_dir, args.proof_status_dir)
+            for packet in packets
+        ]
         print("EML_PACKET_BUILDER_FIXTURES_OK")
         print(f"packets={len(built)}")
         return 0
 
     packet = load_packet(args.packet) if args.packet else packet_from_cli(args)
-    built = build_one(packet, args.out_dir, args.report_dir, args.evidence_dir, args.obligation_dir)
+    built = build_one(packet, args.out_dir, args.report_dir, args.evidence_dir, args.obligation_dir, args.proof_status_dir)
     if args.strict and built["result"]["review"]["decision"] != "candidate_only":
         raise SystemExit("strict mode requires candidate_only review decision")
     print("EML_PACKET_BUILDER_OK")

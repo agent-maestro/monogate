@@ -41,6 +41,7 @@ Status: `EML_PACKET_BUILDER_CANDIDATE_PASS`
 ## Domain Safety Lens
 
 - Unresolved obligations: `1`
+- Checked obligations: `0`
 - Candidate safe rewrites: `1`
 - Blocked public claims: `7`
 

@@ -18,17 +18,29 @@
       "production_controller_claim",
       "public_savings_claim",
       "range_safety_proved_claim",
-      "theorem_proof_claim",
-      "total_domain_safety_claim"
+      "theorem_proof_claim"
+    ],
+    "checkedObligations": [
+      {
+        "checkedBy": "MachLib.Real.softplus_pair_log_argument_positive",
+        "kind": "domain",
+        "obligationId": "softplus_pair_v0:domain:n5:ln-argument-positive",
+        "proofArtifact": "MachLib/EMLDomainSafety.lean",
+        "proofSummary": "For all a b, exp(a) is positive and exp(b) is positive, so exp(a) + exp(b) is positive.",
+        "proofTarget": "log_argument_positive"
+      }
     ],
     "domainRequirements": [
       {
         "blockedPublicClaim": "log argument may be nonpositive",
+        "checkedBy": "MachLib.Real.softplus_pair_log_argument_positive",
         "nodeId": "n5",
         "possibleSafeRewrite": "Introduce log-domain lift, positivity guard, or range proof.",
+        "proofArtifact": "MachLib/EMLDomainSafety.lean",
+        "proofSummary": "For all a b, exp(a) is positive and exp(b) is positive, so exp(a) + exp(b) is positive.",
         "requirement": "argument_positive",
         "requirementId": "softplus_pair_v0:domain:n5:ln-argument-positive",
-        "status": "unresolved",
+        "status": "checked_small_witness",
         "trigger": "ln"
       }
     ],
@@ -63,20 +75,16 @@
     "schemaVersion": "monogate.eml_domain_safety_lens.v0",
     "status": "candidate_only",
     "summary": {
-      "blocked_public_claim_count": 8,
+      "blocked_public_claim_count": 7,
+      "checked_domain_requirement_count": 1,
+      "checked_obligation_count": 1,
       "domain_requirement_count": 1,
-      "proved_count": 0,
+      "proved_count": 1,
       "range_assumption_count": 2,
       "safe_rewrite_candidate_count": 3,
-      "unresolved_obligation_count": 3
+      "unresolved_obligation_count": 2
     },
     "unresolvedObligations": [
-      {
-        "kind": "domain",
-        "obligationId": "softplus_pair_v0:domain:n5:ln-argument-positive",
-        "proofTarget": "log_argument_positive",
-        "reason": "This card records a proof obligation; it does not prove positivity."
-      },
       {
         "kind": "range_safety",
         "obligationId": "softplus_pair_v0:range:a:declared-safe-range",
@@ -207,13 +215,16 @@
   "obligations": {
     "cards": [
       {
+        "checkedBy": "MachLib.Real.softplus_pair_log_argument_positive",
         "description": "Log node requires evidence that its argument is positive over declared inputs/ranges.",
         "kind": "domain",
         "nodeId": "n5",
-        "nonClaim": "This card records a proof obligation; it does not prove positivity.",
+        "nonClaim": "This checked witness discharges one local log-argument positivity obligation; it is not complete EML safety, compiler correctness, or a public savings claim.",
         "obligationId": "softplus_pair_v0:domain:n5:ln-argument-positive",
+        "proofArtifact": "MachLib/EMLDomainSafety.lean",
+        "proofSummary": "For all a b, exp(a) is positive and exp(b) is positive, so exp(a) + exp(b) is positive.",
         "proofTarget": "log_argument_positive",
-        "status": "candidate_only",
+        "status": "checked_small_witness",
         "trigger": "ln"
       },
       {
@@ -247,7 +258,7 @@
     "summary": {
       "count": 3,
       "domain_count": 1,
-      "proved_count": 0,
+      "proved_count": 1,
       "range_safety_count": 2
     }
   },
@@ -517,6 +528,17 @@
     "semanticStrength": "eml_expression_packet_candidate_no_public_savings_claim",
     "validationStatus": "pass"
   },
+  "safeRewriteProposals": [
+    {
+      "blockedAction": "Do not change compiler lowering or public savings claims from this witness alone.",
+      "nodeId": "n5",
+      "proofArtifact": "MachLib/EMLDomainSafety.lean",
+      "proposal": "Mark this log-domain guard as proof-backed in review surfaces.",
+      "proposalId": "softplus_pair_v0:ln:checked-domain-rewrite",
+      "requirementId": "softplus_pair_v0:domain:n5:ln-argument-positive",
+      "status": "candidate_no_compiler_change"
+    }
+  ],
   "schemaVersion": "monogate.eml_packet_builder.result.v0",
   "sourcePacket": {
     "claim_flags": {

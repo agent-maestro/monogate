@@ -73,7 +73,7 @@ def test_ln_expression_generates_domain_obligation():
     cards = result["obligations"]["cards"]
     assert any(card["trigger"] == "ln" for card in cards)
     assert result["obligations"]["summary"]["domain_count"] >= 1
-    assert result["obligations"]["summary"]["proved_count"] == 0
+    assert result["obligations"]["summary"]["proved_count"] == 1
 
 
 def test_domain_safety_lens_classifies_requirements_and_blocks_claims():
@@ -83,12 +83,34 @@ def test_domain_safety_lens_classifies_requirements_and_blocks_claims():
     assert lens["status"] == "candidate_only"
     assert lens["summary"]["domain_requirement_count"] == 1
     assert lens["summary"]["range_assumption_count"] == 2
-    assert lens["summary"]["unresolved_obligation_count"] == result["obligations"]["summary"]["count"]
-    assert lens["summary"]["proved_count"] == 0
+    assert lens["summary"]["unresolved_obligation_count"] == 2
+    assert lens["summary"]["checked_obligation_count"] == 1
+    assert lens["summary"]["checked_domain_requirement_count"] == 1
+    assert lens["summary"]["proved_count"] == 1
     assert lens["domainRequirements"][0]["requirement"] == "argument_positive"
-    assert "total_domain_safety_claim" in lens["blockedPublicClaims"]
+    assert lens["domainRequirements"][0]["status"] == "checked_small_witness"
+    assert lens["domainRequirements"][0]["checkedBy"] == "MachLib.Real.softplus_pair_log_argument_positive"
+    assert "total_domain_safety_claim" not in lens["blockedPublicClaims"]
     assert "formal_verification_claim" in lens["blockedPublicClaims"]
     assert any("log-domain lift" in rewrite for rewrite in lens["possibleSafeRewrites"])
+
+
+def test_domain_safety_lens_without_proof_manifest_stays_unresolved():
+    result = build_result(fixture_packet("softplus_pair_v0"), proof_status_dir=None)
+    lens = result["domainSafety"]
+    assert lens["summary"]["unresolved_obligation_count"] == result["obligations"]["summary"]["count"]
+    assert lens["summary"]["proved_count"] == 0
+    assert lens["domainRequirements"][0]["status"] == "unresolved"
+    assert "total_domain_safety_claim" in lens["blockedPublicClaims"]
+
+
+def test_checked_witness_creates_safe_rewrite_proposal_without_compiler_change():
+    result = build_result(fixture_packet("softplus_pair_v0"))
+    proposals = result["safeRewriteProposals"]
+    assert len(proposals) == 1
+    assert proposals[0]["status"] == "candidate_no_compiler_change"
+    assert proposals[0]["proofArtifact"] == "MachLib/EMLDomainSafety.lean"
+    assert "Do not change compiler" in proposals[0]["blockedAction"]
 
 
 def test_domain_safety_lens_records_declared_ranges_without_promoting_them():
@@ -175,6 +197,8 @@ def test_cli_direct_expression_writes_outputs(tmp_path):
             str(tmp_path / "evidence"),
             "--obligation-dir",
             str(tmp_path / "obligations"),
+            "--proof-status-dir",
+            str(tmp_path / "proof_status"),
             "--strict",
         ],
         check=True,
@@ -213,6 +237,8 @@ def test_cli_build_fixtures(tmp_path):
             str(tmp_path / "evidence"),
             "--obligation-dir",
             str(tmp_path / "obligations"),
+            "--proof-status-dir",
+            str(tmp_path / "proof_status"),
             "--strict",
         ],
         check=True,
