@@ -1,0 +1,640 @@
+{
+  "artifactId": "sigmoid-derivative-v0",
+  "costs": {
+    "canonicalPublicTreeEmlNodes": 90,
+    "canonicalPublicTreeSuperbestNodes": 17,
+    "costModel": "superbest_v5_3_expression_dag",
+    "internalDagEmlNodes": 54,
+    "internalDagSuperbestNodes": 10,
+    "internalExtraDagSavingsNodes": 7,
+    "publicSavingsClaim": false
+  },
+  "date": "2026-05-27",
+  "ir": {
+    "edgeCount": 10,
+    "edges": [
+      {
+        "from": "n1",
+        "op": "neg",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "op": "exp",
+        "to": "n3"
+      },
+      {
+        "from": "n0",
+        "op": "add",
+        "to": "n4"
+      },
+      {
+        "from": "n3",
+        "op": "add",
+        "to": "n4"
+      },
+      {
+        "from": "n0",
+        "op": "div",
+        "to": "n5"
+      },
+      {
+        "from": "n4",
+        "op": "div",
+        "to": "n5"
+      },
+      {
+        "from": "n0",
+        "op": "sub",
+        "to": "n6"
+      },
+      {
+        "from": "n5",
+        "op": "sub",
+        "to": "n6"
+      },
+      {
+        "from": "n5",
+        "op": "mul",
+        "to": "n7"
+      },
+      {
+        "from": "n6",
+        "op": "mul",
+        "to": "n7"
+      }
+    ],
+    "lowering": {
+      "final_expr": "(_t0 * (1 - _t0))",
+      "javascript_source": "function loweredExpr(x) {\n  const BEST = {\n    div: (x, y) => x / y,\n    neg: x => -x,\n  };\n  const _t3 = BEST.neg(x);\n  const _t2 = Math.exp(_t3);\n  const _t1 = (1 + _t2);\n  const _t0 = BEST.div(1, _t1);\n  return (_t0 * (1 - _t0));\n}",
+      "python_source": "from monogate import BEST\n\ndef lowered_expr(x):\n    \"\"\"SuperBEST DAG-lowered expression; shared temporaries first.\"\"\"\n    _t3 = BEST.neg(x)\n    _t2 = BEST.exp(_t3)\n    _t1 = (1 + _t2)\n    _t0 = BEST.div(1, _t1)\n    return (_t0 * (1 - _t0))",
+      "temporaries": [
+        {
+          "eml_cost": 9,
+          "op": "neg",
+          "reuse_count": 2,
+          "source": "BEST.neg(x)",
+          "subtree_size": 2,
+          "superbest_cost": 2,
+          "temp": "_t3"
+        },
+        {
+          "eml_cost": 1,
+          "op": "exp",
+          "reuse_count": 2,
+          "source": "BEST.exp(_t3)",
+          "subtree_size": 3,
+          "superbest_cost": 1,
+          "temp": "_t2"
+        },
+        {
+          "eml_cost": 11,
+          "op": "add",
+          "reuse_count": 2,
+          "source": "(1 + _t2)",
+          "subtree_size": 5,
+          "superbest_cost": 2,
+          "temp": "_t1"
+        },
+        {
+          "eml_cost": 15,
+          "op": "div",
+          "reuse_count": 2,
+          "source": "BEST.div(1, _t1)",
+          "subtree_size": 7,
+          "superbest_cost": 2,
+          "temp": "_t0"
+        }
+      ],
+      "temporary_count": 4
+    },
+    "nodeCount": 8,
+    "nodes": [
+      {
+        "args": [],
+        "eml_cost": 0,
+        "id": "n0",
+        "kind": "constant",
+        "op": null,
+        "reuse_count": 5,
+        "source": "1",
+        "superbest_cost": 0
+      },
+      {
+        "args": [],
+        "eml_cost": 0,
+        "id": "n1",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 2,
+        "source": "x",
+        "superbest_cost": 0
+      },
+      {
+        "args": [
+          "n1"
+        ],
+        "eml_cost": 9,
+        "id": "n2",
+        "kind": "operation",
+        "op": "neg",
+        "reuse_count": 2,
+        "source": "neg(n1)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n2"
+        ],
+        "eml_cost": 1,
+        "id": "n3",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 2,
+        "source": "exp(n2)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [
+          "n0",
+          "n3"
+        ],
+        "eml_cost": 11,
+        "id": "n4",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 2,
+        "source": "add(n0, n3)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n0",
+          "n4"
+        ],
+        "eml_cost": 15,
+        "id": "n5",
+        "kind": "operation",
+        "op": "div",
+        "reuse_count": 2,
+        "source": "div(n0, n4)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n0",
+          "n5"
+        ],
+        "eml_cost": 5,
+        "id": "n6",
+        "kind": "operation",
+        "op": "sub",
+        "reuse_count": 1,
+        "source": "sub(n0, n5)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n5",
+          "n6"
+        ],
+        "eml_cost": 13,
+        "id": "n7",
+        "kind": "operation",
+        "op": "mul",
+        "reuse_count": 1,
+        "source": "mul(n5, n6)",
+        "superbest_cost": 1
+      }
+    ],
+    "outputNode": "n7",
+    "programId": "sigmoid_derivative_v0",
+    "reusedNodes": [
+      {
+        "id": "n0",
+        "kind": "constant",
+        "op": null,
+        "reuse_count": 5,
+        "source": "1"
+      },
+      {
+        "id": "n1",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 2,
+        "source": "x"
+      },
+      {
+        "id": "n2",
+        "kind": "operation",
+        "op": "neg",
+        "reuse_count": 2,
+        "source": "neg(n1)"
+      },
+      {
+        "id": "n3",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 2,
+        "source": "exp(n2)"
+      },
+      {
+        "id": "n4",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 2,
+        "source": "add(n0, n3)"
+      },
+      {
+        "id": "n5",
+        "kind": "operation",
+        "op": "div",
+        "reuse_count": 2,
+        "source": "div(n0, n4)"
+      }
+    ],
+    "schemaVersion": "eml-ir.v0"
+  },
+  "replay": {
+    "frameCount": 10,
+    "frames": [
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0000",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "program accepted by local parser",
+        "input": null,
+        "kernel_id": "eml_ir_loader",
+        "lifecycle_state": "INIT",
+        "monotonic_tick": 0,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:e8a44b3439eaa91e98a6728721cdb27521ee329c56248b7ca68df70e00f5b8d5",
+        "replay_hash_prev": null,
+        "requested_output": null,
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": null,
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 0
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0001",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "DAG nodes assigned stable ids",
+        "input": null,
+        "kernel_id": "eml_ir_dag",
+        "lifecycle_state": "READY",
+        "monotonic_tick": 1,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:b2daa517c8b07e4d6b50a252d8ff54560351d8ff61e05df7f8004600600b76bb",
+        "replay_hash_prev": "sha256:e8a44b3439eaa91e98a6728721cdb27521ee329c56248b7ca68df70e00f5b8d5",
+        "requested_output": null,
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": null,
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 1
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0002",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n1"
+          ]
+        },
+        "kernel_id": "neg",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 2,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:8c6bde4a0a0eb49439813cf93b974dd6eb40b2b4463b42e4719c01802e043677",
+        "replay_hash_prev": "sha256:b2daa517c8b07e4d6b50a252d8ff54560351d8ff61e05df7f8004600600b76bb",
+        "requested_output": "n2",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n2",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 2
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0003",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n2"
+          ]
+        },
+        "kernel_id": "exp",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 3,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:74c79935f12da94a3700fcfc086f83f62a7a6dc4bd99e4a8265b0aca1f37cda3",
+        "replay_hash_prev": "sha256:8c6bde4a0a0eb49439813cf93b974dd6eb40b2b4463b42e4719c01802e043677",
+        "requested_output": "n3",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n3",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 3
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0004",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n0",
+            "n3"
+          ]
+        },
+        "kernel_id": "add",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 4,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:94b76129a7508938e12623371791638610033e69e88d0f57b36c84d9a7d44ccf",
+        "replay_hash_prev": "sha256:74c79935f12da94a3700fcfc086f83f62a7a6dc4bd99e4a8265b0aca1f37cda3",
+        "requested_output": "n4",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n4",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 4
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0005",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "division node; denominator domain is not proven by this prototype",
+        "input": {
+          "args": [
+            "n0",
+            "n4"
+          ]
+        },
+        "kernel_id": "div",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 5,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:55e4863bc6ab42e2fb278137e8b6f696e831766b043300bac2fad2d1414cd8bd",
+        "replay_hash_prev": "sha256:94b76129a7508938e12623371791638610033e69e88d0f57b36c84d9a7d44ccf",
+        "requested_output": "n5",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n5",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 5
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0006",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n0",
+            "n5"
+          ]
+        },
+        "kernel_id": "sub",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 6,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:f7bd60d45f58b08860d493a3145c8326958408f3db2342a1c94fffdbaae67dd8",
+        "replay_hash_prev": "sha256:55e4863bc6ab42e2fb278137e8b6f696e831766b043300bac2fad2d1414cd8bd",
+        "requested_output": "n6",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n6",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 6
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0007",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n5",
+            "n6"
+          ]
+        },
+        "kernel_id": "mul",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 7,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:9903dd874143fc7a7ca409e88e930319b61cad24c566fb5a18e5e952f2b14b34",
+        "replay_hash_prev": "sha256:f7bd60d45f58b08860d493a3145c8326958408f3db2342a1c94fffdbaae67dd8",
+        "requested_output": "n7",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n7",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 7
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0008",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "output node n7 reached",
+        "input": null,
+        "kernel_id": "eml_ir_runtime",
+        "lifecycle_state": "END",
+        "monotonic_tick": 8,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:a81eaba25de2a556287396a5a28455ce26c12f880a5ef7633fe46d3a0aa6c7b4",
+        "replay_hash_prev": "sha256:9903dd874143fc7a7ca409e88e930319b61cad24c566fb5a18e5e952f2b14b34",
+        "requested_output": "n7",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n7",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 8
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "sigmoid_derivative_v0:f0009",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "explicit replay terminal boundary",
+        "input": null,
+        "kernel_id": "eml_ir_runtime",
+        "lifecycle_state": "PARKED",
+        "monotonic_tick": 9,
+        "program_id": "sigmoid_derivative_v0",
+        "replay_hash": "sha256:670418e13844efc11296376b63a18c85a4f9978d0e5282d0e34df5658c2c7446",
+        "replay_hash_prev": "sha256:a81eaba25de2a556287396a5a28455ce26c12f880a5ef7633fe46d3a0aa6c7b4",
+        "requested_output": "n7",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n7",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 9
+      }
+    ],
+    "hashChainValid": true,
+    "packetId": "sigmoid_derivative_v0:replay_packet_v0",
+    "terminalState": "PARKED",
+    "timeline": [
+      {
+        "frame_id": "sigmoid_derivative_v0:f0000",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "program accepted by local parser",
+        "kernel_id": "eml_ir_loader",
+        "replay_hash": "sha256:e8a44b3439eaa91e98a6728721cdb27521ee329c56248b7ca68df70e00f5b8d5",
+        "state": "INIT",
+        "tick": 0,
+        "what_happened": "The EML expression packet enters the local IR runtime."
+      },
+      {
+        "frame_id": "sigmoid_derivative_v0:f0001",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "DAG nodes assigned stable ids",
+        "kernel_id": "eml_ir_dag",
+        "replay_hash": "sha256:b2daa517c8b07e4d6b50a252d8ff54560351d8ff61e05df7f8004600600b76bb",
+        "state": "READY",
+        "tick": 1,
+        "what_happened": "Stable DAG node identifiers are assigned."
+      },
+      {
+        "frame_id": "sigmoid_derivative_v0:f0002",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "neg",
+        "replay_hash": "sha256:8c6bde4a0a0eb49439813cf93b974dd6eb40b2b4463b42e4719c01802e043677",
+        "state": "RUNNING",
+        "tick": 2,
+        "what_happened": "The neg node replays as a static expression step."
+      },
+      {
+        "frame_id": "sigmoid_derivative_v0:f0003",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "exp",
+        "replay_hash": "sha256:74c79935f12da94a3700fcfc086f83f62a7a6dc4bd99e4a8265b0aca1f37cda3",
+        "state": "RUNNING",
+        "tick": 3,
+        "what_happened": "The exp node replays as a static expression step."
+      },
+      {
+        "frame_id": "sigmoid_derivative_v0:f0004",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "add",
+        "replay_hash": "sha256:94b76129a7508938e12623371791638610033e69e88d0f57b36c84d9a7d44ccf",
+        "state": "RUNNING",
+        "tick": 4,
+        "what_happened": "The add node replays as a static expression step."
+      },
+      {
+        "frame_id": "sigmoid_derivative_v0:f0005",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "division node; denominator domain is not proven by this prototype",
+        "kernel_id": "div",
+        "replay_hash": "sha256:55e4863bc6ab42e2fb278137e8b6f696e831766b043300bac2fad2d1414cd8bd",
+        "state": "RUNNING",
+        "tick": 5,
+        "what_happened": "A division node is replayed with a domain annotation, not a proof."
+      },
+      {
+        "frame_id": "sigmoid_derivative_v0:f0006",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "sub",
+        "replay_hash": "sha256:f7bd60d45f58b08860d493a3145c8326958408f3db2342a1c94fffdbaae67dd8",
+        "state": "RUNNING",
+        "tick": 6,
+        "what_happened": "The sub node replays as a static expression step."
+      },
+      {
+        "frame_id": "sigmoid_derivative_v0:f0007",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "mul",
+        "replay_hash": "sha256:9903dd874143fc7a7ca409e88e930319b61cad24c566fb5a18e5e952f2b14b34",
+        "state": "RUNNING",
+        "tick": 7,
+        "what_happened": "The mul node replays as a static expression step."
+      },
+      {
+        "frame_id": "sigmoid_derivative_v0:f0008",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "output node n7 reached",
+        "kernel_id": "eml_ir_runtime",
+        "replay_hash": "sha256:a81eaba25de2a556287396a5a28455ce26c12f880a5ef7633fe46d3a0aa6c7b4",
+        "state": "END",
+        "tick": 8,
+        "what_happened": "The output node is reached."
+      },
+      {
+        "frame_id": "sigmoid_derivative_v0:f0009",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "explicit replay terminal boundary",
+        "kernel_id": "eml_ir_runtime",
+        "replay_hash": "sha256:670418e13844efc11296376b63a18c85a4f9978d0e5282d0e34df5658c2c7446",
+        "state": "PARKED",
+        "tick": 9,
+        "what_happened": "The replay packet parks at the terminal boundary."
+      }
+    ]
+  },
+  "review": {
+    "claimBoundary": "Generated EML packet is candidate-only. DAG savings are internal evidence, not a public savings claim.",
+    "decision": "candidate_only",
+    "nonClaims": [
+      "No new public savings claim.",
+      "No Forge/compiler behavior change.",
+      "No theorem or formal verification claim.",
+      "No hardware observation.",
+      "No certified safety or production controller claim.",
+      "No package publish or deploy."
+    ],
+    "replayStatus": "pass",
+    "semanticStrength": "eml_expression_packet_candidate_no_public_savings_claim",
+    "validationStatus": "pass"
+  },
+  "schemaVersion": "monogate.eml_packet_builder.result.v0",
+  "sourcePacket": {
+    "claim_flags": {
+      "certified_safety_claim": false,
+      "compiler_behavior_changed": false,
+      "forge_behavior_changed": false,
+      "formal_verification_claim": false,
+      "hardware_observed": false,
+      "live_serial_capture_performed": false,
+      "production_controller_claim": false,
+      "public_ready": false,
+      "public_savings_claim": false,
+      "theorem_proof_claim": false
+    },
+    "expression": "(1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))",
+    "family": "sigmoid_logistic",
+    "inputs": [
+      "x"
+    ],
+    "physical_meaning": "Derivative-shaped logistic fixture with repeated sigmoid subexpressions for DAG reuse inspection.",
+    "program_id": "sigmoid_derivative_v0",
+    "safe_ranges": {
+      "x": {
+        "max": 12.0,
+        "min": -12.0
+      }
+    },
+    "schemaVersion": "monogate.eml_expression_packet.v0",
+    "simulated_trace_samples": [
+      {
+        "x": -2.0
+      },
+      {
+        "x": 0.0
+      },
+      {
+        "x": 2.0
+      }
+    ],
+    "source_repo": "monogate",
+    "units": {
+      "x": "dimensionless"
+    }
+  },
+  "status": "EML_PACKET_BUILDER_CANDIDATE_PASS",
+  "validationCommands": [
+    "python python/scripts/eml_packet_builder.py --build-fixtures --strict",
+    "python -m pytest -q python/tests/test_eml_packet_builder.py"
+  ]
+}

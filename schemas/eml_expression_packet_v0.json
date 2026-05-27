@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://monogate.dev/schemas/eml_expression_packet_v0.json",
+  "title": "EML Expression Packet v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "program_id",
+    "family",
+    "expression",
+    "inputs",
+    "units",
+    "safe_ranges",
+    "physical_meaning",
+    "source_repo",
+    "claim_flags"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "monogate.eml_expression_packet.v0"
+    },
+    "program_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*_v[0-9]+$"
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expression": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "safe_ranges": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["min", "max"],
+        "properties": {
+          "min": { "type": "number" },
+          "max": { "type": "number" }
+        }
+      }
+    },
+    "physical_meaning": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_repo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "simulated_trace_samples": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "claim_flags": {
+      "type": "object",
+      "required": [
+        "public_ready",
+        "public_savings_claim",
+        "hardware_observed",
+        "live_serial_capture_performed",
+        "certified_safety_claim",
+        "production_controller_claim",
+        "formal_verification_claim",
+        "theorem_proof_claim",
+        "compiler_behavior_changed",
+        "forge_behavior_changed"
+      ],
+      "properties": {
+        "public_ready": { "type": "boolean" },
+        "public_savings_claim": { "type": "boolean" },
+        "hardware_observed": { "type": "boolean" },
+        "live_serial_capture_performed": { "type": "boolean" },
+        "certified_safety_claim": { "type": "boolean" },
+        "production_controller_claim": { "type": "boolean" },
+        "formal_verification_claim": { "type": "boolean" },
+        "theorem_proof_claim": { "type": "boolean" },
+        "compiler_behavior_changed": { "type": "boolean" },
+        "forge_behavior_changed": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

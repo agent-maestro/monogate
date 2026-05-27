@@ -1,0 +1,495 @@
+{
+  "artifactId": "gaussian-energy-v0",
+  "costs": {
+    "canonicalPublicTreeEmlNodes": 57,
+    "canonicalPublicTreeSuperbestNodes": 10,
+    "costModel": "superbest_v5_3_expression_dag",
+    "internalDagEmlNodes": 34,
+    "internalDagSuperbestNodes": 6,
+    "internalExtraDagSavingsNodes": 4,
+    "publicSavingsClaim": false
+  },
+  "date": "2026-05-27",
+  "ir": {
+    "edgeCount": 6,
+    "edges": [
+      {
+        "from": "n0",
+        "op": "mul",
+        "to": "n1"
+      },
+      {
+        "from": "n0",
+        "op": "mul",
+        "to": "n1"
+      },
+      {
+        "from": "n1",
+        "op": "neg",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "op": "exp",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "op": "add",
+        "to": "n4"
+      },
+      {
+        "from": "n3",
+        "op": "add",
+        "to": "n4"
+      }
+    ],
+    "lowering": {
+      "final_expr": "(_t0 + _t0)",
+      "javascript_source": "function loweredExpr(x) {\n  const BEST = {\n    div: (x, y) => x / y,\n    neg: x => -x,\n  };\n  const _t2 = (x * x);\n  const _t1 = BEST.neg(_t2);\n  const _t0 = Math.exp(_t1);\n  return (_t0 + _t0);\n}",
+      "python_source": "from monogate import BEST\n\ndef lowered_expr(x):\n    \"\"\"SuperBEST DAG-lowered expression; shared temporaries first.\"\"\"\n    _t2 = (x * x)\n    _t1 = BEST.neg(_t2)\n    _t0 = BEST.exp(_t1)\n    return (_t0 + _t0)",
+      "temporaries": [
+        {
+          "eml_cost": 13,
+          "op": "mul",
+          "reuse_count": 2,
+          "source": "(x * x)",
+          "subtree_size": 3,
+          "superbest_cost": 1,
+          "temp": "_t2"
+        },
+        {
+          "eml_cost": 9,
+          "op": "neg",
+          "reuse_count": 2,
+          "source": "BEST.neg(_t2)",
+          "subtree_size": 4,
+          "superbest_cost": 2,
+          "temp": "_t1"
+        },
+        {
+          "eml_cost": 1,
+          "op": "exp",
+          "reuse_count": 2,
+          "source": "BEST.exp(_t1)",
+          "subtree_size": 5,
+          "superbest_cost": 1,
+          "temp": "_t0"
+        }
+      ],
+      "temporary_count": 3
+    },
+    "nodeCount": 5,
+    "nodes": [
+      {
+        "args": [],
+        "eml_cost": 0,
+        "id": "n0",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 4,
+        "source": "x",
+        "superbest_cost": 0
+      },
+      {
+        "args": [
+          "n0",
+          "n0"
+        ],
+        "eml_cost": 13,
+        "id": "n1",
+        "kind": "operation",
+        "op": "mul",
+        "reuse_count": 2,
+        "source": "mul(n0, n0)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [
+          "n1"
+        ],
+        "eml_cost": 9,
+        "id": "n2",
+        "kind": "operation",
+        "op": "neg",
+        "reuse_count": 2,
+        "source": "neg(n1)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n2"
+        ],
+        "eml_cost": 1,
+        "id": "n3",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 2,
+        "source": "exp(n2)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [
+          "n3",
+          "n3"
+        ],
+        "eml_cost": 11,
+        "id": "n4",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 1,
+        "source": "add(n3, n3)",
+        "superbest_cost": 2
+      }
+    ],
+    "outputNode": "n4",
+    "programId": "gaussian_energy_v0",
+    "reusedNodes": [
+      {
+        "id": "n0",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 4,
+        "source": "x"
+      },
+      {
+        "id": "n1",
+        "kind": "operation",
+        "op": "mul",
+        "reuse_count": 2,
+        "source": "mul(n0, n0)"
+      },
+      {
+        "id": "n2",
+        "kind": "operation",
+        "op": "neg",
+        "reuse_count": 2,
+        "source": "neg(n1)"
+      },
+      {
+        "id": "n3",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 2,
+        "source": "exp(n2)"
+      }
+    ],
+    "schemaVersion": "eml-ir.v0"
+  },
+  "replay": {
+    "frameCount": 8,
+    "frames": [
+      {
+        "evidence_level": "simulated",
+        "frame_id": "gaussian_energy_v0:f0000",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "program accepted by local parser",
+        "input": null,
+        "kernel_id": "eml_ir_loader",
+        "lifecycle_state": "INIT",
+        "monotonic_tick": 0,
+        "program_id": "gaussian_energy_v0",
+        "replay_hash": "sha256:17d56fca7b809fec4ce51053d5fb44b1d17df35591f8f7134e8df3fbac2c4f06",
+        "replay_hash_prev": null,
+        "requested_output": null,
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": null,
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 0
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "gaussian_energy_v0:f0001",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "DAG nodes assigned stable ids",
+        "input": null,
+        "kernel_id": "eml_ir_dag",
+        "lifecycle_state": "READY",
+        "monotonic_tick": 1,
+        "program_id": "gaussian_energy_v0",
+        "replay_hash": "sha256:af77f151f8f02457f60daa27dacee5b9f8bdd5619971e45d5eec49751cbe004a",
+        "replay_hash_prev": "sha256:17d56fca7b809fec4ce51053d5fb44b1d17df35591f8f7134e8df3fbac2c4f06",
+        "requested_output": null,
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": null,
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 1
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "gaussian_energy_v0:f0002",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n0",
+            "n0"
+          ]
+        },
+        "kernel_id": "mul",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 2,
+        "program_id": "gaussian_energy_v0",
+        "replay_hash": "sha256:c7d06c6341a13696acb3cc3f77f85929c136177aeb02f99f39069fe01f3a918c",
+        "replay_hash_prev": "sha256:af77f151f8f02457f60daa27dacee5b9f8bdd5619971e45d5eec49751cbe004a",
+        "requested_output": "n1",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n1",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 2
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "gaussian_energy_v0:f0003",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n1"
+          ]
+        },
+        "kernel_id": "neg",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 3,
+        "program_id": "gaussian_energy_v0",
+        "replay_hash": "sha256:bc0babf2e955413d24741f7faf1a156b72a71c030c954dcdc1d56ba4dda7a285",
+        "replay_hash_prev": "sha256:c7d06c6341a13696acb3cc3f77f85929c136177aeb02f99f39069fe01f3a918c",
+        "requested_output": "n2",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n2",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 3
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "gaussian_energy_v0:f0004",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n2"
+          ]
+        },
+        "kernel_id": "exp",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 4,
+        "program_id": "gaussian_energy_v0",
+        "replay_hash": "sha256:0a500f792ce92e583c1342a6da5f76761124cb8317e2c89e63130c0191dcffc9",
+        "replay_hash_prev": "sha256:bc0babf2e955413d24741f7faf1a156b72a71c030c954dcdc1d56ba4dda7a285",
+        "requested_output": "n3",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n3",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 4
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "gaussian_energy_v0:f0005",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n3",
+            "n3"
+          ]
+        },
+        "kernel_id": "add",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 5,
+        "program_id": "gaussian_energy_v0",
+        "replay_hash": "sha256:c01a7eb4ab5fb8cafed5e54c4e4008f0335d0c15f08f673ea03decec2de91232",
+        "replay_hash_prev": "sha256:0a500f792ce92e583c1342a6da5f76761124cb8317e2c89e63130c0191dcffc9",
+        "requested_output": "n4",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n4",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 5
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "gaussian_energy_v0:f0006",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "output node n4 reached",
+        "input": null,
+        "kernel_id": "eml_ir_runtime",
+        "lifecycle_state": "END",
+        "monotonic_tick": 6,
+        "program_id": "gaussian_energy_v0",
+        "replay_hash": "sha256:f0b159183980d5e988a3af9f493165fa7ed39fc306819bf674c638ca5012ff5a",
+        "replay_hash_prev": "sha256:c01a7eb4ab5fb8cafed5e54c4e4008f0335d0c15f08f673ea03decec2de91232",
+        "requested_output": "n4",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n4",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 6
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "gaussian_energy_v0:f0007",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "explicit replay terminal boundary",
+        "input": null,
+        "kernel_id": "eml_ir_runtime",
+        "lifecycle_state": "PARKED",
+        "monotonic_tick": 7,
+        "program_id": "gaussian_energy_v0",
+        "replay_hash": "sha256:c403c29127caed03367b37124d622c7d6118b3f65f520a7d6de45215d4025458",
+        "replay_hash_prev": "sha256:f0b159183980d5e988a3af9f493165fa7ed39fc306819bf674c638ca5012ff5a",
+        "requested_output": "n4",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n4",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 7
+      }
+    ],
+    "hashChainValid": true,
+    "packetId": "gaussian_energy_v0:replay_packet_v0",
+    "terminalState": "PARKED",
+    "timeline": [
+      {
+        "frame_id": "gaussian_energy_v0:f0000",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "program accepted by local parser",
+        "kernel_id": "eml_ir_loader",
+        "replay_hash": "sha256:17d56fca7b809fec4ce51053d5fb44b1d17df35591f8f7134e8df3fbac2c4f06",
+        "state": "INIT",
+        "tick": 0,
+        "what_happened": "The EML expression packet enters the local IR runtime."
+      },
+      {
+        "frame_id": "gaussian_energy_v0:f0001",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "DAG nodes assigned stable ids",
+        "kernel_id": "eml_ir_dag",
+        "replay_hash": "sha256:af77f151f8f02457f60daa27dacee5b9f8bdd5619971e45d5eec49751cbe004a",
+        "state": "READY",
+        "tick": 1,
+        "what_happened": "Stable DAG node identifiers are assigned."
+      },
+      {
+        "frame_id": "gaussian_energy_v0:f0002",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "mul",
+        "replay_hash": "sha256:c7d06c6341a13696acb3cc3f77f85929c136177aeb02f99f39069fe01f3a918c",
+        "state": "RUNNING",
+        "tick": 2,
+        "what_happened": "The mul node replays as a static expression step."
+      },
+      {
+        "frame_id": "gaussian_energy_v0:f0003",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "neg",
+        "replay_hash": "sha256:bc0babf2e955413d24741f7faf1a156b72a71c030c954dcdc1d56ba4dda7a285",
+        "state": "RUNNING",
+        "tick": 3,
+        "what_happened": "The neg node replays as a static expression step."
+      },
+      {
+        "frame_id": "gaussian_energy_v0:f0004",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "exp",
+        "replay_hash": "sha256:0a500f792ce92e583c1342a6da5f76761124cb8317e2c89e63130c0191dcffc9",
+        "state": "RUNNING",
+        "tick": 4,
+        "what_happened": "The exp node replays as a static expression step."
+      },
+      {
+        "frame_id": "gaussian_energy_v0:f0005",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "add",
+        "replay_hash": "sha256:c01a7eb4ab5fb8cafed5e54c4e4008f0335d0c15f08f673ea03decec2de91232",
+        "state": "RUNNING",
+        "tick": 5,
+        "what_happened": "The add node replays as a static expression step."
+      },
+      {
+        "frame_id": "gaussian_energy_v0:f0006",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "output node n4 reached",
+        "kernel_id": "eml_ir_runtime",
+        "replay_hash": "sha256:f0b159183980d5e988a3af9f493165fa7ed39fc306819bf674c638ca5012ff5a",
+        "state": "END",
+        "tick": 6,
+        "what_happened": "The output node is reached."
+      },
+      {
+        "frame_id": "gaussian_energy_v0:f0007",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "explicit replay terminal boundary",
+        "kernel_id": "eml_ir_runtime",
+        "replay_hash": "sha256:c403c29127caed03367b37124d622c7d6118b3f65f520a7d6de45215d4025458",
+        "state": "PARKED",
+        "tick": 7,
+        "what_happened": "The replay packet parks at the terminal boundary."
+      }
+    ]
+  },
+  "review": {
+    "claimBoundary": "Generated EML packet is candidate-only. DAG savings are internal evidence, not a public savings claim.",
+    "decision": "candidate_only",
+    "nonClaims": [
+      "No new public savings claim.",
+      "No Forge/compiler behavior change.",
+      "No theorem or formal verification claim.",
+      "No hardware observation.",
+      "No certified safety or production controller claim.",
+      "No package publish or deploy."
+    ],
+    "replayStatus": "pass",
+    "semanticStrength": "eml_expression_packet_candidate_no_public_savings_claim",
+    "validationStatus": "pass"
+  },
+  "schemaVersion": "monogate.eml_packet_builder.result.v0",
+  "sourcePacket": {
+    "claim_flags": {
+      "certified_safety_claim": false,
+      "compiler_behavior_changed": false,
+      "forge_behavior_changed": false,
+      "formal_verification_claim": false,
+      "hardware_observed": false,
+      "live_serial_capture_performed": false,
+      "production_controller_claim": false,
+      "public_ready": false,
+      "public_savings_claim": false,
+      "theorem_proof_claim": false
+    },
+    "expression": "exp(-(x * x)) + exp(-(x * x))",
+    "family": "forge_efrog_fixture",
+    "inputs": [
+      "x"
+    ],
+    "physical_meaning": "Gaussian-like repeated energy fixture for shared-node and replay inspection.",
+    "program_id": "gaussian_energy_v0",
+    "safe_ranges": {
+      "x": {
+        "max": 8.0,
+        "min": -8.0
+      }
+    },
+    "schemaVersion": "monogate.eml_expression_packet.v0",
+    "simulated_trace_samples": [
+      {
+        "x": -1.0
+      },
+      {
+        "x": 0.0
+      },
+      {
+        "x": 1.0
+      }
+    ],
+    "source_repo": "monogate",
+    "units": {
+      "x": "dimensionless"
+    }
+  },
+  "status": "EML_PACKET_BUILDER_CANDIDATE_PASS",
+  "validationCommands": [
+    "python python/scripts/eml_packet_builder.py --build-fixtures --strict",
+    "python -m pytest -q python/tests/test_eml_packet_builder.py"
+  ]
+}

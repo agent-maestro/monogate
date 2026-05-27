@@ -1,0 +1,450 @@
+{
+  "artifactId": "softplus-pair-v0",
+  "costs": {
+    "canonicalPublicTreeEmlNodes": 16,
+    "canonicalPublicTreeSuperbestNodes": 5,
+    "costModel": "superbest_v5_3_expression_dag",
+    "internalDagEmlNodes": 16,
+    "internalDagSuperbestNodes": 5,
+    "internalExtraDagSavingsNodes": 0,
+    "publicSavingsClaim": false
+  },
+  "date": "2026-05-27",
+  "ir": {
+    "edgeCount": 5,
+    "edges": [
+      {
+        "from": "n0",
+        "op": "exp",
+        "to": "n1"
+      },
+      {
+        "from": "n2",
+        "op": "exp",
+        "to": "n3"
+      },
+      {
+        "from": "n1",
+        "op": "add",
+        "to": "n4"
+      },
+      {
+        "from": "n3",
+        "op": "add",
+        "to": "n4"
+      },
+      {
+        "from": "n4",
+        "op": "ln",
+        "to": "n5"
+      }
+    ],
+    "lowering": {
+      "final_expr": "BEST.ln((BEST.exp(a) + BEST.exp(b)))",
+      "javascript_source": "function loweredExpr(a, b) {\n  const BEST = {\n    div: (x, y) => x / y,\n    neg: x => -x,\n  };\n  return Math.log((Math.exp(a) + Math.exp(b)));\n}",
+      "python_source": "from monogate import BEST\n\ndef lowered_expr(a, b):\n    \"\"\"SuperBEST DAG-lowered expression; shared temporaries first.\"\"\"\n    return BEST.ln((BEST.exp(a) + BEST.exp(b)))",
+      "temporaries": [],
+      "temporary_count": 0
+    },
+    "nodeCount": 6,
+    "nodes": [
+      {
+        "args": [],
+        "eml_cost": 0,
+        "id": "n0",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 1,
+        "source": "a",
+        "superbest_cost": 0
+      },
+      {
+        "args": [
+          "n0"
+        ],
+        "eml_cost": 1,
+        "id": "n1",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 1,
+        "source": "exp(n0)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [],
+        "eml_cost": 0,
+        "id": "n2",
+        "kind": "input",
+        "op": null,
+        "reuse_count": 1,
+        "source": "b",
+        "superbest_cost": 0
+      },
+      {
+        "args": [
+          "n2"
+        ],
+        "eml_cost": 1,
+        "id": "n3",
+        "kind": "operation",
+        "op": "exp",
+        "reuse_count": 1,
+        "source": "exp(n2)",
+        "superbest_cost": 1
+      },
+      {
+        "args": [
+          "n1",
+          "n3"
+        ],
+        "eml_cost": 11,
+        "id": "n4",
+        "kind": "operation",
+        "op": "add",
+        "reuse_count": 1,
+        "source": "add(n1, n3)",
+        "superbest_cost": 2
+      },
+      {
+        "args": [
+          "n4"
+        ],
+        "eml_cost": 3,
+        "id": "n5",
+        "kind": "operation",
+        "op": "ln",
+        "reuse_count": 1,
+        "source": "ln(n4)",
+        "superbest_cost": 1
+      }
+    ],
+    "outputNode": "n5",
+    "programId": "softplus_pair_v0",
+    "reusedNodes": [],
+    "schemaVersion": "eml-ir.v0"
+  },
+  "replay": {
+    "frameCount": 8,
+    "frames": [
+      {
+        "evidence_level": "simulated",
+        "frame_id": "softplus_pair_v0:f0000",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "program accepted by local parser",
+        "input": null,
+        "kernel_id": "eml_ir_loader",
+        "lifecycle_state": "INIT",
+        "monotonic_tick": 0,
+        "program_id": "softplus_pair_v0",
+        "replay_hash": "sha256:cdf131e35fffc296d0031b13b4ce3f8179637f1df507a1a5778acbb6d038a0b8",
+        "replay_hash_prev": null,
+        "requested_output": null,
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": null,
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 0
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "softplus_pair_v0:f0001",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "DAG nodes assigned stable ids",
+        "input": null,
+        "kernel_id": "eml_ir_dag",
+        "lifecycle_state": "READY",
+        "monotonic_tick": 1,
+        "program_id": "softplus_pair_v0",
+        "replay_hash": "sha256:0a764c1cf3b6bfe453f662c6b13b441b0beefef210bbafe90f79597fa384bf62",
+        "replay_hash_prev": "sha256:cdf131e35fffc296d0031b13b4ce3f8179637f1df507a1a5778acbb6d038a0b8",
+        "requested_output": null,
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": null,
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 1
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "softplus_pair_v0:f0002",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n0"
+          ]
+        },
+        "kernel_id": "exp",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 2,
+        "program_id": "softplus_pair_v0",
+        "replay_hash": "sha256:73ead8ad19ac8c8ec293ae4eed46b76457106eb04b38e2571e1d87522b60e4f7",
+        "replay_hash_prev": "sha256:0a764c1cf3b6bfe453f662c6b13b441b0beefef210bbafe90f79597fa384bf62",
+        "requested_output": "n1",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n1",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 2
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "softplus_pair_v0:f0003",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n2"
+          ]
+        },
+        "kernel_id": "exp",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 3,
+        "program_id": "softplus_pair_v0",
+        "replay_hash": "sha256:13948f36b262498f2e58b320600884485254a896ea633e7db9dab9096dd94014",
+        "replay_hash_prev": "sha256:73ead8ad19ac8c8ec293ae4eed46b76457106eb04b38e2571e1d87522b60e4f7",
+        "requested_output": "n3",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n3",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 3
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "softplus_pair_v0:f0004",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n1",
+            "n3"
+          ]
+        },
+        "kernel_id": "add",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 4,
+        "program_id": "softplus_pair_v0",
+        "replay_hash": "sha256:f2a23e4b0e318a47d47db64f554556ffc087ff093768fd7baf50646f5c8826cb",
+        "replay_hash_prev": "sha256:13948f36b262498f2e58b320600884485254a896ea633e7db9dab9096dd94014",
+        "requested_output": "n4",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n4",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 4
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "softplus_pair_v0:f0005",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "input": {
+          "args": [
+            "n4"
+          ]
+        },
+        "kernel_id": "ln",
+        "lifecycle_state": "RUNNING",
+        "monotonic_tick": 5,
+        "program_id": "softplus_pair_v0",
+        "replay_hash": "sha256:6881a09b42daeb8dd792e7f56e3abb454681866f6da22ca4ca942445cea7c4ca",
+        "replay_hash_prev": "sha256:f2a23e4b0e318a47d47db64f554556ffc087ff093768fd7baf50646f5c8826cb",
+        "requested_output": "n5",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n5",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 5
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "softplus_pair_v0:f0006",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "output node n5 reached",
+        "input": null,
+        "kernel_id": "eml_ir_runtime",
+        "lifecycle_state": "END",
+        "monotonic_tick": 6,
+        "program_id": "softplus_pair_v0",
+        "replay_hash": "sha256:43779a41ec6e69fe38285a77c05ccbb3d13c5802eb1a752ad051d3a0ecaa3f8e",
+        "replay_hash_prev": "sha256:6881a09b42daeb8dd792e7f56e3abb454681866f6da22ca4ca942445cea7c4ca",
+        "requested_output": "n5",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n5",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 6
+      },
+      {
+        "evidence_level": "simulated",
+        "frame_id": "softplus_pair_v0:f0007",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "explicit replay terminal boundary",
+        "input": null,
+        "kernel_id": "eml_ir_runtime",
+        "lifecycle_state": "PARKED",
+        "monotonic_tick": 7,
+        "program_id": "softplus_pair_v0",
+        "replay_hash": "sha256:51c1be1e26bd80410f1ebb3f676844d6f3c69198d78fe3fabfd1e675e5592a8b",
+        "replay_hash_prev": "sha256:43779a41ec6e69fe38285a77c05ccbb3d13c5802eb1a752ad051d3a0ecaa3f8e",
+        "requested_output": "n5",
+        "runtime_id": "eml_ir_pipeline_v0",
+        "safe_output": "n5",
+        "source": "eml_ir_substrate_v0",
+        "timestamp_ms": 7
+      }
+    ],
+    "hashChainValid": true,
+    "packetId": "softplus_pair_v0:replay_packet_v0",
+    "terminalState": "PARKED",
+    "timeline": [
+      {
+        "frame_id": "softplus_pair_v0:f0000",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "program accepted by local parser",
+        "kernel_id": "eml_ir_loader",
+        "replay_hash": "sha256:cdf131e35fffc296d0031b13b4ce3f8179637f1df507a1a5778acbb6d038a0b8",
+        "state": "INIT",
+        "tick": 0,
+        "what_happened": "The EML expression packet enters the local IR runtime."
+      },
+      {
+        "frame_id": "softplus_pair_v0:f0001",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "DAG nodes assigned stable ids",
+        "kernel_id": "eml_ir_dag",
+        "replay_hash": "sha256:0a764c1cf3b6bfe453f662c6b13b441b0beefef210bbafe90f79597fa384bf62",
+        "state": "READY",
+        "tick": 1,
+        "what_happened": "Stable DAG node identifiers are assigned."
+      },
+      {
+        "frame_id": "softplus_pair_v0:f0002",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "exp",
+        "replay_hash": "sha256:73ead8ad19ac8c8ec293ae4eed46b76457106eb04b38e2571e1d87522b60e4f7",
+        "state": "RUNNING",
+        "tick": 2,
+        "what_happened": "The exp node replays as a static expression step."
+      },
+      {
+        "frame_id": "softplus_pair_v0:f0003",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "exp",
+        "replay_hash": "sha256:13948f36b262498f2e58b320600884485254a896ea633e7db9dab9096dd94014",
+        "state": "RUNNING",
+        "tick": 3,
+        "what_happened": "The exp node replays as a static expression step."
+      },
+      {
+        "frame_id": "softplus_pair_v0:f0004",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "add",
+        "replay_hash": "sha256:f2a23e4b0e318a47d47db64f554556ffc087ff093768fd7baf50646f5c8826cb",
+        "state": "RUNNING",
+        "tick": 4,
+        "what_happened": "The add node replays as a static expression step."
+      },
+      {
+        "frame_id": "softplus_pair_v0:f0005",
+        "guard_action": "PASS",
+        "guard_reason": "static expression node",
+        "kernel_id": "ln",
+        "replay_hash": "sha256:6881a09b42daeb8dd792e7f56e3abb454681866f6da22ca4ca942445cea7c4ca",
+        "state": "RUNNING",
+        "tick": 5,
+        "what_happened": "The ln node replays as a static expression step."
+      },
+      {
+        "frame_id": "softplus_pair_v0:f0006",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "output node n5 reached",
+        "kernel_id": "eml_ir_runtime",
+        "replay_hash": "sha256:43779a41ec6e69fe38285a77c05ccbb3d13c5802eb1a752ad051d3a0ecaa3f8e",
+        "state": "END",
+        "tick": 6,
+        "what_happened": "The output node is reached."
+      },
+      {
+        "frame_id": "softplus_pair_v0:f0007",
+        "guard_action": "ANNOTATE",
+        "guard_reason": "explicit replay terminal boundary",
+        "kernel_id": "eml_ir_runtime",
+        "replay_hash": "sha256:51c1be1e26bd80410f1ebb3f676844d6f3c69198d78fe3fabfd1e675e5592a8b",
+        "state": "PARKED",
+        "tick": 7,
+        "what_happened": "The replay packet parks at the terminal boundary."
+      }
+    ]
+  },
+  "review": {
+    "claimBoundary": "Generated EML packet is candidate-only. DAG savings are internal evidence, not a public savings claim.",
+    "decision": "candidate_only",
+    "nonClaims": [
+      "No new public savings claim.",
+      "No Forge/compiler behavior change.",
+      "No theorem or formal verification claim.",
+      "No hardware observation.",
+      "No certified safety or production controller claim.",
+      "No package publish or deploy."
+    ],
+    "replayStatus": "pass",
+    "semanticStrength": "eml_expression_packet_candidate_no_public_savings_claim",
+    "validationStatus": "pass"
+  },
+  "schemaVersion": "monogate.eml_packet_builder.result.v0",
+  "sourcePacket": {
+    "claim_flags": {
+      "certified_safety_claim": false,
+      "compiler_behavior_changed": false,
+      "forge_behavior_changed": false,
+      "formal_verification_claim": false,
+      "hardware_observed": false,
+      "live_serial_capture_performed": false,
+      "production_controller_claim": false,
+      "public_ready": false,
+      "public_savings_claim": false,
+      "theorem_proof_claim": false
+    },
+    "expression": "ln(exp(a) + exp(b))",
+    "family": "softplus_logsumexp",
+    "inputs": [
+      "a",
+      "b"
+    ],
+    "physical_meaning": "Small log-sum-exp style expression for EML IR packet-builder intake.",
+    "program_id": "softplus_pair_v0",
+    "safe_ranges": {
+      "a": {
+        "max": 10.0,
+        "min": -10.0
+      },
+      "b": {
+        "max": 10.0,
+        "min": -10.0
+      }
+    },
+    "schemaVersion": "monogate.eml_expression_packet.v0",
+    "simulated_trace_samples": [
+      {
+        "a": 0.0,
+        "b": 0.0
+      },
+      {
+        "a": 1.0,
+        "b": -1.0
+      },
+      {
+        "a": 2.0,
+        "b": 0.5
+      }
+    ],
+    "source_repo": "monogate",
+    "units": {
+      "a": "dimensionless",
+      "b": "dimensionless"
+    }
+  },
+  "status": "EML_PACKET_BUILDER_CANDIDATE_PASS",
+  "validationCommands": [
+    "python python/scripts/eml_packet_builder.py --build-fixtures --strict",
+    "python -m pytest -q python/tests/test_eml_packet_builder.py"
+  ]
+}
