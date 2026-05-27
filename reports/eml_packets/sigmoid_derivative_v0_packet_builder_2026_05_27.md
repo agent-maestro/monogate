@@ -20,6 +20,8 @@ Status: `EML_PACKET_BUILDER_CANDIDATE_PASS`
 - Reused nodes: `6`
 - Replay frames: `10`
 - Obligation cards: `2`
+- Domain requirements: `1`
+- Range assumptions: `1`
 - Public tree SuperBEST baseline: `17`
 - Internal DAG SuperBEST candidate: `10`
 
@@ -35,6 +37,12 @@ Status: `EML_PACKET_BUILDER_CANDIDATE_PASS`
 - Domain obligations: `1`
 - Range-safety obligations: `1`
 - Proved obligations: `0`
+
+## Domain Safety Lens
+
+- Unresolved obligations: `2`
+- Candidate safe rewrites: `2`
+- Blocked public claims: `8`
 
 ## Non-Claims
 

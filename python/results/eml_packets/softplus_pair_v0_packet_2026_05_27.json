@@ -10,6 +10,87 @@
     "publicSavingsClaim": false
   },
   "date": "2026-05-27",
+  "domainSafety": {
+    "blockedPublicClaims": [
+      "certified_safety_claim",
+      "formal_verification_claim",
+      "hardware_observed",
+      "production_controller_claim",
+      "public_savings_claim",
+      "range_safety_proved_claim",
+      "theorem_proof_claim",
+      "total_domain_safety_claim"
+    ],
+    "domainRequirements": [
+      {
+        "blockedPublicClaim": "log argument may be nonpositive",
+        "nodeId": "n5",
+        "possibleSafeRewrite": "Introduce log-domain lift, positivity guard, or range proof.",
+        "requirement": "argument_positive",
+        "requirementId": "softplus_pair_v0:domain:n5:ln-argument-positive",
+        "status": "unresolved",
+        "trigger": "ln"
+      }
+    ],
+    "nonClaims": [
+      "The domain safety lens is deterministic classification, not proof.",
+      "Safe rewrite suggestions are candidates, not compiler behavior changes.",
+      "Range assumptions are declared metadata, not hardware observations."
+    ],
+    "possibleSafeRewrites": [
+      "Introduce log-domain lift, positivity guard, or range proof.",
+      "Attach runtime guard, sampled replay evidence, or MachLib range proof before promotion.",
+      "Attach runtime guard, sampled replay evidence, or MachLib range proof before promotion."
+    ],
+    "rangeAssumptions": [
+      {
+        "blockedPublicClaim": "declared range is not runtime, hardware, or proof evidence",
+        "input": "a",
+        "max": 10.0,
+        "min": -10.0,
+        "possibleSafeRewrite": "Attach runtime guard, sampled replay evidence, or MachLib range proof before promotion.",
+        "status": "declared_unverified"
+      },
+      {
+        "blockedPublicClaim": "declared range is not runtime, hardware, or proof evidence",
+        "input": "b",
+        "max": 10.0,
+        "min": -10.0,
+        "possibleSafeRewrite": "Attach runtime guard, sampled replay evidence, or MachLib range proof before promotion.",
+        "status": "declared_unverified"
+      }
+    ],
+    "schemaVersion": "monogate.eml_domain_safety_lens.v0",
+    "status": "candidate_only",
+    "summary": {
+      "blocked_public_claim_count": 8,
+      "domain_requirement_count": 1,
+      "proved_count": 0,
+      "range_assumption_count": 2,
+      "safe_rewrite_candidate_count": 3,
+      "unresolved_obligation_count": 3
+    },
+    "unresolvedObligations": [
+      {
+        "kind": "domain",
+        "obligationId": "softplus_pair_v0:domain:n5:ln-argument-positive",
+        "proofTarget": "log_argument_positive",
+        "reason": "This card records a proof obligation; it does not prove positivity."
+      },
+      {
+        "kind": "range_safety",
+        "obligationId": "softplus_pair_v0:range:a:declared-safe-range",
+        "proofTarget": "input_range_respected",
+        "reason": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof."
+      },
+      {
+        "kind": "range_safety",
+        "obligationId": "softplus_pair_v0:range:b:declared-safe-range",
+        "proofTarget": "input_range_respected",
+        "reason": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof."
+      }
+    ]
+  },
   "ir": {
     "edgeCount": 5,
     "edges": [

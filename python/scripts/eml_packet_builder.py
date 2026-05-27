@@ -4,8 +4,8 @@
 Input: expression metadata packet.
 Output: EML IR, replay summary, Evidence Packet v0, and a short report.
 
-This is EML-R2 plumbing. It does not change Forge/compiler behavior and does
-not create public savings, formal verification, or hardware claims.
+This is EML-R2/R6/R7 plumbing. It does not change Forge/compiler behavior and
+does not create public savings, formal verification, or hardware claims.
 """
 
 from __future__ import annotations
@@ -145,6 +145,172 @@ def _build_obligations(packet: dict[str, Any], ir: dict[str, Any]) -> list[dict[
     return obligations
 
 
+def _domain_requirement_for_card(card: dict[str, Any]) -> dict[str, Any] | None:
+    if card["kind"] != "domain":
+        return None
+    if card["trigger"] == "div":
+        requirement = "denominator_nonzero"
+        blocker = "division denominator may be zero"
+        rewrite = "Introduce a guard or range proof before division."
+    elif card["trigger"] == "ln":
+        requirement = "argument_positive"
+        blocker = "log argument may be nonpositive"
+        rewrite = "Introduce log-domain lift, positivity guard, or range proof."
+    elif card["trigger"] == "sqrt":
+        requirement = "argument_nonnegative"
+        blocker = "sqrt argument may be negative"
+        rewrite = "Introduce nonnegative clamp, square-domain guard, or range proof."
+    else:
+        requirement = "unknown_domain_requirement"
+        blocker = "domain requirement unresolved"
+        rewrite = "Add a domain-specific guard or proof."
+    return {
+        "requirementId": card["obligationId"],
+        "nodeId": card.get("nodeId"),
+        "trigger": card["trigger"],
+        "requirement": requirement,
+        "status": "unresolved",
+        "blockedPublicClaim": blocker,
+        "possibleSafeRewrite": rewrite,
+    }
+
+
+def _build_domain_safety(packet: dict[str, Any], obligations: list[dict[str, Any]]) -> dict[str, Any]:
+    domain_requirements = [
+        requirement
+        for card in obligations
+        for requirement in [_domain_requirement_for_card(card)]
+        if requirement is not None
+    ]
+    range_assumptions = [
+        {
+            "input": name,
+            "min": bounds["min"],
+            "max": bounds["max"],
+            "status": "declared_unverified",
+            "blockedPublicClaim": "declared range is not runtime, hardware, or proof evidence",
+            "possibleSafeRewrite": "Attach runtime guard, sampled replay evidence, or MachLib range proof before promotion.",
+        }
+        for name, bounds in sorted(packet.get("safe_ranges", {}).items())
+    ]
+    unresolved = [
+        {
+            "obligationId": card["obligationId"],
+            "kind": card["kind"],
+            "proofTarget": card["proofTarget"],
+            "reason": card["nonClaim"],
+        }
+        for card in obligations
+    ]
+    blocked_public_claims = [
+        "public_savings_claim",
+        "formal_verification_claim",
+        "theorem_proof_claim",
+        "hardware_observed",
+        "certified_safety_claim",
+        "production_controller_claim",
+    ]
+    if domain_requirements:
+        blocked_public_claims.append("total_domain_safety_claim")
+    if range_assumptions:
+        blocked_public_claims.append("range_safety_proved_claim")
+    return {
+        "schemaVersion": "monogate.eml_domain_safety_lens.v0",
+        "status": "candidate_only",
+        "domainRequirements": domain_requirements,
+        "rangeAssumptions": range_assumptions,
+        "unresolvedObligations": unresolved,
+        "possibleSafeRewrites": [
+            item["possibleSafeRewrite"]
+            for item in [*domain_requirements, *range_assumptions]
+        ],
+        "blockedPublicClaims": sorted(set(blocked_public_claims)),
+        "summary": {
+            "domain_requirement_count": len(domain_requirements),
+            "range_assumption_count": len(range_assumptions),
+            "unresolved_obligation_count": len(unresolved),
+            "safe_rewrite_candidate_count": len(domain_requirements) + len(range_assumptions),
+            "blocked_public_claim_count": len(set(blocked_public_claims)),
+            "proved_count": 0,
+        },
+        "nonClaims": [
+            "The domain safety lens is deterministic classification, not proof.",
+            "Safe rewrite suggestions are candidates, not compiler behavior changes.",
+            "Range assumptions are declared metadata, not hardware observations.",
+        ],
+    }
+
+
+def _lean_name(text: str) -> str:
+    parts = re.sub(r"[^A-Za-z0-9]+", "_", text).strip("_").split("_")
+    if not parts:
+        return "eml_obligation"
+    first = parts[0].lower()
+    rest = [part[:1].upper() + part[1:] for part in parts[1:]]
+    return first + "".join(rest)
+
+
+def _build_machlib_stub_text(result: dict[str, Any]) -> str:
+    packet = result["sourcePacket"]
+    lines = [
+        f"-- EML-R7 MachLib obligation stubs for {packet['program_id']}",
+        "-- Candidate-only artifact generated from EML packet obligations.",
+        "-- This file contains no proofs and makes no theorem/proof claim.",
+        "",
+        "namespace Monogate",
+        "namespace EML",
+        "namespace GeneratedObligations",
+        "",
+        f"-- Source expression: {packet['expression']}",
+        "",
+    ]
+    cards = result["obligations"]["cards"]
+    if not cards:
+        lines.append("-- No obligation cards were generated for this packet.")
+    for index, card in enumerate(cards):
+        stub_name = _lean_name(f"{packet['program_id']}_{card['proofTarget']}_{index}")
+        lines.extend(
+            [
+                f"/-- Candidate obligation: {card['description']} -/",
+                f"def {stub_name} : String := \"{card['obligationId']}\"",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "end GeneratedObligations",
+            "end EML",
+            "end Monogate",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def _build_machlib_stub_manifest(result: dict[str, Any], stub_relpath: str) -> dict[str, Any]:
+    return {
+        "schemaVersion": "monogate.eml_machlib_obligation_stub.v0",
+        "status": "candidate_only",
+        "programId": result["sourcePacket"]["program_id"],
+        "artifactId": result["artifactId"],
+        "stubPath": stub_relpath,
+        "obligationCount": result["obligations"]["summary"]["count"],
+        "provedCount": 0,
+        "claimFlags": {
+            "formal_verification_claim": False,
+            "theorem_proof_claim": False,
+            "machlib_build_claim": False,
+            "compiler_behavior_changed": False,
+            "public_ready": False,
+        },
+        "nonClaims": [
+            "Lean stub export is not a proof.",
+            "Lean stub export is not a MachLib build result.",
+            "Lean stub export does not change Forge/compiler behavior.",
+        ],
+    }
+
+
 def packet_from_cli(args: argparse.Namespace) -> dict[str, Any]:
     if not args.expression:
         raise ValueError("--expression is required when --packet is not provided")
@@ -233,6 +399,7 @@ def build_result(packet: dict[str, Any]) -> dict[str, Any]:
     ]
     edges = _edges(ir["nodes"])
     obligations = _build_obligations(packet, ir)
+    domain_safety = _build_domain_safety(packet, obligations)
     return {
         "schemaVersion": RESULT_SCHEMA_VERSION,
         "artifactId": artifact_id(packet["program_id"]),
@@ -298,6 +465,7 @@ def build_result(packet: dict[str, Any]) -> dict[str, Any]:
                 "Domain cards are not formal verification claims.",
             ],
         },
+        "domainSafety": domain_safety,
         "validationCommands": [
             "python python/scripts/eml_packet_builder.py --build-fixtures --strict",
             "python -m pytest -q python/tests/test_eml_packet_builder.py",
@@ -327,6 +495,9 @@ def build_evidence_packet(result: dict[str, Any]) -> dict[str, Any]:
             "obligation_count": result["obligations"]["summary"]["count"],
             "domain_obligation_count": result["obligations"]["summary"]["domain_count"],
             "range_safety_obligation_count": result["obligations"]["summary"]["range_safety_count"],
+            "domain_requirement_count": result["domainSafety"]["summary"]["domain_requirement_count"],
+            "range_assumption_count": result["domainSafety"]["summary"]["range_assumption_count"],
+            "blocked_public_claim_count": result["domainSafety"]["summary"]["blocked_public_claim_count"],
             "public_savings_claim": False,
             "internal_extra_dag_savings_nodes": result["costs"]["internalExtraDagSavingsNodes"],
         },
@@ -341,6 +512,7 @@ def build_evidence_packet(result: dict[str, Any]) -> dict[str, Any]:
             "Built from an EML Expression Packet v0 input.",
             "Generated EML IR and replay frames with the existing IR substrate pipeline.",
             "Generated candidate proof-obligation cards for domain and range boundaries.",
+            "Classified domain requirements, range assumptions, blocked claims, and candidate safe rewrites.",
             "Kept public savings and hardware/proof claims false.",
         ],
         "validationCommands": result["validationCommands"],
@@ -389,6 +561,8 @@ def render_report(result: dict[str, Any], evidence: dict[str, Any]) -> str:
             f"- Reused nodes: `{len(result['ir']['reusedNodes'])}`",
             f"- Replay frames: `{result['replay']['frameCount']}`",
             f"- Obligation cards: `{result['obligations']['summary']['count']}`",
+            f"- Domain requirements: `{result['domainSafety']['summary']['domain_requirement_count']}`",
+            f"- Range assumptions: `{result['domainSafety']['summary']['range_assumption_count']}`",
             f"- Public tree SuperBEST baseline: `{result['costs']['canonicalPublicTreeSuperbestNodes']}`",
             f"- Internal DAG SuperBEST candidate: `{result['costs']['internalDagSuperbestNodes']}`",
             "",
@@ -405,6 +579,12 @@ def render_report(result: dict[str, Any], evidence: dict[str, Any]) -> str:
             f"- Range-safety obligations: `{result['obligations']['summary']['range_safety_count']}`",
             f"- Proved obligations: `{result['obligations']['summary']['proved_count']}`",
             "",
+            "## Domain Safety Lens",
+            "",
+            f"- Unresolved obligations: `{result['domainSafety']['summary']['unresolved_obligation_count']}`",
+            f"- Candidate safe rewrites: `{result['domainSafety']['summary']['safe_rewrite_candidate_count']}`",
+            f"- Blocked public claims: `{result['domainSafety']['summary']['blocked_public_claim_count']}`",
+            "",
             "## Non-Claims",
             "",
             "- No new public savings claim.",
@@ -418,7 +598,13 @@ def render_report(result: dict[str, Any], evidence: dict[str, Any]) -> str:
     )
 
 
-def write_outputs(result: dict[str, Any], out_dir: Path, report_dir: Path, evidence_dir: Path) -> dict[str, Path]:
+def write_outputs(
+    result: dict[str, Any],
+    out_dir: Path,
+    report_dir: Path,
+    evidence_dir: Path,
+    obligation_dir: Path,
+) -> dict[str, Path]:
     program_id = result["sourcePacket"]["program_id"]
     stamp = DATE.replace("-", "_")
     evidence = build_evidence_packet(result)
@@ -428,19 +614,38 @@ def write_outputs(result: dict[str, Any], out_dir: Path, report_dir: Path, evide
     result_path = out_dir / f"{program_id}_packet_{stamp}.json"
     report_path = report_dir / f"{program_id}_packet_builder_{stamp}.md"
     evidence_path = evidence_dir / f"{program_id}_eml_packet.json"
+    stub_dir = obligation_dir / program_id
+    stub_path = stub_dir / f"{program_id}_obligations.lean"
+    stub_manifest_path = stub_dir / f"{program_id}_machlib_stub_manifest.json"
     result_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     evidence_path.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     report_path.write_text(render_report(result, evidence), encoding="utf-8")
+    stub_dir.mkdir(parents=True, exist_ok=True)
+    stub_path.write_text(_build_machlib_stub_text(result), encoding="utf-8")
+    try:
+        stub_relpath = str(stub_path.relative_to(ROOT))
+    except ValueError:
+        stub_relpath = str(stub_path)
+    manifest = _build_machlib_stub_manifest(result, stub_relpath)
+    stub_manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return {
         "result": result_path,
         "report": report_path,
         "evidence": evidence_path,
+        "machlib_stub": stub_path,
+        "machlib_stub_manifest": stub_manifest_path,
     }
 
 
-def build_one(packet: dict[str, Any], out_dir: Path, report_dir: Path, evidence_dir: Path) -> dict[str, Any]:
+def build_one(
+    packet: dict[str, Any],
+    out_dir: Path,
+    report_dir: Path,
+    evidence_dir: Path,
+    obligation_dir: Path,
+) -> dict[str, Any]:
     result = build_result(packet)
-    paths = write_outputs(result, out_dir, report_dir, evidence_dir)
+    paths = write_outputs(result, out_dir, report_dir, evidence_dir, obligation_dir)
     return {"result": result, "paths": {key: str(value) for key, value in paths.items()}}
 
 
@@ -458,6 +663,7 @@ def main() -> int:
     parser.add_argument("--out-dir", type=Path, default=ROOT / "python/results/eml_packets")
     parser.add_argument("--report-dir", type=Path, default=ROOT / "reports/eml_packets")
     parser.add_argument("--evidence-dir", type=Path, default=ROOT / "reports/evidence_packets")
+    parser.add_argument("--obligation-dir", type=Path, default=ROOT / "reports/eml_obligations")
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
 
@@ -465,13 +671,13 @@ def main() -> int:
         packets = [load_packet(path) for path in sorted(args.fixtures_dir.glob("*.json"))]
         if args.strict and len(packets) < 3:
             raise SystemExit("strict mode requires at least 3 fixture packets")
-        built = [build_one(packet, args.out_dir, args.report_dir, args.evidence_dir) for packet in packets]
+        built = [build_one(packet, args.out_dir, args.report_dir, args.evidence_dir, args.obligation_dir) for packet in packets]
         print("EML_PACKET_BUILDER_FIXTURES_OK")
         print(f"packets={len(built)}")
         return 0
 
     packet = load_packet(args.packet) if args.packet else packet_from_cli(args)
-    built = build_one(packet, args.out_dir, args.report_dir, args.evidence_dir)
+    built = build_one(packet, args.out_dir, args.report_dir, args.evidence_dir, args.obligation_dir)
     if args.strict and built["result"]["review"]["decision"] != "candidate_only":
         raise SystemExit("strict mode requires candidate_only review decision")
     print("EML_PACKET_BUILDER_OK")

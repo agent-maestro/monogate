@@ -56,6 +56,8 @@ def test_evidence_packet_matches_public_packet_shape():
     assert evidence["claimFlags"]["hardware_observed"] is False
     assert evidence["claimFlags"]["public_savings_claim"] is False
     assert evidence["semanticReview"]["obligation_count"] == result["obligations"]["summary"]["count"]
+    assert evidence["semanticReview"]["domain_requirement_count"] == result["domainSafety"]["summary"]["domain_requirement_count"]
+    assert evidence["semanticReview"]["blocked_public_claim_count"] == result["domainSafety"]["summary"]["blocked_public_claim_count"]
 
 
 def test_replay_hash_chain_is_preserved():
@@ -72,6 +74,31 @@ def test_ln_expression_generates_domain_obligation():
     assert any(card["trigger"] == "ln" for card in cards)
     assert result["obligations"]["summary"]["domain_count"] >= 1
     assert result["obligations"]["summary"]["proved_count"] == 0
+
+
+def test_domain_safety_lens_classifies_requirements_and_blocks_claims():
+    result = build_result(fixture_packet("softplus_pair_v0"))
+    lens = result["domainSafety"]
+    assert lens["schemaVersion"] == "monogate.eml_domain_safety_lens.v0"
+    assert lens["status"] == "candidate_only"
+    assert lens["summary"]["domain_requirement_count"] == 1
+    assert lens["summary"]["range_assumption_count"] == 2
+    assert lens["summary"]["unresolved_obligation_count"] == result["obligations"]["summary"]["count"]
+    assert lens["summary"]["proved_count"] == 0
+    assert lens["domainRequirements"][0]["requirement"] == "argument_positive"
+    assert "total_domain_safety_claim" in lens["blockedPublicClaims"]
+    assert "formal_verification_claim" in lens["blockedPublicClaims"]
+    assert any("log-domain lift" in rewrite for rewrite in lens["possibleSafeRewrites"])
+
+
+def test_domain_safety_lens_records_declared_ranges_without_promoting_them():
+    result = build_result(fixture_packet("gaussian_energy_v0"))
+    lens = result["domainSafety"]
+    assert lens["summary"]["domain_requirement_count"] == 0
+    assert lens["summary"]["range_assumption_count"] == 1
+    assert lens["rangeAssumptions"][0]["status"] == "declared_unverified"
+    assert "range_safety_proved_claim" in lens["blockedPublicClaims"]
+    assert lens["summary"]["proved_count"] == 0
 
 
 def test_div_expression_generates_domain_obligation():
@@ -146,6 +173,8 @@ def test_cli_direct_expression_writes_outputs(tmp_path):
             str(tmp_path / "reports"),
             "--evidence-dir",
             str(tmp_path / "evidence"),
+            "--obligation-dir",
+            str(tmp_path / "obligations"),
             "--strict",
         ],
         check=True,
@@ -156,8 +185,18 @@ def test_cli_direct_expression_writes_outputs(tmp_path):
     paths = json.loads(proc.stdout.split("\n", 2)[2])
     result = json.loads(__import__("pathlib").Path(paths["result"]).read_text())
     evidence = json.loads(__import__("pathlib").Path(paths["evidence"]).read_text())
+    stub = __import__("pathlib").Path(paths["machlib_stub"]).read_text()
+    manifest = json.loads(__import__("pathlib").Path(paths["machlib_stub_manifest"]).read_text())
     assert result["artifactId"] == "voltage-divider-v0"
+    assert result["domainSafety"]["summary"]["domain_requirement_count"] == 1
     assert evidence["claimFlags"]["hardware_observed"] is False
+    assert "namespace Monogate" in stub
+    assert "contains no proofs" in stub
+    assert manifest["schemaVersion"] == "monogate.eml_machlib_obligation_stub.v0"
+    assert manifest["provedCount"] == 0
+    assert manifest["claimFlags"]["formal_verification_claim"] is False
+    assert manifest["claimFlags"]["theorem_proof_claim"] is False
+    assert manifest["claimFlags"]["machlib_build_claim"] is False
 
 
 def test_cli_build_fixtures(tmp_path):
@@ -172,6 +211,8 @@ def test_cli_build_fixtures(tmp_path):
             str(tmp_path / "reports"),
             "--evidence-dir",
             str(tmp_path / "evidence"),
+            "--obligation-dir",
+            str(tmp_path / "obligations"),
             "--strict",
         ],
         check=True,
@@ -181,3 +222,5 @@ def test_cli_build_fixtures(tmp_path):
     assert "EML_PACKET_BUILDER_FIXTURES_OK" in proc.stdout
     assert len(list((tmp_path / "results").glob("*.json"))) >= 3
     assert len(list((tmp_path / "evidence").glob("*.json"))) >= 3
+    assert len(list((tmp_path / "obligations").glob("*/*_obligations.lean"))) >= 3
+    assert len(list((tmp_path / "obligations").glob("*/*_machlib_stub_manifest.json"))) >= 3

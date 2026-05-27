@@ -10,6 +10,72 @@
     "publicSavingsClaim": false
   },
   "date": "2026-05-27",
+  "domainSafety": {
+    "blockedPublicClaims": [
+      "certified_safety_claim",
+      "formal_verification_claim",
+      "hardware_observed",
+      "production_controller_claim",
+      "public_savings_claim",
+      "range_safety_proved_claim",
+      "theorem_proof_claim",
+      "total_domain_safety_claim"
+    ],
+    "domainRequirements": [
+      {
+        "blockedPublicClaim": "division denominator may be zero",
+        "nodeId": "n5",
+        "possibleSafeRewrite": "Introduce a guard or range proof before division.",
+        "requirement": "denominator_nonzero",
+        "requirementId": "sigmoid_derivative_v0:domain:n5:div-denominator-nonzero",
+        "status": "unresolved",
+        "trigger": "div"
+      }
+    ],
+    "nonClaims": [
+      "The domain safety lens is deterministic classification, not proof.",
+      "Safe rewrite suggestions are candidates, not compiler behavior changes.",
+      "Range assumptions are declared metadata, not hardware observations."
+    ],
+    "possibleSafeRewrites": [
+      "Introduce a guard or range proof before division.",
+      "Attach runtime guard, sampled replay evidence, or MachLib range proof before promotion."
+    ],
+    "rangeAssumptions": [
+      {
+        "blockedPublicClaim": "declared range is not runtime, hardware, or proof evidence",
+        "input": "x",
+        "max": 12.0,
+        "min": -12.0,
+        "possibleSafeRewrite": "Attach runtime guard, sampled replay evidence, or MachLib range proof before promotion.",
+        "status": "declared_unverified"
+      }
+    ],
+    "schemaVersion": "monogate.eml_domain_safety_lens.v0",
+    "status": "candidate_only",
+    "summary": {
+      "blocked_public_claim_count": 8,
+      "domain_requirement_count": 1,
+      "proved_count": 0,
+      "range_assumption_count": 1,
+      "safe_rewrite_candidate_count": 2,
+      "unresolved_obligation_count": 2
+    },
+    "unresolvedObligations": [
+      {
+        "kind": "domain",
+        "obligationId": "sigmoid_derivative_v0:domain:n5:div-denominator-nonzero",
+        "proofTarget": "denominator_nonzero",
+        "reason": "This card records a proof obligation; it does not prove the denominator condition."
+      },
+      {
+        "kind": "range_safety",
+        "obligationId": "sigmoid_derivative_v0:range:x:declared-safe-range",
+        "proofTarget": "input_range_respected",
+        "reason": "This card records a declared range boundary; it is not hardware evidence or a certified safety proof."
+      }
+    ]
+  },
   "ir": {
     "edgeCount": 10,
     "edges": [
