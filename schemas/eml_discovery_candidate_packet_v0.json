@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_discovery_candidate_packet.v0",
+  "title": "EML Discovery Candidate Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "candidateId",
+    "family",
+    "emlForm",
+    "standardForm",
+    "expectedAdvantageAxis",
+    "requiredTest",
+    "requiredProof",
+    "negativeControl",
+    "queueClass",
+    "priorityScore",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_discovery_candidate_packet.v0" },
+    "packetType": { "const": "eml_discovery_candidate_packet_v0" },
+    "date": { "type": "string" },
+    "candidateId": { "type": "string" },
+    "family": { "type": "string" },
+    "emlForm": { "type": "string" },
+    "standardForm": { "type": "string" },
+    "expectedAdvantageAxis": { "type": "string" },
+    "queueClass": {
+      "enum": [
+        "ready_for_advantage_lab",
+        "needs_machlib_witness",
+        "needs_symbolic_search",
+        "needs_math_review",
+        "blocked_or_expository_only"
+      ]
+    },
+    "priorityScore": { "type": "integer" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    }
+  },
+  "additionalProperties": true
+}
