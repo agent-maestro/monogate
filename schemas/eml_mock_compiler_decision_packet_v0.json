@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_mock_compiler_decision_packet.v0",
+  "title": "EML Mock Compiler Decision Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "programId",
+    "guardDecision",
+    "compilerDecision",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_mock_compiler_decision_packet.v0" },
+    "packetType": { "const": "eml_mock_compiler_decision_packet_v0" },
+    "date": { "type": "string" },
+    "programId": { "type": "string" },
+    "guardDecision": { "type": "string" },
+    "compilerDecision": {
+      "enum": [
+        "proof_shape_only",
+        "protected_runtime_lowering",
+        "blocked_requires_evidence"
+      ]
+    },
+    "claimFlags": { "type": "object", "additionalProperties": { "const": false } }
+  },
+  "additionalProperties": true
+}
