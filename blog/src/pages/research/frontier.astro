@@ -4,16 +4,39 @@ import Base from '../../layouts/Base.astro';
 
 <Base
   title="Frontier Research — monogate.org"
-  description="Active Monogate research fronts: boundary concentration, proof-carrying rescue packets, Forge replay artifacts, and MachLib obligations."
+  description="Active Monogate research fronts: EML Advantage Lab, guarded lowering, proof-carrying rescue packets, MachLib witnesses, and bounded public claims."
 >
   <section class="frontier-hero">
     <p class="eyebrow">Monogate Research</p>
     <h1>Frontier map</h1>
     <p class="lede">
-      The current frontier is not a single theorem. It is a repeatable loop:
-      Forge emits evidence, monogate.dev inspects it, MachLib names the proof
+      The current frontier is no longer "EML wins everywhere." It is a
+      repeatable review loop: EML expressions become packets, packets become
+      guard decisions, guard decisions become lowering plans or proof
       obligations, and monogate.org keeps the public claim boundary honest.
     </p>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow">Current center</p>
+    <h2>EML Advantage Lab</h2>
+    <p>
+      The Advantage Lab asks the corrected research question: where does EML
+      help, where does standard/protected math win, and which claims remain
+      blocked? The first scoreboard is deliberately mixed: EML is strongest as
+      a generator, proof/search grammar, and teaching lens; standard or
+      protected math currently wins many runtime and stability cases.
+    </p>
+    <ul class="metrics">
+      <li><strong>1</strong><span>EML win</span></li>
+      <li><strong>4</strong><span>standard wins</span></li>
+      <li><strong>3</strong><span>mixed cases</span></li>
+      <li><strong>1</strong><span>research-only case</span></li>
+    </ul>
+    <div class="links">
+      <a href="https://monogate.dev/explorer/eml-advantage">Open Advantage Lab</a>
+      <a href="/blog/eml-advantage-lab">Read research note</a>
+    </div>
   </section>
 
   <section class="panel">
@@ -34,38 +57,40 @@ import Base from '../../layouts/Base.astro';
 
   <section class="grid" aria-label="Frontier research fronts">
     <article>
-      <p class="tag">geometry</p>
-      <h2>Boundary concentration</h2>
+      <p class="tag">compiler boundary</p>
+      <h2>Guarded lowering</h2>
       <p>
-        High-dimensional search space pushes useful structure toward sparse
-        boundary regions. This is the substrate behind corner concentration,
-        phantom attractors, and rescue-triggered optimization traces.
+        A9 through A11.3 convert EML advantage evidence into conservative
+        compiler policy: preserve EML for proof/search shape, lower near-zero
+        `exp(x)-1` to protected `expm1`, lower softplus/log-sum-exp to
+        protected forms, require positive-domain guards, and block unstable
+        deep trees.
       </p>
-      <a href="/blog/why-eml-optimization-lives-on-the-boundary">Read the boundary essay</a>
+      <a href="https://monogate.dev/explorer/eml-packets/builder">Open packet builder</a>
     </article>
 
     <article>
-      <p class="tag">forge</p>
-      <h2>Replayable rescue packets</h2>
+      <p class="tag">symbolic search</p>
+      <h2>PySR reality check</h2>
       <p>
-        Forge now emits a suite manifest, replay result, obligation registry,
-        approval gate, markdown summary, and Explorer fixture from one command.
-        The goal is repeatable research artifacts, not screenshots or
-        hand-entered tables.
+        The first real private PySR run did not show a robust EML grammar
+        advantage on the prime-residual fixture. That is useful evidence: it
+        narrows the claim to better feature design, sharper targets, and
+        pre-registered controls instead of treating EML universality as a
+        performance claim.
       </p>
-      <code>forge rescue --suite --strict</code>
+      <a href="https://monogate.dev/explorer/eml-symbolic-regression">Open template search</a>
     </article>
 
     <article>
       <p class="tag">machlib</p>
-      <h2>Proof obligations</h2>
+      <h2>Small checked witnesses</h2>
       <p>
-        The suite routes each rescue lane to a named MachLib obligation. The
-        current public claim is obligation routing plus packet witnesses. The
-        log-domain lane now has a restricted semantic rewrite theorem for a
-        small witness-shaped class. Guard-clamp, precision escape, and
-        saturation-deshelf remain concrete-sample-invariant lanes. Full
-        unrestricted semantic-rewrite proofs remain future work.
+        MachLib has small witnesses for softplus positivity, sigmoid
+        denominator nonzero, <code>eml(x, 1) = exp(x)</code>, and the
+        Atlas-facing subtraction boundary
+        <code>eml(log(v), exp(u)) = v - u</code> under <code>0 &lt; v</code>.
+        These are scoped footholds, not full EML language semantics.
       </p>
       <a href="/blog/proof-carrying-rescue-status">See status table</a>
     </article>
@@ -76,21 +101,27 @@ import Base from '../../layouts/Base.astro';
       <p>
         We claim generated analysis artifacts, simulated traces, replay checks,
         and explicit proof-obligation names. We do not yet claim production
-        optimizer rewrites, hardware observations, or fully discharged formal
-        proofs for the whole suite.
+        optimizer rewrites, broad EML superiority, compiler correctness,
+        hardware observations, zeta-zero discovery, or fully discharged formal
+        proofs for the whole stack.
       </p>
     </article>
   </section>
 
   <section class="panel">
-    <p class="eyebrow">Next pressure point</p>
-    <h2>Move from witnesses to semantics</h2>
+    <p class="eyebrow">Surface split</p>
+    <h2>Research record, workbench, visualization</h2>
     <p>
-      The first semantic step above local witnesses is now in place:
-      `log_domain_lift` has a restricted semantic rewrite theorem for its small
-      witness class. The next pressure point is widening that theorem from the
-      witness class toward a larger family of rescued log-domain programs.
+      monogate.org is the research record. monogate.dev is the developer
+      playground where people inspect packets and run tools. 1op.io is the
+      games and visualization surface. This split matters: the dev site should
+      be usable, while the research site carries the claims, caveats, and
+      public status.
     </p>
+    <div class="links">
+      <a href="https://monogate.dev">Open dev playground</a>
+      <a href="https://1op.io">Open 1op.io</a>
+    </div>
   </section>
 
   <style>
@@ -144,6 +175,37 @@ import Base from '../../layouts/Base.astro';
       gap: 8px;
       margin-top: 14px;
     }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0 4px;
+      padding: 0;
+      list-style: none;
+    }
+    .metrics li {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      background: rgba(255,255,255,0.015);
+    }
+    .metrics strong {
+      display: block;
+      font-family: var(--mono);
+      color: var(--orange);
+      font-size: 1.4rem;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .metrics span {
+      display: block;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      line-height: 1.45;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
     .links a,
     article a {
       font-family: var(--mono);
@@ -161,6 +223,9 @@ import Base from '../../layouts/Base.astro';
     @media (max-width: 720px) {
       .grid {
         grid-template-columns: 1fr;
+      }
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
       h1 {
         font-size: 1.7rem;

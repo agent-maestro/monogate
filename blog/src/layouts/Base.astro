@@ -34,11 +34,11 @@ const projectLd = {
   name: "Monogate",
   alternateName: "Monogate Research",
   description:
-    "EML operator framework for elementary function optimization. " +
-    "One binary operator eml(x, y) = exp(x) - ln(y) generates every elementary " +
-    "function as a finite tree. SuperBEST routing proves 80.8% node savings on " +
-    "the 10 positive-domain primitives; 13 of 14 Lean 4 files at 0 sorries verify the " +
-    "core lower bounds (the 14th carries 2 documented sorries on Part D).",
+    "Research record for the EML operator, proof-carrying rescue, MachLib " +
+    "witnesses, and evidence-bounded claims. Monogate studies where " +
+    "eml(x, y) = exp(x) - ln(y) helps as a generator, proof/search grammar, " +
+    "and inspectable artifact language, while keeping unsupported runtime, " +
+    "compiler, hardware, and theorem claims blocked.",
   url: "https://monogate.org",
   sameAs: [
     "https://github.com/agent-maestro/monogate",
@@ -94,7 +94,7 @@ const articleLd = (type === "article" || date) ? {
 
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content={title ?? "Monogate — One Operator for All Elementary Functions"} />
-    <meta property="og:description" content={description ?? "16 operators. 14 nodes. 80.8% savings. Proved optimal."} />
+    <meta property="og:description" content={description ?? "Research record for EML, MachLib witnesses, proof-carrying rescue, and evidence-bounded claims."} />
     <meta property="og:image" content="https://monogate.org/og-image.jpg" />
     <meta property="og:url" content={pageUrl} />
     <meta property="og:type" content={type} />
@@ -104,7 +104,7 @@ const articleLd = (type === "article" || date) ? {
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title ?? "Monogate — One Operator for All Elementary Functions"} />
-    <meta name="twitter:description" content={description ?? "16 operators. 14 nodes. 80.8% savings. Proved optimal."} />
+    <meta name="twitter:description" content={description ?? "Research record for EML, MachLib witnesses, proof-carrying rescue, and evidence-bounded claims."} />
     <meta name="twitter:image" content="https://monogate.org/og-image.jpg" />
 
     <!-- Structured data -->
@@ -149,13 +149,13 @@ const articleLd = (type === "article" || date) ? {
         justify-content: space-between;
         font-family: var(--mono);
         font-size: 12px;
-        max-width: 800px;
+        max-width: 920px;
         margin: 0 auto;
         position: relative;
       }
       nav .brand { color: var(--orange); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; }
       nav .brand:hover { text-decoration: none; }
-      nav .links { display: flex; gap: 24px; color: var(--muted); }
+      nav .links { display: flex; gap: clamp(10px, 1.5vw, 20px); color: var(--muted); }
       nav .links a { color: var(--muted); }
       nav .links a:hover { color: var(--text); text-decoration: none; }
       nav .links a.active { color: var(--text); }
@@ -180,7 +180,7 @@ const articleLd = (type === "article" || date) ? {
         border-bottom: 1px solid var(--border);
         font-family: var(--mono);
         font-size: 11px;
-        max-width: 800px;
+        max-width: 920px;
         margin: 0 auto;
       }
       .mobile-menu.open { display: flex; }
@@ -195,7 +195,7 @@ const articleLd = (type === "article" || date) ? {
       }
       .mobile-menu a:last-child { border-bottom: none; }
       .mobile-menu a:hover { color: var(--text); background: rgba(255,255,255,0.02); }
-      @media (max-width: 600px) {
+      @media (max-width: 820px) {
         nav .links { display: none; }
         .hamburger { display: block; }
       }
@@ -266,7 +266,7 @@ const articleLd = (type === "article" || date) ? {
         font-family: var(--mono);
         font-size: 11px;
         color: var(--muted);
-        max-width: 800px;
+        max-width: 920px;
         margin: 0 auto;
       }
     </style>
@@ -278,6 +278,7 @@ const articleLd = (type === "article" || date) ? {
         <a href="/one-operator">One Operator</a>
         <a href="/superbest">SuperBEST</a>
         <a href="/framework">Framework</a>
+        <a href="/research/frontier">Frontier</a>
         <a href="/atlas">Atlas</a>
         <a href="/theorems">Theorems</a>
         <a href="/proofs">Proofs</a>
@@ -290,6 +291,7 @@ const articleLd = (type === "article" || date) ? {
       <a href="/one-operator" role="menuitem">One Operator</a>
       <a href="/superbest" role="menuitem">SuperBEST</a>
       <a href="/framework" role="menuitem">Framework</a>
+      <a href="/research/frontier" role="menuitem">Frontier</a>
       <a href="/atlas" role="menuitem">Atlas</a>
       <a href="/theorems" role="menuitem">Theorems</a>
       <a href="/proofs" role="menuitem">Proofs</a>
