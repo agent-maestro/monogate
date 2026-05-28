@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_guard_decision_packet.v0",
+  "title": "EML Guard Decision Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "fixtureId",
+    "decision",
+    "matchedRuleIds",
+    "expectedDecisionMatched",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_guard_decision_packet.v0" },
+    "packetType": { "const": "eml_guard_decision_packet_v0" },
+    "date": { "type": "string" },
+    "fixtureId": { "type": "string" },
+    "decision": {
+      "enum": [
+        "allow_proof_shape",
+        "recommend_protected_lowering",
+        "block_missing_domain_guard",
+        "block_unstable_deep_tree",
+        "block_claim_until_evidence"
+      ]
+    },
+    "matchedRuleIds": { "type": "array", "items": { "type": "string" } },
+    "expectedDecisionMatched": { "type": "boolean" },
+    "claimFlags": { "type": "object", "additionalProperties": { "const": false } }
+  },
+  "additionalProperties": true
+}
