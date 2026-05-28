@@ -1,0 +1,219 @@
+{
+  "claimFlags": {
+    "builder_draft_compiler_ready": false,
+    "builder_draft_public_approval": false,
+    "builder_export_compiler_implementation_claim": false,
+    "builder_export_public_approval": false,
+    "builder_export_runtime_performance_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_advantage_proved": false,
+    "eml_general_superiority_claim": false,
+    "expression_guard_lens_production_ready": false,
+    "forge_behavior_changed": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "general_eml_superiority_claim": false,
+    "guard_analyzer_implemented": false,
+    "guard_analyzer_production_ready": false,
+    "guard_fixture_executed_as_compiler": false,
+    "guard_rules_complete": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_atlas_promotion": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-27",
+  "feedbackId": "eml_a11_3_builder_export_feedback",
+  "nonClaims": [
+    "A11.3 connects builder/export guard feedback to A11.2 stability evidence.",
+    "A11.3 does not approve public publication, implement compiler behavior, or prove compiler correctness.",
+    "A11.3 does not claim runtime performance, production readiness, public Atlas promotion, or EML advantage."
+  ],
+  "packetType": "eml_builder_export_feedback_packet_v0",
+  "schemaVersion": "monogate.eml_a11_3_builder_export_feedback.v0",
+  "sourceDrafts": [
+    "/home/monogate/monogate/monogate/python/fixtures/eml_expression_packets/softplus_pair_v0.json",
+    "/home/monogate/monogate/monogate/python/fixtures/eml_expression_holdout_packets/expm1_near_zero_holdout_v0.json"
+  ],
+  "status": "EML_A11_3_BUILDER_EXPORT_FEEDBACK_PASS",
+  "summary": {
+    "allProtectedLoweringsCiteA11_2": true,
+    "claimFlagsAllFalse": true,
+    "compilerBehaviorChanged": false,
+    "compilerCorrectnessClaim": false,
+    "compilerImplementationClaim": false,
+    "draftCount": 2,
+    "productionReady": false,
+    "protectedLoweringDraftCount": 2,
+    "runtimePerformanceClaim": false,
+    "supportingEvidenceCitationCount": 2
+  },
+  "validationPackets": [
+    {
+      "blockedClaims": [
+        "general EML superiority",
+        "runtime performance"
+      ],
+      "claimFlags": {
+        "builder_draft_compiler_ready": false,
+        "builder_draft_public_approval": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "expression_guard_lens_production_ready": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "guard_analyzer_implemented": false,
+        "guard_analyzer_production_ready": false,
+        "guard_fixture_executed_as_compiler": false,
+        "guard_rules_complete": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "compilerBehaviorChanged": false,
+      "compilerCorrectnessClaim": false,
+      "date": "2026-05-27",
+      "decision": "recommend_protected_lowering",
+      "estimatedTreeDepth": 3,
+      "expression": "ln(exp(a) + exp(b))",
+      "family": "softplus_logsumexp",
+      "localReviewerAction": "may cite attached protected-lowering stability evidence, but keep speed/compiler claims blocked",
+      "matchedRuleIds": [
+        "lower_logaddexp_softplus_v0",
+        "require_positive_log_domain_guard_v0"
+      ],
+      "nonClaims": [
+        "A10.2 validates one local EML builder draft against guard rules.",
+        "A10.2 does not approve publication, change compiler behavior, or prove compiler correctness.",
+        "A10.2 does not claim production readiness, runtime performance, public Atlas promotion, or EML advantage."
+      ],
+      "packetType": "eml_builder_draft_guard_validation_packet_v0",
+      "productionReady": false,
+      "programId": "softplus_pair_v0",
+      "reason": "Log-sum-exp/softplus shape should lower to protected runtime code.",
+      "recommendedLowering": "logaddexp-style protected lowering",
+      "schemaVersion": "monogate.eml_builder_draft_guard_validation_packet.v0",
+      "sourceDraftPath": "/home/monogate/monogate/monogate/python/fixtures/eml_expression_packets/softplus_pair_v0.json",
+      "supportingEvidenceArtifacts": [
+        {
+          "artifactId": "eml-a11-2-protected-lowering-benchmark",
+          "caseId": "logsumexp_edge_grid",
+          "doesNotSupport": [
+            "runtime performance",
+            "compiler correctness",
+            "production readiness",
+            "general EML superiority"
+          ],
+          "evidenceKind": "deterministic_numeric_stability_fixture",
+          "evidencePath": "python/results/eml_a11_2_protected_lowering_benchmark/eml_a11_2_protected_lowering_benchmark_2026_05_27.json",
+          "supports": "protected log-sum-exp lowering remains finite on the recorded edge grid where naive forms can fail"
+        }
+      ]
+    },
+    {
+      "blockedClaims": [
+        "general EML superiority",
+        "runtime performance"
+      ],
+      "claimFlags": {
+        "builder_draft_compiler_ready": false,
+        "builder_draft_public_approval": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "expression_guard_lens_production_ready": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "guard_analyzer_implemented": false,
+        "guard_analyzer_production_ready": false,
+        "guard_fixture_executed_as_compiler": false,
+        "guard_rules_complete": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "compilerBehaviorChanged": false,
+      "compilerCorrectnessClaim": false,
+      "date": "2026-05-27",
+      "decision": "recommend_protected_lowering",
+      "estimatedTreeDepth": 1,
+      "expression": "eml(x,e)",
+      "family": "protected_lowering_holdout",
+      "localReviewerAction": "may cite attached protected-lowering stability evidence, but keep speed/compiler claims blocked",
+      "matchedRuleIds": [
+        "lower_expm1_near_zero_v0",
+        "prefer_protected_runtime_lowering_v0"
+      ],
+      "nonClaims": [
+        "A10.2 validates one local EML builder draft against guard rules.",
+        "A10.2 does not approve publication, change compiler behavior, or prove compiler correctness.",
+        "A10.2 does not claim production readiness, runtime performance, public Atlas promotion, or EML advantage."
+      ],
+      "packetType": "eml_builder_draft_guard_validation_packet_v0",
+      "productionReady": false,
+      "programId": "expm1_near_zero_holdout_v0",
+      "reason": "Near-zero exp-minus-one shape should lower to protected runtime code.",
+      "recommendedLowering": "expm1-style protected lowering",
+      "schemaVersion": "monogate.eml_builder_draft_guard_validation_packet.v0",
+      "sourceDraftPath": "/home/monogate/monogate/monogate/python/fixtures/eml_expression_holdout_packets/expm1_near_zero_holdout_v0.json",
+      "supportingEvidenceArtifacts": [
+        {
+          "artifactId": "eml-a11-2-protected-lowering-benchmark",
+          "caseId": "expm1_near_zero",
+          "doesNotSupport": [
+            "runtime performance",
+            "compiler correctness",
+            "production readiness",
+            "general EML superiority"
+          ],
+          "evidenceKind": "deterministic_numeric_stability_fixture",
+          "evidencePath": "python/results/eml_a11_2_protected_lowering_benchmark/eml_a11_2_protected_lowering_benchmark_2026_05_27.json",
+          "supports": "protected expm1-style lowering is no worse than naive exp(x)-1 on the recorded edge grid"
+        }
+      ]
+    }
+  ]
+}

@@ -28,6 +28,7 @@ def test_builder_draft_validator_records_guard_decision(tmp_path):
     assert payload["status"] == "EML_A10_2_BUILDER_DRAFT_VALIDATION_PASS"
     assert payload["validationPacket"]["programId"] == "softplus_pair_v0"
     assert payload["validationPacket"]["decision"] == "recommend_protected_lowering"
+    assert payload["validationPacket"]["supportingEvidenceArtifacts"][0]["artifactId"] == "eml-a11-2-protected-lowering-benchmark"
     validate_payload(payload)
 
 
@@ -38,6 +39,7 @@ def test_builder_draft_validator_keeps_claims_false(tmp_path):
     assert packet["compilerCorrectnessClaim"] is False
     assert packet["productionReady"] is False
     assert payload["summary"]["claimFlagsAllFalse"] is True
+    assert payload["summary"]["supportingEvidenceCount"] == 1
 
 
 def test_builder_draft_validator_writes_packet(tmp_path):

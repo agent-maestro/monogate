@@ -39,6 +39,31 @@ NON_CLAIMS = [
     "A10.2 does not claim production readiness, runtime performance, public Atlas promotion, or EML advantage.",
 ]
 
+A11_2_ARTIFACT_ID = "eml-a11-2-protected-lowering-benchmark"
+A11_2_RESULT_PATH = "python/results/eml_a11_2_protected_lowering_benchmark/eml_a11_2_protected_lowering_benchmark_2026_05_27.json"
+
+
+def supporting_evidence_for_lowering(lowering: str | None) -> list[dict[str, Any]]:
+    if lowering == "expm1-style protected lowering":
+        return [{
+            "artifactId": A11_2_ARTIFACT_ID,
+            "caseId": "expm1_near_zero",
+            "evidencePath": A11_2_RESULT_PATH,
+            "evidenceKind": "deterministic_numeric_stability_fixture",
+            "supports": "protected expm1-style lowering is no worse than naive exp(x)-1 on the recorded edge grid",
+            "doesNotSupport": ["runtime performance", "compiler correctness", "production readiness", "general EML superiority"],
+        }]
+    if lowering == "logaddexp-style protected lowering":
+        return [{
+            "artifactId": A11_2_ARTIFACT_ID,
+            "caseId": "logsumexp_edge_grid",
+            "evidencePath": A11_2_RESULT_PATH,
+            "evidenceKind": "deterministic_numeric_stability_fixture",
+            "supports": "protected log-sum-exp lowering remains finite on the recorded edge grid where naive forms can fail",
+            "doesNotSupport": ["runtime performance", "compiler correctness", "production readiness", "general EML superiority"],
+        }]
+    return []
+
 
 def load_draft(path: Path) -> dict[str, Any]:
     draft = json.loads(path.read_text(encoding="utf-8"))
@@ -53,6 +78,7 @@ def load_draft(path: Path) -> dict[str, Any]:
 def validate_draft(draft_path: Path) -> dict[str, Any]:
     draft = load_draft(draft_path)
     guard = analyze_packet(draft)
+    supporting_evidence = supporting_evidence_for_lowering(guard["recommendedLowering"])
     validation_packet = {
         "schemaVersion": PACKET_SCHEMA_VERSION,
         "packetType": "eml_builder_draft_guard_validation_packet_v0",
@@ -65,9 +91,10 @@ def validate_draft(draft_path: Path) -> dict[str, Any]:
         "decision": guard["decision"],
         "matchedRuleIds": guard["matchedRuleIds"],
         "recommendedLowering": guard["recommendedLowering"],
+        "supportingEvidenceArtifacts": supporting_evidence,
         "reason": guard["reason"],
         "blockedClaims": guard["blockedClaims"],
-        "localReviewerAction": local_reviewer_action(guard["decision"]),
+        "localReviewerAction": local_reviewer_action(guard["decision"], supporting_evidence),
         "compilerBehaviorChanged": False,
         "compilerCorrectnessClaim": False,
         "productionReady": False,
@@ -77,8 +104,10 @@ def validate_draft(draft_path: Path) -> dict[str, Any]:
     return validation_packet
 
 
-def local_reviewer_action(decision: str) -> str:
+def local_reviewer_action(decision: str, supporting_evidence: list[dict[str, Any]] | None = None) -> str:
     if decision == "recommend_protected_lowering":
+        if supporting_evidence:
+            return "may cite attached protected-lowering stability evidence, but keep speed/compiler claims blocked"
         return "keep candidate private until protected lowering evidence is attached"
     if decision.startswith("block"):
         return "do not surface as public or runtime-strengthened evidence until the blocker is discharged"
@@ -99,6 +128,7 @@ def build_validation(draft_path: Path, out_dir: Path, packet_dir: Path, report_d
             "decision": validation_packet["decision"],
             "matchedRuleCount": len(validation_packet["matchedRuleIds"]),
             "blockedClaimCount": len(validation_packet["blockedClaims"]),
+            "supportingEvidenceCount": len(validation_packet["supportingEvidenceArtifacts"]),
             "compilerBehaviorChanged": False,
             "compilerCorrectnessClaim": False,
             "productionReady": False,
@@ -170,6 +200,7 @@ def render_report(payload: dict[str, Any]) -> str:
         f"- Program: `{packet['programId']}`",
         f"- Decision: `{packet['decision']}`",
         f"- Recommended lowering: `{packet['recommendedLowering'] or 'none'}`",
+        f"- Supporting evidence artifacts: {len(packet['supportingEvidenceArtifacts'])}",
         f"- Reviewer action: {packet['localReviewerAction']}",
         "",
         "## Boundary",
@@ -186,6 +217,8 @@ def validate_payload(payload: dict[str, Any]) -> None:
     summary = payload["summary"]
     if summary["matchedRuleCount"] < 1:
         raise ValueError("expected at least one matched guard rule")
+    if payload["validationPacket"]["decision"] == "recommend_protected_lowering" and summary["supportingEvidenceCount"] < 1:
+        raise ValueError("protected lowering recommendations must cite supporting evidence")
     for key in ["compilerBehaviorChanged", "compilerCorrectnessClaim", "productionReady"]:
         if summary[key] is not False:
             raise ValueError(f"{key} must remain false")

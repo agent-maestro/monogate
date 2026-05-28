@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_builder_export_feedback_packet.v0",
+  "title": "EML Builder Export Feedback Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "feedbackId",
+    "validationPackets",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_builder_export_feedback_packet.v0" },
+    "packetType": { "const": "eml_builder_export_feedback_packet_v0" },
+    "date": { "type": "string" },
+    "feedbackId": { "type": "string" },
+    "validationPackets": { "type": "array" },
+    "summary": { "type": "object" },
+    "claimFlags": { "type": "object", "additionalProperties": { "const": false } }
+  },
+  "additionalProperties": true
+}

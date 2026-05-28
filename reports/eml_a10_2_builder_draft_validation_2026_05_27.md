@@ -7,7 +7,8 @@ Status: `EML_A10_2_BUILDER_DRAFT_VALIDATION_PASS`
 - Program: `softplus_pair_v0`
 - Decision: `recommend_protected_lowering`
 - Recommended lowering: `logaddexp-style protected lowering`
-- Reviewer action: keep candidate private until protected lowering evidence is attached
+- Supporting evidence artifacts: 1
+- Reviewer action: may cite attached protected-lowering stability evidence, but keep speed/compiler claims blocked
 
 ## Boundary
 

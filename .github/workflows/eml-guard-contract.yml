@@ -23,6 +23,7 @@ jobs:
           python python/scripts/eml_a11_mock_compiler_decision.py --build --strict
           python python/scripts/eml_a11_1_mock_compiler_holdouts.py --build --strict
           python python/scripts/eml_a11_2_protected_lowering_benchmark.py --build --strict
+          python python/scripts/eml_a11_3_builder_export_feedback.py --build --strict
       - name: Run guard tests
         run: |
           python -m pytest -q \
@@ -33,4 +34,5 @@ jobs:
             python/tests/test_eml_a10_2_validate_builder_draft.py \
             python/tests/test_eml_a11_mock_compiler_decision.py \
             python/tests/test_eml_a11_1_mock_compiler_holdouts.py \
-            python/tests/test_eml_a11_2_protected_lowering_benchmark.py
+            python/tests/test_eml_a11_2_protected_lowering_benchmark.py \
+            python/tests/test_eml_a11_3_builder_export_feedback.py

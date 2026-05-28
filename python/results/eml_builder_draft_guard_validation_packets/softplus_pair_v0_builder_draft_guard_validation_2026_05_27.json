@@ -42,7 +42,7 @@
   "estimatedTreeDepth": 3,
   "expression": "ln(exp(a) + exp(b))",
   "family": "softplus_logsumexp",
-  "localReviewerAction": "keep candidate private until protected lowering evidence is attached",
+  "localReviewerAction": "may cite attached protected-lowering stability evidence, but keep speed/compiler claims blocked",
   "matchedRuleIds": [
     "lower_logaddexp_softplus_v0",
     "require_positive_log_domain_guard_v0"
@@ -58,5 +58,20 @@
   "reason": "Log-sum-exp/softplus shape should lower to protected runtime code.",
   "recommendedLowering": "logaddexp-style protected lowering",
   "schemaVersion": "monogate.eml_builder_draft_guard_validation_packet.v0",
-  "sourceDraftPath": "python/fixtures/eml_expression_packets/softplus_pair_v0.json"
+  "sourceDraftPath": "python/fixtures/eml_expression_packets/softplus_pair_v0.json",
+  "supportingEvidenceArtifacts": [
+    {
+      "artifactId": "eml-a11-2-protected-lowering-benchmark",
+      "caseId": "logsumexp_edge_grid",
+      "doesNotSupport": [
+        "runtime performance",
+        "compiler correctness",
+        "production readiness",
+        "general EML superiority"
+      ],
+      "evidenceKind": "deterministic_numeric_stability_fixture",
+      "evidencePath": "python/results/eml_a11_2_protected_lowering_benchmark/eml_a11_2_protected_lowering_benchmark_2026_05_27.json",
+      "supports": "protected log-sum-exp lowering remains finite on the recorded edge grid where naive forms can fail"
+    }
+  ]
 }

@@ -1,9 +1,12 @@
 {
-  "artifactId": "eml-a10-2-builder-draft-guard-validation",
-  "claimBoundary": "Local draft validation only; no public approval, compiler behavior change, compiler correctness proof, production readiness, or EML advantage claim.",
+  "artifactId": "eml-a11-3-builder-export-feedback",
+  "claimBoundary": "Builder/export feedback only; no public approval, compiler implementation, compiler correctness, runtime performance, production readiness, or EML advantage claim.",
   "claimFlags": {
     "builder_draft_compiler_ready": false,
     "builder_draft_public_approval": false,
+    "builder_export_compiler_implementation_claim": false,
+    "builder_export_public_approval": false,
+    "builder_export_runtime_performance_claim": false,
     "certified_safety_claim": false,
     "compiler_behavior_changed": false,
     "compiler_correctness_claim": false,
@@ -34,25 +37,26 @@
     "zeta_zero_discovery_claim": false
   },
   "nonClaims": [
-    "A10.2 validates one local EML builder draft against guard rules.",
-    "A10.2 does not approve publication, change compiler behavior, or prove compiler correctness.",
-    "A10.2 does not claim production readiness, runtime performance, public Atlas promotion, or EML advantage."
+    "A11.3 connects builder/export guard feedback to A11.2 stability evidence.",
+    "A11.3 does not approve public publication, implement compiler behavior, or prove compiler correctness.",
+    "A11.3 does not claim runtime performance, production readiness, public Atlas promotion, or EML advantage."
   ],
-  "replayStatus": "deterministic_single_draft_analysis",
-  "reviewDecision": "local_builder_draft_guard_validated",
+  "replayStatus": "deterministic_export_feedback",
+  "reviewDecision": "builder_export_feedback_recorded",
   "schemaVersion": "monogate.evidence_public_packet.v0",
   "semanticReview": {
-    "blockedClaimCount": 2,
+    "allProtectedLoweringsCiteA11_2": true,
     "claimFlagsAllFalse": true,
     "compilerBehaviorChanged": false,
     "compilerCorrectnessClaim": false,
-    "decision": "recommend_protected_lowering",
-    "matchedRuleCount": 2,
+    "compilerImplementationClaim": false,
+    "draftCount": 2,
     "productionReady": false,
-    "programId": "softplus_pair_v0",
-    "supportingEvidenceCount": 1
+    "protectedLoweringDraftCount": 2,
+    "runtimePerformanceClaim": false,
+    "supportingEvidenceCitationCount": 2
   },
-  "semanticStrength": "local_guard_validation_no_compiler_behavior_change",
-  "title": "EML-A10.2 Builder Draft Guard Validation",
+  "semanticStrength": "builder_feedback_with_stability_evidence_no_compiler_behavior_change",
+  "title": "EML-A11.3 Builder Export Feedback",
   "validationStatus": "pass"
 }
