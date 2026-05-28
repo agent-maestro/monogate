@@ -1,0 +1,193 @@
+{
+  "a12InterpreterSummary": {
+    "caseCount": 2,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "compilerImplementationClaim": false,
+    "formalSemanticEquivalenceClaim": false,
+    "frameCount": 16,
+    "interpreterExecuted": true,
+    "naiveNonFiniteCount": 3,
+    "productionLoweringClaim": false,
+    "protectedBetterCount": 12,
+    "protectedNoWorseCount": 16,
+    "protectedNonFiniteCount": 0,
+    "realCompilerBehaviorChanged": false,
+    "runtimePerformanceClaim": false
+  },
+  "astNodes": [
+    {
+      "arity": 0,
+      "description": "Named input variable.",
+      "node": "Var"
+    },
+    {
+      "arity": 0,
+      "description": "Literal numeric constant.",
+      "node": "Const"
+    },
+    {
+      "arity": 1,
+      "description": "Protected or mathematical exponential node.",
+      "node": "Exp"
+    },
+    {
+      "arity": 1,
+      "description": "Natural logarithm; requires positive argument guard.",
+      "node": "Log"
+    },
+    {
+      "arity": 2,
+      "description": "Binary addition.",
+      "node": "Add"
+    },
+    {
+      "arity": 2,
+      "description": "Binary subtraction.",
+      "node": "Sub"
+    },
+    {
+      "arity": 2,
+      "description": "Binary multiplication.",
+      "node": "Mul"
+    },
+    {
+      "arity": 2,
+      "description": "Primitive eml(x,y) = exp(x) - log(y).",
+      "node": "Eml"
+    },
+    {
+      "arity": 1,
+      "description": "Protected runtime lowering for exp(x)-1.",
+      "node": "ProtectedExpm1"
+    },
+    {
+      "arity": "n>=1",
+      "description": "Protected max-shifted log-sum-exp lowering.",
+      "node": "ProtectedLogSumExp"
+    }
+  ],
+  "claimFlags": {
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "forge_behavior_changed": false,
+    "formal_compiler_proof_claim": false,
+    "full_eml_semantics_claim": false,
+    "package_published": false,
+    "production_lowering_claim": false,
+    "proof_assistant_formalization_complete": false,
+    "public_ready": false,
+    "semantic_equivalence_claim": false
+  },
+  "date": "2026-05-27",
+  "guards": [
+    {
+      "formalStatus": "stub",
+      "guardId": "finite-inputs",
+      "predicate": "all variables evaluate to finite real values"
+    },
+    {
+      "formalStatus": "stub",
+      "guardId": "positive-log-argument",
+      "predicate": "argument(Log) > 0"
+    },
+    {
+      "formalStatus": "stub",
+      "guardId": "nonempty-vector",
+      "predicate": "ProtectedLogSumExp input list has length >= 1"
+    },
+    {
+      "formalStatus": "stub",
+      "guardId": "near-zero-cancellation-risk",
+      "predicate": "source shape exp(x)-1 may lose precision near zero"
+    },
+    {
+      "formalStatus": "stub",
+      "guardId": "blocked-unsupported-tree",
+      "predicate": "unsupported or unstable trees route to blocked review"
+    }
+  ],
+  "loweringRules": [
+    {
+      "coveredBy": [
+        "A11.2 protected-lowering benchmark",
+        "A12 protected-lowering interpreter"
+      ],
+      "proofStatus": "model_stub_not_formalized",
+      "requiredGuards": [
+        "finite-inputs",
+        "near-zero-cancellation-risk"
+      ],
+      "ruleId": "lower-exp-minus-one-to-expm1",
+      "sourceAst": "Sub(Exp(x), Const(1))",
+      "targetAst": "ProtectedExpm1(x)"
+    },
+    {
+      "coveredBy": [
+        "A11.2 protected-lowering benchmark",
+        "A12 protected-lowering interpreter"
+      ],
+      "proofStatus": "model_stub_not_formalized",
+      "requiredGuards": [
+        "finite-inputs",
+        "nonempty-vector"
+      ],
+      "ruleId": "lower-log-sum-exp-to-protected",
+      "sourceAst": "Log(Sum(map Exp xs))",
+      "targetAst": "ProtectedLogSumExp(xs)"
+    },
+    {
+      "coveredBy": [
+        "R10C scoped certificates for selected cases"
+      ],
+      "proofStatus": "model_stub_not_formalized",
+      "requiredGuards": [
+        "finite-inputs",
+        "positive-log-argument"
+      ],
+      "ruleId": "preserve-eml-proof-shape",
+      "sourceAst": "Eml(x,y)",
+      "targetAst": "Eml(x,y)"
+    },
+    {
+      "coveredBy": [
+        "A9/A10 guard decision packets"
+      ],
+      "proofStatus": "routing_stub_not_formalized",
+      "requiredGuards": [
+        "blocked-unsupported-tree"
+      ],
+      "ruleId": "block-unsupported-lowering",
+      "sourceAst": "UnsupportedOrUnstableTree",
+      "targetAst": "BlockedReview"
+    }
+  ],
+  "modelType": "eml_proof_assistant_ast_guard_model_v0",
+  "nonClaims": [
+    "R10F is a proof-assistant-facing AST and guard model stub.",
+    "R10F does not complete a Lean/Coq proof-assistant formalization.",
+    "R10F does not claim compiler correctness, formal compiler proof, full EML semantics, or semantic equivalence.",
+    "R10F does not change Forge/compiler behavior, deploy, or publish packages."
+  ],
+  "openCompilerObligationsFromR10E": [
+    "syntax-preservation",
+    "domain-guard-preservation",
+    "unsupported-case-routing",
+    "runtime-implementation-correspondence",
+    "compiler-wide-induction"
+  ],
+  "schemaVersion": "monogate.eml_proof_assistant_ast_guard_model.v0",
+  "sourceA12Path": "/home/monogate/monogate/monogate/python/results/eml_a12_protected_lowering_interpreter/eml_a12_protected_lowering_interpreter_2026_05_27.json",
+  "sourceR10EPath": "/home/monogate/monogate/monogate/python/results/eml_r10e_formal_compiler_proof_skeleton/eml_r10e_formal_compiler_proof_skeleton_2026_05_27.json",
+  "summary": {
+    "a12InterpreterLinked": true,
+    "astNodeCount": 10,
+    "compilerBehaviorChanged": false,
+    "compilerCorrectnessProved": false,
+    "guardCount": 5,
+    "loweringRuleCount": 4,
+    "openCompilerObligationCount": 5,
+    "proofAssistantFormalizationComplete": false
+  }
+}

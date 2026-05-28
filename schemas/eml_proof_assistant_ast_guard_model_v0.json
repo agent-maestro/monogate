@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_proof_assistant_ast_guard_model.v0",
+  "title": "EML Proof-Assistant AST Guard Model v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "modelType",
+    "date",
+    "sourceR10EPath",
+    "astNodes",
+    "guards",
+    "loweringRules",
+    "openCompilerObligationsFromR10E",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_proof_assistant_ast_guard_model.v0" },
+    "modelType": { "const": "eml_proof_assistant_ast_guard_model_v0" },
+    "date": { "type": "string" },
+    "sourceR10EPath": { "type": "string", "minLength": 1 },
+    "sourceA12Path": { "type": ["string", "null"] },
+    "astNodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node", "arity", "description"],
+        "additionalProperties": true
+      }
+    },
+    "guards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["guardId", "predicate", "formalStatus"],
+        "additionalProperties": true
+      }
+    },
+    "loweringRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ruleId", "sourceAst", "targetAst", "requiredGuards", "proofStatus"],
+        "additionalProperties": true
+      }
+    },
+    "openCompilerObligationsFromR10E": { "type": "array", "items": { "type": "string" } },
+    "summary": { "type": "object" },
+    "claimFlags": { "type": "object", "additionalProperties": { "const": false } },
+    "nonClaims": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

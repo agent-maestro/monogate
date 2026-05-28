@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_protected_lowering_interpreter_packet.v0",
+  "title": "EML Protected Lowering Interpreter Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "caseId",
+    "sourceShape",
+    "guardDecision",
+    "mockCompilerDecision",
+    "recommendedLowering",
+    "frames",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_protected_lowering_interpreter_packet.v0" },
+    "packetType": { "const": "eml_protected_lowering_interpreter_packet_v0" },
+    "date": { "type": "string" },
+    "caseId": { "type": "string", "minLength": 1 },
+    "sourceShape": { "type": "string", "minLength": 1 },
+    "guardDecision": { "type": "string", "minLength": 1 },
+    "mockCompilerDecision": { "type": "string", "minLength": 1 },
+    "recommendedLowering": { "type": "string", "minLength": 1 },
+    "frames": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["frameIndex", "sample", "reference", "naiveValue", "protectedValue", "protectedNoWorse"],
+        "additionalProperties": true
+      }
+    },
+    "summary": { "type": "object" },
+    "claimFlags": { "type": "object", "additionalProperties": { "const": false } },
+    "nonClaims": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}
