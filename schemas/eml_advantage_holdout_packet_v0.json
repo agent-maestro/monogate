@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_advantage_holdout_packet.v0",
+  "title": "EML Advantage Holdout Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "caseId",
+    "sourceAdvantageClass",
+    "holdoutClass",
+    "holdoutConfidence",
+    "profiles",
+    "criteria",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_advantage_holdout_packet.v0" },
+    "packetType": { "const": "eml_advantage_holdout_packet_v0" },
+    "date": { "type": "string" },
+    "caseId": { "type": "string" },
+    "sourceAdvantageClass": { "type": "string" },
+    "holdoutClass": {
+      "enum": [
+        "eml_win_replicated",
+        "standard_win_replicated",
+        "mixed_replicated",
+        "research_only_retained",
+        "weakened",
+        "blocked"
+      ]
+    },
+    "holdoutConfidence": {
+      "enum": ["retained", "weakened", "blocked", "control_pass"]
+    },
+    "profiles": { "type": "array" },
+    "criteria": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
