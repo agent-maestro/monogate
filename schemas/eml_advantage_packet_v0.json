@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_advantage_packet.v0",
+  "title": "EML Advantage Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "caseId",
+    "family",
+    "standardForm",
+    "emlForm",
+    "advantageClass",
+    "axes",
+    "blockedClaims",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_advantage_packet.v0" },
+    "packetType": { "const": "eml_advantage_packet_v0" },
+    "date": { "type": "string" },
+    "caseId": { "type": "string" },
+    "family": { "type": "string" },
+    "standardForm": { "type": "string" },
+    "emlForm": { "type": "string" },
+    "advantageClass": {
+      "enum": ["eml_win", "standard_win", "mixed", "research_only", "blocked"]
+    },
+    "axes": { "type": "object" },
+    "evidencePaths": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "blockedClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
