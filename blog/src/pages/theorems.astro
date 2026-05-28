@@ -314,6 +314,16 @@ const obsCount = byTier['OBSERVATION'].length;
 <Base title="Theorem Catalog — monogate.org" description="Honest classification of monogate results. Every result labeled for what it actually is: theorem, proposition, conjecture, or observation.">
 
   <h1>Theorem Catalog</h1>
+  <div class="status-banner">
+    <p class="status-kicker">Current status · May 2026</p>
+    <p>
+      This catalog mixes external theorems, local Lean witnesses,
+      propositions, conjectures, and observations. A theorem label means the
+      listed statement has the evidence described on its card; it does not
+      imply full EML language semantics, compiler correctness, production
+      safety, hardware validation, or broad EML superiority.
+    </p>
+  </div>
   <p style="color: var(--muted); margin-bottom: 6px;">
     Every result is labeled for what it actually is. Proved facts are theorems. Everything else is clearly marked.
   </p>
@@ -420,6 +430,27 @@ const obsCount = byTier['OBSERVATION'].length;
 </Base>
 
 <style>
+  .status-banner {
+    background: rgba(196,167,125,0.08);
+    border: 1px solid rgba(196,167,125,0.24);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 14px 0 22px;
+  }
+  .status-banner p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .status-banner .status-kicker {
+    color: var(--orange);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
   .filter-btn { transition: all 0.15s; }
   .filter-btn:hover { opacity: 0.8; }
   .filter-btn.active { box-shadow: 0 0 0 1px currentColor; }
