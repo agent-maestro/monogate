@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_compiler_guard_rule_packet.v0",
+  "title": "EML Compiler Guard Rule Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "ruleId",
+    "trigger",
+    "guardAction",
+    "ruleClass",
+    "evidenceStatus",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_compiler_guard_rule_packet.v0" },
+    "packetType": { "const": "eml_compiler_guard_rule_packet_v0" },
+    "date": { "type": "string" },
+    "ruleId": { "type": "string" },
+    "trigger": { "type": "string" },
+    "guardAction": { "type": "string" },
+    "ruleClass": {
+      "enum": [
+        "proof_shape_preference",
+        "protected_runtime_lowering",
+        "domain_guard",
+        "deep_tree_block",
+        "claim_gate"
+      ]
+    },
+    "evidenceStatus": {
+      "enum": [
+        "ready_for_compiler_fixture",
+        "requires_more_holdout",
+        "documentation_rule_only"
+      ]
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_deep_tree_holdout_packet.v0",
+  "title": "EML Deep Tree Holdout Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "caseId",
+    "treeDepth",
+    "holdoutClass",
+    "emlForm",
+    "standardForm",
+    "profiles",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_deep_tree_holdout_packet.v0" },
+    "packetType": { "const": "eml_deep_tree_holdout_packet_v0" },
+    "date": { "type": "string" },
+    "caseId": { "type": "string" },
+    "treeDepth": { "type": "integer" },
+    "holdoutClass": {
+      "enum": [
+        "eml_structure_supported",
+        "mixed_identity_supported",
+        "standard_runtime_win",
+        "blocked_unstable_deep_tree"
+      ]
+    },
+    "profiles": { "type": "array" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    }
+  },
+  "additionalProperties": true
+}

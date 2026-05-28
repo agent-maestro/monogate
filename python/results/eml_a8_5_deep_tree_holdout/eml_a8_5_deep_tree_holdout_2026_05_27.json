@@ -1,0 +1,701 @@
+{
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deep_tree_stability_claim": false,
+    "deploy_performed": false,
+    "eml_advantage_proved": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "general_eml_superiority_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_atlas_promotion": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-27",
+  "holdoutId": "eml_a8_5_deep_tree_holdout",
+  "holdoutPackets": [
+    {
+      "caseId": "deep_expm1_chain_near_zero_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deep_tree_stability_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "criteria": {
+        "blockFiniteRatioBelow": 0.99,
+        "blockMaxAbsErrorAbove": 1000000.0,
+        "finiteRatioPass": 0.999,
+        "maxAbsErrorPass": 1e-08,
+        "maxRelErrorPass": 1e-08,
+        "standardImprovementFactor": 100.0
+      },
+      "date": "2026-05-27",
+      "emlForm": "Fold_8 z -> eml(z,e)",
+      "holdoutClass": "standard_runtime_win",
+      "nonClaims": [
+        "A8.5 is a deterministic deep-tree holdout, not proof of deep-tree stability.",
+        "A8.5 does not prove EML advantage, broad EML superiority, compiler correctness, runtime performance, theorem discovery, public Atlas promotion, or deployment.",
+        "Blocked deep trees are guardrail evidence, not a universal limit theorem."
+      ],
+      "packetType": "eml_deep_tree_holdout_packet_v0",
+      "profiles": [
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 4.607747249352066e-16,
+            "maxRelError": 1.1265258605347503e-06,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "inputMax": 1e-08,
+          "inputMin": -1e-08,
+          "profile": "holdout",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 2.481541837659083e-24,
+            "maxRelError": 8.841977552081676e-16,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "standard"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 4.607747249352066e-16,
+            "maxRelError": 4.607747065042177e-08,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "inputMax": 1e-08,
+          "inputMin": -1e-08,
+          "profile": "edge",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 1.6543612251060553e-24,
+            "maxRelError": 1.7232928766443587e-16,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "standard"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 8.724002075960273e-16,
+            "maxRelError": 1.4024522784917105e-05,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "inputMax": 1.5000000000000002e-08,
+          "inputMin": -1.5000000000000002e-08,
+          "profile": "stress",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 6.617444900424222e-24,
+            "maxRelError": 8.424073220006539e-16,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "standard"
+        }
+      ],
+      "schemaVersion": "monogate.eml_deep_tree_holdout_packet.v0",
+      "standardForm": "Fold_8 z -> expm1(z)",
+      "treeDepth": 8
+    },
+    {
+      "caseId": "deep_expm1_chain_wide_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deep_tree_stability_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "criteria": {
+        "blockFiniteRatioBelow": 0.99,
+        "blockMaxAbsErrorAbove": 1000000.0,
+        "finiteRatioPass": 0.999,
+        "maxAbsErrorPass": 1e-08,
+        "maxRelErrorPass": 1e-08,
+        "standardImprovementFactor": 100.0
+      },
+      "date": "2026-05-27",
+      "emlForm": "Fold_5 z -> eml(z,e)",
+      "holdoutClass": "blocked_unstable_deep_tree",
+      "nonClaims": [
+        "A8.5 is a deterministic deep-tree holdout, not proof of deep-tree stability.",
+        "A8.5 does not prove EML advantage, broad EML superiority, compiler correctness, runtime performance, theorem discovery, public Atlas promotion, or deployment.",
+        "Blocked deep trees are guardrail evidence, not a universal limit theorem."
+      ],
+      "packetType": "eml_deep_tree_holdout_packet_v0",
+      "profiles": [
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 0.0,
+            "infCount": 2048,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "inputMax": 5.0,
+          "inputMin": 1.0,
+          "profile": "holdout",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 0.0,
+            "infCount": 2048,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "winner": "blocked"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 0.0,
+            "infCount": 2048,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "inputMax": 5.0,
+          "inputMin": 1.0,
+          "profile": "edge",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 0.0,
+            "infCount": 2048,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "winner": "blocked"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 0.12451171875,
+            "infCount": 1793,
+            "maxAbsError": 4.7560748800753413e+288,
+            "maxRelError": 2.8742311480603364e-12,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "inputMax": 6.0,
+          "inputMin": 0.0,
+          "profile": "stress",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 0.12451171875,
+            "infCount": 1793,
+            "maxAbsError": 1.6722992152741148e+289,
+            "maxRelError": 3.4950605408840817e-12,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "winner": "blocked"
+        }
+      ],
+      "schemaVersion": "monogate.eml_deep_tree_holdout_packet.v0",
+      "standardForm": "guarded/protected expm1 chain",
+      "treeDepth": 5
+    },
+    {
+      "caseId": "nested_ln_from_eml_positive_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deep_tree_stability_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "criteria": {
+        "blockFiniteRatioBelow": 0.99,
+        "blockMaxAbsErrorAbove": 1000000.0,
+        "finiteRatioPass": 0.999,
+        "maxAbsErrorPass": 1e-08,
+        "maxRelErrorPass": 1e-08,
+        "standardImprovementFactor": 100.0
+      },
+      "date": "2026-05-27",
+      "emlForm": "nested ln_from_eml(exp(x))",
+      "holdoutClass": "mixed_identity_supported",
+      "nonClaims": [
+        "A8.5 is a deterministic deep-tree holdout, not proof of deep-tree stability.",
+        "A8.5 does not prove EML advantage, broad EML superiority, compiler correctness, runtime performance, theorem discovery, public Atlas promotion, or deployment.",
+        "Blocked deep trees are guardrail evidence, not a universal limit theorem."
+      ],
+      "packetType": "eml_deep_tree_holdout_packet_v0",
+      "profiles": [
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 8.881784197001252e-16,
+            "maxRelError": 1.1318745420097564e-14,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "inputMax": 8.0,
+          "inputMin": -8.0,
+          "profile": "holdout",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "standard"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 8.881784197001252e-16,
+            "maxRelError": 1.1563881182205904e-16,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "inputMax": 8.0,
+          "inputMin": -8.0,
+          "profile": "edge",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "standard"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 8.881784197001252e-16,
+            "maxRelError": 8.137660105952497e-15,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "inputMax": 12.0,
+          "inputMin": -12.0,
+          "profile": "stress",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "standard"
+        }
+      ],
+      "schemaVersion": "monogate.eml_deep_tree_holdout_packet.v0",
+      "standardForm": "log(exp(x))",
+      "treeDepth": 6
+    },
+    {
+      "caseId": "subtraction_boundary_chain_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deep_tree_stability_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "criteria": {
+        "blockFiniteRatioBelow": 0.99,
+        "blockMaxAbsErrorAbove": 1000000.0,
+        "finiteRatioPass": 0.999,
+        "maxAbsErrorPass": 1e-08,
+        "maxRelErrorPass": 1e-08,
+        "standardImprovementFactor": 100.0
+      },
+      "date": "2026-05-27",
+      "emlForm": "eml(log(v),exp(u)) repeated with positive v",
+      "holdoutClass": "blocked_unstable_deep_tree",
+      "nonClaims": [
+        "A8.5 is a deterministic deep-tree holdout, not proof of deep-tree stability.",
+        "A8.5 does not prove EML advantage, broad EML superiority, compiler correctness, runtime performance, theorem discovery, public Atlas promotion, or deployment.",
+        "Blocked deep trees are guardrail evidence, not a universal limit theorem."
+      ],
+      "packetType": "eml_deep_tree_holdout_packet_v0",
+      "profiles": [
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 0.30908203125,
+            "infCount": 1415,
+            "maxAbsError": 3.5251923824858053e+307,
+            "maxRelError": 8.484127750920381e+306,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "inputMax": 4.0,
+          "inputMin": -4.0,
+          "profile": "holdout",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "blocked"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 0.5,
+            "infCount": 1024,
+            "maxAbsError": 1.4988855305040635e+28,
+            "maxRelError": 2.318461764120748e+27,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "inputMax": 4.0,
+          "inputMin": -4.0,
+          "profile": "edge",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "blocked"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 0.37255859375,
+            "infCount": 1285,
+            "maxAbsError": 1.132744413086923e+304,
+            "maxRelError": 2.724269361400398e+303,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "inputMax": 6.0,
+          "inputMin": -6.0,
+          "profile": "stress",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 1.0,
+            "infCount": 0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "nanCount": 0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "blocked"
+        }
+      ],
+      "schemaVersion": "monogate.eml_deep_tree_holdout_packet.v0",
+      "standardForm": "subtraction accumulator",
+      "treeDepth": 6
+    },
+    {
+      "caseId": "unstable_deep_tree_negative_control_v0",
+      "claimFlags": {
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deep_tree_stability_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "criteria": {
+        "blockFiniteRatioBelow": 0.99,
+        "blockMaxAbsErrorAbove": 1000000.0,
+        "finiteRatioPass": 0.999,
+        "maxAbsErrorPass": 1e-08,
+        "maxRelErrorPass": 1e-08,
+        "standardImprovementFactor": 100.0
+      },
+      "date": "2026-05-27",
+      "emlForm": "unguarded deep EML exponential fold",
+      "holdoutClass": "blocked_unstable_deep_tree",
+      "nonClaims": [
+        "A8.5 is a deterministic deep-tree holdout, not proof of deep-tree stability.",
+        "A8.5 does not prove EML advantage, broad EML superiority, compiler correctness, runtime performance, theorem discovery, public Atlas promotion, or deployment.",
+        "Blocked deep trees are guardrail evidence, not a universal limit theorem."
+      ],
+      "packetType": "eml_deep_tree_holdout_packet_v0",
+      "profiles": [
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 0.0,
+            "infCount": 2048,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "inputMax": 8.0,
+          "inputMin": 2.0,
+          "profile": "holdout",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 0.0,
+            "infCount": 0,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 2048,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "winner": "blocked"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 0.0,
+            "infCount": 2048,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "inputMax": 8.0,
+          "inputMin": 2.0,
+          "profile": "edge",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 0.0,
+            "infCount": 0,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 2048,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "winner": "blocked"
+        },
+        {
+          "eml": {
+            "expression": "eml_deep_tree",
+            "finiteRatio": 0.0,
+            "infCount": 2048,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 0,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "inputMax": 9.5,
+          "inputMin": 0.5,
+          "profile": "stress",
+          "standard": {
+            "expression": "standard_or_guarded",
+            "finiteRatio": 0.0,
+            "infCount": 0,
+            "maxAbsError": null,
+            "maxRelError": null,
+            "nanCount": 2048,
+            "pass": false,
+            "sampleCount": 2048
+          },
+          "winner": "blocked"
+        }
+      ],
+      "schemaVersion": "monogate.eml_deep_tree_holdout_packet.v0",
+      "standardForm": "blocked unless lowered/guarded",
+      "treeDepth": 12
+    }
+  ],
+  "nonClaims": [
+    "A8.5 is a deterministic deep-tree holdout, not proof of deep-tree stability.",
+    "A8.5 does not prove EML advantage, broad EML superiority, compiler correctness, runtime performance, theorem discovery, public Atlas promotion, or deployment.",
+    "Blocked deep trees are guardrail evidence, not a universal limit theorem."
+  ],
+  "schemaVersion": "monogate.eml_a8_5_deep_tree_holdout.v0",
+  "status": "EML_A8_5_DEEP_TREE_HOLDOUT_PASS",
+  "summary": {
+    "blockedCount": 3,
+    "byHoldoutClass": {
+      "blocked_unstable_deep_tree": 3,
+      "mixed_identity_supported": 1,
+      "standard_runtime_win": 1
+    },
+    "claimFlagsAllFalse": true,
+    "deepTreeStabilityClaim": false,
+    "emlAdvantageProved": false,
+    "emlStructureSupportedCount": 0,
+    "maxTreeDepth": 12,
+    "mixedIdentitySupportedCount": 1,
+    "packetCount": 5,
+    "publicAtlasPromotion": false,
+    "standardRuntimeWinCount": 1
+  }
+}
