@@ -16,12 +16,12 @@ blocked claims, and next validators.
 | `pm-a1-profitable-agent-claim` | `forecasting` | `calibration_ready_no_outcomes` | `blocked_public_claim` | `private` | attach resolved outcomes and scoring history before any profitable-agent claim |
 | `oph-correct-theory-of-everything-claim` | `external_theory` | `source_only` | `blocked_public_claim` | `private` | decompose into small claims and run contradiction/formalization review |
 | `electronics-voltage-divider-hardware-observed` | `hardware` | `fixture_only` | `blocked_public_claim` | `private` | collect live capture packet before claiming hardware validation |
-| `r11-compiler-lowering-correctness` | `compiler_correctness` | `runtime_bakeoff_local` | `blocked_public_claim` | `private` | prove scoped semantic preservation before compiler correctness claims |
+| `r11-compiler-lowering-correctness` | `compiler_correctness` | `scoped_semantic_proof` | `blocked_public_claim` | `private` | formalize compiler-wide proof skeleton before compiler correctness claims |
 | `machlib-subtraction-boundary-witness` | `proof_status` | `small_checked_witness` | `approved_bounded_public_claim` | `public_bounded` | surface only the bounded scoped claim with domain assumptions and evidence paths |
 | `ai-answer-ready-for-publication` | `ai_answer` | `none` | `human_review_required` | `candidate` | attach sources, reviewer notes, and a validator before any public surface |
 | `builder-robust-to-forbidden-claim-injection` | `redteam_robustness` | `fixture_red_team_pass` | `candidate_only` | `candidate` | keep as candidate packet until required validators pass |
 | `command-cockpit-robust-to-private-leakage` | `redteam_robustness` | `local_red_team_pass` | `candidate_only` | `candidate` | keep as candidate packet until required validators pass |
-| `r12-generated-stubs-validate-on-fixtures` | `generated_stub_validation` | `runtime_bakeoff_local` | `candidate_only` | `candidate` | keep as candidate packet until required validators pass |
+| `r12-generated-stubs-validate-on-fixtures` | `generated_stub_validation` | `scoped_semantic_proof` | `candidate_only` | `candidate` | keep as candidate packet until required validators pass |
 
 ## Summary
 

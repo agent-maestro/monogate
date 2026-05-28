@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Scoped Semantic Proof Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "caseId",
+    "sourceExpression",
+    "loweredExpression",
+    "proofStatus",
+    "domainGuards",
+    "rewriteSteps",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_scoped_semantic_proof_packet.v0" },
+    "packetType": { "const": "eml_scoped_semantic_proof_packet_v0" },
+    "caseId": { "type": "string", "minLength": 1 },
+    "sourceExpression": { "type": "string", "minLength": 1 },
+    "loweredExpression": { "type": "string", "minLength": 1 },
+    "proofStatus": { "enum": ["scoped_proof_pass", "blocked"] },
+    "domainGuards": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "rewriteSteps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stepId", "rule", "before", "after"],
+        "properties": {
+          "stepId": { "type": "string", "minLength": 1 },
+          "rule": { "type": "string", "minLength": 1 },
+          "before": { "type": "string", "minLength": 1 },
+          "after": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": true
+      }
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

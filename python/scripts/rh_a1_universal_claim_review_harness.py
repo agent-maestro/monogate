@@ -96,12 +96,16 @@ def infer_evidence_strength(claim: dict[str, Any]) -> str:
         return "runtime_bakeoff_local"
     if claim_type == "proof_status" and ("checked" in summary or "witness" in summary):
         return "small_checked_witness"
+    if claim_type == "compiler_correctness" and any("r10c" in path or "scoped_semantic_proof" in path for path in paths):
+        return "scoped_semantic_proof"
     if claim_type == "compiler_correctness" and any("r10b" in path or "runtime_bakeoff" in path for path in paths):
         return "runtime_bakeoff_local"
     if claim_type == "compiler_correctness" and any("eml_r12" in path or "generated_stub" in path for path in paths):
         return "validated_replay_or_packet"
     if claim_type in {"performance", "compiler_correctness"} and any("r10" in path or "r11" in path for path in paths):
         return "local_measurement_only"
+    if claim_type == "generated_stub_validation" and any("r10c" in path or "scoped_semantic_proof" in path for path in paths):
+        return "scoped_semantic_proof"
     if claim_type == "generated_stub_validation" and any("r10b" in path or "runtime_bakeoff" in path for path in paths):
         return "runtime_bakeoff_local"
     if claim_type == "generated_stub_validation" and any("eml_r12" in path or "generated_stub" in path for path in paths):
@@ -168,6 +172,8 @@ def next_action(decision: str, claim_type: str, evidence_strength: str) -> str:
             return "run runtime bakeoff and scoped semantic proof before compiler correctness claims"
         if claim_type == "compiler_correctness" and evidence_strength == "runtime_bakeoff_local":
             return "prove scoped semantic preservation before compiler correctness claims"
+        if claim_type == "compiler_correctness" and evidence_strength == "scoped_semantic_proof":
+            return "formalize compiler-wide proof skeleton before compiler correctness claims"
         return {
             "performance": "run broader runtime bakeoff before making any public performance claim",
             "forecasting": "attach resolved outcomes and scoring history before any profitable-agent claim",
@@ -226,8 +232,12 @@ def review_claim(claim: dict[str, Any]) -> dict[str, Any]:
         required_validators = ["runtime_bakeoff", "scoped_semantic_proof", "formal_compiler_proof"]
     if claim_type == "compiler_correctness" and evidence_strength == "runtime_bakeoff_local":
         required_validators = ["scoped_semantic_proof", "formal_compiler_proof"]
+    if claim_type == "compiler_correctness" and evidence_strength == "scoped_semantic_proof":
+        required_validators = ["formal_compiler_proof"]
     if claim_type == "generated_stub_validation" and evidence_strength == "runtime_bakeoff_local":
         required_validators = ["scoped_semantic_proof", "formal_compiler_proof"]
+    if claim_type == "generated_stub_validation" and evidence_strength == "scoped_semantic_proof":
+        required_validators = ["formal_compiler_proof"]
     if claim_type == "performance" and evidence_strength == "runtime_bakeoff_local":
         required_validators = ["holdout_runtime_bakeoff", "implementation_benchmark"]
     if claim_type == "redteam_robustness" and evidence_strength == "local_red_team_pass":

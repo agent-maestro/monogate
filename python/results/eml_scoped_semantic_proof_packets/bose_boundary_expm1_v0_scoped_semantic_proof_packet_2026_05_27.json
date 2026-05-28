@@ -1,0 +1,53 @@
+{
+  "caseId": "bose_boundary_expm1_v0",
+  "claimFlags": {
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "formal_compiler_proof_claim": false,
+    "full_eml_semantics_claim": false,
+    "hardware_observed": false,
+    "package_published": false,
+    "production_lowering_claim": false,
+    "public_ready": false,
+    "semantic_equivalence_claim": false
+  },
+  "date": "2026-05-27",
+  "domainGuards": [
+    "x is real"
+  ],
+  "loweredExpression": "expm1(x)",
+  "nonClaims": [
+    "R10C proves only named scoped rewrite certificates.",
+    "R10C does not prove compiler correctness.",
+    "R10C does not prove full EML semantics or production lowering.",
+    "R10C does not deploy, publish packages, or operate hardware."
+  ],
+  "normalForm": "exp(x) - 1",
+  "packetType": "eml_scoped_semantic_proof_packet_v0",
+  "proofStatus": "scoped_proof_pass",
+  "r12LoweredExpression": "np.expm1(x)",
+  "rewriteSteps": [
+    {
+      "after": "exp(x) - ln(e)",
+      "before": "eml(x, e)",
+      "rule": "expand_eml_definition",
+      "stepId": "bose-001"
+    },
+    {
+      "after": "exp(x) - 1",
+      "before": "exp(x) - ln(e)",
+      "rule": "ln_e_one",
+      "stepId": "bose-002"
+    },
+    {
+      "after": "expm1(x)",
+      "before": "exp(x) - 1",
+      "rule": "expm1_definition",
+      "stepId": "bose-003"
+    }
+  ],
+  "schemaVersion": "monogate.eml_scoped_semantic_proof_packet.v0",
+  "scopeBoundary": "single named expression under listed domain guards",
+  "sourceBakeoffStatus": "pass",
+  "sourceExpression": "eml(x, e)"
+}

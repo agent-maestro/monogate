@@ -1,0 +1,54 @@
+{
+  "caseId": "subtraction_boundary_v0",
+  "claimFlags": {
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "formal_compiler_proof_claim": false,
+    "full_eml_semantics_claim": false,
+    "hardware_observed": false,
+    "package_published": false,
+    "production_lowering_claim": false,
+    "public_ready": false,
+    "semantic_equivalence_claim": false
+  },
+  "date": "2026-05-27",
+  "domainGuards": [
+    "v > 0",
+    "u is real"
+  ],
+  "loweredExpression": "v - u",
+  "nonClaims": [
+    "R10C proves only named scoped rewrite certificates.",
+    "R10C does not prove compiler correctness.",
+    "R10C does not prove full EML semantics or production lowering.",
+    "R10C does not deploy, publish packages, or operate hardware."
+  ],
+  "normalForm": "v - u",
+  "packetType": "eml_scoped_semantic_proof_packet_v0",
+  "proofStatus": "scoped_proof_pass",
+  "r12LoweredExpression": "v - u",
+  "rewriteSteps": [
+    {
+      "after": "exp(ln(v)) - ln(exp(u))",
+      "before": "eml(ln(v), exp(u))",
+      "rule": "expand_eml_definition",
+      "stepId": "sub-001"
+    },
+    {
+      "after": "v - ln(exp(u))",
+      "before": "exp(ln(v)) - ln(exp(u))",
+      "rule": "exp_log_inverse_on_positive_domain",
+      "stepId": "sub-002"
+    },
+    {
+      "after": "v - u",
+      "before": "v - ln(exp(u))",
+      "rule": "log_exp_inverse_on_real_domain",
+      "stepId": "sub-003"
+    }
+  ],
+  "schemaVersion": "monogate.eml_scoped_semantic_proof_packet.v0",
+  "scopeBoundary": "single named expression under listed domain guards",
+  "sourceBakeoffStatus": "pass",
+  "sourceExpression": "eml(ln(v), exp(u))"
+}
