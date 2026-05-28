@@ -31,11 +31,13 @@
   "evidencePaths": [
     "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
     "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
-    "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+    "reports/evidence_packets/eml_r12_generated_lowering_stubs.json",
+    "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+    "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
   ],
-  "evidenceStrength": "validated_replay_or_packet",
-  "evidenceSummary": "R11 emits candidate lowering plans and R12 generated fixture stubs validate on deterministic grids; compiler correctness is still not proved.",
-  "nextAction": "run runtime bakeoff and scoped semantic proof before compiler correctness claims",
+  "evidenceStrength": "runtime_bakeoff_local",
+  "evidenceSummary": "R11 emits candidate lowering plans, R12 generated fixture stubs validate on deterministic grids, and R10B adds local runtime bakeoff on broader float64/float32 grids; compiler correctness is still not proved.",
+  "nextAction": "prove scoped semantic preservation before compiler correctness claims",
   "nonClaims": [
     "RH-A1 is a deterministic review harness, not a proof system.",
     "RH-A1 does not approve unsupported public claims.",
@@ -46,7 +48,6 @@
   "packetType": "claim_review_packet_v0",
   "requestedSurface": "public",
   "requiredValidators": [
-    "runtime_bakeoff",
     "scoped_semantic_proof",
     "formal_compiler_proof"
   ],
@@ -54,7 +55,7 @@
     "artifact_type:compiler_artifact",
     "claim_type:compiler_correctness",
     "requested_surface:public",
-    "evidence_strength:validated_replay_or_packet",
+    "evidence_strength:runtime_bakeoff_local",
     "public wording exceeds current evidence"
   ],
   "schemaVersion": "monogate.claim_review_packet.v0",

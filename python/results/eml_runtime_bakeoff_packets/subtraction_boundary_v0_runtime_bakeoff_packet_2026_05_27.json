@@ -1,0 +1,58 @@
+{
+  "caseId": "subtraction_boundary_v0",
+  "claimFlags": {
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "embedded_measurement_claim": false,
+    "formal_verification_claim": false,
+    "gpu_measurement_claim": false,
+    "hardware_observed": false,
+    "production_lowering_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "semantic_equivalence_claim": false
+  },
+  "date": "2026-05-27",
+  "dtypeResults": [
+    {
+      "dtype": "float64",
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 0.5268630849220104,
+      "maxAbsError": 0.0,
+      "maxRelError": 0.0,
+      "nanOrInfCount": 0,
+      "sampleCount": 2308,
+      "status": "pass",
+      "tolerances": {
+        "maxAbsError": 1e-09,
+        "maxRelError": 1e-09
+      }
+    },
+    {
+      "dtype": "float32",
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 0.4783362218370884,
+      "maxAbsError": 1.9073486328125e-06,
+      "maxRelError": 5.957335824611744e-08,
+      "nanOrInfCount": 0,
+      "sampleCount": 2308,
+      "status": "pass",
+      "tolerances": {
+        "maxAbsError": 0.0001,
+        "maxRelError": 0.0001
+      }
+    }
+  ],
+  "loweredExpression": "v - u",
+  "nonClaims": [
+    "R10B records local runtime bakeoff evidence only.",
+    "R10B does not claim compiler correctness or formal semantic equivalence.",
+    "R10B does not make public performance, savings, hardware, GPU, or embedded claims.",
+    "R10B does not change Forge/compiler behavior or deploy generated code."
+  ],
+  "packetType": "eml_runtime_bakeoff_packet_v0",
+  "runtimeStatus": "pass",
+  "schemaVersion": "monogate.eml_runtime_bakeoff_packet.v0",
+  "sourceStubFunction": "lower_subtraction_boundary_v0"
+}

@@ -10,9 +10,11 @@
       "requestedSurface": "public",
       "evidencePaths": [
         "reports/eml_r10_cost_stability_lab_2026_05_27.md",
-        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md"
+        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
+        "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+        "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
       ],
-      "evidenceSummary": "R10/R11 route softplus toward standard logaddexp rather than pure EML.",
+      "evidenceSummary": "R10/R11 route softplus toward standard logaddexp rather than pure EML, and R10B adds local runtime bakeoff evidence without public performance claims.",
       "sourceLane": "eml"
     },
     {
@@ -63,9 +65,11 @@
       "evidencePaths": [
         "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
         "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
-        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json",
+        "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+        "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
       ],
-      "evidenceSummary": "R11 emits candidate lowering plans and R12 generated fixture stubs validate on deterministic grids; compiler correctness is still not proved.",
+      "evidenceSummary": "R11 emits candidate lowering plans, R12 generated fixture stubs validate on deterministic grids, and R10B adds local runtime bakeoff on broader float64/float32 grids; compiler correctness is still not proved.",
       "sourceLane": "compiler"
     },
     {
@@ -127,9 +131,11 @@
       "requestedSurface": "public",
       "evidencePaths": [
         "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
-        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json",
+        "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+        "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
       ],
-      "evidenceSummary": "R12 generated seven Python fixture stubs from R11 plans and validated them on deterministic grids; no compiler correctness or production lowering claim.",
+      "evidenceSummary": "R12 generated seven Python fixture stubs from R11 plans and R10B validated them on broader float64/float32 runtime grids; no compiler correctness or production lowering claim.",
       "sourceLane": "compiler"
     }
   ]

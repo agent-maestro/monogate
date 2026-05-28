@@ -157,6 +157,10 @@ def queue_item(packet: dict[str, Any]) -> dict[str, Any]:
     next_sprint = SPRINT_BY_CLAIM_TYPE.get(packet["claimType"], "manual_review")
     if packet["claimType"] == "compiler_correctness" and validators and validators[0] == "runtime_bakeoff":
         next_sprint = "R10B runtime bakeoff"
+    if packet["claimType"] in {"compiler_correctness", "generated_stub_validation"} and validators and validators[0] == "scoped_semantic_proof":
+        next_sprint = "R10C scoped semantic proof"
+    if packet["claimType"] == "performance" and validators and validators[0] == "holdout_runtime_bakeoff":
+        next_sprint = "R10D implementation benchmark"
     if packet["claimType"] == "redteam_robustness" and validators and validators[0] == "adapter_coverage_review":
         next_sprint = "RT-A3 red-team regression CI guard"
     if packet["claimType"] == "forecasting" and validators and validators[0] == "outcome_resolution_ledger":

@@ -97,8 +97,8 @@ def test_compiler_claim_routes_to_runtime_bakeoff_after_r12(tmp_path):
         tmp_path / "feeds",
     )["payload"]
     item = item_by_claim(payload["queue"]["items"], "r11-compiler-lowering-correctness")
-    assert item["nextSprint"] == "R10B runtime bakeoff"
-    assert item["nextValidator"] == "runtime_bakeoff"
+    assert item["nextSprint"] == "R10C scoped semantic proof"
+    assert item["nextValidator"] == "scoped_semantic_proof"
     assert item["priority"] in {"high", "medium"}
 
 
@@ -112,8 +112,8 @@ def test_r12_candidate_routes_to_runtime_bakeoff(tmp_path):
         tmp_path / "feeds",
     )["payload"]
     item = item_by_claim(payload["queue"]["items"], "r12-generated-stubs-validate-on-fixtures")
-    assert item["nextSprint"] == "R10B runtime bakeoff"
-    assert item["nextValidator"] == "r12_generated_stub_packet"
+    assert item["nextSprint"] == "R10C scoped semantic proof"
+    assert item["nextValidator"] == "scoped_semantic_proof"
     assert item["blockerCategory"] == "runtime_bakeoff_or_semantic_proof_missing"
 
 

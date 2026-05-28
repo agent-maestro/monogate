@@ -62,7 +62,6 @@
     },
     {
       "allValidators": [
-        "r10_cost_stability",
         "holdout_runtime_bakeoff",
         "implementation_benchmark"
       ],
@@ -90,26 +89,26 @@
       "decision": "blocked_public_claim",
       "evidencePaths": [
         "reports/eml_r10_cost_stability_lab_2026_05_27.md",
-        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md"
+        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
+        "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+        "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
       ],
-      "evidenceStrength": "local_measurement_only",
+      "evidenceStrength": "runtime_bakeoff_local",
       "nextAction": "run broader runtime bakeoff before making any public performance claim",
-      "nextSprint": "R10B runtime bakeoff",
-      "nextValidator": "r10_cost_stability",
-      "priority": "high",
+      "nextSprint": "R10D implementation benchmark",
+      "nextValidator": "holdout_runtime_bakeoff",
+      "priority": "medium",
       "rank": 2,
-      "score": 64,
+      "score": 52,
       "scoreReasons": [
         "blocked_public_claim:+30",
         "lane:eml:+12",
-        "evidence_gap:local_measurement_only:+12",
         "runtime_bakeoff:+10"
       ],
       "sourceLane": "eml"
     },
     {
       "allValidators": [
-        "runtime_bakeoff",
         "scoped_semantic_proof",
         "formal_compiler_proof"
       ],
@@ -138,12 +137,14 @@
       "evidencePaths": [
         "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
         "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
-        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json",
+        "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+        "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
       ],
-      "evidenceStrength": "validated_replay_or_packet",
-      "nextAction": "run runtime bakeoff and scoped semantic proof before compiler correctness claims",
-      "nextSprint": "R10B runtime bakeoff",
-      "nextValidator": "runtime_bakeoff",
+      "evidenceStrength": "runtime_bakeoff_local",
+      "nextAction": "prove scoped semantic preservation before compiler correctness claims",
+      "nextSprint": "R10C scoped semantic proof",
+      "nextValidator": "scoped_semantic_proof",
       "priority": "medium",
       "rank": 3,
       "score": 48,
@@ -338,9 +339,8 @@
     },
     {
       "allValidators": [
-        "r12_generated_stub_packet",
-        "runtime_bakeoff",
-        "scoped_semantic_proof"
+        "scoped_semantic_proof",
+        "formal_compiler_proof"
       ],
       "allowedSurface": "candidate",
       "blockedClaims": [
@@ -367,12 +367,14 @@
       "decision": "candidate_only",
       "evidencePaths": [
         "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
-        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json",
+        "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+        "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
       ],
-      "evidenceStrength": "validated_replay_or_packet",
+      "evidenceStrength": "runtime_bakeoff_local",
       "nextAction": "keep as candidate packet until required validators pass",
-      "nextSprint": "R10B runtime bakeoff",
-      "nextValidator": "r12_generated_stub_packet",
+      "nextSprint": "R10C scoped semantic proof",
+      "nextValidator": "scoped_semantic_proof",
       "priority": "low",
       "rank": 8,
       "score": 28,
@@ -497,9 +499,9 @@
       "redteam": 2
     },
     "byPriority": {
-      "high": 2,
+      "high": 1,
       "low": 5,
-      "medium": 3
+      "medium": 4
     },
     "claimFlagsAllFalse": true,
     "compilerBehaviorChanged": false,

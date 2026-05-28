@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Runtime Bakeoff Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "caseId",
+    "dtypeResults",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_runtime_bakeoff_packet.v0" },
+    "packetType": { "const": "eml_runtime_bakeoff_packet_v0" },
+    "caseId": { "type": "string", "minLength": 1 },
+    "dtypeResults": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dtype", "status", "sampleCount", "finiteRatio", "maxAbsError", "maxRelError"],
+        "properties": {
+          "dtype": { "enum": ["float64", "float32"] },
+          "status": { "enum": ["pass", "fail"] },
+          "sampleCount": { "type": "integer", "minimum": 1 },
+          "finiteRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+          "maxAbsError": { "type": "number" },
+          "maxRelError": { "type": "number" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

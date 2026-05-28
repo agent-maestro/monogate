@@ -1,0 +1,58 @@
+{
+  "caseId": "gaussian_energy_v0",
+  "claimFlags": {
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "embedded_measurement_claim": false,
+    "formal_verification_claim": false,
+    "gpu_measurement_claim": false,
+    "hardware_observed": false,
+    "production_lowering_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "semantic_equivalence_claim": false
+  },
+  "date": "2026-05-27",
+  "dtypeResults": [
+    {
+      "dtype": "float64",
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 3.778162911611785,
+      "maxAbsError": 0.0,
+      "maxRelError": 0.0,
+      "nanOrInfCount": 0,
+      "sampleCount": 2308,
+      "status": "pass",
+      "tolerances": {
+        "maxAbsError": 1e-09,
+        "maxRelError": 1e-09
+      }
+    },
+    {
+      "dtype": "float32",
+      "finiteRatio": 1.0,
+      "latencyNsPerSample": 5.088388214904679,
+      "maxAbsError": 7.403879798140167e-08,
+      "maxRelError": 9.80599158954733e-07,
+      "nanOrInfCount": 0,
+      "sampleCount": 2308,
+      "status": "pass",
+      "tolerances": {
+        "maxAbsError": 0.0001,
+        "maxRelError": 0.0001
+      }
+    }
+  ],
+  "loweredExpression": "2.0 * np.exp(-(x * x))",
+  "nonClaims": [
+    "R10B records local runtime bakeoff evidence only.",
+    "R10B does not claim compiler correctness or formal semantic equivalence.",
+    "R10B does not make public performance, savings, hardware, GPU, or embedded claims.",
+    "R10B does not change Forge/compiler behavior or deploy generated code."
+  ],
+  "packetType": "eml_runtime_bakeoff_packet_v0",
+  "runtimeStatus": "pass",
+  "schemaVersion": "monogate.eml_runtime_bakeoff_packet.v0",
+  "sourceStubFunction": "lower_gaussian_energy_v0"
+}

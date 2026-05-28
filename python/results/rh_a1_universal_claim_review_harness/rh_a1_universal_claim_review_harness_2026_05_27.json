@@ -56,10 +56,12 @@
       "decision": "blocked_public_claim",
       "evidencePaths": [
         "reports/eml_r10_cost_stability_lab_2026_05_27.md",
-        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md"
+        "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
+        "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+        "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
       ],
-      "evidenceStrength": "local_measurement_only",
-      "evidenceSummary": "R10/R11 route softplus toward standard logaddexp rather than pure EML.",
+      "evidenceStrength": "runtime_bakeoff_local",
+      "evidenceSummary": "R10/R11 route softplus toward standard logaddexp rather than pure EML, and R10B adds local runtime bakeoff evidence without public performance claims.",
       "nextAction": "run broader runtime bakeoff before making any public performance claim",
       "nonClaims": [
         "RH-A1 is a deterministic review harness, not a proof system.",
@@ -71,7 +73,6 @@
       "packetType": "claim_review_packet_v0",
       "requestedSurface": "public",
       "requiredValidators": [
-        "r10_cost_stability",
         "holdout_runtime_bakeoff",
         "implementation_benchmark"
       ],
@@ -79,7 +80,7 @@
         "artifact_type:eml_expression",
         "claim_type:performance",
         "requested_surface:public",
-        "evidence_strength:local_measurement_only",
+        "evidence_strength:runtime_bakeoff_local",
         "public wording exceeds current evidence"
       ],
       "schemaVersion": "monogate.claim_review_packet.v0",
@@ -306,11 +307,13 @@
       "evidencePaths": [
         "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
         "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
-        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json",
+        "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+        "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
       ],
-      "evidenceStrength": "validated_replay_or_packet",
-      "evidenceSummary": "R11 emits candidate lowering plans and R12 generated fixture stubs validate on deterministic grids; compiler correctness is still not proved.",
-      "nextAction": "run runtime bakeoff and scoped semantic proof before compiler correctness claims",
+      "evidenceStrength": "runtime_bakeoff_local",
+      "evidenceSummary": "R11 emits candidate lowering plans, R12 generated fixture stubs validate on deterministic grids, and R10B adds local runtime bakeoff on broader float64/float32 grids; compiler correctness is still not proved.",
+      "nextAction": "prove scoped semantic preservation before compiler correctness claims",
       "nonClaims": [
         "RH-A1 is a deterministic review harness, not a proof system.",
         "RH-A1 does not approve unsupported public claims.",
@@ -321,7 +324,6 @@
       "packetType": "claim_review_packet_v0",
       "requestedSurface": "public",
       "requiredValidators": [
-        "runtime_bakeoff",
         "scoped_semantic_proof",
         "formal_compiler_proof"
       ],
@@ -329,7 +331,7 @@
         "artifact_type:compiler_artifact",
         "claim_type:compiler_correctness",
         "requested_surface:public",
-        "evidence_strength:validated_replay_or_packet",
+        "evidence_strength:runtime_bakeoff_local",
         "public wording exceeds current evidence"
       ],
       "schemaVersion": "monogate.claim_review_packet.v0",
@@ -608,10 +610,12 @@
       "decision": "candidate_only",
       "evidencePaths": [
         "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
-        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+        "reports/evidence_packets/eml_r12_generated_lowering_stubs.json",
+        "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+        "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
       ],
-      "evidenceStrength": "validated_replay_or_packet",
-      "evidenceSummary": "R12 generated seven Python fixture stubs from R11 plans and validated them on deterministic grids; no compiler correctness or production lowering claim.",
+      "evidenceStrength": "runtime_bakeoff_local",
+      "evidenceSummary": "R12 generated seven Python fixture stubs from R11 plans and R10B validated them on broader float64/float32 runtime grids; no compiler correctness or production lowering claim.",
       "nextAction": "keep as candidate packet until required validators pass",
       "nonClaims": [
         "RH-A1 is a deterministic review harness, not a proof system.",
@@ -624,15 +628,14 @@
       "packetType": "claim_review_packet_v0",
       "requestedSurface": "public",
       "requiredValidators": [
-        "r12_generated_stub_packet",
-        "runtime_bakeoff",
-        "scoped_semantic_proof"
+        "scoped_semantic_proof",
+        "formal_compiler_proof"
       ],
       "reviewNotes": [
         "artifact_type:compiler_artifact",
         "claim_type:generated_stub_validation",
         "requested_surface:public",
-        "evidence_strength:validated_replay_or_packet"
+        "evidence_strength:runtime_bakeoff_local"
       ],
       "schemaVersion": "monogate.claim_review_packet.v0",
       "sourceLane": "compiler"
@@ -657,12 +660,11 @@
       "calibration_ready_no_outcomes": 1,
       "fixture_only": 1,
       "fixture_red_team_pass": 1,
-      "local_measurement_only": 1,
       "local_red_team_pass": 1,
       "none": 1,
+      "runtime_bakeoff_local": 3,
       "small_checked_witness": 1,
-      "source_only": 1,
-      "validated_replay_or_packet": 2
+      "source_only": 1
     },
     "hardwareActionPerformed": false,
     "publicReadyClaimMade": false,

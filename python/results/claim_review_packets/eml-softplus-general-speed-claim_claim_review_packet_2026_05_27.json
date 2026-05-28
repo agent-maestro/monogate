@@ -30,10 +30,12 @@
   "decision": "blocked_public_claim",
   "evidencePaths": [
     "reports/eml_r10_cost_stability_lab_2026_05_27.md",
-    "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md"
+    "reports/eml_r11_hybrid_lowering_planner_2026_05_27.md",
+    "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+    "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
   ],
-  "evidenceStrength": "local_measurement_only",
-  "evidenceSummary": "R10/R11 route softplus toward standard logaddexp rather than pure EML.",
+  "evidenceStrength": "runtime_bakeoff_local",
+  "evidenceSummary": "R10/R11 route softplus toward standard logaddexp rather than pure EML, and R10B adds local runtime bakeoff evidence without public performance claims.",
   "nextAction": "run broader runtime bakeoff before making any public performance claim",
   "nonClaims": [
     "RH-A1 is a deterministic review harness, not a proof system.",
@@ -45,7 +47,6 @@
   "packetType": "claim_review_packet_v0",
   "requestedSurface": "public",
   "requiredValidators": [
-    "r10_cost_stability",
     "holdout_runtime_bakeoff",
     "implementation_benchmark"
   ],
@@ -53,7 +54,7 @@
     "artifact_type:eml_expression",
     "claim_type:performance",
     "requested_surface:public",
-    "evidence_strength:local_measurement_only",
+    "evidence_strength:runtime_bakeoff_local",
     "public wording exceeds current evidence"
   ],
   "schemaVersion": "monogate.claim_review_packet.v0",

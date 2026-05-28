@@ -31,10 +31,12 @@
   "decision": "candidate_only",
   "evidencePaths": [
     "reports/eml_r12_generated_lowering_stubs_2026_05_27.md",
-    "reports/evidence_packets/eml_r12_generated_lowering_stubs.json"
+    "reports/evidence_packets/eml_r12_generated_lowering_stubs.json",
+    "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
+    "reports/evidence_packets/eml_r10b_runtime_bakeoff.json"
   ],
-  "evidenceStrength": "validated_replay_or_packet",
-  "evidenceSummary": "R12 generated seven Python fixture stubs from R11 plans and validated them on deterministic grids; no compiler correctness or production lowering claim.",
+  "evidenceStrength": "runtime_bakeoff_local",
+  "evidenceSummary": "R12 generated seven Python fixture stubs from R11 plans and R10B validated them on broader float64/float32 runtime grids; no compiler correctness or production lowering claim.",
   "nextAction": "keep as candidate packet until required validators pass",
   "nonClaims": [
     "RH-A1 is a deterministic review harness, not a proof system.",
@@ -47,15 +49,14 @@
   "packetType": "claim_review_packet_v0",
   "requestedSurface": "public",
   "requiredValidators": [
-    "r12_generated_stub_packet",
-    "runtime_bakeoff",
-    "scoped_semantic_proof"
+    "scoped_semantic_proof",
+    "formal_compiler_proof"
   ],
   "reviewNotes": [
     "artifact_type:compiler_artifact",
     "claim_type:generated_stub_validation",
     "requested_surface:public",
-    "evidence_strength:validated_replay_or_packet"
+    "evidence_strength:runtime_bakeoff_local"
   ],
   "schemaVersion": "monogate.claim_review_packet.v0",
   "sourceLane": "compiler"
