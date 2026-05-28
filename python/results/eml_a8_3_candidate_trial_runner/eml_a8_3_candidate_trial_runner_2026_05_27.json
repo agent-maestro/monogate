@@ -1,0 +1,438 @@
+{
+  "claimFlags": {
+    "candidate_proved": false,
+    "candidate_trial_performed": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_advantage_proved": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "general_eml_superiority_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_atlas_promotion": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-27",
+  "nonClaims": [
+    "A8.3 runs bounded deterministic candidate trials only.",
+    "A8.3 does not prove EML advantage, broad EML superiority, theorem discovery, compiler correctness, RH proof, zeta-zero discovery, runtime performance, public Atlas promotion, or deployment.",
+    "A8.3 confirms one runtime anti-example so standard protected math can still win."
+  ],
+  "schemaVersion": "monogate.eml_a8_3_candidate_trial_runner.v0",
+  "selectedCandidateIds": [
+    "safe_log_domain_lift_v0",
+    "ln_from_eml_boundary_v0",
+    "expm1_runtime_anti_example_v1"
+  ],
+  "sourceQueueId": "eml_a8_2_discovery_candidate_queue",
+  "status": "EML_A8_3_CANDIDATE_TRIAL_RUNNER_PASS",
+  "summary": {
+    "blockedCount": 0,
+    "byTrialClass": {
+      "eml_proof_shape_supported": 1,
+      "mixed_identity_supported": 1,
+      "standard_runtime_win_confirmed": 1
+    },
+    "candidateProved": false,
+    "candidateTrialPerformed": true,
+    "claimFlagsAllFalse": true,
+    "emlAdvantageProved": false,
+    "mixedIdentitySupportedCount": 1,
+    "proofShapeSupportedCount": 1,
+    "publicAtlasPromotion": false,
+    "standardRuntimeWinConfirmedCount": 1,
+    "trialCount": 3
+  },
+  "trialPackets": [
+    {
+      "axisTested": "proof_shape",
+      "blockedPublicClaims": [
+        "general EML superiority",
+        "runtime performance",
+        "compiler correctness",
+        "theorem discovery",
+        "public Atlas promotion"
+      ],
+      "candidateId": "safe_log_domain_lift_v0",
+      "claimFlags": {
+        "candidate_proved": false,
+        "candidate_trial_performed": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "criteria": {
+        "antiExampleStandardImprovementFactor": 1000.0,
+        "finiteRatioPass": 1.0,
+        "identityMaxAbsErrorPass": 1e-10,
+        "identityMaxRelErrorPass": 1e-10
+      },
+      "date": "2026-05-27",
+      "emlForm": "raw theta -> positive y=exp(theta) -> eml(x,y)",
+      "evidenceNotes": [
+        "MachLib already carries concrete log-domain positive-coordinate witnesses.",
+        "No runtime speed or broad safety claim follows from this trial."
+      ],
+      "expectedAdvantageAxis": "proof_shape",
+      "family": "proof_shape",
+      "interpretation": "Trial supports the bounded proof-shape claim: exp(theta) produces positive internal log-domain coordinates on all profiles.",
+      "nonClaims": [
+        "A8.3 runs bounded deterministic candidate trials only.",
+        "A8.3 does not prove EML advantage, broad EML superiority, theorem discovery, compiler correctness, RH proof, zeta-zero discovery, runtime performance, public Atlas promotion, or deployment.",
+        "A8.3 confirms one runtime anti-example so standard protected math can still win."
+      ],
+      "packetType": "eml_candidate_trial_packet_v0",
+      "profiles": [
+        {
+          "eml": {
+            "expression": "eml_log_domain_lift",
+            "finiteRatio": 1.0,
+            "maxAbsError": 2.220446049250313e-16,
+            "maxRelError": 4.254185281845072e-16,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "positiveLiftRatio": 1.0,
+          "profile": "holdout",
+          "thetaMax": 20.0,
+          "thetaMin": -20.0,
+          "winner": "eml_proof_shape"
+        },
+        {
+          "eml": {
+            "expression": "eml_log_domain_lift",
+            "finiteRatio": 1.0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "positiveLiftRatio": 1.0,
+          "profile": "edge",
+          "thetaMax": 80.0,
+          "thetaMin": -80.0,
+          "winner": "eml_proof_shape"
+        },
+        {
+          "eml": {
+            "expression": "eml_log_domain_lift",
+            "finiteRatio": 1.0,
+            "maxAbsError": 1.1102230246251565e-16,
+            "maxRelError": 4.0074668566721e-16,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "positiveLiftRatio": 1.0,
+          "profile": "stress",
+          "thetaMax": 300.0,
+          "thetaMin": -300.0,
+          "winner": "eml_proof_shape"
+        }
+      ],
+      "schemaVersion": "monogate.eml_candidate_trial_packet.v0",
+      "sourcePriorityScore": 48,
+      "sourceQueueClass": "needs_machlib_witness",
+      "standardForm": "manual positive-domain guard",
+      "trialClass": "eml_proof_shape_supported",
+      "trialId": "safe_log_domain_lift_trial_v0"
+    },
+    {
+      "axisTested": "proof_shape",
+      "blockedPublicClaims": [
+        "general EML superiority",
+        "runtime performance",
+        "compiler correctness",
+        "theorem discovery",
+        "public Atlas promotion"
+      ],
+      "candidateId": "ln_from_eml_boundary_v0",
+      "claimFlags": {
+        "candidate_proved": false,
+        "candidate_trial_performed": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "criteria": {
+        "antiExampleStandardImprovementFactor": 1000.0,
+        "finiteRatioPass": 1.0,
+        "identityMaxAbsErrorPass": 1e-10,
+        "identityMaxRelErrorPass": 1e-10
+      },
+      "date": "2026-05-27",
+      "emlForm": "ln(y) = eml(1, eml(eml(1, y), 1))",
+      "evidenceNotes": [
+        "Nested EML recovers ln(y) on positive domains.",
+        "This is not a runtime win over standard log."
+      ],
+      "expectedAdvantageAxis": "proof_shape",
+      "family": "generator_identity",
+      "interpretation": "Trial supports the identity/teaching lane, while standard log remains the runtime form.",
+      "nonClaims": [
+        "A8.3 runs bounded deterministic candidate trials only.",
+        "A8.3 does not prove EML advantage, broad EML superiority, theorem discovery, compiler correctness, RH proof, zeta-zero discovery, runtime performance, public Atlas promotion, or deployment.",
+        "A8.3 confirms one runtime anti-example so standard protected math can still win."
+      ],
+      "packetType": "eml_candidate_trial_packet_v0",
+      "profiles": [
+        {
+          "domainPositiveRatio": 1.0,
+          "eml": {
+            "expression": "ln_from_nested_eml",
+            "finiteRatio": 1.0,
+            "maxAbsError": 8.881784197001252e-16,
+            "maxRelError": 4.687143674752382e-15,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "profile": "holdout",
+          "standard": {
+            "expression": "standard_log",
+            "finiteRatio": 1.0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "tie_identity"
+        },
+        {
+          "domainPositiveRatio": 1.0,
+          "eml": {
+            "expression": "ln_from_nested_eml",
+            "finiteRatio": 1.0,
+            "maxAbsError": 8.881784197001252e-16,
+            "maxRelError": 1.5865195899921515e-14,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "profile": "edge",
+          "standard": {
+            "expression": "standard_log",
+            "finiteRatio": 1.0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "tie_identity"
+        },
+        {
+          "domainPositiveRatio": 1.0,
+          "eml": {
+            "expression": "ln_from_nested_eml",
+            "finiteRatio": 1.0,
+            "maxAbsError": 1.7763568394002505e-15,
+            "maxRelError": 1.0409651318151728e-14,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "profile": "stress",
+          "standard": {
+            "expression": "standard_log",
+            "finiteRatio": 1.0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "winner": "tie_identity"
+        }
+      ],
+      "schemaVersion": "monogate.eml_candidate_trial_packet.v0",
+      "sourcePriorityScore": 46,
+      "sourceQueueClass": "needs_machlib_witness",
+      "standardForm": "ln(y)",
+      "trialClass": "mixed_identity_supported",
+      "trialId": "ln_from_eml_boundary_trial_v0"
+    },
+    {
+      "axisTested": "negative_control",
+      "blockedPublicClaims": [
+        "general EML superiority",
+        "runtime performance",
+        "compiler correctness",
+        "theorem discovery",
+        "public Atlas promotion"
+      ],
+      "candidateId": "expm1_runtime_anti_example_v1",
+      "claimFlags": {
+        "candidate_proved": false,
+        "candidate_trial_performed": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_advantage_proved": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "general_eml_superiority_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_atlas_promotion": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "criteria": {
+        "antiExampleStandardImprovementFactor": 1000.0,
+        "finiteRatioPass": 1.0,
+        "identityMaxAbsErrorPass": 1e-10,
+        "identityMaxRelErrorPass": 1e-10
+      },
+      "date": "2026-05-27",
+      "emlForm": "eml(x,e)",
+      "evidenceNotes": [
+        "EML can still be a boundary lens for exp(x)-1.",
+        "Runtime lowering should choose protected expm1 near zero."
+      ],
+      "expectedAdvantageAxis": "negative_control",
+      "family": "runtime_anti_example",
+      "interpretation": "Trial confirms the expected anti-example: protected expm1 beats raw exp(x)-1 near zero.",
+      "nonClaims": [
+        "A8.3 runs bounded deterministic candidate trials only.",
+        "A8.3 does not prove EML advantage, broad EML superiority, theorem discovery, compiler correctness, RH proof, zeta-zero discovery, runtime performance, public Atlas promotion, or deployment.",
+        "A8.3 confirms one runtime anti-example so standard protected math can still win."
+      ],
+      "packetType": "eml_candidate_trial_packet_v0",
+      "profiles": [
+        {
+          "eml": {
+            "expression": "eml_exp_minus_one",
+            "finiteRatio": 1.0,
+            "maxAbsError": 1.108894221009636e-16,
+            "maxRelError": 1.1263719767105257e-06,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "profile": "near_zero",
+          "scale": 1e-08,
+          "standard": {
+            "expression": "standard_expm1",
+            "finiteRatio": 1.0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "standardImprovementFactor": 1.108894221009636e+284,
+          "winner": "standard"
+        },
+        {
+          "eml": {
+            "expression": "eml_exp_minus_one",
+            "finiteRatio": 1.0,
+            "maxAbsError": 1.1098788276556119e-16,
+            "maxRelError": 0.0001109878827655612,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "profile": "tiny",
+          "scale": 1e-12,
+          "standard": {
+            "expression": "standard_expm1",
+            "finiteRatio": 1.0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "standardImprovementFactor": 1.109878827655612e+284,
+          "winner": "standard"
+        },
+        {
+          "eml": {
+            "expression": "eml_exp_minus_one",
+            "finiteRatio": 1.0,
+            "maxAbsError": 1.1070826499732112e-16,
+            "maxRelError": 2.1705510573307355e-07,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "profile": "signed_edge",
+          "scale": 1e-06,
+          "standard": {
+            "expression": "standard_expm1",
+            "finiteRatio": 1.0,
+            "maxAbsError": 0.0,
+            "maxRelError": 0.0,
+            "pass": true,
+            "sampleCount": 2048
+          },
+          "standardImprovementFactor": 1.1070826499732111e+284,
+          "winner": "standard"
+        }
+      ],
+      "schemaVersion": "monogate.eml_candidate_trial_packet.v0",
+      "sourcePriorityScore": 34,
+      "sourceQueueClass": "ready_for_advantage_lab",
+      "standardForm": "expm1(x)",
+      "trialClass": "standard_runtime_win_confirmed",
+      "trialId": "expm1_runtime_antiexample_trial_v1"
+    }
+  ],
+  "trialRunnerId": "eml_a8_3_candidate_trial_runner"
+}

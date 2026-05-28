@@ -1,0 +1,133 @@
+{
+  "axisTested": "negative_control",
+  "blockedPublicClaims": [
+    "general EML superiority",
+    "runtime performance",
+    "compiler correctness",
+    "theorem discovery",
+    "public Atlas promotion"
+  ],
+  "candidateId": "expm1_runtime_anti_example_v1",
+  "claimFlags": {
+    "candidate_proved": false,
+    "candidate_trial_performed": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_advantage_proved": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "general_eml_superiority_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_atlas_promotion": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "criteria": {
+    "antiExampleStandardImprovementFactor": 1000.0,
+    "finiteRatioPass": 1.0,
+    "identityMaxAbsErrorPass": 1e-10,
+    "identityMaxRelErrorPass": 1e-10
+  },
+  "date": "2026-05-27",
+  "emlForm": "eml(x,e)",
+  "evidenceNotes": [
+    "EML can still be a boundary lens for exp(x)-1.",
+    "Runtime lowering should choose protected expm1 near zero."
+  ],
+  "expectedAdvantageAxis": "negative_control",
+  "family": "runtime_anti_example",
+  "interpretation": "Trial confirms the expected anti-example: protected expm1 beats raw exp(x)-1 near zero.",
+  "nonClaims": [
+    "A8.3 runs bounded deterministic candidate trials only.",
+    "A8.3 does not prove EML advantage, broad EML superiority, theorem discovery, compiler correctness, RH proof, zeta-zero discovery, runtime performance, public Atlas promotion, or deployment.",
+    "A8.3 confirms one runtime anti-example so standard protected math can still win."
+  ],
+  "packetType": "eml_candidate_trial_packet_v0",
+  "profiles": [
+    {
+      "eml": {
+        "expression": "eml_exp_minus_one",
+        "finiteRatio": 1.0,
+        "maxAbsError": 1.108894221009636e-16,
+        "maxRelError": 1.1263719767105257e-06,
+        "pass": true,
+        "sampleCount": 2048
+      },
+      "profile": "near_zero",
+      "scale": 1e-08,
+      "standard": {
+        "expression": "standard_expm1",
+        "finiteRatio": 1.0,
+        "maxAbsError": 0.0,
+        "maxRelError": 0.0,
+        "pass": true,
+        "sampleCount": 2048
+      },
+      "standardImprovementFactor": 1.108894221009636e+284,
+      "winner": "standard"
+    },
+    {
+      "eml": {
+        "expression": "eml_exp_minus_one",
+        "finiteRatio": 1.0,
+        "maxAbsError": 1.1098788276556119e-16,
+        "maxRelError": 0.0001109878827655612,
+        "pass": true,
+        "sampleCount": 2048
+      },
+      "profile": "tiny",
+      "scale": 1e-12,
+      "standard": {
+        "expression": "standard_expm1",
+        "finiteRatio": 1.0,
+        "maxAbsError": 0.0,
+        "maxRelError": 0.0,
+        "pass": true,
+        "sampleCount": 2048
+      },
+      "standardImprovementFactor": 1.109878827655612e+284,
+      "winner": "standard"
+    },
+    {
+      "eml": {
+        "expression": "eml_exp_minus_one",
+        "finiteRatio": 1.0,
+        "maxAbsError": 1.1070826499732112e-16,
+        "maxRelError": 2.1705510573307355e-07,
+        "pass": true,
+        "sampleCount": 2048
+      },
+      "profile": "signed_edge",
+      "scale": 1e-06,
+      "standard": {
+        "expression": "standard_expm1",
+        "finiteRatio": 1.0,
+        "maxAbsError": 0.0,
+        "maxRelError": 0.0,
+        "pass": true,
+        "sampleCount": 2048
+      },
+      "standardImprovementFactor": 1.1070826499732111e+284,
+      "winner": "standard"
+    }
+  ],
+  "schemaVersion": "monogate.eml_candidate_trial_packet.v0",
+  "sourcePriorityScore": 34,
+  "sourceQueueClass": "ready_for_advantage_lab",
+  "standardForm": "expm1(x)",
+  "trialClass": "standard_runtime_win_confirmed",
+  "trialId": "expm1_runtime_antiexample_trial_v1"
+}

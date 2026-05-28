@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_candidate_trial_packet.v0",
+  "title": "EML Candidate Trial Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "candidateId",
+    "trialId",
+    "sourceQueueClass",
+    "trialClass",
+    "axisTested",
+    "emlForm",
+    "standardForm",
+    "profiles",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_candidate_trial_packet.v0" },
+    "packetType": { "const": "eml_candidate_trial_packet_v0" },
+    "date": { "type": "string" },
+    "candidateId": { "type": "string" },
+    "trialId": { "type": "string" },
+    "sourceQueueClass": { "type": "string" },
+    "trialClass": {
+      "enum": [
+        "eml_proof_shape_supported",
+        "mixed_identity_supported",
+        "standard_runtime_win_confirmed",
+        "blocked"
+      ]
+    },
+    "axisTested": { "type": "string" },
+    "profiles": { "type": "array" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    }
+  },
+  "additionalProperties": true
+}

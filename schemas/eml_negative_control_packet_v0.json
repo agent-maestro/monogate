@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_negative_control_packet.v0",
+  "title": "EML Negative Control Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "controlId",
+    "expectedWinner",
+    "controlClass",
+    "evidenceStatus",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_negative_control_packet.v0" },
+    "packetType": { "const": "eml_negative_control_packet_v0" },
+    "date": { "type": "string" },
+    "controlId": { "type": "string" },
+    "expectedWinner": { "enum": ["standard", "blocked"] },
+    "controlClass": {
+      "enum": [
+        "protected_runtime",
+        "non_eml_structure",
+        "unstable_deep_tree"
+      ]
+    },
+    "evidenceStatus": {
+      "enum": [
+        "confirmed",
+        "registered_for_next_holdout"
+      ]
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    }
+  },
+  "additionalProperties": true
+}
