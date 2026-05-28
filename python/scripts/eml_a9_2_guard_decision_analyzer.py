@@ -11,6 +11,7 @@ import argparse
 import json
 from pathlib import Path
 import sys
+import tempfile
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -40,14 +41,16 @@ NON_CLAIMS = [
 
 
 def load_fixtures() -> list[dict[str, Any]]:
-    built = build_fixtures(
-        ROOT / "python/results/.tmp_a9_2_fixtures",
-        ROOT / "python/results/.tmp_a9_2_fixture_packets",
-        ROOT / "reports/.tmp_a9_2_reports",
-        ROOT / "reports/.tmp_a9_2_evidence",
-        ROOT / "command_center_feeds/.tmp_a9_2_feeds",
-    )
-    return built["payload"]["fixturePackets"]
+    with tempfile.TemporaryDirectory(prefix="monogate_a9_2_fixtures_") as tmp:
+        root = Path(tmp)
+        built = build_fixtures(
+            root / "fixtures",
+            root / "fixture_packets",
+            root / "reports",
+            root / "evidence",
+            root / "feeds",
+        )
+        return built["payload"]["fixturePackets"]
 
 
 def analyze_fixture(fixture: dict[str, Any]) -> dict[str, Any]:

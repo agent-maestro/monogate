@@ -1,0 +1,28 @@
+name: EML Guard Contract
+
+on:
+  pull_request:
+  push:
+    branches: [master, main]
+
+jobs:
+  guard-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run guard fixtures and analyzer
+        run: |
+          python python/scripts/eml_a9_1_guard_rule_fixtures.py --build --strict
+          python python/scripts/eml_a9_2_guard_decision_analyzer.py --build --strict
+          python python/scripts/eml_a9_3_guard_ci_contract.py --build --strict
+          python python/scripts/eml_a10_expression_guard_lens.py --build --strict
+      - name: Run guard tests
+        run: |
+          python -m pytest -q \
+            python/tests/test_eml_a9_1_guard_rule_fixtures.py \
+            python/tests/test_eml_a9_2_guard_decision_analyzer.py \
+            python/tests/test_eml_a9_3_guard_ci_contract.py \
+            python/tests/test_eml_a10_expression_guard_lens.py

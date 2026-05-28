@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_guard_ci_contract_packet.v0",
+  "title": "EML Guard CI Contract Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "contractId",
+    "checks",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_guard_ci_contract_packet.v0" },
+    "packetType": { "const": "eml_guard_ci_contract_packet_v0" },
+    "date": { "type": "string" },
+    "contractId": { "type": "string" },
+    "checks": { "type": "array" },
+    "claimFlags": { "type": "object", "additionalProperties": { "const": false } }
+  },
+  "additionalProperties": true
+}
