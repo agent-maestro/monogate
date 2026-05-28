@@ -161,6 +161,8 @@ def queue_item(packet: dict[str, Any]) -> dict[str, Any]:
         next_sprint = "R10C scoped semantic proof"
     if packet["claimType"] in {"compiler_correctness", "generated_stub_validation"} and validators and validators[0] == "formal_compiler_proof":
         next_sprint = "R10E formal compiler proof skeleton"
+    if packet["claimType"] in {"compiler_correctness", "generated_stub_validation"} and validators and validators[0] == "proof_assistant_ast_model":
+        next_sprint = "R10F proof-assistant AST and guard model"
     if packet["claimType"] == "performance" and validators and validators[0] == "holdout_runtime_bakeoff":
         next_sprint = "R10D implementation benchmark"
     if packet["claimType"] == "redteam_robustness" and validators and validators[0] == "adapter_coverage_review":

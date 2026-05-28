@@ -97,8 +97,8 @@ def test_compiler_claim_routes_to_runtime_bakeoff_after_r12(tmp_path):
         tmp_path / "feeds",
     )["payload"]
     item = item_by_claim(payload["queue"]["items"], "r11-compiler-lowering-correctness")
-    assert item["nextSprint"] == "R10E formal compiler proof skeleton"
-    assert item["nextValidator"] == "formal_compiler_proof"
+    assert item["nextSprint"] == "R10F proof-assistant AST and guard model"
+    assert item["nextValidator"] == "proof_assistant_ast_model"
     assert item["priority"] in {"high", "medium"}
 
 
@@ -112,8 +112,8 @@ def test_r12_candidate_routes_to_runtime_bakeoff(tmp_path):
         tmp_path / "feeds",
     )["payload"]
     item = item_by_claim(payload["queue"]["items"], "r12-generated-stubs-validate-on-fixtures")
-    assert item["nextSprint"] == "R10E formal compiler proof skeleton"
-    assert item["nextValidator"] == "formal_compiler_proof"
+    assert item["nextSprint"] == "R10F proof-assistant AST and guard model"
+    assert item["nextValidator"] == "proof_assistant_ast_model"
     assert item["blockerCategory"] == "runtime_bakeoff_or_semantic_proof_missing"
 
 

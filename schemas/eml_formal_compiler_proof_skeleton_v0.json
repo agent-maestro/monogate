@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Formal Compiler Proof Skeleton v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "skeletonType",
+    "obligations",
+    "coveredCases",
+    "openObligations",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_formal_compiler_proof_skeleton.v0" },
+    "skeletonType": { "const": "eml_formal_compiler_proof_skeleton_v0" },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["obligationId", "title", "status"],
+        "properties": {
+          "obligationId": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["covered_by_scoped_certificate", "open", "blocked"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

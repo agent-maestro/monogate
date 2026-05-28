@@ -35,10 +35,12 @@
     "reports/eml_r10b_runtime_bakeoff_2026_05_27.md",
     "reports/evidence_packets/eml_r10b_runtime_bakeoff.json",
     "reports/eml_r10c_scoped_semantic_proof_2026_05_27.md",
-    "reports/evidence_packets/eml_r10c_scoped_semantic_proof.json"
+    "reports/evidence_packets/eml_r10c_scoped_semantic_proof.json",
+    "reports/eml_r10e_formal_compiler_proof_skeleton_2026_05_27.md",
+    "reports/evidence_packets/eml_r10e_formal_compiler_proof_skeleton.json"
   ],
-  "evidenceStrength": "scoped_semantic_proof",
-  "evidenceSummary": "R12 generated seven Python fixture stubs, R10B validated them on broader float64/float32 runtime grids, and R10C records scoped rewrite certificates for selected forms; no compiler correctness or production lowering claim.",
+  "evidenceStrength": "formal_proof_skeleton_open",
+  "evidenceSummary": "R12 generated seven Python fixture stubs, R10B validated them on broader float64/float32 runtime grids, R10C records scoped rewrite certificates for selected forms, and R10E records an open proof skeleton; no compiler correctness or production lowering claim.",
   "nextAction": "keep as candidate packet until required validators pass",
   "nonClaims": [
     "RH-A1 is a deterministic review harness, not a proof system.",
@@ -51,13 +53,14 @@
   "packetType": "claim_review_packet_v0",
   "requestedSurface": "public",
   "requiredValidators": [
-    "formal_compiler_proof"
+    "proof_assistant_ast_model",
+    "compiler_wide_induction"
   ],
   "reviewNotes": [
     "artifact_type:compiler_artifact",
     "claim_type:generated_stub_validation",
     "requested_surface:public",
-    "evidence_strength:scoped_semantic_proof"
+    "evidence_strength:formal_proof_skeleton_open"
   ],
   "schemaVersion": "monogate.claim_review_packet.v0",
   "sourceLane": "compiler"
