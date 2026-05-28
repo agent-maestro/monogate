@@ -1,0 +1,356 @@
+{
+  "benchmarkId": "eml_a11_2_protected_lowering_benchmark",
+  "cases": [
+    {
+      "blockedClaims": [
+        "runtime performance",
+        "compiler correctness",
+        "production readiness",
+        "general EML superiority"
+      ],
+      "caseId": "expm1_near_zero",
+      "expressionShape": "eml(x,e)",
+      "interpretation": "Protected numeric form is stability-preferred on this deterministic edge grid.",
+      "maxNaiveAbsError": 1.1077471016666666e-16,
+      "maxProtectedAbsError": 9.916668055535714e-21,
+      "naiveNonFiniteCount": 0,
+      "protectedBetterCount": 10,
+      "protectedNoWorseCount": 11,
+      "protectedNonFiniteCount": 0,
+      "recommendedLowering": "expm1-style protected lowering",
+      "rows": [
+        {
+          "naiveAbsError": 2.21217196215e-17,
+          "naiveValue": -9.999778782798785e-13,
+          "protectedAbsError": 1.66666666666625e-37,
+          "protectedNoWorse": true,
+          "protectedValue": -9.999999999995e-13,
+          "reference": "-9.9999999999950000000000016666666666662500000000000833333333333194444E-13",
+          "sample": {
+            "x": -1e-12
+          }
+        },
+        {
+          "naiveAbsError": 8.279037099999833e-18,
+          "naiveValue": -1.000000082740371e-10,
+          "protectedAbsError": 9.999833333333338e-27,
+          "protectedNoWorse": true,
+          "protectedValue": -9.999999999500001e-11,
+          "reference": "-9.999999999500000000016666666666250000000008333333333194444444446428571E-11",
+          "sample": {
+            "x": -1e-10
+          }
+        },
+        {
+          "naiveAbsError": 1.0774710166666666e-17,
+          "naiveValue": -9.99999993922529e-09,
+          "protectedAbsError": 8.3333333375e-25,
+          "protectedNoWorse": true,
+          "protectedValue": -9.999999950000001e-09,
+          "reference": "-9.99999995000000016666666625000000083333333194444444642857142609126984403E-9",
+          "sample": {
+            "x": -1e-08
+          }
+        },
+        {
+          "naiveAbsError": 1.5861266625000008e-17,
+          "naiveValue": -9.999994999843054e-07,
+          "protectedAbsError": 3.337499999166667e-23,
+          "protectedNoWorse": true,
+          "protectedValue": -9.999995000001667e-07,
+          "reference": "-9.9999950000016666662500000833333194444464285711805555831128720238097743306E-7",
+          "sample": {
+            "x": -1e-06
+          }
+        },
+        {
+          "naiveAbsError": 1.3499166680555358e-18,
+          "naiveValue": -9.999500016666385e-05,
+          "protectedAbsError": 9.916668055535714e-21,
+          "protectedNoWorse": true,
+          "protectedValue": -9.999500016666251e-05,
+          "reference": "-0.00009999500016666250008333194446428546627259697420659972534540112653641995986095",
+          "sample": {
+            "x": -0.0001
+          }
+        },
+        {
+          "naiveAbsError": 0.0,
+          "naiveValue": 0.0,
+          "protectedAbsError": 0.0,
+          "protectedNoWorse": true,
+          "protectedValue": 0.0,
+          "reference": "0",
+          "sample": {
+            "x": 0.0
+          }
+        },
+        {
+          "naiveAbsError": 8.8900581841e-17,
+          "naiveValue": 1.000088900582341e-12,
+          "protectedAbsError": 1.6666666666670834e-37,
+          "protectedNoWorse": true,
+          "protectedValue": 1.0000000000005e-12,
+          "reference": "1.0000000000005000000000001666666666667083333333333416666666666680556E-12",
+          "sample": {
+            "x": 1e-12
+          }
+        },
+        {
+          "naiveAbsError": 8.269037099999833e-18,
+          "naiveValue": 1.000000082740371e-10,
+          "protectedAbsError": 1.6666666667083334e-31,
+          "protectedNoWorse": true,
+          "protectedValue": 1.00000000005e-10,
+          "reference": "1.000000000050000000001666666666708333333334166666666680555555555753968E-10",
+          "sample": {
+            "x": 1e-10
+          }
+        },
+        {
+          "naiveAbsError": 1.1077471016666666e-16,
+          "naiveValue": 9.99999993922529e-09,
+          "protectedAbsError": 8.333333329166667e-25,
+          "protectedNoWorse": true,
+          "protectedValue": 1.0000000050000001e-08,
+          "reference": "1.00000000500000001666666670833333341666666680555555575396825421626984155E-8",
+          "sample": {
+            "x": 1e-08
+          }
+        },
+        {
+          "naiveAbsError": 3.7982966708333343e-17,
+          "naiveValue": 1.0000004999621837e-06,
+          "protectedAbsError": 1.6670833334166667e-22,
+          "protectedNoWorse": true,
+          "protectedValue": 1.0000005000001665e-06,
+          "reference": "0.0000010000005000001666667083333416666680555557539682787698440255734678130761985",
+          "sample": {
+            "x": 1e-06
+          }
+        },
+        {
+          "naiveAbsError": 4.3266583331944424e-17,
+          "naiveValue": 0.0001000050001667141,
+          "protectedAbsError": 6.583331944424603e-21,
+          "protectedNoWorse": true,
+          "protectedValue": 0.00010000500016667084,
+          "reference": "0.0001000050001666708334166680555753970734154541721783810346353909723112359727818",
+          "sample": {
+            "x": 0.0001
+          }
+        }
+      ],
+      "sampleCount": 11
+    },
+    {
+      "blockedClaims": [
+        "runtime performance",
+        "compiler correctness",
+        "production readiness",
+        "general EML superiority"
+      ],
+      "caseId": "logsumexp_edge_grid",
+      "expressionShape": "ln(sum(exp(x_i)))",
+      "interpretation": "Protected numeric form is stability-preferred on this deterministic edge grid.",
+      "maxNaiveAbsError": "inf",
+      "maxProtectedAbsError": 2.283404899549497e-14,
+      "naiveNonFiniteCount": 4,
+      "protectedBetterCount": 5,
+      "protectedNoWorseCount": 9,
+      "protectedNonFiniteCount": 0,
+      "recommendedLowering": "logaddexp-style protected lowering",
+      "rows": [
+        {
+          "naiveAbsError": "inf",
+          "naiveValue": "inf",
+          "protectedAbsError": 2.283404899549497e-14,
+          "protectedNoWorse": true,
+          "protectedValue": -999.6867383124818,
+          "reference": "-999.68673831248177716595100450503214435808471991432965162528093648516280509849081",
+          "sample": {
+            "values": [
+              -1000.0,
+              -1001.0
+            ]
+          }
+        },
+        {
+          "naiveAbsError": 0.24666639110057717,
+          "naiveValue": -744.4400719213812,
+          "protectedAbsError": 2.283404899549497e-14,
+          "protectedNoWorse": true,
+          "protectedValue": -744.6867383124818,
+          "reference": "-744.68673831248177716595100450503214435808471991432965162528093648516280509849081",
+          "sample": {
+            "values": [
+              -745.0,
+              -746.0
+            ]
+          }
+        },
+        {
+          "naiveAbsError": 2.8340489954949678e-15,
+          "naiveValue": -49.68673831248178,
+          "protectedAbsError": 2.8340489954949678e-15,
+          "protectedNoWorse": true,
+          "protectedValue": -49.68673831248178,
+          "reference": "-49.686738312481777165951004505032144358084719914329651625280936485162805098490813",
+          "sample": {
+            "values": [
+              -50.0,
+              -51.0
+            ]
+          }
+        },
+        {
+          "naiveAbsError": 9.417232121458176e-18,
+          "naiveValue": 0.6931471805599453,
+          "protectedAbsError": 9.417232121458176e-18,
+          "protectedNoWorse": true,
+          "protectedValue": 0.6931471805599453,
+          "reference": "0.69314718055994530941723212145817656807550013436025525412068000949339362196969472",
+          "sample": {
+            "values": [
+              0.0,
+              0.0
+            ]
+          }
+        },
+        {
+          "naiveAbsError": 2.8340489954949678e-15,
+          "naiveValue": 50.31326168751822,
+          "protectedAbsError": 2.8340489954949678e-15,
+          "protectedNoWorse": true,
+          "protectedValue": 50.31326168751822,
+          "reference": "50.313261687518222834048995494967855641915280085670348374719063514837194901509187",
+          "sample": {
+            "values": [
+              50.0,
+              49.0
+            ]
+          }
+        },
+        {
+          "naiveAbsError": 2.283404899549497e-14,
+          "naiveValue": 700.3132616875182,
+          "protectedAbsError": 2.283404899549497e-14,
+          "protectedNoWorse": true,
+          "protectedValue": 700.3132616875182,
+          "reference": "700.31326168751822283404899549496785564191528008567034837471906351483719490150919",
+          "sample": {
+            "values": [
+              700.0,
+              699.0
+            ]
+          }
+        },
+        {
+          "naiveAbsError": "inf",
+          "naiveValue": "inf",
+          "protectedAbsError": 2.283404899549497e-14,
+          "protectedNoWorse": true,
+          "protectedValue": 1000.3132616875182,
+          "reference": "1000.3132616875182228340489954949678556419152800856703483747190635148371949015092",
+          "sample": {
+            "values": [
+              1000.0,
+              999.0
+            ]
+          }
+        },
+        {
+          "naiveAbsError": "inf",
+          "naiveValue": "inf",
+          "protectedAbsError": 1.9695517080095455e-14,
+          "protectedNoWorse": true,
+          "protectedValue": -999.5923940355556,
+          "reference": "-999.59239403555561969551708009545492954852705289169380592527148619746469317009496",
+          "sample": {
+            "values": [
+              -1000.0,
+              -1001.0,
+              -1002.0
+            ]
+          }
+        },
+        {
+          "naiveAbsError": "inf",
+          "naiveValue": "inf",
+          "protectedAbsError": 1.9695517080095455e-14,
+          "protectedNoWorse": true,
+          "protectedValue": 1000.4076059644444,
+          "reference": "1000.4076059644443803044829199045450704514729471083061940747285138025353068299050",
+          "sample": {
+            "values": [
+              1000.0,
+              999.0,
+              998.0
+            ]
+          }
+        }
+      ],
+      "sampleCount": 9
+    }
+  ],
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "compiler_correctness_proved": false,
+    "deploy_performed": false,
+    "eml_advantage_proved": false,
+    "eml_general_superiority_claim": false,
+    "expression_guard_lens_production_ready": false,
+    "forge_behavior_changed": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "general_eml_superiority_claim": false,
+    "guard_analyzer_implemented": false,
+    "guard_analyzer_production_ready": false,
+    "guard_fixture_executed_as_compiler": false,
+    "guard_rules_complete": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "holdout_set_public_approval": false,
+    "live_serial_capture_performed": false,
+    "mock_compiler_is_real_compiler": false,
+    "production_controller_claim": false,
+    "protected_lowering_compiler_correctness_claim": false,
+    "protected_lowering_compiler_implementation_claim": false,
+    "protected_lowering_runtime_performance_claim": false,
+    "public_atlas_promotion": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-27",
+  "nonClaims": [
+    "A11.2 compares naive and protected numeric forms on deterministic edge grids.",
+    "A11.2 does not measure speed, latency, energy, throughput, or production runtime performance.",
+    "A11.2 does not implement or verify a real compiler lowering.",
+    "A11.2 does not claim compiler correctness, production readiness, public Atlas promotion, or EML advantage."
+  ],
+  "packetType": "eml_protected_lowering_benchmark_packet_v0",
+  "schemaVersion": "monogate.eml_a11_2_protected_lowering_benchmark.v0",
+  "status": "EML_A11_2_PROTECTED_LOWERING_BENCHMARK_PASS",
+  "summary": {
+    "caseCount": 2,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "compilerImplementationClaim": false,
+    "naiveNonFiniteCount": 4,
+    "numericStabilityEvidenceRecorded": true,
+    "productionReady": false,
+    "protectedBetterCount": 15,
+    "protectedNoWorseCount": 20,
+    "protectedNonFiniteCount": 0,
+    "runtimePerformanceClaim": false,
+    "sampleCount": 20
+  }
+}

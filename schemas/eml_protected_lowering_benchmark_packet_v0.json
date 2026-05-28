@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_protected_lowering_benchmark_packet.v0",
+  "title": "EML Protected Lowering Benchmark Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "benchmarkId",
+    "cases",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_protected_lowering_benchmark_packet.v0" },
+    "packetType": { "const": "eml_protected_lowering_benchmark_packet_v0" },
+    "date": { "type": "string" },
+    "benchmarkId": { "type": "string" },
+    "cases": { "type": "array" },
+    "summary": { "type": "object" },
+    "claimFlags": { "type": "object", "additionalProperties": { "const": false } }
+  },
+  "additionalProperties": true
+}
