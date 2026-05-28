@@ -2,7 +2,7 @@
   "blockedClaims": [
     "general EML superiority",
     "runtime performance",
-    "public expression claim"
+    "deep-tree stability"
   ],
   "claimFlags": {
     "certified_safety_claim": false,
@@ -36,12 +36,12 @@
   },
   "compilerBehaviorChanged": false,
   "date": "2026-05-27",
-  "decision": "block_missing_domain_guard",
-  "estimatedTreeDepth": 7,
-  "expression": "(1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))",
-  "family": "sigmoid_logistic",
+  "decision": "block_unstable_deep_tree",
+  "estimatedTreeDepth": 10,
+  "expression": "eml(eml(eml(eml(eml(eml(eml(eml(eml(eml(x,e),e),e),e),e),e),e),e),e),e)",
+  "family": "blocked_depth_holdout",
   "matchedRuleIds": [
-    "require_positive_log_domain_guard_v0"
+    "block_unstable_deep_tree_v0"
   ],
   "nonClaims": [
     "A10 applies guard decisions to existing EML expression packets only.",
@@ -49,9 +49,9 @@
     "A10 does not claim production readiness, EML advantage, runtime performance, public Atlas promotion, or deployment."
   ],
   "packetType": "eml_expression_guard_lens_packet_v0",
-  "programId": "sigmoid_derivative_v0",
-  "reason": "Division-like or raw EML expression requires explicit denominator/domain guard evidence before public/runtime strengthening.",
+  "programId": "deep_fold_holdout_v0",
+  "reason": "Expression depth exceeds current guard lens tolerance.",
   "recommendedLowering": null,
   "schemaVersion": "monogate.eml_expression_guard_lens_packet.v0",
-  "sourcePath": "/home/monogate/monogate/monogate/python/fixtures/eml_expression_packets/sigmoid_derivative_v0.json"
+  "sourcePath": "/home/monogate/monogate/monogate/python/fixtures/eml_expression_holdout_packets/deep_fold_holdout_v0.json"
 }

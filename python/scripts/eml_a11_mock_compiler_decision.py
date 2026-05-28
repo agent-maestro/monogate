@@ -95,14 +95,26 @@ def summarize(decisions: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def build_mock_decisions(packet_dir: Path, out_dir: Path, decision_packet_dir: Path, report_dir: Path, evidence_dir: Path, command_feed_dir: Path) -> dict[str, Any]:
+def build_mock_decisions(
+    packet_dir: Path,
+    out_dir: Path,
+    decision_packet_dir: Path,
+    report_dir: Path,
+    evidence_dir: Path,
+    command_feed_dir: Path,
+    lens_out_dir: Path | None = None,
+    lens_packet_dir: Path | None = None,
+    lens_report_dir: Path | None = None,
+    lens_evidence_dir: Path | None = None,
+    lens_command_feed_dir: Path | None = None,
+) -> dict[str, Any]:
     lens = build_lens(
         packet_dir,
-        ROOT / "python/results/eml_a10_expression_guard_lens",
-        ROOT / "python/results/eml_expression_guard_lens_packets",
-        ROOT / "reports",
-        ROOT / "reports/evidence_packets",
-        ROOT / "command_center_feeds",
+        lens_out_dir or (ROOT / "python/results/eml_a10_expression_guard_lens"),
+        lens_packet_dir or (ROOT / "python/results/eml_expression_guard_lens_packets"),
+        lens_report_dir or (ROOT / "reports"),
+        lens_evidence_dir or (ROOT / "reports/evidence_packets"),
+        lens_command_feed_dir or (ROOT / "command_center_feeds"),
     )["payload"]
     decisions = [decision_for_guard(packet) for packet in lens["guardLensPackets"]]
     payload = {

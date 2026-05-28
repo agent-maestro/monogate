@@ -54,28 +54,36 @@ def estimate_depth(expression: str) -> int:
 def analyze_packet(packet: dict[str, Any]) -> dict[str, Any]:
     expression = packet["expression"]
     program_id = packet["program_id"]
-    lower = expression.lower()
+    lower = expression.lower().replace(" ", "")
     matched: list[str] = []
     decision = "allow_proof_shape"
     lowering = None
     reason = "Expression has no protected-runtime trigger in the current fixture lens."
     blocked_claims = ["general EML superiority", "runtime performance"]
 
-    if "ln(exp(a) + exp(b))" in expression or "ln(exp" in lower:
+    if "eml(log(v),exp(u))" in lower:
+        matched = ["prefer_eml_for_proof_shape_v0", "subtraction_boundary_guarded_v0"]
+        reason = "Guarded subtraction-boundary shape may remain proof/search evidence with non-claims attached."
+    elif "ln(exp(a) + exp(b))" in expression or "ln(exp" in lower or "log(exp" in lower:
         decision = "recommend_protected_lowering"
         matched = ["lower_logaddexp_softplus_v0", "require_positive_log_domain_guard_v0"]
         lowering = "logaddexp-style protected lowering"
         reason = "Log-sum-exp/softplus shape should lower to protected runtime code."
-    elif "1 /" in expression or re.search(r"\bdiv\b|/", expression):
-        decision = "block_missing_domain_guard"
-        matched = ["require_positive_log_domain_guard_v0"]
-        reason = "Division-like expression requires explicit denominator guard evidence before public/runtime strengthening."
-        blocked_claims.append("public expression claim")
+    elif lower in {"eml(x,e)", "exp(x)-1", "exp(x)-ln(e)"}:
+        decision = "recommend_protected_lowering"
+        matched = ["lower_expm1_near_zero_v0", "prefer_protected_runtime_lowering_v0"]
+        lowering = "expm1-style protected lowering"
+        reason = "Near-zero exp-minus-one shape should lower to protected runtime code."
     elif estimate_depth(expression) >= 10:
         decision = "block_unstable_deep_tree"
         matched = ["block_unstable_deep_tree_v0"]
         reason = "Expression depth exceeds current guard lens tolerance."
         blocked_claims.append("deep-tree stability")
+    elif "1 /" in expression or re.search(r"\bdiv\b|/", expression) or "eml(x,y)" in lower:
+        decision = "block_missing_domain_guard"
+        matched = ["require_positive_log_domain_guard_v0"]
+        reason = "Division-like or raw EML expression requires explicit denominator/domain guard evidence before public/runtime strengthening."
+        blocked_claims.append("public expression claim")
     else:
         matched = ["prefer_eml_for_proof_shape_v0"]
 

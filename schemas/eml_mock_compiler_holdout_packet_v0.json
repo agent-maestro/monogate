@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_mock_compiler_holdout_packet.v0",
+  "title": "EML Mock Compiler Holdout Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "date",
+    "holdoutId",
+    "decisionPackets",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_mock_compiler_holdout_packet.v0" },
+    "packetType": { "const": "eml_mock_compiler_holdout_packet_v0" },
+    "date": { "type": "string" },
+    "holdoutId": { "type": "string" },
+    "decisionPackets": { "type": "array" },
+    "summary": { "type": "object" },
+    "claimFlags": { "type": "object", "additionalProperties": { "const": false } }
+  },
+  "additionalProperties": true
+}

@@ -37,9 +37,9 @@
   "compilerBehaviorChanged": false,
   "date": "2026-05-27",
   "decision": "block_missing_domain_guard",
-  "estimatedTreeDepth": 7,
-  "expression": "(1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))",
-  "family": "sigmoid_logistic",
+  "estimatedTreeDepth": 1,
+  "expression": "eml(x, y)",
+  "family": "blocked_domain_holdout",
   "matchedRuleIds": [
     "require_positive_log_domain_guard_v0"
   ],
@@ -49,9 +49,9 @@
     "A10 does not claim production readiness, EML advantage, runtime performance, public Atlas promotion, or deployment."
   ],
   "packetType": "eml_expression_guard_lens_packet_v0",
-  "programId": "sigmoid_derivative_v0",
+  "programId": "raw_eml_domain_holdout_v0",
   "reason": "Division-like or raw EML expression requires explicit denominator/domain guard evidence before public/runtime strengthening.",
   "recommendedLowering": null,
   "schemaVersion": "monogate.eml_expression_guard_lens_packet.v0",
-  "sourcePath": "/home/monogate/monogate/monogate/python/fixtures/eml_expression_packets/sigmoid_derivative_v0.json"
+  "sourcePath": "/home/monogate/monogate/monogate/python/fixtures/eml_expression_holdout_packets/raw_eml_domain_holdout_v0.json"
 }

@@ -21,6 +21,7 @@ jobs:
           python python/scripts/eml_a10_expression_guard_lens.py --build --strict
           python python/scripts/eml_a10_2_validate_builder_draft.py python/fixtures/eml_expression_packets/softplus_pair_v0.json --build --strict
           python python/scripts/eml_a11_mock_compiler_decision.py --build --strict
+          python python/scripts/eml_a11_1_mock_compiler_holdouts.py --build --strict
       - name: Run guard tests
         run: |
           python -m pytest -q \
@@ -29,4 +30,5 @@ jobs:
             python/tests/test_eml_a9_3_guard_ci_contract.py \
             python/tests/test_eml_a10_expression_guard_lens.py \
             python/tests/test_eml_a10_2_validate_builder_draft.py \
-            python/tests/test_eml_a11_mock_compiler_decision.py
+            python/tests/test_eml_a11_mock_compiler_decision.py \
+            python/tests/test_eml_a11_1_mock_compiler_holdouts.py

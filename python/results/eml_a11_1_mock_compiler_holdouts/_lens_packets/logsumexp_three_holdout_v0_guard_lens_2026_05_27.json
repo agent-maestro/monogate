@@ -1,8 +1,7 @@
 {
   "blockedClaims": [
     "general EML superiority",
-    "runtime performance",
-    "public expression claim"
+    "runtime performance"
   ],
   "claimFlags": {
     "certified_safety_claim": false,
@@ -36,11 +35,12 @@
   },
   "compilerBehaviorChanged": false,
   "date": "2026-05-27",
-  "decision": "block_missing_domain_guard",
-  "estimatedTreeDepth": 7,
-  "expression": "(1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))",
-  "family": "sigmoid_logistic",
+  "decision": "recommend_protected_lowering",
+  "estimatedTreeDepth": 4,
+  "expression": "ln(exp(a) + exp(b) + exp(c))",
+  "family": "protected_lowering_holdout",
   "matchedRuleIds": [
+    "lower_logaddexp_softplus_v0",
     "require_positive_log_domain_guard_v0"
   ],
   "nonClaims": [
@@ -49,9 +49,9 @@
     "A10 does not claim production readiness, EML advantage, runtime performance, public Atlas promotion, or deployment."
   ],
   "packetType": "eml_expression_guard_lens_packet_v0",
-  "programId": "sigmoid_derivative_v0",
-  "reason": "Division-like or raw EML expression requires explicit denominator/domain guard evidence before public/runtime strengthening.",
-  "recommendedLowering": null,
+  "programId": "logsumexp_three_holdout_v0",
+  "reason": "Log-sum-exp/softplus shape should lower to protected runtime code.",
+  "recommendedLowering": "logaddexp-style protected lowering",
   "schemaVersion": "monogate.eml_expression_guard_lens_packet.v0",
-  "sourcePath": "/home/monogate/monogate/monogate/python/fixtures/eml_expression_packets/sigmoid_derivative_v0.json"
+  "sourcePath": "/home/monogate/monogate/monogate/python/fixtures/eml_expression_holdout_packets/logsumexp_three_holdout_v0.json"
 }
