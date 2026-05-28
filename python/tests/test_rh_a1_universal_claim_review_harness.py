@@ -45,10 +45,11 @@ def test_eml_general_speed_claim_is_blocked():
 def test_prediction_market_profit_claim_is_blocked():
     packet = review_claim(claim_by_id("pm-a1-profitable-agent-claim"))
     assert packet["decision"] == "blocked_public_claim"
-    assert packet["evidenceStrength"] == "fixture_only"
+    assert packet["evidenceStrength"] == "calibration_ready_no_outcomes"
     assert "financial_advice" in packet["blockedClaims"]
     assert "profitable_strategy" in packet["blockedClaims"]
-    assert "calibration_ledger" in packet["requiredValidators"]
+    assert "outcome_resolution_ledger" in packet["requiredValidators"]
+    assert "brier_log_loss_scoring" in packet["requiredValidators"]
 
 
 def test_external_theory_toe_claim_is_blocked():

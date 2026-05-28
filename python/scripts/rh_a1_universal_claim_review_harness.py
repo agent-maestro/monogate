@@ -100,6 +100,8 @@ def infer_evidence_strength(claim: dict[str, Any]) -> str:
         return "local_measurement_only"
     if claim_type == "generated_stub_validation" and any("eml_r12" in path or "generated_stub" in path for path in paths):
         return "validated_replay_or_packet"
+    if claim_type == "forecasting" and any("pm_a1b" in path or "calibration_ledger" in path for path in paths):
+        return "calibration_ready_no_outcomes"
     if claim_type == "forecasting" and any("pm_a1" in path for path in paths):
         return "fixture_only"
     if claim_type == "hardware" and "simulated" in summary:
@@ -160,7 +162,7 @@ def next_action(decision: str, claim_type: str, evidence_strength: str) -> str:
             return "run runtime bakeoff and scoped semantic proof before compiler correctness claims"
         return {
             "performance": "run broader runtime bakeoff before making any public performance claim",
-            "forecasting": "build calibration ledger and keep all trade decisions human-reviewed",
+            "forecasting": "attach resolved outcomes and scoring history before any profitable-agent claim",
             "external_theory": "decompose into small claims and run contradiction/formalization review",
             "hardware": "collect live capture packet before claiming hardware validation",
             "compiler_correctness": "validate generated stubs and prove scoped semantics before compiler claims",
@@ -216,6 +218,8 @@ def review_claim(claim: dict[str, Any]) -> dict[str, Any]:
         required_validators = ["runtime_bakeoff", "scoped_semantic_proof", "formal_compiler_proof"]
     if claim_type == "redteam_robustness" and evidence_strength == "local_red_team_pass":
         required_validators = ["adapter_coverage_review", "regression_ci_guard"]
+    if claim_type == "forecasting" and evidence_strength == "calibration_ready_no_outcomes":
+        required_validators = ["outcome_resolution_ledger", "brier_log_loss_scoring", "human_market_review"]
     return {
         "schemaVersion": REVIEW_PACKET_SCHEMA_VERSION,
         "packetType": "claim_review_packet_v0",

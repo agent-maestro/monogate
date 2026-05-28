@@ -13,7 +13,7 @@ blocked claims, and next validators.
 | Claim | Type | Evidence | Decision | Allowed surface | Next action |
 |---|---|---|---|---|---|
 | `eml-softplus-general-speed-claim` | `performance` | `local_measurement_only` | `blocked_public_claim` | `private` | run broader runtime bakeoff before making any public performance claim |
-| `pm-a1-profitable-agent-claim` | `forecasting` | `fixture_only` | `blocked_public_claim` | `private` | build calibration ledger and keep all trade decisions human-reviewed |
+| `pm-a1-profitable-agent-claim` | `forecasting` | `calibration_ready_no_outcomes` | `blocked_public_claim` | `private` | attach resolved outcomes and scoring history before any profitable-agent claim |
 | `oph-correct-theory-of-everything-claim` | `external_theory` | `source_only` | `blocked_public_claim` | `private` | decompose into small claims and run contradiction/formalization review |
 | `electronics-voltage-divider-hardware-observed` | `hardware` | `fixture_only` | `blocked_public_claim` | `private` | collect live capture packet before claiming hardware validation |
 | `r11-compiler-lowering-correctness` | `compiler_correctness` | `validated_replay_or_packet` | `blocked_public_claim` | `private` | run runtime bakeoff and scoped semantic proof before compiler correctness claims |

@@ -34,54 +34,6 @@
     "items": [
       {
         "allValidators": [
-          "pm_a1_forecast_packet",
-          "calibration_ledger",
-          "human_market_review"
-        ],
-        "allowedSurface": "private",
-        "blockedClaims": [
-          "financial_advice",
-          "profitable_strategy",
-          "autonomous_trading"
-        ],
-        "blockerCategory": "calibration_missing",
-        "claim": "The prediction-market agent can identify profitable Polymarket/Kalshi trades.",
-        "claimFlags": {
-          "automatic_reviewer_approval": false,
-          "certified_safety_claim": false,
-          "compiler_behavior_changed": false,
-          "deploy_performed": false,
-          "financial_advice_claim": false,
-          "hardware_action_performed": false,
-          "production_controller_claim": false,
-          "public_ready": false,
-          "public_sprint_approval_claim": false,
-          "trade_performed": false
-        },
-        "claimId": "pm-a1-profitable-agent-claim",
-        "claimType": "forecasting",
-        "decision": "blocked_public_claim",
-        "evidencePaths": [
-          "reports/pm_a1_prediction_market_evidence_agent_2026_05_27.md",
-          "reports/evidence_packets/pm_a1_prediction_market_evidence_agent.json"
-        ],
-        "evidenceStrength": "fixture_only",
-        "nextAction": "build calibration ledger and keep all trade decisions human-reviewed",
-        "nextSprint": "PM-A1B calibration ledger",
-        "nextValidator": "pm_a1_forecast_packet",
-        "priority": "high",
-        "rank": 1,
-        "score": 68,
-        "scoreReasons": [
-          "blocked_public_claim:+30",
-          "lane:prediction_market:+14",
-          "evidence_gap:fixture_only:+12",
-          "agent_calibration:+12"
-        ],
-        "sourceLane": "prediction_market"
-      },
-      {
-        "allValidators": [
           "live_capture_packet",
           "device_identity",
           "calibration_context",
@@ -117,7 +69,7 @@
         "nextSprint": "EE-A2 live capture packet",
         "nextValidator": "live_capture_packet",
         "priority": "high",
-        "rank": 2,
+        "rank": 1,
         "score": 65,
         "scoreReasons": [
           "blocked_public_claim:+30",
@@ -164,7 +116,7 @@
         "nextSprint": "R10B runtime bakeoff",
         "nextValidator": "r10_cost_stability",
         "priority": "high",
-        "rank": 3,
+        "rank": 2,
         "score": 64,
         "scoreReasons": [
           "blocked_public_claim:+30",
@@ -212,13 +164,61 @@
         "nextSprint": "R10B runtime bakeoff",
         "nextValidator": "runtime_bakeoff",
         "priority": "medium",
-        "rank": 4,
+        "rank": 3,
         "score": 48,
         "scoreReasons": [
           "blocked_public_claim:+30",
           "lane:compiler:+18"
         ],
         "sourceLane": "compiler"
+      },
+      {
+        "allValidators": [
+          "outcome_resolution_ledger",
+          "brier_log_loss_scoring",
+          "human_market_review"
+        ],
+        "allowedSurface": "private",
+        "blockedClaims": [
+          "financial_advice",
+          "profitable_strategy",
+          "autonomous_trading"
+        ],
+        "blockerCategory": "calibration_missing",
+        "claim": "The prediction-market agent can identify profitable Polymarket/Kalshi trades.",
+        "claimFlags": {
+          "automatic_reviewer_approval": false,
+          "certified_safety_claim": false,
+          "compiler_behavior_changed": false,
+          "deploy_performed": false,
+          "financial_advice_claim": false,
+          "hardware_action_performed": false,
+          "production_controller_claim": false,
+          "public_ready": false,
+          "public_sprint_approval_claim": false,
+          "trade_performed": false
+        },
+        "claimId": "pm-a1-profitable-agent-claim",
+        "claimType": "forecasting",
+        "decision": "blocked_public_claim",
+        "evidencePaths": [
+          "reports/pm_a1_prediction_market_evidence_agent_2026_05_27.md",
+          "reports/evidence_packets/pm_a1_prediction_market_evidence_agent.json",
+          "reports/pm_a1b_calibration_ledger_2026_05_27.md",
+          "reports/evidence_packets/pm_a1b_calibration_ledger.json"
+        ],
+        "evidenceStrength": "calibration_ready_no_outcomes",
+        "nextAction": "attach resolved outcomes and scoring history before any profitable-agent claim",
+        "nextSprint": "PM-A1C outcome resolver fixture",
+        "nextValidator": "outcome_resolution_ledger",
+        "priority": "medium",
+        "rank": 4,
+        "score": 44,
+        "scoreReasons": [
+          "blocked_public_claim:+30",
+          "lane:prediction_market:+14"
+        ],
+        "sourceLane": "prediction_market"
       },
       {
         "allValidators": [
@@ -516,9 +516,9 @@
         "redteam": 2
       },
       "byPriority": {
-        "high": 3,
+        "high": 2,
         "low": 5,
-        "medium": 2
+        "medium": 3
       },
       "claimFlagsAllFalse": true,
       "compilerBehaviorChanged": false,
@@ -526,8 +526,8 @@
       "hardwareActionPerformed": false,
       "publicApprovalPerformed": false,
       "queueItemCount": 10,
-      "topClaimId": "pm-a1-profitable-agent-claim",
-      "topNextSprint": "PM-A1B calibration ledger",
+      "topClaimId": "electronics-voltage-divider-hardware-observed",
+      "topNextSprint": "EE-A2 live capture packet",
       "tradePerformed": false
     }
   },
@@ -546,9 +546,9 @@
       "redteam": 2
     },
     "byPriority": {
-      "high": 3,
+      "high": 2,
       "low": 5,
-      "medium": 2
+      "medium": 3
     },
     "claimFlagsAllFalse": true,
     "compilerBehaviorChanged": false,
@@ -556,8 +556,8 @@
     "hardwareActionPerformed": false,
     "publicApprovalPerformed": false,
     "queueItemCount": 10,
-    "topClaimId": "pm-a1-profitable-agent-claim",
-    "topNextSprint": "PM-A1B calibration ledger",
+    "topClaimId": "electronics-voltage-divider-hardware-observed",
+    "topNextSprint": "EE-A2 live capture packet",
     "tradePerformed": false
   }
 }

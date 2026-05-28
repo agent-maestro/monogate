@@ -47,6 +47,14 @@ def test_score_prioritizes_compiler_and_redteam_blockers(tmp_path):
     assert "redteam_bridge:+14" in redteam_reasons
 
 
+def test_prediction_market_claim_routes_to_outcome_resolver_after_pm_a1b(tmp_path):
+    review = build_review(tmp_path)["payload"]
+    items = build_queue_items(review["reviewPackets"])
+    item = item_by_claim(items, "pm-a1-profitable-agent-claim")
+    assert item["nextSprint"] == "PM-A1C outcome resolver fixture"
+    assert item["nextValidator"] == "outcome_resolution_ledger"
+
+
 def test_queue_items_are_ranked_by_descending_score(tmp_path):
     review = build_review(tmp_path)["payload"]
     items = build_queue_items(review["reviewPackets"])

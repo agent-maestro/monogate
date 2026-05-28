@@ -31,11 +31,13 @@
   "decision": "blocked_public_claim",
   "evidencePaths": [
     "reports/pm_a1_prediction_market_evidence_agent_2026_05_27.md",
-    "reports/evidence_packets/pm_a1_prediction_market_evidence_agent.json"
+    "reports/evidence_packets/pm_a1_prediction_market_evidence_agent.json",
+    "reports/pm_a1b_calibration_ledger_2026_05_27.md",
+    "reports/evidence_packets/pm_a1b_calibration_ledger.json"
   ],
-  "evidenceStrength": "fixture_only",
-  "evidenceSummary": "PM-A1 is fixture-backed, read-only, low-confidence, and explicitly requires human review.",
-  "nextAction": "build calibration ledger and keep all trade decisions human-reviewed",
+  "evidenceStrength": "calibration_ready_no_outcomes",
+  "evidenceSummary": "PM-A1 is fixture-backed and read-only; PM-A1B adds a calibration-ready ledger with pending outcomes and null scores. No profitable-agent, financial-advice, or trading claim.",
+  "nextAction": "attach resolved outcomes and scoring history before any profitable-agent claim",
   "nonClaims": [
     "RH-A1 is a deterministic review harness, not a proof system.",
     "RH-A1 does not approve unsupported public claims.",
@@ -47,15 +49,15 @@
   "packetType": "claim_review_packet_v0",
   "requestedSurface": "public",
   "requiredValidators": [
-    "pm_a1_forecast_packet",
-    "calibration_ledger",
+    "outcome_resolution_ledger",
+    "brier_log_loss_scoring",
     "human_market_review"
   ],
   "reviewNotes": [
     "artifact_type:prediction_market_forecast",
     "claim_type:forecasting",
     "requested_surface:public",
-    "evidence_strength:fixture_only",
+    "evidence_strength:calibration_ready_no_outcomes",
     "public wording exceeds current evidence"
   ],
   "schemaVersion": "monogate.claim_review_packet.v0",

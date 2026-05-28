@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate Prediction Market Calibration Ledger v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "ledgerType",
+    "entries",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.prediction_market_calibration_ledger.v0" },
+    "ledgerType": { "const": "prediction_market_calibration_ledger_v0" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "marketId",
+          "forecastProbability",
+          "marketPrice",
+          "outcomeStatus",
+          "eligibleForFutureScoring"
+        ],
+        "properties": {
+          "marketId": { "type": "string", "minLength": 1 },
+          "forecastProbability": { "type": "number", "minimum": 0, "maximum": 1 },
+          "marketPrice": { "type": "number", "minimum": 0, "maximum": 1 },
+          "outcomeStatus": { "enum": ["pending_resolution", "resolved"] },
+          "outcomeValue": { "type": ["boolean", "null"] },
+          "brierScore": { "type": ["number", "null"] },
+          "logLoss": { "type": ["number", "null"] },
+          "eligibleForFutureScoring": { "type": "boolean" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
