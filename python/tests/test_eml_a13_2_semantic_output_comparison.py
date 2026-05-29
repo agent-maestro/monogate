@@ -30,7 +30,7 @@ def test_a13_2_builds_semantic_comparison_packets(tmp_path):
     assert payload["status"] == "EML_A13_2_SEMANTIC_OUTPUT_COMPARISON_PASS"
     assert payload["summary"]["caseCount"] >= 6
     assert payload["summary"]["passCount"] == payload["summary"]["caseCount"]
-    assert payload["summary"]["sampleCount"] >= 20
+    assert payload["summary"]["sampleCount"] >= 29
     validate_payload(payload)
 
 
@@ -41,6 +41,9 @@ def test_a13_2_compares_python_and_javascript_targets(tmp_path):
         assert packet["targetLanguages"] == ["python", "javascript"]
         assert packet["comparisonStatus"] == "pass"
         assert packet["maxAbsError"] <= 1.0e-9 or packet["maxRelError"] <= 1.0e-9
+    assert "stretched_exponential_holdout_semantic_compare_v0" in {
+        packet["caseId"] for packet in payload["casePackets"]
+    }
 
 
 def test_a13_2_frames_include_three_values_and_errors(tmp_path):
@@ -64,7 +67,7 @@ def test_a13_2_generated_json_files_parse(tmp_path):
     built = build_tmp(tmp_path)
     paths = [built["result_path"], built["evidence_path"], built["feed_path"]]
     paths.extend(str(path) for path in (tmp_path / "packets").glob("*.json"))
-    assert len(paths) >= 9
+    assert len(paths) >= 10
     for path in paths:
         json.loads(Path(path).read_text(encoding="utf-8"))
 

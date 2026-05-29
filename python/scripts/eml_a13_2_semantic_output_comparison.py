@@ -116,6 +116,18 @@ CASES = [
         ],
     },
     {
+        "caseId": "stretched_exponential_holdout_semantic_compare_v0",
+        "sourcePath": "examples/stretched_exponential.py",
+        "functionName": "stretched_exponential",
+        "samples": [
+            {"amplitude": 1.0, "scale": 1.0, "shape": 0.75, "t": 0.0},
+            {"amplitude": 2.0, "scale": 3.0, "shape": 1.5, "t": 4.0},
+            {"amplitude": 0.5, "scale": 0.75, "shape": 2.5, "t": 1.25},
+            {"amplitude": 1.0, "scale": 0.0, "shape": 1.0, "t": 1.0},
+            {"amplitude": 1.0, "scale": 1.0, "shape": 0.5, "t": -1.0},
+        ],
+    },
+    {
         "caseId": "voltage_divider_holdout_semantic_compare_v0",
         "sourcePath": "examples/voltage_divider.py",
         "functionName": "voltage_divider",

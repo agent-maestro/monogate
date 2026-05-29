@@ -91,7 +91,7 @@ def style_for_packet(packet: dict[str, Any]) -> tuple[str, list[str], str]:
     runtime = packet["emlSurfaceSummary"]["runtimeRecommendation"]
     tags: list[str] = []
 
-    if family_id in {"rc_decay", "gaussian"} and role.startswith("full_exponential"):
+    if family_id in {"rc_decay", "gaussian", "stretched_exponential"} and role.startswith("full_exponential"):
         primary = "eml_native"
         rationale = "The main surface is an exponential envelope/kernel already represented by the EML boundary."
     elif family_id in {"damped_wave", "numpy_softplus"} or "partial" in finding:
@@ -348,8 +348,8 @@ def validate_payload(payload: dict[str, Any], packets: list[dict[str, Any]]) -> 
     if payload["status"] != STATUS:
         raise ValueError("invalid status")
     summary = payload["summary"]
-    if summary["stylePacketCount"] != 6:
-        raise ValueError("expected six style packets")
+    if summary["stylePacketCount"] != 7:
+        raise ValueError("expected seven style packets")
     if summary["sourceExportPacketCount"] != summary["stylePacketCount"]:
         raise ValueError("style packets must match source export packets")
     if summary["emlNativePrimaryCount"] < 2:

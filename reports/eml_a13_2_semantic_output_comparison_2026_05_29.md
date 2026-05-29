@@ -14,13 +14,14 @@ and Forge Python/JavaScript emission, then compares fixed sample grids.
 | `poly_quadratic_semantic_compare_v0` | 4 | `pass` | 1.110e-16 | 1.110e-15 |
 | `gaussian_stable_holdout_semantic_compare_v0` | 4 | `pass` | 5.551e-17 | 1.570e-15 |
 | `rc_decay_holdout_semantic_compare_v0` | 4 | `pass` | 0.000e+00 | 0.000e+00 |
+| `stretched_exponential_holdout_semantic_compare_v0` | 5 | `pass` | 2.082e-17 | 3.972e-16 |
 | `voltage_divider_holdout_semantic_compare_v0` | 4 | `pass` | 0.000e+00 | 0.000e+00 |
 
 ## Summary
 
-- Cases: `6`
-- Samples: `25`
-- Passes: `6`
+- Cases: `7`
+- Samples: `30`
+- Passes: `7`
 - Max abs error: `1.110e-16`
 - Max rel error: `1.570e-15`
 

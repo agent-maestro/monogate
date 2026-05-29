@@ -14,15 +14,16 @@ It is not a compiler, decompiler, proof, runtime, or public product claim.
 | `poly_quadratic_semantic_compare_v0_export_packet_v0` | `poly_quadratic` | `unmapped` | `pass` | 4 | `javascript,python` |
 | `gaussian_stable_holdout_semantic_compare_v0_export_packet_v0` | `gaussian_stable` | `gaussian` | `pass` | 4 | `javascript,python` |
 | `rc_decay_holdout_semantic_compare_v0_export_packet_v0` | `rc_decay_stable` | `rc_decay` | `pass` | 4 | `javascript,python` |
+| `stretched_exponential_holdout_semantic_compare_v0_export_packet_v0` | `stretched_exponential` | `stretched_exponential` | `pass` | 5 | `javascript,python` |
 | `voltage_divider_holdout_semantic_compare_v0_export_packet_v0` | `voltage_divider` | `clamp_guard` | `pass` | 4 | `javascript,python` |
 
 ## Summary
 
-- Export packets: `6`
-- Semantic cases: `6`
-- Semantic passes: `6`
-- Roundtrip cases available: `32`
-- Roundtrip passes available: `32`
+- Export packets: `7`
+- Semantic cases: `7`
+- Semantic passes: `7`
+- Roundtrip cases available: `34`
+- Roundtrip passes available: `34`
 
 ## Boundary
 

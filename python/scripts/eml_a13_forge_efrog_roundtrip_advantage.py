@@ -40,6 +40,7 @@ TARGETS = ("python", "javascript")
 HOLDOUT_FIXTURES = (
     BridgeFixture("python_holdout_gaussian_stable", False, "examples/gaussian_stable.py", None, decompile_python_source),
     BridgeFixture("python_holdout_rc_decay_stable", False, "examples/rc_decay_stable.py", None, decompile_python_source),
+    BridgeFixture("python_holdout_stretched_exponential", False, "examples/stretched_exponential.py", None, decompile_python_source),
     BridgeFixture("python_holdout_poly_horner", False, "examples/poly_horner.py", None, decompile_python_source),
     BridgeFixture("python_holdout_voltage_divider", False, "examples/voltage_divider.py", None, decompile_python_source),
 )

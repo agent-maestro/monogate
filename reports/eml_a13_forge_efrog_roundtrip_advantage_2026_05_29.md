@@ -38,6 +38,8 @@ and records bounded roundtrip evidence for the EML toolchain thesis.
 | `python_holdout_gaussian_stable_to_forge_javascript_v0` | `pass` | `roundtrip_pass_standard_surface_smaller` | 16 | 21 | `sha256:5f7c307be3f` |
 | `python_holdout_rc_decay_stable_to_forge_python_v0` | `pass` | `roundtrip_pass_standard_surface_smaller` | 14 | 18 | `sha256:b26bf1e8c6a` |
 | `python_holdout_rc_decay_stable_to_forge_javascript_v0` | `pass` | `roundtrip_pass_standard_surface_smaller` | 14 | 18 | `sha256:b26bf1e8c6a` |
+| `python_holdout_stretched_exponential_to_forge_python_v0` | `pass` | `roundtrip_pass_standard_surface_smaller` | 21 | 25 | `sha256:87162ece830` |
+| `python_holdout_stretched_exponential_to_forge_javascript_v0` | `pass` | `roundtrip_pass_standard_surface_smaller` | 21 | 25 | `sha256:87162ece830` |
 | `python_holdout_poly_horner_to_forge_python_v0` | `pass` | `roundtrip_pass_standard_surface_smaller` | 15 | 37 | `sha256:b9c647885b5` |
 | `python_holdout_poly_horner_to_forge_javascript_v0` | `pass` | `roundtrip_pass_standard_surface_smaller` | 15 | 37 | `sha256:b9c647885b5` |
 | `python_holdout_voltage_divider_to_forge_python_v0` | `pass` | `roundtrip_pass_standard_surface_smaller` | 7 | 8 | `sha256:8d55824da11` |
@@ -45,12 +47,12 @@ and records bounded roundtrip evidence for the EML toolchain thesis.
 
 ## Summary
 
-- Cases: `32`
-- Holdout cases: `8`
+- Cases: `34`
+- Holdout cases: `10`
 - Targets: `javascript, python`
-- Roundtrip passes: `32`
+- Roundtrip passes: `34`
 - EML surface wins: `10`
-- Standard surface smaller: `22`
+- Standard surface smaller: `24`
 
 ## Boundary
 

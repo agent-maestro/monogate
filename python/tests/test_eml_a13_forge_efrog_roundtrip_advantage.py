@@ -30,7 +30,7 @@ def test_a13_builds_roundtrip_packets_for_many_frontends(tmp_path):
     assert payload["status"] == "EML_A13_FORGE_EFROG_ROUNDTRIP_ADVANTAGE_PASS"
     assert payload["summary"]["caseCount"] >= 30
     assert payload["summary"]["roundtripPassCount"] >= 30
-    assert payload["summary"]["holdoutCaseCount"] >= 8
+    assert payload["summary"]["holdoutCaseCount"] >= 10
     assert payload["summary"]["targetLanguages"] == ["javascript", "python"]
     validate_payload(payload)
 
@@ -52,6 +52,9 @@ def test_a13_has_holdout_and_default_frontend_slices(tmp_path):
     assert source_classes == {"default_frontend", "holdout"}
     holdout_packets = [packet for packet in payload["casePackets"] if packet["sourceClass"] == "holdout"]
     assert {packet["targetLanguage"] for packet in holdout_packets} == {"python", "javascript"}
+    assert "python_holdout_stretched_exponential" in {
+        packet["sourceLanguage"] for packet in holdout_packets
+    }
 
 
 def test_a13_classification_is_bounded_not_triumphal(tmp_path):

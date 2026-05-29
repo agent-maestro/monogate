@@ -67,6 +67,7 @@ def family_for_case(case_id: str, pcc10: dict[str, Any]) -> dict[str, Any] | Non
         "rc_decay_holdout_semantic_compare_v0": "rc_decay",
         "gaussian_stable_holdout_semantic_compare_v0": "gaussian",
         "gaussian_semantic_compare_v0": "gaussian",
+        "stretched_exponential_holdout_semantic_compare_v0": "stretched_exponential",
         "sigmoid_semantic_compare_v0": "numpy_softplus",
         "voltage_divider_holdout_semantic_compare_v0": "clamp_guard",
     }
@@ -76,6 +77,14 @@ def family_for_case(case_id: str, pcc10: dict[str, Any]) -> dict[str, Any] | Non
     for row in pcc10["families"]:
         if row["familyId"] == family_id:
             return row
+    if family_id == "stretched_exponential":
+        return {
+            "familyId": "stretched_exponential",
+            "surface": "stable_stretched_exponential",
+            "finding": "semantic_search_representation_tie",
+            "emlRole": "full_exponential_stretched_kernel_representation",
+            "runtimeRecommendation": "standard_or_protected_runtime_until_benchmarked",
+        }
     return None
 
 
@@ -315,8 +324,8 @@ def validate_payload(payload: dict[str, Any], packets: list[dict[str, Any]]) -> 
     if payload["status"] != STATUS:
         raise ValueError("invalid status")
     summary = payload["summary"]
-    if summary["exportPacketCount"] != 6:
-        raise ValueError("expected six export packets")
+    if summary["exportPacketCount"] != 7:
+        raise ValueError("expected seven export packets")
     if summary["semanticPassCount"] != summary["semanticCaseCount"]:
         raise ValueError("all semantic cases must pass")
     if summary["roundtripPassCount"] != summary["roundtripCaseCount"]:
