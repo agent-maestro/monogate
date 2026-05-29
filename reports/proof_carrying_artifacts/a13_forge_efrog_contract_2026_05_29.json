@@ -1,0 +1,87 @@
+{
+  "artifactId": "a13-forge-efrog-proof-carrying-artifact-contract",
+  "artifactKind": "compiler_output",
+  "claimBoundary": "Private proof-carrying artifact contract for A13 evidence only; no compiler correctness, formal equivalence, production toolchain, broad EML advantage, runtime performance, or safety claim.",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "compiler_correctness_claim": false,
+    "deterministic_os_claim": false,
+    "formal_equivalence_claim": false,
+    "high_assurance_certification_claim": false,
+    "pcc_completeness_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false
+  },
+  "evidenceReferences": [
+    "reports/evidence_packets/eml_a13_forge_efrog_roundtrip_advantage.json",
+    "reports/evidence_packets/eml_a13_2_semantic_output_comparison.json",
+    "reports/evidence_packets/eml_a13_toolchain_pause.json",
+    "python/results/eml_a13_forge_efrog_roundtrip_advantage/eml_a13_forge_efrog_roundtrip_advantage_2026_05_29.json",
+    "python/results/eml_a13_2_semantic_output_comparison/eml_a13_2_semantic_output_comparison_2026_05_29.json",
+    "schemas/eml_forge_efrog_roundtrip_packet_v0.json",
+    "schemas/eml_forge_efrog_semantic_comparison_packet_v0.json"
+  ],
+  "nonClaims": [
+    "No claim that this is Foundational PCC.",
+    "No claim that A13 proves compiler correctness.",
+    "No claim that sample-grid agreement proves formal equivalence.",
+    "No claim that Forge or eFrog behavior changed.",
+    "No claim that A13 is production-ready or safe to publish publicly.",
+    "No broad EML advantage or runtime performance claim."
+  ],
+  "obligations": [
+    {
+      "dischargeArtifact": "reports/evidence_packets/eml_a13_forge_efrog_roundtrip_advantage.json",
+      "obligationId": "a13-roundtrip-packet-schema-validation",
+      "obligationKind": "schema_validation",
+      "status": "discharged"
+    },
+    {
+      "dischargeArtifact": "reports/evidence_packets/eml_a13_2_semantic_output_comparison.json",
+      "obligationId": "a13-semantic-comparison-packet-schema-validation",
+      "obligationKind": "schema_validation",
+      "status": "discharged"
+    },
+    {
+      "dischargeArtifact": "python/results/eml_a13_forge_efrog_roundtrip_advantage/eml_a13_forge_efrog_roundtrip_advantage_2026_05_29.json",
+      "obligationId": "a13-deterministic-roundtrip-generation",
+      "obligationKind": "replay_validation",
+      "status": "partial"
+    },
+    {
+      "dischargeArtifact": "python/results/eml_a13_2_semantic_output_comparison/eml_a13_2_semantic_output_comparison_2026_05_29.json",
+      "obligationId": "a13-selected-sample-grid-agreement",
+      "obligationKind": "sample_grid_agreement",
+      "status": "partial"
+    },
+    {
+      "dischargeArtifact": "reports/evidence_packets/eml_a13_toolchain_pause.json",
+      "obligationId": "a13-claim-boundary-review",
+      "obligationKind": "claim_boundary_review",
+      "status": "discharged"
+    },
+    {
+      "dischargeArtifact": "",
+      "obligationId": "a13-formal-compiler-correctness-witness",
+      "obligationKind": "formal_witness",
+      "status": "blocked"
+    },
+    {
+      "dischargeArtifact": "",
+      "obligationId": "a13-non-python-source-semantic-comparison",
+      "obligationKind": "sample_grid_agreement",
+      "status": "unresolved"
+    },
+    {
+      "dischargeArtifact": "",
+      "obligationId": "a13-generated-target-reingest",
+      "obligationKind": "replay_validation",
+      "status": "unresolved"
+    }
+  ],
+  "payloadReference": "reports/eml_a13_toolchain_pause_2026_05_29.md",
+  "schemaVersion": "monogate.proof_carrying_artifact_contract.v0"
+}
