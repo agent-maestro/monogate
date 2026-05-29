@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_forge_efrog_semantic_comparison_packet.v0",
+  "title": "EML Forge/eFrog Semantic Comparison Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "caseId",
+    "sourcePath",
+    "functionName",
+    "targetLanguages",
+    "sampleCount",
+    "maxAbsError",
+    "maxRelError",
+    "comparisonStatus",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "monogate.eml_forge_efrog_semantic_comparison_packet.v0"
+    },
+    "packetType": {
+      "const": "eml_forge_efrog_semantic_comparison_packet_v0"
+    },
+    "caseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourcePath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "functionName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targetLanguages": {
+      "type": "array",
+      "items": {
+        "enum": ["python", "javascript"]
+      },
+      "minItems": 2
+    },
+    "sampleCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "maxAbsError": {
+      "type": "number",
+      "minimum": 0
+    },
+    "maxRelError": {
+      "type": "number",
+      "minimum": 0
+    },
+    "comparisonStatus": {
+      "enum": ["pass", "fail", "blocked"]
+    },
+    "claimFlags": {
+      "type": "object"
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    }
+  }
+}
