@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.proof_carrying_artifact_contract.v0",
+  "title": "Monogate Proof-Carrying Artifact Contract v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "artifactId",
+    "artifactKind",
+    "payloadReference",
+    "evidenceReferences",
+    "obligations",
+    "claimBoundary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "monogate.proof_carrying_artifact_contract.v0"
+    },
+    "artifactId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifactKind": {
+      "enum": [
+        "compiler_output",
+        "decompiler_output",
+        "rescue_packet",
+        "replay_trace",
+        "understanding_packet",
+        "forecast_packet",
+        "hardware_packet",
+        "research_map"
+      ]
+    },
+    "payloadReference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidenceReferences": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "obligationId",
+          "obligationKind",
+          "status",
+          "dischargeArtifact"
+        ],
+        "properties": {
+          "obligationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "obligationKind": {
+            "enum": [
+              "schema_validation",
+              "replay_validation",
+              "sample_grid_agreement",
+              "formal_witness",
+              "human_review",
+              "claim_boundary_review",
+              "external_source_review"
+            ]
+          },
+          "status": {
+            "enum": [
+              "discharged",
+              "partial",
+              "blocked",
+              "not_applicable",
+              "unresolved"
+            ]
+          },
+          "dischargeArtifact": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "claimBoundary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": {
+        "const": false
+      }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

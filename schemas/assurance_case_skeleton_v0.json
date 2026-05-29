@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.assurance_case_skeleton.v0",
+  "title": "Monogate Assurance Case Skeleton v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "caseId",
+    "scope",
+    "topClaim",
+    "subclaims",
+    "evidence",
+    "openGaps",
+    "claimBoundary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "monogate.assurance_case_skeleton.v0"
+    },
+    "caseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "topClaim": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subclaims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "claim", "status"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "claim": { "type": "string", "minLength": 1 },
+          "status": {
+            "enum": ["supported", "partial", "blocked", "unresolved"]
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "openGaps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "claimBoundary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": {
+        "const": false
+      }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

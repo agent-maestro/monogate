@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.replay_taxonomy_packet.v0",
+  "title": "Monogate Replay Taxonomy Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "artifactId",
+    "replayFamily",
+    "determinismScope",
+    "inputsCaptured",
+    "nondeterminismSources",
+    "replayGuarantee",
+    "claimBoundary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "monogate.replay_taxonomy_packet.v0"
+    },
+    "artifactId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "replayFamily": {
+      "enum": [
+        "artifact_replay",
+        "sample_grid_replay",
+        "trace_replay",
+        "record_replay",
+        "deterministic_os_replay",
+        "fixture_only"
+      ]
+    },
+    "determinismScope": {
+      "enum": [
+        "none",
+        "fixture_deterministic",
+        "tool_deterministic",
+        "sample_grid_deterministic",
+        "process_replay_deterministic",
+        "system_enforced_deterministic"
+      ]
+    },
+    "inputsCaptured": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "nondeterminismSources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "replayGuarantee": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claimBoundary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": {
+        "const": false
+      }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}
