@@ -13,6 +13,7 @@ from scripts.proof_carrying_artifact_contract_validator import (
     DEFAULT_CONTRACTS_DIR,
     build_batch_validator,
     build_validator,
+    is_external_workspace_ref,
     read_json,
     validate_contract,
 )
@@ -80,6 +81,15 @@ def test_validator_can_skip_path_checks_for_synthetic_contract():
     synthetic["payloadReference"] = "missing/path.md"
     payload = validate_contract(synthetic, check_paths=False)
     assert payload["summary"]["valid"] is True
+
+
+def test_external_workspace_refs_are_warnings_not_failures():
+    contract = read_json(DEFAULT_CONTRACT)
+    contract["payloadReference"] = "../missing-sibling/reports/example.json"
+    payload = validate_contract(contract)
+    assert is_external_workspace_ref(contract["payloadReference"]) is True
+    assert payload["summary"]["valid"] is True
+    assert payload["summary"]["warningCount"] == 1
 
 
 def test_generated_json_files_parse(tmp_path):

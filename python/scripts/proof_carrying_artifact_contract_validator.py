@@ -107,6 +107,23 @@ def path_exists(path_text: str) -> bool:
     return (ROOT / path).exists()
 
 
+def is_external_workspace_ref(path_text: str) -> bool:
+    if not path_text:
+        return False
+    path = Path(path_text)
+    if path.is_absolute():
+        try:
+            path.relative_to(ROOT)
+            return False
+        except ValueError:
+            return True
+    try:
+        (ROOT / path).resolve().relative_to(ROOT)
+        return False
+    except ValueError:
+        return True
+
+
 def normalized_non_claims(contract: dict[str, Any]) -> str:
     return " ".join(contract.get("nonClaims", [])).lower()
 
@@ -169,9 +186,17 @@ def validate_contract(contract: dict[str, Any], *, check_paths: bool = True) -> 
                 failures.append(f"{flag} needs an explicit matching non-claim")
 
     if check_paths:
-        missing_paths = [path for path in sorted(set(contract_paths(contract))) if not path_exists(path)]
-        if missing_paths:
-            failures.extend(f"referenced path missing: {path}" for path in missing_paths)
+        missing_internal_paths = []
+        missing_external_refs = []
+        for path in sorted(set(contract_paths(contract))):
+            if path_exists(path):
+                continue
+            if is_external_workspace_ref(path):
+                missing_external_refs.append(path)
+            else:
+                missing_internal_paths.append(path)
+        failures.extend(f"referenced path missing: {path}" for path in missing_internal_paths)
+        warnings.extend(f"external workspace reference not present in this checkout: {path}" for path in missing_external_refs)
 
     return result(contract, failures, warnings, status_counts)
 
