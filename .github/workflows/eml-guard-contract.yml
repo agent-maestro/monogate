@@ -28,6 +28,9 @@ jobs:
           python python/scripts/eml_a11_1_mock_compiler_holdouts.py --build --strict
           python python/scripts/eml_a11_2_protected_lowering_benchmark.py --build --strict
           python python/scripts/eml_a11_3_builder_export_feedback.py --build --strict
+      - name: Validate proof-carrying artifact contracts
+        run: |
+          python python/scripts/proof_carrying_artifact_contract_validator.py --contracts-dir reports/proof_carrying_artifacts --strict
       - name: Run guard tests
         run: |
           python -m pytest -q \
@@ -39,4 +42,5 @@ jobs:
             python/tests/test_eml_a11_mock_compiler_decision.py \
             python/tests/test_eml_a11_1_mock_compiler_holdouts.py \
             python/tests/test_eml_a11_2_protected_lowering_benchmark.py \
-            python/tests/test_eml_a11_3_builder_export_feedback.py
+            python/tests/test_eml_a11_3_builder_export_feedback.py \
+            python/tests/test_proof_carrying_artifact_contract_validator.py
