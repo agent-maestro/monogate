@@ -1,0 +1,381 @@
+{
+  "artifactId": "eml-adv-pcc8-log-domain-holdout",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "log_domain_generalization_claim": false,
+    "noise_robustness_general_claim": false,
+    "prediction_accuracy_claim": false,
+    "production_controller_claim": false,
+    "proof_claim": false,
+    "protected_lowering_correctness_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "real_world_generalization_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "source_family_generalization_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "contractId": "eml-advantage-lab-proof-carrying-artifact-contract",
+  "date": "2026-05-29",
+  "gapResponseKind": "log_domain_source_family_holdout",
+  "holdoutPacket": {
+    "caseId": "efrog_numpy_softplus_log_domain_holdout_v0",
+    "claimFlags": {
+      "broad_eml_advantage_claim": false,
+      "certified_safety_claim": false,
+      "compiler_behavior_changed": false,
+      "compiler_correctness_claim": false,
+      "deploy_performed": false,
+      "eml_general_superiority_claim": false,
+      "forge_behavior_changed": false,
+      "formal_equivalence_claim": false,
+      "formal_proof_claim": false,
+      "formal_verification_claim": false,
+      "hardware_measurement_claim": false,
+      "hardware_observed": false,
+      "live_serial_capture_performed": false,
+      "log_domain_generalization_claim": false,
+      "noise_robustness_general_claim": false,
+      "prediction_accuracy_claim": false,
+      "production_controller_claim": false,
+      "proof_claim": false,
+      "protected_lowering_correctness_claim": false,
+      "public_performance_claim": false,
+      "public_ready": false,
+      "public_savings_claim": false,
+      "real_world_generalization_claim": false,
+      "rh_proof_claim": false,
+      "runtime_performance_claim": false,
+      "safe_to_publish_publicly": false,
+      "source_family_generalization_claim": false,
+      "theorem_discovery_claim": false,
+      "theorem_proof_claim": false,
+      "zeta_zero_discovery_claim": false
+    },
+    "date": "2026-05-29",
+    "emlForm": "log(1 + eml(x, 1))",
+    "holdoutClass": "log_domain_semantic_tie_with_protected_lowering_guard",
+    "nonClaims": [
+      "PCC8 is one log-domain holdout, not a broad log-domain benchmark.",
+      "PCC8 does not prove broad EML advantage, source-family generalization, protected-lowering correctness, noise robustness, or prediction accuracy.",
+      "PCC8 does not claim runtime performance, compiler correctness, formal equivalence, proof strength, production readiness, public readiness, or deployment.",
+      "Protected logaddexp is recorded as the runtime recommendation on overflow-prone ranges, not as a compiler-correctness proof."
+    ],
+    "packetType": "eml_advantage_pcc8_log_domain_holdout_packet_v0",
+    "profiles": [
+      {
+        "emlFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "emlShapedVsSource": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "inputRanges": {
+          "x": [
+            -40.0,
+            40.0
+          ]
+        },
+        "noiseKind": "none",
+        "profile": "safe_log_domain_grid",
+        "protectedFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "protectedLoweringRecommended": false,
+        "protectedVsNoisyObservation": {
+          "finiteRatio": 1.0,
+          "mae": 0.0,
+          "reportedAsClaim": false,
+          "rmse": 0.0
+        },
+        "protectedVsProtectedReference": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "sampleCount": 2048,
+        "sourceFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "winner": "semantic_tie_log_domain_safe_range"
+      },
+      {
+        "emlFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "emlShapedVsSource": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "inputRanges": {
+          "x": [
+            -8.025701248143502,
+            8.048665308599297
+          ]
+        },
+        "noiseKind": "input_perturbation",
+        "profile": "centered_noisy_input_grid",
+        "protectedFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "protectedLoweringRecommended": false,
+        "protectedVsNoisyObservation": {
+          "finiteRatio": 1.0,
+          "mae": 0.0,
+          "reportedAsClaim": false,
+          "rmse": 0.0
+        },
+        "protectedVsProtectedReference": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "sampleCount": 2048,
+        "sourceFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "winner": "semantic_tie_log_domain_safe_range"
+      },
+      {
+        "emlFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "emlShapedVsSource": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "inputRanges": {
+          "x": [
+            -8.0,
+            8.0
+          ]
+        },
+        "noiseKind": "output_observation",
+        "profile": "noisy_output_observation_grid",
+        "protectedFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "protectedLoweringRecommended": false,
+        "protectedVsNoisyObservation": {
+          "finiteRatio": 1.0,
+          "mae": 0.0007967464504538497,
+          "reportedAsClaim": false,
+          "rmse": 0.0010022290105452388
+        },
+        "protectedVsProtectedReference": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "sampleCount": 2048,
+        "sourceFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "winner": "semantic_tie_log_domain_safe_range"
+      },
+      {
+        "emlFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "emlShapedVsSource": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "inputRanges": {
+          "x": [
+            -1000.0,
+            -50.0
+          ]
+        },
+        "noiseKind": "negative_tail",
+        "profile": "negative_tail_underflow_grid",
+        "protectedFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "protectedLoweringRecommended": false,
+        "protectedVsNoisyObservation": {
+          "finiteRatio": 1.0,
+          "mae": 0.0,
+          "reportedAsClaim": false,
+          "rmse": 0.0
+        },
+        "protectedVsProtectedReference": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "sampleCount": 2048,
+        "sourceFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "winner": "semantic_tie_log_domain_safe_range"
+      },
+      {
+        "emlFinite": {
+          "finiteCount": 579,
+          "finiteRatio": 0.28271484375,
+          "sampleCount": 2048
+        },
+        "emlShapedVsSource": {
+          "finiteRatio": 0.28271484375,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": false
+        },
+        "inputRanges": {
+          "x": [
+            690.0,
+            760.0
+          ]
+        },
+        "noiseKind": "overflow_guard",
+        "profile": "positive_overflow_guard_grid",
+        "protectedFinite": {
+          "finiteCount": 2048,
+          "finiteRatio": 1.0,
+          "sampleCount": 2048
+        },
+        "protectedLoweringRecommended": true,
+        "protectedVsNoisyObservation": {
+          "finiteRatio": 1.0,
+          "mae": 0.0,
+          "reportedAsClaim": false,
+          "rmse": 0.0
+        },
+        "protectedVsProtectedReference": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "sampleCount": 2048,
+        "sourceFinite": {
+          "finiteCount": 579,
+          "finiteRatio": 0.28271484375,
+          "sampleCount": 2048
+        },
+        "winner": "protected_lowering_required"
+      }
+    ],
+    "protectedForm": "logaddexp(0, x)",
+    "schemaVersion": "monogate.eml_advantage_pcc8_log_domain_holdout_packet.v0",
+    "sourceForm": "log(1 + exp(x))",
+    "sourceLineCount": 10,
+    "sourcePath": "examples/numpy_softplus.py",
+    "sourceRepo": "efrog",
+    "sourceSha256": "sha256:5f787d454fd17e4b624539a77fc8ee4671664ff729c0e53066d5f2c4c96058e7",
+    "summary": {
+      "allProtectedProfilesFinite": true,
+      "broadEmlAdvantageClaim": false,
+      "logDomainGeneralizationClaim": false,
+      "noiseRobustnessGeneralClaim": false,
+      "noisyOutputProfileCount": 1,
+      "overflowGuardProfileCount": 1,
+      "predictionAccuracyClaim": false,
+      "profileCount": 5,
+      "protectedLoweringCorrectnessClaim": false,
+      "protectedLoweringRecommendedProfiles": 1,
+      "runtimePerformanceClaim": false,
+      "safeSemanticTieProfiles": 4,
+      "sourceFamilyGeneralizationClaim": false
+    }
+  },
+  "nonClaims": [
+    "PCC8 is one log-domain holdout, not a broad log-domain benchmark.",
+    "PCC8 does not prove broad EML advantage, source-family generalization, protected-lowering correctness, noise robustness, or prediction accuracy.",
+    "PCC8 does not claim runtime performance, compiler correctness, formal equivalence, proof strength, production readiness, public readiness, or deployment.",
+    "Protected logaddexp is recorded as the runtime recommendation on overflow-prone ranges, not as a compiler-correctness proof."
+  ],
+  "schemaVersion": "monogate.eml_advantage_pcc8_log_domain_holdout.v0",
+  "selectedSource": "efrog/examples/numpy_softplus.py",
+  "status": "EML_ADV_PCC8_LOG_DOMAIN_HOLDOUT_PASS",
+  "summary": {
+    "allProtectedProfilesFinite": true,
+    "broadEmlAdvantageClaim": false,
+    "claimFlagsAllFalse": true,
+    "holdoutCount": 1,
+    "logDomainGeneralizationClaim": false,
+    "noiseRobustnessGeneralClaim": false,
+    "predictionAccuracyClaim": false,
+    "profileCount": 5,
+    "protectedLoweringCorrectnessClaim": false,
+    "protectedLoweringRecommendedProfiles": 1,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "runtimeRecommendation": "protected_logaddexp_for_overflow_prone_ranges",
+    "safeSemanticTieProfiles": 4,
+    "sourceFamilies": [
+      "rc_decay_stable",
+      "gaussian_stable",
+      "damped_wave",
+      "numpy_softplus"
+    ],
+    "sourceFamilyCount": 4,
+    "sourceFamilyGeneralizationClaim": false,
+    "sourceLinked": true
+  }
+}
