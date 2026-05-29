@@ -1,0 +1,71 @@
+{
+  "artifactId": "eml-a17-private-review-dry-run",
+  "claimBoundary": "Private dry run only; candidate review packet remains candidate-only and no public, runtime, compiler, proof, or safety claim is made.",
+  "claimFlags": {
+    "automatic_approval": false,
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "deployment_performed": false,
+    "efrog_behavior_changed": false,
+    "eml_general_superiority_claim": false,
+    "engine_behavior_changed": false,
+    "engine_files_modified": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "production_runtime_claim": false,
+    "proof_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "nonClaims": [
+    "A17 is a private dry run over existing A14/A15 artifacts.",
+    "A17 does not change Forge, eFrog, command-center, or Monogate Engine behavior.",
+    "A17 does not approve public display or deployment.",
+    "A17 does not prove compiler correctness, formal equivalence, runtime performance, production runtime, certified safety, or broad EML advantage."
+  ],
+  "replayStatus": "not_applicable_private_review_dry_run",
+  "reviewDecision": "private_dry_run_recorded",
+  "reviewHighlights": [
+    "Completes one file-backed A14 -> packet-builder candidate -> A15 workflow.",
+    "Uses Gaussian stable because it is a true holdout source family.",
+    "Keeps Glass Box adapter implementation deferred until engine worktree coordination."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "automaticApproval": false,
+    "candidateReviewPacketCount": 1,
+    "claimFlagsAllFalse": true,
+    "deploymentPerformed": false,
+    "dryRunCount": 1,
+    "engineFilesModified": false,
+    "mountCardLinked": true,
+    "publicReady": false,
+    "roundtripCaseCount": 2,
+    "roundtripLinked": true,
+    "selectedFunction": "gaussian_stable",
+    "semanticSampleCount": 4
+  },
+  "semanticStrength": "one_case_private_workflow_from_a14_to_a15",
+  "title": "EML-A17 Private Review Dry Run",
+  "validationCommands": [
+    "python python/scripts/eml_a17_private_review_dry_run.py --build --strict",
+    "python -m pytest -q python/tests/test_eml_a17_private_review_dry_run.py"
+  ],
+  "validationStatus": "pass"
+}
