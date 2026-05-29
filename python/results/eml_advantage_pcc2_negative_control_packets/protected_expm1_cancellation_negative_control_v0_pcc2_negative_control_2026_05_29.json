@@ -1,0 +1,120 @@
+{
+  "caseId": "protected_expm1_cancellation_negative_control_v0",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "proof_claim": false,
+    "protected_runtime_complete_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-29",
+  "emlForm": "eml(x,e) = exp(x) - 1",
+  "expectedWinner": "standard",
+  "gapId": "eml-advantage-runtime-performance-non-claim",
+  "negativeControlClass": "protected_runtime_cancellation",
+  "nonClaims": [
+    "PCC2 is one protected-runtime negative control, not an exhaustive holdout suite.",
+    "PCC2 does not prove broad EML advantage or general EML superiority.",
+    "PCC2 does not claim public runtime performance, compiler correctness, formal equivalence, proof strength, production readiness, or public readiness.",
+    "The result supports a local lowering rule: use protected expm1 near cancellation-sensitive exp(x)-1 regions."
+  ],
+  "packetType": "eml_advantage_pcc2_negative_control_packet_v0",
+  "profiles": [
+    {
+      "description": "values where exp(x)-1 suffers cancellation",
+      "emlRaw": {
+        "finiteRatio": 1.0,
+        "maxAbsError": 1.1099659734141514e-16,
+        "maxRelError": 1.0,
+        "meanRelError": 0.0008474076797859499
+      },
+      "inputMax": 1e-12,
+      "inputMin": -1e-12,
+      "meanRelativeErrorImprovementFactor": 8.474076797859499e+296,
+      "profile": "tiny_symmetric_holdout",
+      "sampleCount": 2048,
+      "standardProtected": {
+        "finiteRatio": 1.0,
+        "maxAbsError": 0.0,
+        "maxRelError": 0.0,
+        "meanRelError": 0.0
+      },
+      "winner": "standard"
+    },
+    {
+      "description": "small but not microscopic cancellation region",
+      "emlRaw": {
+        "finiteRatio": 1.0,
+        "maxAbsError": 1.108860873223241e-16,
+        "maxRelError": 8.890058184096306e-05,
+        "meanRelError": 8.566229996858273e-08
+      },
+      "inputMax": 1e-08,
+      "inputMin": -1e-08,
+      "meanRelativeErrorImprovementFactor": 8.566229996858273e+292,
+      "profile": "small_symmetric_holdout",
+      "sampleCount": 2048,
+      "standardProtected": {
+        "finiteRatio": 1.0,
+        "maxAbsError": 0.0,
+        "maxRelError": 0.0,
+        "meanRelError": 0.0
+      },
+      "winner": "standard"
+    },
+    {
+      "description": "positive edge where protected lowering should remain safe",
+      "emlRaw": {
+        "finiteRatio": 1.0,
+        "maxAbsError": 1.1097811953958885e-16,
+        "maxRelError": 1.0,
+        "meanRelError": 0.028580408042555922
+      },
+      "inputMax": 1e-06,
+      "inputMin": 1e-16,
+      "meanRelativeErrorImprovementFactor": 2.8580408042555922e+298,
+      "profile": "one_sided_positive_edge",
+      "sampleCount": 2048,
+      "standardProtected": {
+        "finiteRatio": 1.0,
+        "maxAbsError": 0.0,
+        "maxRelError": 0.0,
+        "meanRelError": 0.0
+      },
+      "winner": "standard"
+    }
+  ],
+  "schemaVersion": "monogate.eml_advantage_pcc2_negative_control_packet.v0",
+  "standardForm": "expm1(x)",
+  "summary": {
+    "allProfilesFavorProtectedStandard": true,
+    "criteria": {
+      "finiteRatioPass": 1.0,
+      "profileCount": 3,
+      "standardWinImprovementFactor": 10.0
+    },
+    "emlWinProfiles": 0,
+    "profileCount": 3,
+    "standardWinProfiles": 3
+  }
+}

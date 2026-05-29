@@ -1,0 +1,62 @@
+{
+  "artifactId": "eml-adv-pcc2-gap-response",
+  "claimBoundary": "Private protected-runtime negative control for EML Advantage Lab contract only; no broad EML advantage, public runtime performance, compiler correctness, formal equivalence, proof, production, or public-readiness claim.",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "proof_claim": false,
+    "protected_runtime_complete_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "nonClaims": [
+    "PCC2 is one protected-runtime negative control, not an exhaustive holdout suite.",
+    "PCC2 does not prove broad EML advantage or general EML superiority.",
+    "PCC2 does not claim public runtime performance, compiler correctness, formal equivalence, proof strength, production readiness, or public readiness.",
+    "The result supports a local lowering rule: use protected expm1 near cancellation-sensitive exp(x)-1 regions."
+  ],
+  "replayStatus": "deterministic_numeric_holdout",
+  "reviewDecision": "private_gap_response_recorded",
+  "reviewHighlights": [
+    "Adds a concrete cancellation-sensitive negative control.",
+    "Records protected expm1 as the correct lowering for exp(x)-1 near zero.",
+    "Keeps broad EML advantage and runtime-performance claims blocked."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "allProfilesFavorProtectedStandard": true,
+    "broadEmlAdvantageClaim": false,
+    "claimFlagsAllFalse": true,
+    "negativeControlCount": 1,
+    "profileCount": 3,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "standardWinProfiles": 3
+  },
+  "semanticStrength": "protected_runtime_negative_control_no_broad_advantage_claim",
+  "title": "EML-ADV-PCC2 Gap Response",
+  "validationCommands": [
+    "python python/scripts/eml_advantage_pcc2_gap_response.py --build --strict",
+    "python -m pytest -q python/tests/test_eml_advantage_pcc2_gap_response.py"
+  ],
+  "validationStatus": "pass"
+}
