@@ -7,8 +7,8 @@ Status: `PCC_M5_CONTRACT_BATCH_VALIDATOR_PASS`
 - contracts: `3`
 - valid contracts: `3`
 - failed contracts: `0`
-- obligations: `28`
-- discharged: `11`
+- obligations: `29`
+- discharged: `12`
 - partial: `9`
 - blocked: `6`
 - unresolved: `2`
@@ -18,7 +18,7 @@ Status: `PCC_M5_CONTRACT_BATCH_VALIDATOR_PASS`
 | Contract | Valid | Obligations | Failures |
 | --- | --- | --- | --- |
 | `a13-forge-efrog-proof-carrying-artifact-contract` | `True` | `8` | `0` |
-| `eml-advantage-lab-proof-carrying-artifact-contract` | `True` | `11` | `0` |
+| `eml-advantage-lab-proof-carrying-artifact-contract` | `True` | `12` | `0` |
 | `forge-rescue-proof-carrying-artifact-contract` | `True` | `9` | `0` |
 
 ## Boundary
