@@ -1,0 +1,89 @@
+{
+  "artifactId": "eml-s20-style-atlas",
+  "claimBoundary": "Private EML style vocabulary only; no broad EML advantage, runtime performance, compiler correctness, formal equivalence, proof, deployment, or public-readiness claim.",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "efrog_behavior_changed": false,
+    "eml_general_superiority_claim": false,
+    "engine_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "machlib_source_changed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "style_generalization_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "nonClaims": [
+    "S20 defines a private EML style vocabulary over existing A14/PCC10 evidence only.",
+    "S20 does not claim broad EML advantage, runtime performance, compiler correctness, formal equivalence, proof strength, production readiness, or public readiness.",
+    "S20 does not change Forge, eFrog, MachLib, Monogate Engine, or public surfaces.",
+    "S20 classifications are review aids; they are not mathematical proofs or source-family generalization claims."
+  ],
+  "replayStatus": "deterministic_classification_over_existing_a14_pcc10_evidence",
+  "reviewDecision": "private_review_vocabulary_recorded",
+  "reviewHighlights": [
+    "Separates EML-native, EML-partial, guard-owned, standard-preferred, and semantic-only cases.",
+    "Classifies six existing Forge/eFrog export packets without changing the compiler or decompiler.",
+    "Turns vague EML advantage language into reviewable style decisions."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "a17CandidatePacketCount": 1,
+    "broadEmlAdvantageClaim": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "emlNativePrimaryCount": 3,
+    "emlPartialPrimaryCount": 1,
+    "formalEquivalenceClaim": false,
+    "guardOwnedPrimaryCount": 1,
+    "pcc10SourceFamilyCount": 5,
+    "primaryStyleCounts": {
+      "eml_native": 3,
+      "eml_partial": 1,
+      "guard_owned": 1,
+      "semantic_only": 0,
+      "standard_preferred": 1
+    },
+    "publicReady": false,
+    "roundtripLinkedCount": 4,
+    "runtimePerformanceClaim": false,
+    "semanticOnlyCount": 2,
+    "semanticOnlyTagCount": 2,
+    "sourceExportPacketCount": 6,
+    "standardPreferredPrimaryCount": 1,
+    "styleGeneralizationClaim": false,
+    "stylePacketCount": 6,
+    "styleTagCounts": {
+      "eml_native": 3,
+      "eml_partial": 1,
+      "guard_owned": 1,
+      "semantic_only": 2,
+      "standard_preferred": 5
+    }
+  },
+  "semanticStrength": "style_classifier_no_new_performance_or_correctness_claim",
+  "title": "EML-S20 Style Atlas",
+  "validationCommands": [
+    "python python/scripts/eml_s20_style_atlas.py --build --strict",
+    "python -m pytest -q python/tests/test_eml_s20_style_atlas.py"
+  ],
+  "validationStatus": "pass"
+}
