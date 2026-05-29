@@ -1,0 +1,282 @@
+{
+  "artifactId": "eml-s21-native-holdout",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "efrog_behavior_changed": false,
+    "eml_general_superiority_claim": false,
+    "eml_native_generalization_claim": false,
+    "engine_behavior_changed": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "machlib_source_changed": false,
+    "package_published": false,
+    "prediction_accuracy_claim": false,
+    "production_controller_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "source_family_generalization_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-29",
+  "holdoutPacket": {
+    "caseId": "stretched_exponential_eml_native_holdout_v0",
+    "claimFlags": {
+      "broad_eml_advantage_claim": false,
+      "certified_safety_claim": false,
+      "compiler_behavior_changed": false,
+      "compiler_correctness_claim": false,
+      "deploy_performed": false,
+      "efrog_behavior_changed": false,
+      "eml_general_superiority_claim": false,
+      "eml_native_generalization_claim": false,
+      "engine_behavior_changed": false,
+      "forge_behavior_changed": false,
+      "formal_equivalence_claim": false,
+      "formal_proof_claim": false,
+      "formal_verification_claim": false,
+      "hardware_measurement_claim": false,
+      "hardware_observed": false,
+      "live_serial_capture_performed": false,
+      "machlib_source_changed": false,
+      "package_published": false,
+      "prediction_accuracy_claim": false,
+      "production_controller_claim": false,
+      "public_performance_claim": false,
+      "public_ready": false,
+      "public_savings_claim": false,
+      "rh_proof_claim": false,
+      "runtime_performance_claim": false,
+      "safe_to_publish_publicly": false,
+      "source_family_generalization_claim": false,
+      "theorem_discovery_claim": false,
+      "theorem_proof_claim": false,
+      "zeta_zero_discovery_claim": false
+    },
+    "date": "2026-05-29",
+    "emlForm": "amplitude * eml(-((max(t, 0) / scale)^shape), 1)",
+    "nonClaims": [
+      "S21 is one private EML-native holdout selected from the S20 style atlas.",
+      "S21 does not prove EML-native source-family generalization or broad EML advantage.",
+      "S21 does not claim runtime performance, compiler correctness, formal equivalence, proof strength, production readiness, public readiness, or deployment.",
+      "The stretched-exponential source family is a deterministic semantic fixture, not live hardware, biology, reliability, or production evidence."
+    ],
+    "packetType": "eml_s21_native_holdout_packet_v0",
+    "profiles": [
+      {
+        "domainRequirements": [
+          "scale > 0",
+          "shape > 0",
+          "t is clamped to nonnegative semantic domain before fractional powers"
+        ],
+        "emlShapedVsSource": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "inputRanges": {
+          "amplitude": [
+            0.2,
+            3.0
+          ],
+          "scale": [
+            0.35,
+            5.0
+          ],
+          "shape": [
+            0.55,
+            2.75
+          ],
+          "t": [
+            0.0,
+            8.0
+          ]
+        },
+        "noiseKind": "none",
+        "profile": "clean_stretched_exponential_grid",
+        "sampleCount": 2048,
+        "styleDecision": "eml_native_semantic_tie"
+      },
+      {
+        "domainRequirements": [
+          "scale > 0",
+          "shape > 0",
+          "t is clamped to nonnegative semantic domain before fractional powers"
+        ],
+        "emlShapedVsSource": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "inputRanges": {
+          "amplitude": [
+            0.1860614675997027,
+            3.004027074539736
+          ],
+          "scale": [
+            0.3384883728126226,
+            5.005781708119749
+          ],
+          "shape": [
+            0.5250169186320962,
+            2.7832012467106164
+          ],
+          "t": [
+            0.0,
+            8.027513645515638
+          ]
+        },
+        "noiseKind": "input_perturbation",
+        "profile": "noisy_input_stretched_exponential_grid",
+        "sampleCount": 2048,
+        "styleDecision": "eml_native_semantic_tie"
+      },
+      {
+        "domainRequirements": [
+          "scale > 0",
+          "shape > 0",
+          "t is clamped to nonnegative semantic domain before fractional powers"
+        ],
+        "emlShapedVsSource": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "inputRanges": {
+          "amplitude": [
+            0.5,
+            1.5
+          ],
+          "scale": [
+            0.2,
+            8.0
+          ],
+          "shape": [
+            0.3,
+            1.2
+          ],
+          "t": [
+            1e-06,
+            40.0
+          ]
+        },
+        "noiseKind": "tail_sweep",
+        "profile": "long_tail_stretched_exponential_grid",
+        "sampleCount": 2048,
+        "styleDecision": "eml_native_semantic_tie"
+      },
+      {
+        "domainRequirements": [
+          "scale > 0",
+          "shape > 0",
+          "t is clamped to nonnegative semantic domain before fractional powers"
+        ],
+        "emlShapedVsSource": {
+          "finiteRatio": 1.0,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "meanAbsError": 0.0,
+          "pass": true
+        },
+        "inputRanges": {
+          "amplitude": [
+            1.0,
+            1.0
+          ],
+          "scale": [
+            0.5,
+            2.5
+          ],
+          "shape": [
+            0.25,
+            4.0
+          ],
+          "t": [
+            0.0,
+            6.0
+          ]
+        },
+        "noiseKind": "shape_sweep",
+        "profile": "shape_sweep_stretched_exponential_grid",
+        "sampleCount": 2048,
+        "styleDecision": "eml_native_semantic_tie"
+      }
+    ],
+    "schemaVersion": "monogate.eml_s21_native_holdout_packet.v0",
+    "selectedFromStyleAtlas": "eml_native",
+    "sourceFamily": "stretched_exponential",
+    "standardForm": "amplitude * exp(-((max(t, 0) / scale)^shape))",
+    "summary": {
+      "allProfilesPass": true,
+      "blockedProfiles": 0,
+      "broadEmlAdvantageClaim": false,
+      "compilerCorrectnessClaim": false,
+      "emlNativeGeneralizationClaim": false,
+      "emlNativeSemanticTie": true,
+      "formalEquivalenceClaim": false,
+      "passingProfiles": 4,
+      "profileCount": 4,
+      "runtimePerformanceClaim": false,
+      "sampleCountTotal": 8192,
+      "sourceFamilyGeneralizationClaim": false
+    },
+    "surface": "amplitude * exp(-((max(t, 0) / scale)^shape))",
+    "whyThisHoldout": [
+      "It stays in the S20 EML-native lane.",
+      "It is not a repeat of Gaussian or RC decay.",
+      "It stresses fractional powers, positive-domain guards, and long tails."
+    ]
+  },
+  "nextResearchQuestion": "Promote stretched exponential into Forge/eFrog export flow only after a source fixture and roundtrip hash exist.",
+  "nonClaims": [
+    "S21 is one private EML-native holdout selected from the S20 style atlas.",
+    "S21 does not prove EML-native source-family generalization or broad EML advantage.",
+    "S21 does not claim runtime performance, compiler correctness, formal equivalence, proof strength, production readiness, public readiness, or deployment.",
+    "The stretched-exponential source family is a deterministic semantic fixture, not live hardware, biology, reliability, or production evidence."
+  ],
+  "s20NativePrimaryCount": 3,
+  "schemaVersion": "monogate.eml_s21_native_holdout.v0",
+  "selectedStyleLane": "eml_native",
+  "sourceEvidence": [
+    "python/results/eml_s20_style_atlas/eml_s20_style_atlas_2026_05_29.json"
+  ],
+  "status": "EML_S21_NATIVE_HOLDOUT_PASS",
+  "summary": {
+    "allProfilesPass": true,
+    "broadEmlAdvantageClaim": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "emlNativeGeneralizationClaim": false,
+    "emlNativeSemanticTie": true,
+    "formalEquivalenceClaim": false,
+    "holdoutCount": 1,
+    "passingProfiles": 4,
+    "profileCount": 4,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "s20NativePrimaryCount": 3,
+    "sampleCountTotal": 8192,
+    "sourceFamily": "stretched_exponential",
+    "sourceFamilyGeneralizationClaim": false
+  }
+}
