@@ -1,0 +1,151 @@
+{
+  "artifactId": "eml-advantage-product-direction-sprints",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "deployment_performed": false,
+    "eml_general_superiority_claim": false,
+    "engine_runtime_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "glassbox_production_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "machlib_theorem_discharged": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-29",
+  "nonClaims": [
+    "This is a private product-direction sprint plan, not a new EML advantage result.",
+    "No Forge/eFrog compiler behavior changed.",
+    "No Monogate Engine runtime behavior changed.",
+    "No MachLib theorem is claimed discharged by this artifact.",
+    "No compiler correctness, formal equivalence, runtime performance, certified safety, deployment, or public-readiness claim is made."
+  ],
+  "recommendedOrder": [
+    "forge_efrog_packet_export_ux",
+    "mge_glassbox_evidence_mount",
+    "machlib_small_witness_selection"
+  ],
+  "schemaVersion": "monogate.eml_advantage_product_direction_sprints.v0",
+  "sourcePausePoint": "eml-adv-pcc10-family-synthesis",
+  "sprints": [
+    {
+      "blockedClaims": [
+        "compiler correctness",
+        "formal equivalence",
+        "broad EML advantage",
+        "runtime performance"
+      ],
+      "deliverables": [
+        "private packet export spec",
+        "CLI or builder preset for source -> EML -> Forge target evidence",
+        "fixture-backed export example",
+        "claim-boundary report"
+      ],
+      "goal": "Turn the existing Forge/eFrog roundtrip and semantic comparison work into a developer-facing packet export workflow.",
+      "inputs": [
+        "eml-a13-forge-efrog-roundtrip",
+        "eml-a13-2-semantic-output-comparison",
+        "eml-adv-pcc10-family-synthesis"
+      ],
+      "lane": "compiler_decompiler",
+      "order": 1,
+      "readyToStart": true,
+      "risk": "Medium",
+      "sprintId": "forge_efrog_packet_export_ux",
+      "title": "Forge/eFrog Packet Export UX",
+      "whyFirst": "It is least blocked, uses clean existing artifacts, and turns EML research into an inspectable developer workflow."
+    },
+    {
+      "blockedClaims": [
+        "production runtime",
+        "certified safety",
+        "game-engine completeness",
+        "automatic approval"
+      ],
+      "deliverables": [
+        "engine handoff packet",
+        "Glass Box evidence adapter spec",
+        "non-overlapping implementation note for the dirty engine worktree",
+        "private command cockpit row"
+      ],
+      "goal": "Mount selected EML Advantage and compiler/decompiler evidence into Glass Box as reviewable packets or HUD-linked traces.",
+      "inputs": [
+        "engine-transition-history",
+        "eml-adv-pcc10-family-synthesis",
+        "eml-a13-2-semantic-output-comparison"
+      ],
+      "lane": "engine_runtime",
+      "order": 2,
+      "readyToStart": true,
+      "risk": "MediumHigh",
+      "sprintId": "mge_glassbox_evidence_mount",
+      "title": "Monogate Engine / Glass Box Evidence Mount",
+      "whySecond": "It connects the research to the visible engine experience, but the dirty engine worktree currently has unrelated uncommitted edits, so the first pass should be a handoff/spec artifact."
+    },
+    {
+      "blockedClaims": [
+        "MachLib witness completion before Lean passes",
+        "general EML correctness",
+        "Forge compiler correctness",
+        "formal equivalence"
+      ],
+      "deliverables": [
+        "witness candidate decision",
+        "domain assumptions",
+        "Lean file touch-plan",
+        "proof or blocked-proof report after implementation sprint"
+      ],
+      "goal": "Select one narrow, low-risk EML witness candidate for a proof attempt after inspecting the current MachLib surface.",
+      "inputs": [
+        "eml-adv-pcc10-family-synthesis",
+        "eml-atlas-safe-education-candidates",
+        "prior subtraction-boundary discussion"
+      ],
+      "lane": "formal_methods",
+      "order": 3,
+      "readyToStart": true,
+      "recommendedCandidate": {
+        "name": "subtraction_boundary",
+        "reason": "It is cleaner than log reconstruction, expresses a useful Atlas boundary, and depends on explicit domain assumptions.",
+        "statement": "eml(log(v), exp(u)) = v - u under v > 0"
+      },
+      "risk": "High",
+      "sprintId": "machlib_small_witness_selection",
+      "title": "MachLib Small Witness Selection",
+      "whyThird": "It is valuable, but proof work should begin only after local MachLib inspection confirms the exact namespace and existing theorem surface."
+    }
+  ],
+  "status": "EML_ADVANTAGE_PRODUCT_DIRECTION_SPRINTS_PASS",
+  "summary": {
+    "claimFlagsAllFalse": true,
+    "deploymentPerformed": false,
+    "engineGlassboxSprintCount": 1,
+    "engineWorktreeConstraintRecorded": true,
+    "forgeEfrogSprintCount": 1,
+    "machlibWitnessSprintCount": 1,
+    "publicReady": false,
+    "readyToStartCount": 3,
+    "recommendedFirstSprint": "forge_efrog_packet_export_ux",
+    "sprintCount": 3
+  },
+  "title": "EML Advantage Product Direction Sprints"
+}
