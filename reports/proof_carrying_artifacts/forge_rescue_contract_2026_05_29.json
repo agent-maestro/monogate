@@ -1,0 +1,99 @@
+{
+  "artifactId": "forge-rescue-proof-carrying-artifact-contract",
+  "artifactKind": "rescue_packet",
+  "claimBoundary": "Proof-carrying artifact contract for the existing Forge Rescue Suite public surface; no Foundational PCC, optimizer-wide correctness, formal equivalence, certified safety, hardware observation, production-controller, or unrestricted semantic rewrite claim.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "hardware_observed": false,
+    "optimizer_wide_correctness_claim": false,
+    "pcc_completeness_claim": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "unrestricted_semantic_rewrite_claim": false
+  },
+  "evidenceReferences": [
+    "../forge/reports/proof_carrying_rescue_suite_v0_2026_05_26.json",
+    "../forge/reports/proof_carrying_rescue_suite_v0_2026_05_26.md",
+    "../forge/reports/proof_carrying_rescue_replay_v0_2026_05_26.json",
+    "../forge/reports/rescue_artifact_approval_v0_2026_05_26.json",
+    "../forge/reports/rescue_obligation_registry_v0_2026_05_26.json",
+    "../forge/reports/proof_carrying_rescue_explorer_fixture_v0_2026_05_26.json",
+    "../forge/docs/proof_carrying_rescue_suite.md",
+    "../forge/docs/research_artifact_contract.md"
+  ],
+  "nonClaims": [
+    "No claim that Forge Rescue is Foundational PCC or PCC-complete.",
+    "No optimizer-wide correctness claim.",
+    "No compiler correctness claim.",
+    "No formal equivalence claim.",
+    "No certified safety or production-controller claim.",
+    "No hardware observation claim.",
+    "No unrestricted semantic rewrite claim.",
+    "No runtime performance claim.",
+    "No new public publishing decision; this contract validates the existing bounded surface only."
+  ],
+  "obligations": [
+    {
+      "dischargeArtifact": "../forge/reports/proof_carrying_rescue_suite_v0_2026_05_26.json",
+      "obligationId": "forge-rescue-suite-json-validation",
+      "obligationKind": "schema_validation",
+      "status": "discharged"
+    },
+    {
+      "dischargeArtifact": "../forge/reports/proof_carrying_rescue_replay_v0_2026_05_26.json",
+      "obligationId": "forge-rescue-replay-validation",
+      "obligationKind": "replay_validation",
+      "status": "discharged"
+    },
+    {
+      "dischargeArtifact": "../forge/reports/rescue_obligation_registry_v0_2026_05_26.json",
+      "obligationId": "forge-rescue-obligation-registry-complete",
+      "obligationKind": "schema_validation",
+      "status": "discharged"
+    },
+    {
+      "dischargeArtifact": "../forge/reports/rescue_artifact_approval_v0_2026_05_26.json",
+      "obligationId": "forge-rescue-conservative-claim-flags",
+      "obligationKind": "claim_boundary_review",
+      "status": "discharged"
+    },
+    {
+      "dischargeArtifact": "../forge/reports/rescue_obligation_registry_v0_2026_05_26.json",
+      "obligationId": "forge-rescue-concrete-machlib-witness-coverage",
+      "obligationKind": "formal_witness",
+      "status": "partial"
+    },
+    {
+      "dischargeArtifact": "../forge/reports/rescue_obligation_registry_v0_2026_05_26.json",
+      "obligationId": "forge-rescue-log-domain-restricted-semantic-rewrite",
+      "obligationKind": "formal_witness",
+      "status": "partial"
+    },
+    {
+      "dischargeArtifact": "../forge/reports/rescue_artifact_approval_v0_2026_05_26.json",
+      "obligationId": "forge-rescue-public-copy-boundary",
+      "obligationKind": "human_review",
+      "status": "partial"
+    },
+    {
+      "dischargeArtifact": "",
+      "obligationId": "forge-rescue-optimizer-wide-correctness",
+      "obligationKind": "formal_witness",
+      "status": "blocked"
+    },
+    {
+      "dischargeArtifact": "",
+      "obligationId": "forge-rescue-certified-safety-or-production-controller",
+      "obligationKind": "claim_boundary_review",
+      "status": "blocked"
+    }
+  ],
+  "payloadReference": "../forge/reports/proof_carrying_rescue_suite_v0_2026_05_26.md",
+  "schemaVersion": "monogate.proof_carrying_artifact_contract.v0"
+}

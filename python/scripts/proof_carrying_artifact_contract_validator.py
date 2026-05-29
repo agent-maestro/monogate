@@ -64,9 +64,9 @@ RISKY_FLAG_NON_CLAIMS = {
 }
 
 NON_CLAIMS = [
-    "PCC-M3 validates contract structure and claim-boundary consistency only.",
-    "PCC-M3 does not prove compiler correctness or formal equivalence.",
-    "PCC-M3 does not make A13 public-ready, production-ready, or runtime-performance-backed.",
+    "The contract validator checks structure and claim-boundary consistency only.",
+    "The contract validator does not prove compiler correctness or formal equivalence.",
+    "The contract validator does not make any artifact public-ready, production-ready, or runtime-performance-backed.",
 ]
 
 CLAIM_FLAGS = {
@@ -202,11 +202,11 @@ def result(
     }
 
 
-def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
+def build_evidence_packet(payload: dict[str, Any], *, artifact_id: str, title: str, next_step: str) -> dict[str, Any]:
     return {
         "schemaVersion": EVIDENCE_SCHEMA_VERSION,
-        "artifactId": "pcc-m3-contract-validator",
-        "title": "PCC-M3 Contract Validator",
+        "artifactId": artifact_id,
+        "title": title,
         "reviewDecision": "private_validator_recorded",
         "validationStatus": "pass" if payload["summary"]["valid"] else "fail",
         "replayStatus": "not_applicable",
@@ -215,24 +215,25 @@ def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
         "claimBoundary": "Validator for proof-carrying artifact contracts only; no compiler correctness, formal equivalence, production readiness, public readiness, or proof-strength claim.",
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
+        "nextStep": next_step,
     }
 
 
-def command_feed(payload: dict[str, Any]) -> dict[str, Any]:
+def command_feed(payload: dict[str, Any], *, title: str, next_step: str) -> dict[str, Any]:
     return {
         "schemaVersion": "monogate.command_center_feed.v0",
-        "title": "PCC-M3 Contract Validator",
+        "title": title,
         "status": payload["status"],
         "summary": payload["summary"],
-        "nextStep": "PCC-M4: validate a second artifact family, preferably Forge Rescue or EML Advantage Lab.",
+        "nextStep": next_step,
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
     }
 
 
-def render_report(payload: dict[str, Any]) -> str:
+def render_report(payload: dict[str, Any], *, title: str) -> str:
     lines = [
-        "# PCC-M3 Contract Validator",
+        f"# {title}",
         "",
         f"Status: `{payload['status']}`",
         "",
@@ -268,24 +269,29 @@ def build_validator(
     command_feed_dir: Path,
     *,
     check_paths: bool = True,
+    result_stem: str = "pcc_m3_contract_validator_2026_05_29",
+    feed_stem: str = "pcc_m3_contract_validator_feed_2026_05_29",
+    evidence_id: str = "pcc-m3-contract-validator",
+    title: str = "PCC-M3 Contract Validator",
+    next_step: str = "PCC-M4: validate a second artifact family, preferably Forge Rescue or EML Advantage Lab.",
 ) -> dict[str, Any]:
     contract = read_json(contract_path)
     payload = validate_contract(contract, check_paths=check_paths)
-    evidence = build_evidence_packet(payload)
-    feed = command_feed(payload)
+    evidence = build_evidence_packet(payload, artifact_id=evidence_id, title=title, next_step=next_step)
+    feed = command_feed(payload, title=title, next_step=next_step)
 
     out_dir.mkdir(parents=True, exist_ok=True)
     report_dir.mkdir(parents=True, exist_ok=True)
     evidence_dir.mkdir(parents=True, exist_ok=True)
     command_feed_dir.mkdir(parents=True, exist_ok=True)
 
-    result_path = out_dir / "pcc_m3_contract_validator_2026_05_29.json"
-    report_path = report_dir / "pcc_m3_contract_validator_2026_05_29.md"
-    evidence_path = evidence_dir / "pcc_m3_contract_validator.json"
-    feed_path = command_feed_dir / "pcc_m3_contract_validator_feed_2026_05_29.json"
+    result_path = out_dir / f"{result_stem}.json"
+    report_path = report_dir / f"{result_stem}.md"
+    evidence_path = evidence_dir / f"{evidence_id.replace('-', '_')}.json"
+    feed_path = command_feed_dir / f"{feed_stem}.json"
 
     result_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    report_path.write_text(render_report(payload), encoding="utf-8")
+    report_path.write_text(render_report(payload, title=title), encoding="utf-8")
     evidence_path.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     feed_path.write_text(json.dumps(feed, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -307,6 +313,11 @@ def main() -> int:
     parser.add_argument("--report-dir", type=Path, default=ROOT / "reports")
     parser.add_argument("--evidence-dir", type=Path, default=ROOT / "reports/evidence_packets")
     parser.add_argument("--command-feed-dir", type=Path, default=ROOT / "command_center_feeds")
+    parser.add_argument("--result-stem", default="pcc_m3_contract_validator_2026_05_29")
+    parser.add_argument("--feed-stem", default="pcc_m3_contract_validator_feed_2026_05_29")
+    parser.add_argument("--evidence-id", default="pcc-m3-contract-validator")
+    parser.add_argument("--title", default="PCC-M3 Contract Validator")
+    parser.add_argument("--next-step", default="PCC-M4: validate a second artifact family, preferably Forge Rescue or EML Advantage Lab.")
     parser.add_argument("--no-path-check", action="store_true")
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
@@ -318,6 +329,11 @@ def main() -> int:
         args.evidence_dir,
         args.command_feed_dir,
         check_paths=not args.no_path_check,
+        result_stem=args.result_stem,
+        feed_stem=args.feed_stem,
+        evidence_id=args.evidence_id,
+        title=args.title,
+        next_step=args.next_step,
     )
     payload = built["payload"]
     if args.strict and not payload["summary"]["valid"]:

@@ -15,6 +15,8 @@ from scripts.proof_carrying_artifact_contract_validator import (
     validate_contract,
 )
 
+RESCUE_CONTRACT = Path("reports/proof_carrying_artifacts/forge_rescue_contract_2026_05_29.json")
+
 
 def build_tmp(tmp_path):
     return build_validator(
@@ -106,3 +108,24 @@ def test_cli_strict(tmp_path):
         text=True,
     )
     assert "PCC_M3_CONTRACT_VALIDATOR_OK" in proc.stdout
+
+
+def test_forge_rescue_contract_validates(tmp_path):
+    built = build_validator(
+        RESCUE_CONTRACT,
+        tmp_path / "results",
+        tmp_path / "reports",
+        tmp_path / "evidence",
+        tmp_path / "feeds",
+        result_stem="pcc_m4_forge_rescue_contract_validator_2026_05_29",
+        feed_stem="pcc_m4_forge_rescue_contract_validator_feed_2026_05_29",
+        evidence_id="pcc-m4-forge-rescue-contract-validator",
+        title="PCC-M4 Forge Rescue Contract Validator",
+        next_step="PCC-M5: validate all proof-carrying artifact contracts as a batch.",
+    )
+    payload = built["payload"]
+    assert payload["summary"]["valid"] is True
+    assert payload["summary"]["obligationCount"] == 9
+    assert payload["summary"]["dischargedObligations"] == 4
+    assert payload["summary"]["partialObligations"] == 3
+    assert payload["summary"]["blockedObligations"] == 2
