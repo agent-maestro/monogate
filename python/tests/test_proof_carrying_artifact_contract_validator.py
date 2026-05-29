@@ -155,12 +155,12 @@ def test_eml_advantage_lab_contract_validates(tmp_path):
         feed_stem="eml_advantage_lab_contract_validator_feed_2026_05_29",
         evidence_id="eml-advantage-lab-contract-validator",
         title="EML Advantage Lab Contract Validator",
-        next_step="EML-ADV-PCC9: add a guarded/piecewise source family such as clamp_guard.py.",
+        next_step="EML-ADV-PCC10: add a family-level synthesis across smooth, log-domain, oscillatory, and guarded holdouts.",
     )
     payload = built["payload"]
     assert payload["summary"]["valid"] is True
-    assert payload["summary"]["obligationCount"] == 17
-    assert payload["summary"]["dischargedObligations"] == 10
+    assert payload["summary"]["obligationCount"] == 18
+    assert payload["summary"]["dischargedObligations"] == 11
     assert payload["summary"]["partialObligations"] == 4
     assert payload["summary"]["blockedObligations"] == 3
 
@@ -178,7 +178,7 @@ def test_batch_validator_validates_all_contracts(tmp_path):
     assert payload["summary"]["valid"] is True
     assert payload["summary"]["contractCount"] >= 3
     assert payload["summary"]["failedContractCount"] == 0
-    assert payload["summary"]["obligationCount"] >= 34
+    assert payload["summary"]["obligationCount"] >= 35
 
 
 def test_batch_cli_strict(tmp_path):

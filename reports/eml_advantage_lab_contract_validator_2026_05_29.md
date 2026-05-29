@@ -6,8 +6,8 @@ Status: `PCC_M3_CONTRACT_VALIDATOR_PASS`
 
 - contract: `eml-advantage-lab-proof-carrying-artifact-contract`
 - valid: `True`
-- obligations: `17`
-- discharged: `10`
+- obligations: `18`
+- discharged: `11`
 - partial: `4`
 - blocked: `3`
 - unresolved: `0`
