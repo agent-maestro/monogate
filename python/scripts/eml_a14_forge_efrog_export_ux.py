@@ -31,6 +31,7 @@ PATHS = {
     "a13_2": ROOT / "python/results/eml_a13_2_semantic_output_comparison/eml_a13_2_semantic_output_comparison_2026_05_29.json",
     "pcc10": ROOT / "python/results/eml_advantage_pcc10_family_synthesis/eml_advantage_pcc10_family_synthesis_2026_05_29.json",
     "sprint_closure": ROOT / "python/results/eml_advantage_product_sprint_closure/eml_advantage_product_sprint_closure_2026_05_29.json",
+    "s24": ROOT / "python/results/eml_s24_sigmoid_runtime_bakeoff/eml_s24_sigmoid_runtime_bakeoff_2026_05_29.json",
 }
 
 CLAIM_FLAGS = {
@@ -56,6 +57,38 @@ NON_CLAIMS = [
     "A14 does not prove compiler correctness or formal semantic equivalence.",
     "A14 does not claim broad EML advantage, runtime performance, production readiness, certified safety, or public safety.",
 ]
+
+
+def default_runtime_advisory() -> dict[str, Any]:
+    return {
+        "advisoryStatus": "no_family_runtime_advisory_attached",
+        "source": None,
+        "canonicalRepresentationForm": None,
+        "recommendedRuntimeForm": "standard_or_protected_runtime_until_benchmarked",
+        "blockedOrCautionForms": [],
+        "reason": "No dedicated runtime bakeoff is attached for this export family.",
+        "decision": "inspect_family_evidence_before_runtime_lowering",
+        "claimBoundary": "advisory_metadata_only_no_compiler_behavior_change_or_runtime_performance_claim",
+    }
+
+
+def stable_sigmoid_runtime_advisory(s24: dict[str, Any]) -> dict[str, Any]:
+    recommendation = s24["recommendation"]
+    return {
+        "advisoryStatus": "s24_runtime_recommendation_attached",
+        "source": "eml-s24-sigmoid-runtime-bakeoff",
+        "sourcePath": "python/results/eml_s24_sigmoid_runtime_bakeoff/eml_s24_sigmoid_runtime_bakeoff_2026_05_29.json",
+        "canonicalRepresentationForm": recommendation["representationForm"],
+        "recommendedRuntimeForm": recommendation["recommendedRuntimeForm"],
+        "recommendedRuntimeRole": recommendation["recommendedRuntimeRole"],
+        "teachingSearchForm": recommendation["teachingSearchForm"],
+        "blockedOrCautionForms": recommendation["blockedOrCautionForms"],
+        "reason": "S24 observed dangerous exponent inputs for the naive sigmoid form and recommends protected branch-stable runtime lowering for wide ranges.",
+        "decision": recommendation["decision"],
+        "claimBoundary": "advisory_metadata_only_no_compiler_behavior_change_or_runtime_performance_claim",
+        "publicPerformanceClaim": False,
+        "runtimePerformanceClaim": False,
+    }
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -104,7 +137,18 @@ def roundtrip_index(a13: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
     return rows
 
 
-def export_packet(semantic_case: dict[str, Any], matching_roundtrips: list[dict[str, Any]], pcc10: dict[str, Any]) -> dict[str, Any]:
+def runtime_advisory_for_case(semantic_case: dict[str, Any], s24: dict[str, Any]) -> dict[str, Any]:
+    if semantic_case["caseId"] == "stable_sigmoid_holdout_semantic_compare_v0":
+        return stable_sigmoid_runtime_advisory(s24)
+    return default_runtime_advisory()
+
+
+def export_packet(
+    semantic_case: dict[str, Any],
+    matching_roundtrips: list[dict[str, Any]],
+    pcc10: dict[str, Any],
+    s24: dict[str, Any],
+) -> dict[str, Any]:
     family = family_for_case(semantic_case["caseId"], pcc10)
     sample_count = len(semantic_case["frames"])
     roundtrip_targets = sorted({row["targetLanguage"] for row in matching_roundtrips})
@@ -134,6 +178,7 @@ def export_packet(semantic_case: dict[str, Any], matching_roundtrips: list[dict[
             "emlRole": family["emlRole"] if family else "case_level_export",
             "runtimeRecommendation": family["runtimeRecommendation"] if family else "standard_or_protected_runtime_until_benchmarked",
         },
+        "runtimeAdvisory": runtime_advisory_for_case(semantic_case, s24),
         "machlibWitnessReferences": [
             {
                 "name": "atlas_subtraction_boundary_witness",
@@ -167,7 +212,7 @@ def export_packet(semantic_case: dict[str, Any], matching_roundtrips: list[dict[
             "larger semantic sample grid",
             "non-Python source semantic comparison",
             "formal compiler correctness proof",
-            "runtime benchmark before performance claims",
+            "family-specific runtime benchmark before performance claims" if semantic_case["caseId"] != "stable_sigmoid_holdout_semantic_compare_v0" else "export implementation that consumes S24 advisory metadata without changing compiler behavior",
         ],
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
@@ -181,9 +226,10 @@ def build_payload(packet_dir: Path | None = None) -> tuple[dict[str, Any], list[
     a13_2 = read_json(PATHS["a13_2"])
     pcc10 = read_json(PATHS["pcc10"])
     sprint_closure = read_json(PATHS["sprint_closure"])
+    s24 = read_json(PATHS["s24"])
     by_hash = roundtrip_index(a13)
     packets = [
-        export_packet(case, by_hash.get(case["canonicalEmlHash"], []), pcc10)
+        export_packet(case, by_hash.get(case["canonicalEmlHash"], []), pcc10, s24)
         for case in a13_2["casePackets"]
     ]
     if packet_dir:
@@ -215,6 +261,12 @@ def build_payload(packet_dir: Path | None = None) -> tuple[dict[str, Any], list[
             "targetLanguageCount": len(a13["summary"]["targetLanguages"]),
             "familySynthesisSourceCount": pcc10["summary"]["sourceFamilyCount"],
             "sprintClosureHandoffReadyCount": sprint_closure["summary"]["handoffReadyCount"],
+            "runtimeAdvisoryAttachedCount": sum(
+                1 for packet in packets if packet["runtimeAdvisory"]["advisoryStatus"] != "no_family_runtime_advisory_attached"
+            ),
+            "s24SigmoidRuntimeRecommendationAttached": any(
+                packet["runtimeAdvisory"]["source"] == "eml-s24-sigmoid-runtime-bakeoff" for packet in packets
+            ),
             "forgeBehaviorChanged": False,
             "efrogBehaviorChanged": False,
             "compilerCorrectnessClaim": False,
@@ -248,6 +300,7 @@ def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
             "Exports eight semantic sample-grid cases into developer-facing packets.",
             "Links each export to matching roundtrip target evidence by canonical EML hash.",
             "Carries PCC10 family interpretation and blocked claims into the UX layer.",
+            "Attaches S24 sigmoid runtime advisory metadata to the stable sigmoid export without changing compiler behavior.",
         ],
         "validationCommands": [
             "python python/scripts/eml_a14_forge_efrog_export_ux.py --build --strict",
@@ -263,7 +316,7 @@ def build_command_feed(payload: dict[str, Any]) -> dict[str, Any]:
         "title": "EML-A14 Forge/eFrog Evidence Export UX",
         "status": payload["status"],
         "summary": payload["summary"],
-        "topFollowup": "Mount selected A14 export packets into Glass Box after the engine worktree is coordinated.",
+        "topFollowup": "Teach Forge/eFrog export consumers to display attached runtime advisories without changing compiler behavior.",
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
     }
@@ -280,14 +333,15 @@ def render_report(payload: dict[str, Any], packets: list[dict[str, Any]]) -> str
         "A14 turns existing A13/A13.2/PCC10 evidence into private developer-facing export packets.",
         "It is not a compiler, decompiler, proof, runtime, or public product claim.",
         "",
-        "| Export | Function | Family | Semantic status | Samples | Roundtrip targets |",
-        "|---|---|---|---|---:|---|",
+        "| Export | Function | Family | Semantic status | Samples | Runtime advisory | Roundtrip targets |",
+        "|---|---|---|---|---:|---|---|",
     ]
     for packet in packets:
         lines.append(
             f"| `{packet['exportId']}` | `{packet['functionName']}` | "
             f"`{packet['emlSurfaceSummary']['familyId']}` | `{packet['semanticSampleGridStatus']}` | "
-            f"{packet['semanticSampleCount']} | `{','.join(packet['forgeTargets'])}` |"
+            f"{packet['semanticSampleCount']} | `{packet['runtimeAdvisory']['recommendedRuntimeForm']}` | "
+            f"`{','.join(packet['forgeTargets'])}` |"
         )
     summary = payload["summary"]
     lines.extend(
@@ -300,6 +354,8 @@ def render_report(payload: dict[str, Any], packets: list[dict[str, Any]]) -> str
             f"- Semantic passes: `{summary['semanticPassCount']}`",
             f"- Roundtrip cases available: `{summary['roundtripCaseCount']}`",
             f"- Roundtrip passes available: `{summary['roundtripPassCount']}`",
+            f"- Runtime advisories attached: `{summary['runtimeAdvisoryAttachedCount']}`",
+            f"- S24 sigmoid runtime recommendation attached: `{summary['s24SigmoidRuntimeRecommendationAttached']}`",
             "",
             "## Boundary",
             "",
@@ -322,6 +378,18 @@ def validate_export_packet(packet: dict[str, Any]) -> None:
         raise ValueError("all linked roundtrip rows must pass")
     if packet["roundtripLinkStatus"] not in {"linked_by_canonical_eml_hash", "semantic_comparison_only"}:
         raise ValueError("invalid roundtrip link status")
+    advisory = packet["runtimeAdvisory"]
+    if advisory["claimBoundary"] != "advisory_metadata_only_no_compiler_behavior_change_or_runtime_performance_claim":
+        raise ValueError("invalid runtime advisory claim boundary")
+    if packet["sourceCaseId"] == "stable_sigmoid_holdout_semantic_compare_v0":
+        if advisory["source"] != "eml-s24-sigmoid-runtime-bakeoff":
+            raise ValueError("stable sigmoid export must attach S24 advisory")
+        if advisory["recommendedRuntimeForm"] != "branch_stable_sigmoid":
+            raise ValueError("stable sigmoid export must recommend branch-stable runtime")
+        if advisory["canonicalRepresentationForm"] != "clamp_stable_sigmoid":
+            raise ValueError("stable sigmoid export must retain clamp-stable representation")
+    elif advisory["source"] is not None:
+        raise ValueError("unexpected runtime advisory source")
     for key, value in packet["claimFlags"].items():
         if value is not False:
             raise ValueError(f"claim flag must remain false: {key}")
@@ -339,6 +407,10 @@ def validate_payload(payload: dict[str, Any], packets: list[dict[str, Any]]) -> 
         raise ValueError("all semantic cases must pass")
     if summary["roundtripPassCount"] != summary["roundtripCaseCount"]:
         raise ValueError("all A13 roundtrip cases must pass")
+    if summary["runtimeAdvisoryAttachedCount"] != 1:
+        raise ValueError("expected exactly one attached runtime advisory")
+    if summary["s24SigmoidRuntimeRecommendationAttached"] is not True:
+        raise ValueError("expected S24 sigmoid runtime recommendation attachment")
     for key in [
         "forgeBehaviorChanged",
         "efrogBehaviorChanged",

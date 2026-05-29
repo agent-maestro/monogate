@@ -78,7 +78,7 @@
     "larger semantic sample grid",
     "non-Python source semantic comparison",
     "formal compiler correctness proof",
-    "runtime benchmark before performance claims"
+    "export implementation that consumes S24 advisory metadata without changing compiler behavior"
   ],
   "nonClaims": [
     "A14 exports existing evidence into developer-facing packets only.",
@@ -91,6 +91,23 @@
   "roundtripCaseCount": 2,
   "roundtripLinkStatus": "linked_by_canonical_eml_hash",
   "roundtripPassCount": 2,
+  "runtimeAdvisory": {
+    "advisoryStatus": "s24_runtime_recommendation_attached",
+    "blockedOrCautionForms": [
+      "naive_sigmoid"
+    ],
+    "canonicalRepresentationForm": "clamp_stable_sigmoid",
+    "claimBoundary": "advisory_metadata_only_no_compiler_behavior_change_or_runtime_performance_claim",
+    "decision": "use_protected_or_branch_stable_runtime; keep EML/clamp form as representation/search evidence",
+    "publicPerformanceClaim": false,
+    "reason": "S24 observed dangerous exponent inputs for the naive sigmoid form and recommends protected branch-stable runtime lowering for wide ranges.",
+    "recommendedRuntimeForm": "branch_stable_sigmoid",
+    "recommendedRuntimeRole": "protected_branch_runtime_reference",
+    "runtimePerformanceClaim": false,
+    "source": "eml-s24-sigmoid-runtime-bakeoff",
+    "sourcePath": "python/results/eml_s24_sigmoid_runtime_bakeoff/eml_s24_sigmoid_runtime_bakeoff_2026_05_29.json",
+    "teachingSearchForm": "naive_sigmoid"
+  },
   "schemaVersion": "monogate.eml_forge_efrog_export_packet.v0",
   "semanticSampleCount": 7,
   "semanticSampleGridStatus": "pass",

@@ -45,6 +45,42 @@ def test_a14_carries_family_interpretation_without_broad_claim():
     assert "stable_sigmoid" in family_ids
     assert payload["summary"]["broadEmlAdvantageClaim"] is False
     assert payload["summary"]["runtimePerformanceClaim"] is False
+    assert payload["summary"]["runtimeAdvisoryAttachedCount"] == 1
+    assert payload["summary"]["s24SigmoidRuntimeRecommendationAttached"] is True
+
+
+def test_a14_attaches_s24_sigmoid_runtime_advisory_without_behavior_change():
+    _payload, packets = build_payload()
+    stable_sigmoid = next(
+        packet
+        for packet in packets
+        if packet["sourceCaseId"] == "stable_sigmoid_holdout_semantic_compare_v0"
+    )
+    advisory = stable_sigmoid["runtimeAdvisory"]
+    assert advisory["source"] == "eml-s24-sigmoid-runtime-bakeoff"
+    assert advisory["canonicalRepresentationForm"] == "clamp_stable_sigmoid"
+    assert advisory["recommendedRuntimeForm"] == "branch_stable_sigmoid"
+    assert advisory["teachingSearchForm"] == "naive_sigmoid"
+    assert advisory["blockedOrCautionForms"] == ["naive_sigmoid"]
+    assert advisory["runtimePerformanceClaim"] is False
+    assert advisory["publicPerformanceClaim"] is False
+    assert advisory["claimBoundary"] == "advisory_metadata_only_no_compiler_behavior_change_or_runtime_performance_claim"
+    assert stable_sigmoid["claimFlags"]["forge_behavior_changed"] is False
+    assert stable_sigmoid["claimFlags"]["efrog_behavior_changed"] is False
+
+
+def test_a14_leaves_other_exports_without_family_runtime_advisory():
+    _payload, packets = build_payload()
+    other_packets = [
+        packet
+        for packet in packets
+        if packet["sourceCaseId"] != "stable_sigmoid_holdout_semantic_compare_v0"
+    ]
+    assert len(other_packets) == 7
+    for packet in other_packets:
+        advisory = packet["runtimeAdvisory"]
+        assert advisory["source"] is None
+        assert advisory["recommendedRuntimeForm"] == "standard_or_protected_runtime_until_benchmarked"
 
 
 def test_a14_builder_preset_is_private_candidate_only():
