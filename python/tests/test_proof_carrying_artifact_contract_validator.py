@@ -155,12 +155,12 @@ def test_eml_advantage_lab_contract_validates(tmp_path):
         feed_stem="eml_advantage_lab_contract_validator_feed_2026_05_29",
         evidence_id="eml-advantage-lab-contract-validator",
         title="EML Advantage Lab Contract Validator",
-        next_step="EML-ADV-PCC10: add a family-level synthesis across smooth, log-domain, oscillatory, and guarded holdouts.",
+        next_step="Choose the next product lane for EML Advantage: Forge/eFrog, Monogate Engine, or MachLib.",
     )
     payload = built["payload"]
     assert payload["summary"]["valid"] is True
-    assert payload["summary"]["obligationCount"] == 18
-    assert payload["summary"]["dischargedObligations"] == 11
+    assert payload["summary"]["obligationCount"] == 19
+    assert payload["summary"]["dischargedObligations"] == 12
     assert payload["summary"]["partialObligations"] == 4
     assert payload["summary"]["blockedObligations"] == 3
 
@@ -178,7 +178,7 @@ def test_batch_validator_validates_all_contracts(tmp_path):
     assert payload["summary"]["valid"] is True
     assert payload["summary"]["contractCount"] >= 3
     assert payload["summary"]["failedContractCount"] == 0
-    assert payload["summary"]["obligationCount"] >= 35
+    assert payload["summary"]["obligationCount"] >= 36
 
 
 def test_batch_cli_strict(tmp_path):

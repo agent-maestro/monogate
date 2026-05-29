@@ -1,0 +1,76 @@
+{
+  "artifactId": "eml-adv-pcc10-family-synthesis",
+  "claimBoundary": "Private family-level synthesis only; no broad EML advantage, source-family generalization, runtime-performance, compiler-correctness, formal-equivalence, proof, production, deployment, or public-readiness claim.",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "family_level_generalization_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "proof_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "source_family_generalization_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "nonClaims": [
+    "PCC10 is a private synthesis over five holdout families, not a broad EML advantage benchmark.",
+    "PCC10 does not prove source-family generalization, compiler correctness, formal equivalence, proof strength, runtime performance, or production readiness.",
+    "PCC10 does not claim EML is generally superior to standard/protected mathematics.",
+    "The synthesis identifies where EML helps representation and where protected or guarded standard forms remain required."
+  ],
+  "replayStatus": "deterministic_synthesis_over_existing_holdouts",
+  "reviewDecision": "private_family_synthesis_recorded",
+  "reviewHighlights": [
+    "Summarizes five EML Advantage source families.",
+    "Separates representation help, partial EML coverage, protected runtime need, and guard grammar need.",
+    "Marks the source-family phase as a clean private pause point."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "broadEmlAdvantageClaim": false,
+    "claimFlagsAllFalse": true,
+    "familyLevelGeneralizationClaim": false,
+    "fullEmlCoverageFamilies": 2,
+    "guardGrammarRequiredFamilies": 1,
+    "nextProductLanes": [
+      "forge_efrog_productization",
+      "monogate_engine_glassbox",
+      "machlib_small_witness"
+    ],
+    "partialEmlCoverageFamilies": 2,
+    "profileCount": 22,
+    "protectedRuntimeRequiredFamilies": 1,
+    "publicClaimAllowedFamilies": 0,
+    "publicReady": false,
+    "recommendedPausePoint": true,
+    "representationHelpfulFamilies": 4,
+    "runtimePerformanceClaim": false,
+    "runtimeWinFamilies": 0,
+    "sourceFamilyCount": 5,
+    "sourceFamilyGeneralizationClaim": false
+  },
+  "semanticStrength": "five_family_synthesis_no_generalization_or_runtime_claim",
+  "title": "EML-ADV-PCC10 Family-Level Synthesis",
+  "validationCommands": [
+    "python python/scripts/eml_advantage_pcc10_family_synthesis.py --build --strict",
+    "python -m pytest -q python/tests/test_eml_advantage_pcc10_family_synthesis.py"
+  ],
+  "validationStatus": "pass"
+}
