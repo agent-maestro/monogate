@@ -1,0 +1,71 @@
+{
+  "artifactId": "eml-a15-glassbox-evidence-mount",
+  "claimBoundary": "Private Glass Box handoff only; no engine behavior change, production runtime, certified safety, compiler correctness, formal equivalence, public readiness, or deployment claim.",
+  "claimFlags": {
+    "automatic_approval_claim": false,
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "deployment_performed": false,
+    "eml_general_superiority_claim": false,
+    "engine_behavior_changed": false,
+    "engine_files_modified": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "glassbox_production_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "production_runtime_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "nonClaims": [
+    "A15 is a private Glass Box handoff, not an engine runtime change.",
+    "A15 does not modify Monogate Engine files.",
+    "A15 does not claim production runtime, certified safety, compiler correctness, formal equivalence, runtime performance, or public readiness.",
+    "A15 does not automatically approve any evidence packet for public display."
+  ],
+  "replayStatus": "not_applicable_handoff_over_existing_packets",
+  "reviewDecision": "private_engine_handoff_recorded",
+  "reviewHighlights": [
+    "Transforms six A14 export packets into Glass Box mount cards.",
+    "Records the engine dirty-worktree constraint explicitly.",
+    "Defers adapter implementation until engine work is coordinated."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "certifiedSafetyClaim": false,
+    "claimFlagsAllFalse": true,
+    "deploymentPerformed": false,
+    "engineBehaviorChanged": false,
+    "engineDirtyPathCount": 17,
+    "engineFilesModifiedByA15": 0,
+    "glassboxProductionClaim": false,
+    "mountCardCount": 6,
+    "productionRuntimeClaim": false,
+    "publicReady": false,
+    "roundtripLinkedMountCount": 4,
+    "semanticOnlyMountCount": 2,
+    "sourceExportPacketCount": 6
+  },
+  "semanticStrength": "glassbox_mount_contract_no_engine_behavior_change",
+  "title": "EML-A15 Glass Box Evidence Mount Handoff",
+  "validationCommands": [
+    "python python/scripts/eml_a15_glassbox_evidence_mount.py --build --strict",
+    "python -m pytest -q python/tests/test_eml_a15_glassbox_evidence_mount.py"
+  ],
+  "validationStatus": "pass"
+}
