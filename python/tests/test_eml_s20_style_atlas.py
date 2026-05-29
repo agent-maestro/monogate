@@ -20,8 +20,8 @@ def test_s20_builds_six_style_packets():
     payload, packets = build_payload()
     validate_payload(payload, packets)
     assert payload["status"] == "EML_S20_STYLE_ATLAS_PASS"
-    assert payload["summary"]["stylePacketCount"] == 7
-    assert len(packets) == 7
+    assert payload["summary"]["stylePacketCount"] == 8
+    assert len(packets) == 8
 
 
 def test_s20_defines_expected_style_vocabulary():
@@ -43,9 +43,10 @@ def test_s20_classifies_current_export_families():
     assert styles_by_family["gaussian"] == "eml_native"
     assert styles_by_family["rc_decay"] == "eml_native"
     assert styles_by_family["stretched_exponential"] == "eml_native"
+    assert styles_by_family["stable_sigmoid"] == "eml_native"
     assert styles_by_family["numpy_softplus"] == "eml_partial"
     assert styles_by_family["clamp_guard"] == "guard_owned"
-    assert payload["summary"]["emlNativePrimaryCount"] == 4
+    assert payload["summary"]["emlNativePrimaryCount"] == 5
     assert payload["summary"]["emlPartialPrimaryCount"] == 1
     assert payload["summary"]["guardOwnedPrimaryCount"] == 1
     assert payload["summary"]["standardPreferredPrimaryCount"] == 1
@@ -100,7 +101,7 @@ def test_s20_writes_outputs_and_packets(tmp_path):
     for key in ["result_path", "evidence_path", "feed_path"]:
         json.loads(Path(built[key]).read_text(encoding="utf-8"))
     packet_paths = sorted((tmp_path / "packets").glob("*.json"))
-    assert len(packet_paths) == 7
+    assert len(packet_paths) == 8
     assert Path(built["report_path"]).read_text(encoding="utf-8").startswith("# EML-S20")
 
 

@@ -19,16 +19,16 @@ def test_a14_exports_semantic_cases():
     payload, packets = build_payload()
     validate_payload(payload, packets)
     assert payload["status"] == "EML_A14_FORGE_EFROG_EXPORT_UX_PASS"
-    assert payload["summary"]["exportPacketCount"] == 7
-    assert payload["summary"]["semanticPassCount"] == 7
-    assert len(packets) == 7
+    assert payload["summary"]["exportPacketCount"] == 8
+    assert payload["summary"]["semanticPassCount"] == 8
+    assert len(packets) == 8
 
 
 def test_a14_packets_record_roundtrip_link_status():
     _payload, packets = build_payload()
     linked = [packet for packet in packets if packet["roundtripLinkStatus"] == "linked_by_canonical_eml_hash"]
     semantic_only = [packet for packet in packets if packet["roundtripLinkStatus"] == "semantic_comparison_only"]
-    assert len(linked) == 5
+    assert len(linked) == 6
     assert len(semantic_only) == 2
     for packet in packets:
         assert packet["roundtripPassCount"] == packet["roundtripCaseCount"]
@@ -42,6 +42,7 @@ def test_a14_carries_family_interpretation_without_broad_claim():
     assert "rc_decay" in family_ids
     assert "gaussian" in family_ids
     assert "stretched_exponential" in family_ids
+    assert "stable_sigmoid" in family_ids
     assert payload["summary"]["broadEmlAdvantageClaim"] is False
     assert payload["summary"]["runtimePerformanceClaim"] is False
 
@@ -73,7 +74,7 @@ def test_a14_writes_outputs_and_export_packets(tmp_path):
     for key in ["result_path", "evidence_path", "feed_path"]:
         json.loads(Path(built[key]).read_text(encoding="utf-8"))
     packet_paths = sorted((tmp_path / "packets").glob("*.json"))
-    assert len(packet_paths) == 7
+    assert len(packet_paths) == 8
     assert Path(built["report_path"]).read_text(encoding="utf-8").startswith("# EML-A14")
 
 

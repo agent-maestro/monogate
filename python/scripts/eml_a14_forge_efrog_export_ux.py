@@ -68,6 +68,7 @@ def family_for_case(case_id: str, pcc10: dict[str, Any]) -> dict[str, Any] | Non
         "gaussian_stable_holdout_semantic_compare_v0": "gaussian",
         "gaussian_semantic_compare_v0": "gaussian",
         "stretched_exponential_holdout_semantic_compare_v0": "stretched_exponential",
+        "stable_sigmoid_holdout_semantic_compare_v0": "stable_sigmoid",
         "sigmoid_semantic_compare_v0": "numpy_softplus",
         "voltage_divider_holdout_semantic_compare_v0": "clamp_guard",
     }
@@ -84,6 +85,14 @@ def family_for_case(case_id: str, pcc10: dict[str, Any]) -> dict[str, Any] | Non
             "finding": "semantic_search_representation_tie",
             "emlRole": "full_exponential_stretched_kernel_representation",
             "runtimeRecommendation": "standard_or_protected_runtime_until_benchmarked",
+        }
+    if family_id == "stable_sigmoid":
+        return {
+            "familyId": "stable_sigmoid",
+            "surface": "stable_sigmoid_logistic",
+            "finding": "bounded_transition_semantic_search_representation",
+            "emlRole": "bounded_exponential_transition_representation",
+            "runtimeRecommendation": "protected_branch_stable_runtime_for_large_ranges",
         }
     return None
 
@@ -236,7 +245,7 @@ def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
         "reviewHighlights": [
-            "Exports six semantic sample-grid cases into developer-facing packets.",
+            "Exports eight semantic sample-grid cases into developer-facing packets.",
             "Links each export to matching roundtrip target evidence by canonical EML hash.",
             "Carries PCC10 family interpretation and blocked claims into the UX layer.",
         ],
@@ -324,8 +333,8 @@ def validate_payload(payload: dict[str, Any], packets: list[dict[str, Any]]) -> 
     if payload["status"] != STATUS:
         raise ValueError("invalid status")
     summary = payload["summary"]
-    if summary["exportPacketCount"] != 7:
-        raise ValueError("expected seven export packets")
+    if summary["exportPacketCount"] != 8:
+        raise ValueError("expected eight export packets")
     if summary["semanticPassCount"] != summary["semanticCaseCount"]:
         raise ValueError("all semantic cases must pass")
     if summary["roundtripPassCount"] != summary["roundtripCaseCount"]:

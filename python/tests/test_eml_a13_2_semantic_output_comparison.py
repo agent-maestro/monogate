@@ -30,7 +30,7 @@ def test_a13_2_builds_semantic_comparison_packets(tmp_path):
     assert payload["status"] == "EML_A13_2_SEMANTIC_OUTPUT_COMPARISON_PASS"
     assert payload["summary"]["caseCount"] >= 6
     assert payload["summary"]["passCount"] == payload["summary"]["caseCount"]
-    assert payload["summary"]["sampleCount"] >= 29
+    assert payload["summary"]["sampleCount"] >= 37
     validate_payload(payload)
 
 
@@ -42,6 +42,9 @@ def test_a13_2_compares_python_and_javascript_targets(tmp_path):
         assert packet["comparisonStatus"] == "pass"
         assert packet["maxAbsError"] <= 1.0e-9 or packet["maxRelError"] <= 1.0e-9
     assert "stretched_exponential_holdout_semantic_compare_v0" in {
+        packet["caseId"] for packet in payload["casePackets"]
+    }
+    assert "stable_sigmoid_holdout_semantic_compare_v0" in {
         packet["caseId"] for packet in payload["casePackets"]
     }
 

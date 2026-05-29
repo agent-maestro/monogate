@@ -57,12 +57,13 @@ Review rule: Do not use as roundtrip evidence; require linked hash evidence befo
 | `gaussian_stable_holdout_semantic_compare_v0` | `gaussian` | `eml_native` | `eml_native, standard_preferred` | `linked_by_canonical_eml_hash` | Treat EML as the search/semantic representation; still require runtime and domain evidence before claiming performance or safety. |
 | `rc_decay_holdout_semantic_compare_v0` | `rc_decay` | `eml_native` | `eml_native, standard_preferred` | `linked_by_canonical_eml_hash` | Treat EML as the search/semantic representation; still require runtime and domain evidence before claiming performance or safety. |
 | `stretched_exponential_holdout_semantic_compare_v0` | `stretched_exponential` | `eml_native` | `eml_native, standard_preferred` | `linked_by_canonical_eml_hash` | Treat EML as the search/semantic representation; still require runtime and domain evidence before claiming performance or safety. |
+| `stable_sigmoid_holdout_semantic_compare_v0` | `stable_sigmoid` | `eml_native` | `eml_native, standard_preferred` | `linked_by_canonical_eml_hash` | Treat EML as the search/semantic representation; still require runtime and domain evidence before claiming performance or safety. |
 | `voltage_divider_holdout_semantic_compare_v0` | `clamp_guard` | `guard_owned` | `guard_owned` | `linked_by_canonical_eml_hash` | Route to guard grammar before any EML lowering or runtime claim. |
 
 ## Summary
 
-- Style packets: `7`
-- EML-native primary cases: `4`
+- Style packets: `8`
+- EML-native primary cases: `5`
 - EML-partial primary cases: `1`
 - Guard-owned primary cases: `1`
 - Standard-preferred primary cases: `1`

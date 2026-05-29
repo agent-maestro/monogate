@@ -128,6 +128,12 @@ CASES = [
         ],
     },
     {
+        "caseId": "stable_sigmoid_holdout_semantic_compare_v0",
+        "sourcePath": "examples/stable_sigmoid.py",
+        "functionName": "stable_sigmoid",
+        "samples": [{"x": x} for x in [-40.0, -8.0, -1.0, 0.0, 1.0, 8.0, 40.0]],
+    },
+    {
         "caseId": "voltage_divider_holdout_semantic_compare_v0",
         "sourcePath": "examples/voltage_divider.py",
         "functionName": "voltage_divider",
