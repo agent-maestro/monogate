@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "monogate.eml_forge_efrog_roundtrip_packet.v0",
+  "title": "EML Forge/eFrog Roundtrip Packet v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packetType",
+    "caseId",
+    "sourceLanguage",
+    "targetLanguage",
+    "roundtripStatus",
+    "canonicalEmlHash",
+    "normalizedShapeHash",
+    "advantageClass",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "monogate.eml_forge_efrog_roundtrip_packet.v0"
+    },
+    "packetType": {
+      "const": "eml_forge_efrog_roundtrip_packet_v0"
+    },
+    "caseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceLanguage": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targetLanguage": {
+      "type": "string",
+      "minLength": 1
+    },
+    "roundtripStatus": {
+      "enum": ["pass", "fail", "blocked"]
+    },
+    "canonicalEmlHash": {
+      "type": "string",
+      "pattern": "^sha256:"
+    },
+    "normalizedShapeHash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "advantageClass": {
+      "enum": [
+        "eml_toolchain_surface_win",
+        "roundtrip_pass_standard_surface_smaller",
+        "roundtrip_blocked"
+      ]
+    },
+    "claimFlags": {
+      "type": "object"
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    }
+  }
+}
