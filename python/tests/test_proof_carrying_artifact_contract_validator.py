@@ -10,6 +10,8 @@ import sys
 
 from scripts.proof_carrying_artifact_contract_validator import (
     DEFAULT_CONTRACT,
+    DEFAULT_CONTRACTS_DIR,
+    build_batch_validator,
     build_validator,
     read_json,
     validate_contract,
@@ -129,3 +131,43 @@ def test_forge_rescue_contract_validates(tmp_path):
     assert payload["summary"]["dischargedObligations"] == 4
     assert payload["summary"]["partialObligations"] == 3
     assert payload["summary"]["blockedObligations"] == 2
+
+
+def test_batch_validator_validates_all_contracts(tmp_path):
+    built = build_batch_validator(
+        DEFAULT_CONTRACTS_DIR,
+        tmp_path / "results",
+        tmp_path / "reports",
+        tmp_path / "evidence",
+        tmp_path / "feeds",
+    )
+    payload = built["payload"]
+    assert payload["status"] == "PCC_M5_CONTRACT_BATCH_VALIDATOR_PASS"
+    assert payload["summary"]["valid"] is True
+    assert payload["summary"]["contractCount"] >= 2
+    assert payload["summary"]["failedContractCount"] == 0
+    assert payload["summary"]["obligationCount"] >= 17
+
+
+def test_batch_cli_strict(tmp_path):
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "python/scripts/proof_carrying_artifact_contract_validator.py",
+            "--contracts-dir",
+            str(DEFAULT_CONTRACTS_DIR),
+            "--out-dir",
+            str(tmp_path / "results"),
+            "--report-dir",
+            str(tmp_path / "reports"),
+            "--evidence-dir",
+            str(tmp_path / "evidence"),
+            "--command-feed-dir",
+            str(tmp_path / "feeds"),
+            "--strict",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "PCC_M5_CONTRACT_BATCH_VALIDATOR_OK" in proc.stdout

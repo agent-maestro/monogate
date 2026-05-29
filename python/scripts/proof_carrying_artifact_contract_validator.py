@@ -14,8 +14,11 @@ ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_VERSION = "monogate.proof_carrying_artifact_contract_validator.v0"
 EVIDENCE_SCHEMA_VERSION = "monogate.evidence_public_packet.v0"
 STATUS = "PCC_M3_CONTRACT_VALIDATOR_PASS"
+BATCH_STATUS = "PCC_M5_CONTRACT_BATCH_VALIDATOR_PASS"
+BATCH_FAIL_STATUS = "PCC_M5_CONTRACT_BATCH_VALIDATOR_FAIL"
 
 DEFAULT_CONTRACT = ROOT / "reports/proof_carrying_artifacts/a13_forge_efrog_contract_2026_05_29.json"
+DEFAULT_CONTRACTS_DIR = ROOT / "reports/proof_carrying_artifacts"
 
 REQUIRED_FIELDS = [
     "schemaVersion",
@@ -306,9 +309,151 @@ def build_validator(
     }
 
 
+def build_batch_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schemaVersion": EVIDENCE_SCHEMA_VERSION,
+        "artifactId": "pcc-m5-contract-batch-validator",
+        "title": "PCC-M5 Contract Batch Validator",
+        "reviewDecision": "private_batch_validator_recorded",
+        "validationStatus": "pass" if payload["summary"]["valid"] else "fail",
+        "replayStatus": "not_applicable",
+        "semanticStrength": "batch_contract_structure_and_claim_boundary_validator",
+        "semanticReview": payload["summary"],
+        "claimBoundary": "Batch validator for proof-carrying artifact contracts only; no compiler correctness, formal equivalence, production readiness, public readiness, or proof-strength claim.",
+        "claimFlags": dict(CLAIM_FLAGS),
+        "nonClaims": list(NON_CLAIMS),
+        "nextStep": "PCC-M6: add this batch validator to CI once the contract registry stabilizes.",
+    }
+
+
+def build_batch_command_feed(payload: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schemaVersion": "monogate.command_center_feed.v0",
+        "title": "PCC-M5 Contract Batch Validator",
+        "status": payload["status"],
+        "summary": payload["summary"],
+        "nextStep": "PCC-M6: add this batch validator to CI once the contract registry stabilizes.",
+        "claimFlags": dict(CLAIM_FLAGS),
+        "nonClaims": list(NON_CLAIMS),
+    }
+
+
+def render_batch_report(payload: dict[str, Any]) -> str:
+    lines = [
+        "# PCC-M5 Contract Batch Validator",
+        "",
+        f"Status: `{payload['status']}`",
+        "",
+        "## Summary",
+        "",
+        f"- contracts: `{payload['summary']['contractCount']}`",
+        f"- valid contracts: `{payload['summary']['validContractCount']}`",
+        f"- failed contracts: `{payload['summary']['failedContractCount']}`",
+        f"- obligations: `{payload['summary']['obligationCount']}`",
+        f"- discharged: `{payload['summary']['dischargedObligations']}`",
+        f"- partial: `{payload['summary']['partialObligations']}`",
+        f"- blocked: `{payload['summary']['blockedObligations']}`",
+        f"- unresolved: `{payload['summary']['unresolvedObligations']}`",
+        "",
+        "## Contracts",
+        "",
+        "| Contract | Valid | Obligations | Failures |",
+        "| --- | --- | --- | --- |",
+    ]
+    for item in payload["contracts"]:
+        lines.append(
+            f"| `{item['contractId']}` | `{item['summary']['valid']}` | "
+            f"`{item['summary']['obligationCount']}` | `{item['summary']['failureCount']}` |"
+        )
+    lines.extend([
+        "",
+        "## Boundary",
+        "",
+        "- Batch-validates structure and claim-boundary consistency only.",
+        "- Does not prove compiler correctness or formal equivalence.",
+        "- Does not make any artifact public-ready or production-ready.",
+        "",
+    ])
+    return "\n".join(lines)
+
+
+def build_batch_validator(
+    contracts_dir: Path,
+    out_dir: Path,
+    report_dir: Path,
+    evidence_dir: Path,
+    command_feed_dir: Path,
+    *,
+    check_paths: bool = True,
+) -> dict[str, Any]:
+    contract_paths = sorted(contracts_dir.glob("*.json"))
+    contracts = []
+    totals = {
+        "obligationCount": 0,
+        "dischargedObligations": 0,
+        "partialObligations": 0,
+        "blockedObligations": 0,
+        "unresolvedObligations": 0,
+        "notApplicableObligations": 0,
+        "failureCount": 0,
+        "warningCount": 0,
+    }
+    for path in contract_paths:
+        payload = validate_contract(read_json(path), check_paths=check_paths)
+        payload["sourcePath"] = str(path.resolve().relative_to(ROOT))
+        contracts.append(payload)
+        for key in totals:
+            totals[key] += int(payload["summary"].get(key, 0))
+
+    failed = [payload for payload in contracts if not payload["summary"]["valid"]]
+    summary = {
+        "valid": not failed and bool(contracts),
+        "contractCount": len(contracts),
+        "validContractCount": len(contracts) - len(failed),
+        "failedContractCount": len(failed),
+        **totals,
+    }
+    payload = {
+        "schemaVersion": "monogate.proof_carrying_artifact_contract_batch_validator.v0",
+        "status": BATCH_STATUS if summary["valid"] else BATCH_FAIL_STATUS,
+        "summary": summary,
+        "contracts": contracts,
+        "claimFlags": dict(CLAIM_FLAGS),
+        "nonClaims": list(NON_CLAIMS),
+    }
+    evidence = build_batch_evidence_packet(payload)
+    feed = build_batch_command_feed(payload)
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    report_dir.mkdir(parents=True, exist_ok=True)
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    command_feed_dir.mkdir(parents=True, exist_ok=True)
+
+    result_path = out_dir / "pcc_m5_contract_batch_validator_2026_05_29.json"
+    report_path = report_dir / "pcc_m5_contract_batch_validator_2026_05_29.md"
+    evidence_path = evidence_dir / "pcc_m5_contract_batch_validator.json"
+    feed_path = command_feed_dir / "pcc_m5_contract_batch_validator_feed_2026_05_29.json"
+
+    result_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    report_path.write_text(render_batch_report(payload), encoding="utf-8")
+    evidence_path.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    feed_path.write_text(json.dumps(feed, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    return {
+        "payload": payload,
+        "evidence": evidence,
+        "feed": feed,
+        "result_path": str(result_path),
+        "report_path": str(report_path),
+        "evidence_path": str(evidence_path),
+        "feed_path": str(feed_path),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--contract", type=Path, default=DEFAULT_CONTRACT)
+    parser.add_argument("--contracts-dir", type=Path, default=None)
     parser.add_argument("--out-dir", type=Path, default=ROOT / "python/results/proof_carrying_artifact_contract_validator")
     parser.add_argument("--report-dir", type=Path, default=ROOT / "reports")
     parser.add_argument("--evidence-dir", type=Path, default=ROOT / "reports/evidence_packets")
@@ -321,6 +466,25 @@ def main() -> int:
     parser.add_argument("--no-path-check", action="store_true")
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args()
+
+    if args.contracts_dir is not None:
+        built = build_batch_validator(
+            args.contracts_dir,
+            args.out_dir,
+            args.report_dir,
+            args.evidence_dir,
+            args.command_feed_dir,
+            check_paths=not args.no_path_check,
+        )
+        payload = built["payload"]
+        if args.strict and not payload["summary"]["valid"]:
+            print(json.dumps(payload["summary"], indent=2), file=sys.stderr)
+            return 1
+        print("PCC_M5_CONTRACT_BATCH_VALIDATOR_OK" if payload["summary"]["valid"] else "PCC_M5_CONTRACT_BATCH_VALIDATOR_FAIL")
+        print(f"contracts={payload['summary']['contractCount']}")
+        print(f"obligations={payload['summary']['obligationCount']}")
+        print(f"result={built['result_path']}")
+        return 0 if payload["summary"]["valid"] else 1
 
     built = build_validator(
         args.contract,
