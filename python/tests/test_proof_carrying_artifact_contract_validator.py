@@ -19,6 +19,7 @@ from scripts.proof_carrying_artifact_contract_validator import (
 )
 
 RESCUE_CONTRACT = Path("reports/proof_carrying_artifacts/forge_rescue_contract_2026_05_29.json")
+EML_ADVANTAGE_CONTRACT = Path("reports/proof_carrying_artifacts/eml_advantage_lab_contract_2026_05_29.json")
 
 
 def build_tmp(tmp_path):
@@ -143,6 +144,27 @@ def test_forge_rescue_contract_validates(tmp_path):
     assert payload["summary"]["blockedObligations"] == 2
 
 
+def test_eml_advantage_lab_contract_validates(tmp_path):
+    built = build_validator(
+        EML_ADVANTAGE_CONTRACT,
+        tmp_path / "results",
+        tmp_path / "reports",
+        tmp_path / "evidence",
+        tmp_path / "feeds",
+        result_stem="eml_advantage_lab_contract_validator_2026_05_29",
+        feed_stem="eml_advantage_lab_contract_validator_feed_2026_05_29",
+        evidence_id="eml-advantage-lab-contract-validator",
+        title="EML Advantage Lab Contract Validator",
+        next_step="EML-ADV-PCC2: choose one new holdout or negative-control experiment from the contract gaps.",
+    )
+    payload = built["payload"]
+    assert payload["summary"]["valid"] is True
+    assert payload["summary"]["obligationCount"] == 10
+    assert payload["summary"]["dischargedObligations"] == 3
+    assert payload["summary"]["partialObligations"] == 4
+    assert payload["summary"]["blockedObligations"] == 3
+
+
 def test_batch_validator_validates_all_contracts(tmp_path):
     built = build_batch_validator(
         DEFAULT_CONTRACTS_DIR,
@@ -154,9 +176,9 @@ def test_batch_validator_validates_all_contracts(tmp_path):
     payload = built["payload"]
     assert payload["status"] == "PCC_M5_CONTRACT_BATCH_VALIDATOR_PASS"
     assert payload["summary"]["valid"] is True
-    assert payload["summary"]["contractCount"] >= 2
+    assert payload["summary"]["contractCount"] >= 3
     assert payload["summary"]["failedContractCount"] == 0
-    assert payload["summary"]["obligationCount"] >= 17
+    assert payload["summary"]["obligationCount"] >= 27
 
 
 def test_batch_cli_strict(tmp_path):

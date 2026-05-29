@@ -21,8 +21,8 @@ python/tests/test_proof_carrying_artifact_contract_validator.py
 
 ## Current Registry
 
-- contracts: 2
-- obligations: 17
+- contracts: 3
+- obligations: 27
 - failed contracts: 0
 
 ## Boundary
