@@ -9,6 +9,7 @@
     "caseId",
     "sourceLanguage",
     "targetLanguage",
+    "sourceClass",
     "roundtripStatus",
     "canonicalEmlHash",
     "normalizedShapeHash",
@@ -34,6 +35,9 @@
     "targetLanguage": {
       "type": "string",
       "minLength": 1
+    },
+    "sourceClass": {
+      "enum": ["default_frontend", "holdout"]
     },
     "roundtripStatus": {
       "enum": ["pass", "fail", "blocked"]

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """EML-A13 Forge/eFrog roundtrip advantage lab.
 
-Runs existing eFrog source frontends through Forge's Python target and records
-bounded toolchain evidence. This is a private measurement lane: no Forge or
+Runs existing eFrog source frontends and a small holdout slice through Forge's
+Python and JavaScript targets. This is a private measurement lane: no Forge or
 eFrog behavior changes, no compiler-correctness proof, and no broad EML
 advantage claim.
 """
@@ -27,7 +27,8 @@ if str(EFROG_ROOT) not in sys.path:
 
 from efrog.fingerprint import canonical_size, fingerprint_eml  # noqa: E402
 from efrog.normalization import normalize_module  # noqa: E402
-from efrog.roundtrip import BRIDGE_FIXTURES, _compile_target, _decompile_fixture  # noqa: E402
+from efrog.decompilers.python import decompile_python_source  # noqa: E402
+from efrog.roundtrip import BRIDGE_FIXTURES, BridgeFixture, _compile_target, _decompile_fixture  # noqa: E402
 
 DATE = "2026-05-29"
 STAMP = DATE.replace("-", "_")
@@ -35,6 +36,13 @@ SCHEMA_VERSION = "monogate.eml_a13_forge_efrog_roundtrip_advantage.v0"
 PACKET_SCHEMA_VERSION = "monogate.eml_forge_efrog_roundtrip_packet.v0"
 EVIDENCE_SCHEMA_VERSION = "monogate.evidence_public_packet.v0"
 STATUS = "EML_A13_FORGE_EFROG_ROUNDTRIP_ADVANTAGE_PASS"
+TARGETS = ("python", "javascript")
+HOLDOUT_FIXTURES = (
+    BridgeFixture("python_holdout_gaussian_stable", False, "examples/gaussian_stable.py", None, decompile_python_source),
+    BridgeFixture("python_holdout_rc_decay_stable", False, "examples/rc_decay_stable.py", None, decompile_python_source),
+    BridgeFixture("python_holdout_poly_horner", False, "examples/poly_horner.py", None, decompile_python_source),
+    BridgeFixture("python_holdout_voltage_divider", False, "examples/voltage_divider.py", None, decompile_python_source),
+)
 
 CLAIM_FLAGS = {
     "public_ready": False,
@@ -81,14 +89,14 @@ def _advantage_class(roundtrip_status: str, eml_nodes: int, standard_nodes: int)
     return "roundtrip_pass_standard_surface_smaller"
 
 
-def build_case_packet(fixture: Any, tmp_path: Path) -> dict[str, Any]:
+def build_case_packet(fixture: Any, target: str, tmp_path: Path) -> dict[str, Any]:
     source = _fixture_source(fixture)
     mod = _decompile_fixture(fixture)
     eml = mod.to_eml()
     shape = normalize_module(mod)
     status, message = _compile_target(
         eml,
-        target="python",
+        target=target,
         tmp_path=tmp_path,
         source_language=fixture.language,
         strict=False,
@@ -99,9 +107,10 @@ def build_case_packet(fixture: Any, tmp_path: Path) -> dict[str, Any]:
         "schemaVersion": PACKET_SCHEMA_VERSION,
         "packetType": "eml_forge_efrog_roundtrip_packet_v0",
         "date": DATE,
-        "caseId": f"{fixture.language}_to_forge_python_v0",
+        "caseId": f"{fixture.language}_to_forge_{target}_v0",
         "sourceLanguage": fixture.language,
-        "targetLanguage": "python",
+        "targetLanguage": target,
+        "sourceClass": "holdout" if str(fixture.language).startswith("python_holdout_") else "default_frontend",
         "sourceHostedByEfrog": bool(fixture.hosted),
         "sourceBytes": len(source.encode("utf-8")),
         "canonicalEmlBytes": canonical_size(eml),
@@ -117,7 +126,7 @@ def build_case_packet(fixture: Any, tmp_path: Path) -> dict[str, Any]:
         "reviewerDecision": "private_roundtrip_evidence",
         "missingEvidence": [
             "cross-target semantic equivalence",
-            "holdout source corpus",
+            "larger holdout source corpus",
             "formal compiler correctness proof",
         ],
         "claimFlags": dict(CLAIM_FLAGS),
@@ -133,13 +142,16 @@ def summarize(case_packets: list[dict[str, Any]]) -> dict[str, Any]:
         class_counts[packet["advantageClass"]] = class_counts.get(packet["advantageClass"], 0) + 1
     return {
         "caseCount": len(case_packets),
+        "defaultFrontendCaseCount": sum(1 for packet in case_packets if packet["sourceClass"] == "default_frontend"),
+        "holdoutCaseCount": sum(1 for packet in case_packets if packet["sourceClass"] == "holdout"),
         "roundtripPassCount": sum(1 for packet in case_packets if packet["roundtripStatus"] == "pass"),
         "roundtripBlockedCount": sum(1 for packet in case_packets if packet["roundtripStatus"] == "blocked"),
         "roundtripFailCount": sum(1 for packet in case_packets if packet["roundtripStatus"] == "fail"),
         "emlToolchainSurfaceWinCount": class_counts.get("eml_toolchain_surface_win", 0),
         "standardSurfaceSmallerCount": class_counts.get("roundtrip_pass_standard_surface_smaller", 0),
         "advantageClassCounts": class_counts,
-        "targetLanguage": "python",
+        "targetLanguages": sorted({packet["targetLanguage"] for packet in case_packets}),
+        "sourceLanguageCount": len({packet["sourceLanguage"] for packet in case_packets}),
         "forgeBehaviorChanged": False,
         "efrogBehaviorChanged": False,
         "compilerCorrectnessClaim": False,
@@ -157,7 +169,7 @@ def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
         "title": "EML-A13 Forge/eFrog Roundtrip Advantage Lab",
         "reviewDecision": "private_roundtrip_evidence_recorded",
         "validationStatus": "pass",
-        "replayStatus": "deterministic_source_to_eml_to_forge_python_roundtrip",
+        "replayStatus": "deterministic_source_to_eml_to_forge_target_roundtrip",
         "semanticStrength": "toolchain_roundtrip_evidence_no_compiler_correctness_claim",
         "semanticReview": payload["summary"],
         "claimBoundary": "Private roundtrip lab only; no compiler correctness, formal equivalence, broad EML advantage, runtime performance, production readiness, or public safety claim.",
@@ -173,7 +185,7 @@ def command_feed(payload: dict[str, Any]) -> dict[str, Any]:
         "title": "EML-A13 Forge/eFrog Roundtrip Advantage Lab",
         "status": payload["status"],
         "summary": payload["summary"],
-        "topFollowup": "A13.1 add private holdout sources and cross-target comparison",
+        "topFollowup": "A13.2 add semantic output comparison for selected scalar kernels",
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
     }
@@ -187,7 +199,8 @@ def render_report(payload: dict[str, Any]) -> str:
         "",
         f"Status: `{payload['status']}`",
         "",
-        "A13 runs existing eFrog source frontends through Forge's Python target",
+        "A13 runs existing eFrog source frontends and a small holdout slice through",
+        "Forge's Python and JavaScript targets",
         "and records bounded roundtrip evidence for the EML toolchain thesis.",
         "",
         "| Case | Roundtrip | Advantage class | Standard nodes | EML nodes | Shape hash |",
@@ -214,6 +227,8 @@ def render_report(payload: dict[str, Any]) -> str:
             "## Summary",
             "",
             f"- Cases: `{payload['summary']['caseCount']}`",
+            f"- Holdout cases: `{payload['summary']['holdoutCaseCount']}`",
+            f"- Targets: `{', '.join(payload['summary']['targetLanguages'])}`",
             f"- Roundtrip passes: `{payload['summary']['roundtripPassCount']}`",
             f"- EML surface wins: `{payload['summary']['emlToolchainSurfaceWinCount']}`",
             f"- Standard surface smaller: `{payload['summary']['standardSurfaceSmallerCount']}`",
@@ -254,7 +269,11 @@ def validate_payload(payload: dict[str, Any]) -> None:
     summary = payload["summary"]
     if summary["caseCount"] < 10:
         raise ValueError("expected at least 10 source frontend cases")
-    if summary["roundtripPassCount"] < 10:
+    if summary["holdoutCaseCount"] < 4:
+        raise ValueError("expected holdout source cases")
+    if set(summary["targetLanguages"]) != set(TARGETS):
+        raise ValueError("expected Python and JavaScript Forge targets")
+    if summary["roundtripPassCount"] < 20:
         raise ValueError("expected at least 10 passing roundtrips")
     for key in [
         "forgeBehaviorChanged",
@@ -281,7 +300,12 @@ def build_lab(
 ) -> dict[str, Any]:
     with tempfile.TemporaryDirectory(prefix="eml_a13_roundtrip_") as tmp:
         tmp_path = Path(tmp)
-        case_packets = [build_case_packet(fixture, tmp_path) for fixture in BRIDGE_FIXTURES]
+        fixtures = tuple(BRIDGE_FIXTURES) + HOLDOUT_FIXTURES
+        case_packets = [
+            build_case_packet(fixture, target, tmp_path)
+            for fixture in fixtures
+            for target in TARGETS
+        ]
     payload = {
         "schemaVersion": SCHEMA_VERSION,
         "date": DATE,

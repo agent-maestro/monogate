@@ -28,9 +28,10 @@ def test_a13_builds_roundtrip_packets_for_many_frontends(tmp_path):
     built = build_tmp(tmp_path)
     payload = built["payload"]
     assert payload["status"] == "EML_A13_FORGE_EFROG_ROUNDTRIP_ADVANTAGE_PASS"
-    assert payload["summary"]["caseCount"] >= 10
-    assert payload["summary"]["roundtripPassCount"] >= 10
-    assert payload["summary"]["targetLanguage"] == "python"
+    assert payload["summary"]["caseCount"] >= 30
+    assert payload["summary"]["roundtripPassCount"] >= 30
+    assert payload["summary"]["holdoutCaseCount"] >= 8
+    assert payload["summary"]["targetLanguages"] == ["javascript", "python"]
     validate_payload(payload)
 
 
@@ -42,6 +43,15 @@ def test_a13_packets_have_hashes_and_shape_identity(tmp_path):
         assert packet["canonicalEmlBytes"] > 0
         assert packet["functionCount"] >= 1
         assert packet["roundtripStatus"] == "pass"
+        assert packet["targetLanguage"] in {"python", "javascript"}
+
+
+def test_a13_has_holdout_and_default_frontend_slices(tmp_path):
+    payload = build_tmp(tmp_path)["payload"]
+    source_classes = {packet["sourceClass"] for packet in payload["casePackets"]}
+    assert source_classes == {"default_frontend", "holdout"}
+    holdout_packets = [packet for packet in payload["casePackets"] if packet["sourceClass"] == "holdout"]
+    assert {packet["targetLanguage"] for packet in holdout_packets} == {"python", "javascript"}
 
 
 def test_a13_classification_is_bounded_not_triumphal(tmp_path):
@@ -69,7 +79,7 @@ def test_a13_generated_json_files_parse(tmp_path):
     built = build_tmp(tmp_path)
     paths = [built["result_path"], built["evidence_path"], built["feed_path"]]
     paths.extend(str(path) for path in (tmp_path / "packets").glob("*.json"))
-    assert len(paths) >= 13
+    assert len(paths) >= 35
     for path in paths:
         json.loads(Path(path).read_text(encoding="utf-8"))
 
