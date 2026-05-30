@@ -1,0 +1,49 @@
+{
+  "claimFlags": {
+    "all_generated_lean_files_proved_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "lean_proof_claim": false,
+    "new_machlib_axiom_claim": false,
+    "package_published": false,
+    "public_ready": false,
+    "rc_step_response_proved_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "target_all_ready_claim": false
+  },
+  "date": "2026-05-30",
+  "decision": "zero_division_surface_guard_closed",
+  "nonClaims": [
+    "FEF-P28 records a narrow zero-division proof-surface guard for Forge-generated Lean imports.",
+    "FEF-P28 adds no MachLib axiom; the helper is derived from div_def, ne_of_gt, and zero_mul.",
+    "FEF-P28 does not discharge rc_step_response_at_zero.",
+    "FEF-P28 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+    "FEF-P28 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P28 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P28 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness."
+  ],
+  "schemaVersion": "monogate.command_feed.fef_p28_zero_division_surface_guard.v0",
+  "status": "FEF_P28_ZERO_DIVISION_SURFACE_GUARD_PASS",
+  "summary": {
+    "allGeneratedLeanFilesProvedClaim": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "formalEquivalenceClaim": false,
+    "helperIdentifierAvailableCount": 2,
+    "helperIdentifierCount": 2,
+    "leanProofClaim": false,
+    "newMachlibAxiomClaim": false,
+    "packagePublished": false,
+    "publicReady": false,
+    "rcStepResponseProvedClaim": false,
+    "rcStepZeroDivisionSurfaceProbePass": true,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "targetAllReadyClaim": false,
+    "zeroDivOfNeZeroAvailable": true,
+    "zeroDivOfPosAvailable": true
+  },
+  "title": "FEF-P28 Zero-Division MachLib Surface Guard",
+  "topFollowup": "Retry rc_step_response_at_zero as a scoped proof-discharge packet using zero_div_of_pos."
+}
