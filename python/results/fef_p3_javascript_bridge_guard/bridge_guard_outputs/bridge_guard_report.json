@@ -1,0 +1,51 @@
+{
+  "artifacts": {
+    "bridge_bundle": "/tmp/fef_p3_bridge_guard_probe/bridge_bundle",
+    "bundle_audit": "/tmp/fef_p3_bridge_guard_probe/bundle_audit.json",
+    "capability_map": "/tmp/fef_p3_bridge_guard_probe/capability_map.json",
+    "roundtrip_matrix": "/tmp/fef_p3_bridge_guard_probe/roundtrip_matrix",
+    "schema_validation": "/tmp/fef_p3_bridge_guard_probe/schema_validation.json",
+    "tamper_audit": "/tmp/fef_p3_bridge_guard_probe/tamper_audit.json"
+  },
+  "checks": [
+    {
+      "message": "capability map schema/counts are stable",
+      "name": "capability_map",
+      "status": "pass"
+    },
+    {
+      "message": "bundle status=pass hash=sha256:40275b004a13b9ef3ec6761ac2edeb5acb0a6d505f64e4f6356291e6ee009a51",
+      "name": "bridge_bundle",
+      "status": "pass"
+    },
+    {
+      "message": "audit status=pass mismatches=0",
+      "name": "bundle_audit",
+      "status": "pass"
+    },
+    {
+      "message": "tamper audit status=fail mismatches=2",
+      "name": "tamper_audit",
+      "status": "pass"
+    },
+    {
+      "message": "roundtrip passed=True results=10",
+      "name": "roundtrip_matrix",
+      "status": "pass"
+    },
+    {
+      "message": "schema validations=10",
+      "name": "schema_validation",
+      "status": "pass"
+    }
+  ],
+  "claim_boundaries": [
+    "The guard verifies bridge artifacts and tamper detection, not arbitrary-program correctness.",
+    "A blocked guard usually means the sibling Forge checkout is unavailable.",
+    "JavaScript runtime execution is a deterministic Node smoke over generated fixtures, not formal semantic equivalence.",
+    "The tamper probe intentionally mutates a copied bundle, never the primary bundle."
+  ],
+  "out_dir": "/tmp/fef_p3_bridge_guard_probe",
+  "schema": "efrog_bridge_guard_report_v0",
+  "status": "pass"
+}

@@ -1,0 +1,39 @@
+{
+  "artifact_manifest": "artifact_manifest.json",
+  "bundle_hash": "sha256:40275b004a13b9ef3ec6761ac2edeb5acb0a6d505f64e4f6356291e6ee009a51",
+  "claim_boundaries": [
+    "The bundle records translation evidence, not arbitrary-program correctness.",
+    "Python target validation means Forge emitted Python and Python bytecode compilation passed.",
+    "Rust target validation uses a local monogate_sys compatibility shim for standalone rustc checks; it does not replace the Forge runtime crate.",
+    "Python/Rust equivalence is deterministic sampled evidence over generated inputs, not exhaustive semantic equivalence.",
+    "Lean skeletons are proof hooks, not discharged theorem proofs.",
+    "Domain obligations are unresolved unless a later artifact discharges them."
+  ],
+  "eml": "gaussian.eml",
+  "equivalence_report": "python_rust_equivalence.json",
+  "evidence_packet": "translation_evidence_packet.json",
+  "lean_skeleton": "gaussian_skeleton.lean",
+  "module_name": "gaussian",
+  "normalized_shape": "normalized_shape.json",
+  "obligations": "domain_obligations.json",
+  "out_dir": "/tmp/fef_p3_bridge_guard_probe/bridge_bundle",
+  "schema": "efrog_forge_bridge_bundle_v0",
+  "source_language": "python",
+  "status": "pass",
+  "target_results": [
+    {
+      "artifact": "target_python.py",
+      "message": "Forge emission and Python bytecode compile passed",
+      "status": "pass",
+      "target": "python",
+      "validation": "python_bytecode"
+    },
+    {
+      "artifact": "target_rust.rs,target_rust_standalone_check.rs",
+      "message": "Forge emitted Rust and local compatibility shim compiled with rustc",
+      "status": "pass",
+      "target": "rust",
+      "validation": "rustc_standalone_shim"
+    }
+  ]
+}

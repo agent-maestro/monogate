@@ -1,0 +1,245 @@
+{
+  "artifactId": "fef-p3-javascript-bridge-guard",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "date": "2026-05-30",
+  "decision": "javascript_runtime_execution_added_to_bridge_guard",
+  "fefP2Link": {
+    "path": "reports/evidence_packets/fef_p2_clean_room_quickstart_scaffold.json",
+    "reviewDecision": "local_scaffold_and_clean_room_quickstart_passed"
+  },
+  "guard": {
+    "checks": [
+      {
+        "message": "capability map schema/counts are stable",
+        "name": "capability_map",
+        "status": "pass"
+      },
+      {
+        "message": "bundle status=pass hash=sha256:40275b004a13b9ef3ec6761ac2edeb5acb0a6d505f64e4f6356291e6ee009a51",
+        "name": "bridge_bundle",
+        "status": "pass"
+      },
+      {
+        "message": "audit status=pass mismatches=0",
+        "name": "bundle_audit",
+        "status": "pass"
+      },
+      {
+        "message": "tamper audit status=fail mismatches=2",
+        "name": "tamper_audit",
+        "status": "pass"
+      },
+      {
+        "message": "roundtrip passed=True results=10",
+        "name": "roundtrip_matrix",
+        "status": "pass"
+      },
+      {
+        "message": "schema validations=10",
+        "name": "schema_validation",
+        "status": "pass"
+      }
+    ],
+    "claimBoundaries": [
+      "The guard verifies bridge artifacts and tamper detection, not arbitrary-program correctness.",
+      "A blocked guard usually means the sibling Forge checkout is unavailable.",
+      "JavaScript runtime execution is a deterministic Node smoke over generated fixtures, not formal semantic equivalence.",
+      "The tamper probe intentionally mutates a copied bundle, never the primary bundle."
+    ],
+    "path": "python/results/fef_p3_javascript_bridge_guard/bridge_guard_outputs",
+    "status": "pass"
+  },
+  "nextMilestones": [
+    "FEF-P4 non-Python source semantic comparison",
+    "FEF-P5 publication decision and public copy update only after claim review"
+  ],
+  "nonClaims": [
+    "FEF-P3 records JavaScript runtime execution in the real eFrog bridge guard.",
+    "FEF-P3 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P3 does not publish a package or enable public checkout.",
+    "FEF-P3 does not claim runtime performance, production readiness, Verilog, Lean proofs, zkproof, or silicon output."
+  ],
+  "releaseGates": [
+    {
+      "id": "bridge_guard_runs_python_and_javascript",
+      "status": "pass"
+    },
+    {
+      "id": "python_bytecode_compile_guard_passed",
+      "status": "pass"
+    },
+    {
+      "id": "javascript_runtime_execution_guard_passed",
+      "status": "pass"
+    },
+    {
+      "id": "public_package_published",
+      "status": "blocked"
+    },
+    {
+      "id": "checkout_remains_disabled",
+      "status": "required"
+    }
+  ],
+  "roundtripMatrix": {
+    "javascriptResultCount": 5,
+    "javascriptRuntimeExecutionPassCount": 5,
+    "passed": true,
+    "path": "python/results/fef_p3_javascript_bridge_guard/bridge_guard_outputs/roundtrip_matrix/roundtrip_matrix.json",
+    "pythonResultCount": 5,
+    "resultCount": 10,
+    "results": [
+      {
+        "canonical_eml_hash": "sha256:05f2ce23a92c01d0c6596bd67fc21e2370206dc77d91458d191091d99f0959eb",
+        "evidence_packet_id": "efrog-forge:python->python:05f2ce23a92c",
+        "message": "Forge format check, target emission, and Python bytecode compile passed",
+        "runtime_validation": "python_bytecode_compile_passed",
+        "source_language": "python",
+        "status": "pass",
+        "target_language": "python"
+      },
+      {
+        "canonical_eml_hash": "sha256:05f2ce23a92c01d0c6596bd67fc21e2370206dc77d91458d191091d99f0959eb",
+        "evidence_packet_id": "efrog-forge:python->javascript:05f2ce23a92c",
+        "message": "Forge format check, target emission, and JavaScript runtime execution passed for 1 exported function(s)",
+        "runtime_validation": "javascript_runtime_execution_passed",
+        "source_language": "python",
+        "status": "pass",
+        "target_language": "javascript"
+      },
+      {
+        "canonical_eml_hash": "sha256:05f2ce23a92c01d0c6596bd67fc21e2370206dc77d91458d191091d99f0959eb",
+        "evidence_packet_id": "efrog-forge:c->python:05f2ce23a92c",
+        "message": "Forge format check, target emission, and Python bytecode compile passed",
+        "runtime_validation": "python_bytecode_compile_passed",
+        "source_language": "c",
+        "status": "pass",
+        "target_language": "python"
+      },
+      {
+        "canonical_eml_hash": "sha256:05f2ce23a92c01d0c6596bd67fc21e2370206dc77d91458d191091d99f0959eb",
+        "evidence_packet_id": "efrog-forge:c->javascript:05f2ce23a92c",
+        "message": "Forge format check, target emission, and JavaScript runtime execution passed for 1 exported function(s)",
+        "runtime_validation": "javascript_runtime_execution_passed",
+        "source_language": "c",
+        "status": "pass",
+        "target_language": "javascript"
+      },
+      {
+        "canonical_eml_hash": "sha256:c1f2ef52dd94affa31988035ed011a323d058e8acb098a3f5271cfd4ab43ccbe",
+        "evidence_packet_id": "efrog-forge:javascript->python:c1f2ef52dd94",
+        "message": "Forge format check, target emission, and Python bytecode compile passed",
+        "runtime_validation": "python_bytecode_compile_passed",
+        "source_language": "javascript",
+        "status": "pass",
+        "target_language": "python"
+      },
+      {
+        "canonical_eml_hash": "sha256:c1f2ef52dd94affa31988035ed011a323d058e8acb098a3f5271cfd4ab43ccbe",
+        "evidence_packet_id": "efrog-forge:javascript->javascript:c1f2ef52dd94",
+        "message": "Forge format check, target emission, and JavaScript runtime execution passed for 1 exported function(s)",
+        "runtime_validation": "javascript_runtime_execution_passed",
+        "source_language": "javascript",
+        "status": "pass",
+        "target_language": "javascript"
+      },
+      {
+        "canonical_eml_hash": "sha256:e053a0fefbc0163ed44eb9358e9d559949aa58d6ca4b26e0ee02cac38366d61b",
+        "evidence_packet_id": "efrog-forge:rust->python:e053a0fefbc0",
+        "message": "Forge format check, target emission, and Python bytecode compile passed",
+        "runtime_validation": "python_bytecode_compile_passed",
+        "source_language": "rust",
+        "status": "pass",
+        "target_language": "python"
+      },
+      {
+        "canonical_eml_hash": "sha256:e053a0fefbc0163ed44eb9358e9d559949aa58d6ca4b26e0ee02cac38366d61b",
+        "evidence_packet_id": "efrog-forge:rust->javascript:e053a0fefbc0",
+        "message": "Forge format check, target emission, and JavaScript runtime execution passed for 1 exported function(s)",
+        "runtime_validation": "javascript_runtime_execution_passed",
+        "source_language": "rust",
+        "status": "pass",
+        "target_language": "javascript"
+      },
+      {
+        "canonical_eml_hash": "sha256:e053a0fefbc0163ed44eb9358e9d559949aa58d6ca4b26e0ee02cac38366d61b",
+        "evidence_packet_id": "efrog-forge:matlab->python:e053a0fefbc0",
+        "message": "Forge format check, target emission, and Python bytecode compile passed",
+        "runtime_validation": "python_bytecode_compile_passed",
+        "source_language": "matlab",
+        "status": "pass",
+        "target_language": "python"
+      },
+      {
+        "canonical_eml_hash": "sha256:e053a0fefbc0163ed44eb9358e9d559949aa58d6ca4b26e0ee02cac38366d61b",
+        "evidence_packet_id": "efrog-forge:matlab->javascript:e053a0fefbc0",
+        "message": "Forge format check, target emission, and JavaScript runtime execution passed for 1 exported function(s)",
+        "runtime_validation": "javascript_runtime_execution_passed",
+        "source_language": "matlab",
+        "status": "pass",
+        "target_language": "javascript"
+      }
+    ],
+    "sourceLanguages": [
+      "c",
+      "javascript",
+      "matlab",
+      "python",
+      "rust"
+    ],
+    "targetLanguages": [
+      "python",
+      "javascript"
+    ]
+  },
+  "schemaVersion": "monogate.fef_p3_javascript_bridge_guard.v0",
+  "status": "FEF_P3_JAVASCRIPT_BRIDGE_GUARD_PASS",
+  "summary": {
+    "bridgeGuardStatus": "pass",
+    "claimFlagsAllFalse": true,
+    "javascriptResultCount": 5,
+    "javascriptRuntimeExecutionPassCount": 5,
+    "packagePublished": false,
+    "publicReady": false,
+    "pythonResultCount": 5,
+    "resultCount": 10,
+    "roundtripMatrixPassed": true,
+    "safeToPublishPublicly": false,
+    "targetLanguages": [
+      "python",
+      "javascript"
+    ]
+  }
+}

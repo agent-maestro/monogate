@@ -1,0 +1,8 @@
+module gaussian;
+
+fn gaussian(mu: Real, sigma: Real, x: Real) -> Real
+    where chain_order <= 1
+{
+    let dx = x - mu;
+    exp(-dx * dx / (2.0 * sigma * sigma)) / sigma
+}

@@ -1,0 +1,31 @@
+{
+  "bundle_hash_actual": "sha256:fdf7f32069ef78af2fb0f619cac38f952e420bb6f6a9f5f541fe342524228aae",
+  "bundle_hash_expected": "sha256:40275b004a13b9ef3ec6761ac2edeb5acb0a6d505f64e4f6356291e6ee009a51",
+  "checked_artifact_count": 10,
+  "claim_boundaries": [
+    "Bundle audit checks artifact bytes against the recorded SHA-256 manifest.",
+    "A passing audit does not prove semantic correctness.",
+    "A failing audit means the bundle should be regenerated or reviewed before use."
+  ],
+  "mismatch_count": 2,
+  "mismatches": [
+    {
+      "actual_bytes": 189,
+      "actual_sha256": "5a8afef99a83af917c45d895aa7129371ca60b26c82aa168ec4779aa4b03e6c2",
+      "expected_bytes": 172,
+      "expected_sha256": "5961c07b30e82aa95baf72c1af2fa78558f1474d28e24e7c06f904d423ed94e9",
+      "path": "gaussian.eml",
+      "reason": "hash_or_size_mismatch"
+    },
+    {
+      "actual_bytes": null,
+      "actual_sha256": "sha256:fdf7f32069ef78af2fb0f619cac38f952e420bb6f6a9f5f541fe342524228aae",
+      "expected_bytes": null,
+      "expected_sha256": "sha256:40275b004a13b9ef3ec6761ac2edeb5acb0a6d505f64e4f6356291e6ee009a51",
+      "path": "<bundle>",
+      "reason": "bundle_hash_mismatch"
+    }
+  ],
+  "schema": "efrog_bundle_audit_report_v0",
+  "status": "fail"
+}

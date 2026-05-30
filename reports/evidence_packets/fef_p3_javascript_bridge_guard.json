@@ -1,0 +1,74 @@
+{
+  "artifactId": "fef-p3-javascript-bridge-guard",
+  "claimBoundary": "JavaScript generated-target runtime execution guard only; no public package publication, compiler correctness, formal equivalence, runtime performance, production readiness, checkout, Verilog, Lean proof, zkproof, or silicon claim.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "nonClaims": [
+    "FEF-P3 records JavaScript runtime execution in the real eFrog bridge guard.",
+    "FEF-P3 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P3 does not publish a package or enable public checkout.",
+    "FEF-P3 does not claim runtime performance, production readiness, Verilog, Lean proofs, zkproof, or silicon output."
+  ],
+  "reviewDecision": "javascript_runtime_execution_added_to_bridge_guard",
+  "reviewHighlights": [
+    "The real eFrog bridge guard now runs Python and JavaScript hosted roundtrip targets.",
+    "Generated JavaScript modules are imported by Node and exported functions are executed on deterministic numeric inputs.",
+    "The recorded guard matrix has 10 passing results: five Python bytecode checks and five JavaScript runtime executions."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "bridgeGuardStatus": "pass",
+    "claimFlagsAllFalse": true,
+    "javascriptResultCount": 5,
+    "javascriptRuntimeExecutionPassCount": 5,
+    "packagePublished": false,
+    "publicReady": false,
+    "pythonResultCount": 5,
+    "resultCount": 10,
+    "roundtripMatrixPassed": true,
+    "safeToPublishPublicly": false,
+    "targetLanguages": [
+      "python",
+      "javascript"
+    ]
+  },
+  "semanticStrength": "bridge_guard_javascript_runtime_smoke_pass",
+  "title": "FEF-P3 JavaScript Bridge Guard",
+  "validationCommands": [
+    "python -m pytest -q tests/test_bridge_artifacts.py -k 'roundtrip_matrix or bridge_guard'",
+    "python -m efrog.cli --bridge-guard --out-dir /tmp/fef_p3_bridge_guard_probe",
+    "python python/scripts/fef_p3_javascript_bridge_guard.py --build --strict"
+  ],
+  "validationStatus": "pass"
+}

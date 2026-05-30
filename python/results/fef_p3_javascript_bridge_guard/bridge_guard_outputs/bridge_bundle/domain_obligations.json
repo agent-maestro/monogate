@@ -1,0 +1,46 @@
+{
+  "claim_boundaries": [
+    "Static obligations are candidate proof/runtime requirements, not discharged proofs.",
+    "The analyzer is conservative and may miss obligations hidden behind unsupported syntax.",
+    "Obligations become claims only after a Forge, MachLib, or runtime witness discharges them."
+  ],
+  "module_name": "gaussian",
+  "obligation_count": 3,
+  "obligations": [
+    {
+      "expression": "(exp(-dx * dx / (2.0 * sigma * sigma))) / (sigma)",
+      "function": "gaussian",
+      "kind": "nonzero_denominator",
+      "obligation_id": "obl:489211fb05396562",
+      "rationale": "Division requires a nonzero denominator.",
+      "required_predicate": "sigma != 0",
+      "route_hint": "MachLib.NonzeroDenominatorObligation",
+      "severity": "domain",
+      "status": "unresolved"
+    },
+    {
+      "expression": "exp(-dx * dx / (2.0 * sigma * sigma))",
+      "function": "gaussian",
+      "kind": "finite_exp_argument",
+      "obligation_id": "obl:e8dccccaf0d7fcb8",
+      "rationale": "Finite-precision targets may overflow for unbounded exponential inputs.",
+      "required_predicate": "-dx * dx / (2.0 * sigma * sigma) is finite and target-bounded",
+      "route_hint": "Forge.FinitePrecisionBound",
+      "severity": "stability",
+      "status": "unresolved"
+    },
+    {
+      "expression": "(-dx * dx) / (2.0 * sigma * sigma)",
+      "function": "gaussian",
+      "kind": "nonzero_denominator",
+      "obligation_id": "obl:30a94251d1985a8c",
+      "rationale": "Division requires a nonzero denominator.",
+      "required_predicate": "2.0 * sigma * sigma != 0",
+      "route_hint": "MachLib.NonzeroDenominatorObligation",
+      "severity": "domain",
+      "status": "unresolved"
+    }
+  ],
+  "schema": "efrog_domain_obligation_report_v0",
+  "unresolved_count": 3
+}
