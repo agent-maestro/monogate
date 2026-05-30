@@ -1,0 +1,157 @@
+{
+  "blockedCandidateCount": 0,
+  "candidateFoundCount": 1,
+  "caseId": "verified_add_proof_candidate_scan_v0",
+  "claimFlags": {
+    "additional_selected_lean_proof_claim": false,
+    "c_target_public_ready": false,
+    "candidate_scanner_proof_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_import_resolution_claim": false,
+    "lean_proof_claim": false,
+    "lean_structural_ready": false,
+    "lean_typecheck_claim": false,
+    "lean_typecheck_with_sorry_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "rust_target_public_ready": false,
+    "safe_to_publish_publicly": false,
+    "selected_lean_proof_public_claim": false,
+    "silicon_claim": false,
+    "target_all_ready_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "date": "2026-05-30",
+  "generatedFileSorryCount": 1,
+  "generatedTargetLanguage": "lean",
+  "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+  "machlibBuildLibExists": true,
+  "missingEvidence": [
+    "review and intentional discharge for candidate-found theorems",
+    "new MachLib lemmas or proof scripts for blocked obligations",
+    "broader proof-discharge automation policy",
+    "formal compiler correctness proof",
+    "audit of MachLib foundational axioms"
+  ],
+  "nonClaims": [
+    "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+    "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+    "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+    "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+    "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+  ],
+  "obligations": [
+    {
+      "attempts": [
+        {
+          "candidateFileSorryCount": 0,
+          "candidateId": "rfl_v0",
+          "leanCheck": {
+            "attempted": true,
+            "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/verified_add_broader_lean_typecheck_v0_1_rfl_v0.lean:22:2: error: tactic 'rfl' failed, the left-hand side\n  0\nis not definitionally equal to the right-hand side\n  add_nonneg_ a b\na b : Real\nh1 : a \u2265 0\nh2 : b \u2265 0\n\u22a2 add_nonneg_ a b \u2265 0",
+            "returnCode": 1,
+            "status": "candidate_typecheck_fail"
+          },
+          "proofBody": [
+            "  rfl"
+          ]
+        },
+        {
+          "candidateFileSorryCount": 0,
+          "candidateId": "unfold_rfl_v0",
+          "leanCheck": {
+            "attempted": true,
+            "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/verified_add_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:23:2: error: tactic 'rfl' failed, the left-hand side\n  0\nis not definitionally equal to the right-hand side\n  a + b\na b : Real\nh1 : a \u2265 0\nh2 : b \u2265 0\n\u22a2 a + b \u2265 0",
+            "returnCode": 1,
+            "status": "candidate_typecheck_fail"
+          },
+          "proofBody": [
+            "  unfold add_nonneg_",
+            "  rfl"
+          ]
+        },
+        {
+          "candidateFileSorryCount": 0,
+          "candidateId": "unfold_simp_v0",
+          "leanCheck": {
+            "attempted": true,
+            "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/verified_add_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:21:41: error: unsolved goals\na b : Real\nh1 : a \u2265 0\nh2 : b \u2265 0\n\u22a2 0 \u2264 a + b",
+            "returnCode": 1,
+            "status": "candidate_typecheck_fail"
+          },
+          "proofBody": [
+            "  unfold add_nonneg_",
+            "  simp"
+          ]
+        },
+        {
+          "candidateFileSorryCount": 0,
+          "candidateId": "unfold_add_nonneg_v0",
+          "leanCheck": {
+            "attempted": true,
+            "outputExcerpt": "",
+            "returnCode": 0,
+            "status": "candidate_typecheck_pass"
+          },
+          "proofBody": [
+            "  unfold add_nonneg_",
+            "  exact add_nonneg h1 h2"
+          ]
+        }
+      ],
+      "candidateStatus": "candidate_found",
+      "functionName": "add_nonneg_",
+      "generatedFileSorryCount": 1,
+      "generatedProofBody": [
+        "  unfold add_nonneg_",
+        "  sorry  -- TODO: prove against MachLib foundations"
+      ],
+      "selectedCandidate": {
+        "candidateFileSorryCount": 0,
+        "candidateId": "unfold_add_nonneg_v0",
+        "leanCheck": {
+          "attempted": true,
+          "outputExcerpt": "",
+          "returnCode": 0,
+          "status": "candidate_typecheck_pass"
+        },
+        "proofBody": [
+          "  unfold add_nonneg_",
+          "  exact add_nonneg h1 h2"
+        ]
+      },
+      "theoremName": "add_nonneg_is_nonneg"
+    }
+  ],
+  "packetType": "fef_p20_lean_proof_candidate_packet_v0",
+  "proofDischargePolicy": "scan_only_no_generated_source_rewrite",
+  "proofObligationCount": 1,
+  "schemaVersion": "monogate.fef_p20_lean_proof_candidate_packet.v0",
+  "sourcePath": "examples/verified_add.eml"
+}

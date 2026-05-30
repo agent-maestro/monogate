@@ -1,0 +1,1837 @@
+{
+  "artifactId": "fef-p20-lean-proof-candidate-scanner",
+  "candidatePackets": [
+    {
+      "blockedCandidateCount": 0,
+      "candidateFoundCount": 1,
+      "caseId": "verified_add_proof_candidate_scan_v0",
+      "claimFlags": {
+        "additional_selected_lean_proof_claim": false,
+        "c_target_public_ready": false,
+        "candidate_scanner_proof_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_import_resolution_claim": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "lean_typecheck_with_sorry_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "selected_lean_proof_public_claim": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "generatedFileSorryCount": 1,
+      "generatedTargetLanguage": "lean",
+      "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+      "machlibBuildLibExists": true,
+      "missingEvidence": [
+        "review and intentional discharge for candidate-found theorems",
+        "new MachLib lemmas or proof scripts for blocked obligations",
+        "broader proof-discharge automation policy",
+        "formal compiler correctness proof",
+        "audit of MachLib foundational axioms"
+      ],
+      "nonClaims": [
+        "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+        "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+        "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+        "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+        "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+      ],
+      "obligations": [
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/verified_add_broader_lean_typecheck_v0_1_rfl_v0.lean:22:2: error: tactic 'rfl' failed, the left-hand side\n  0\nis not definitionally equal to the right-hand side\n  add_nonneg_ a b\na b : Real\nh1 : a \u2265 0\nh2 : b \u2265 0\n\u22a2 add_nonneg_ a b \u2265 0",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/verified_add_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:23:2: error: tactic 'rfl' failed, the left-hand side\n  0\nis not definitionally equal to the right-hand side\n  a + b\na b : Real\nh1 : a \u2265 0\nh2 : b \u2265 0\n\u22a2 a + b \u2265 0",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold add_nonneg_",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/verified_add_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:21:41: error: unsolved goals\na b : Real\nh1 : a \u2265 0\nh2 : b \u2265 0\n\u22a2 0 \u2264 a + b",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold add_nonneg_",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold add_nonneg_",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "candidate_found",
+          "functionName": "add_nonneg_",
+          "generatedFileSorryCount": 1,
+          "generatedProofBody": [
+            "  unfold add_nonneg_",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": {
+            "candidateFileSorryCount": 0,
+            "candidateId": "unfold_add_nonneg_v0",
+            "leanCheck": {
+              "attempted": true,
+              "outputExcerpt": "",
+              "returnCode": 0,
+              "status": "candidate_typecheck_pass"
+            },
+            "proofBody": [
+              "  unfold add_nonneg_",
+              "  exact add_nonneg h1 h2"
+            ]
+          },
+          "theoremName": "add_nonneg_is_nonneg"
+        }
+      ],
+      "packetType": "fef_p20_lean_proof_candidate_packet_v0",
+      "proofDischargePolicy": "scan_only_no_generated_source_rewrite",
+      "proofObligationCount": 1,
+      "schemaVersion": "monogate.fef_p20_lean_proof_candidate_packet.v0",
+      "sourcePath": "examples/verified_add.eml"
+    },
+    {
+      "blockedCandidateCount": 1,
+      "candidateFoundCount": 0,
+      "caseId": "clamp_bounded_proof_candidate_scan_v0",
+      "claimFlags": {
+        "additional_selected_lean_proof_claim": false,
+        "c_target_public_ready": false,
+        "candidate_scanner_proof_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_import_resolution_claim": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "lean_typecheck_with_sorry_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "selected_lean_proof_public_claim": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "generatedFileSorryCount": 1,
+      "generatedTargetLanguage": "lean",
+      "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+      "machlibBuildLibExists": true,
+      "missingEvidence": [
+        "review and intentional discharge for candidate-found theorems",
+        "new MachLib lemmas or proof scripts for blocked obligations",
+        "broader proof-discharge automation policy",
+        "formal compiler correctness proof",
+        "audit of MachLib foundational axioms"
+      ],
+      "nonClaims": [
+        "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+        "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+        "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+        "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+        "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+      ],
+      "obligations": [
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/clamp_bounded_broader_lean_typecheck_v0_1_rfl_v0.lean:23:2: error: tactic 'rfl' failed, the left-hand side\n  LO\nis not definitionally equal to the right-hand side\n  clamp_unit x\nx : Real\n\u22a2 clamp_unit x \u2265 LO",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/clamp_bounded_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:24:2: error: tactic 'rfl' failed, the left-hand side\n  LO\nis not definitionally equal to the right-hand side\n  (x.max LO).min HI\nx : Real\n\u22a2 (x.max LO).min HI \u2265 LO",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold clamp_unit",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/clamp_bounded_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:22:30: error: unsolved goals\nx : Real\n\u22a2 LO \u2264 (x.max LO).min HI",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold clamp_unit",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/clamp_bounded_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:24:19: error: unknown identifier 'h1'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/clamp_bounded_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:24:22: error: unknown identifier 'h2'",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold clamp_unit",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "blocked_no_candidate_passed",
+          "functionName": "clamp_unit",
+          "generatedFileSorryCount": 1,
+          "generatedProofBody": [
+            "  unfold clamp_unit",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": null,
+          "theoremName": "clamp_in_unit_interval"
+        }
+      ],
+      "packetType": "fef_p20_lean_proof_candidate_packet_v0",
+      "proofDischargePolicy": "scan_only_no_generated_source_rewrite",
+      "proofObligationCount": 1,
+      "schemaVersion": "monogate.fef_p20_lean_proof_candidate_packet.v0",
+      "sourcePath": "examples/clamp_bounded.eml"
+    },
+    {
+      "blockedCandidateCount": 1,
+      "candidateFoundCount": 2,
+      "caseId": "voltage_divider_proof_candidate_scan_v0",
+      "claimFlags": {
+        "additional_selected_lean_proof_claim": false,
+        "c_target_public_ready": false,
+        "candidate_scanner_proof_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_import_resolution_claim": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "lean_typecheck_with_sorry_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "selected_lean_proof_public_claim": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "generatedFileSorryCount": 3,
+      "generatedTargetLanguage": "lean",
+      "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+      "machlibBuildLibExists": true,
+      "missingEvidence": [
+        "review and intentional discharge for candidate-found theorems",
+        "new MachLib lemmas or proof scripts for blocked obligations",
+        "broader proof-discharge automation policy",
+        "formal compiler correctness proof",
+        "audit of MachLib foundational axioms"
+      ],
+      "nonClaims": [
+        "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+        "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+        "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+        "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+        "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+      ],
+      "obligations": [
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_rfl_v0.lean:21:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_rfl_v0.lean:22:5: warning: unused variable `h2`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_rfl_v0.lean:31:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_rfl_v0.lean:43:8: warning: declaration uses 's",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:21:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:22:5: warning: unused variable `h2`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:44:8: ",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_divider",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:21:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:22:5: warning: unused variable `h2`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:44",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_divider",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:25:22: error: application type mismatch\n  add_nonneg ?m.281 h2\nargument\n  h2\nhas type\n  r2 > 0 : Prop\nbut is expected to have type\n  0 \u2264 ?m.265 : Prop\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:44:8: warning: declaration uses 'sorry'",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold vout_divider",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "candidate_found",
+          "functionName": "vout_divider",
+          "generatedFileSorryCount": 3,
+          "generatedProofBody": [
+            "  unfold vout_divider",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": {
+            "candidateFileSorryCount": 2,
+            "candidateId": "rfl_v0",
+            "leanCheck": {
+              "attempted": true,
+              "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_rfl_v0.lean:21:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_rfl_v0.lean:22:5: warning: unused variable `h2`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_rfl_v0.lean:31:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_1_rfl_v0.lean:43:8: warning: declaration uses 's",
+              "returnCode": 0,
+              "status": "candidate_typecheck_pass"
+            },
+            "proofBody": [
+              "  rfl"
+            ]
+          },
+          "theoremName": "voltage_divider_law"
+        },
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_rfl_v0.lean:36:2: error: tactic 'rfl' failed, the left-hand side\n  0\nis not definitionally equal to the right-hand side\n  rsum r1 r2\nr1 r2 : Real\nh1 : r1 > 0\nh2 : r2 > 0\n\u22a2 rsum r1 r2 > 0\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_rfl_v0.lean:43:8: warning: declaration uses 'sorry'",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:37:2: error: tactic 'rfl' failed, the left-hand side\n  0\nis not definitionally equal to the right-hand side\n  r1 + r2\nr1 r2 : Real\nh1 : r1 > 0\nh2 : r2 > 0\n\u22a2 r1 + r2 > 0\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:44:8: warning: declaration uses 'sorry'",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold rsum",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:35:35: error: unsolved goals\nr1 r2 : Real\nh1 : r1 > 0\nh2 : r2 > 0\n\u22a2 0 < r1 + r2\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:44:8: warning: declaration uses 'sorry'",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold rsum",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:37:22: error: application type mismatch\n  add_nonneg ?m.376 h2\nargument\n  h2\nhas type\n  r2 > 0 : Prop\nbut is expected to have type\n  0 \u2264 ?m.360 : Prop\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:44:8: warning: declaration uses 'sorry'",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold rsum",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "blocked_no_candidate_passed",
+          "functionName": "rsum",
+          "generatedFileSorryCount": 3,
+          "generatedProofBody": [
+            "  unfold rsum",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": null,
+          "theoremName": "voltage_divider_denom_pos"
+        },
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_rfl_v0.lean:45:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_rfl_v0.lean:45:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_symmetric",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_simp_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_simp_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_simp_v0.lean:45:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_symmetric",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 2,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_add_nonneg_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_add_nonneg_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_add_nonneg_v0.lean:48:22: error: unknown identifier 'h2'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_unfold_add_nonneg_v0.lean:48:19: error: application type mismatch\n  add_nonneg h1\nargument\n  h1\nhas type\n  r > 0 : Prop\nbut is expected to have type\n  0 \u2264 ?m.60",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold vout_symmetric",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "candidate_found",
+          "functionName": "vout_symmetric",
+          "generatedFileSorryCount": 3,
+          "generatedProofBody": [
+            "  unfold vout_symmetric",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": {
+            "candidateFileSorryCount": 2,
+            "candidateId": "rfl_v0",
+            "leanCheck": {
+              "attempted": true,
+              "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/voltage_divider_broader_lean_typecheck_v0_3_rfl_v0.lean:45:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`",
+              "returnCode": 0,
+              "status": "candidate_typecheck_pass"
+            },
+            "proofBody": [
+              "  rfl"
+            ]
+          },
+          "theoremName": "voltage_divider_symmetric_half"
+        }
+      ],
+      "packetType": "fef_p20_lean_proof_candidate_packet_v0",
+      "proofDischargePolicy": "scan_only_no_generated_source_rewrite",
+      "proofObligationCount": 3,
+      "schemaVersion": "monogate.fef_p20_lean_proof_candidate_packet.v0",
+      "sourcePath": "examples/voltage_divider.eml"
+    },
+    {
+      "blockedCandidateCount": 1,
+      "candidateFoundCount": 0,
+      "caseId": "pid_controller_proof_candidate_scan_v0",
+      "claimFlags": {
+        "additional_selected_lean_proof_claim": false,
+        "c_target_public_ready": false,
+        "candidate_scanner_proof_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_import_resolution_claim": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "lean_typecheck_with_sorry_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "selected_lean_proof_public_claim": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "generatedFileSorryCount": 1,
+      "generatedTargetLanguage": "lean",
+      "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+      "machlibBuildLibExists": true,
+      "missingEvidence": [
+        "review and intentional discharge for candidate-found theorems",
+        "new MachLib lemmas or proof scripts for blocked obligations",
+        "broader proof-discharge automation policy",
+        "formal compiler correctness proof",
+        "audit of MachLib foundational axioms"
+      ],
+      "nonClaims": [
+        "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+        "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+        "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+        "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+        "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+      ],
+      "obligations": [
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/pid_controller_broader_lean_typecheck_v0_1_rfl_v0.lean:29:2: error: tactic 'rfl' failed, the left-hand side\n  OUT_MIN\nis not definitionally equal to the right-hand side\n  pid error integral derivative\nerror integral derivative : Real\nh_error : -100.0 \u2264 error \u2227 error \u2264 100.0\nh_integral : -100.0 \u2264 integral \u2227 integral \u2264 100.0\nh_derivative : -100.0 \u2264 derivative \u2227 derivative \u2264 100.0\n\u22a2 pid error integral derivative \u2265 OUT_MIN",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/pid_controller_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:30:2: error: tactic 'rfl' failed, the left-hand side\n  OUT_MIN\nis not definitionally equal to the right-hand side\n  ((Kp * error + Ki * integral + Kd * derivative).max OUT_MIN).min OUT_MAX\nerror integral derivative : Real\nh_error : -100.0 \u2264 error \u2227 error \u2264 100.0\nh_integral : -100.0 \u2264 integral \u2227 integral \u2264 100.0\nh_derivative : -100.0 \u2264 derivative \u2227 derivative \u2264 100.0\n\u22a2 ((Kp * error + Ki * integral + Kd * derivative).max OUT_MIN).min OUT_MAX \u2265 OUT_MIN",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold pid",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/pid_controller_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:28:52: error: unsolved goals\nerror integral derivative : Real\nh_error : -100.0 \u2264 error \u2227 error \u2264 100.0\nh_integral : -100.0 \u2264 integral \u2227 integral \u2264 100.0\nh_derivative : -100.0 \u2264 derivative \u2227 derivative \u2264 100.0\n\u22a2 OUT_MIN \u2264 ((Kp * error + Ki * integral + Kd * derivative).max OUT_MIN).min OUT_MAX",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold pid",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/pid_controller_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:30:19: error: unknown identifier 'h1'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/pid_controller_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:30:22: error: unknown identifier 'h2'",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold pid",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "blocked_no_candidate_passed",
+          "functionName": "pid",
+          "generatedFileSorryCount": 1,
+          "generatedProofBody": [
+            "  unfold pid",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": null,
+          "theoremName": "pid_output_clamped"
+        }
+      ],
+      "packetType": "fef_p20_lean_proof_candidate_packet_v0",
+      "proofDischargePolicy": "scan_only_no_generated_source_rewrite",
+      "proofObligationCount": 1,
+      "schemaVersion": "monogate.fef_p20_lean_proof_candidate_packet.v0",
+      "sourcePath": "examples/pid_controller.eml"
+    },
+    {
+      "blockedCandidateCount": 1,
+      "candidateFoundCount": 4,
+      "caseId": "rc_filter_proof_candidate_scan_v0",
+      "claimFlags": {
+        "additional_selected_lean_proof_claim": false,
+        "c_target_public_ready": false,
+        "candidate_scanner_proof_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_import_resolution_claim": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "lean_typecheck_with_sorry_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "selected_lean_proof_public_claim": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "generatedFileSorryCount": 5,
+      "generatedTargetLanguage": "lean",
+      "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+      "machlibBuildLibExists": true,
+      "missingEvidence": [
+        "review and intentional discharge for candidate-found theorems",
+        "new MachLib lemmas or proof scripts for blocked obligations",
+        "broader proof-discharge automation policy",
+        "formal compiler correctness proof",
+        "audit of MachLib foundational axioms"
+      ],
+      "nonClaims": [
+        "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+        "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+        "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+        "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+        "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+      ],
+      "obligations": [
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_rfl_v0.lean:21:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_rfl_v0.lean:22:5: warning: unused variable `h2`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_rfl_v0.lean:31:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_rfl_v0.lean:41:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:21:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:22:5: warning: unused variable `h2`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:42:8: warning: declaration use",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold tau",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:21:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:22:5: warning: unused variable `h2`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:42:8: warning: declaration",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold tau",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:25:22: error: application type mismatch\n  add_nonneg ?m.137 h2\nargument\n  h2\nhas type\n  c > 0 : Prop\nbut is expected to have type\n  0 \u2264 ?m.121 : Prop\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:52:8: warning: declaration uses 'sorry'\n/tmp/f",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold tau",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "candidate_found",
+          "functionName": "tau",
+          "generatedFileSorryCount": 5,
+          "generatedProofBody": [
+            "  unfold tau",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": {
+            "candidateFileSorryCount": 4,
+            "candidateId": "rfl_v0",
+            "leanCheck": {
+              "attempted": true,
+              "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_rfl_v0.lean:21:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_rfl_v0.lean:22:5: warning: unused variable `h2`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_rfl_v0.lean:31:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_1_rfl_v0.lean:41:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_",
+              "returnCode": 0,
+              "status": "candidate_typecheck_pass"
+            },
+            "proofBody": [
+              "  rfl"
+            ]
+          },
+          "theoremName": "rc_time_constant_def"
+        },
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_rfl_v0.lean:41:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_rfl_v0.lean:51:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_rfl_v0.lean:62:8: warning: declaration uses 'sorry'",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:52:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:63:8: warning: declaration uses 'sorry'",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_steady",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:52:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:63:8: warning: declaration uses 'sorry'",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_steady",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:35:19: error: unknown identifier 'h1'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:35:22: error: unknown identifier 'h2'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:52:8: warning:",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold vout_steady",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "candidate_found",
+          "functionName": "vout_steady",
+          "generatedFileSorryCount": 5,
+          "generatedProofBody": [
+            "  unfold vout_steady",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": {
+            "candidateFileSorryCount": 4,
+            "candidateId": "rfl_v0",
+            "leanCheck": {
+              "attempted": true,
+              "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_rfl_v0.lean:41:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_rfl_v0.lean:51:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_2_rfl_v0.lean:62:8: warning: declaration uses 'sorry'",
+              "returnCode": 0,
+              "status": "candidate_typecheck_pass"
+            },
+            "proofBody": [
+              "  rfl"
+            ]
+          },
+          "theoremName": "rc_steady_state_equals_input"
+        },
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_rfl_v0.lean:51:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_rfl_v0.lean:62:8: warning: declaration uses 'sorry'",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_rfl_v0.lean:52:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_rfl_v0.lean:63:8: warning: declaration uses 'sorry'",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_initial",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_simp_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_simp_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_simp_v0.lean:52:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_simp_v0.lean:63:8: warning: declaration uses 'sorry'",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_initial",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_add_nonneg_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_add_nonneg_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_add_nonneg_v0.lean:45:19: error: unknown identifier 'h1'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_add_nonneg_v0.lean:45:22: error: unknown identifier 'h2'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_unfold_add_nonneg_v0.lean:52:8: warning:",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold vout_initial",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "candidate_found",
+          "functionName": "vout_initial",
+          "generatedFileSorryCount": 5,
+          "generatedProofBody": [
+            "  unfold vout_initial",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": {
+            "candidateFileSorryCount": 4,
+            "candidateId": "rfl_v0",
+            "leanCheck": {
+              "attempted": true,
+              "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_rfl_v0.lean:51:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_3_rfl_v0.lean:62:8: warning: declaration uses 'sorry'",
+              "returnCode": 0,
+              "status": "candidate_typecheck_pass"
+            },
+            "proofBody": [
+              "  rfl"
+            ]
+          },
+          "theoremName": "rc_initial_output_zero"
+        },
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:53:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:62:",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_rfl_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_rfl_v0.lean:53:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_ty",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_charging",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_simp_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_simp_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_simp_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_simp_v0.lean:53:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lea",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold vout_charging",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_add_nonneg_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_add_nonneg_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_add_nonneg_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_add_nonneg_v0.lean:56:22: error: unknown identifier 'h2'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_unfold_add_nonneg_v0.lean:56:19: error",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold vout_charging",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "candidate_found",
+          "functionName": "vout_charging",
+          "generatedFileSorryCount": 5,
+          "generatedProofBody": [
+            "  unfold vout_charging",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": {
+            "candidateFileSorryCount": 4,
+            "candidateId": "rfl_v0",
+            "leanCheck": {
+              "attempted": true,
+              "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:53:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_4_rfl_v0.lean:62:",
+              "returnCode": 0,
+              "status": "candidate_typecheck_pass"
+            },
+            "proofBody": [
+              "  rfl"
+            ]
+          },
+          "theoremName": "rc_step_response_form"
+        },
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_rfl_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_rfl_v0.lean:52:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_rfl_v0.lean:66:2: error: tactic 'rfl' failed, the left-hand side\n  vout_charging_at_zero vin",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_rfl_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_rfl_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_rfl_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_rfl_v0.lean:52:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_rfl_v0.lean:67:2: error: tactic 'rfl' failed, the left-ha",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold vout_charging_at_zero",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_simp_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_simp_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_simp_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_simp_v0.lean:52:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_simp_v0.lean:67:2: error: simp made no progress",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold vout_charging_at_zero",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 4,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_add_nonneg_v0.lean:20:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_add_nonneg_v0.lean:32:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_add_nonneg_v0.lean:42:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_add_nonneg_v0.lean:52:8: warning: declaration uses 'sorry'\n/tmp/fef_p20_lean_candidate_scan_cowyatak/rc_filter_broader_lean_typecheck_v0_5_unfold_add_nonneg_v0.lean:67:22: err",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold vout_charging_at_zero",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "blocked_no_candidate_passed",
+          "functionName": "vout_charging_at_zero",
+          "generatedFileSorryCount": 5,
+          "generatedProofBody": [
+            "  unfold vout_charging_at_zero",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": null,
+          "theoremName": "rc_step_response_at_zero"
+        }
+      ],
+      "packetType": "fef_p20_lean_proof_candidate_packet_v0",
+      "proofDischargePolicy": "scan_only_no_generated_source_rewrite",
+      "proofObligationCount": 5,
+      "schemaVersion": "monogate.fef_p20_lean_proof_candidate_packet.v0",
+      "sourcePath": "examples/rc_filter.eml"
+    },
+    {
+      "blockedCandidateCount": 1,
+      "candidateFoundCount": 0,
+      "caseId": "sine_oscillator_proof_candidate_scan_v0",
+      "claimFlags": {
+        "additional_selected_lean_proof_claim": false,
+        "c_target_public_ready": false,
+        "candidate_scanner_proof_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_import_resolution_claim": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "lean_typecheck_with_sorry_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "selected_lean_proof_public_claim": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "generatedFileSorryCount": 1,
+      "generatedTargetLanguage": "lean",
+      "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+      "machlibBuildLibExists": true,
+      "missingEvidence": [
+        "review and intentional discharge for candidate-found theorems",
+        "new MachLib lemmas or proof scripts for blocked obligations",
+        "broader proof-discharge automation policy",
+        "formal compiler correctness proof",
+        "audit of MachLib foundational axioms"
+      ],
+      "nonClaims": [
+        "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+        "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+        "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+        "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+        "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+      ],
+      "obligations": [
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/sine_oscillator_broader_lean_typecheck_v0_1_rfl_v0.lean:25:2: error: tactic 'rfl' failed, the left-hand side\n  (oscillate amplitude omega t).abs\nis not definitionally equal to the right-hand side\n  amplitude\namplitude omega t : Real\nh1 : amplitude \u2265 0\nh2 : amplitude \u2264 1\nh3 : omega \u2265 0\nh4 : omega \u2264 10000.0\nh5 : t \u2265 0\n\u22a2 (oscillate amplitude omega t).abs \u2264 amplitude",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/sine_oscillator_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:26:2: error: tactic 'rfl' failed, the left-hand side\n  (amplitude * (omega * t).sin).abs\nis not definitionally equal to the right-hand side\n  amplitude\namplitude omega t : Real\nh1 : amplitude \u2265 0\nh2 : amplitude \u2264 1\nh3 : omega \u2265 0\nh4 : omega \u2264 10000.0\nh5 : t \u2265 0\n\u22a2 (amplitude * (omega * t).sin).abs \u2264 amplitude",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold oscillate",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/sine_oscillator_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:26:2: error: simp made no progress",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold oscillate",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/sine_oscillator_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:26:22: error: application type mismatch\n  add_nonneg h1 h2\nargument\n  h2\nhas type\n  amplitude \u2264 1 : Prop\nbut is expected to have type\n  0 \u2264 ?m.157 : Prop",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold oscillate",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "blocked_no_candidate_passed",
+          "functionName": "oscillate",
+          "generatedFileSorryCount": 1,
+          "generatedProofBody": [
+            "  unfold oscillate",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": null,
+          "theoremName": "sine_oscillator_amplitude_bound"
+        }
+      ],
+      "packetType": "fef_p20_lean_proof_candidate_packet_v0",
+      "proofDischargePolicy": "scan_only_no_generated_source_rewrite",
+      "proofObligationCount": 1,
+      "schemaVersion": "monogate.fef_p20_lean_proof_candidate_packet.v0",
+      "sourcePath": "examples/sine_oscillator.eml"
+    },
+    {
+      "blockedCandidateCount": 1,
+      "candidateFoundCount": 0,
+      "caseId": "smoothstep_proof_candidate_scan_v0",
+      "claimFlags": {
+        "additional_selected_lean_proof_claim": false,
+        "c_target_public_ready": false,
+        "candidate_scanner_proof_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_import_resolution_claim": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "lean_typecheck_with_sorry_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "selected_lean_proof_public_claim": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "generatedFileSorryCount": 1,
+      "generatedTargetLanguage": "lean",
+      "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+      "machlibBuildLibExists": true,
+      "missingEvidence": [
+        "review and intentional discharge for candidate-found theorems",
+        "new MachLib lemmas or proof scripts for blocked obligations",
+        "broader proof-discharge automation policy",
+        "formal compiler correctness proof",
+        "audit of MachLib foundational axioms"
+      ],
+      "nonClaims": [
+        "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+        "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+        "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+        "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+        "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+      ],
+      "obligations": [
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/smoothstep_broader_lean_typecheck_v0_1_rfl_v0.lean:25:2: error: tactic 'rfl' failed, the left-hand side\n  ZERO\nis not definitionally equal to the right-hand side\n  smoothstep t\nt : Real\nh1 : t \u2265 ZERO\nh2 : t \u2264 ONE\n\u22a2 smoothstep t \u2265 ZERO",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/smoothstep_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:26:2: error: tactic 'rfl' failed, the left-hand side\n  ZERO\nis not definitionally equal to the right-hand side\n  t * t * (3.0 - 2.0 * t)\nt : Real\nh1 : t \u2265 ZERO\nh2 : t \u2264 ONE\n\u22a2 t * t * (3.0 - 2.0 * t) \u2265 ZERO",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold smoothstep",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/smoothstep_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:24:32: error: unsolved goals\nt : Real\nh1 : t \u2265 ZERO\nh2 : t \u2264 ONE\n\u22a2 ZERO \u2264 t * t * (3.0 - 2.0 * t)",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold smoothstep",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 0,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/smoothstep_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:26:22: error: application type mismatch\n  add_nonneg h1 h2\nargument\n  h2\nhas type\n  t \u2264 ONE : Prop\nbut is expected to have type\n  0 \u2264 ?m.175 : Prop",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold smoothstep",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "blocked_no_candidate_passed",
+          "functionName": "smoothstep",
+          "generatedFileSorryCount": 1,
+          "generatedProofBody": [
+            "  unfold smoothstep",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": null,
+          "theoremName": "smoothstep_in_unit_interval"
+        }
+      ],
+      "packetType": "fef_p20_lean_proof_candidate_packet_v0",
+      "proofDischargePolicy": "scan_only_no_generated_source_rewrite",
+      "proofObligationCount": 1,
+      "schemaVersion": "monogate.fef_p20_lean_proof_candidate_packet.v0",
+      "sourcePath": "examples/smoothstep.eml"
+    },
+    {
+      "blockedCandidateCount": 1,
+      "candidateFoundCount": 1,
+      "caseId": "mosfet_iv_proof_candidate_scan_v0",
+      "claimFlags": {
+        "additional_selected_lean_proof_claim": false,
+        "c_target_public_ready": false,
+        "candidate_scanner_proof_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_import_resolution_claim": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "lean_typecheck_with_sorry_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "selected_lean_proof_public_claim": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "generatedFileSorryCount": 2,
+      "generatedTargetLanguage": "lean",
+      "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+      "machlibBuildLibExists": true,
+      "missingEvidence": [
+        "review and intentional discharge for candidate-found theorems",
+        "new MachLib lemmas or proof scripts for blocked obligations",
+        "broader proof-discharge automation policy",
+        "formal compiler correctness proof",
+        "audit of MachLib foundational axioms"
+      ],
+      "nonClaims": [
+        "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+        "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+        "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+        "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+        "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+      ],
+      "obligations": [
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 1,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_rfl_v0.lean:22:35: warning: unused variable `mu`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_rfl_v0.lean:22:47: warning: unused variable `c_ox`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_rfl_v0.lean:22:61: warning: unused variable `w_over_l`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_le",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 1,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:22:35: warning: unused variable `mu`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:22:47: warning: unused variable `c_ox`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_unfold_rfl_v0.lean:22:61: warning: unused variable `w_over_l`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold id_at_threshold",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 1,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:22:35: warning: unused variable `mu`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:22:47: warning: unused variable `c_ox`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_unfold_simp_v0.lean:22:61: warning: unused variable `w_over_l`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowya",
+                "returnCode": 0,
+                "status": "candidate_typecheck_pass"
+              },
+              "proofBody": [
+                "  unfold id_at_threshold",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 1,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:22:35: warning: unused variable `mu`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:22:47: warning: unused variable `c_ox`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_unfold_add_nonneg_v0.lean:22:61: warning: unused variable `w_over_l`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_ca",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold id_at_threshold",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "candidate_found",
+          "functionName": "id_at_threshold",
+          "generatedFileSorryCount": 2,
+          "generatedProofBody": [
+            "  unfold id_at_threshold",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": {
+            "candidateFileSorryCount": 1,
+            "candidateId": "rfl_v0",
+            "leanCheck": {
+              "attempted": true,
+              "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_rfl_v0.lean:22:35: warning: unused variable `mu`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_rfl_v0.lean:22:47: warning: unused variable `c_ox`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_1_rfl_v0.lean:22:61: warning: unused variable `w_over_l`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_le",
+              "returnCode": 0,
+              "status": "candidate_typecheck_pass"
+            },
+            "proofBody": [
+              "  rfl"
+            ]
+          },
+          "theoremName": "mosfet_zero_overdrive_zero_current"
+        },
+        {
+          "attempts": [
+            {
+              "candidateFileSorryCount": 1,
+              "candidateId": "rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_rfl_v0.lean:22:35: warning: unused variable `mu`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_rfl_v0.lean:22:47: warning: unused variable `c_ox`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_rfl_v0.lean:22:61: warning: unused variable `w_over_l`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_le",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 1,
+              "candidateId": "unfold_rfl_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:22:35: warning: unused variable `mu`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:22:47: warning: unused variable `c_ox`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_unfold_rfl_v0.lean:22:61: warning: unused variable `w_over_l`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold id_prefactor",
+                "  rfl"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 1,
+              "candidateId": "unfold_simp_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:22:35: warning: unused variable `mu`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:22:47: warning: unused variable `c_ox`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_unfold_simp_v0.lean:22:61: warning: unused variable `w_over_l`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowya",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold id_prefactor",
+                "  simp"
+              ]
+            },
+            {
+              "candidateFileSorryCount": 1,
+              "candidateId": "unfold_add_nonneg_v0",
+              "leanCheck": {
+                "attempted": true,
+                "outputExcerpt": "/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:22:35: warning: unused variable `mu`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:22:47: warning: unused variable `c_ox`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_candidate_scan_cowyatak/mosfet_iv_broader_lean_typecheck_v0_2_unfold_add_nonneg_v0.lean:22:61: warning: unused variable `w_over_l`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p20_lean_ca",
+                "returnCode": 1,
+                "status": "candidate_typecheck_fail"
+              },
+              "proofBody": [
+                "  unfold id_prefactor",
+                "  exact add_nonneg h1 h2"
+              ]
+            }
+          ],
+          "candidateStatus": "blocked_no_candidate_passed",
+          "functionName": "id_prefactor",
+          "generatedFileSorryCount": 2,
+          "generatedProofBody": [
+            "  unfold id_prefactor",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "selectedCandidate": null,
+          "theoremName": "mosfet_prefactor_positive"
+        }
+      ],
+      "packetType": "fef_p20_lean_proof_candidate_packet_v0",
+      "proofDischargePolicy": "scan_only_no_generated_source_rewrite",
+      "proofObligationCount": 2,
+      "schemaVersion": "monogate.fef_p20_lean_proof_candidate_packet.v0",
+      "sourcePath": "examples/carriers/electronics/mosfet_iv.eml"
+    }
+  ],
+  "claimFlags": {
+    "additional_selected_lean_proof_claim": false,
+    "c_target_public_ready": false,
+    "candidate_scanner_proof_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_import_resolution_claim": false,
+    "lean_proof_claim": false,
+    "lean_structural_ready": false,
+    "lean_typecheck_claim": false,
+    "lean_typecheck_with_sorry_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "rust_target_public_ready": false,
+    "safe_to_publish_publicly": false,
+    "selected_lean_proof_public_claim": false,
+    "silicon_claim": false,
+    "target_all_ready_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "date": "2026-05-30",
+  "decision": "selected_lean_proof_candidate_scan_recorded",
+  "fefP19Link": {
+    "path": "reports/evidence_packets/fef_p19_additional_lean_proof_discharge.json",
+    "reviewDecision": "one_additional_selected_generated_lean_theorem_typechecks_with_remaining_sorry_visible"
+  },
+  "nextMilestones": [
+    "Review candidate-found obligations before adding additional discharge packets.",
+    "For blocked obligations, add targeted MachLib lemmas or keep the blockers visible.",
+    "Keep broad Lean proof-readiness and compiler-correctness claims blocked."
+  ],
+  "nonClaims": [
+    "FEF-P20 scans selected generated Lean proof obligations for small no-sorry candidate proof bodies.",
+    "FEF-P20 reports candidate closure and blockers; it does not automatically discharge the generated source artifacts.",
+    "FEF-P20 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+    "FEF-P20 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P20 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P20 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+    "FEF-P20 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+  ],
+  "releaseGates": [
+    {
+      "id": "selected_candidate_scan_completed",
+      "status": "pass"
+    },
+    {
+      "id": "candidate_found_theorems_reviewed_and_discharged",
+      "status": "blocked"
+    },
+    {
+      "id": "blocked_obligations_have_machlib_proofs",
+      "status": "blocked"
+    },
+    {
+      "id": "machlib_foundational_audit",
+      "status": "blocked"
+    },
+    {
+      "id": "public_package_published",
+      "status": "blocked"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p20_lean_proof_candidate_scanner.v0",
+  "status": "FEF_P20_LEAN_PROOF_CANDIDATE_SCANNER_PASS",
+  "summary": {
+    "blockedCandidateCount": 7,
+    "candidateCoverageRatio": 0.5333333333333333,
+    "candidateFoundCount": 8,
+    "candidateScannerProofClaim": false,
+    "caseCount": 8,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "formalEquivalenceClaim": false,
+    "generatedFileSorryCount": 15,
+    "leanProofClaim": false,
+    "machlibBuildLibExists": true,
+    "packagePublished": false,
+    "packetCount": 8,
+    "proofObligationCount": 15,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "targetAllReadyClaim": false
+  }
+}
