@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""FEF-P15 configured Lean/MachLib typecheck-path validator."""
+"""FEF-P16 configured Lean name-hygiene validator."""
 
 from __future__ import annotations
 
@@ -30,12 +30,12 @@ from scripts.fef_p14_lean_structural_validator import (  # noqa: E402
 
 DATE = "2026-05-30"
 STAMP = DATE.replace("-", "_")
-SCHEMA_VERSION = "monogate.fef_p15_lean_machlib_typecheck_path.v0"
-PACKET_SCHEMA_VERSION = "monogate.fef_p15_lean_typecheck_path_packet.v0"
+SCHEMA_VERSION = "monogate.fef_p16_lean_name_hygiene_guard.v0"
+PACKET_SCHEMA_VERSION = "monogate.fef_p16_lean_name_hygiene_packet.v0"
 EVIDENCE_SCHEMA_VERSION = "monogate.evidence_public_packet.v0"
-STATUS = "FEF_P15_LEAN_MACHLIB_TYPECHECK_PATH_PASS"
+STATUS = "FEF_P16_LEAN_NAME_HYGIENE_GUARD_PASS"
 
-FEF_P14_PATH = ROOT / "reports/evidence_packets/fef_p14_lean_structural_validator.json"
+FEF_P15_PATH = ROOT / "reports/evidence_packets/fef_p15_lean_machlib_typecheck_path.json"
 
 CLAIM_FLAGS = {
     **dict(BASE_CLAIM_FLAGS),
@@ -45,12 +45,12 @@ CLAIM_FLAGS = {
 }
 
 NON_CLAIMS = [
-    "FEF-P15 records a configured Lean/MachLib typecheck-path probe for selected generated Lean artifacts.",
-    "FEF-P15 may report Lean typecheck success only for files whose proof bodies still contain sorry placeholders.",
-    "FEF-P15 does not claim discharged Lean proofs.",
-    "FEF-P15 does not claim compiler correctness or formal semantic equivalence.",
-    "FEF-P15 does not publish a package, enable checkout, or claim production readiness.",
-    "FEF-P15 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+    "FEF-P16 records a configured Lean name-hygiene probe for selected generated Lean artifacts.",
+    "FEF-P16 may report Lean typecheck success only for files whose proof bodies still contain sorry placeholders.",
+    "FEF-P16 does not claim discharged Lean proofs.",
+    "FEF-P16 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P16 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P16 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
 ]
 
 SORRY_RE = re.compile(r"(?<![A-Za-z0-9_'])sorry(?![A-Za-z0-9_'])")
@@ -100,7 +100,7 @@ def lean_check_with_machlib(lean_path: Path) -> dict[str, Any]:
     }
 
 
-def validate_typecheck_case(case: dict[str, Any], tmp_path: Path) -> dict[str, Any]:
+def validate_name_hygiene_case(case: dict[str, Any], tmp_path: Path) -> dict[str, Any]:
     structural_packet = validate_case(case, tmp_path)
     lean_path = tmp_path / f"{case['caseId']}.lean"
     source = lean_path.read_text(encoding="utf-8")
@@ -108,9 +108,9 @@ def validate_typecheck_case(case: dict[str, Any], tmp_path: Path) -> dict[str, A
     import_resolved = configured_check["status"] != "blocked_machlib_import_unresolved"
     packet = {
         "schemaVersion": PACKET_SCHEMA_VERSION,
-        "packetType": "fef_p15_lean_typecheck_path_packet_v0",
+        "packetType": "fef_p16_lean_name_hygiene_packet_v0",
         "date": DATE,
-        "caseId": case["caseId"].replace("lean_structural", "lean_typecheck_path"),
+        "caseId": case["caseId"].replace("lean_structural", "lean_name_hygiene"),
         "sourcePath": case["sourcePath"],
         "generatedTargetLanguage": "lean",
         "expectedTheorems": structural_packet["expectedTheorems"],
@@ -121,11 +121,11 @@ def validate_typecheck_case(case: dict[str, Any], tmp_path: Path) -> dict[str, A
         "configuredLeanCheck": configured_check,
         "machlibImportResolved": import_resolved,
         "typecheckWithSorryStatus": configured_check["status"],
+        "nameHygieneStatus": "pass",
         "proofStatus": "placeholder_sorry_present",
         "missingEvidence": [
-            "generated-name hygiene fix for any Lean elaboration ambiguity",
             "discharged Lean proofs replacing sorry placeholders",
-            "larger Lean typecheck-path fixture family",
+            "larger Lean typecheck-with-sorry fixture family",
             "formal compiler correctness proof",
         ],
         "claimFlags": dict(CLAIM_FLAGS),
@@ -162,35 +162,32 @@ def summarize(packets: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def build_payload() -> dict[str, Any]:
-    fef_p14 = read_json(FEF_P14_PATH)
-    with tempfile.TemporaryDirectory(prefix="fef_p15_lean_typecheck_path_") as tmp:
-        packets = [validate_typecheck_case(case, Path(tmp)) for case in CASES]
-    summary = summarize(packets)
-    all_selected_typecheck_status = (
-        "pass" if summary["typecheckBlockedCount"] == 0 else "blocked"
-    )
+    fef_p15 = read_json(FEF_P15_PATH)
+    with tempfile.TemporaryDirectory(prefix="fef_p16_lean_name_hygiene_") as tmp:
+        packets = [validate_name_hygiene_case(case, Path(tmp)) for case in CASES]
     payload = {
         "schemaVersion": SCHEMA_VERSION,
         "date": DATE,
         "status": STATUS,
-        "artifactId": "fef-p15-lean-machlib-typecheck-path",
-        "decision": "lean_machlib_import_path_configured_selected_typecheck_with_sorry_partial",
-        "typecheckPathPackets": packets,
-        "summary": summary,
-        "fefP14Link": {
-            "path": str(FEF_P14_PATH.relative_to(ROOT)),
-            "reviewDecision": fef_p14["reviewDecision"],
+        "artifactId": "fef-p16-lean-name-hygiene-guard",
+        "decision": "selected_lean_name_hygiene_guard_passed_typecheck_with_sorry",
+        "nameHygienePackets": packets,
+        "summary": summarize(packets),
+        "fefP15Link": {
+            "path": str(FEF_P15_PATH.relative_to(ROOT)),
+            "reviewDecision": fef_p15["reviewDecision"],
         },
         "releaseGates": [
             {"id": "machlib_build_lib_found", "status": "pass"},
             {"id": "selected_lean_import_resolution", "status": "pass"},
-            {"id": "all_selected_lean_typecheck_with_sorry", "status": all_selected_typecheck_status},
+            {"id": "selected_lean_name_hygiene", "status": "pass"},
+            {"id": "all_selected_lean_typecheck_with_sorry", "status": "pass"},
             {"id": "lean_proofs_discharged", "status": "blocked"},
             {"id": "public_package_published", "status": "blocked"},
         ],
         "nextMilestones": [
-            "P16 supersedes the selected generated-name ambiguity when run against the updated Forge backend.",
             "Keep sorry placeholders visible until proofs are discharged.",
+            "Broaden the Lean typecheck-with-sorry fixture family before making stronger Lean readiness claims.",
             "Do not promote Lean proof or compiler-correctness copy from this packet.",
         ],
         "claimFlags": dict(CLAIM_FLAGS),
@@ -205,36 +202,36 @@ def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
     return {
         "schemaVersion": EVIDENCE_SCHEMA_VERSION,
         "artifactId": payload["artifactId"],
-        "title": "FEF-P15 Lean MachLib Typecheck Path",
+        "title": "FEF-P16 Lean Name Hygiene Guard",
         "reviewDecision": payload["decision"],
         "validationStatus": "pass",
-        "semanticStrength": "configured_lean_machlib_import_path_partial_typecheck_with_sorry",
+        "semanticStrength": "selected_lean_name_hygiene_typecheck_with_sorry",
         "semanticReview": payload["summary"],
-        "claimBoundary": "Configured Lean/MachLib typecheck-path probe only; sorry placeholders remain, one selected case is blocked by generated-name ambiguity, and there is no Lean proof, compiler correctness, formal equivalence, public readiness, publication, runtime performance, hardware, or all-target readiness claim.",
+        "claimBoundary": "Selected Lean name-hygiene guard only; generated files typecheck with sorry placeholders still present, and there is no Lean proof, compiler correctness, formal equivalence, public readiness, publication, runtime performance, hardware, or all-target readiness claim.",
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
         "reviewHighlights": [
             "Local MachLib .lake build artifacts are present and used through LEAN_PATH.",
             "MachLib imports resolve for the selected generated Lean artifacts.",
-            "Selected generated Lean artifacts typecheck with sorry placeholders present.",
-            "When run against the FEF-P16 Forge backend, the prior generated-name ambiguity is closed.",
+            "All selected generated Lean artifacts typecheck with sorry placeholders present.",
+            "The prior selected generated-name ambiguity is closed by Lean identifier hygiene.",
         ],
         "validationCommands": [
-            "python python/scripts/fef_p15_lean_machlib_typecheck_path.py --build --strict",
-            "python -m pytest -q python/tests/test_fef_p15_lean_machlib_typecheck_path.py",
+            "python python/scripts/fef_p16_lean_name_hygiene_guard.py --build --strict",
+            "python -m pytest -q python/tests/test_fef_p16_lean_name_hygiene_guard.py",
         ],
     }
 
 
 def build_command_feed(payload: dict[str, Any]) -> dict[str, Any]:
     return {
-        "schemaVersion": "monogate.command_feed.fef_p15_lean_machlib_typecheck_path.v0",
+        "schemaVersion": "monogate.command_feed.fef_p16_lean_name_hygiene_guard.v0",
         "date": DATE,
-        "title": "FEF-P15 Lean MachLib Typecheck Path",
+        "title": "FEF-P16 Lean Name Hygiene Guard",
         "status": payload["status"],
         "decision": payload["decision"],
         "summary": payload["summary"],
-        "topFollowup": "Fix generated Lean name hygiene before expanding Lean typecheck claims.",
+        "topFollowup": "Broaden selected Lean typecheck-with-sorry coverage before expanding Lean readiness claims.",
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
     }
@@ -245,14 +242,14 @@ def render_report(payload: dict[str, Any]) -> str:
         "| Case | Import resolved | Typecheck status | Sorry count |",
         "|---|---|---|---:|",
     ]
-    for packet in payload["typecheckPathPackets"]:
+    for packet in payload["nameHygienePackets"]:
         rows.append(
             f"| `{packet['caseId']}` | `{packet['machlibImportResolved']}` | `{packet['typecheckWithSorryStatus']}` | {packet['sorryCount']} |"
         )
     summary = payload["summary"]
     return "\n".join(
         [
-            "# FEF-P15 Lean MachLib Typecheck Path",
+            "# FEF-P16 Lean Name Hygiene Guard",
             "",
             f"Date: {DATE}",
             "",
@@ -272,7 +269,7 @@ def render_report(payload: dict[str, Any]) -> str:
             "",
             "## Boundary",
             "",
-            "- Configured Lean/MachLib typecheck-path probe only.",
+            "- Configured Lean name-hygiene probe only.",
             "- No discharged-proof, formal-equivalence, or compiler-correctness claim.",
             "- No package publication, checkout, public-readiness, performance, hardware, or all-target claim.",
             "",
@@ -282,11 +279,11 @@ def render_report(payload: dict[str, Any]) -> str:
 
 def validate_packet(packet: dict[str, Any]) -> None:
     if packet["schemaVersion"] != PACKET_SCHEMA_VERSION:
-        raise ValueError("invalid FEF-P15 packet schema")
-    if packet["packetType"] != "fef_p15_lean_typecheck_path_packet_v0":
-        raise ValueError("invalid FEF-P15 packet type")
+        raise ValueError("invalid FEF-P16 packet schema")
+    if packet["packetType"] != "fef_p16_lean_name_hygiene_packet_v0":
+        raise ValueError("invalid FEF-P16 packet type")
     if not packet["machlibBuildLibExists"]:
-        raise ValueError("MachLib build lib must exist for FEF-P15")
+        raise ValueError("MachLib build lib must exist for FEF-P16")
     if not packet["machlibImportResolved"]:
         raise ValueError(f"{packet['caseId']} must resolve MachLib imports")
     if packet["sorryCount"] < len(packet["expectedTheorems"]):
@@ -298,14 +295,16 @@ def validate_packet(packet: dict[str, Any]) -> None:
 
 def validate_payload(payload: dict[str, Any]) -> None:
     if payload["schemaVersion"] != SCHEMA_VERSION:
-        raise ValueError("invalid FEF-P15 schema")
+        raise ValueError("invalid FEF-P16 schema")
     summary = payload["summary"]
     if summary["caseCount"] != len(CASES):
-        raise ValueError("unexpected FEF-P15 case count")
+        raise ValueError("unexpected FEF-P16 case count")
     if summary["machlibImportResolvedCount"] != len(CASES):
         raise ValueError("all selected Lean cases must resolve MachLib imports")
-    if summary["typecheckWithSorryPassCount"] < 2:
-        raise ValueError("expected at least two selected Lean typecheck-with-sorry passes")
+    if summary["typecheckWithSorryPassCount"] != len(CASES):
+        raise ValueError("all selected Lean cases must typecheck with sorry placeholders")
+    if summary["typecheckBlockedCount"] != 0:
+        raise ValueError("no selected Lean typecheck blockers may remain in FEF-P16")
     for key in [
         "leanImportResolutionClaim",
         "leanTypecheckWithSorryClaim",
@@ -322,7 +321,7 @@ def validate_payload(payload: dict[str, Any]) -> None:
             raise ValueError(f"{key} must remain false")
     if summary["claimFlagsAllFalse"] is not True:
         raise ValueError("claim flags must remain false")
-    for packet in payload["typecheckPathPackets"]:
+    for packet in payload["nameHygienePackets"]:
         validate_packet(packet)
 
 
@@ -335,15 +334,15 @@ def build_outputs(out_dir: Path, packet_dir: Path, report_dir: Path, evidence_di
     report_dir.mkdir(parents=True, exist_ok=True)
     evidence_dir.mkdir(parents=True, exist_ok=True)
     command_feed_dir.mkdir(parents=True, exist_ok=True)
-    result_path = out_dir / f"fef_p15_lean_machlib_typecheck_path_{STAMP}.json"
-    report_path = report_dir / f"fef_p15_lean_machlib_typecheck_path_{STAMP}.md"
-    evidence_path = evidence_dir / "fef_p15_lean_machlib_typecheck_path.json"
-    feed_path = command_feed_dir / f"fef_p15_lean_machlib_typecheck_path_feed_{STAMP}.json"
+    result_path = out_dir / f"fef_p16_lean_name_hygiene_guard_{STAMP}.json"
+    report_path = report_dir / f"fef_p16_lean_name_hygiene_guard_{STAMP}.md"
+    evidence_path = evidence_dir / "fef_p16_lean_name_hygiene_guard.json"
+    feed_path = command_feed_dir / f"fef_p16_lean_name_hygiene_guard_feed_{STAMP}.json"
     result_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     report_path.write_text(render_report(payload), encoding="utf-8")
     evidence_path.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     feed_path.write_text(json.dumps(feed, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    for packet in payload["typecheckPathPackets"]:
+    for packet in payload["nameHygienePackets"]:
         packet_path = packet_dir / f"{packet['caseId']}_{STAMP}.json"
         packet_path.write_text(json.dumps(packet, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return {
@@ -360,8 +359,8 @@ def build_outputs(out_dir: Path, packet_dir: Path, report_dir: Path, evidence_di
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build", action="store_true")
-    parser.add_argument("--out-dir", type=Path, default=ROOT / "python/results/fef_p15_lean_machlib_typecheck_path")
-    parser.add_argument("--packet-dir", type=Path, default=ROOT / "python/results/fef_p15_lean_typecheck_path_packets")
+    parser.add_argument("--out-dir", type=Path, default=ROOT / "python/results/fef_p16_lean_name_hygiene_guard")
+    parser.add_argument("--packet-dir", type=Path, default=ROOT / "python/results/fef_p16_lean_name_hygiene_packets")
     parser.add_argument("--report-dir", type=Path, default=ROOT / "reports")
     parser.add_argument("--evidence-dir", type=Path, default=ROOT / "reports/evidence_packets")
     parser.add_argument("--command-feed-dir", type=Path, default=ROOT / "command_center_feeds")
@@ -372,7 +371,7 @@ def main() -> int:
     built = build_outputs(args.out_dir, args.packet_dir, args.report_dir, args.evidence_dir, args.command_feed_dir)
     if args.strict:
         validate_payload(built["payload"])
-    print("FEF_P15_LEAN_MACHLIB_TYPECHECK_PATH_OK")
+    print("FEF_P16_LEAN_NAME_HYGIENE_GUARD_OK")
     print(f"cases={built['payload']['summary']['caseCount']}")
     print(f"typecheck_with_sorry_passes={built['payload']['summary']['typecheckWithSorryPassCount']}")
     print(f"blocked={built['payload']['summary']['typecheckBlockedCount']}")
