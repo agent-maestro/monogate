@@ -1,0 +1,87 @@
+{
+  "artifactId": "fef-p7-compound-reassignment-javascript-guard",
+  "claimBoundary": "Selected C/Rust poly_horner compound-reassignment guard only; records a scoped Forge JavaScript backend implementation change without claiming compiler correctness, formal equivalence, runtime performance, production readiness, checkout, Verilog, Lean proof, zkproof, silicon, or hardware output.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "nonClaims": [
+    "FEF-P7 records a bounded generated-JavaScript rebind guard for selected poly_horner fixtures.",
+    "FEF-P7 records that Forge JavaScript emission changed only for repeated local EML bindings.",
+    "FEF-P7 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P7 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P7 does not claim runtime performance, Verilog, Lean proofs, zkproof, silicon, or hardware output."
+  ],
+  "reviewDecision": "compound_reassignment_generated_javascript_guard_passed",
+  "reviewHighlights": [
+    "Generated JavaScript for repeated EML local bindings now emits one mutable binding and subsequent assignments.",
+    "Selected C and Rust poly_horner fixtures execute through original runtimes and compare against Forge Python/JavaScript outputs.",
+    "The FEF-P6 compound-reassignment generated JavaScript holdout is closed for the selected poly_horner fixtures."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "caseCount": 2,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "failCount": 0,
+    "forgeImplementationChange": {
+      "changed": true,
+      "newEmissionShape": "single let declaration followed by assignments for repeated local names",
+      "scope": "JavaScript backend repeated local EML binding emission only"
+    },
+    "formalEquivalenceClaim": false,
+    "javascriptRebindGuardPass": true,
+    "maxAbsError": 0.0,
+    "maxRelError": 0.0,
+    "packagePublished": false,
+    "passCount": 2,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "sampleCount": 8,
+    "sourceLanguages": [
+      "c",
+      "rust"
+    ],
+    "targetLanguages": [
+      "python",
+      "javascript"
+    ]
+  },
+  "semanticStrength": "selected_poly_horner_original_runtime_sample_grid_semantic_agreement",
+  "title": "FEF-P7 Compound-Reassignment JavaScript Guard",
+  "validationCommands": [
+    "python python/scripts/fef_p7_compound_reassignment_javascript_guard.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p7_compound_reassignment_javascript_guard.py"
+  ],
+  "validationStatus": "pass"
+}
