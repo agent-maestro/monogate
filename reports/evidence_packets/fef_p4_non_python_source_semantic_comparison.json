@@ -1,0 +1,80 @@
+{
+  "artifactId": "fef-p4-non-python-source-semantic-comparison",
+  "claimBoundary": "Selected JavaScript-source sample-grid semantic comparison only; no public package publication, compiler correctness, formal equivalence, runtime performance, production readiness, checkout, Verilog, Lean proof, zkproof, or silicon claim.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "nonClaims": [
+    "FEF-P4 records bounded non-Python source semantic sample comparisons.",
+    "FEF-P4 uses selected JavaScript source fixtures only.",
+    "FEF-P4 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P4 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P4 does not claim runtime performance, Verilog, Lean proofs, zkproof, or silicon output."
+  ],
+  "reviewDecision": "javascript_source_semantic_comparison_passed",
+  "reviewHighlights": [
+    "Three JavaScript source fixtures execute under Node and compare against Forge Python and Forge JavaScript outputs.",
+    "The comparison covers gaussian, sigmoid, and circle area fixtures over deterministic sample grids.",
+    "This closes the first non-Python source semantic-comparison blocker while leaving broader language/runtime coverage open."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "caseCount": 3,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "failCount": 0,
+    "formalEquivalenceClaim": false,
+    "maxAbsError": 3.410605131648481e-13,
+    "maxRelError": 1.0856293312728803e-15,
+    "packagePublished": false,
+    "passCount": 3,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "sampleCount": 14,
+    "sourceLanguages": [
+      "javascript"
+    ],
+    "targetLanguages": [
+      "python",
+      "javascript"
+    ]
+  },
+  "semanticStrength": "javascript_source_sample_grid_semantic_agreement",
+  "title": "FEF-P4 Non-Python Source Semantic Comparison",
+  "validationCommands": [
+    "python python/scripts/fef_p4_non_python_source_semantic_comparison.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p4_non_python_source_semantic_comparison.py"
+  ],
+  "validationStatus": "pass"
+}
