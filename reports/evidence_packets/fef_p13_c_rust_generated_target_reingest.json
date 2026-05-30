@@ -1,0 +1,93 @@
+{
+  "artifactId": "fef-p13-c-rust-generated-target-reingest",
+  "claimBoundary": "Selected generated C/Rust target re-ingest only; no public package publication, compiler correctness, formal equivalence, runtime performance, production readiness, checkout, Verilog, Lean proof, zkproof, silicon, hardware, or all-target readiness claim.",
+  "claimFlags": {
+    "c_target_public_ready": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "rust_target_public_ready": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "target_all_ready_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "nonClaims": [
+    "FEF-P13 records bounded generated C/Rust target re-ingest checks for selected outputs.",
+    "FEF-P13 compares generated C/Rust runtime outputs to re-ingested-and-recompiled Python outputs over deterministic samples.",
+    "FEF-P13 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P13 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P13 does not claim runtime performance, Verilog, Lean proofs, zkproof, silicon, or hardware output.",
+    "FEF-P13 does not claim all Forge targets are ready."
+  ],
+  "reviewDecision": "selected_c_rust_generated_target_reingest_passed",
+  "reviewHighlights": [
+    "Generated C targets re-ingest through eFrog after Forge runtime mg_* call mapping.",
+    "Generated Rust targets re-ingest through eFrog after generated attribute handling and Forge runtime mg_* call mapping.",
+    "Re-ingested C/Rust outputs recompile to Python and agree with generated target runtimes over deterministic samples.",
+    "The selected source family includes Python, JavaScript, C, and Rust sources."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "caseCount": 5,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "failCount": 0,
+    "formalEquivalenceClaim": false,
+    "generatedTargetLanguages": [
+      "c",
+      "rust"
+    ],
+    "maxAbsError": 2.1316282072803006e-14,
+    "maxRelError": 1.0856293312728803e-15,
+    "packagePublished": false,
+    "packetCount": 10,
+    "passCount": 10,
+    "publicReady": false,
+    "recompiledTargetLanguages": [
+      "python"
+    ],
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "sampleCount": 34,
+    "sourceLanguages": [
+      "c",
+      "javascript",
+      "python",
+      "rust"
+    ],
+    "targetAllReadyClaim": false
+  },
+  "semanticStrength": "selected_c_rust_generated_target_reingest_sample_grid_agreement",
+  "title": "FEF-P13 C/Rust Generated-Target Re-ingest",
+  "validationCommands": [
+    "python python/scripts/fef_p13_c_rust_generated_target_reingest.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p13_c_rust_generated_target_reingest.py"
+  ],
+  "validationStatus": "pass"
+}
