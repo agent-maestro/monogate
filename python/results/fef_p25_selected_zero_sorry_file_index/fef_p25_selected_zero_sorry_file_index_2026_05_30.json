@@ -1,0 +1,136 @@
+{
+  "artifactId": "fef-p25-selected-zero-sorry-file-index",
+  "claimFlags": {
+    "all_generated_lean_files_proved_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "lean_proof_claim": false,
+    "package_published": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "target_all_ready_claim": false,
+    "zero_sorry_index_claim": false
+  },
+  "date": "2026-05-30",
+  "decision": "selected_generated_lean_zero_sorry_file_index_recorded",
+  "indexedFiles": [
+    {
+      "artifactId": "fef-p18-selected-lean-proof-discharge",
+      "evidencePath": "reports/evidence_packets/fef_p18_selected_lean_proof_discharge.json",
+      "expectedStatus": "selected_file_zero_sorry",
+      "leanCheckStatuses": [
+        "typecheck_no_sorry_pass"
+      ],
+      "remainingPlaceholderTheoremCount": 0,
+      "selectedDischargedTheoremCount": 1,
+      "selectedFile": "verified_add",
+      "sourcePath": "examples/verified_add.eml",
+      "status": "selected_file_zero_sorry"
+    },
+    {
+      "artifactId": "fef-p21-rc-filter-lean-proof-discharge",
+      "evidencePath": "reports/evidence_packets/fef_p21_rc_filter_lean_proof_discharge.json",
+      "expectedStatus": "selected_file_remaining_sorry",
+      "leanCheckStatuses": [
+        "typecheck_selected_proofs_with_remaining_sorry_pass"
+      ],
+      "remainingPlaceholderTheoremCount": 1,
+      "selectedDischargedTheoremCount": 4,
+      "selectedFile": "rc_filter",
+      "sourcePath": "examples/rc_filter.eml",
+      "status": "selected_file_remaining_sorry"
+    },
+    {
+      "artifactId": "fef-p23-voltage-divider-full-lean-proof-discharge",
+      "evidencePath": "reports/evidence_packets/fef_p23_voltage_divider_full_lean_proof_discharge.json",
+      "expectedStatus": "selected_file_zero_sorry",
+      "leanCheckStatuses": [
+        "typecheck_selected_file_zero_sorry_pass"
+      ],
+      "remainingPlaceholderTheoremCount": 0,
+      "selectedDischargedTheoremCount": 3,
+      "selectedFile": "voltage_divider",
+      "sourcePath": "examples/voltage_divider.eml",
+      "status": "selected_file_zero_sorry"
+    },
+    {
+      "artifactId": "fef-p24-mosfet-full-lean-proof-discharge",
+      "evidencePath": "reports/evidence_packets/fef_p24_mosfet_full_lean_proof_discharge.json",
+      "expectedStatus": "selected_file_zero_sorry",
+      "leanCheckStatuses": [
+        "typecheck_selected_file_zero_sorry_pass"
+      ],
+      "remainingPlaceholderTheoremCount": 0,
+      "selectedDischargedTheoremCount": 2,
+      "selectedFile": "mosfet_iv",
+      "sourcePath": "examples/carriers/electronics/mosfet_iv.eml",
+      "status": "selected_file_zero_sorry"
+    }
+  ],
+  "nextMilestones": [
+    "Target rc_step_response_at_zero only after a valid proof path exists.",
+    "Expand selected zero-sorry coverage one generated Lean file at a time.",
+    "Keep broad Lean proof-readiness and compiler-correctness claims blocked."
+  ],
+  "nonClaims": [
+    "FEF-P25 indexes selected generated Lean files with existing zero-sorry evidence packets.",
+    "FEF-P25 does not generate new proofs or rewrite generated Lean artifacts.",
+    "FEF-P25 does not claim all generated Lean files are proved or zero-sorry.",
+    "FEF-P25 keeps rc_filter's rc_step_response_at_zero blocker visible.",
+    "FEF-P25 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P25 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P25 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness."
+  ],
+  "releaseGates": [
+    {
+      "id": "selected_zero_sorry_files_indexed",
+      "status": "pass"
+    },
+    {
+      "id": "rc_filter_blocker_visible",
+      "status": "pass"
+    },
+    {
+      "id": "all_generated_lean_files_zero_sorry",
+      "status": "blocked"
+    },
+    {
+      "id": "machlib_foundational_audit",
+      "status": "blocked"
+    },
+    {
+      "id": "public_package_published",
+      "status": "blocked"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p25_selected_zero_sorry_file_index.v0",
+  "status": "FEF_P25_SELECTED_ZERO_SORRY_FILE_INDEX_PASS",
+  "summary": {
+    "allGeneratedLeanFilesProvedClaim": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "formalEquivalenceClaim": false,
+    "indexedSelectedFileCount": 4,
+    "leanProofClaim": false,
+    "packagePublished": false,
+    "publicReady": false,
+    "rcStepResponseAtZeroStillBlocked": true,
+    "remainingPlaceholderTheoremCount": 1,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedDischargedTheoremCount": 10,
+    "selectedRemainingSorryFileCount": 1,
+    "selectedRemainingSorryFiles": [
+      "rc_filter"
+    ],
+    "selectedZeroSorryFileCount": 3,
+    "selectedZeroSorryFiles": [
+      "verified_add",
+      "voltage_divider",
+      "mosfet_iv"
+    ],
+    "targetAllReadyClaim": false,
+    "zeroSorryIndexClaim": false
+  }
+}
