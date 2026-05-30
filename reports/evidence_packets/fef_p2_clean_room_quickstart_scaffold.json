@@ -1,0 +1,69 @@
+{
+  "artifactId": "fef-p2-clean-room-quickstart-scaffold",
+  "claimBoundary": "Local scaffold and clean-room quickstart only; no public package publication, general compiler implementation, compiler correctness, formal equivalence, runtime performance, public readiness, or checkout claim.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "efrog_behavior_changed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "generated_target_code_changed": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "nonClaims": [
+    "FEF-P2 creates a local scaffold and records a clean-room quickstart pass.",
+    "FEF-P2 does not publish a package or reserve a public package name.",
+    "FEF-P2 does not claim a general Forge/eFrog compiler implementation.",
+    "FEF-P2 does not claim compiler correctness, formal equivalence, runtime performance, production readiness, proof strength, or public hardware readiness.",
+    "FEF-P2 does not re-enable checkout."
+  ],
+  "reviewDecision": "local_scaffold_and_clean_room_quickstart_passed",
+  "reviewHighlights": [
+    "Creates a local monogate-forge-preview scaffold.",
+    "Fresh venv quickstart installs the scaffold and runs capabilities, emit, check, and packet commands.",
+    "Generated Python and JavaScript fixture targets execute over six deterministic samples with zero observed absolute error."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "claimFlagsAllFalse": true,
+    "cleanRoomQuickstartPassed": true,
+    "javascriptTargetExecuted": true,
+    "maxAbsError": 0.0,
+    "packagePublished": false,
+    "packageScaffoldCreated": true,
+    "publicReady": false,
+    "pythonTargetExecuted": true,
+    "safeToPublishPublicly": false,
+    "sampleCount": 6
+  },
+  "semanticStrength": "local_scaffold_clean_room_quickstart_pass_no_public_package_claim",
+  "title": "FEF-P2 Clean-Room Quickstart Scaffold",
+  "validationCommands": [
+    "python -m pytest -q packages/monogate-forge-preview/tests",
+    "python python/scripts/fef_p2_clean_room_quickstart_scaffold.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p2_clean_room_quickstart_scaffold.py"
+  ],
+  "validationStatus": "pass"
+}

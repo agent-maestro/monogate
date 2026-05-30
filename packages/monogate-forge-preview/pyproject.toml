@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "monogate-forge-preview"
+version = "0.0.0"
+description = "Local scaffold for bounded Forge/eFrog compiler-preview quickstarts"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Monogate Research" }]
+dependencies = []
+
+[project.scripts]
+monogate-forge-preview = "monogate_forge_preview.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
