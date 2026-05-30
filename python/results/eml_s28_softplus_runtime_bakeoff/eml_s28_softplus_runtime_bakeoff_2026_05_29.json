@@ -1,0 +1,910 @@
+{
+  "artifactId": "eml-s28-softplus-runtime-bakeoff",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "gpu_measurement_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "softplus_generalization_claim": false,
+    "source_family_generalization_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-29",
+  "nextResearchQuestion": "Attach the S28 softplus runtime recommendation to the S27 export policy registry without changing compiler behavior.",
+  "nonClaims": [
+    "S28 records local deterministic softplus runtime bakeoff evidence only.",
+    "S28 does not make a public performance claim or production runtime claim.",
+    "S28 does not prove compiler correctness, formal equivalence, broad EML advantage, softplus generalization, proof strength, certified safety, deployment, or public readiness.",
+    "Timing numbers are local process measurements for ranking inside this fixture only."
+  ],
+  "recommendation": {
+    "blockedOrCautionForms": [
+      "naive_softplus",
+      "clamp60_softplus_caution"
+    ],
+    "decision": "use_logaddexp_softplus_for_runtime; keep softplus/logsumexp as representation/search evidence",
+    "protectedAlternativeForm": "branch_stable_softplus",
+    "publicPerformanceClaim": false,
+    "recommendedRuntimeForm": "logaddexp_softplus",
+    "recommendedRuntimeRole": "protected_library_runtime_reference",
+    "representationForm": "softplus_logsumexp",
+    "runtimePerformanceClaim": false,
+    "teachingSearchForm": "naive_softplus"
+  },
+  "runtimePackets": [
+    {
+      "claimFlags": {
+        "broad_eml_advantage_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "gpu_measurement_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "softplus_generalization_claim": false,
+        "source_family_generalization_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "date": "2026-05-29",
+      "expression": "ln(1 + exp(x))",
+      "formId": "naive_softplus",
+      "nodeCost": 4,
+      "nonClaims": [
+        "S28 records local deterministic softplus runtime bakeoff evidence only.",
+        "S28 does not make a public performance claim or production runtime claim.",
+        "S28 does not prove compiler correctness, formal equivalence, broad EML advantage, softplus generalization, proof strength, certified safety, deployment, or public readiness.",
+        "Timing numbers are local process measurements for ranking inside this fixture only."
+      ],
+      "packetType": "eml_s28_softplus_runtime_bakeoff_packet_v0",
+      "profiles": [
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.0,
+            12.0
+          ],
+          "latencyNsPerSample": 6.01171875,
+          "maxAbsError": 1.7763568394002505e-15,
+          "maxRelError": 2.2199540535898895e-16,
+          "noiseKind": "transition",
+          "nonnegativeRatio": 1.0,
+          "profile": "transition_window",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.0,
+            12.0
+          ],
+          "latencyNsPerSample": 5.99609375,
+          "maxAbsError": 1.7763568394002505e-15,
+          "maxRelError": 2.219323980076077e-16,
+          "noiseKind": "transition",
+          "nonnegativeRatio": 1.0,
+          "profile": "transition_window",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -80.0,
+            80.0
+          ],
+          "latencyNsPerSample": 5.82421875,
+          "maxAbsError": 7.105427357601002e-15,
+          "maxRelError": 2.212252487923907e-16,
+          "noiseKind": "safe_range",
+          "nonnegativeRatio": 1.0,
+          "profile": "safe_float_range",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -80.0,
+            80.0
+          ],
+          "latencyNsPerSample": 5.77734375,
+          "maxAbsError": 7.105427357601002e-15,
+          "maxRelError": 2.1854446193875483e-16,
+          "noiseKind": "safe_range",
+          "nonnegativeRatio": 1.0,
+          "profile": "safe_float_range",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.095275148646243,
+            12.160642879961149
+          ],
+          "latencyNsPerSample": 6.26953125,
+          "maxAbsError": 1.7763568394002505e-15,
+          "maxRelError": 2.2075278030288416e-16,
+          "noiseKind": "input_perturbation",
+          "nonnegativeRatio": 1.0,
+          "profile": "noisy_transition_inputs",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.095274925231934,
+            12.160642623901367
+          ],
+          "latencyNsPerSample": 6.24609375,
+          "maxAbsError": 1.7763568394002505e-15,
+          "maxRelError": 2.1967148918935515e-16,
+          "noiseKind": "input_perturbation",
+          "nonnegativeRatio": 1.0,
+          "profile": "noisy_transition_inputs",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 948,
+          "dtype": "float64",
+          "finiteRatio": 0.77294921875,
+          "inputRange": [
+            -1200.0,
+            1200.0
+          ],
+          "latencyNsPerSample": 7.19140625,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "overflow_boundary",
+          "nonnegativeRatio": 0.77294921875,
+          "profile": "extreme_overflow_boundary",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "blocked"
+        },
+        {
+          "dangerousExponentInputCount": 948,
+          "dtype": "float32",
+          "finiteRatio": 0.77294921875,
+          "inputRange": [
+            -1200.0,
+            1200.0
+          ],
+          "latencyNsPerSample": 7.20703125,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "overflow_boundary",
+          "nonnegativeRatio": 0.77294921875,
+          "profile": "extreme_overflow_boundary",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "blocked"
+        }
+      ],
+      "readabilityScore": 5,
+      "role": "teaching_and_search_baseline",
+      "schemaVersion": "monogate.eml_s28_softplus_runtime_bakeoff_packet.v0",
+      "summary": {
+        "blockedProfileRunCount": 2,
+        "dangerousExponentInputCount": 1896,
+        "dangerousExponentInputObserved": true,
+        "finitePass": false,
+        "localTimingOnly": true,
+        "maxAbsError": 7.105427357601002e-15,
+        "maxRelError": 2.2199540535898895e-16,
+        "medianLatencyNsPerSample": 6.12890625,
+        "nonnegativePass": false,
+        "profileRunCount": 8,
+        "runtimePerformanceClaim": false,
+        "semanticDriftSampleCount": 0,
+        "worstFiniteRatio": 0.77294921875,
+        "worstNonnegativeRatio": 0.77294921875
+      }
+    },
+    {
+      "claimFlags": {
+        "broad_eml_advantage_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "gpu_measurement_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "softplus_generalization_claim": false,
+        "source_family_generalization_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "date": "2026-05-29",
+      "expression": "logaddexp(0, x)",
+      "formId": "logaddexp_softplus",
+      "nodeCost": 2,
+      "nonClaims": [
+        "S28 records local deterministic softplus runtime bakeoff evidence only.",
+        "S28 does not make a public performance claim or production runtime claim.",
+        "S28 does not prove compiler correctness, formal equivalence, broad EML advantage, softplus generalization, proof strength, certified safety, deployment, or public readiness.",
+        "Timing numbers are local process measurements for ranking inside this fixture only."
+      ],
+      "packetType": "eml_s28_softplus_runtime_bakeoff_packet_v0",
+      "profiles": [
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.0,
+            12.0
+          ],
+          "latencyNsPerSample": 6.625,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "transition",
+          "nonnegativeRatio": 1.0,
+          "profile": "transition_window",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.0,
+            12.0
+          ],
+          "latencyNsPerSample": 6.6171875,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "transition",
+          "nonnegativeRatio": 1.0,
+          "profile": "transition_window",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -80.0,
+            80.0
+          ],
+          "latencyNsPerSample": 5.12890625,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "safe_range",
+          "nonnegativeRatio": 1.0,
+          "profile": "safe_float_range",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -80.0,
+            80.0
+          ],
+          "latencyNsPerSample": 5.14453125,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "safe_range",
+          "nonnegativeRatio": 1.0,
+          "profile": "safe_float_range",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.095275148646243,
+            12.160642879961149
+          ],
+          "latencyNsPerSample": 6.6328125,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "input_perturbation",
+          "nonnegativeRatio": 1.0,
+          "profile": "noisy_transition_inputs",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.095274925231934,
+            12.160642623901367
+          ],
+          "latencyNsPerSample": 6.609375,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "input_perturbation",
+          "nonnegativeRatio": 1.0,
+          "profile": "noisy_transition_inputs",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -1200.0,
+            1200.0
+          ],
+          "latencyNsPerSample": 6.55859375,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "overflow_boundary",
+          "nonnegativeRatio": 1.0,
+          "profile": "extreme_overflow_boundary",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -1200.0,
+            1200.0
+          ],
+          "latencyNsPerSample": 6.58984375,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "overflow_boundary",
+          "nonnegativeRatio": 1.0,
+          "profile": "extreme_overflow_boundary",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        }
+      ],
+      "readabilityScore": 5,
+      "role": "protected_library_runtime_reference",
+      "schemaVersion": "monogate.eml_s28_softplus_runtime_bakeoff_packet.v0",
+      "summary": {
+        "blockedProfileRunCount": 0,
+        "dangerousExponentInputCount": 0,
+        "dangerousExponentInputObserved": false,
+        "finitePass": true,
+        "localTimingOnly": true,
+        "maxAbsError": 0.0,
+        "maxRelError": 0.0,
+        "medianLatencyNsPerSample": 6.599609375,
+        "nonnegativePass": true,
+        "profileRunCount": 8,
+        "runtimePerformanceClaim": false,
+        "semanticDriftSampleCount": 0,
+        "worstFiniteRatio": 1.0,
+        "worstNonnegativeRatio": 1.0
+      }
+    },
+    {
+      "claimFlags": {
+        "broad_eml_advantage_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "gpu_measurement_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "softplus_generalization_claim": false,
+        "source_family_generalization_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "date": "2026-05-29",
+      "expression": "where(x > 0, x + log1p(exp(-x)), log1p(exp(x)))",
+      "formId": "branch_stable_softplus",
+      "nodeCost": 10,
+      "nonClaims": [
+        "S28 records local deterministic softplus runtime bakeoff evidence only.",
+        "S28 does not make a public performance claim or production runtime claim.",
+        "S28 does not prove compiler correctness, formal equivalence, broad EML advantage, softplus generalization, proof strength, certified safety, deployment, or public readiness.",
+        "Timing numbers are local process measurements for ranking inside this fixture only."
+      ],
+      "packetType": "eml_s28_softplus_runtime_bakeoff_packet_v0",
+      "profiles": [
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.0,
+            12.0
+          ],
+          "latencyNsPerSample": 12.7890625,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "transition",
+          "nonnegativeRatio": 1.0,
+          "profile": "transition_window",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.0,
+            12.0
+          ],
+          "latencyNsPerSample": 12.79296875,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "transition",
+          "nonnegativeRatio": 1.0,
+          "profile": "transition_window",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -80.0,
+            80.0
+          ],
+          "latencyNsPerSample": 12.40625,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "safe_range",
+          "nonnegativeRatio": 1.0,
+          "profile": "safe_float_range",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -80.0,
+            80.0
+          ],
+          "latencyNsPerSample": 12.390625,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "safe_range",
+          "nonnegativeRatio": 1.0,
+          "profile": "safe_float_range",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.095275148646243,
+            12.160642879961149
+          ],
+          "latencyNsPerSample": 13.3515625,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "input_perturbation",
+          "nonnegativeRatio": 1.0,
+          "profile": "noisy_transition_inputs",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.095274925231934,
+            12.160642623901367
+          ],
+          "latencyNsPerSample": 13.33203125,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "input_perturbation",
+          "nonnegativeRatio": 1.0,
+          "profile": "noisy_transition_inputs",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -1200.0,
+            1200.0
+          ],
+          "latencyNsPerSample": 15.23046875,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "overflow_boundary",
+          "nonnegativeRatio": 1.0,
+          "profile": "extreme_overflow_boundary",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -1200.0,
+            1200.0
+          ],
+          "latencyNsPerSample": 15.1953125,
+          "maxAbsError": 0.0,
+          "maxRelError": 0.0,
+          "noiseKind": "overflow_boundary",
+          "nonnegativeRatio": 1.0,
+          "profile": "extreme_overflow_boundary",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        }
+      ],
+      "readabilityScore": 4,
+      "role": "protected_branch_runtime_alternative",
+      "schemaVersion": "monogate.eml_s28_softplus_runtime_bakeoff_packet.v0",
+      "summary": {
+        "blockedProfileRunCount": 0,
+        "dangerousExponentInputCount": 0,
+        "dangerousExponentInputObserved": false,
+        "finitePass": true,
+        "localTimingOnly": true,
+        "maxAbsError": 0.0,
+        "maxRelError": 0.0,
+        "medianLatencyNsPerSample": 13.0625,
+        "nonnegativePass": true,
+        "profileRunCount": 8,
+        "runtimePerformanceClaim": false,
+        "semanticDriftSampleCount": 0,
+        "worstFiniteRatio": 1.0,
+        "worstNonnegativeRatio": 1.0
+      }
+    },
+    {
+      "claimFlags": {
+        "broad_eml_advantage_claim": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "gpu_measurement_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "softplus_generalization_claim": false,
+        "source_family_generalization_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "zeta_zero_discovery_claim": false
+      },
+      "date": "2026-05-29",
+      "expression": "ln(1 + exp(clamp60(x)))",
+      "formId": "clamp60_softplus_caution",
+      "nodeCost": 10,
+      "nonClaims": [
+        "S28 records local deterministic softplus runtime bakeoff evidence only.",
+        "S28 does not make a public performance claim or production runtime claim.",
+        "S28 does not prove compiler correctness, formal equivalence, broad EML advantage, softplus generalization, proof strength, certified safety, deployment, or public readiness.",
+        "Timing numbers are local process measurements for ranking inside this fixture only."
+      ],
+      "packetType": "eml_s28_softplus_runtime_bakeoff_packet_v0",
+      "profiles": [
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.0,
+            12.0
+          ],
+          "latencyNsPerSample": 7.1875,
+          "maxAbsError": 5.329070518200751e-15,
+          "maxRelError": 3.691825790340765e-15,
+          "noiseKind": "transition",
+          "nonnegativeRatio": 1.0,
+          "profile": "transition_window",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.0,
+            12.0
+          ],
+          "latencyNsPerSample": 7.1640625,
+          "maxAbsError": 1.7763568394002505e-15,
+          "maxRelError": 2.219323980076077e-16,
+          "noiseKind": "transition",
+          "nonnegativeRatio": 1.0,
+          "profile": "transition_window",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -80.0,
+            80.0
+          ],
+          "latencyNsPerSample": 6.9921875,
+          "maxAbsError": 20.0,
+          "maxRelError": 485165194.4097903,
+          "noiseKind": "safe_range",
+          "nonnegativeRatio": 1.0,
+          "profile": "safe_float_range",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 512,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -80.0,
+            80.0
+          ],
+          "latencyNsPerSample": 6.98828125,
+          "maxAbsError": 20.0,
+          "maxRelError": 485165194.4097903,
+          "noiseKind": "safe_range",
+          "nonnegativeRatio": 1.0,
+          "profile": "safe_float_range",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 512,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.095275148646243,
+            12.160642879961149
+          ],
+          "latencyNsPerSample": 7.4453125,
+          "maxAbsError": 5.329070518200751e-15,
+          "maxRelError": 3.733516446788593e-15,
+          "noiseKind": "input_perturbation",
+          "nonnegativeRatio": 1.0,
+          "profile": "noisy_transition_inputs",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -12.095274925231934,
+            12.160642623901367
+          ],
+          "latencyNsPerSample": 7.42578125,
+          "maxAbsError": 1.7763568394002505e-15,
+          "maxRelError": 2.1967148918935515e-16,
+          "noiseKind": "input_perturbation",
+          "nonnegativeRatio": 1.0,
+          "profile": "noisy_transition_inputs",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 0,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float64",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -1200.0,
+            1200.0
+          ],
+          "latencyNsPerSample": 6.89453125,
+          "maxAbsError": 1140.0,
+          "maxRelError": 8.756510762697018e+273,
+          "noiseKind": "overflow_boundary",
+          "nonnegativeRatio": 1.0,
+          "profile": "extreme_overflow_boundary",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 2048,
+          "status": "pass"
+        },
+        {
+          "dangerousExponentInputCount": 0,
+          "dtype": "float32",
+          "finiteRatio": 1.0,
+          "inputRange": [
+            -1200.0,
+            1200.0
+          ],
+          "latencyNsPerSample": 6.866943359375,
+          "maxAbsError": 1140.0,
+          "maxRelError": 8.75651076269652e+273,
+          "noiseKind": "overflow_boundary",
+          "nonnegativeRatio": 1.0,
+          "profile": "extreme_overflow_boundary",
+          "sampleCount": 4096,
+          "semanticDriftSampleCount": 2048,
+          "status": "pass"
+        }
+      ],
+      "readabilityScore": 3,
+      "role": "clamped_search_caution_not_semantic_runtime",
+      "schemaVersion": "monogate.eml_s28_softplus_runtime_bakeoff_packet.v0",
+      "summary": {
+        "blockedProfileRunCount": 0,
+        "dangerousExponentInputCount": 0,
+        "dangerousExponentInputObserved": false,
+        "finitePass": true,
+        "localTimingOnly": true,
+        "maxAbsError": 1140.0,
+        "maxRelError": 8.756510762697018e+273,
+        "medianLatencyNsPerSample": 7.078125,
+        "nonnegativePass": true,
+        "profileRunCount": 8,
+        "runtimePerformanceClaim": false,
+        "semanticDriftSampleCount": 5120,
+        "worstFiniteRatio": 1.0,
+        "worstNonnegativeRatio": 1.0
+      }
+    }
+  ],
+  "s27NextRuntimeBakeoffCandidate": "softplus_logsumexp_or_gaussian_log_normal",
+  "schemaVersion": "monogate.eml_s28_softplus_runtime_bakeoff.v0",
+  "sourceEvidence": [
+    "python/results/eml_s27_export_policy_registry/eml_s27_export_policy_registry_2026_05_29.json"
+  ],
+  "status": "EML_S28_SOFTPLUS_RUNTIME_BAKEOFF_PASS",
+  "summary": {
+    "broadEmlAdvantageClaim": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "finiteAndNonnegativeFormCount": 3,
+    "formalEquivalenceClaim": false,
+    "profileRunCount": 32,
+    "publicPerformanceClaim": false,
+    "publicReady": false,
+    "recommendedRuntimeForm": "logaddexp_softplus",
+    "representationForm": "softplus_logsumexp",
+    "runtimeFormCount": 4,
+    "runtimePerformanceClaim": false,
+    "sourceFamilyGeneralizationClaim": false
+  }
+}

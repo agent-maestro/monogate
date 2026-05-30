@@ -1,0 +1,218 @@
+{
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "guard_policy_generalization_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "source_family_generalization_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-29",
+  "expression": "clip(x, lo, hi)",
+  "formId": "semantic_clamp_baseline",
+  "nodeCost": 3,
+  "nonClaims": [
+    "S31 records local deterministic guard-owned clamp policy evidence only.",
+    "S31 does not make a public performance claim or production runtime claim.",
+    "S31 does not authorize generic clamp lowering without an owning guard policy.",
+    "S31 does not prove compiler correctness, formal equivalence, broad EML advantage, source-family generalization, proof strength, certified safety, deployment, or public readiness."
+  ],
+  "packetType": "eml_s31_guard_owned_clamp_policy_bakeoff_packet_v0",
+  "profiles": [
+    {
+      "dtype": "float64",
+      "finiteRatio": 1.0,
+      "guardRange": [
+        -1.0,
+        1.0
+      ],
+      "inputRange": [
+        -0.9,
+        0.9
+      ],
+      "insideGuardRatio": 1.0,
+      "latencyNsPerSample": 0.4453125,
+      "maxAbsErrorVsGuardReference": 0.0,
+      "noiseKind": "inside_domain",
+      "profile": "inside_guard_band",
+      "sampleCount": 4096,
+      "semanticMutationSampleCount": 0,
+      "status": "pass"
+    },
+    {
+      "dtype": "float32",
+      "finiteRatio": 1.0,
+      "guardRange": [
+        -1.0,
+        1.0
+      ],
+      "inputRange": [
+        -0.8999999761581421,
+        0.8999999761581421
+      ],
+      "insideGuardRatio": 1.0,
+      "latencyNsPerSample": 0.43359375,
+      "maxAbsErrorVsGuardReference": 0.0,
+      "noiseKind": "inside_domain",
+      "profile": "inside_guard_band",
+      "sampleCount": 4096,
+      "semanticMutationSampleCount": 0,
+      "status": "pass"
+    },
+    {
+      "dtype": "float64",
+      "finiteRatio": 1.0,
+      "guardRange": [
+        -1.0,
+        1.0
+      ],
+      "inputRange": [
+        -1.25,
+        1.25
+      ],
+      "insideGuardRatio": 0.7998046875,
+      "latencyNsPerSample": 0.445068359375,
+      "maxAbsErrorVsGuardReference": 0.0,
+      "noiseKind": "boundary_crossing",
+      "profile": "boundary_crossing_window",
+      "sampleCount": 4096,
+      "semanticMutationSampleCount": 820,
+      "status": "pass"
+    },
+    {
+      "dtype": "float32",
+      "finiteRatio": 1.0,
+      "guardRange": [
+        -1.0,
+        1.0
+      ],
+      "inputRange": [
+        -1.25,
+        1.25
+      ],
+      "insideGuardRatio": 0.7998046875,
+      "latencyNsPerSample": 0.4375,
+      "maxAbsErrorVsGuardReference": 0.0,
+      "noiseKind": "boundary_crossing",
+      "profile": "boundary_crossing_window",
+      "sampleCount": 4096,
+      "semanticMutationSampleCount": 820,
+      "status": "pass"
+    },
+    {
+      "dtype": "float64",
+      "finiteRatio": 1.0,
+      "guardRange": [
+        -1.0,
+        1.0
+      ],
+      "inputRange": [
+        -12.0,
+        12.0
+      ],
+      "insideGuardRatio": 0.08349609375,
+      "latencyNsPerSample": 0.42578125,
+      "maxAbsErrorVsGuardReference": 0.0,
+      "noiseKind": "semantic_mutation",
+      "profile": "far_outside_guard_band",
+      "sampleCount": 4096,
+      "semanticMutationSampleCount": 3754,
+      "status": "pass"
+    },
+    {
+      "dtype": "float32",
+      "finiteRatio": 1.0,
+      "guardRange": [
+        -1.0,
+        1.0
+      ],
+      "inputRange": [
+        -12.0,
+        12.0
+      ],
+      "insideGuardRatio": 0.08349609375,
+      "latencyNsPerSample": 0.421875,
+      "maxAbsErrorVsGuardReference": 0.0,
+      "noiseKind": "semantic_mutation",
+      "profile": "far_outside_guard_band",
+      "sampleCount": 4096,
+      "semanticMutationSampleCount": 3754,
+      "status": "pass"
+    },
+    {
+      "dtype": "float64",
+      "finiteRatio": 1.0,
+      "guardRange": [
+        -1.0,
+        1.0
+      ],
+      "inputRange": [
+        -1.1272964029617518,
+        1.1419627317660384
+      ],
+      "insideGuardRatio": 0.90576171875,
+      "latencyNsPerSample": 0.43359375,
+      "maxAbsErrorVsGuardReference": 0.0,
+      "noiseKind": "input_perturbation",
+      "profile": "noisy_boundary_inputs",
+      "sampleCount": 4096,
+      "semanticMutationSampleCount": 386,
+      "status": "pass"
+    },
+    {
+      "dtype": "float32",
+      "finiteRatio": 1.0,
+      "guardRange": [
+        -1.0,
+        1.0
+      ],
+      "inputRange": [
+        -1.1272964477539062,
+        1.1419627666473389
+      ],
+      "insideGuardRatio": 0.90576171875,
+      "latencyNsPerSample": 0.433349609375,
+      "maxAbsErrorVsGuardReference": 0.0,
+      "noiseKind": "input_perturbation",
+      "profile": "noisy_boundary_inputs",
+      "sampleCount": 4096,
+      "semanticMutationSampleCount": 386,
+      "status": "pass"
+    }
+  ],
+  "readabilityScore": 5,
+  "role": "explicit_semantic_clamp_baseline",
+  "schemaVersion": "monogate.eml_s31_guard_owned_clamp_policy_bakeoff_packet.v0",
+  "summary": {
+    "blockedProfileRunCount": 0,
+    "finitePass": true,
+    "localTimingOnly": true,
+    "maxAbsErrorVsGuardReference": 0.0,
+    "medianLatencyNsPerSample": 0.43359375,
+    "profileRunCount": 8,
+    "runtimePerformanceClaim": false,
+    "semanticMutationObserved": true,
+    "semanticMutationSampleCount": 9920
+  }
+}

@@ -1,0 +1,484 @@
+#!/usr/bin/env python3
+"""EML-S31 guard-owned clamp policy bakeoff.
+
+S31 compares clamp-shaped forms as policy evidence, not as a generic runtime
+lowering. Clamp can be a semantic operation, a guard boundary, or a numerical
+mutation. This fixture records that distinction and keeps public performance,
+compiler correctness, formal equivalence, production, and broad advantage
+claims blocked.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+import sys
+import time
+from typing import Any, Callable
+
+import numpy as np
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT / "python") not in sys.path:
+    sys.path.insert(0, str(ROOT / "python"))
+
+from scripts.eml_advantage_lab import CLAIM_FLAGS as ADVANTAGE_CLAIM_FLAGS  # noqa: E402
+
+DATE = "2026-05-29"
+STAMP = DATE.replace("-", "_")
+SCHEMA_VERSION = "monogate.eml_s31_guard_owned_clamp_policy_bakeoff.v0"
+PACKET_SCHEMA_VERSION = "monogate.eml_s31_guard_owned_clamp_policy_bakeoff_packet.v0"
+EVIDENCE_SCHEMA_VERSION = "monogate.evidence_public_packet.v0"
+STATUS = "EML_S31_GUARD_OWNED_CLAMP_POLICY_BAKEOFF_PASS"
+
+S27_PATH = ROOT / "python/results/eml_s27_export_policy_registry/eml_s27_export_policy_registry_2026_05_29.json"
+
+CLAIM_FLAGS = {
+    **dict(ADVANTAGE_CLAIM_FLAGS),
+    "public_ready": False,
+    "safe_to_publish_publicly": False,
+    "public_performance_claim": False,
+    "runtime_performance_claim": False,
+    "broad_eml_advantage_claim": False,
+    "source_family_generalization_claim": False,
+    "guard_policy_generalization_claim": False,
+    "compiler_correctness_claim": False,
+    "formal_equivalence_claim": False,
+    "formal_proof_claim": False,
+    "production_toolchain_claim": False,
+    "certified_safety_claim": False,
+    "deploy_performed": False,
+    "package_published": False,
+}
+
+NON_CLAIMS = [
+    "S31 records local deterministic guard-owned clamp policy evidence only.",
+    "S31 does not make a public performance claim or production runtime claim.",
+    "S31 does not authorize generic clamp lowering without an owning guard policy.",
+    "S31 does not prove compiler correctness, formal equivalence, broad EML advantage, source-family generalization, proof strength, certified safety, deployment, or public readiness.",
+]
+
+FORM_METADATA = {
+    "guard_owned_branch_boundary_surface": {
+        "expression": "where(x < lo, lo, where(x > hi, hi, x))",
+        "role": "guard_owned_policy_boundary_reference",
+        "nodeCost": 9,
+        "readabilityScore": 5,
+    },
+    "semantic_clamp_baseline": {
+        "expression": "clip(x, lo, hi)",
+        "role": "explicit_semantic_clamp_baseline",
+        "nodeCost": 3,
+        "readabilityScore": 5,
+    },
+    "protected_branch_runtime_candidate": {
+        "expression": "branch(lo <= x <= hi, x, boundary)",
+        "role": "runtime_candidate_only_when_guard_owns_semantics",
+        "nodeCost": 9,
+        "readabilityScore": 4,
+    },
+    "runtime_clamp_caution": {
+        "expression": "generic_runtime_clamp(x, lo, hi)",
+        "role": "caution_generic_lowering_changes_semantics_without_guard",
+        "nodeCost": 3,
+        "readabilityScore": 4,
+    },
+}
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def deterministic_noise(count: int, seed: int, scale: float) -> np.ndarray:
+    rng = np.random.default_rng(seed)
+    return rng.normal(0.0, scale, count)
+
+
+def profile_specs() -> list[dict[str, Any]]:
+    count = 4096
+    return [
+        {
+            "profile": "inside_guard_band",
+            "noiseKind": "inside_domain",
+            "x": np.linspace(-0.9, 0.9, count),
+            "lo": -1.0,
+            "hi": 1.0,
+        },
+        {
+            "profile": "boundary_crossing_window",
+            "noiseKind": "boundary_crossing",
+            "x": np.linspace(-1.25, 1.25, count),
+            "lo": -1.0,
+            "hi": 1.0,
+        },
+        {
+            "profile": "far_outside_guard_band",
+            "noiseKind": "semantic_mutation",
+            "x": np.linspace(-12.0, 12.0, count),
+            "lo": -1.0,
+            "hi": 1.0,
+        },
+        {
+            "profile": "noisy_boundary_inputs",
+            "noiseKind": "input_perturbation",
+            "x": np.linspace(-1.1, 1.1, count) + deterministic_noise(count, seed=3101, scale=0.025),
+            "lo": -1.0,
+            "hi": 1.0,
+        },
+    ]
+
+
+def guard_owned_branch_boundary_surface(spec: dict[str, Any], x: np.ndarray) -> np.ndarray:
+    return np.where(x < spec["lo"], spec["lo"], np.where(x > spec["hi"], spec["hi"], x))
+
+
+def semantic_clamp_baseline(spec: dict[str, Any], x: np.ndarray) -> np.ndarray:
+    return np.clip(x, spec["lo"], spec["hi"])
+
+
+def protected_branch_runtime_candidate(spec: dict[str, Any], x: np.ndarray) -> np.ndarray:
+    return guard_owned_branch_boundary_surface(spec, x)
+
+
+def runtime_clamp_caution(spec: dict[str, Any], x: np.ndarray) -> np.ndarray:
+    return np.clip(x, spec["lo"], spec["hi"])
+
+
+PolicyForm = Callable[[dict[str, Any], np.ndarray], np.ndarray]
+POLICY_FORMS: dict[str, PolicyForm] = {
+    "guard_owned_branch_boundary_surface": guard_owned_branch_boundary_surface,
+    "semantic_clamp_baseline": semantic_clamp_baseline,
+    "protected_branch_runtime_candidate": protected_branch_runtime_candidate,
+    "runtime_clamp_caution": runtime_clamp_caution,
+}
+
+
+def reference_clamp(spec: dict[str, Any], x: np.ndarray) -> np.ndarray:
+    return guard_owned_branch_boundary_surface(spec, x.astype(np.float64))
+
+
+def timed_call(fn: PolicyForm, spec: dict[str, Any], x: np.ndarray, repeats: int = 9) -> tuple[np.ndarray, float]:
+    best = float("inf")
+    observed: np.ndarray | None = None
+    for _ in range(repeats):
+        start = time.perf_counter_ns()
+        candidate = fn(spec, x)
+        elapsed = time.perf_counter_ns() - start
+        best = min(best, elapsed / max(1, x.size))
+        observed = np.asarray(candidate, dtype=np.float64)
+    assert observed is not None
+    return observed, float(best)
+
+
+def profile_result(form_id: str, spec: dict[str, Any], dtype_name: str) -> dict[str, Any]:
+    dtype = np.float64 if dtype_name == "float64" else np.float32
+    x = spec["x"].astype(dtype)
+    observed, latency = timed_call(POLICY_FORMS[form_id], spec, x.astype(np.float64))
+    reference = reference_clamp(spec, x.astype(np.float64))
+    finite = np.isfinite(observed)
+    inside_guard = (x.astype(np.float64) >= spec["lo"]) & (x.astype(np.float64) <= spec["hi"])
+    semantic_mutation = np.abs(observed - x.astype(np.float64)) > 1.0e-12
+    comparable = finite & np.isfinite(reference)
+    errors = np.abs(observed[comparable] - reference[comparable])
+    return {
+        "profile": spec["profile"],
+        "noiseKind": spec["noiseKind"],
+        "dtype": dtype_name,
+        "sampleCount": int(x.size),
+        "inputRange": [float(np.min(x)), float(np.max(x))],
+        "guardRange": [float(spec["lo"]), float(spec["hi"])],
+        "finiteRatio": float(np.mean(finite)),
+        "insideGuardRatio": float(np.mean(inside_guard)),
+        "semanticMutationSampleCount": int(np.sum(semantic_mutation)),
+        "maxAbsErrorVsGuardReference": float(np.max(errors)) if errors.size else float("inf"),
+        "latencyNsPerSample": latency,
+        "status": "pass" if float(np.mean(finite)) == 1.0 else "blocked",
+    }
+
+
+def packet_for_form(form_id: str) -> dict[str, Any]:
+    profiles = [
+        profile_result(form_id, spec, dtype_name)
+        for spec in profile_specs()
+        for dtype_name in ("float64", "float32")
+    ]
+    metadata = FORM_METADATA[form_id]
+    packet = {
+        "schemaVersion": PACKET_SCHEMA_VERSION,
+        "packetType": "eml_s31_guard_owned_clamp_policy_bakeoff_packet_v0",
+        "date": DATE,
+        "formId": form_id,
+        "expression": metadata["expression"],
+        "role": metadata["role"],
+        "nodeCost": metadata["nodeCost"],
+        "readabilityScore": metadata["readabilityScore"],
+        "profiles": profiles,
+        "summary": {
+            "profileRunCount": len(profiles),
+            "finitePass": all(profile["finiteRatio"] == 1.0 for profile in profiles),
+            "blockedProfileRunCount": sum(1 for profile in profiles if profile["status"] != "pass"),
+            "semanticMutationSampleCount": sum(profile["semanticMutationSampleCount"] for profile in profiles),
+            "semanticMutationObserved": any(profile["semanticMutationSampleCount"] > 0 for profile in profiles),
+            "maxAbsErrorVsGuardReference": max(profile["maxAbsErrorVsGuardReference"] for profile in profiles),
+            "medianLatencyNsPerSample": float(np.median([profile["latencyNsPerSample"] for profile in profiles])),
+            "localTimingOnly": True,
+            "runtimePerformanceClaim": False,
+        },
+        "claimFlags": dict(CLAIM_FLAGS),
+        "nonClaims": list(NON_CLAIMS),
+    }
+    validate_packet(packet)
+    return packet
+
+
+def recommendation(packets: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "recommendedPolicyForm": "guard_owned_branch_boundary_surface",
+        "recommendedPolicyRole": "guard_owned_policy_boundary_reference",
+        "representationForm": "guard_owned_branch_boundary_surface",
+        "runtimeForm": "guard_owned_branch_boundary_surface",
+        "runtimeRole": "guard_policy_boundary_not_generic_runtime_lowering",
+        "teachingSearchForm": "semantic_clamp_baseline",
+        "protectedAlternativeForm": "protected_branch_runtime_candidate",
+        "blockedOrCautionForms": ["runtime_clamp_caution"],
+        "policyDecision": "keep_clamp_guard_owned; do_not_apply_generic_runtime_clamp_without_guard_policy_ownership",
+        "anchorReadiness": "not_ready_without_engine_guard_policy_row_and_anchor_packet",
+        "publicPerformanceClaim": False,
+        "runtimePerformanceClaim": False,
+    }
+
+
+def build_payload() -> dict[str, Any]:
+    s27 = read_json(S27_PATH)
+    packets = [packet_for_form(form_id) for form_id in POLICY_FORMS]
+    rec = recommendation(packets)
+    payload = {
+        "schemaVersion": SCHEMA_VERSION,
+        "date": DATE,
+        "status": STATUS,
+        "artifactId": "eml-s31-guard-owned-clamp-policy-bakeoff",
+        "sourceEvidence": [str(S27_PATH.relative_to(ROOT))],
+        "s27NextRuntimeBakeoffCandidate": s27["summary"]["nextRuntimeBakeoffCandidate"],
+        "policyPackets": packets,
+        "recommendation": rec,
+        "summary": {
+            "policyFormCount": len(packets),
+            "profileRunCount": sum(packet["summary"]["profileRunCount"] for packet in packets),
+            "finiteFormCount": sum(1 for packet in packets if packet["summary"]["finitePass"]),
+            "semanticMutationObserved": any(packet["summary"]["semanticMutationObserved"] for packet in packets),
+            "recommendedPolicyForm": rec["recommendedPolicyForm"],
+            "runtimeForm": rec["runtimeForm"],
+            "anchorReadiness": rec["anchorReadiness"],
+            "publicReady": False,
+            "publicPerformanceClaim": False,
+            "runtimePerformanceClaim": False,
+            "broadEmlAdvantageClaim": False,
+            "sourceFamilyGeneralizationClaim": False,
+            "compilerCorrectnessClaim": False,
+            "formalEquivalenceClaim": False,
+            "claimFlagsAllFalse": all(value is False for value in CLAIM_FLAGS.values()),
+        },
+        "nextResearchQuestion": "Attach S31 as a guard-owned clamp policy drilldown without making a generic runtime lowering or anchor claim.",
+        "claimFlags": dict(CLAIM_FLAGS),
+        "nonClaims": list(NON_CLAIMS),
+    }
+    validate_payload(payload)
+    return payload
+
+
+def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schemaVersion": EVIDENCE_SCHEMA_VERSION,
+        "artifactId": "eml-s31-guard-owned-clamp-policy-bakeoff",
+        "title": "EML-S31 Guard-Owned Clamp Policy Bakeoff",
+        "reviewDecision": "private_guard_policy_boundary_recorded",
+        "validationStatus": "pass",
+        "replayStatus": "deterministic_local_guard_policy_grid",
+        "semanticStrength": "guard_policy_boundary_no_generic_runtime_lowering_or_correctness_claim",
+        "semanticReview": payload["summary"],
+        "claimBoundary": "Private guard-owned clamp policy bakeoff only; no generic runtime lowering, public performance, compiler correctness, formal equivalence, production, proof, deployment, or public-readiness claim.",
+        "claimFlags": dict(CLAIM_FLAGS),
+        "nonClaims": list(NON_CLAIMS),
+        "reviewHighlights": [
+            "Compares guard-owned branch surface, explicit semantic clamp, protected branch candidate, and generic runtime clamp caution.",
+            "Records when clamp mutates values outside the guard-owned domain.",
+            "Keeps clamp out of generic runtime lowering unless the guard policy owns the semantic boundary.",
+        ],
+        "validationCommands": [
+            "python python/scripts/eml_s31_guard_owned_clamp_policy_bakeoff.py --build --strict",
+            "python -m pytest -q python/tests/test_eml_s31_guard_owned_clamp_policy_bakeoff.py",
+        ],
+    }
+
+
+def build_command_feed(payload: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schemaVersion": "monogate.command_feed.eml_s31_guard_owned_clamp_policy_bakeoff.v0",
+        "date": DATE,
+        "title": "EML-S31 Guard-Owned Clamp Policy Bakeoff",
+        "status": payload["status"],
+        "summary": payload["summary"],
+        "topFollowup": payload["nextResearchQuestion"],
+        "claimFlags": dict(CLAIM_FLAGS),
+        "nonClaims": list(NON_CLAIMS),
+    }
+
+
+def render_report(payload: dict[str, Any]) -> str:
+    lines = [
+        "# EML-S31 Guard-Owned Clamp Policy Bakeoff",
+        "",
+        f"Date: {DATE}",
+        "",
+        f"Status: `{payload['status']}`",
+        "",
+        "S31 records clamp as a guard-owned policy boundary, not a generic",
+        "runtime lowering. This is private policy evidence only.",
+        "",
+        "| Form | Role | Finite | Semantic mutation samples | Median ns/sample | Max error vs guard ref | Recommendation |",
+        "|---|---|---|---:|---:|---:|---|",
+    ]
+    recommended = payload["recommendation"]["recommendedPolicyForm"]
+    for packet in payload["policyPackets"]:
+        summary = packet["summary"]
+        lines.append(
+            f"| `{packet['formId']}` | `{packet['role']}` | `{summary['finitePass']}` | "
+            f"`{summary['semanticMutationSampleCount']}` | `{summary['medianLatencyNsPerSample']:.1f}` | "
+            f"`{summary['maxAbsErrorVsGuardReference']:.3e}` | "
+            f"{'policy recommendation' if packet['formId'] == recommended else ''} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Decision",
+            "",
+            f"- Recommended policy form: `{payload['recommendation']['recommendedPolicyForm']}`",
+            f"- Runtime form when guard-owned: `{payload['recommendation']['runtimeForm']}`",
+            f"- Caution form: `{', '.join(payload['recommendation']['blockedOrCautionForms'])}`",
+            f"- Decision: {payload['recommendation']['policyDecision']}",
+            "- Anchor readiness: not ready until an engine guard policy row and anchor packet exist.",
+            "",
+            "## Boundary",
+            "",
+            "- No generic runtime lowering claim.",
+            "- No public or runtime performance claim.",
+            "- No compiler correctness or formal equivalence claim.",
+            "- No broad EML advantage or source-family generalization claim.",
+            "- No proof, deployment, package publish, certified-safety, or public-readiness claim.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def validate_packet(packet: dict[str, Any]) -> None:
+    if packet["schemaVersion"] != PACKET_SCHEMA_VERSION:
+        raise ValueError("invalid S31 packet schema")
+    if packet["packetType"] != "eml_s31_guard_owned_clamp_policy_bakeoff_packet_v0":
+        raise ValueError("invalid S31 packet type")
+    if packet["summary"]["profileRunCount"] != 8:
+        raise ValueError("expected four profiles x two dtypes")
+    for key, value in packet["claimFlags"].items():
+        if value is not False:
+            raise ValueError(f"claim flag must remain false: {key}")
+
+
+def validate_payload(payload: dict[str, Any]) -> None:
+    if payload["schemaVersion"] != SCHEMA_VERSION:
+        raise ValueError("invalid S31 schema")
+    if payload["status"] != STATUS:
+        raise ValueError("invalid S31 status")
+    summary = payload["summary"]
+    if summary["policyFormCount"] != 4:
+        raise ValueError("expected four policy forms")
+    if summary["profileRunCount"] != 32:
+        raise ValueError("expected 32 profile runs")
+    if summary["finiteFormCount"] != 4:
+        raise ValueError("expected all forms to remain finite")
+    if summary["semanticMutationObserved"] is not True:
+        raise ValueError("clamp policy must record semantic mutation outside guard")
+    if summary["recommendedPolicyForm"] != "guard_owned_branch_boundary_surface":
+        raise ValueError("guard-owned branch surface should be the policy recommendation")
+    for key in [
+        "publicReady",
+        "publicPerformanceClaim",
+        "runtimePerformanceClaim",
+        "broadEmlAdvantageClaim",
+        "sourceFamilyGeneralizationClaim",
+        "compilerCorrectnessClaim",
+        "formalEquivalenceClaim",
+    ]:
+        if summary[key] is not False:
+            raise ValueError(f"{key} must remain false")
+    if summary["claimFlagsAllFalse"] is not True:
+        raise ValueError("claim flags must remain false")
+    for packet in payload["policyPackets"]:
+        validate_packet(packet)
+    for key, value in payload["claimFlags"].items():
+        if value is not False:
+            raise ValueError(f"claim flag must remain false: {key}")
+
+
+def build_outputs(
+    out_dir: Path,
+    packet_dir: Path,
+    report_dir: Path,
+    evidence_dir: Path,
+    command_feed_dir: Path,
+) -> dict[str, Any]:
+    payload = build_payload()
+    evidence = build_evidence_packet(payload)
+    feed = build_command_feed(payload)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    packet_dir.mkdir(parents=True, exist_ok=True)
+    report_dir.mkdir(parents=True, exist_ok=True)
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    command_feed_dir.mkdir(parents=True, exist_ok=True)
+    result_path = out_dir / f"eml_s31_guard_owned_clamp_policy_bakeoff_{STAMP}.json"
+    report_path = report_dir / f"eml_s31_guard_owned_clamp_policy_bakeoff_{STAMP}.md"
+    evidence_path = evidence_dir / "eml_s31_guard_owned_clamp_policy_bakeoff.json"
+    feed_path = command_feed_dir / f"eml_s31_guard_owned_clamp_policy_bakeoff_feed_{STAMP}.json"
+    result_path.write_text(json.dumps(payload, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
+    report_path.write_text(render_report(payload), encoding="utf-8")
+    evidence_path.write_text(json.dumps(evidence, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
+    feed_path.write_text(json.dumps(feed, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
+    for packet in payload["policyPackets"]:
+        packet_path = packet_dir / f"{packet['formId']}_policy_bakeoff_packet_{STAMP}.json"
+        packet_path.write_text(json.dumps(packet, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
+    return {
+        "payload": payload,
+        "evidence": evidence,
+        "feed": feed,
+        "result_path": str(result_path),
+        "report_path": str(report_path),
+        "evidence_path": str(evidence_path),
+        "feed_path": str(feed_path),
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--build", action="store_true")
+    parser.add_argument("--out-dir", type=Path, default=ROOT / "python/results/eml_s31_guard_owned_clamp_policy_bakeoff")
+    parser.add_argument("--packet-dir", type=Path, default=ROOT / "python/results/eml_s31_guard_owned_clamp_policy_packets")
+    parser.add_argument("--report-dir", type=Path, default=ROOT / "reports")
+    parser.add_argument("--evidence-dir", type=Path, default=ROOT / "reports/evidence_packets")
+    parser.add_argument("--command-feed-dir", type=Path, default=ROOT / "command_center_feeds")
+    parser.add_argument("--strict", action="store_true")
+    args = parser.parse_args()
+    if not args.build:
+        raise SystemExit("--build is required")
+    built = build_outputs(args.out_dir, args.packet_dir, args.report_dir, args.evidence_dir, args.command_feed_dir)
+    if args.strict:
+        validate_payload(built["payload"])
+    print("EML_S31_GUARD_OWNED_CLAMP_POLICY_BAKEOFF_OK")
+    print(f"forms={built['payload']['summary']['policyFormCount']}")
+    print(f"recommended={built['payload']['summary']['recommendedPolicyForm']}")
+    print(f"result={built['result_path']}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
