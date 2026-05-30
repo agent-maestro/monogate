@@ -1,0 +1,372 @@
+{
+  "artifactId": "fef-p14-lean-structural-validator",
+  "claimFlags": {
+    "c_target_public_ready": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "lean_structural_ready": false,
+    "lean_typecheck_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "rust_target_public_ready": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "target_all_ready_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "date": "2026-05-30",
+  "decision": "selected_lean_structural_validation_passed_typecheck_blocked",
+  "fefP13Link": {
+    "path": "reports/evidence_packets/fef_p13_c_rust_generated_target_reingest.json",
+    "reviewDecision": "selected_c_rust_generated_target_reingest_passed"
+  },
+  "nextMilestones": [
+    "Configure standalone Lean/MachLib import path or Lake project for generated Lean typecheck.",
+    "Replace selected sorry placeholders with discharged proofs only when proven.",
+    "Add structural validators for other non-runtime target families where local tooling exists."
+  ],
+  "nonClaims": [
+    "FEF-P14 records bounded structural validation for selected generated Lean artifacts.",
+    "FEF-P14 checks theorem names, MachLib imports, and proof-placeholder counts.",
+    "FEF-P14 does not claim Lean proofs are discharged.",
+    "FEF-P14 does not claim generated Lean files typecheck in a configured MachLib project.",
+    "FEF-P14 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P14 does not claim compiler correctness, formal semantic equivalence, runtime performance, Verilog, zkproof, silicon, or hardware output."
+  ],
+  "releaseGates": [
+    {
+      "id": "selected_lean_structural_validation",
+      "status": "pass"
+    },
+    {
+      "id": "lean_typecheck_in_configured_machlib_project",
+      "status": "blocked"
+    },
+    {
+      "id": "lean_proofs_discharged",
+      "status": "blocked"
+    },
+    {
+      "id": "target_all_ready_claim",
+      "status": "blocked"
+    },
+    {
+      "id": "public_package_published",
+      "status": "blocked"
+    },
+    {
+      "id": "checkout_remains_disabled",
+      "status": "required"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p14_lean_structural_validator.v0",
+  "status": "FEF_P14_LEAN_STRUCTURAL_VALIDATOR_PASS",
+  "structuralPackets": [
+    {
+      "caseId": "verified_add_lean_structural_v0",
+      "claimFlags": {
+        "c_target_public_ready": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "declaredTheorems": [
+        "add_nonneg_is_nonneg"
+      ],
+      "expectedTheorems": [
+        "add_nonneg_is_nonneg"
+      ],
+      "generatedByteCount": 597,
+      "generatedLineCount": 24,
+      "generatedTargetLanguage": "lean",
+      "leanToolchainCheck": {
+        "attempted": true,
+        "returnCode": 1,
+        "status": "blocked_machlib_import_unresolved",
+        "stderrExcerpt": "/tmp/fef_p14_lean_structural_6qxznpe9/verified_add_lean_structural_v0.lean:6:0: error: unknown module prefix 'MachLib'\n\nNo directory 'MachLib' or file 'MachLib.olean' in the search path entries:\n/home/monogate/.elan/toolchains/leanprover--lean4---v4.14.0/lib/lean"
+      },
+      "machlibImports": [
+        "MachLib.EML",
+        "MachLib.Trig",
+        "MachLib.Forge"
+      ],
+      "missingEvidence": [
+        "MachLib import path configured for standalone Lean typecheck",
+        "discharged Lean proofs replacing sorry placeholders",
+        "larger Lean structural fixture family",
+        "formal compiler correctness proof"
+      ],
+      "missingTheorems": [],
+      "nonClaims": [
+        "FEF-P14 records bounded structural validation for selected generated Lean artifacts.",
+        "FEF-P14 checks theorem names, MachLib imports, and proof-placeholder counts.",
+        "FEF-P14 does not claim Lean proofs are discharged.",
+        "FEF-P14 does not claim generated Lean files typecheck in a configured MachLib project.",
+        "FEF-P14 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P14 does not claim compiler correctness, formal semantic equivalence, runtime performance, Verilog, zkproof, silicon, or hardware output."
+      ],
+      "packetType": "fef_p14_lean_structural_packet_v0",
+      "proofStatus": "placeholder_sorry_present",
+      "schemaVersion": "monogate.fef_p14_lean_structural_packet.v0",
+      "sorryCount": 1,
+      "sourcePath": "examples/verified_add.eml",
+      "structuralStatus": "pass",
+      "unexpectedTheorems": []
+    },
+    {
+      "caseId": "clamp_bounded_lean_structural_v0",
+      "claimFlags": {
+        "c_target_public_ready": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "declaredTheorems": [
+        "clamp_in_unit_interval"
+      ],
+      "expectedTheorems": [
+        "clamp_in_unit_interval"
+      ],
+      "generatedByteCount": 611,
+      "generatedLineCount": 25,
+      "generatedTargetLanguage": "lean",
+      "leanToolchainCheck": {
+        "attempted": true,
+        "returnCode": 1,
+        "status": "blocked_machlib_import_unresolved",
+        "stderrExcerpt": "/tmp/fef_p14_lean_structural_6qxznpe9/clamp_bounded_lean_structural_v0.lean:6:0: error: unknown module prefix 'MachLib'\n\nNo directory 'MachLib' or file 'MachLib.olean' in the search path entries:\n/home/monogate/.elan/toolchains/leanprover--lean4---v4.14.0/lib/lean"
+      },
+      "machlibImports": [
+        "MachLib.EML",
+        "MachLib.Trig",
+        "MachLib.Forge"
+      ],
+      "missingEvidence": [
+        "MachLib import path configured for standalone Lean typecheck",
+        "discharged Lean proofs replacing sorry placeholders",
+        "larger Lean structural fixture family",
+        "formal compiler correctness proof"
+      ],
+      "missingTheorems": [],
+      "nonClaims": [
+        "FEF-P14 records bounded structural validation for selected generated Lean artifacts.",
+        "FEF-P14 checks theorem names, MachLib imports, and proof-placeholder counts.",
+        "FEF-P14 does not claim Lean proofs are discharged.",
+        "FEF-P14 does not claim generated Lean files typecheck in a configured MachLib project.",
+        "FEF-P14 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P14 does not claim compiler correctness, formal semantic equivalence, runtime performance, Verilog, zkproof, silicon, or hardware output."
+      ],
+      "packetType": "fef_p14_lean_structural_packet_v0",
+      "proofStatus": "placeholder_sorry_present",
+      "schemaVersion": "monogate.fef_p14_lean_structural_packet.v0",
+      "sorryCount": 1,
+      "sourcePath": "examples/clamp_bounded.eml",
+      "structuralStatus": "pass",
+      "unexpectedTheorems": []
+    },
+    {
+      "caseId": "voltage_divider_lean_structural_v0",
+      "claimFlags": {
+        "c_target_public_ready": false,
+        "certified_safety_claim": false,
+        "compiler_behavior_changed": false,
+        "compiler_correctness_claim": false,
+        "deploy_performed": false,
+        "eml_general_superiority_claim": false,
+        "forge_behavior_changed": false,
+        "formal_equivalence_claim": false,
+        "formal_proof_claim": false,
+        "formal_verification_claim": false,
+        "hardware_measurement_claim": false,
+        "hardware_observed": false,
+        "lean_proof_claim": false,
+        "lean_structural_ready": false,
+        "lean_typecheck_claim": false,
+        "live_serial_capture_performed": false,
+        "package_published": false,
+        "production_controller_claim": false,
+        "production_toolchain_claim": false,
+        "proof_claim": false,
+        "public_checkout_enabled": false,
+        "public_compiler_package_available": false,
+        "public_performance_claim": false,
+        "public_ready": false,
+        "public_savings_claim": false,
+        "rh_proof_claim": false,
+        "runtime_performance_claim": false,
+        "rust_target_public_ready": false,
+        "safe_to_publish_publicly": false,
+        "silicon_claim": false,
+        "target_all_ready_claim": false,
+        "theorem_discovery_claim": false,
+        "theorem_proof_claim": false,
+        "verilog_claim": false,
+        "zeta_zero_discovery_claim": false,
+        "zkproof_claim": false
+      },
+      "date": "2026-05-30",
+      "declaredTheorems": [
+        "voltage_divider_law",
+        "voltage_divider_denom_pos",
+        "voltage_divider_symmetric_half"
+      ],
+      "expectedTheorems": [
+        "voltage_divider_law",
+        "voltage_divider_denom_pos",
+        "voltage_divider_symmetric_half"
+      ],
+      "generatedByteCount": 1440,
+      "generatedLineCount": 49,
+      "generatedTargetLanguage": "lean",
+      "leanToolchainCheck": {
+        "attempted": true,
+        "returnCode": 1,
+        "status": "blocked_machlib_import_unresolved",
+        "stderrExcerpt": "/tmp/fef_p14_lean_structural_6qxznpe9/voltage_divider_lean_structural_v0.lean:6:0: error: unknown module prefix 'MachLib'\n\nNo directory 'MachLib' or file 'MachLib.olean' in the search path entries:\n/home/monogate/.elan/toolchains/leanprover--lean4---v4.14.0/lib/lean"
+      },
+      "machlibImports": [
+        "MachLib.EML",
+        "MachLib.Trig",
+        "MachLib.Forge"
+      ],
+      "missingEvidence": [
+        "MachLib import path configured for standalone Lean typecheck",
+        "discharged Lean proofs replacing sorry placeholders",
+        "larger Lean structural fixture family",
+        "formal compiler correctness proof"
+      ],
+      "missingTheorems": [],
+      "nonClaims": [
+        "FEF-P14 records bounded structural validation for selected generated Lean artifacts.",
+        "FEF-P14 checks theorem names, MachLib imports, and proof-placeholder counts.",
+        "FEF-P14 does not claim Lean proofs are discharged.",
+        "FEF-P14 does not claim generated Lean files typecheck in a configured MachLib project.",
+        "FEF-P14 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P14 does not claim compiler correctness, formal semantic equivalence, runtime performance, Verilog, zkproof, silicon, or hardware output."
+      ],
+      "packetType": "fef_p14_lean_structural_packet_v0",
+      "proofStatus": "placeholder_sorry_present",
+      "schemaVersion": "monogate.fef_p14_lean_structural_packet.v0",
+      "sorryCount": 3,
+      "sourcePath": "examples/voltage_divider.eml",
+      "structuralStatus": "pass",
+      "unexpectedTheorems": []
+    }
+  ],
+  "summary": {
+    "caseCount": 3,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "declaredTheoremCount": 5,
+    "expectedTheoremCount": 5,
+    "failCount": 0,
+    "formalEquivalenceClaim": false,
+    "generatedTargetLanguages": [
+      "lean"
+    ],
+    "leanBinaryAvailable": true,
+    "leanProofClaim": false,
+    "leanToolchainStatuses": [
+      "blocked_machlib_import_unresolved"
+    ],
+    "leanTypecheckClaim": false,
+    "packagePublished": false,
+    "packetCount": 3,
+    "passCount": 3,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "sorryCount": 5,
+    "targetAllReadyClaim": false
+  }
+}

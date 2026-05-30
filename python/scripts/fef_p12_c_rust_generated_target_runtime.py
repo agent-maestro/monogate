@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -18,7 +19,6 @@ EFROG_ROOT = MONOGATE_ROOT / "efrog"
 FORGE_ROOT = MONOGATE_ROOT / "forge"
 FORGE_C_RUNTIME = FORGE_ROOT / "software/runtime/c/libmonogate.c"
 FORGE_C_INCLUDE = FORGE_ROOT / "software/runtime/c"
-FORGE_RUST_RUNTIME = FORGE_ROOT / "software/runtime/rust"
 if str(ROOT / "python") not in sys.path:
     sys.path.insert(0, str(ROOT / "python"))
 if str(EFROG_ROOT) not in sys.path:
@@ -93,6 +93,39 @@ def require_tool(name: str) -> str:
     return path
 
 
+RUST_RUNTIME_COMPAT = """
+mod monogate_sys {
+    pub fn mg_abs(x: f64) -> f64 { x.abs() }
+    pub fn mg_acos(x: f64) -> f64 { x.acos() }
+    pub fn mg_acosh(x: f64) -> f64 { x.acosh() }
+    pub fn mg_asin(x: f64) -> f64 { x.asin() }
+    pub fn mg_asinh(x: f64) -> f64 { x.asinh() }
+    pub fn mg_atan(x: f64) -> f64 { x.atan() }
+    pub fn mg_atanh(x: f64) -> f64 { x.atanh() }
+    pub fn mg_ceil(x: f64) -> f64 { x.ceil() }
+    pub fn mg_cos(x: f64) -> f64 { x.cos() }
+    pub fn mg_cosh(x: f64) -> f64 { x.cosh() }
+    pub fn mg_exp(x: f64) -> f64 { x.exp() }
+    pub fn mg_floor(x: f64) -> f64 { x.floor() }
+    pub fn mg_ln(x: f64) -> f64 { x.ln() }
+    pub fn mg_log(x: f64) -> f64 { x.ln() }
+    pub fn mg_log10(x: f64) -> f64 { x.log10() }
+    pub fn mg_log2(x: f64) -> f64 { x.log2() }
+    pub fn mg_max(x: f64, y: f64) -> f64 { x.max(y) }
+    pub fn mg_min(x: f64, y: f64) -> f64 { x.min(y) }
+    pub fn mg_pow(x: f64, y: f64) -> f64 { x.powf(y) }
+    pub fn mg_round(x: f64) -> f64 { x.round() }
+    pub fn mg_sin(x: f64) -> f64 { x.sin() }
+    pub fn mg_sinh(x: f64) -> f64 { x.sinh() }
+    pub fn mg_sqrt(x: f64) -> f64 { x.sqrt() }
+    pub fn mg_tan(x: f64) -> f64 { x.tan() }
+    pub fn mg_tanh(x: f64) -> f64 { x.tanh() }
+}
+"""
+
+RUST_INNER_ATTRIBUTE_RE = re.compile(r"^\s*#!\[[^\n]*\]\s*$", re.MULTILINE)
+
+
 def call_generated_c(generated_path: Path, function_name: str, samples: list[dict[str, Any]], tmp_path: Path) -> list[float]:
     gcc = require_tool("gcc")
     work = tmp_path / f"{generated_path.stem}_c_runtime"
@@ -163,14 +196,12 @@ def call_generated_rust(generated_path: Path, function_name: str, samples: list[
                 'name = "fef_p12_target_runtime"',
                 'path = "src/lib.rs"',
                 "",
-                "[dependencies]",
-                f'monogate-sys = {{ path = "{FORGE_RUST_RUNTIME.as_posix()}" }}',
-                "",
             ]
         ),
         encoding="utf-8",
     )
-    (src / "lib.rs").write_text(generated_path.read_text(encoding="utf-8"), encoding="utf-8")
+    generated_source = RUST_INNER_ATTRIBUTE_RE.sub("", generated_path.read_text(encoding="utf-8"))
+    (src / "lib.rs").write_text(RUST_RUNTIME_COMPAT + "\n" + generated_source, encoding="utf-8")
     calls = []
     for sample in samples:
         args = ", ".join(float_literal(arg, "_f64") for arg in sample["args"])
@@ -347,7 +378,7 @@ def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
         "nonClaims": list(NON_CLAIMS),
         "reviewHighlights": [
             "Selected generated C outputs compile with local gcc and Forge C runtime.",
-            "Selected generated Rust outputs compile/run with local Cargo and Forge Rust runtime.",
+            "Selected generated Rust outputs compile/run with local Cargo and a local compatibility shim for Forge runtime math calls.",
             "Generated C/Rust local-runtime outputs agree with generated Python reference outputs over deterministic samples.",
             "The selected source family includes Python, JavaScript, C, and Rust sources.",
         ],
@@ -411,6 +442,7 @@ def render_report(payload: dict[str, Any]) -> str:
             "## Boundary",
             "",
             "- Selected generated C/Rust local-runtime sample-grid comparison only.",
+            "- Rust runtime execution uses a local compatibility shim for Forge runtime math calls to keep the guard offline-reproducible.",
             "- No package publication or checkout claim.",
             "- No all-target readiness, compiler correctness, or formal semantic equivalence claim.",
             "- No runtime performance, production, Verilog, Lean proof, zkproof, silicon, or hardware claim.",

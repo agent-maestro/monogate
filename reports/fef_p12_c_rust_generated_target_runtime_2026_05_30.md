@@ -36,6 +36,7 @@ into bounded local-runtime sample-grid evidence.
 ## Boundary
 
 - Selected generated C/Rust local-runtime sample-grid comparison only.
+- Rust runtime execution uses a local compatibility shim for Forge runtime math calls to keep the guard offline-reproducible.
 - No package publication or checkout claim.
 - No all-target readiness, compiler correctness, or formal semantic equivalence claim.
 - No runtime performance, production, Verilog, Lean proof, zkproof, silicon, or hardware claim.

@@ -1,0 +1,91 @@
+{
+  "artifactId": "fef-p14-lean-structural-validator",
+  "claimBoundary": "Selected generated Lean structural validation only; no Lean typecheck claim, discharged-proof claim, public package publication, compiler correctness, formal equivalence, runtime performance, production readiness, checkout, Verilog, zkproof, silicon, hardware, or all-target readiness claim.",
+  "claimFlags": {
+    "c_target_public_ready": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "lean_structural_ready": false,
+    "lean_typecheck_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "rust_target_public_ready": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "target_all_ready_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "nonClaims": [
+    "FEF-P14 records bounded structural validation for selected generated Lean artifacts.",
+    "FEF-P14 checks theorem names, MachLib imports, and proof-placeholder counts.",
+    "FEF-P14 does not claim Lean proofs are discharged.",
+    "FEF-P14 does not claim generated Lean files typecheck in a configured MachLib project.",
+    "FEF-P14 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P14 does not claim compiler correctness, formal semantic equivalence, runtime performance, Verilog, zkproof, silicon, or hardware output."
+  ],
+  "reviewDecision": "selected_lean_structural_validation_passed_typecheck_blocked",
+  "reviewHighlights": [
+    "Selected Lean outputs declare the expected theorem names.",
+    "Generated Lean outputs carry MachLib imports.",
+    "Proof bodies still contain sorry placeholders and are counted explicitly.",
+    "Standalone Lean typecheck remains blocked until MachLib imports are configured for this environment."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "caseCount": 3,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "declaredTheoremCount": 5,
+    "expectedTheoremCount": 5,
+    "failCount": 0,
+    "formalEquivalenceClaim": false,
+    "generatedTargetLanguages": [
+      "lean"
+    ],
+    "leanBinaryAvailable": true,
+    "leanProofClaim": false,
+    "leanToolchainStatuses": [
+      "blocked_machlib_import_unresolved"
+    ],
+    "leanTypecheckClaim": false,
+    "packagePublished": false,
+    "packetCount": 3,
+    "passCount": 3,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "sorryCount": 5,
+    "targetAllReadyClaim": false
+  },
+  "semanticStrength": "selected_lean_structural_validation_only",
+  "title": "FEF-P14 Lean Structural Validator",
+  "validationCommands": [
+    "python python/scripts/fef_p14_lean_structural_validator.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p14_lean_structural_validator.py"
+  ],
+  "validationStatus": "pass"
+}
