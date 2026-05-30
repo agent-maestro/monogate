@@ -1,0 +1,205 @@
+{
+  "artifactId": "fef-p29-rc-filter-full-lean-proof-discharge",
+  "claimFlags": {
+    "all_generated_lean_files_proved_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "lean_proof_claim": false,
+    "new_machlib_axiom_claim": false,
+    "package_published": false,
+    "public_ready": false,
+    "rc_step_response_proved_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "selected_rc_filter_file_zero_sorry_claim": false,
+    "target_all_ready_claim": false
+  },
+  "date": "2026-05-30",
+  "decision": "rc_filter_generated_file_reviewed_and_all_placeholders_discharged",
+  "fefP21Link": {
+    "path": "reports/evidence_packets/fef_p21_rc_filter_lean_proof_discharge.json",
+    "reviewDecision": "rc_filter_candidate_found_theorems_reviewed_and_discharged_with_remaining_placeholder_visible"
+  },
+  "fefP28Link": {
+    "path": "reports/evidence_packets/fef_p28_zero_division_surface_guard.json",
+    "reviewDecision": "zero_division_surface_guard_closed"
+  },
+  "nextMilestones": [
+    "Update the selected zero-sorry-file index to include rc_filter.",
+    "Review remaining candidate-found obligations before adding more discharge packets.",
+    "Keep broad Lean proof-readiness and compiler-correctness claims blocked."
+  ],
+  "nonClaims": [
+    "FEF-P29 records reviewed discharge for all generated Lean theorem placeholders in the selected rc_filter file.",
+    "FEF-P29 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+    "FEF-P29 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P29 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P29 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+    "FEF-P29 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+  ],
+  "rcFilterProofPackets": [
+    {
+      "caseId": "rc_filter_full_reviewed_proof_discharge_v0",
+      "claimFlags": {
+        "all_generated_lean_files_proved_claim": false,
+        "compiler_correctness_claim": false,
+        "formal_equivalence_claim": false,
+        "lean_proof_claim": false,
+        "new_machlib_axiom_claim": false,
+        "package_published": false,
+        "public_ready": false,
+        "rc_step_response_proved_claim": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "selected_rc_filter_file_zero_sorry_claim": false,
+        "target_all_ready_claim": false
+      },
+      "configuredLeanCheck": {
+        "attempted": true,
+        "outputExcerpt": "/tmp/fef_p29_rc_filter_full_proof_h659wto1/rc_filter_full_reviewed_proof_discharge_v0_discharged.lean:21:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p29_rc_filter_full_proof_h659wto1/rc_filter_full_reviewed_proof_discharge_v0_discharged.lean:22:5: warning: unused variable `h2`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`\n/tmp/fef_p29_rc_filter_full_proof_h659wto1/rc_filter_full_reviewed_proof_discharge_v0_discharged.lean:50:5: warning: unused variable `h1`\nnote: this linter can be disabled with `set_option linter.unusedVariables false`",
+        "returnCode": 0,
+        "status": "typecheck_selected_file_zero_sorry_pass"
+      },
+      "date": "2026-05-30",
+      "declaredTheorems": [
+        "rc_time_constant_def",
+        "rc_steady_state_equals_input",
+        "rc_initial_output_zero",
+        "rc_step_response_form",
+        "rc_step_response_at_zero"
+      ],
+      "dischargedFileSorryCount": 0,
+      "generatedFileSorryCount": 5,
+      "generatedTargetLanguage": "lean",
+      "machlibBuildLib": "/home/monogate/monogate/machlib/foundations/.lake/build/lib",
+      "machlibBuildLibExists": true,
+      "missingEvidence": [
+        "proof discharge for remaining generated Lean theorem stubs outside the selected rc_filter file",
+        "formal compiler correctness proof",
+        "audit of MachLib foundational axioms"
+      ],
+      "nonClaims": [
+        "FEF-P29 records reviewed discharge for all generated Lean theorem placeholders in the selected rc_filter file.",
+        "FEF-P29 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+        "FEF-P29 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P29 does not publish a package, enable checkout, or claim production readiness.",
+        "FEF-P29 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+        "FEF-P29 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+      ],
+      "packetType": "fef_p29_rc_filter_full_lean_proof_discharge_packet_v0",
+      "proofDischargeStatus": "selected_rc_filter_generated_file_typechecks_zero_sorry",
+      "remainingPlaceholderTheorems": [],
+      "schemaVersion": "monogate.fef_p29_rc_filter_full_lean_proof_discharge_packet.v0",
+      "selectedDischargedTheorems": [
+        {
+          "dischargedProofBody": [
+            "  rfl"
+          ],
+          "generatedProofBody": [
+            "  unfold tau",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "proofDependency": "Lean.rfl",
+          "theoremName": "rc_time_constant_def"
+        },
+        {
+          "dischargedProofBody": [
+            "  rfl"
+          ],
+          "generatedProofBody": [
+            "  unfold vout_steady",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "proofDependency": "Lean.rfl",
+          "theoremName": "rc_steady_state_equals_input"
+        },
+        {
+          "dischargedProofBody": [
+            "  rfl"
+          ],
+          "generatedProofBody": [
+            "  unfold vout_initial",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "proofDependency": "Lean.rfl",
+          "theoremName": "rc_initial_output_zero"
+        },
+        {
+          "dischargedProofBody": [
+            "  rfl"
+          ],
+          "generatedProofBody": [
+            "  unfold vout_charging",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "proofDependency": "Lean.rfl",
+          "theoremName": "rc_step_response_form"
+        },
+        {
+          "dischargedProofBody": [
+            "  unfold vout_charging_at_zero",
+            "  rw [zero_div_of_pos h1, exp_zero, sub_def, add_neg, mul_zero]"
+          ],
+          "generatedProofBody": [
+            "  unfold vout_charging_at_zero",
+            "  sorry  -- TODO: prove against MachLib foundations"
+          ],
+          "proofDependency": "MachLib.Real.zero_div_of_pos + MachLib.Real.exp_zero + subtraction/mul rewrites",
+          "theoremName": "rc_step_response_at_zero"
+        }
+      ],
+      "sourcePath": "examples/rc_filter.eml"
+    }
+  ],
+  "releaseGates": [
+    {
+      "id": "selected_rc_filter_obligations_reviewed",
+      "status": "pass"
+    },
+    {
+      "id": "selected_rc_filter_file_typechecks",
+      "status": "pass"
+    },
+    {
+      "id": "selected_rc_filter_file_zero_sorry",
+      "status": "pass"
+    },
+    {
+      "id": "remaining_generated_lean_proofs_discharged",
+      "status": "blocked"
+    },
+    {
+      "id": "machlib_foundational_audit",
+      "status": "blocked"
+    },
+    {
+      "id": "public_package_published",
+      "status": "blocked"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p29_rc_filter_full_lean_proof_discharge.v0",
+  "status": "FEF_P29_RC_FILTER_FULL_LEAN_PROOF_DISCHARGE_PASS",
+  "summary": {
+    "allGeneratedLeanFilesProvedClaim": false,
+    "caseCount": 1,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "dischargedFileSorryCount": 0,
+    "formalEquivalenceClaim": false,
+    "generatedFileSorryCount": 5,
+    "leanCheckStatuses": [
+      "typecheck_selected_file_zero_sorry_pass"
+    ],
+    "leanProofClaim": false,
+    "machlibBuildLibExists": true,
+    "packagePublished": false,
+    "packetCount": 1,
+    "publicReady": false,
+    "remainingPlaceholderTheoremCount": 0,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedDischargedTheoremCount": 5,
+    "selectedRcFilterFileZeroSorryClaim": false,
+    "targetAllReadyClaim": false
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "artifactId": "fef-p29-rc-filter-full-lean-proof-discharge",
+  "claimBoundary": "Reviewed discharge for all generated Lean theorem placeholders in the selected rc_filter file only; other generated Lean files may still carry visible placeholders, and there is no broad Lean proof readiness, compiler correctness, formal equivalence, public readiness, publication, runtime performance, hardware, or all-target readiness claim.",
+  "claimFlags": {
+    "all_generated_lean_files_proved_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "lean_proof_claim": false,
+    "new_machlib_axiom_claim": false,
+    "package_published": false,
+    "public_ready": false,
+    "rc_step_response_proved_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "selected_rc_filter_file_zero_sorry_claim": false,
+    "target_all_ready_claim": false
+  },
+  "nonClaims": [
+    "FEF-P29 records reviewed discharge for all generated Lean theorem placeholders in the selected rc_filter file.",
+    "FEF-P29 does not claim broad Lean proof readiness or all generated Lean proofs are discharged.",
+    "FEF-P29 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P29 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P29 does not claim runtime performance, Verilog, zkproof, silicon, hardware, or all-target readiness.",
+    "FEF-P29 relies on the current MachLib axiomatic foundation surface and does not audit MachLib foundational soundness."
+  ],
+  "reviewDecision": "rc_filter_generated_file_reviewed_and_all_placeholders_discharged",
+  "reviewHighlights": [
+    "P21 left rc_step_response_at_zero as the selected file's visible blocker.",
+    "P28 exposed zero_div_of_pos under the generated Lean import surface.",
+    "FEF-P29 replaces rc_step_response_at_zero with `unfold vout_charging_at_zero; rw [zero_div_of_pos h1, exp_zero, sub_def, add_neg, mul_zero]`.",
+    "The selected rc_filter generated Lean file typechecks through the configured MachLib path.",
+    "The selected rc_filter generated Lean file has zero visible sorry placeholders after review."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "allGeneratedLeanFilesProvedClaim": false,
+    "caseCount": 1,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "dischargedFileSorryCount": 0,
+    "formalEquivalenceClaim": false,
+    "generatedFileSorryCount": 5,
+    "leanCheckStatuses": [
+      "typecheck_selected_file_zero_sorry_pass"
+    ],
+    "leanProofClaim": false,
+    "machlibBuildLibExists": true,
+    "packagePublished": false,
+    "packetCount": 1,
+    "publicReady": false,
+    "remainingPlaceholderTheoremCount": 0,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedDischargedTheoremCount": 5,
+    "selectedRcFilterFileZeroSorryClaim": false,
+    "targetAllReadyClaim": false
+  },
+  "semanticStrength": "selected_rc_filter_generated_lean_file_typechecks_zero_sorry",
+  "title": "FEF-P29 rc_filter Full Lean Proof Discharge",
+  "validationCommands": [
+    "python python/scripts/fef_p29_rc_filter_full_lean_proof_discharge.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p29_rc_filter_full_lean_proof_discharge.py"
+  ],
+  "validationStatus": "pass"
+}
