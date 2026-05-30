@@ -1,0 +1,204 @@
+{
+  "allowedCommands": [
+    {
+      "command": "monogate-forge-preview capabilities",
+      "purpose": "Print the bounded preview capability map and blocked claims."
+    },
+    {
+      "command": "monogate-forge-preview emit --target python examples/gaussian.py --out build/gaussian.py",
+      "purpose": "Run the selected source -> EML -> Forge Python preview path."
+    },
+    {
+      "command": "monogate-forge-preview emit --target javascript examples/gaussian.py --out build/gaussian.js",
+      "purpose": "Run the selected source -> EML -> Forge JavaScript preview path."
+    },
+    {
+      "command": "monogate-forge-preview check examples/gaussian.py --targets python,javascript",
+      "purpose": "Run deterministic sample-grid checks for the preview slice."
+    },
+    {
+      "command": "monogate-forge-preview packet examples/gaussian.py --targets python,javascript --out evidence/packet.json",
+      "purpose": "Emit a bounded evidence packet with all public claim flags false."
+    }
+  ],
+  "artifactId": "fef-p1-public-compiler-preview-decision",
+  "blockedCommands": [
+    {
+      "command": "monogate-forge-preview emit --target verilog",
+      "reason": "Blocked until FPGA simulation/synthesis/live evidence exists for the public path."
+    },
+    {
+      "command": "monogate-forge-preview emit --target lean --claim-proof",
+      "reason": "Blocked until checked proof status exists and no theorem stub is presented as proof."
+    },
+    {
+      "command": "monogate-forge-preview emit --target all",
+      "reason": "Blocked because FEF-P0 only covers Python/JavaScript selected-slice evidence."
+    },
+    {
+      "command": "monogate-forge-preview prove-correct",
+      "reason": "Blocked because compiler correctness and formal equivalence are not established."
+    },
+    {
+      "command": "monogate-forge-preview benchmark --claim-speedup",
+      "reason": "Blocked because FEF-P1 records no public runtime performance claim."
+    }
+  ],
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "efrog_behavior_changed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "generated_target_code_changed": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "package_implementation_started": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_package_name_reserved": false,
+    "public_performance_claim": false,
+    "public_quickstart_reproducible": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-05-30",
+  "decision": "select_monogate_forge_preview_package",
+  "fefP0Link": {
+    "decision": "not_public_ready_yet",
+    "path": "reports/evidence_packets/fef_p0_public_compiler_slice_readiness.json",
+    "privateCompilerSlicePresent": true,
+    "publicReady": false
+  },
+  "nextMilestones": [
+    "FEF-P2 clean-room quickstart and package scaffold",
+    "FEF-P3 JavaScript runtime execution in the bridge guard",
+    "FEF-P4 non-Python source semantic comparison",
+    "FEF-P5 public preview copy update only after FEF-P2 passes"
+  ],
+  "nonClaims": [
+    "FEF-P1 records a package/CLI decision only.",
+    "FEF-P1 does not publish or implement a public compiler package.",
+    "FEF-P1 does not change Forge or eFrog behavior.",
+    "FEF-P1 does not claim compiler correctness, formal equivalence, runtime performance, production readiness, proof strength, or public hardware readiness.",
+    "FEF-P1 does not re-enable checkout."
+  ],
+  "optionMatrix": [
+    {
+      "decision": "rejected_for_now",
+      "id": "extend_monogate_package",
+      "label": "Add compiler-preview commands to monogate",
+      "reason": "Lowest install friction, but it blurs the public math/optimization package with an immature compiler preview.",
+      "risk": "Users may infer the core monogate package now includes the full Forge compiler."
+    },
+    {
+      "decision": "selected",
+      "id": "monogate_forge_preview_package",
+      "label": "Create monogate-forge-preview",
+      "reason": "Makes the preview explicit, bounded, and separate from both monogate and future Forge Pro.",
+      "risk": "Requires separate packaging and quickstart work before any public claim."
+    },
+    {
+      "decision": "fallback",
+      "id": "artifact_only_preview",
+      "label": "Publish reproducible artifacts only",
+      "reason": "Safest if packaging takes longer, but less useful as a public compiler preview.",
+      "risk": "May feel like documentation rather than a tool."
+    }
+  ],
+  "previewScope": {
+    "explicitlyOutOfScope": [
+      "Verilog",
+      "Lean proof claims",
+      "zkproof",
+      "target all",
+      "silicon",
+      "compiler correctness",
+      "runtime speedup claims",
+      "paid Forge Pro checkout"
+    ],
+    "inputScope": [
+      "selected source fixtures",
+      "selected .eml fixtures only after clean-room quickstart proves them"
+    ],
+    "requiredChecks": [
+      "deterministic sample-grid comparison",
+      "generated Python execution",
+      "generated JavaScript execution",
+      "evidence packet with all public claim flags false"
+    ],
+    "targetScope": [
+      "python",
+      "javascript"
+    ]
+  },
+  "releaseGates": [
+    {
+      "id": "package_scaffold_created",
+      "requiredEvidence": "A minimal package scaffold for monogate-forge-preview with version, README, CLI entrypoint, and tests.",
+      "status": "pending"
+    },
+    {
+      "id": "clean_room_quickstart_passed",
+      "requiredEvidence": "Fresh environment install and exact quickstart commands without sibling private repos.",
+      "status": "pending"
+    },
+    {
+      "id": "python_target_execution_passed",
+      "requiredEvidence": "Generated Python target executes over deterministic sample grids.",
+      "status": "pending"
+    },
+    {
+      "id": "javascript_target_execution_passed",
+      "requiredEvidence": "Generated JavaScript target executes over deterministic sample grids.",
+      "status": "pending"
+    },
+    {
+      "id": "public_copy_review_passed",
+      "requiredEvidence": "Website/docs copy says preview, selected targets, and blocked claims.",
+      "status": "pending"
+    },
+    {
+      "id": "checkout_remains_disabled",
+      "requiredEvidence": "No paid checkout is enabled for compiler claims during preview.",
+      "status": "required"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p1_public_compiler_preview_decision.v0",
+  "selectedPackage": {
+    "distributionStatus": "not_created_not_published",
+    "name": "monogate-forge-preview",
+    "scope": "minimum public compiler preview for selected eFrog -> EML -> Forge Python/JavaScript paths",
+    "selectedReason": "Makes the preview explicit, bounded, and separate from both monogate and future Forge Pro."
+  },
+  "status": "FEF_P1_PUBLIC_COMPILER_PREVIEW_DECISION_RECORDED",
+  "summary": {
+    "allowedCommandCount": 5,
+    "blockedCommandCount": 5,
+    "claimFlagsAllFalse": true,
+    "packageCreated": false,
+    "packageDecisionRecorded": true,
+    "packagePublished": false,
+    "publicReady": false,
+    "releaseGateCount": 6,
+    "safeToPublishPublicly": false,
+    "selectedPackageName": "monogate-forge-preview"
+  }
+}
