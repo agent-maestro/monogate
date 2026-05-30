@@ -1,0 +1,151 @@
+{
+  "allowedPublicClaims": [
+    "A local monogate-forge-preview scaffold exists.",
+    "The local scaffold supports selected Python/JavaScript preview commands.",
+    "A fresh local virtualenv quickstart passed for the selected Gaussian fixture.",
+    "The real eFrog bridge guard executes generated JavaScript modules through Node for hosted fixtures.",
+    "Selected JavaScript source fixtures have bounded sample-grid comparison against Forge Python and JavaScript outputs."
+  ],
+  "artifactId": "fef-p5-publication-copy-review",
+  "blockedPublicClaims": [
+    "published package availability",
+    "checkout availability",
+    "general compiler correctness",
+    "formal semantic equivalence",
+    "runtime performance",
+    "production toolchain readiness",
+    "Verilog/Lean proof/zkproof/silicon readiness",
+    "36 shipped targets"
+  ],
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "copyReview": {
+    "copyPath": "packages/monogate-forge-preview/PUBLIC_PREVIEW_COPY.md",
+    "forbiddenHits": [],
+    "requiredBoundaryMissing": [],
+    "status": "pass"
+  },
+  "date": "2026-05-30",
+  "decision": "copy_review_passed_publication_blocked",
+  "evidenceInputs": {
+    "fefP1": {
+      "claimBoundary": "Decision packet only; no package created, package published, compiler correctness, formal equivalence, runtime performance, public readiness, or checkout claim.",
+      "claimFlagsAllFalse": true,
+      "path": "reports/evidence_packets/fef_p1_public_compiler_preview_decision.json",
+      "reviewDecision": "select_monogate_forge_preview_package",
+      "validationStatus": "pass"
+    },
+    "fefP2": {
+      "claimBoundary": "Local scaffold and clean-room quickstart only; no public package publication, general compiler implementation, compiler correctness, formal equivalence, runtime performance, public readiness, or checkout claim.",
+      "claimFlagsAllFalse": true,
+      "path": "reports/evidence_packets/fef_p2_clean_room_quickstart_scaffold.json",
+      "reviewDecision": "local_scaffold_and_clean_room_quickstart_passed",
+      "validationStatus": "pass"
+    },
+    "fefP3": {
+      "claimBoundary": "JavaScript generated-target runtime execution guard only; no public package publication, compiler correctness, formal equivalence, runtime performance, production readiness, checkout, Verilog, Lean proof, zkproof, or silicon claim.",
+      "claimFlagsAllFalse": true,
+      "path": "reports/evidence_packets/fef_p3_javascript_bridge_guard.json",
+      "reviewDecision": "javascript_runtime_execution_added_to_bridge_guard",
+      "validationStatus": "pass"
+    },
+    "fefP4": {
+      "claimBoundary": "Selected JavaScript-source sample-grid semantic comparison only; no public package publication, compiler correctness, formal equivalence, runtime performance, production readiness, checkout, Verilog, Lean proof, zkproof, or silicon claim.",
+      "claimFlagsAllFalse": true,
+      "path": "reports/evidence_packets/fef_p4_non_python_source_semantic_comparison.json",
+      "reviewDecision": "javascript_source_semantic_comparison_passed",
+      "validationStatus": "pass"
+    }
+  },
+  "nextMilestones": [
+    "Run an explicit release action if/when publication is desired.",
+    "FEF-P6 broaden original-runtime semantic comparison to C/Rust/MATLAB where local toolchains are available.",
+    "Keep Forge public site copy aligned to installable monogate until publication happens."
+  ],
+  "nonClaims": [
+    "FEF-P5 reviews copy and release gates only.",
+    "FEF-P5 does not publish a package.",
+    "FEF-P5 does not enable checkout or commerce.",
+    "FEF-P5 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P5 does not claim runtime performance, production readiness, Verilog, Lean proofs, zkproof, or silicon output."
+  ],
+  "package": {
+    "copyPath": "packages/monogate-forge-preview/PUBLIC_PREVIEW_COPY.md",
+    "distributionStatus": "local_scaffold_not_published",
+    "name": "monogate-forge-preview",
+    "path": "packages/monogate-forge-preview"
+  },
+  "releaseGates": [
+    {
+      "id": "fef_p1_preview_shape_selected",
+      "status": "pass"
+    },
+    {
+      "id": "fef_p2_clean_room_local_quickstart_passed",
+      "status": "pass"
+    },
+    {
+      "id": "fef_p3_javascript_bridge_guard_passed",
+      "status": "pass"
+    },
+    {
+      "id": "fef_p4_javascript_source_semantic_comparison_passed",
+      "status": "pass"
+    },
+    {
+      "id": "public_copy_boundary_review_passed",
+      "status": "pass"
+    },
+    {
+      "id": "package_published",
+      "status": "blocked"
+    },
+    {
+      "id": "checkout_remains_disabled",
+      "status": "required"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p5_publication_copy_review.v0",
+  "status": "FEF_P5_PUBLICATION_COPY_REVIEW_PASS",
+  "summary": {
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "copyReviewPassed": true,
+    "evidenceClaimFlagsAllFalse": true,
+    "evidenceInputsValid": true,
+    "packagePublished": false,
+    "publicReady": false,
+    "safeToPublishPublicly": false
+  }
+}
