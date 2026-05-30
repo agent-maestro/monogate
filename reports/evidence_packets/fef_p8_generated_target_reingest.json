@@ -1,0 +1,89 @@
+{
+  "artifactId": "fef-p8-generated-target-reingest",
+  "claimBoundary": "Selected generated Python/JavaScript target re-ingest only; no public package publication, compiler correctness, formal equivalence, runtime performance, production readiness, checkout, Verilog, Lean proof, zkproof, silicon, or hardware claim.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "nonClaims": [
+    "FEF-P8 records bounded generated-target re-ingest checks for selected Python/JavaScript outputs.",
+    "FEF-P8 compares generated target runtime outputs to re-ingested-and-recompiled Python outputs over deterministic samples.",
+    "FEF-P8 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P8 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P8 does not claim runtime performance, Verilog, Lean proofs, zkproof, silicon, or hardware output."
+  ],
+  "reviewDecision": "selected_generated_target_reingest_passed",
+  "reviewHighlights": [
+    "Selected generated Python outputs re-ingest through eFrog Python and recompile to Python.",
+    "Selected generated JavaScript outputs re-ingest through eFrog JavaScript and recompile to Python.",
+    "Generated target outputs and re-ingested/recompiled Python outputs agree over deterministic samples for the selected cases.",
+    "Power-expression generated-target re-ingest remains held out because eFrog currently prints `^`, which Forge reserves for unit expressions."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "failCount": 0,
+    "formalEquivalenceClaim": false,
+    "generatedTargetLanguages": [
+      "javascript",
+      "python"
+    ],
+    "heldOutGeneratedTargetShapes": [
+      "power-expression generated Python/JavaScript re-ingest where eFrog emits `^`, which Forge reserves for unit expressions"
+    ],
+    "maxAbsError": 0.0,
+    "maxRelError": 0.0,
+    "packagePublished": false,
+    "packetCount": 6,
+    "passCount": 6,
+    "publicReady": false,
+    "recompiledTargetLanguages": [
+      "python"
+    ],
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "sampleCount": 26,
+    "sourceLanguages": [
+      "c",
+      "javascript",
+      "rust"
+    ]
+  },
+  "semanticStrength": "selected_generated_target_reingest_sample_grid_agreement",
+  "title": "FEF-P8 Generated-Target Re-ingest",
+  "validationCommands": [
+    "python python/scripts/fef_p8_generated_target_reingest.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p8_generated_target_reingest.py"
+  ],
+  "validationStatus": "pass"
+}
