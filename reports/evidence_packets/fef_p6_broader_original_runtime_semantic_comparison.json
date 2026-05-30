@@ -1,0 +1,107 @@
+{
+  "artifactId": "fef-p6-broader-original-runtime-semantic-comparison",
+  "claimBoundary": "Selected C/Rust original-runtime sample-grid semantic comparison only; no public package publication, compiler correctness, formal equivalence, runtime performance, production readiness, checkout, Verilog, Lean proof, zkproof, silicon, or hardware claim.",
+  "claimFlags": {
+    "certified_safety_claim": false,
+    "compiler_behavior_changed": false,
+    "compiler_correctness_claim": false,
+    "deploy_performed": false,
+    "eml_general_superiority_claim": false,
+    "forge_behavior_changed": false,
+    "formal_equivalence_claim": false,
+    "formal_proof_claim": false,
+    "formal_verification_claim": false,
+    "hardware_measurement_claim": false,
+    "hardware_observed": false,
+    "lean_proof_claim": false,
+    "live_serial_capture_performed": false,
+    "package_published": false,
+    "production_controller_claim": false,
+    "production_toolchain_claim": false,
+    "proof_claim": false,
+    "public_checkout_enabled": false,
+    "public_compiler_package_available": false,
+    "public_performance_claim": false,
+    "public_ready": false,
+    "public_savings_claim": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "silicon_claim": false,
+    "theorem_discovery_claim": false,
+    "theorem_proof_claim": false,
+    "verilog_claim": false,
+    "zeta_zero_discovery_claim": false,
+    "zkproof_claim": false
+  },
+  "nonClaims": [
+    "FEF-P6 records bounded original-runtime sample comparisons for selected C and Rust fixtures.",
+    "FEF-P6 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P6 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P6 does not claim runtime performance, Verilog, Lean proofs, zkproof, silicon, or hardware output.",
+    "MATLAB/Octave original-runtime comparison is recorded as unavailable when no local runtime is present."
+  ],
+  "reviewDecision": "c_rust_original_runtime_semantic_comparison_passed",
+  "reviewHighlights": [
+    "Selected C fixtures execute through gcc-built original runners and compare against Forge Python/JavaScript outputs.",
+    "Selected Rust fixtures execute through rustc-built original runners and compare against Forge Python/JavaScript outputs.",
+    "MATLAB/Octave original-runtime comparison is recorded as unavailable because no local runtime is on PATH.",
+    "Compound-reassignment poly_horner fixtures are left out because generated JavaScript rebind handling needs a separate guard."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "caseCount": 5,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "failCount": 0,
+    "formalEquivalenceClaim": false,
+    "maxAbsError": 3.410605131648481e-13,
+    "maxRelError": 1.0856293312728803e-15,
+    "packagePublished": false,
+    "passCount": 5,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "sampleCount": 23,
+    "sourceLanguages": [
+      "c",
+      "rust"
+    ],
+    "targetLanguages": [
+      "python",
+      "javascript"
+    ],
+    "toolchains": {
+      "gcc": {
+        "available": true,
+        "path": "/usr/bin/gcc"
+      },
+      "matlab": {
+        "available": false,
+        "path": null
+      },
+      "octave": {
+        "available": false,
+        "path": null
+      },
+      "rustc": {
+        "available": true,
+        "path": "/home/monogate/.cargo/bin/rustc"
+      }
+    },
+    "unavailableOriginalRuntimes": [
+      {
+        "reason": "No local octave or matlab runtime found on PATH.",
+        "sourceLanguage": "matlab",
+        "status": "not_executed"
+      }
+    ]
+  },
+  "semanticStrength": "c_rust_original_runtime_sample_grid_semantic_agreement",
+  "title": "FEF-P6 Broader Original-Runtime Semantic Comparison",
+  "validationCommands": [
+    "python python/scripts/fef_p6_broader_original_runtime_semantic_comparison.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p6_broader_original_runtime_semantic_comparison.py"
+  ],
+  "validationStatus": "pass"
+}
