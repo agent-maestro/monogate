@@ -1,0 +1,841 @@
+{
+  "artifactId": "fef-p37-verified-add-runtime-execution",
+  "claimFlags": {
+    "all_free_targets_public_ready_claim": false,
+    "all_free_targets_runtime_execution_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "package_published": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "selected_runtime_execution_claim": false,
+    "target_all_ready_claim": false
+  },
+  "date": "2026-05-30",
+  "decision": "selected_verified_add_generated_targets_execute_and_match_reference",
+  "fefP36Link": {
+    "path": "reports/evidence_packets/fef_p36_free_target_capability_matrix.json",
+    "reviewDecision": "selected_free_target_capability_matrix_with_runtime_overlay"
+  },
+  "nextMilestones": [
+    "Add runtime execution checks for runtime_helper_mix on the same installed toolchain set.",
+    "Fold verified_add runtime execution rows into the selected capability matrix view.",
+    "Keep public package publication blocked until explicit release action."
+  ],
+  "nonClaims": [
+    "FEF-P37 records runtime execution for installed toolchains over one selected verified_add fixture.",
+    "FEF-P37 does not execute all 13 free targets.",
+    "FEF-P37 does not claim all free targets are public-ready.",
+    "FEF-P37 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P37 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P37 does not claim runtime performance, Verilog, silicon, hardware, Pro-target, or all-target readiness."
+  ],
+  "reference": {
+    "function": "a + b",
+    "values": [
+      0.0,
+      3.0,
+      1.0,
+      10.5,
+      123.45700000000001,
+      3.0000000000000004e-09
+    ]
+  },
+  "releaseGates": [
+    {
+      "id": "selected_runtime_targets_emit",
+      "status": "pass"
+    },
+    {
+      "id": "selected_runtime_targets_execute",
+      "status": "pass"
+    },
+    {
+      "id": "selected_runtime_targets_match_reference",
+      "status": "pass"
+    },
+    {
+      "id": "all_free_targets_runtime_execution",
+      "status": "blocked"
+    },
+    {
+      "id": "public_package_published",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness_proved",
+      "status": "blocked"
+    }
+  ],
+  "runtimeRows": [
+    {
+      "agreementStatus": "pass",
+      "artifactBytes": 693,
+      "artifactPath": "/tmp/fef_p37_verified_add_runtime_6jnvw5_1/c/verified_add.c",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "expected": 0.0,
+          "index": 0,
+          "observed": 0.0,
+          "sample": {
+            "args": [
+              0.0,
+              0.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0,
+          "index": 1,
+          "observed": 3.0,
+          "sample": {
+            "args": [
+              1.0,
+              2.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 1.0,
+          "index": 2,
+          "observed": 1.0,
+          "sample": {
+            "args": [
+              0.25,
+              0.75
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 10.5,
+          "index": 3,
+          "observed": 10.5,
+          "sample": {
+            "args": [
+              10.0,
+              0.5
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 123.45700000000001,
+          "index": 4,
+          "observed": 123.45700000000001,
+          "sample": {
+            "args": [
+              123.456,
+              0.001
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0000000000000004e-09,
+          "index": 5,
+          "observed": 3.0000000000000004e-09,
+          "sample": {
+            "args": [
+              1e-09,
+              2e-09
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ],
+      "maxAbsError": 0.0,
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "runtimeTool": "c",
+      "sampleCount": 6,
+      "target": "c"
+    },
+    {
+      "agreementStatus": "pass",
+      "artifactBytes": 652,
+      "artifactPath": "/tmp/fef_p37_verified_add_runtime_6jnvw5_1/cpp/verified_add.hpp",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "expected": 0.0,
+          "index": 0,
+          "observed": 0.0,
+          "sample": {
+            "args": [
+              0.0,
+              0.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0,
+          "index": 1,
+          "observed": 3.0,
+          "sample": {
+            "args": [
+              1.0,
+              2.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 1.0,
+          "index": 2,
+          "observed": 1.0,
+          "sample": {
+            "args": [
+              0.25,
+              0.75
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 10.5,
+          "index": 3,
+          "observed": 10.5,
+          "sample": {
+            "args": [
+              10.0,
+              0.5
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 123.45700000000001,
+          "index": 4,
+          "observed": 123.45700000000001,
+          "sample": {
+            "args": [
+              123.456,
+              0.001
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0000000000000004e-09,
+          "index": 5,
+          "observed": 3.0000000000000004e-09,
+          "sample": {
+            "args": [
+              1e-09,
+              2e-09
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ],
+      "maxAbsError": 0.0,
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "runtimeTool": "cpp",
+      "sampleCount": 6,
+      "target": "cpp"
+    },
+    {
+      "agreementStatus": "pass",
+      "artifactBytes": 646,
+      "artifactPath": "/tmp/fef_p37_verified_add_runtime_6jnvw5_1/rust/verified_add.rs",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "expected": 0.0,
+          "index": 0,
+          "observed": 0.0,
+          "sample": {
+            "args": [
+              0.0,
+              0.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0,
+          "index": 1,
+          "observed": 3.0,
+          "sample": {
+            "args": [
+              1.0,
+              2.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 1.0,
+          "index": 2,
+          "observed": 1.0,
+          "sample": {
+            "args": [
+              0.25,
+              0.75
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 10.5,
+          "index": 3,
+          "observed": 10.5,
+          "sample": {
+            "args": [
+              10.0,
+              0.5
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 123.45700000000001,
+          "index": 4,
+          "observed": 123.45700000000001,
+          "sample": {
+            "args": [
+              123.456,
+              0.001
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0000000000000004e-09,
+          "index": 5,
+          "observed": 3.0000000000000004e-09,
+          "sample": {
+            "args": [
+              1e-09,
+              2e-09
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ],
+      "maxAbsError": 0.0,
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "runtimeTool": "rust",
+      "sampleCount": 6,
+      "target": "rust"
+    },
+    {
+      "agreementStatus": "pass",
+      "artifactBytes": 499,
+      "artifactPath": "/tmp/fef_p37_verified_add_runtime_6jnvw5_1/python/verified_add.py",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "expected": 0.0,
+          "index": 0,
+          "observed": 0.0,
+          "sample": {
+            "args": [
+              0.0,
+              0.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0,
+          "index": 1,
+          "observed": 3.0,
+          "sample": {
+            "args": [
+              1.0,
+              2.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 1.0,
+          "index": 2,
+          "observed": 1.0,
+          "sample": {
+            "args": [
+              0.25,
+              0.75
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 10.5,
+          "index": 3,
+          "observed": 10.5,
+          "sample": {
+            "args": [
+              10.0,
+              0.5
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 123.45700000000001,
+          "index": 4,
+          "observed": 123.45700000000001,
+          "sample": {
+            "args": [
+              123.456,
+              0.001
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0000000000000004e-09,
+          "index": 5,
+          "observed": 3.0000000000000004e-09,
+          "sample": {
+            "args": [
+              1e-09,
+              2e-09
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ],
+      "maxAbsError": 0.0,
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "runtimeTool": "python",
+      "sampleCount": 6,
+      "target": "python"
+    },
+    {
+      "agreementStatus": "pass",
+      "artifactBytes": 740,
+      "artifactPath": "/tmp/fef_p37_verified_add_runtime_6jnvw5_1/javascript/verified_add.js",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "expected": 0.0,
+          "index": 0,
+          "observed": 0.0,
+          "sample": {
+            "args": [
+              0.0,
+              0.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0,
+          "index": 1,
+          "observed": 3.0,
+          "sample": {
+            "args": [
+              1.0,
+              2.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 1.0,
+          "index": 2,
+          "observed": 1.0,
+          "sample": {
+            "args": [
+              0.25,
+              0.75
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 10.5,
+          "index": 3,
+          "observed": 10.5,
+          "sample": {
+            "args": [
+              10.0,
+              0.5
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 123.45700000000001,
+          "index": 4,
+          "observed": 123.45700000000001,
+          "sample": {
+            "args": [
+              123.456,
+              0.001
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0000000000000004e-09,
+          "index": 5,
+          "observed": 3.0000000000000004e-09,
+          "sample": {
+            "args": [
+              1e-09,
+              2e-09
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ],
+      "maxAbsError": 0.0,
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "runtimeTool": "javascript",
+      "sampleCount": 6,
+      "target": "javascript"
+    },
+    {
+      "agreementStatus": "pass",
+      "artifactBytes": 738,
+      "artifactPath": "/tmp/fef_p37_verified_add_runtime_6jnvw5_1/java/VerifiedAdd.java",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "expected": 0.0,
+          "index": 0,
+          "observed": 0.0,
+          "sample": {
+            "args": [
+              0.0,
+              0.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0,
+          "index": 1,
+          "observed": 3.0,
+          "sample": {
+            "args": [
+              1.0,
+              2.0
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 1.0,
+          "index": 2,
+          "observed": 1.0,
+          "sample": {
+            "args": [
+              0.25,
+              0.75
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 10.5,
+          "index": 3,
+          "observed": 10.5,
+          "sample": {
+            "args": [
+              10.0,
+              0.5
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 123.45700000000001,
+          "index": 4,
+          "observed": 123.45700000000001,
+          "sample": {
+            "args": [
+              123.456,
+              0.001
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "absError": 0.0,
+          "expected": 3.0000000000000004e-09,
+          "index": 5,
+          "observed": 3.0000000000000004e-09,
+          "sample": {
+            "args": [
+              1e-09,
+              2e-09
+            ],
+            "labels": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ],
+      "maxAbsError": 0.0,
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "runtimeTool": "java",
+      "sampleCount": 6,
+      "target": "java"
+    }
+  ],
+  "sampleGrid": [
+    {
+      "args": [
+        0.0,
+        0.0
+      ],
+      "labels": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "args": [
+        1.0,
+        2.0
+      ],
+      "labels": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "args": [
+        0.25,
+        0.75
+      ],
+      "labels": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "args": [
+        10.0,
+        0.5
+      ],
+      "labels": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "args": [
+        123.456,
+        0.001
+      ],
+      "labels": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "args": [
+        1e-09,
+        2e-09
+      ],
+      "labels": [
+        "a",
+        "b"
+      ]
+    }
+  ],
+  "schemaVersion": "monogate.fef_p37_verified_add_runtime_execution.v0",
+  "sourceFixture": "examples/verified_add.eml",
+  "status": "FEF_P37_VERIFIED_ADD_RUNTIME_EXECUTION_PASS",
+  "summary": {
+    "agreementPassCount": 6,
+    "allFreeTargetsPublicReadyClaim": false,
+    "allFreeTargetsRuntimeExecutionClaim": false,
+    "allSelectedRuntimeTargetsPass": true,
+    "allSelectedTargetsAgreeWithReference": true,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "emissionPassCount": 6,
+    "formalEquivalenceClaim": false,
+    "maxAbsError": 0.0,
+    "packagePublished": false,
+    "publicReady": false,
+    "runtimeFailedTargets": [],
+    "runtimePassCount": 6,
+    "runtimePerformanceClaim": false,
+    "runtimeTargetCount": 6,
+    "runtimeTargets": [
+      "c",
+      "cpp",
+      "rust",
+      "python",
+      "javascript",
+      "java"
+    ],
+    "safeToPublishPublicly": false,
+    "sampleCountPerTarget": 6,
+    "sourceFixture": "examples/verified_add.eml",
+    "targetAllReadyClaim": false,
+    "totalSampleExecutions": 36
+  }
+}
