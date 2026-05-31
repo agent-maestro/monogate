@@ -1,0 +1,150 @@
+{
+  "allowedPrivatePreviewClaims": [
+    "Rust, C, and Python are the selected private hero lane.",
+    "The hero lane records 12 selected runtime cells and 72 selected runtime sample executions.",
+    "Selected generated C/Rust target outputs have 10 re-ingest packets and 34 sample comparisons.",
+    "The private preview package may point reviewers to P44 and P45 evidence without claiming public readiness."
+  ],
+  "artifactId": "fef-p46-hero-lane-private-preview-release-gate",
+  "blockedPublicClaims": [
+    "public package availability",
+    "checkout availability",
+    "public readiness",
+    "full arbitrary C/Rust source roundtrip",
+    "all-free-target runtime execution",
+    "all-free-target roundtrip",
+    "compiler correctness",
+    "formal semantic equivalence",
+    "runtime performance",
+    "production readiness",
+    "Verilog/Lean proof/zkproof/silicon/hardware readiness"
+  ],
+  "claimFlags": {
+    "all_free_targets_roundtrip_claim": false,
+    "all_free_targets_runtime_execution_claim": false,
+    "all_target_readiness_claim": false,
+    "checkout_enabled": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "full_c_rust_roundtrip_claim": false,
+    "package_published": false,
+    "private_preview_release_action_claim": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false
+  },
+  "date": "2026-05-30",
+  "decision": "rust_c_python_private_preview_release_action_approved_publication_blocked",
+  "nextMilestones": [
+    "Prepare a private reviewer bundle index that links P43, P44, P45, and this P46 gate.",
+    "Broaden C/Rust roundtrip with non-generated source fixtures only under a separate gate.",
+    "Keep public release blocked until publication, checkout, and public-readiness gates are explicitly passed."
+  ],
+  "nonClaims": [
+    "FEF-P46 records a private preview release-action gate for the Rust/C/Python hero lane.",
+    "FEF-P46 does not publish a package.",
+    "FEF-P46 does not enable checkout or commerce.",
+    "FEF-P46 does not claim public readiness.",
+    "FEF-P46 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P46 does not claim runtime performance.",
+    "FEF-P46 does not claim full arbitrary C/Rust source roundtrip.",
+    "FEF-P46 does not claim all-free-target runtime execution or all-free-target roundtrip.",
+    "FEF-P46 does not claim Verilog, Lean proof, zkproof, silicon, hardware, Pro-target, production, or all-target readiness."
+  ],
+  "privateCopyReview": {
+    "forbiddenHits": [],
+    "requiredBoundaryMissing": [],
+    "status": "pass"
+  },
+  "privatePreviewCopy": "Private preview evidence only.\n\nForge/eFrog has a selected Rust/C/Python hero lane for private review. The lane\nrecords selected runtime execution evidence for Rust, C, and Python across four\nfixture families, plus selected generated-target C/Rust re-ingest evidence that\nroundtrips through eFrog and recompiles to Python.\n\nThis is not a public package release, not a compiler-correctness proof, not a\nformal semantic-equivalence result, not a runtime-performance benchmark, not a\ncheckout-enabled product, and not full arbitrary C/Rust source roundtrip.\n",
+  "privatePreviewScope": {
+    "fixtureCount": 4,
+    "heroRuntimeCellCount": 12,
+    "heroRuntimeSampleExecutions": 72,
+    "heroTargets": [
+      "rust",
+      "c",
+      "python"
+    ],
+    "selectedRoundtripAttachmentMaxAbsError": 2.1316282072803006e-14,
+    "selectedRoundtripAttachmentPackets": 10,
+    "selectedRoundtripAttachmentSamples": 34,
+    "selectedRoundtripAttachmentTargets": [
+      "c",
+      "rust"
+    ]
+  },
+  "releaseGates": [
+    {
+      "id": "private_preview_scope_recorded",
+      "status": "pass"
+    },
+    {
+      "id": "private_preview_copy_boundary_review_passed",
+      "status": "pass"
+    },
+    {
+      "id": "hero_lane_runtime_evidence_attached",
+      "status": "pass"
+    },
+    {
+      "id": "selected_c_rust_roundtrip_attachment_attached",
+      "status": "pass"
+    },
+    {
+      "id": "full_c_rust_roundtrip_claim",
+      "status": "blocked"
+    },
+    {
+      "id": "public_package_published",
+      "status": "blocked"
+    },
+    {
+      "id": "checkout_enabled",
+      "status": "blocked"
+    },
+    {
+      "id": "public_readiness",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness_proved",
+      "status": "blocked"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p46_hero_lane_private_preview_release_gate.v0",
+  "status": "FEF_P46_HERO_LANE_PRIVATE_PREVIEW_RELEASE_GATE_PASS",
+  "summary": {
+    "allFreeTargetsRoundtripClaim": false,
+    "allFreeTargetsRuntimeExecutionClaim": false,
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "formalEquivalenceClaim": false,
+    "fullCRustRoundtripClaim": false,
+    "heroRuntimeCellCount": 12,
+    "heroRuntimeSampleExecutions": 72,
+    "heroTargets": [
+      "rust",
+      "c",
+      "python"
+    ],
+    "packagePublished": false,
+    "privateCopyReviewPassed": true,
+    "privatePreviewReleaseActionApproved": true,
+    "publicReady": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedRoundtripAttachmentPackets": 10,
+    "selectedRoundtripAttachmentSamples": 34,
+    "selectedRoundtripAttachmentTargets": [
+      "c",
+      "rust"
+    ]
+  },
+  "upstreamEvidence": {
+    "fefP44": "reports/evidence_packets/fef_p44_hero_target_hardening_gate.json",
+    "fefP45": "reports/evidence_packets/fef_p45_c_rust_roundtrip_attachment_gate.json"
+  }
+}
