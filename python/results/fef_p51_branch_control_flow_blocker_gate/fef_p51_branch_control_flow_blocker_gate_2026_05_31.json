@@ -1,7 +1,7 @@
 {
   "allowedPrivateClaims": [
     "Selected branch/control-flow C/Rust fixtures were attempted and current frontend blockers are recorded.",
-    "After FEF-P52/FEF-P53/FEF-P54/FEF-P55, selected C branch cases and the selected Rust if-expression case may pass as later-phase closures while P51 remains a blocker inventory.",
+    "After FEF-P52/FEF-P53/FEF-P54/FEF-P55/FEF-P56, all selected P51 branch cases may pass as later-phase closures while P51 remains a blocker inventory.",
     "P50 scalar source-derived re-ingest evidence remains valid but does not cover branch/control-flow fixtures.",
     "The next branch work is implementation work, not a release-action task."
   ],
@@ -175,7 +175,7 @@
       "sourceSnippet": "fn relu(x: f64) -> f64 { if x > 0.0 { x } else { 0.0 } }"
     },
     {
-      "blockerClass": "rust_if_expression_unsupported",
+      "blockerClass": "unexpected_pass",
       "caseId": "rust_if_return_clamp_v0",
       "claimFlags": {
         "all_free_targets_roundtrip_claim": false,
@@ -197,12 +197,12 @@
         "safe_to_publish_publicly": false,
         "selected_branch_fixture_pass_claim": false
       },
-      "emittedEml": null,
-      "errorMessage": "line 1: expected kw 'else', got kw 'if'",
-      "errorType": "EFrogError",
+      "emittedEml": "module rust_if_return_clamp_v0;\n\nfn step01(x: Real) -> Real\n    where chain_order <= 0\n{\n    clamp(x * 1e+30, 0.0, 1.0)\n}\n\nfn clamp(x: Real, lo: Real, hi: Real) -> Real\n    where chain_order <= 0\n{\n    x + (hi - (x)) * step01((x) - (hi)) + (lo - (x + (hi - (x)) * step01((x) - (hi)))) * step01((lo) - (x))\n}\n",
+      "errorMessage": null,
+      "errorType": null,
       "expectedStatus": "blocked",
       "feature": "if_return_clamp",
-      "observedStatus": "blocked",
+      "observedStatus": "unexpected_pass",
       "sourceLanguage": "rust",
       "sourceSnippet": "fn clamp(x: f64, lo: f64, hi: f64) -> f64 { if x < lo { return lo; } if x > hi { return hi; } return x; }"
     }
@@ -210,14 +210,14 @@
   "implementationRequirements": [
     "Keep C branch lowering evidence in later selected P52/P53/P54 gates, not in P51 blocker evidence.",
     "Keep selected Rust `if` expression evidence in the later FEF-P55 gate, not in P51 blocker evidence.",
-    "Add Rust `if return` parsing/lowering before branch re-ingest can cover the remaining selected Rust branch blocker.",
+    "Keep selected Rust `if return` evidence in the later FEF-P56 gate, not in P51 blocker evidence.",
     "Add deterministic boundary samples around branch thresholds after frontend support exists.",
     "Keep the new branch gate separate from P50 scalar source-derived re-ingest evidence."
   ],
   "nextMilestones": [
     "Implement the narrow C/Rust branch frontends or keep branch fixtures as blocked review evidence.",
     "After each frontend slice exists, add a separate branch fixture runtime/re-ingest gate.",
-    "Record private reviewer response over P47-P55 before changing release posture."
+    "Record private reviewer response over P47-P56 before changing release posture."
   ],
   "nonClaims": [
     "FEF-P51 records branch/control-flow blockers for selected non-generated C/Rust fixtures.",
@@ -275,10 +275,8 @@
     "allFreeTargetsRoundtripClaim": false,
     "allFreeTargetsRuntimeExecutionClaim": false,
     "arbitrarySourceFamilyClaim": false,
-    "blockedCount": 1,
-    "blockerClasses": [
-      "rust_if_expression_unsupported"
-    ],
+    "blockedCount": 0,
+    "blockerClasses": [],
     "branchControlFlowReingestClaim": false,
     "branchControlFlowSupported": false,
     "checkoutEnabled": false,
@@ -299,10 +297,11 @@
       "c_if_early_return_relu_v0",
       "c_if_else_clamp_v0",
       "c_ternary_select_v0",
-      "rust_if_expr_relu_v0"
+      "rust_if_expr_relu_v0",
+      "rust_if_return_clamp_v0"
     ],
-    "laterPhasePassCount": 4,
-    "minimumExpectedBlockedFixtures": 1,
+    "laterPhasePassCount": 5,
+    "minimumExpectedBlockedFixtures": 0,
     "p50PacketCount": 10,
     "p50SourceCaseCount": 5,
     "p50SourceDerivedReingestPass": true,
@@ -316,6 +315,6 @@
       "c",
       "rust"
     ],
-    "unexpectedPassCount": 4
+    "unexpectedPassCount": 5
   }
 }

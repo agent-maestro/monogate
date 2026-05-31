@@ -34,9 +34,8 @@ def test_fef_p51_records_branch_blocker_inventory():
 def test_fef_p51_blocker_classes_are_explicit():
     payload = build_payload()
     summary = payload["summary"]
-    assert {
-        "rust_if_expression_unsupported",
-    }.issubset(set(summary["blockerClasses"]))
+    if summary["blockedCount"]:
+        assert {"rust_if_expression_unsupported"}.issubset(set(summary["blockerClasses"]))
     rows = {row["caseId"]: row for row in payload["fixtureRows"]}
     if rows["c_if_early_return_relu_v0"]["observedStatus"] == "blocked":
         assert rows["c_if_early_return_relu_v0"]["blockerClass"] == (
@@ -64,6 +63,11 @@ def test_fef_p51_blocker_classes_are_explicit():
     else:
         assert rows["rust_if_expr_relu_v0"]["observedStatus"] == "unexpected_pass"
         assert "step01" in rows["rust_if_expr_relu_v0"]["emittedEml"]
+    if rows["rust_if_return_clamp_v0"]["observedStatus"] == "blocked":
+        assert rows["rust_if_return_clamp_v0"]["blockerClass"] == "rust_if_expression_unsupported"
+    else:
+        assert rows["rust_if_return_clamp_v0"]["observedStatus"] == "unexpected_pass"
+        assert "step01" in rows["rust_if_return_clamp_v0"]["emittedEml"]
 
 
 def test_fef_p51_rows_record_local_frontend_errors():
