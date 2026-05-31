@@ -1,0 +1,94 @@
+{
+  "artifactId": "fef-p43-free-target-reality-matrix",
+  "claimBoundary": "Target-level reality matrix only; selected emission/validation evidence exists for four fixture families across 13 free targets, selected runtime evidence exists only for six software targets, selected roundtrip evidence exists only for Python and JavaScript, and publication/public-readiness/compiler-correctness/formal-equivalence/runtime-performance claims remain blocked.",
+  "claimFlags": {
+    "all_free_targets_public_ready_claim": false,
+    "all_free_targets_roundtrip_claim": false,
+    "all_free_targets_runtime_execution_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "free_target_reality_matrix_claim": false,
+    "package_published": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "target_all_ready_claim": false
+  },
+  "nonClaims": [
+    "FEF-P43 summarizes current free-target evidence by target.",
+    "FEF-P43 does not execute new runtime checks.",
+    "FEF-P43 does not add new fixture families.",
+    "FEF-P43 does not claim all 13 free targets runtime-execute.",
+    "FEF-P43 does not claim all 13 free targets roundtrip.",
+    "FEF-P43 does not claim all free targets are public-ready.",
+    "FEF-P43 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P43 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P43 does not claim runtime performance, Verilog, Lean proofs, zkproof proofs, silicon output, hardware readiness, Pro-target readiness, or all-target readiness."
+  ],
+  "reviewDecision": "free_target_reality_matrix_recorded_publication_blocked",
+  "reviewHighlights": [
+    "All 13 free targets have selected four-fixture emission and validation evidence.",
+    "C, C++, Rust, Python, JavaScript, and Java have selected runtime execution overlays.",
+    "Python and JavaScript have selected eFrog/Forge roundtrip evidence.",
+    "Rust, C, and Python are named as the first hero hardening lane."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "allFreeTargetsPublicReadyClaim": false,
+    "allFreeTargetsRoundtripClaim": false,
+    "allFreeTargetsRuntimeExecutionClaim": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "detectedToolchainRuntimeNotWiredTargets": [
+      "lean"
+    ],
+    "emissionPassTargetCount": 13,
+    "fixtureCount": 4,
+    "formalEquivalenceClaim": false,
+    "freeTargetCount": 13,
+    "heroTargets": [
+      "rust",
+      "c",
+      "python"
+    ],
+    "matrixCellCount": 52,
+    "missingOrUnclaimedRuntimeTargets": [
+      "go",
+      "kotlin",
+      "csharp",
+      "wasm",
+      "matlab",
+      "zkproof"
+    ],
+    "packagePublished": false,
+    "privatePreviewPublicationBlocked": true,
+    "publicReady": false,
+    "roundtripPassTargetCount": 2,
+    "roundtripPassTargets": [
+      "python",
+      "javascript"
+    ],
+    "runtimeOverlayCellCount": 24,
+    "runtimeOverlayMaxAbsError": 4.440892098500626e-16,
+    "runtimeOverlaySampleExecutions": 144,
+    "runtimePassTargetCount": 6,
+    "runtimePassTargets": [
+      "c",
+      "cpp",
+      "rust",
+      "python",
+      "java",
+      "javascript"
+    ],
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "validationPassTargetCount": 13
+  },
+  "semanticStrength": "target_level_reality_matrix_selected_evidence_only",
+  "title": "FEF-P43 Free Target Reality Matrix",
+  "validationCommands": [
+    "python python/scripts/fef_p43_free_target_reality_matrix.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p43_free_target_reality_matrix.py"
+  ],
+  "validationStatus": "pass"
+}
