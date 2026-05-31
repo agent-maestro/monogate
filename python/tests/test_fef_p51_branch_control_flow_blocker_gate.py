@@ -10,6 +10,7 @@ import sys
 from scripts.fef_p51_branch_control_flow_blocker_gate import (
     BRANCH_FIXTURES,
     CLAIM_FLAGS,
+    LATER_PHASE_PASS_CASE_IDS,
     build_outputs,
     build_payload,
     validate_payload,
@@ -24,8 +25,8 @@ def test_fef_p51_records_branch_blocker_inventory():
     assert payload["decision"] == "branch_control_flow_non_generated_c_rust_blockers_recorded"
     assert summary["fixtureCount"] == len(BRANCH_FIXTURES)
     assert summary["blockedCount"] >= summary["minimumExpectedBlockedFixtures"]
-    assert summary["unexpectedPassCount"] <= 1
-    assert set(summary["laterPhasePassCaseIds"]).issubset({"c_ternary_select_v0"})
+    assert summary["unexpectedPassCount"] <= len(LATER_PHASE_PASS_CASE_IDS)
+    assert set(summary["laterPhasePassCaseIds"]).issubset(LATER_PHASE_PASS_CASE_IDS)
     assert summary["sourceLanguages"] == ["c", "rust"]
     assert summary["p50SourceDerivedReingestPass"] is True
 
@@ -38,9 +39,13 @@ def test_fef_p51_blocker_classes_are_explicit():
         "rust_if_expression_unsupported",
     }.issubset(set(summary["blockerClasses"]))
     rows = {row["caseId"]: row for row in payload["fixtureRows"]}
-    assert rows["c_if_early_return_relu_v0"]["blockerClass"] == (
-        "c_statement_control_flow_unsupported"
-    )
+    if rows["c_if_early_return_relu_v0"]["observedStatus"] == "blocked":
+        assert rows["c_if_early_return_relu_v0"]["blockerClass"] == (
+            "c_statement_control_flow_unsupported"
+        )
+    else:
+        assert rows["c_if_early_return_relu_v0"]["observedStatus"] == "unexpected_pass"
+        assert "step01" in rows["c_if_early_return_relu_v0"]["emittedEml"]
     if rows["c_ternary_select_v0"]["observedStatus"] == "blocked":
         assert rows["c_ternary_select_v0"]["blockerClass"] == (
             "c_conditional_expression_unsupported"
@@ -54,7 +59,7 @@ def test_fef_p51_blocker_classes_are_explicit():
 def test_fef_p51_rows_record_local_frontend_errors():
     payload = build_payload()
     for row in payload["fixtureRows"]:
-        if row["caseId"] == "c_ternary_select_v0" and row["observedStatus"] == "unexpected_pass":
+        if row["caseId"] in LATER_PHASE_PASS_CASE_IDS and row["observedStatus"] == "unexpected_pass":
             assert row["errorType"] is None
             assert row["errorMessage"] is None
             assert row["emittedEml"]

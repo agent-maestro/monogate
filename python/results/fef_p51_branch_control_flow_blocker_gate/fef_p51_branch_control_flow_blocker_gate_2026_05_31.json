@@ -1,7 +1,7 @@
 {
   "allowedPrivateClaims": [
     "Selected branch/control-flow C/Rust fixtures were attempted and current frontend blockers are recorded.",
-    "After FEF-P52, the selected C ternary case may pass as a later-phase closure while P51 remains a blocker inventory.",
+    "After FEF-P52/FEF-P53, the selected C ternary and C if early-return cases may pass as later-phase closures while P51 remains a blocker inventory.",
     "P50 scalar source-derived re-ingest evidence remains valid but does not cover branch/control-flow fixtures.",
     "The next branch work is implementation work, not a release-action task."
   ],
@@ -47,7 +47,7 @@
   },
   "fixtureRows": [
     {
-      "blockerClass": "c_statement_control_flow_unsupported",
+      "blockerClass": "unexpected_pass",
       "caseId": "c_if_early_return_relu_v0",
       "claimFlags": {
         "all_free_targets_roundtrip_claim": false,
@@ -69,12 +69,12 @@
         "safe_to_publish_publicly": false,
         "selected_branch_fixture_pass_claim": false
       },
-      "emittedEml": null,
-      "errorMessage": "If not supported in E2 (if/for/while go to E3+)",
-      "errorType": "EFrogError",
-      "expectedStatus": "blocked",
+      "emittedEml": "module c_if_early_return_relu_v0;\n\nfn step01(x: Real) -> Real\n    where chain_order <= 0\n{\n    clamp(x * 1e+30, 0.0, 1.0)\n}\n\nfn relu(x: Real) -> Real\n    where chain_order <= 0\n{\n    0.0 + (x - (0.0)) * step01((x) - (0.0))\n}\n",
+      "errorMessage": null,
+      "errorType": null,
+      "expectedStatus": "blocked_or_later_phase_pass",
       "feature": "if_early_return",
-      "observedStatus": "blocked",
+      "observedStatus": "unexpected_pass",
       "sourceLanguage": "c",
       "sourceSnippet": "double relu(double x) { if (x > 0.0) return x; return 0.0; }"
     },
@@ -102,7 +102,7 @@
         "selected_branch_fixture_pass_claim": false
       },
       "emittedEml": null,
-      "errorMessage": "If not supported in E2 (if/for/while go to E3+)",
+      "errorMessage": "C if statement form not supported in E2 (only `if (cond) return a; return b;` or return-only if/else)",
       "errorType": "EFrogError",
       "expectedStatus": "blocked",
       "feature": "if_else_clamp",
@@ -208,16 +208,17 @@
     }
   ],
   "implementationRequirements": [
-    "Add C `If` statement lowering to a guarded/piecewise EML form or explicit unsupported branch packet.",
+    "Add broader C `If` statement lowering beyond the selected early-return form, or keep unsupported branch packets explicit.",
     "Keep C `TernaryOp` lowering evidence in the later FEF-P52 selected ternary gate, not in P51 blocker evidence.",
+    "Keep C early-return `If` lowering evidence in the later FEF-P53 selected if early-return gate, not in P51 blocker evidence.",
     "Add Rust `if` expression and `if return` parsing/lowering before branch re-ingest can run.",
     "Add deterministic boundary samples around branch thresholds after frontend support exists.",
     "Keep the new branch gate separate from P50 scalar source-derived re-ingest evidence."
   ],
   "nextMilestones": [
     "Implement the narrow C/Rust branch frontends or keep branch fixtures as blocked review evidence.",
-    "After frontend support exists, add a P52 branch fixture runtime/re-ingest gate.",
-    "Record private reviewer response over P47-P51 before changing release posture."
+    "After each frontend slice exists, add a separate branch fixture runtime/re-ingest gate.",
+    "Record private reviewer response over P47-P53 before changing release posture."
   ],
   "nonClaims": [
     "FEF-P51 records branch/control-flow blockers for selected non-generated C/Rust fixtures.",
@@ -275,7 +276,7 @@
     "allFreeTargetsRoundtripClaim": false,
     "allFreeTargetsRuntimeExecutionClaim": false,
     "arbitrarySourceFamilyClaim": false,
-    "blockedCount": 4,
+    "blockedCount": 3,
     "blockerClasses": [
       "c_statement_control_flow_unsupported",
       "rust_if_expression_unsupported"
@@ -297,10 +298,11 @@
     "fullCRustRoundtripClaim": false,
     "fullNonGeneratedSourceRoundtripClaim": false,
     "laterPhasePassCaseIds": [
+      "c_if_early_return_relu_v0",
       "c_ternary_select_v0"
     ],
-    "laterPhasePassCount": 1,
-    "minimumExpectedBlockedFixtures": 4,
+    "laterPhasePassCount": 2,
+    "minimumExpectedBlockedFixtures": 3,
     "p50PacketCount": 10,
     "p50SourceCaseCount": 5,
     "p50SourceDerivedReingestPass": true,
@@ -314,6 +316,6 @@
       "c",
       "rust"
     ],
-    "unexpectedPassCount": 1
+    "unexpectedPassCount": 2
   }
 }
