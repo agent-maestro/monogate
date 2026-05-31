@@ -1,0 +1,71 @@
+{
+  "artifactId": "fef-p35-clamp-guard-runtime-execution",
+  "claimBoundary": "Runtime execution over installed local toolchains for one selected clamp/guard fixture only; it compares generated C, C++, Rust, Python, JavaScript, and Java outputs to a deterministic reference grid and makes no all-free-target runtime execution, public readiness, compiler correctness, formal equivalence, publication, runtime performance, hardware, Pro-target, or all-target readiness claim.",
+  "claimFlags": {
+    "all_free_targets_public_ready_claim": false,
+    "all_free_targets_runtime_execution_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "package_published": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "selected_runtime_execution_claim": false,
+    "target_all_ready_claim": false
+  },
+  "nonClaims": [
+    "FEF-P35 records runtime execution for installed toolchains over one selected clamp/guard fixture.",
+    "FEF-P35 does not execute all 13 free targets.",
+    "FEF-P35 does not claim arbitrary branch/control-flow support.",
+    "FEF-P35 does not claim all free targets are public-ready.",
+    "FEF-P35 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P35 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P35 does not claim runtime performance, Verilog, silicon, hardware, Pro-target, or all-target readiness."
+  ],
+  "reviewDecision": "selected_clamp_guard_generated_targets_execute_and_match_reference",
+  "reviewHighlights": [
+    "Generated C, C++, Rust, Python, JavaScript, and Java clamp_guard_mix targets execute locally.",
+    "All selected runtime targets match the deterministic clamp reference over seven samples.",
+    "Go, Kotlin, C#, MATLAB, wasm, Lean, and zkproof are not runtime-executed by this guard.",
+    "The guard is selected runtime evidence only and does not publish or widen public preview claims."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "agreementPassCount": 6,
+    "allFreeTargetsPublicReadyClaim": false,
+    "allFreeTargetsRuntimeExecutionClaim": false,
+    "allSelectedRuntimeTargetsPass": true,
+    "allSelectedTargetsAgreeWithReference": true,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "emissionPassCount": 6,
+    "formalEquivalenceClaim": false,
+    "maxAbsError": 0.0,
+    "packagePublished": false,
+    "publicReady": false,
+    "runtimeFailedTargets": [],
+    "runtimePassCount": 6,
+    "runtimePerformanceClaim": false,
+    "runtimeTargetCount": 6,
+    "runtimeTargets": [
+      "c",
+      "cpp",
+      "rust",
+      "python",
+      "javascript",
+      "java"
+    ],
+    "safeToPublishPublicly": false,
+    "sampleCountPerTarget": 7,
+    "sourceFixture": "generated/clamp_guard_mix.eml",
+    "targetAllReadyClaim": false,
+    "totalSampleExecutions": 42
+  },
+  "semanticStrength": "selected_generated_targets_runtime_sample_grid_agreement",
+  "title": "FEF-P35 Clamp/Guard Runtime Execution",
+  "validationCommands": [
+    "python python/scripts/fef_p35_clamp_guard_runtime_execution.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p35_clamp_guard_runtime_execution.py"
+  ],
+  "validationStatus": "pass"
+}
