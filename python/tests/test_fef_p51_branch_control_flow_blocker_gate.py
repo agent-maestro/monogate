@@ -59,7 +59,11 @@ def test_fef_p51_blocker_classes_are_explicit():
     else:
         assert rows["c_if_else_clamp_v0"]["observedStatus"] == "unexpected_pass"
         assert "step01" in rows["c_if_else_clamp_v0"]["emittedEml"]
-    assert rows["rust_if_expr_relu_v0"]["blockerClass"] == "rust_if_expression_unsupported"
+    if rows["rust_if_expr_relu_v0"]["observedStatus"] == "blocked":
+        assert rows["rust_if_expr_relu_v0"]["blockerClass"] == "rust_if_expression_unsupported"
+    else:
+        assert rows["rust_if_expr_relu_v0"]["observedStatus"] == "unexpected_pass"
+        assert "step01" in rows["rust_if_expr_relu_v0"]["emittedEml"]
 
 
 def test_fef_p51_rows_record_local_frontend_errors():
