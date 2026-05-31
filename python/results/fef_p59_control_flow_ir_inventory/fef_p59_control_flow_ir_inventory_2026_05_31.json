@@ -1,0 +1,511 @@
+{
+  "allowedPrivateReviewerStatements": [
+    "P59 records a candidate control-flow IR inventory for review.",
+    "The five selected P57 branch closures can be described using the candidate IR vocabulary.",
+    "P59 names unsupported forms and semantic obligations before any general branch/control-flow support claim."
+  ],
+  "artifactId": "fef-p59-control-flow-ir-inventory",
+  "blockedStatements": [
+    "The control-flow IR is implemented.",
+    "General C/Rust branch/control-flow support is established.",
+    "Branch/control-flow re-ingest is generally supported.",
+    "Full non-generated C/Rust source roundtrip is supported.",
+    "Arbitrary C/Rust source-family support is established.",
+    "A reviewer has approved the bundle.",
+    "Forge/eFrog is public-ready.",
+    "Compiler correctness has been proved.",
+    "Formal semantic equivalence has been proved.",
+    "Runtime performance has been established."
+  ],
+  "claimFlags": {
+    "arbitrary_source_family_claim": false,
+    "branch_control_flow_reingest_claim": false,
+    "checkout_enabled": false,
+    "compiler_correctness_claim": false,
+    "control_flow_ir_implemented": false,
+    "control_flow_ir_inventory_claim": false,
+    "formal_equivalence_claim": false,
+    "full_c_rust_roundtrip_claim": false,
+    "full_non_generated_source_roundtrip_claim": false,
+    "general_branch_control_flow_claim": false,
+    "package_published": false,
+    "private_reviewer_decision_recorded": false,
+    "production_ready": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false
+  },
+  "date": "2026-05-31",
+  "decision": "control_flow_ir_inventory_recorded_general_support_blocked",
+  "irNodes": [
+    {
+      "category": "structure",
+      "id": "cfg_entry",
+      "purpose": "single entry point for a lifted function body",
+      "requiredForGeneralSupport": true
+    },
+    {
+      "category": "structure",
+      "id": "cfg_exit",
+      "purpose": "single normalized exit for return-value comparison and source roundtrip",
+      "requiredForGeneralSupport": true
+    },
+    {
+      "category": "structure",
+      "id": "basic_block",
+      "purpose": "ordered side-effect-aware statement container",
+      "requiredForGeneralSupport": true
+    },
+    {
+      "category": "predicate",
+      "id": "condition_expr",
+      "purpose": "typed boolean expression with explicit numeric comparison semantics",
+      "requiredForGeneralSupport": true
+    },
+    {
+      "category": "control",
+      "id": "branch",
+      "purpose": "conditional edge from one block to true/false successors",
+      "requiredForGeneralSupport": true
+    },
+    {
+      "category": "control",
+      "id": "merge",
+      "purpose": "join point for branch outcomes, fallthrough, and else-if chains",
+      "requiredForGeneralSupport": true
+    },
+    {
+      "category": "control",
+      "id": "return_value",
+      "purpose": "explicit return edge and returned expression",
+      "requiredForGeneralSupport": true
+    },
+    {
+      "category": "state",
+      "id": "assignment",
+      "purpose": "mutable local update needed before general branches or loops",
+      "requiredForGeneralSupport": true
+    },
+    {
+      "category": "state",
+      "id": "phi_or_select",
+      "purpose": "merged scalar value after branch alternatives",
+      "requiredForGeneralSupport": true
+    },
+    {
+      "category": "boundary",
+      "id": "unsupported_construct",
+      "purpose": "fail-closed marker for loops, effects, calls, memory, labels, and unsupported branch forms",
+      "requiredForGeneralSupport": true
+    }
+  ],
+  "nextMilestones": [
+    "Define a machine-readable control-flow IR schema without enabling support claims.",
+    "Build a nested branch fixture matrix against the IR inventory.",
+    "Build an unsupported constructs blocker gate for loops, effects, calls, memory, and labels."
+  ],
+  "nonClaims": [
+    "FEF-P59 records a control-flow IR inventory only.",
+    "FEF-P59 does not implement a new IR in Forge or eFrog.",
+    "FEF-P59 does not add a new frontend lowering.",
+    "FEF-P59 does not claim general branch/control-flow support.",
+    "FEF-P59 does not claim branch/control-flow re-ingest support.",
+    "FEF-P59 does not claim full non-generated source roundtrip.",
+    "FEF-P59 does not claim arbitrary C/Rust source-family support.",
+    "FEF-P59 does not record reviewer approval or rejection.",
+    "FEF-P59 does not publish a package.",
+    "FEF-P59 does not enable checkout or commerce.",
+    "FEF-P59 does not claim public readiness.",
+    "FEF-P59 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P59 does not claim runtime performance.",
+    "FEF-P59 does not claim hardware, silicon, proof, Pro-target, production, or all-target readiness."
+  ],
+  "releaseGates": [
+    {
+      "id": "control_flow_ir_inventory",
+      "status": "recorded"
+    },
+    {
+      "id": "control_flow_ir_implementation",
+      "status": "not_started"
+    },
+    {
+      "id": "general_branch_control_flow_support",
+      "status": "blocked"
+    },
+    {
+      "id": "unsupported_constructs_policy",
+      "status": "blocked"
+    },
+    {
+      "id": "non_generated_branch_roundtrip",
+      "status": "blocked"
+    },
+    {
+      "id": "private_reviewer_decision",
+      "status": "not_recorded"
+    },
+    {
+      "id": "public_release",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness",
+      "status": "blocked"
+    }
+  ],
+  "requiredValidators": [
+    "control_flow_ir_schema",
+    "nested_branch_fixture_matrix",
+    "assignment_phi_fixture_gate",
+    "compound_condition_semantics_gate",
+    "unsupported_constructs_blocker_gate",
+    "non_generated_branch_roundtrip_gate",
+    "formal_obligation_inventory"
+  ],
+  "schemaVersion": "monogate.fef_p59_control_flow_ir_inventory.v0",
+  "selectedClosureMappings": [
+    {
+      "candidateIrPath": [
+        "condition_expr",
+        "phi_or_select",
+        "return_value"
+      ],
+      "caseId": "c_ternary_select_v0",
+      "currentLowering": "guarded_affine_selector_step01",
+      "missingForGeneralization": [
+        "typed condition semantics",
+        "source roundtrip AST shape"
+      ],
+      "selectedFeature": "ternary_select",
+      "sourceLanguage": "c"
+    },
+    {
+      "candidateIrPath": [
+        "cfg_entry",
+        "condition_expr",
+        "branch",
+        "return_value",
+        "cfg_exit"
+      ],
+      "caseId": "c_if_early_return_relu_v0",
+      "currentLowering": "guarded_affine_selector_step01",
+      "missingForGeneralization": [
+        "fallthrough normalization",
+        "multiple return normalization"
+      ],
+      "selectedFeature": "if_early_return",
+      "sourceLanguage": "c"
+    },
+    {
+      "candidateIrPath": [
+        "condition_expr",
+        "branch",
+        "merge",
+        "phi_or_select",
+        "return_value"
+      ],
+      "caseId": "c_if_else_clamp_v0",
+      "currentLowering": "nested_guarded_affine_selector_step01",
+      "missingForGeneralization": [
+        "else-if chain normalization",
+        "dominance and merge proof obligations"
+      ],
+      "selectedFeature": "if_else_clamp",
+      "sourceLanguage": "c"
+    },
+    {
+      "candidateIrPath": [
+        "condition_expr",
+        "phi_or_select",
+        "return_value"
+      ],
+      "caseId": "rust_if_expr_relu_v0",
+      "currentLowering": "guarded_affine_selector_step01",
+      "missingForGeneralization": [
+        "expression-valued branch typing",
+        "Rust block expression boundaries"
+      ],
+      "selectedFeature": "if_expression",
+      "sourceLanguage": "rust"
+    },
+    {
+      "candidateIrPath": [
+        "cfg_entry",
+        "condition_expr",
+        "branch",
+        "return_value",
+        "merge",
+        "cfg_exit"
+      ],
+      "caseId": "rust_if_return_clamp_v0",
+      "currentLowering": "nested_guarded_affine_selector_step01",
+      "missingForGeneralization": [
+        "early-return normalization",
+        "fallthrough and merge semantics"
+      ],
+      "selectedFeature": "if_return_clamp",
+      "sourceLanguage": "rust"
+    }
+  ],
+  "semanticObligations": [
+    {
+      "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+      "id": "condition_truth_semantics",
+      "status": "open"
+    },
+    {
+      "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+      "id": "dominance_and_merge_preservation",
+      "status": "open"
+    },
+    {
+      "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+      "id": "return_and_fallthrough_preservation",
+      "status": "open"
+    },
+    {
+      "description": "Mutable updates must preserve statement order and branch-local state.",
+      "id": "assignment_order_preservation",
+      "status": "open"
+    },
+    {
+      "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+      "id": "unsupported_construct_fail_closed",
+      "status": "open"
+    },
+    {
+      "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+      "id": "source_ast_roundtrip_boundary",
+      "status": "open"
+    }
+  ],
+  "sourcePackets": {
+    "P51": {
+      "artifactId": "fef-p51-branch-control-flow-blocker-gate",
+      "claimFlagsAllFalse": true,
+      "packetPath": "reports/evidence_packets/fef_p51_branch_control_flow_blocker_gate.json",
+      "reviewDecision": "branch_control_flow_non_generated_c_rust_blockers_recorded",
+      "semanticReview": {
+        "allFreeTargetsRoundtripClaim": false,
+        "allFreeTargetsRuntimeExecutionClaim": false,
+        "arbitrarySourceFamilyClaim": false,
+        "blockedCount": 0,
+        "blockerClasses": [],
+        "branchControlFlowReingestClaim": false,
+        "branchControlFlowSupported": false,
+        "checkoutEnabled": false,
+        "claimFlagsAllFalse": true,
+        "compilerCorrectnessClaim": false,
+        "features": [
+          "if_early_return",
+          "if_else_clamp",
+          "ternary_select",
+          "if_expression",
+          "if_return_clamp"
+        ],
+        "fixtureCount": 5,
+        "formalEquivalenceClaim": false,
+        "fullCRustRoundtripClaim": false,
+        "fullNonGeneratedSourceRoundtripClaim": false,
+        "laterPhasePassCaseIds": [
+          "c_if_early_return_relu_v0",
+          "c_if_else_clamp_v0",
+          "c_ternary_select_v0",
+          "rust_if_expr_relu_v0",
+          "rust_if_return_clamp_v0"
+        ],
+        "laterPhasePassCount": 5,
+        "minimumExpectedBlockedFixtures": 0,
+        "p50PacketCount": 10,
+        "p50SourceCaseCount": 5,
+        "p50SourceDerivedReingestPass": true,
+        "packagePublished": false,
+        "publicReady": false,
+        "reviewerDecisionRecorded": false,
+        "runtimePerformanceClaim": false,
+        "safeToPublishPublicly": false,
+        "selectedBranchFixturePassClaim": false,
+        "sourceLanguages": [
+          "c",
+          "rust"
+        ],
+        "unexpectedPassCount": 5
+      },
+      "semanticStrength": "branch_control_flow_blocker_inventory_no_support_claim",
+      "title": "FEF-P51 Branch/Control-Flow Blocker Gate",
+      "validationStatus": "pass"
+    },
+    "P57": {
+      "artifactId": "fef-p57-selected-branch-closure-matrix",
+      "claimFlagsAllFalse": true,
+      "packetPath": "reports/evidence_packets/fef_p57_selected_branch_closure_matrix.json",
+      "reviewDecision": "all_selected_branch_closures_recorded_general_branch_blocked",
+      "semanticReview": {
+        "allFreeTargetsRoundtripClaim": false,
+        "allFreeTargetsRuntimeExecutionClaim": false,
+        "arbitrarySourceFamilyClaim": false,
+        "checkoutEnabled": false,
+        "claimFlagsAllFalse": true,
+        "compilerCorrectnessClaim": false,
+        "formalEquivalenceClaim": false,
+        "fullCRustRoundtripClaim": false,
+        "fullNonGeneratedSourceRoundtripClaim": false,
+        "generalBranchControlFlowClaim": false,
+        "generatedTargetLanguages": [
+          "c",
+          "rust"
+        ],
+        "maxAbsError": 0.0,
+        "maxRelError": 0.0,
+        "p51BlockedCount": 0,
+        "p51FixtureCount": 5,
+        "p51LaterPhasePassCaseIds": [
+          "c_if_early_return_relu_v0",
+          "c_if_else_clamp_v0",
+          "c_ternary_select_v0",
+          "rust_if_expr_relu_v0",
+          "rust_if_return_clamp_v0"
+        ],
+        "p51LaterPhasePassCount": 5,
+        "packagePublished": false,
+        "publicReady": false,
+        "recompiledTargetLanguages": [
+          "python"
+        ],
+        "reviewerDecisionRecorded": false,
+        "runtimePerformanceClaim": false,
+        "safeToPublishPublicly": false,
+        "selectedBranchCaseCount": 5,
+        "selectedBranchClosureCount": 5,
+        "selectedLoweringPassCount": 5,
+        "sourceLanguages": [
+          "c",
+          "rust"
+        ],
+        "totalPacketSampleComparisons": 58,
+        "totalReingestPacketCount": 10
+      },
+      "semanticStrength": "all_selected_branch_closures_recorded_general_branch_blocked",
+      "title": "FEF-P57 Selected Branch Closure Matrix",
+      "validationStatus": "pass"
+    },
+    "P58": {
+      "artifactId": "fef-p58-branch-gap-private-review-addendum",
+      "claimFlagsAllFalse": true,
+      "packetPath": "reports/evidence_packets/fef_p58_branch_gap_private_review_addendum.json",
+      "reviewDecision": "private_review_addendum_ready_general_branch_gap_blocked",
+      "semanticReview": {
+        "allFreeTargetsRoundtripClaim": false,
+        "allFreeTargetsRuntimeExecutionClaim": false,
+        "allSourcePacketClaimFlagsFalse": true,
+        "allSourcePacketsValidationPass": true,
+        "arbitrarySourceFamilyClaim": false,
+        "blockedGapCount": 6,
+        "branchControlFlowReingestClaim": false,
+        "checkoutEnabled": false,
+        "claimFlagsAllFalse": true,
+        "compilerCorrectnessClaim": false,
+        "formalEquivalenceClaim": false,
+        "fullCRustRoundtripClaim": false,
+        "fullNonGeneratedSourceRoundtripClaim": false,
+        "gapCount": 6,
+        "generalBranchControlFlowClaim": false,
+        "nonGeneratedSemanticSourceCaseCount": 5,
+        "nonGeneratedSemanticSourceSampleCount": 23,
+        "p51SelectedBlockedCount": 0,
+        "packagePublished": false,
+        "privateReviewBundleReady": true,
+        "privateReviewerIntakeReady": true,
+        "publicReady": false,
+        "recommendedNextPhase": "private_reviewer_response_or_branch_gap_validator",
+        "reviewerDecisionRecorded": false,
+        "runtimePerformanceClaim": false,
+        "safeToPublishPublicly": false,
+        "selectedBranchCaseCount": 5,
+        "selectedBranchClosureCount": 5,
+        "selectedBranchPacketSampleComparisons": 58,
+        "selectedBranchReingestPacketCount": 10,
+        "sourceDerivedReingestPacketCount": 10,
+        "sourceDerivedReingestSampleCount": 46,
+        "sourcePacketCount": 6
+      },
+      "semanticStrength": "private_review_addendum_ready_general_branch_gap_blocked",
+      "title": "FEF-P58 Branch Gap Private-Review Addendum",
+      "validationStatus": "pass"
+    }
+  },
+  "status": "FEF_P59_CONTROL_FLOW_IR_INVENTORY_PASS",
+  "summary": {
+    "allSourcePacketClaimFlagsFalse": true,
+    "allSourcePacketsValidationPass": true,
+    "arbitrarySourceFamilyClaim": false,
+    "branchControlFlowReingestClaim": false,
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "controlFlowIrImplemented": false,
+    "formalEquivalenceClaim": false,
+    "fullCRustRoundtripClaim": false,
+    "fullNonGeneratedSourceRoundtripClaim": false,
+    "generalBranchControlFlowClaim": false,
+    "irNodeCount": 10,
+    "openSemanticObligationCount": 6,
+    "p51SelectedBlockedCount": 0,
+    "p58BlockedGapCount": 6,
+    "packagePublished": false,
+    "productionReady": false,
+    "publicReady": false,
+    "requiredIrNodeCount": 10,
+    "reviewerDecisionRecorded": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedBranchCaseCount": 5,
+    "selectedBranchClosureCount": 5,
+    "selectedBranchPacketSampleComparisons": 58,
+    "selectedBranchReingestPacketCount": 10,
+    "selectedMappingCount": 5,
+    "semanticObligationCount": 6,
+    "sourcePacketCount": 3,
+    "unsupportedFormCount": 6
+  },
+  "unsupportedForms": [
+    {
+      "id": "nested_statement_branches",
+      "nextValidator": "nested_branch_fixture_matrix",
+      "reason": "selected closures do not cover arbitrary nested statement bodies",
+      "status": "blocked"
+    },
+    {
+      "id": "boolean_compound_conditions",
+      "nextValidator": "compound_condition_semantics_gate",
+      "reason": "selected closures do not cover short-circuit and/or condition semantics",
+      "status": "blocked"
+    },
+    {
+      "id": "mutable_assignments_across_branches",
+      "nextValidator": "assignment_phi_fixture_gate",
+      "reason": "selected closures are scalar return-only or expression-valued cases",
+      "status": "blocked"
+    },
+    {
+      "id": "loops_and_back_edges",
+      "nextValidator": "loop_construct_blocker_gate",
+      "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+      "status": "blocked"
+    },
+    {
+      "id": "side_effecting_calls_or_memory",
+      "nextValidator": "side_effect_boundary_inventory",
+      "reason": "current selected branch evidence is side-effect free",
+      "status": "blocked"
+    },
+    {
+      "id": "source_preserving_roundtrip",
+      "nextValidator": "non_generated_branch_roundtrip_gate",
+      "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+      "status": "blocked"
+    }
+  ]
+}
