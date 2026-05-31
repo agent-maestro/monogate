@@ -1,0 +1,761 @@
+{
+  "artifactId": "fef-p40-affine-poly-fixture-runtime-guard",
+  "claimFlags": {
+    "all_free_targets_public_ready_claim": false,
+    "all_free_targets_runtime_execution_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "package_published": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "selected_affine_poly_fixture_claim": false,
+    "target_all_ready_claim": false
+  },
+  "date": "2026-05-30",
+  "decision": "selected_affine_poly_fixture_emits_validates_and_runtime_executes",
+  "nextMilestones": [
+    "Fold affine_poly_mix into the selected capability matrix refresh.",
+    "Add runtime checks for additional installed free-target toolchains if they become available."
+  ],
+  "nonClaims": [
+    "FEF-P40 records one additional selected affine-polynomial fixture family.",
+    "FEF-P40 does not execute all 13 free targets.",
+    "FEF-P40 does not add new runtime toolchains beyond C, C++, Rust, Python, JavaScript, and Java.",
+    "FEF-P40 does not claim arbitrary branch/control-flow support.",
+    "FEF-P40 does not claim all free targets are public-ready.",
+    "FEF-P40 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P40 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P40 does not claim runtime performance, Verilog, silicon, hardware, Pro-target, or all-target readiness."
+  ],
+  "reference": {
+    "function": "x*x + 2*y + 1",
+    "values": [
+      1.0,
+      6.0,
+      3.75,
+      2.0,
+      21.015625,
+      96.0
+    ]
+  },
+  "releaseGates": [
+    {
+      "id": "selected_affine_poly_all_13_free_targets_emit",
+      "status": "pass"
+    },
+    {
+      "id": "selected_affine_poly_all_13_free_targets_validate",
+      "status": "pass"
+    },
+    {
+      "id": "selected_runtime_targets_execute",
+      "status": "pass"
+    },
+    {
+      "id": "all_free_targets_runtime_execution",
+      "status": "blocked"
+    },
+    {
+      "id": "public_package_published",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness_proved",
+      "status": "blocked"
+    }
+  ],
+  "runtimeRows": [
+    {
+      "agreementStatus": "pass",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.0,
+            0.0
+          ],
+          "expected": 1.0,
+          "observed": 1.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            1.0,
+            2.0
+          ],
+          "expected": 6.0,
+          "observed": 6.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -1.5,
+            0.25
+          ],
+          "expected": 3.75,
+          "observed": 3.75
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            3.0,
+            -4.0
+          ],
+          "expected": 2.0,
+          "observed": 2.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.125,
+            10.0
+          ],
+          "expected": 21.015625,
+          "observed": 21.015625
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -10.0,
+            -2.5
+          ],
+          "expected": 96.0,
+          "observed": 96.0
+        }
+      ],
+      "maxAbsError": 0.0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "sampleCount": 6,
+      "target": "c"
+    },
+    {
+      "agreementStatus": "pass",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.0,
+            0.0
+          ],
+          "expected": 1.0,
+          "observed": 1.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            1.0,
+            2.0
+          ],
+          "expected": 6.0,
+          "observed": 6.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -1.5,
+            0.25
+          ],
+          "expected": 3.75,
+          "observed": 3.75
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            3.0,
+            -4.0
+          ],
+          "expected": 2.0,
+          "observed": 2.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.125,
+            10.0
+          ],
+          "expected": 21.015625,
+          "observed": 21.015625
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -10.0,
+            -2.5
+          ],
+          "expected": 96.0,
+          "observed": 96.0
+        }
+      ],
+      "maxAbsError": 0.0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "sampleCount": 6,
+      "target": "cpp"
+    },
+    {
+      "agreementStatus": "pass",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.0,
+            0.0
+          ],
+          "expected": 1.0,
+          "observed": 1.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            1.0,
+            2.0
+          ],
+          "expected": 6.0,
+          "observed": 6.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -1.5,
+            0.25
+          ],
+          "expected": 3.75,
+          "observed": 3.75
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            3.0,
+            -4.0
+          ],
+          "expected": 2.0,
+          "observed": 2.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.125,
+            10.0
+          ],
+          "expected": 21.015625,
+          "observed": 21.015625
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -10.0,
+            -2.5
+          ],
+          "expected": 96.0,
+          "observed": 96.0
+        }
+      ],
+      "maxAbsError": 0.0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "sampleCount": 6,
+      "target": "rust"
+    },
+    {
+      "agreementStatus": "pass",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.0,
+            0.0
+          ],
+          "expected": 1.0,
+          "observed": 1.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            1.0,
+            2.0
+          ],
+          "expected": 6.0,
+          "observed": 6.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -1.5,
+            0.25
+          ],
+          "expected": 3.75,
+          "observed": 3.75
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            3.0,
+            -4.0
+          ],
+          "expected": 2.0,
+          "observed": 2.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.125,
+            10.0
+          ],
+          "expected": 21.015625,
+          "observed": 21.015625
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -10.0,
+            -2.5
+          ],
+          "expected": 96.0,
+          "observed": 96.0
+        }
+      ],
+      "maxAbsError": 0.0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "sampleCount": 6,
+      "target": "python"
+    },
+    {
+      "agreementStatus": "pass",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.0,
+            0.0
+          ],
+          "expected": 1.0,
+          "observed": 1.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            1.0,
+            2.0
+          ],
+          "expected": 6.0,
+          "observed": 6.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -1.5,
+            0.25
+          ],
+          "expected": 3.75,
+          "observed": 3.75
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            3.0,
+            -4.0
+          ],
+          "expected": 2.0,
+          "observed": 2.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.125,
+            10.0
+          ],
+          "expected": 21.015625,
+          "observed": 21.015625
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -10.0,
+            -2.5
+          ],
+          "expected": 96.0,
+          "observed": 96.0
+        }
+      ],
+      "maxAbsError": 0.0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "sampleCount": 6,
+      "target": "javascript"
+    },
+    {
+      "agreementStatus": "pass",
+      "emissionStatus": "pass",
+      "frames": [
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.0,
+            0.0
+          ],
+          "expected": 1.0,
+          "observed": 1.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            1.0,
+            2.0
+          ],
+          "expected": 6.0,
+          "observed": 6.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -1.5,
+            0.25
+          ],
+          "expected": 3.75,
+          "observed": 3.75
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            3.0,
+            -4.0
+          ],
+          "expected": 2.0,
+          "observed": 2.0
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            0.125,
+            10.0
+          ],
+          "expected": 21.015625,
+          "observed": 21.015625
+        },
+        {
+          "absError": 0.0,
+          "agreementStatus": "pass",
+          "args": [
+            -10.0,
+            -2.5
+          ],
+          "expected": 96.0,
+          "observed": 96.0
+        }
+      ],
+      "maxAbsError": 0.0,
+      "runtimeLevel": "local_toolchain_execution_sample_grid",
+      "runtimeStatus": "pass",
+      "sampleCount": 6,
+      "target": "java"
+    }
+  ],
+  "sampleGrid": [
+    {
+      "args": [
+        0.0,
+        0.0
+      ],
+      "labels": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "args": [
+        1.0,
+        2.0
+      ],
+      "labels": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "args": [
+        -1.5,
+        0.25
+      ],
+      "labels": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "args": [
+        3.0,
+        -4.0
+      ],
+      "labels": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "args": [
+        0.125,
+        10.0
+      ],
+      "labels": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "args": [
+        -10.0,
+        -2.5
+      ],
+      "labels": [
+        "x",
+        "y"
+      ]
+    }
+  ],
+  "schemaVersion": "monogate.fef_p40_affine_poly_fixture_runtime_guard.v0",
+  "sourceFixture": "generated/affine_poly_mix.eml",
+  "status": "FEF_P40_AFFINE_POLY_FIXTURE_RUNTIME_GUARD_PASS",
+  "summary": {
+    "agreementPassCount": 6,
+    "allFreeTargetsPublicReadyClaim": false,
+    "allFreeTargetsRuntimeExecutionClaim": false,
+    "allSelectedRuntimeTargetsPass": true,
+    "allSelectedTargetsAgreeWithReference": true,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "emissionPassCount": 13,
+    "formalEquivalenceClaim": false,
+    "freeTargetCount": 13,
+    "localToolchainTargets": [
+      "c",
+      "cpp",
+      "rust",
+      "python",
+      "java",
+      "javascript",
+      "lean"
+    ],
+    "maxAbsError": 0.0,
+    "packagePublished": false,
+    "publicReady": false,
+    "runtimePassCount": 6,
+    "runtimePerformanceClaim": false,
+    "runtimeTargetCount": 6,
+    "runtimeTargets": [
+      "c",
+      "cpp",
+      "rust",
+      "python",
+      "javascript",
+      "java"
+    ],
+    "safeToPublishPublicly": false,
+    "sampleCountPerTarget": 6,
+    "sourceFixture": "generated/affine_poly_mix.eml",
+    "structuralTargets": [
+      "go",
+      "kotlin",
+      "csharp",
+      "wasm",
+      "matlab",
+      "zkproof"
+    ],
+    "targetAllReadyClaim": false,
+    "totalSampleExecutions": 36,
+    "validationPassCount": 13
+  },
+  "targetRows": [
+    {
+      "artifactBytes": 576,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.c",
+      "emissionStatus": "pass",
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "c",
+      "tool": "gcc",
+      "validationLevel": "local_toolchain_syntax",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 659,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.hpp",
+      "emissionStatus": "pass",
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "cpp",
+      "tool": "g++",
+      "validationLevel": "local_toolchain_syntax",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 555,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.rs",
+      "emissionStatus": "pass",
+      "outputExcerpt": "warning: unused import: `monogate_sys::*`\n --> /tmp/fef_p40_affine_poly_2lkc8w3v/probe.rs:9:5\n  |\n9 | use monogate_sys::*;\n  |     ^^^^^^^^^^^^^^^\n  |\n  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default\n\nwarning: unnecessary parentheses around block return value\n  --> /tmp/fef_p40_affine_poly_2lkc8w3v/probe.rs:17:5\n   |\n17 |     (((x * x) + (2.0 * y)) + 1.0)\n   |     ^                           ^\n   |\n   = note: `#[warn(unused_parens)]` (part of `#[warn(unused)]`) on by default\nhelp: remove these parentheses\n   |\n17 -     (((x * x) + (2.0 * y)) + 1.0)\n17 +     ((x * x) + (2.0 * y)) + 1.0\n   |\n\nwarning: 2 warnings emitted",
+      "returnCode": 0,
+      "target": "rust",
+      "tool": "rustc",
+      "validationLevel": "local_toolchain_syntax",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 365,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.py",
+      "emissionStatus": "pass",
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "python",
+      "tool": "python",
+      "validationLevel": "local_toolchain_syntax",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 587,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.go",
+      "emissionStatus": "pass",
+      "missingTokens": [],
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "go",
+      "tool": "structural",
+      "validationLevel": "structural_tokens_tool_unavailable",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 715,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/AffinePolyMix.java",
+      "emissionStatus": "pass",
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "java",
+      "tool": "javac",
+      "validationLevel": "local_toolchain_syntax",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 521,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.kt",
+      "emissionStatus": "pass",
+      "missingTokens": [],
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "kotlin",
+      "tool": "structural",
+      "validationLevel": "structural_tokens_tool_unavailable",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 1239,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.cs",
+      "emissionStatus": "pass",
+      "missingTokens": [],
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "csharp",
+      "tool": "structural",
+      "validationLevel": "structural_tokens_tool_unavailable",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 561,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.js",
+      "emissionStatus": "pass",
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "javascript",
+      "tool": "node",
+      "validationLevel": "local_toolchain_syntax",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 672,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.wasm",
+      "emissionStatus": "pass",
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "wasm",
+      "tool": "structural",
+      "validationLevel": "wasm_llvm_ir_structural",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 504,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.m",
+      "emissionStatus": "pass",
+      "missingTokens": [],
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "matlab",
+      "tool": "structural",
+      "validationLevel": "structural_tokens_tool_unavailable",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 613,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.lean",
+      "emissionStatus": "pass",
+      "missingTokens": [],
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "lean",
+      "tool": "structural",
+      "validationLevel": "local_toolchain_syntax_with_sorry_allowed",
+      "validationStatus": "pass"
+    },
+    {
+      "artifactBytes": 1788,
+      "artifactPath": "/tmp/fef_p40_affine_poly_2lkc8w3v/affine_poly_mix.json",
+      "emissionStatus": "pass",
+      "missingTokens": [],
+      "outputExcerpt": "",
+      "returnCode": 0,
+      "target": "zkproof",
+      "tool": "json",
+      "validationLevel": "json_schema_structural_arithmetic_gates",
+      "validationStatus": "pass"
+    }
+  ]
+}
