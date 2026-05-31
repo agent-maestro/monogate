@@ -1,0 +1,152 @@
+{
+  "artifactId": "fef-p44-hero-target-hardening-gate",
+  "claimBoundary": "Rust/C/Python hero-target hardening gate only; selected runtime evidence covers four fixture families across three hero targets, Python has selected roundtrip evidence, Rust/C roundtrip remains blocked, and publication/public-readiness/compiler-correctness/formal-equivalence/runtime-performance claims remain blocked.",
+  "claimFlags": {
+    "all_free_targets_public_ready_claim": false,
+    "all_free_targets_roundtrip_claim": false,
+    "all_free_targets_runtime_execution_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "hero_target_hardening_claim": false,
+    "package_published": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "target_all_ready_claim": false
+  },
+  "nonClaims": [
+    "FEF-P44 hardens only the selected Rust, C, and Python hero lane.",
+    "FEF-P44 does not add a new fixture family.",
+    "FEF-P44 does not execute all 13 free targets.",
+    "FEF-P44 does not claim all 13 free targets runtime-execute.",
+    "FEF-P44 does not claim all 13 free targets roundtrip.",
+    "FEF-P44 does not claim all free targets are public-ready.",
+    "FEF-P44 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P44 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P44 does not claim runtime performance, Verilog, Lean proofs, zkproof proofs, silicon output, hardware readiness, Pro-target readiness, or all-target readiness."
+  ],
+  "reviewDecision": "rust_c_python_hero_lane_hardened_publication_blocked",
+  "reviewHighlights": [
+    "Rust, C, and Python are consolidated as the first hero hardening lane.",
+    "All 12 hero fixture-target runtime cells pass with 72 total sample executions.",
+    "Python has selected roundtrip evidence; Rust and C roundtrip remain explicit blockers.",
+    "The lane is a private candidate only, not a public release or correctness claim."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "allFreeTargetsPublicReadyClaim": false,
+    "allFreeTargetsRoundtripClaim": false,
+    "allFreeTargetsRuntimeExecutionClaim": false,
+    "cRoundtripEvidenceAttached": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "fixtureCount": 4,
+    "formalEquivalenceClaim": false,
+    "heroEmissionPassCount": 12,
+    "heroRuntimeCellCount": 12,
+    "heroRuntimeMaxAbsError": 0.0,
+    "heroRuntimePassCount": 12,
+    "heroRuntimeSampleExecutions": 72,
+    "heroTargetCount": 3,
+    "heroTargets": [
+      "rust",
+      "c",
+      "python"
+    ],
+    "heroTargetsAllRuntimePass": true,
+    "heroTargetsAllToolchainsAvailable": true,
+    "heroTargetsByTarget": [
+      {
+        "emissionPassCount": 4,
+        "fixtureCount": 4,
+        "priorityClass": "hero_runtime_lane",
+        "roundtripStatus": "not_attempted",
+        "runtimeMaxAbsError": 0.0,
+        "runtimePassCount": 4,
+        "runtimeSampleExecutions": 24,
+        "runtimeToolchain": {
+          "detectedCommands": [
+            {
+              "command": "rustc",
+              "path": "/home/monogate/.cargo/bin/rustc"
+            }
+          ],
+          "requiredCommands": [
+            "rustc"
+          ],
+          "target": "rust",
+          "toolchainAvailable": true,
+          "toolchainStatus": "available"
+        },
+        "target": "rust",
+        "validationPassCount": 4
+      },
+      {
+        "emissionPassCount": 4,
+        "fixtureCount": 4,
+        "priorityClass": "hero_runtime_lane",
+        "roundtripStatus": "not_attempted",
+        "runtimeMaxAbsError": 0.0,
+        "runtimePassCount": 4,
+        "runtimeSampleExecutions": 24,
+        "runtimeToolchain": {
+          "detectedCommands": [
+            {
+              "command": "gcc",
+              "path": "/usr/bin/gcc"
+            }
+          ],
+          "requiredCommands": [
+            "gcc"
+          ],
+          "target": "c",
+          "toolchainAvailable": true,
+          "toolchainStatus": "available"
+        },
+        "target": "c",
+        "validationPassCount": 4
+      },
+      {
+        "emissionPassCount": 4,
+        "fixtureCount": 4,
+        "priorityClass": "hero_runtime_lane",
+        "roundtripStatus": "pass_selected_roundtrip_evidence",
+        "runtimeMaxAbsError": 0.0,
+        "runtimePassCount": 4,
+        "runtimeSampleExecutions": 24,
+        "runtimeToolchain": {
+          "detectedCommands": [
+            {
+              "command": "python",
+              "path": "/usr/bin/python"
+            }
+          ],
+          "requiredCommands": [
+            "python"
+          ],
+          "target": "python",
+          "toolchainAvailable": true,
+          "toolchainStatus": "available"
+        },
+        "target": "python",
+        "validationPassCount": 4
+      }
+    ],
+    "heroValidationPassCount": 12,
+    "packagePublished": false,
+    "publicReady": false,
+    "pythonRoundtripEvidenceAttached": true,
+    "releaseCandidateStatus": "private_hero_lane_candidate",
+    "runtimePerformanceClaim": false,
+    "rustRoundtripEvidenceAttached": false,
+    "safeToPublishPublicly": false
+  },
+  "semanticStrength": "rust_c_python_selected_runtime_hero_lane_private_candidate",
+  "title": "FEF-P44 Hero Target Hardening Gate",
+  "validationCommands": [
+    "python python/scripts/fef_p44_hero_target_hardening_gate.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p44_hero_target_hardening_gate.py"
+  ],
+  "validationStatus": "pass"
+}
