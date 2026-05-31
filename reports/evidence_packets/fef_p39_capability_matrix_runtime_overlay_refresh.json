@@ -1,0 +1,230 @@
+{
+  "artifactId": "fef-p39-capability-matrix-runtime-overlay-refresh",
+  "claimBoundary": "Selected capability matrix refresh only; it overlays prior runtime execution evidence for three selected fixtures across six installed software targets, and makes no all-free-target runtime execution, public readiness, compiler correctness, formal equivalence, publication, runtime performance, hardware, Pro-target, or all-target readiness claim.",
+  "claimFlags": {
+    "all_free_targets_public_ready_claim": false,
+    "all_free_targets_runtime_execution_claim": false,
+    "compiler_correctness_claim": false,
+    "formal_equivalence_claim": false,
+    "free_target_capability_matrix_claim": false,
+    "package_published": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "target_all_ready_claim": false
+  },
+  "nonClaims": [
+    "FEF-P39 refreshes the selected capability matrix runtime overlay using prior FEF-P35, FEF-P37, and FEF-P38 runtime evidence.",
+    "FEF-P39 does not execute all 13 free targets.",
+    "FEF-P39 does not add new runtime toolchains beyond C, C++, Rust, Python, JavaScript, and Java.",
+    "FEF-P39 does not claim arbitrary branch/control-flow support.",
+    "FEF-P39 does not claim all free targets are public-ready.",
+    "FEF-P39 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P39 does not publish a package, enable checkout, or claim production readiness.",
+    "FEF-P39 does not claim runtime performance, Verilog, silicon, hardware, Pro-target, or all-target readiness."
+  ],
+  "reviewDecision": "selected_capability_matrix_runtime_overlay_refreshed",
+  "reviewHighlights": [
+    "The matrix still covers verified_add, runtime_helper_mix, and clamp_guard_mix across all 13 free targets.",
+    "All 39 fixture-target cells emit and validate at the selected level.",
+    "Runtime overlays now cover all three selected fixtures across C, C++, Rust, Python, JavaScript, and Java.",
+    "The refreshed runtime overlay records 18 selected runtime cells and 108 total sample executions."
+  ],
+  "schemaVersion": "monogate.evidence_public_packet.v0",
+  "semanticReview": {
+    "allFreeTargetsPublicReadyClaim": false,
+    "allFreeTargetsRuntimeExecutionClaim": false,
+    "allMatrixEmissionPass": true,
+    "allMatrixValidationPass": true,
+    "allRuntimeOverlayCellsPass": true,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "emissionPassCount": 39,
+    "fixtureCount": 3,
+    "formalEquivalenceClaim": false,
+    "freeTargetCount": 13,
+    "matrixCellCount": 39,
+    "packagePublished": false,
+    "publicReady": false,
+    "runtimeOverlayByFixture": [
+      {
+        "fixtureId": "verified_add",
+        "runtimeCellCount": 6,
+        "runtimeMaxAbsError": 0.0,
+        "runtimePassCount": 6,
+        "runtimeSampleExecutions": 36,
+        "runtimeTargets": [
+          "c",
+          "cpp",
+          "rust",
+          "python",
+          "java",
+          "javascript"
+        ],
+        "sourceFixture": "examples/verified_add.eml"
+      },
+      {
+        "fixtureId": "runtime_helper_mix",
+        "runtimeCellCount": 6,
+        "runtimeMaxAbsError": 4.440892098500626e-16,
+        "runtimePassCount": 6,
+        "runtimeSampleExecutions": 30,
+        "runtimeTargets": [
+          "c",
+          "cpp",
+          "rust",
+          "python",
+          "java",
+          "javascript"
+        ],
+        "sourceFixture": "generated/runtime_helper_mix.eml"
+      },
+      {
+        "fixtureId": "clamp_guard_mix",
+        "runtimeCellCount": 6,
+        "runtimeMaxAbsError": 0.0,
+        "runtimePassCount": 6,
+        "runtimeSampleExecutions": 42,
+        "runtimeTargets": [
+          "c",
+          "cpp",
+          "rust",
+          "python",
+          "java",
+          "javascript"
+        ],
+        "sourceFixture": "generated/clamp_guard_mix.eml"
+      }
+    ],
+    "runtimeOverlayByTarget": [
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 3,
+        "runtimeSampleExecutions": 18,
+        "target": "c",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 3,
+        "runtimeSampleExecutions": 18,
+        "target": "cpp",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 3,
+        "runtimeSampleExecutions": 18,
+        "target": "rust",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 3,
+        "runtimeSampleExecutions": 18,
+        "target": "python",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 0,
+        "runtimeSampleExecutions": 0,
+        "target": "go",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 3,
+        "runtimeSampleExecutions": 18,
+        "target": "java",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 0,
+        "runtimeSampleExecutions": 0,
+        "target": "kotlin",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 0,
+        "runtimeSampleExecutions": 0,
+        "target": "csharp",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 3,
+        "runtimeSampleExecutions": 18,
+        "target": "javascript",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 0,
+        "runtimeSampleExecutions": 0,
+        "target": "wasm",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 0,
+        "runtimeSampleExecutions": 0,
+        "target": "matlab",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 0,
+        "runtimeSampleExecutions": 0,
+        "target": "lean",
+        "validationPassCount": 3
+      },
+      {
+        "emissionPassCount": 3,
+        "fixtureCount": 3,
+        "runtimePassCount": 0,
+        "runtimeSampleExecutions": 0,
+        "target": "zkproof",
+        "validationPassCount": 3
+      }
+    ],
+    "runtimeOverlayCellCount": 18,
+    "runtimeOverlayFixtureCount": 3,
+    "runtimeOverlayMaxAbsError": 4.440892098500626e-16,
+    "runtimeOverlayPassCount": 18,
+    "runtimeOverlaySampleExecutions": 108,
+    "runtimeOverlayTargetSet": [
+      "c",
+      "cpp",
+      "java",
+      "javascript",
+      "python",
+      "rust"
+    ],
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "targetAllReadyClaim": false,
+    "validationPassCount": 39
+  },
+  "semanticStrength": "selected_fixture_matrix_with_three_selected_runtime_overlays",
+  "title": "FEF-P39 Capability Matrix Runtime Overlay Refresh",
+  "validationCommands": [
+    "python python/scripts/fef_p39_capability_matrix_runtime_overlay_refresh.py --build --strict",
+    "python -m pytest -q python/tests/test_fef_p39_capability_matrix_runtime_overlay_refresh.py"
+  ],
+  "validationStatus": "pass"
+}
