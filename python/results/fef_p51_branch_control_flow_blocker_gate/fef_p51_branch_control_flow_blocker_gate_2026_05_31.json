@@ -1,6 +1,7 @@
 {
   "allowedPrivateClaims": [
-    "Selected branch/control-flow C/Rust fixtures were attempted and are currently blocked at the frontend boundary.",
+    "Selected branch/control-flow C/Rust fixtures were attempted and current frontend blockers are recorded.",
+    "After FEF-P52, the selected C ternary case may pass as a later-phase closure while P51 remains a blocker inventory.",
     "P50 scalar source-derived re-ingest evidence remains valid but does not cover branch/control-flow fixtures.",
     "The next branch work is implementation work, not a release-action task."
   ],
@@ -110,7 +111,7 @@
       "sourceSnippet": "double clamp(double x, double lo, double hi) { if (x < lo) return lo; else if (x > hi) return hi; else return x; }"
     },
     {
-      "blockerClass": "c_conditional_expression_unsupported",
+      "blockerClass": "unexpected_pass",
       "caseId": "c_ternary_select_v0",
       "claimFlags": {
         "all_free_targets_roundtrip_claim": false,
@@ -132,12 +133,12 @@
         "safe_to_publish_publicly": false,
         "selected_branch_fixture_pass_claim": false
       },
-      "emittedEml": null,
-      "errorMessage": "TernaryOp unsupported in C decompiler",
-      "errorType": "EFrogError",
-      "expectedStatus": "blocked",
+      "emittedEml": "module c_ternary_select_v0;\n\nfn step01(x: Real) -> Real\n    where chain_order <= 0\n{\n    clamp(x * 1e+30, 0.0, 1.0)\n}\n\nfn select_pos(x: Real) -> Real\n    where chain_order <= 0\n{\n    0.0 + (x - (0.0)) * step01((x) - (0.0))\n}\n",
+      "errorMessage": null,
+      "errorType": null,
+      "expectedStatus": "blocked_or_later_phase_pass",
       "feature": "ternary_select",
-      "observedStatus": "blocked",
+      "observedStatus": "unexpected_pass",
       "sourceLanguage": "c",
       "sourceSnippet": "double select_pos(double x) { return x > 0.0 ? x : 0.0; }"
     },
@@ -208,7 +209,7 @@
   ],
   "implementationRequirements": [
     "Add C `If` statement lowering to a guarded/piecewise EML form or explicit unsupported branch packet.",
-    "Add C `TernaryOp` lowering to a guarded selector form before using ternary fixtures as passing evidence.",
+    "Keep C `TernaryOp` lowering evidence in the later FEF-P52 selected ternary gate, not in P51 blocker evidence.",
     "Add Rust `if` expression and `if return` parsing/lowering before branch re-ingest can run.",
     "Add deterministic boundary samples around branch thresholds after frontend support exists.",
     "Keep the new branch gate separate from P50 scalar source-derived re-ingest evidence."
@@ -274,9 +275,8 @@
     "allFreeTargetsRoundtripClaim": false,
     "allFreeTargetsRuntimeExecutionClaim": false,
     "arbitrarySourceFamilyClaim": false,
-    "blockedCount": 5,
+    "blockedCount": 4,
     "blockerClasses": [
-      "c_conditional_expression_unsupported",
       "c_statement_control_flow_unsupported",
       "rust_if_expression_unsupported"
     ],
@@ -296,6 +296,11 @@
     "formalEquivalenceClaim": false,
     "fullCRustRoundtripClaim": false,
     "fullNonGeneratedSourceRoundtripClaim": false,
+    "laterPhasePassCaseIds": [
+      "c_ternary_select_v0"
+    ],
+    "laterPhasePassCount": 1,
+    "minimumExpectedBlockedFixtures": 4,
     "p50PacketCount": 10,
     "p50SourceCaseCount": 5,
     "p50SourceDerivedReingestPass": true,
@@ -309,6 +314,6 @@
       "c",
       "rust"
     ],
-    "unexpectedPassCount": 0
+    "unexpectedPassCount": 1
   }
 }

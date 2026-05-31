@@ -23,8 +23,9 @@ def test_fef_p51_records_branch_blocker_inventory():
     assert payload["status"] == "FEF_P51_BRANCH_CONTROL_FLOW_BLOCKER_GATE_PASS"
     assert payload["decision"] == "branch_control_flow_non_generated_c_rust_blockers_recorded"
     assert summary["fixtureCount"] == len(BRANCH_FIXTURES)
-    assert summary["blockedCount"] == len(BRANCH_FIXTURES)
-    assert summary["unexpectedPassCount"] == 0
+    assert summary["blockedCount"] >= summary["minimumExpectedBlockedFixtures"]
+    assert summary["unexpectedPassCount"] <= 1
+    assert set(summary["laterPhasePassCaseIds"]).issubset({"c_ternary_select_v0"})
     assert summary["sourceLanguages"] == ["c", "rust"]
     assert summary["p50SourceDerivedReingestPass"] is True
 
@@ -32,24 +33,33 @@ def test_fef_p51_records_branch_blocker_inventory():
 def test_fef_p51_blocker_classes_are_explicit():
     payload = build_payload()
     summary = payload["summary"]
-    assert set(summary["blockerClasses"]) == {
-        "c_conditional_expression_unsupported",
+    assert {
         "c_statement_control_flow_unsupported",
         "rust_if_expression_unsupported",
-    }
+    }.issubset(set(summary["blockerClasses"]))
     rows = {row["caseId"]: row for row in payload["fixtureRows"]}
     assert rows["c_if_early_return_relu_v0"]["blockerClass"] == (
         "c_statement_control_flow_unsupported"
     )
-    assert rows["c_ternary_select_v0"]["blockerClass"] == (
-        "c_conditional_expression_unsupported"
-    )
+    if rows["c_ternary_select_v0"]["observedStatus"] == "blocked":
+        assert rows["c_ternary_select_v0"]["blockerClass"] == (
+            "c_conditional_expression_unsupported"
+        )
+    else:
+        assert rows["c_ternary_select_v0"]["observedStatus"] == "unexpected_pass"
+        assert "step01" in rows["c_ternary_select_v0"]["emittedEml"]
     assert rows["rust_if_expr_relu_v0"]["blockerClass"] == "rust_if_expression_unsupported"
 
 
 def test_fef_p51_rows_record_local_frontend_errors():
     payload = build_payload()
     for row in payload["fixtureRows"]:
+        if row["caseId"] == "c_ternary_select_v0" and row["observedStatus"] == "unexpected_pass":
+            assert row["errorType"] is None
+            assert row["errorMessage"] is None
+            assert row["emittedEml"]
+            assert all(value is False for value in row["claimFlags"].values())
+            continue
         assert row["observedStatus"] == "blocked"
         assert row["errorType"]
         assert row["errorMessage"]

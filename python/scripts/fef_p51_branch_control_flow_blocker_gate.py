@@ -27,6 +27,8 @@ STAMP = DATE.replace("-", "_")
 SCHEMA_VERSION = "monogate.fef_p51_branch_control_flow_blocker_gate.v0"
 EVIDENCE_SCHEMA_VERSION = "monogate.evidence_public_packet.v0"
 STATUS = "FEF_P51_BRANCH_CONTROL_FLOW_BLOCKER_GATE_PASS"
+MIN_EXPECTED_BLOCKED_FIXTURES = 4
+MAX_EXPECTED_LATER_PHASE_PASSES = 1
 
 P50_PACKET = ROOT / "reports/evidence_packets/fef_p50_non_generated_source_reingest_gate.json"
 
@@ -90,7 +92,7 @@ BRANCH_FIXTURES = [
         "caseId": "c_ternary_select_v0",
         "sourceLanguage": "c",
         "feature": "ternary_select",
-        "expectedStatus": "blocked",
+        "expectedStatus": "blocked_or_later_phase_pass",
         "source": "double select_pos(double x) { return x > 0.0 ? x : 0.0; }",
     },
     {
@@ -151,23 +153,33 @@ def attempt_fixture(fixture: dict[str, str]) -> dict[str, Any]:
 
 
 def classify_blocker(fixture: dict[str, str], error_message: str | None) -> str:
+    if not error_message:
+        return "unexpected_pass"
     if fixture["sourceLanguage"] == "c" and fixture["feature"].startswith("if"):
         return "c_statement_control_flow_unsupported"
     if fixture["sourceLanguage"] == "c" and fixture["feature"] == "ternary_select":
         return "c_conditional_expression_unsupported"
     if fixture["sourceLanguage"] == "rust" and fixture["feature"].startswith("if"):
         return "rust_if_expression_unsupported"
-    if error_message:
-        return "unclassified_frontend_blocker"
-    return "unexpected_pass"
+    return "unclassified_frontend_blocker"
 
 
 def summarize(rows: list[dict[str, Any]], p50_summary: dict[str, Any]) -> dict[str, Any]:
-    blocker_classes = sorted({row["blockerClass"] for row in rows})
+    blocker_classes = sorted(
+        {row["blockerClass"] for row in rows if row["observedStatus"] == "blocked"}
+    )
+    later_phase_passes = [
+        row["caseId"]
+        for row in rows
+        if row["caseId"] == "c_ternary_select_v0" and row["observedStatus"] == "unexpected_pass"
+    ]
     return {
         "fixtureCount": len(rows),
         "blockedCount": sum(1 for row in rows if row["observedStatus"] == "blocked"),
         "unexpectedPassCount": sum(1 for row in rows if row["observedStatus"] == "unexpected_pass"),
+        "laterPhasePassCount": len(later_phase_passes),
+        "laterPhasePassCaseIds": later_phase_passes,
+        "minimumExpectedBlockedFixtures": MIN_EXPECTED_BLOCKED_FIXTURES,
         "sourceLanguages": sorted({row["sourceLanguage"] for row in rows}),
         "features": [row["feature"] for row in rows],
         "blockerClasses": blocker_classes,
@@ -221,13 +233,14 @@ def build_payload() -> dict[str, Any]:
         ],
         "implementationRequirements": [
             "Add C `If` statement lowering to a guarded/piecewise EML form or explicit unsupported branch packet.",
-            "Add C `TernaryOp` lowering to a guarded selector form before using ternary fixtures as passing evidence.",
+            "Keep C `TernaryOp` lowering evidence in the later FEF-P52 selected ternary gate, not in P51 blocker evidence.",
             "Add Rust `if` expression and `if return` parsing/lowering before branch re-ingest can run.",
             "Add deterministic boundary samples around branch thresholds after frontend support exists.",
             "Keep the new branch gate separate from P50 scalar source-derived re-ingest evidence.",
         ],
         "allowedPrivateClaims": [
-            "Selected branch/control-flow C/Rust fixtures were attempted and are currently blocked at the frontend boundary.",
+            "Selected branch/control-flow C/Rust fixtures were attempted and current frontend blockers are recorded.",
+            "After FEF-P52, the selected C ternary case may pass as a later-phase closure while P51 remains a blocker inventory.",
             "P50 scalar source-derived re-ingest evidence remains valid but does not cover branch/control-flow fixtures.",
             "The next branch work is implementation work, not a release-action task.",
         ],
@@ -270,7 +283,7 @@ def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
         "nonClaims": list(NON_CLAIMS),
         "reviewHighlights": [
             "P51 attempts selected C/Rust branch/control-flow fixtures and records their blockers.",
-            "C `if`, C ternary, Rust `if` expression, and Rust `if return` remain frontend blockers.",
+            "After FEF-P52, the selected C ternary case may pass as a later-phase closure; C `if`, Rust `if` expression, and Rust `if return` remain frontend blockers.",
             "P50 scalar source-derived re-ingest evidence remains separate and does not cover branch/control-flow.",
             "No branch/control-flow support claim is made.",
         ],
@@ -326,6 +339,7 @@ def render_report(payload: dict[str, Any]) -> str:
             f"- Fixtures attempted: `{summary['fixtureCount']}`",
             f"- Blocked fixtures: `{summary['blockedCount']}`",
             f"- Unexpected passes: `{summary['unexpectedPassCount']}`",
+            f"- Later-phase pass cases: `{', '.join(summary['laterPhasePassCaseIds']) or 'none'}`",
             f"- Source languages: `{', '.join(summary['sourceLanguages'])}`",
             f"- Blocker classes: `{', '.join(summary['blockerClasses'])}`",
             f"- P50 source-derived re-ingest pass: `{summary['p50SourceDerivedReingestPass']}`",
@@ -355,22 +369,29 @@ def validate_payload(payload: dict[str, Any]) -> None:
     summary = payload["summary"]
     if summary["fixtureCount"] != len(BRANCH_FIXTURES):
         raise ValueError("unexpected branch fixture count")
-    if summary["blockedCount"] != len(BRANCH_FIXTURES):
-        raise ValueError("all P51 fixtures should remain blocked until branch support exists")
-    if summary["unexpectedPassCount"] != 0:
-        raise ValueError("unexpected branch fixture pass")
+    if summary["blockedCount"] < MIN_EXPECTED_BLOCKED_FIXTURES:
+        raise ValueError("too few P51 fixtures remain blocked")
+    if summary["unexpectedPassCount"] > MAX_EXPECTED_LATER_PHASE_PASSES:
+        raise ValueError("too many later-phase branch fixture passes")
+    if summary["laterPhasePassCount"] != summary["unexpectedPassCount"]:
+        raise ValueError("unexpected pass must be recorded as a later-phase pass")
+    if set(summary["laterPhasePassCaseIds"]) - {"c_ternary_select_v0"}:
+        raise ValueError("only the P52 C ternary case may pass in P51")
     if summary["sourceLanguages"] != ["c", "rust"]:
         raise ValueError("expected C/Rust branch fixture languages")
     if summary["p50SourceDerivedReingestPass"] is not True:
         raise ValueError("P50 source-derived re-ingest should remain linked")
     expected_classes = {
-        "c_conditional_expression_unsupported",
         "c_statement_control_flow_unsupported",
         "rust_if_expression_unsupported",
     }
-    if set(summary["blockerClasses"]) != expected_classes:
+    if not expected_classes.issubset(set(summary["blockerClasses"])):
         raise ValueError("unexpected branch blocker class set")
     for row in payload["fixtureRows"]:
+        if row["caseId"] == "c_ternary_select_v0" and row["observedStatus"] == "unexpected_pass":
+            if not row["emittedEml"] or "step01" not in row["emittedEml"]:
+                raise ValueError("P52 C ternary later-phase pass must emit guarded EML")
+            continue
         if row["observedStatus"] != "blocked":
             raise ValueError(f"{row['caseId']} must be blocked")
         if not row["errorMessage"]:

@@ -111,6 +111,7 @@ mod monogate_sys {
     pub fn mg_log(x: f64) -> f64 { x.ln() }
     pub fn mg_log10(x: f64) -> f64 { x.log10() }
     pub fn mg_log2(x: f64) -> f64 { x.log2() }
+    pub fn mg_clamp(x: f64, lo: f64, hi: f64) -> f64 { x.max(lo).min(hi) }
     pub fn mg_max(x: f64, y: f64) -> f64 { x.max(y) }
     pub fn mg_min(x: f64, y: f64) -> f64 { x.min(y) }
     pub fn mg_pow(x: f64, y: f64) -> f64 { x.powf(y) }
