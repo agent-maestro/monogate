@@ -1,0 +1,227 @@
+{
+  "$defs": {
+    "block": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "cfg_entry",
+            "basic_block",
+            "merge",
+            "cfg_exit"
+          ]
+        },
+        "statements": {
+          "items": {
+            "$ref": "#/$defs/statement"
+          },
+          "type": "array"
+        },
+        "terminator": {
+          "$ref": "#/$defs/terminator"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "statements",
+        "terminator"
+      ],
+      "type": "object"
+    },
+    "semanticObligation": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "const": "open"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "description"
+      ],
+      "type": "object"
+    },
+    "statement": {
+      "additionalProperties": true,
+      "properties": {
+        "condition": {
+          "type": "string"
+        },
+        "constructId": {
+          "type": "string"
+        },
+        "expr": {
+          "type": "string"
+        },
+        "falseExpr": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "assignment",
+            "phi_or_select",
+            "unsupported_construct"
+          ]
+        },
+        "target": {
+          "type": "string"
+        },
+        "trueExpr": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "terminator": {
+      "additionalProperties": false,
+      "properties": {
+        "condition": {
+          "type": "string"
+        },
+        "falseBlock": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "branch",
+            "return_value",
+            "jump",
+            "unreachable"
+          ]
+        },
+        "targetBlock": {
+          "type": "string"
+        },
+        "trueBlock": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "unsupportedConstruct": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "nextValidator": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "const": "blocked"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "reason",
+        "nextValidator"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "monogate.control_flow_ir.v0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "blocks": {
+      "items": {
+        "$ref": "#/$defs/block"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "claimFlags": {
+      "additionalProperties": {
+        "const": false
+      },
+      "type": "object"
+    },
+    "entryBlockId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "exitBlockId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "feature": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "functionName": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "nonClaims": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "programId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "monogate.control_flow_ir.v0"
+    },
+    "semanticObligations": {
+      "items": {
+        "$ref": "#/$defs/semanticObligation"
+      },
+      "type": "array"
+    },
+    "sourceLanguage": {
+      "enum": [
+        "c",
+        "rust"
+      ]
+    },
+    "unsupportedConstructs": {
+      "items": {
+        "$ref": "#/$defs/unsupportedConstruct"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "programId",
+    "sourceLanguage",
+    "functionName",
+    "entryBlockId",
+    "exitBlockId",
+    "blocks",
+    "unsupportedConstructs",
+    "semanticObligations",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "title": "Monogate Control-Flow IR v0",
+  "type": "object"
+}
