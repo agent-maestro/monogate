@@ -35,7 +35,6 @@ def test_fef_p51_blocker_classes_are_explicit():
     payload = build_payload()
     summary = payload["summary"]
     assert {
-        "c_statement_control_flow_unsupported",
         "rust_if_expression_unsupported",
     }.issubset(set(summary["blockerClasses"]))
     rows = {row["caseId"]: row for row in payload["fixtureRows"]}
@@ -53,6 +52,13 @@ def test_fef_p51_blocker_classes_are_explicit():
     else:
         assert rows["c_ternary_select_v0"]["observedStatus"] == "unexpected_pass"
         assert "step01" in rows["c_ternary_select_v0"]["emittedEml"]
+    if rows["c_if_else_clamp_v0"]["observedStatus"] == "blocked":
+        assert rows["c_if_else_clamp_v0"]["blockerClass"] == (
+            "c_statement_control_flow_unsupported"
+        )
+    else:
+        assert rows["c_if_else_clamp_v0"]["observedStatus"] == "unexpected_pass"
+        assert "step01" in rows["c_if_else_clamp_v0"]["emittedEml"]
     assert rows["rust_if_expr_relu_v0"]["blockerClass"] == "rust_if_expression_unsupported"
 
 

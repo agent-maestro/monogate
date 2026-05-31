@@ -43,9 +43,8 @@
     "allFreeTargetsRoundtripClaim": false,
     "allFreeTargetsRuntimeExecutionClaim": false,
     "arbitrarySourceFamilyClaim": false,
-    "blockedCount": 3,
+    "blockedCount": 2,
     "blockerClasses": [
-      "c_statement_control_flow_unsupported",
       "rust_if_expression_unsupported"
     ],
     "branchControlFlowReingestClaim": false,
@@ -66,10 +65,11 @@
     "fullNonGeneratedSourceRoundtripClaim": false,
     "laterPhasePassCaseIds": [
       "c_if_early_return_relu_v0",
+      "c_if_else_clamp_v0",
       "c_ternary_select_v0"
     ],
-    "laterPhasePassCount": 2,
-    "minimumExpectedBlockedFixtures": 3,
+    "laterPhasePassCount": 3,
+    "minimumExpectedBlockedFixtures": 2,
     "p50PacketCount": 10,
     "p50SourceCaseCount": 5,
     "p50SourceDerivedReingestPass": true,
@@ -83,8 +83,8 @@
       "c",
       "rust"
     ],
-    "unexpectedPassCount": 2
+    "unexpectedPassCount": 3
   },
   "title": "FEF-P51 Branch/Control-Flow Blocker Gate",
-  "topFollowup": "Implement narrow C/Rust branch frontend lowering or record private reviewer response over P47-P53."
+  "topFollowup": "Implement narrow Rust branch frontend lowering or record private reviewer response over P47-P54."
 }

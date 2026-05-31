@@ -12,7 +12,7 @@ The goal is blocker inventory, not branch support.
 | Case | Source | Feature | Observed | Blocker class | Error |
 |---|---|---|---|---|---|
 | `c_if_early_return_relu_v0` | `c` | `if_early_return` | `unexpected_pass` | `unexpected_pass` |  |
-| `c_if_else_clamp_v0` | `c` | `if_else_clamp` | `blocked` | `c_statement_control_flow_unsupported` | C if statement form not supported in E2 (only `if (cond) return a; return b;` or return-only if/else) |
+| `c_if_else_clamp_v0` | `c` | `if_else_clamp` | `unexpected_pass` | `unexpected_pass` |  |
 | `c_ternary_select_v0` | `c` | `ternary_select` | `unexpected_pass` | `unexpected_pass` |  |
 | `rust_if_expr_relu_v0` | `rust` | `if_expression` | `blocked` | `rust_if_expression_unsupported` | line 1: unexpected token `if` in expression |
 | `rust_if_return_clamp_v0` | `rust` | `if_return_clamp` | `blocked` | `rust_if_expression_unsupported` | line 1: unexpected token `if` in expression |
@@ -20,18 +20,16 @@ The goal is blocker inventory, not branch support.
 ## Summary
 
 - Fixtures attempted: `5`
-- Blocked fixtures: `3`
-- Unexpected passes: `2`
-- Later-phase pass cases: `c_if_early_return_relu_v0, c_ternary_select_v0`
+- Blocked fixtures: `2`
+- Unexpected passes: `3`
+- Later-phase pass cases: `c_if_early_return_relu_v0, c_if_else_clamp_v0, c_ternary_select_v0`
 - Source languages: `c, rust`
-- Blocker classes: `c_statement_control_flow_unsupported, rust_if_expression_unsupported`
+- Blocker classes: `rust_if_expression_unsupported`
 - P50 source-derived re-ingest pass: `True`
 
 ## Implementation Requirements
 
-- Add broader C `If` statement lowering beyond the selected early-return form, or keep unsupported branch packets explicit.
-- Keep C `TernaryOp` lowering evidence in the later FEF-P52 selected ternary gate, not in P51 blocker evidence.
-- Keep C early-return `If` lowering evidence in the later FEF-P53 selected if early-return gate, not in P51 blocker evidence.
+- Keep C branch lowering evidence in later selected P52/P53/P54 gates, not in P51 blocker evidence.
 - Add Rust `if` expression and `if return` parsing/lowering before branch re-ingest can run.
 - Add deterministic boundary samples around branch thresholds after frontend support exists.
 - Keep the new branch gate separate from P50 scalar source-derived re-ingest evidence.

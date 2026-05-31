@@ -27,8 +27,12 @@ STAMP = DATE.replace("-", "_")
 SCHEMA_VERSION = "monogate.fef_p51_branch_control_flow_blocker_gate.v0"
 EVIDENCE_SCHEMA_VERSION = "monogate.evidence_public_packet.v0"
 STATUS = "FEF_P51_BRANCH_CONTROL_FLOW_BLOCKER_GATE_PASS"
-LATER_PHASE_PASS_CASE_IDS = {"c_ternary_select_v0", "c_if_early_return_relu_v0"}
-MIN_EXPECTED_BLOCKED_FIXTURES = 3
+LATER_PHASE_PASS_CASE_IDS = {
+    "c_ternary_select_v0",
+    "c_if_early_return_relu_v0",
+    "c_if_else_clamp_v0",
+}
+MIN_EXPECTED_BLOCKED_FIXTURES = 2
 MAX_EXPECTED_LATER_PHASE_PASSES = len(LATER_PHASE_PASS_CASE_IDS)
 
 P50_PACKET = ROOT / "reports/evidence_packets/fef_p50_non_generated_source_reingest_gate.json"
@@ -234,16 +238,14 @@ def build_payload() -> dict[str, Any]:
             {"id": "compiler_correctness_proved", "status": "blocked"},
         ],
         "implementationRequirements": [
-            "Add broader C `If` statement lowering beyond the selected early-return form, or keep unsupported branch packets explicit.",
-            "Keep C `TernaryOp` lowering evidence in the later FEF-P52 selected ternary gate, not in P51 blocker evidence.",
-            "Keep C early-return `If` lowering evidence in the later FEF-P53 selected if early-return gate, not in P51 blocker evidence.",
+            "Keep C branch lowering evidence in later selected P52/P53/P54 gates, not in P51 blocker evidence.",
             "Add Rust `if` expression and `if return` parsing/lowering before branch re-ingest can run.",
             "Add deterministic boundary samples around branch thresholds after frontend support exists.",
             "Keep the new branch gate separate from P50 scalar source-derived re-ingest evidence.",
         ],
         "allowedPrivateClaims": [
             "Selected branch/control-flow C/Rust fixtures were attempted and current frontend blockers are recorded.",
-            "After FEF-P52/FEF-P53, the selected C ternary and C if early-return cases may pass as later-phase closures while P51 remains a blocker inventory.",
+            "After FEF-P52/FEF-P53/FEF-P54, the selected C branch cases may pass as later-phase closures while P51 remains a blocker inventory.",
             "P50 scalar source-derived re-ingest evidence remains valid but does not cover branch/control-flow fixtures.",
             "The next branch work is implementation work, not a release-action task.",
         ],
@@ -263,7 +265,7 @@ def build_payload() -> dict[str, Any]:
         "nextMilestones": [
             "Implement the narrow C/Rust branch frontends or keep branch fixtures as blocked review evidence.",
             "After each frontend slice exists, add a separate branch fixture runtime/re-ingest gate.",
-            "Record private reviewer response over P47-P53 before changing release posture.",
+            "Record private reviewer response over P47-P54 before changing release posture.",
         ],
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
@@ -286,7 +288,7 @@ def build_evidence_packet(payload: dict[str, Any]) -> dict[str, Any]:
         "nonClaims": list(NON_CLAIMS),
         "reviewHighlights": [
             "P51 attempts selected C/Rust branch/control-flow fixtures and records their blockers.",
-            "After FEF-P52/FEF-P53, selected C ternary and C if early-return cases may pass as later-phase closures; C if/else clamp, Rust `if` expression, and Rust `if return` remain frontend blockers.",
+            "After FEF-P52/FEF-P53/FEF-P54, selected C branch cases may pass as later-phase closures; Rust `if` expression and Rust `if return` remain frontend blockers.",
             "P50 scalar source-derived re-ingest evidence remains separate and does not cover branch/control-flow.",
             "No branch/control-flow support claim is made.",
         ],
@@ -305,7 +307,7 @@ def build_command_feed(payload: dict[str, Any]) -> dict[str, Any]:
         "status": payload["status"],
         "decision": payload["decision"],
         "summary": payload["summary"],
-        "topFollowup": "Implement narrow C/Rust branch frontend lowering or record private reviewer response over P47-P53.",
+        "topFollowup": "Implement narrow Rust branch frontend lowering or record private reviewer response over P47-P54.",
         "claimFlags": dict(CLAIM_FLAGS),
         "nonClaims": list(NON_CLAIMS),
     }
@@ -385,7 +387,6 @@ def validate_payload(payload: dict[str, Any]) -> None:
     if summary["p50SourceDerivedReingestPass"] is not True:
         raise ValueError("P50 source-derived re-ingest should remain linked")
     expected_classes = {
-        "c_statement_control_flow_unsupported",
         "rust_if_expression_unsupported",
     }
     if not expected_classes.issubset(set(summary["blockerClasses"])):

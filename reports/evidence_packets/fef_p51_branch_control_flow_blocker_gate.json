@@ -40,7 +40,7 @@
   "reviewDecision": "branch_control_flow_non_generated_c_rust_blockers_recorded",
   "reviewHighlights": [
     "P51 attempts selected C/Rust branch/control-flow fixtures and records their blockers.",
-    "After FEF-P52/FEF-P53, selected C ternary and C if early-return cases may pass as later-phase closures; C if/else clamp, Rust `if` expression, and Rust `if return` remain frontend blockers.",
+    "After FEF-P52/FEF-P53/FEF-P54, selected C branch cases may pass as later-phase closures; Rust `if` expression and Rust `if return` remain frontend blockers.",
     "P50 scalar source-derived re-ingest evidence remains separate and does not cover branch/control-flow.",
     "No branch/control-flow support claim is made."
   ],
@@ -49,9 +49,8 @@
     "allFreeTargetsRoundtripClaim": false,
     "allFreeTargetsRuntimeExecutionClaim": false,
     "arbitrarySourceFamilyClaim": false,
-    "blockedCount": 3,
+    "blockedCount": 2,
     "blockerClasses": [
-      "c_statement_control_flow_unsupported",
       "rust_if_expression_unsupported"
     ],
     "branchControlFlowReingestClaim": false,
@@ -72,10 +71,11 @@
     "fullNonGeneratedSourceRoundtripClaim": false,
     "laterPhasePassCaseIds": [
       "c_if_early_return_relu_v0",
+      "c_if_else_clamp_v0",
       "c_ternary_select_v0"
     ],
-    "laterPhasePassCount": 2,
-    "minimumExpectedBlockedFixtures": 3,
+    "laterPhasePassCount": 3,
+    "minimumExpectedBlockedFixtures": 2,
     "p50PacketCount": 10,
     "p50SourceCaseCount": 5,
     "p50SourceDerivedReingestPass": true,
@@ -89,7 +89,7 @@
       "c",
       "rust"
     ],
-    "unexpectedPassCount": 2
+    "unexpectedPassCount": 3
   },
   "semanticStrength": "branch_control_flow_blocker_inventory_no_support_claim",
   "title": "FEF-P51 Branch/Control-Flow Blocker Gate",
