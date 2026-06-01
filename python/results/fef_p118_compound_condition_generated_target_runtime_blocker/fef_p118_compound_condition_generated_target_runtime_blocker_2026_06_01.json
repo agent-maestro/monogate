@@ -1,0 +1,392 @@
+{
+  "allowedPrivateReviewerStatements": [
+    "P118 records that generated-target runtime comparison is blocked until selected compound-condition lowering and codegen policy exist.",
+    "P117 original C runtime evidence remains attached as prior evidence.",
+    "P118 is a fail-closed gate, not generated target evidence."
+  ],
+  "artifactId": "fef-p118-compound-condition-generated-target-runtime-blocker",
+  "blockedStatements": [
+    "Generated compound-condition target code was executed.",
+    "Re-ingested compound-condition code was executed.",
+    "Short-circuit, predicate-order, or boolean-normalization policy was implemented in Forge or eFrog.",
+    "Generated compound-condition codegen policy is implemented.",
+    "Compound-condition re-ingest policy is implemented.",
+    "Compound-condition lowering is implemented.",
+    "Compound-condition constructs are supported.",
+    "Frontend branch/control-flow lowering was widened.",
+    "General C/Rust branch/control-flow support is established.",
+    "Branch/control-flow re-ingest is generally supported.",
+    "Full non-generated C/Rust source roundtrip is supported.",
+    "Compiler correctness has been proved.",
+    "Formal semantic equivalence has been proved.",
+    "Runtime performance has been established."
+  ],
+  "claimFlags": {
+    "arbitrary_source_family_claim": false,
+    "assignment_phi_support_claim": false,
+    "boolean_normalization_policy_implemented": false,
+    "branch_control_flow_reingest_claim": false,
+    "checkout_enabled": false,
+    "compiler_correctness_claim": false,
+    "compound_condition_generated_target_execution_claim": false,
+    "compound_condition_generated_target_runtime_blocker_claim": false,
+    "compound_condition_lowering_implemented": false,
+    "compound_condition_reingest_execution_claim": false,
+    "compound_condition_support_claim": false,
+    "control_flow_ir_implemented": false,
+    "formal_equivalence_claim": false,
+    "frontend_lowering_changed": false,
+    "full_c_rust_roundtrip_claim": false,
+    "full_non_generated_source_roundtrip_claim": false,
+    "general_branch_control_flow_claim": false,
+    "implementation_change_applied": false,
+    "implementation_change_approved": false,
+    "loop_backedge_support_claim": false,
+    "nested_branch_support_claim": false,
+    "package_published": false,
+    "predicate_order_policy_implemented": false,
+    "private_reviewer_decision_recorded": false,
+    "production_ready": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "selected_original_c_source_execution_recorded": false,
+    "short_circuit_policy_implemented": false,
+    "side_effect_memory_support_claim": false,
+    "unsupported_constructs_supported": false
+  },
+  "date": "2026-06-01",
+  "decision": "compound_condition_generated_target_runtime_gate_blocked",
+  "generatedTargetRuntimeGate": {
+    "blockedBy": "compound_condition_lowering_codegen_and_reingest_policy_missing",
+    "booleanNormalizationPolicyImplemented": false,
+    "gateId": "compound_condition_generated_target_runtime_gate_v0",
+    "generatedTargetExecuted": false,
+    "inheritedOriginalRuntimeEvidence": {
+      "comparisonCount": 7,
+      "maxAbsError": 0.0,
+      "originalCSourceExecuted": true,
+      "passCount": 7,
+      "phase": "P117",
+      "rightPredicateEvaluatedCount": 4,
+      "shortCircuitCount": 3
+    },
+    "predicateOrderPolicyImplemented": false,
+    "reingestedTargetExecuted": false,
+    "requiredBeforeRun": [
+      "selected_compound_condition_lowering_rule",
+      "generated_compound_condition_codegen_fixture",
+      "generated_target_short_circuit_policy",
+      "generated_target_runtime_comparison_harness",
+      "compound_condition_reingest_policy_for_generated_targets"
+    ],
+    "selectedFixtureId": "c_and_guard_return_v0",
+    "shortCircuitPolicyImplemented": false,
+    "status": "blocked_not_run",
+    "supportClaimAllowed": false
+  },
+  "nextMilestones": [
+    "Define a selected compound-condition lowering/codegen proposal before generated-target runtime execution.",
+    "Define generated-target short-circuit and re-ingest policy before executing generated targets.",
+    "Record a real private reviewer response if one exists before installing any lowering."
+  ],
+  "nonClaims": [
+    "FEF-P118 records a generated-target runtime blocker for one selected compound-condition fixture only.",
+    "FEF-P118 does not execute generated target code.",
+    "FEF-P118 does not execute re-ingested code.",
+    "FEF-P118 does not implement short-circuit, predicate-order, or boolean-normalization policy in Forge or eFrog.",
+    "FEF-P118 does not implement compound-condition lowering.",
+    "FEF-P118 does not define generated compound-condition codegen.",
+    "FEF-P118 does not define compound-condition re-ingest policy.",
+    "FEF-P118 does not widen Forge or eFrog frontend lowering.",
+    "FEF-P118 does not claim compound-condition support.",
+    "FEF-P118 does not record reviewer approval or rejection.",
+    "FEF-P118 does not claim general branch/control-flow support.",
+    "FEF-P118 does not claim branch/control-flow re-ingest support.",
+    "FEF-P118 does not claim full non-generated source roundtrip.",
+    "FEF-P118 does not claim arbitrary C/Rust source-family support.",
+    "FEF-P118 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P118 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+  ],
+  "releaseGates": [
+    {
+      "id": "original_c_compound_condition_runtime_execution",
+      "status": "recorded_by_p117"
+    },
+    {
+      "id": "generated_target_runtime_execution",
+      "status": "blocked_not_run"
+    },
+    {
+      "id": "compound_condition_reingest_execution",
+      "status": "not_performed"
+    },
+    {
+      "id": "compound_condition_lowering",
+      "status": "blocked"
+    },
+    {
+      "id": "generated_compound_condition_codegen_policy",
+      "status": "blocked"
+    },
+    {
+      "id": "generated_target_short_circuit_policy",
+      "status": "blocked"
+    },
+    {
+      "id": "compound_condition_reingest_policy",
+      "status": "blocked"
+    },
+    {
+      "id": "compound_condition_support",
+      "status": "blocked"
+    },
+    {
+      "id": "frontend_lowering_change",
+      "status": "not_performed"
+    },
+    {
+      "id": "general_branch_control_flow_support",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness",
+      "status": "blocked"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p118_compound_condition_generated_target_runtime_blocker.v0",
+  "selectedFixture": {
+    "atomicPredicateCount": 2,
+    "blockedBy": "compound_condition_semantics_gate",
+    "booleanNormalizationPolicyImplemented": false,
+    "booleanOperatorKinds": [
+      "and"
+    ],
+    "branchDepth": 1,
+    "constructId": "boolean_compound_conditions",
+    "id": "c_and_guard_return_v0",
+    "loweringPerformed": false,
+    "requiredSemanticObligations": [
+      "condition_truth_semantics",
+      "return_and_fallthrough_preservation"
+    ],
+    "returnCount": 2,
+    "runtimeExecutionPerformed": false,
+    "schemaFragment": {
+      "blocks": [
+        {
+          "id": "entry",
+          "kind": "cfg_entry",
+          "statements": [
+            {
+              "blockedBy": "compound_condition_semantics_gate",
+              "constructId": "boolean_compound_conditions",
+              "expr": "if (x > 0.0 && y > 0.0) return x + y; return 0.0;",
+              "kind": "unsupported_construct"
+            }
+          ],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        },
+        {
+          "id": "exit",
+          "kind": "cfg_exit",
+          "statements": [],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        }
+      ],
+      "claimFlags": {
+        "arbitrary_source_family_claim": false,
+        "assignment_phi_support_claim": false,
+        "boolean_normalization_policy_implemented": false,
+        "branch_control_flow_reingest_claim": false,
+        "checkout_enabled": false,
+        "compiler_correctness_claim": false,
+        "compound_condition_fixture_gate_claim": false,
+        "compound_condition_lowering_implemented": false,
+        "compound_condition_runtime_execution_claim": false,
+        "compound_condition_support_claim": false,
+        "control_flow_ir_implemented": false,
+        "formal_equivalence_claim": false,
+        "frontend_lowering_changed": false,
+        "full_c_rust_roundtrip_claim": false,
+        "full_non_generated_source_roundtrip_claim": false,
+        "general_branch_control_flow_claim": false,
+        "implementation_change_applied": false,
+        "implementation_change_approved": false,
+        "loop_backedge_support_claim": false,
+        "nested_branch_support_claim": false,
+        "package_published": false,
+        "private_reviewer_decision_recorded": false,
+        "production_ready": false,
+        "public_preview_release_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "short_circuit_policy_implemented": false,
+        "side_effect_memory_support_claim": false,
+        "unsupported_constructs_supported": false
+      },
+      "entryBlockId": "entry",
+      "exitBlockId": "exit",
+      "feature": "compound_and_guard_return",
+      "functionName": "c_and_guard_return",
+      "nonClaims": [
+        "FEF-P113 records compound-condition fixtures only.",
+        "FEF-P113 does not execute compound-condition fixtures.",
+        "FEF-P113 does not implement short-circuit or boolean-normalization policy.",
+        "FEF-P113 does not implement compound-condition lowering.",
+        "FEF-P113 does not widen Forge or eFrog frontend lowering.",
+        "FEF-P113 does not claim compound-condition support.",
+        "FEF-P113 preserves the P112 private reviewer handoff hold status.",
+        "FEF-P113 does not record reviewer approval or rejection.",
+        "FEF-P113 does not claim general branch/control-flow support.",
+        "FEF-P113 does not claim branch/control-flow re-ingest support.",
+        "FEF-P113 does not claim full non-generated source roundtrip.",
+        "FEF-P113 does not claim arbitrary C/Rust source-family support.",
+        "FEF-P113 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P113 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+      ],
+      "programId": "c_and_guard_return_v0",
+      "schemaVersion": "monogate.control_flow_ir.v0",
+      "semanticObligations": [
+        {
+          "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+          "id": "condition_truth_semantics",
+          "status": "open"
+        },
+        {
+          "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+          "id": "return_and_fallthrough_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+          "id": "unsupported_construct_fail_closed",
+          "status": "open"
+        },
+        {
+          "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+          "id": "dominance_and_merge_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Mutable updates must preserve statement order and branch-local state.",
+          "id": "assignment_order_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+          "id": "source_ast_roundtrip_boundary",
+          "status": "open"
+        }
+      ],
+      "sourceLanguage": "c",
+      "unsupportedConstructs": [
+        {
+          "id": "nested_statement_branches",
+          "nextValidator": "nested_branch_fixture_matrix",
+          "reason": "selected closures do not cover arbitrary nested statement bodies",
+          "status": "blocked"
+        },
+        {
+          "id": "boolean_compound_conditions",
+          "nextValidator": "compound_condition_semantics_gate",
+          "reason": "selected closures do not cover short-circuit and/or condition semantics",
+          "status": "blocked"
+        },
+        {
+          "id": "mutable_assignments_across_branches",
+          "nextValidator": "assignment_phi_fixture_gate",
+          "reason": "selected closures are scalar return-only or expression-valued cases",
+          "status": "blocked"
+        },
+        {
+          "id": "loops_and_back_edges",
+          "nextValidator": "loop_construct_blocker_gate",
+          "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+          "status": "blocked"
+        },
+        {
+          "id": "side_effecting_calls_or_memory",
+          "nextValidator": "side_effect_boundary_inventory",
+          "reason": "current selected branch evidence is side-effect free",
+          "status": "blocked"
+        },
+        {
+          "id": "source_preserving_roundtrip",
+          "nextValidator": "non_generated_branch_roundtrip_gate",
+          "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+          "status": "blocked"
+        }
+      ]
+    },
+    "shape": "compound_and_guard_return",
+    "shortCircuitPolicyImplemented": false,
+    "shortCircuitRelevant": true,
+    "sourceLanguage": "c",
+    "sourceSketch": "if (x > 0.0 && y > 0.0) return x + y; return 0.0;",
+    "status": "blocked_fixture_defined",
+    "supportClaimAllowed": false
+  },
+  "sourcePacket": {
+    "packetPath": "reports/evidence_packets/fef_p117_compound_condition_original_c_runtime_gate.json",
+    "phase": "P117",
+    "resultPath": "python/results/fef_p117_compound_condition_original_c_runtime_gate/fef_p117_compound_condition_original_c_runtime_gate_2026_06_01.json",
+    "reviewDecision": "compound_condition_original_c_runtime_recorded_support_blocked",
+    "validationStatus": "pass"
+  },
+  "status": "FEF_P118_COMPOUND_CONDITION_GENERATED_TARGET_RUNTIME_BLOCKER_PASS",
+  "summary": {
+    "arbitrarySourceFamilyClaim": false,
+    "assignmentPhiSupportClaim": false,
+    "booleanNormalizationPolicyImplemented": false,
+    "branchControlFlowReingestClaim": false,
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "compoundConditionGeneratedTargetExecutionClaim": false,
+    "compoundConditionLoweringImplemented": false,
+    "compoundConditionReingestExecutionClaim": false,
+    "compoundConditionSupportClaim": false,
+    "controlFlowIrImplemented": false,
+    "formalEquivalenceClaim": false,
+    "frontendLoweringChanged": false,
+    "fullCRustRoundtripClaim": false,
+    "fullNonGeneratedSourceRoundtripClaim": false,
+    "generalBranchControlFlowClaim": false,
+    "generatedTargetExecuted": false,
+    "generatedTargetGateBlocked": true,
+    "generatedTargetGateStatus": "blocked_not_run",
+    "implementationChangeApplied": false,
+    "implementationChangeApproved": false,
+    "loopBackedgeSupportClaim": false,
+    "nestedBranchSupportClaim": false,
+    "p117ClaimFlagsAllFalse": true,
+    "p117ComparisonCount": 7,
+    "p117MaxAbsError": 0.0,
+    "p117PassCount": 7,
+    "p117RightPredicateEvaluatedCount": 4,
+    "p117ShortCircuitCount": 3,
+    "p117ValidationPass": true,
+    "packagePublished": false,
+    "predicateOrderPolicyImplemented": false,
+    "productionReady": false,
+    "publicReady": false,
+    "reingestedTargetExecuted": false,
+    "requiredBeforeRunCount": 5,
+    "reviewerDecisionRecorded": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedFixtureId": "c_and_guard_return_v0",
+    "selectedFixtureStillBlocked": true,
+    "shortCircuitPolicyImplemented": false,
+    "sideEffectMemorySupportClaim": false,
+    "sourcePacketCount": 1,
+    "unsupportedConstructsSupported": false
+  }
+}
