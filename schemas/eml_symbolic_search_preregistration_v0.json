@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Symbolic Search Preregistration v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "planType",
+    "artifactId",
+    "status",
+    "sourceQueue",
+    "sourceHoldoutTrial",
+    "sourceFailureAtlas",
+    "experimentPlan",
+    "successCriteria",
+    "negativeControls",
+    "nullResultPolicy",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_symbolic_search_preregistration.v0" },
+    "planType": { "const": "eml_symbolic_search_preregistration_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourceQueue": { "type": "string", "minLength": 1 },
+    "sourceHoldoutTrial": { "type": "string", "minLength": 1 },
+    "sourceFailureAtlas": { "type": "string", "minLength": 1 },
+    "experimentPlan": { "type": "object" },
+    "successCriteria": { "type": "array", "items": { "type": "object" } },
+    "negativeControls": { "type": "array", "items": { "type": "object" } },
+    "nullResultPolicy": { "type": "object" },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

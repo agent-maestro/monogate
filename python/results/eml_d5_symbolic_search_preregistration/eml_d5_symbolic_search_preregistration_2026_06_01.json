@@ -1,0 +1,265 @@
+{
+  "artifactId": "eml-d5-symbolic-search-preregistration",
+  "claimFlags": {
+    "candidate_proved": false,
+    "candidate_test_performed": false,
+    "compiler_correctness_claim": false,
+    "eml_advantage_proved": false,
+    "experiment_run_performed": false,
+    "formal_equivalence_claim": false,
+    "general_eml_superiority_claim": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "date": "2026-06-01",
+  "decision": "symbolic_search_preregistered_run_not_performed",
+  "experimentPlan": {
+    "blockedInterpretationsBeforeRun": [
+      "EML advantage proved",
+      "theorem discovery",
+      "RH proof",
+      "zeta-zero discovery",
+      "runtime performance",
+      "compiler correctness",
+      "formal equivalence",
+      "public Atlas promotion"
+    ],
+    "complexityPolicy": {
+      "complexityPenalty": 0.05,
+      "maxComplexity": 22,
+      "mustReportBestEquationText": true,
+      "mustReportParetoFrontier": true,
+      "primaryMetric": "first_acceptable_holdout_loss_at_complexity"
+    },
+    "grammars": [
+      {
+        "complexityBudget": 22,
+        "grammarId": "eml_native_guarded_v1",
+        "notes": "Includes EML-native coordinates plus protected operators required by D4 controls.",
+        "operators": [
+          "+",
+          "-",
+          "*",
+          "/",
+          "protected_eml",
+          "protected_expm1",
+          "protected_logaddexp"
+        ]
+      },
+      {
+        "complexityBudget": 22,
+        "grammarId": "standard_exp_log_trig_v1",
+        "notes": "Standard protected baseline with the same complexity budget.",
+        "operators": [
+          "+",
+          "-",
+          "*",
+          "/",
+          "sin",
+          "cos",
+          "exp",
+          "log_abs",
+          "sqrt_abs",
+          "logaddexp",
+          "expm1"
+        ]
+      },
+      {
+        "complexityBudget": 18,
+        "grammarId": "wrong_exponent_eml_control_v1",
+        "notes": "Negative-control grammar for zeta-like localization traps.",
+        "operators": [
+          "+",
+          "-",
+          "*",
+          "/",
+          "protected_eml"
+        ]
+      }
+    ],
+    "planId": "eml_d5_a6_1_symbolic_search_preregistration_v0",
+    "primaryTarget": {
+      "candidateSignalFromD3": "ambiguous_symbolic_search_retained",
+      "datasetId": "psi_residual",
+      "fixture": "Chebyshev psi(x)-x over fixed train/holdout splits",
+      "interpretationBeforeRun": "ambiguous_requires_preregistered_a6_1"
+    },
+    "protectedOperatorPolicy": {
+      "mustCiteD4Controls": true,
+      "rawRuntimePreferenceAllowed": false,
+      "requiredByFailureAtlas": [
+        "protected_expm1",
+        "protected_logaddexp",
+        "block_unstable_deep_tree"
+      ]
+    },
+    "runLabel": "A6.1 preregistered private symbolic-search refinement",
+    "runPerformed": false,
+    "secondaryTarget": {
+      "candidateSignalFromD3": "parameter_recovery_signal_supported",
+      "datasetId": "damped_oscillator",
+      "fixture": "synthetic damped oscillator parameter-recovery holdout",
+      "interpretationBeforeRun": "search_target_not_runtime_win"
+    },
+    "splitPolicy": {
+      "holdoutFraction": 0.25,
+      "repeatCount": 3,
+      "seed": 20260601,
+      "splitIds": [
+        "seed_20260601_a",
+        "seed_20260601_b",
+        "seed_20260601_c"
+      ],
+      "trainFraction": 0.75
+    },
+    "targetCandidates": [
+      "psi_residual_two_zero_holdout_v1",
+      "damped_oscillator_eml_phase_v0"
+    ]
+  },
+  "negativeControls": [
+    {
+      "blocksIfFails": [
+        "structure_recovery_claim",
+        "zeta_localization_interpretation"
+      ],
+      "controlId": "wrong_exponent_two_zero_v0",
+      "expectedResult": "wrong-exponent controls must not outperform the preregistered EML target grammar",
+      "family": "psi_residual_control"
+    },
+    {
+      "blocksIfFails": [
+        "symbolic_structure_claim",
+        "eml_advantage_claim"
+      ],
+      "controlId": "shuffled_residual_control_v1",
+      "expectedResult": "no grammar should receive positive structural interpretation on shuffled residuals",
+      "family": "data_randomization_control"
+    },
+    {
+      "blocksIfFails": [
+        "general_eml_superiority_claim"
+      ],
+      "controlId": "gaussian_bumps_control_v1",
+      "expectedResult": "standard/protected grammar should remain competitive or win",
+      "family": "non_eml_structure_control"
+    },
+    {
+      "blocksIfFails": [
+        "surface_compression_claim",
+        "runtime_advantage_claim"
+      ],
+      "controlId": "ordinary_polynomial_failure_v0",
+      "expectedResult": "standard Horner representation remains the control",
+      "family": "failure_atlas_control"
+    },
+    {
+      "blocksIfFails": [
+        "raw_eml_runtime_preference",
+        "compiler_lowering_claim"
+      ],
+      "controlId": "expm1_logaddexp_runtime_controls_v1",
+      "expectedResult": "protected expm1/logaddexp policies from D4 must not be violated",
+      "family": "protected_runtime_control"
+    }
+  ],
+  "nonClaims": [
+    "EML-D5 preregisters a future symbolic-search experiment; it does not run the experiment.",
+    "EML-D5 does not prove EML advantage, theorem discovery, RH, zeta-zero discovery, compiler correctness, runtime performance, formal equivalence, or public Atlas promotion.",
+    "EML-D5 success criteria are private research gates, not public claims.",
+    "Null results are explicitly allowed and must be recorded without reinterpretation."
+  ],
+  "nullResultPolicy": {
+    "forbiddenPostHocMoves": [
+      "changing success thresholds after seeing results",
+      "dropping failed splits",
+      "ignoring wrong-exponent controls",
+      "turning localization-only wins into theorem or zeta claims",
+      "turning local runtime stability into performance claims"
+    ],
+    "nullLabels": [
+      "standard_control_retained",
+      "ambiguous_control_failure",
+      "fit_without_complexity_advantage",
+      "no_replicated_holdout_gain"
+    ],
+    "nullResultAccepted": true,
+    "requiredNullReporting": [
+      "all split metrics",
+      "all negative-control outcomes",
+      "best equations for both grammars",
+      "complexity frontier",
+      "claim flags remaining false"
+    ]
+  },
+  "planType": "eml_symbolic_search_preregistration_v0",
+  "schemaVersion": "monogate.eml_symbolic_search_preregistration.v0",
+  "sourceFailureAtlas": "eml-d4-discovery-failure-atlas",
+  "sourceHoldoutTrial": "eml-d3-discovery-holdout-search-trials",
+  "sourceQueue": "eml-d1-discovery-frontier-queue",
+  "status": "EML_D5_SYMBOLIC_SEARCH_PREREGISTRATION_PASS",
+  "successCriteria": [
+    {
+      "criterionId": "holdout_mse_improvement_replicated",
+      "description": "EML grammar must beat the standard grammar on target holdout MSE across all preregistered splits.",
+      "failureAction": "label result as null_or_standard_control_retained",
+      "requiredForPositiveInterpretation": true,
+      "threshold": "eml_holdout_mse <= 0.95 * standard_holdout_mse on every split"
+    },
+    {
+      "criterionId": "complexity_not_higher",
+      "description": "EML grammar must not buy holdout fit by using a larger expression.",
+      "failureAction": "label result as fit_without_complexity_advantage",
+      "requiredForPositiveInterpretation": true,
+      "threshold": "eml_best_complexity <= standard_best_complexity"
+    },
+    {
+      "criterionId": "wrong_exponent_control_not_better",
+      "description": "Wrong-exponent EML-like controls must not beat the selected EML grammar on localization or holdout score.",
+      "failureAction": "label result as ambiguous_control_failure",
+      "requiredForPositiveInterpretation": true,
+      "threshold": "wrong_exponent_score > eml_score on target fixture"
+    },
+    {
+      "criterionId": "negative_controls_do_not_promote_eml",
+      "description": "Shuffled and Gaussian-bump controls must not produce an apparent EML advantage.",
+      "failureAction": "block positive interpretation",
+      "requiredForPositiveInterpretation": true,
+      "threshold": "standard_or_control_label wins on non-EML controls"
+    },
+    {
+      "criterionId": "protected_runtime_controls_respected",
+      "description": "Generated expressions must not prefer raw exp-minus-one or naive logsumexp when D4 says protected standard runtime wins.",
+      "failureAction": "reject expression from positive interpretation",
+      "requiredForPositiveInterpretation": true,
+      "threshold": "no accepted expression violates D4 protected operator policy"
+    },
+    {
+      "criterionId": "localization_and_mse_both_reported",
+      "description": "Psi residual interpretation must report both zeta-like localization and holdout MSE, because D3 showed they can disagree.",
+      "failureAction": "mark run incomplete",
+      "requiredForPositiveInterpretation": true,
+      "threshold": "both metrics present in every target run packet"
+    }
+  ],
+  "summary": {
+    "candidateProved": false,
+    "claimFlagsAllFalse": true,
+    "d3AmbiguousSignalCarriedForward": true,
+    "d4FailureAtlasRequired": true,
+    "emlAdvantageProved": false,
+    "experimentRunPerformed": false,
+    "grammarCount": 3,
+    "negativeControlCount": 5,
+    "nullResultAccepted": true,
+    "preregistrationRecorded": true,
+    "publicReady": false,
+    "requiredSuccessCriteriaCount": 6,
+    "successCriteriaCount": 6,
+    "targetCandidateCount": 2
+  }
+}
