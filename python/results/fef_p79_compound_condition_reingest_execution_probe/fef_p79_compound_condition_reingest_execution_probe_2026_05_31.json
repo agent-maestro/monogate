@@ -1,0 +1,502 @@
+{
+  "allowedPrivateReviewerStatements": [
+    "P79 invokes the selected eFrog C re-ingest probe and records the fail-closed blocker.",
+    "The selected generated compound-condition fixture is not re-ingested successfully yet.",
+    "P79 identifies concrete blocker requirements before a selected re-ingest pass can be recorded."
+  ],
+  "artifactId": "fef-p79-compound-condition-reingest-execution-probe",
+  "blockedStatements": [
+    "Re-ingested compound-condition code was executed successfully.",
+    "Re-ingested Python comparison rows were executed.",
+    "Compound-condition re-ingest is supported.",
+    "Generated compound-condition runtime support is installed in Forge or eFrog.",
+    "Short-circuit condition semantics are implemented in Forge or eFrog.",
+    "Compound-condition lowering is implemented.",
+    "Short-circuit boolean conditions are supported.",
+    "Frontend branch lowering was widened.",
+    "General C/Rust branch/control-flow support is established.",
+    "Branch/control-flow re-ingest is generally supported.",
+    "Full non-generated C/Rust source roundtrip is supported.",
+    "Compiler correctness has been proved.",
+    "Formal semantic equivalence has been proved.",
+    "Runtime performance has been established."
+  ],
+  "blockerRequirements": [
+    {
+      "linkedBlockerDetected": true,
+      "requirementId": "support_selected_nonzero_predicate_condition",
+      "status": "required_before_reingest_execution"
+    },
+    {
+      "linkedBlockerDetected": false,
+      "requirementId": "support_selected_guard_helper_calls",
+      "status": "required_before_reingest_execution"
+    },
+    {
+      "linkedBlockerDetected": false,
+      "requirementId": "support_selected_if_assignment_shape",
+      "status": "required_before_reingest_execution"
+    },
+    {
+      "linkedBlockerDetected": true,
+      "requirementId": "compile_reingested_eml_to_python_and_compare_p77_rows",
+      "status": "blocked_until_reingest_parse_passes"
+    }
+  ],
+  "claimFlags": {
+    "arbitrary_source_family_claim": false,
+    "assignment_phi_support_claim": false,
+    "branch_control_flow_reingest_claim": false,
+    "checkout_enabled": false,
+    "compiler_correctness_claim": false,
+    "compound_condition_lowering_implemented": false,
+    "compound_condition_reingest_execution_claim": false,
+    "compound_condition_reingest_execution_probe_claim": false,
+    "compound_condition_reingest_supported": false,
+    "compound_condition_support_claim": false,
+    "control_flow_ir_implemented": false,
+    "formal_equivalence_claim": false,
+    "frontend_lowering_changed": false,
+    "full_c_rust_roundtrip_claim": false,
+    "full_non_generated_source_roundtrip_claim": false,
+    "general_branch_control_flow_claim": false,
+    "guarded_division_runtime_helper_installed": false,
+    "nested_branch_support_claim": false,
+    "nonzero_predicate_runtime_helper_installed": false,
+    "package_published": false,
+    "private_reviewer_decision_recorded": false,
+    "production_ready": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "selected_codegen_fixture_installed_in_forge": false,
+    "short_circuit_semantics_implemented": false,
+    "unsupported_constructs_supported": false
+  },
+  "date": "2026-05-31",
+  "decision": "selected_compound_condition_reingest_probe_blocked_expected_surface",
+  "nextMilestones": [
+    "Teach eFrog the selected nonzero predicate and guard helper surface, or add a selected re-ingest adapter.",
+    "Re-run the selected generated compound-condition re-ingest gate after the parse blocker is cleared.",
+    "Record private reviewer response to the P47-P79 branch/control-flow bundle."
+  ],
+  "nonClaims": [
+    "FEF-P79 invokes the selected eFrog C re-ingest probe and records the fail-closed result.",
+    "FEF-P79 does not claim successful re-ingest execution.",
+    "FEF-P79 does not install helper functions in Forge or eFrog.",
+    "FEF-P79 does not change Forge or eFrog lowering behavior.",
+    "FEF-P79 does not implement short-circuit condition semantics in Forge or eFrog.",
+    "FEF-P79 does not claim compound-condition support.",
+    "FEF-P79 does not claim assignment/phi or nested branch support.",
+    "FEF-P79 does not claim general branch/control-flow support.",
+    "FEF-P79 does not claim branch/control-flow re-ingest support.",
+    "FEF-P79 does not claim full non-generated source roundtrip.",
+    "FEF-P79 does not claim arbitrary C/Rust source-family support.",
+    "FEF-P79 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P79 does not claim runtime performance."
+  ],
+  "reingestPolicy": {
+    "policyId": "selected_c_and_short_circuit_guard_reingest_policy_v0",
+    "reingestExecutionStatus": "not_executed",
+    "requiredAcceptedSurface": [
+      {
+        "description": "Accept static helper definition for mg_step01 as selected guard helper text.",
+        "requiredToken": "static double mg_step01(double value)",
+        "surfaceId": "static_helper_step01"
+      },
+      {
+        "description": "Accept static helper definition for mg_nonzero01 as selected nonzero guard helper text.",
+        "requiredToken": "static double mg_nonzero01(double value)",
+        "surfaceId": "static_helper_nonzero01"
+      },
+      {
+        "description": "Accept static helper definition for mg_guarded_div as selected guarded division helper text.",
+        "requiredToken": "static double mg_guarded_div(double numerator, double denominator, double default_value, double guard)",
+        "surfaceId": "static_helper_guarded_div"
+      },
+      {
+        "description": "Preserve selected left-false short-circuit skip shape by recognizing if (lhs != 0.0).",
+        "requiredToken": "if (lhs != 0.0)",
+        "surfaceId": "selected_if_guard_shape"
+      },
+      {
+        "description": "Accept selected affine return shape over lhs, rhs, and selected.",
+        "requiredToken": "return lhs * rhs * selected;",
+        "surfaceId": "selected_return_shape"
+      }
+    ],
+    "requiredComparisonRows": [
+      {
+        "comparisonStatus": "pending_reingest_execution",
+        "expected": 0.5,
+        "path": "and_true_division",
+        "reingestExecuted": false,
+        "sampleId": "sample_00"
+      },
+      {
+        "comparisonStatus": "pending_reingest_execution",
+        "expected": 0.0,
+        "path": "left_false_short_circuit",
+        "reingestExecuted": false,
+        "sampleId": "sample_01"
+      },
+      {
+        "comparisonStatus": "pending_reingest_execution",
+        "expected": 0.0,
+        "path": "left_false_short_circuit",
+        "reingestExecuted": false,
+        "sampleId": "sample_02"
+      },
+      {
+        "comparisonStatus": "pending_reingest_execution",
+        "expected": 0.0,
+        "path": "right_false_zero_denominator_guard",
+        "reingestExecuted": false,
+        "sampleId": "sample_03"
+      },
+      {
+        "comparisonStatus": "pending_reingest_execution",
+        "expected": -3.0,
+        "path": "and_true_division",
+        "reingestExecuted": false,
+        "sampleId": "sample_04"
+      },
+      {
+        "comparisonStatus": "pending_reingest_execution",
+        "expected": 0.0,
+        "path": "left_false_short_circuit",
+        "reingestExecuted": false,
+        "sampleId": "sample_05"
+      },
+      {
+        "comparisonStatus": "pending_reingest_execution",
+        "expected": 2.5,
+        "path": "and_true_division",
+        "reingestExecuted": false,
+        "sampleId": "sample_06"
+      }
+    ],
+    "requiredExecutionGate": [
+      "parse selected generated C fixture",
+      "recover helper calls and selected guard shape",
+      "emit canonical selected EML or IR packet",
+      "recompile to Python reference target",
+      "compare against P77 generated C runtime rows",
+      "record re-ingest packet with all broad claims false"
+    ],
+    "requiredRejectedSurface": [
+      {
+        "description": "Reject arbitrary && and || expressions outside the selected generated fixture.",
+        "surfaceId": "arbitrary_boolean_expression"
+      },
+      {
+        "description": "Reject condition terms with function calls, mutation, assignment, volatile reads, or observable side effects.",
+        "surfaceId": "side_effect_condition"
+      },
+      {
+        "description": "Reject nested compound-condition trees beyond the selected two-term shape.",
+        "surfaceId": "nested_condition_tree"
+      },
+      {
+        "description": "Reject claims that helpers are installed globally in Forge/eFrog runtime packages.",
+        "surfaceId": "helper_runtime_import"
+      }
+    ],
+    "scope": "selected_generated_c_fixture_only",
+    "selectedFixtureId": "c_and_short_circuit_guard_v0",
+    "sourceTargetLanguage": "c",
+    "status": "policy_recorded_execution_blocked"
+  },
+  "reingestProbe": {
+    "decompiler": "efrog.decompilers.c.decompile_c_source",
+    "errorMessage": "BinaryOp unsupported as C branch condition",
+    "errorType": "EFrogError",
+    "failure": {
+      "detectedBlockers": [
+        "nonzero_comparison_condition_unsupported"
+      ],
+      "failureClass": "efrog_selected_generated_compound_condition_surface_blocked",
+      "message": "BinaryOp unsupported as C branch condition"
+    },
+    "invocationPerformed": true,
+    "probeId": "selected_generated_c_fixture_efrog_reingest_probe",
+    "recompiledPythonExecuted": false,
+    "reingestExecuted": false,
+    "sourceLanguage": "c",
+    "status": "blocked_expected_unsupported_surface"
+  },
+  "releaseGates": [
+    {
+      "id": "selected_reingest_probe_invocation",
+      "status": "performed_blocked_expected_surface"
+    },
+    {
+      "id": "selected_reingest_execution",
+      "status": "blocked_not_executed"
+    },
+    {
+      "id": "recompiled_python_execution",
+      "status": "blocked_not_executed"
+    },
+    {
+      "id": "helper_runtime_installation",
+      "status": "not_performed"
+    },
+    {
+      "id": "compound_condition_support",
+      "status": "blocked"
+    },
+    {
+      "id": "short_circuit_semantics_implementation",
+      "status": "not_performed"
+    },
+    {
+      "id": "frontend_lowering_change",
+      "status": "not_performed"
+    },
+    {
+      "id": "general_branch_control_flow_support",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness",
+      "status": "blocked"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p79_compound_condition_reingest_execution_probe.v0",
+  "selectedCodegenFixture": {
+    "fixtureId": "c_and_short_circuit_guard_v0_generated_codegen_fixture",
+    "generatedTargetExecuted": false,
+    "installedInForge": false,
+    "preservesShortCircuitSkipInCodeShape": true,
+    "reingestedTargetExecuted": false,
+    "selectedFixtureId": "c_and_short_circuit_guard_v0",
+    "source": "static double mg_step01(double value) { return value > 0.0 ? 1.0 : 0.0; }\nstatic double mg_nonzero01(double value) { return value != 0.0 ? 1.0 : 0.0; }\nstatic double mg_guarded_div(double numerator, double denominator, double default_value, double guard) {\n  return guard != 0.0 ? numerator / denominator : default_value;\n}\n\ndouble c_and_short_circuit_guard_v0_generated_fixture(double x, double y) {\n  double lhs = mg_step01(x);\n  double rhs = 0.0;\n  double selected = 0.0;\n  if (lhs != 0.0) {\n    rhs = mg_nonzero01(y);\n    selected = mg_guarded_div(x, y, 0.0, rhs);\n  }\n  return lhs * rhs * selected;\n}",
+    "status": "codegen_fixture_recorded_runtime_not_executed",
+    "targetLanguage": "c",
+    "usesHelpers": [
+      "step01",
+      "nonzero01",
+      "guarded_div"
+    ]
+  },
+  "selectedFixture": {
+    "blockedBy": "compound_condition_semantics_gate",
+    "branchDepth": 1,
+    "conditionCount": 2,
+    "constructId": "boolean_compound_conditions",
+    "id": "c_and_short_circuit_guard_v0",
+    "operator": "&&",
+    "requiredSemanticObligations": [
+      "condition_truth_semantics",
+      "unsupported_construct_fail_closed"
+    ],
+    "runtimeExecutionPerformed": false,
+    "schemaFragment": {
+      "blocks": [
+        {
+          "id": "entry",
+          "kind": "cfg_entry",
+          "statements": [
+            {
+              "blockedBy": "compound_condition_semantics_gate",
+              "constructId": "boolean_compound_conditions",
+              "expr": "if (x > 0.0 && y != 0.0) { return x / y; } return 0.0;",
+              "kind": "unsupported_construct"
+            }
+          ],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        },
+        {
+          "id": "exit",
+          "kind": "cfg_exit",
+          "statements": [],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        }
+      ],
+      "claimFlags": {
+        "arbitrary_source_family_claim": false,
+        "assignment_phi_support_claim": false,
+        "branch_control_flow_reingest_claim": false,
+        "checkout_enabled": false,
+        "compiler_correctness_claim": false,
+        "compound_condition_fixture_gate_claim": false,
+        "compound_condition_runtime_execution_claim": false,
+        "compound_condition_support_claim": false,
+        "control_flow_ir_implemented": false,
+        "formal_equivalence_claim": false,
+        "frontend_lowering_changed": false,
+        "full_c_rust_roundtrip_claim": false,
+        "full_non_generated_source_roundtrip_claim": false,
+        "general_branch_control_flow_claim": false,
+        "nested_branch_support_claim": false,
+        "package_published": false,
+        "private_reviewer_decision_recorded": false,
+        "production_ready": false,
+        "public_preview_release_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "unsupported_constructs_supported": false
+      },
+      "entryBlockId": "entry",
+      "exitBlockId": "exit",
+      "feature": "and_short_circuit_guard",
+      "functionName": "c_and_short_circuit_guard",
+      "nonClaims": [
+        "FEF-P70 records compound-condition fixtures only.",
+        "FEF-P70 does not execute compound-condition fixtures.",
+        "FEF-P70 does not implement short-circuit condition semantics.",
+        "FEF-P70 does not implement compound-condition lowering.",
+        "FEF-P70 does not widen Forge or eFrog frontend lowering.",
+        "FEF-P70 does not claim compound-condition support.",
+        "FEF-P70 does not claim assignment/phi or nested branch support.",
+        "FEF-P70 does not claim general branch/control-flow support.",
+        "FEF-P70 does not claim branch/control-flow re-ingest support.",
+        "FEF-P70 does not claim full non-generated source roundtrip.",
+        "FEF-P70 does not claim arbitrary C/Rust source-family support.",
+        "FEF-P70 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P70 does not claim runtime performance."
+      ],
+      "programId": "c_and_short_circuit_guard_v0",
+      "schemaVersion": "monogate.control_flow_ir.v0",
+      "semanticObligations": [
+        {
+          "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+          "id": "condition_truth_semantics",
+          "status": "open"
+        },
+        {
+          "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+          "id": "unsupported_construct_fail_closed",
+          "status": "open"
+        },
+        {
+          "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+          "id": "dominance_and_merge_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+          "id": "return_and_fallthrough_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Mutable updates must preserve statement order and branch-local state.",
+          "id": "assignment_order_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+          "id": "source_ast_roundtrip_boundary",
+          "status": "open"
+        }
+      ],
+      "sourceLanguage": "c",
+      "unsupportedConstructs": [
+        {
+          "id": "nested_statement_branches",
+          "nextValidator": "nested_branch_fixture_matrix",
+          "reason": "selected closures do not cover arbitrary nested statement bodies",
+          "status": "blocked"
+        },
+        {
+          "id": "boolean_compound_conditions",
+          "nextValidator": "compound_condition_semantics_gate",
+          "reason": "selected closures do not cover short-circuit and/or condition semantics",
+          "status": "blocked"
+        },
+        {
+          "id": "mutable_assignments_across_branches",
+          "nextValidator": "assignment_phi_fixture_gate",
+          "reason": "selected closures are scalar return-only or expression-valued cases",
+          "status": "blocked"
+        },
+        {
+          "id": "loops_and_back_edges",
+          "nextValidator": "loop_construct_blocker_gate",
+          "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+          "status": "blocked"
+        },
+        {
+          "id": "side_effecting_calls_or_memory",
+          "nextValidator": "side_effect_boundary_inventory",
+          "reason": "current selected branch evidence is side-effect free",
+          "status": "blocked"
+        },
+        {
+          "id": "source_preserving_roundtrip",
+          "nextValidator": "non_generated_branch_roundtrip_gate",
+          "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+          "status": "blocked"
+        }
+      ]
+    },
+    "shape": "and_short_circuit_guard",
+    "shortCircuitSites": 1,
+    "sourceLanguage": "c",
+    "sourceSketch": "if (x > 0.0 && y != 0.0) { return x / y; } return 0.0;",
+    "status": "blocked_fixture_defined",
+    "supportClaimAllowed": false
+  },
+  "sourcePacket": {
+    "packetPath": "reports/evidence_packets/fef_p78_compound_condition_reingest_policy.json",
+    "phase": "P78",
+    "resultPath": "python/results/fef_p78_compound_condition_reingest_policy/fef_p78_compound_condition_reingest_policy_2026_05_31.json",
+    "reviewDecision": "selected_compound_condition_reingest_policy_recorded_execution_blocked",
+    "validationStatus": "pass"
+  },
+  "status": "FEF_P79_COMPOUND_CONDITION_REINGEST_EXECUTION_PROBE_PASS",
+  "summary": {
+    "arbitrarySourceFamilyClaim": false,
+    "assignmentPhiSupportClaim": false,
+    "branchControlFlowReingestClaim": false,
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "codegenFixtureInstalledInForge": false,
+    "compilerBehaviorChanged": false,
+    "compilerCorrectnessClaim": false,
+    "compoundConditionLoweringImplemented": false,
+    "compoundConditionReingestSupported": false,
+    "compoundConditionSupportClaim": false,
+    "controlFlowIrImplemented": false,
+    "detectedBlockerCount": 1,
+    "formalEquivalenceClaim": false,
+    "frontendLoweringChanged": false,
+    "fullCRustRoundtripClaim": false,
+    "fullNonGeneratedSourceRoundtripClaim": false,
+    "generalBranchControlFlowClaim": false,
+    "guardedDivisionRuntimeHelperInstalled": false,
+    "helperRuntimeInstalled": false,
+    "linkedRequirementCount": 2,
+    "nestedBranchSupportClaim": false,
+    "nonzeroPredicateRuntimeHelperInstalled": false,
+    "p78ClaimFlagsAllFalse": true,
+    "p78PolicyRecorded": true,
+    "p78RequiredComparisonRowCount": 7,
+    "p78ValidationPass": true,
+    "packagePublished": false,
+    "probeBlockedExpectedUnsupportedSurface": true,
+    "probeInvocationPerformed": true,
+    "probeStatus": "blocked_expected_unsupported_surface",
+    "productionReady": false,
+    "publicReady": false,
+    "recompiledPythonExecuted": false,
+    "reingestExecuted": false,
+    "requirementCount": 4,
+    "reviewerDecisionRecorded": false,
+    "runtimeComparisonExecuted": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedFixtureId": "c_and_short_circuit_guard_v0",
+    "selectedFixtureStillBlocked": true,
+    "shortCircuitSemanticsImplemented": false,
+    "sourcePacketCount": 1,
+    "unsupportedConstructsSupported": false
+  }
+}
