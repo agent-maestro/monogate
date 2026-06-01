@@ -1,0 +1,160 @@
+{
+  "artifactId": "eml-d7-symbolic-search-interpretation-gate",
+  "claimFlags": {
+    "bounded_private_candidate_signal": false,
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "general_eml_superiority_claim": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "rh_proof_claim": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "zeta_zero_discovery_claim": false
+  },
+  "criterionResults": [
+    {
+      "criterionId": "holdout_mse_improvement_replicated",
+      "labelIfFailed": "no_replicated_holdout_gain",
+      "observed": {
+        "rows": [
+          {
+            "emlHoldoutMse": 5.460328218715536,
+            "passed": false,
+            "requiredMaxMse": 5.250501139986982,
+            "splitId": "seed_20260601_a",
+            "standardHoldoutMse": 5.5268433052494546
+          },
+          {
+            "emlHoldoutMse": 5.291605122812119,
+            "passed": false,
+            "requiredMaxMse": 4.93340915085402,
+            "splitId": "seed_20260601_b",
+            "standardHoldoutMse": 5.193062264056864
+          },
+          {
+            "emlHoldoutMse": 5.263341963656697,
+            "passed": true,
+            "requiredMaxMse": 5.291937093360755,
+            "splitId": "seed_20260601_c",
+            "standardHoldoutMse": 5.570460098274479
+          }
+        ]
+      },
+      "passed": false
+    },
+    {
+      "criterionId": "complexity_not_higher",
+      "labelIfFailed": "fit_without_complexity_advantage",
+      "observed": {
+        "emlComplexity": 17,
+        "standardComplexity": 16
+      },
+      "passed": false
+    },
+    {
+      "criterionId": "wrong_exponent_control_not_better",
+      "labelIfFailed": "ambiguous_control_failure",
+      "observed": {
+        "rows": [
+          {
+            "emlHoldoutMse": 5.460328218715536,
+            "passed": true,
+            "splitId": "seed_20260601_a",
+            "wrongExponentHoldoutMse": 5.834989228910481
+          },
+          {
+            "emlHoldoutMse": 5.291605122812119,
+            "passed": true,
+            "splitId": "seed_20260601_b",
+            "wrongExponentHoldoutMse": 6.062292191989206
+          },
+          {
+            "emlHoldoutMse": 5.263341963656697,
+            "passed": true,
+            "splitId": "seed_20260601_c",
+            "wrongExponentHoldoutMse": 6.527727569049681
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "criterionId": "negative_controls_do_not_promote_eml",
+      "labelIfFailed": "ambiguous_control_failure",
+      "observed": {
+        "pendingControls": [
+          "shuffled_residual_control_v1",
+          "gaussian_bumps_control_v1"
+        ]
+      },
+      "passed": false
+    },
+    {
+      "criterionId": "protected_runtime_controls_respected",
+      "labelIfFailed": "ambiguous_control_failure",
+      "observed": {
+        "requiredControls": [
+          "expm1_logaddexp_runtime_controls_v1",
+          "ordinary_polynomial_failure_v0"
+        ],
+        "satisfiedControls": [
+          "expm1_logaddexp_runtime_controls_v1",
+          "ordinary_polynomial_failure_v0"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "criterionId": "localization_and_mse_both_reported",
+      "labelIfFailed": "incomplete_run",
+      "observed": {
+        "checkedPacketCount": 9,
+        "missingMetricPackets": []
+      },
+      "passed": true
+    }
+  ],
+  "date": "2026-06-01",
+  "decision": "d6_interpreted_against_d5_no_positive_advantage_claim",
+  "gateType": "eml_symbolic_search_interpretation_gate_v0",
+  "interpretation": {
+    "allowedSurface": "private_research_record",
+    "failedCriterionIds": [
+      "holdout_mse_improvement_replicated",
+      "complexity_not_higher",
+      "negative_controls_do_not_promote_eml"
+    ],
+    "label": "no_replicated_holdout_gain",
+    "nextAction": "Route to D8 branch decision: either park psi residual as ambiguous, broaden controls, or choose a different frontier family.",
+    "resultSummary": "D6 is not a positive EML advantage result under the D5 gate: replicated holdout improvement fails, EML complexity is higher than the standard baseline, and some negative controls remain pending."
+  },
+  "nonClaims": [
+    "EML-D7 interprets D6 only against the D5 preregistered criteria.",
+    "EML-D7 does not prove EML advantage, theorem discovery, RH, zeta-zero discovery, compiler correctness, runtime performance, formal equivalence, public Atlas promotion, or public readiness.",
+    "A null or ambiguous label is an allowed research result and must not be reworded as a win."
+  ],
+  "schemaVersion": "monogate.eml_symbolic_search_interpretation_gate.v0",
+  "sourcePreregistration": "eml-d5-symbolic-search-preregistration",
+  "sourceRun": "eml-d6-preregistered-symbolic-search-run",
+  "status": "EML_D7_SYMBOLIC_SEARCH_INTERPRETATION_GATE_PASS",
+  "summary": {
+    "candidateProved": false,
+    "claimFlagsAllFalse": true,
+    "criterionCount": 6,
+    "d5CriteriaPreserved": true,
+    "d6RunInterpreted": true,
+    "emlAdvantageProved": false,
+    "failedCriterionCount": 3,
+    "interpretationLabel": "no_replicated_holdout_gain",
+    "passedCriterionCount": 3,
+    "positiveInterpretationAllowed": false,
+    "publicReady": false,
+    "rhProofClaim": false,
+    "runtimePerformanceClaim": false,
+    "thresholdsChanged": false,
+    "zetaZeroDiscoveryClaim": false
+  }
+}

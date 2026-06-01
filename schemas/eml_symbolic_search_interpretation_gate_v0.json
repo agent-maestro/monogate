@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Symbolic Search Interpretation Gate v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "gateType",
+    "artifactId",
+    "status",
+    "sourcePreregistration",
+    "sourceRun",
+    "criterionResults",
+    "interpretation",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_symbolic_search_interpretation_gate.v0" },
+    "gateType": { "const": "eml_symbolic_search_interpretation_gate_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourcePreregistration": { "type": "string", "minLength": 1 },
+    "sourceRun": { "type": "string", "minLength": 1 },
+    "criterionResults": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "interpretation": { "type": "object" },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
