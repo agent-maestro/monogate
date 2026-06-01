@@ -1,0 +1,318 @@
+{
+  "allowedPrivateReviewerStatements": [
+    "P128 packages the P121-P127 source-preserving evidence bundle for private review.",
+    "P128 marks reviewer response as not recorded.",
+    "P128 holds source-preserving implementation pending reviewer response.",
+    "P128 records no parser, re-emitter, preservation-oracle, fidelity-validation, support, public-readiness, compiler-correctness, or runtime-performance claim."
+  ],
+  "artifactId": "fef-p128-source-preserving-private-reviewer-handoff-hold-gate",
+  "blockedStatements": [
+    "A reviewer has approved source-preserving roundtrip implementation.",
+    "A reviewer has rejected source-preserving roundtrip implementation.",
+    "The implementation change has been approved.",
+    "The implementation change has been applied.",
+    "An implementation diff has been produced.",
+    "Non-generated source was parsed for source-preserving roundtrip.",
+    "Non-generated source was re-emitted.",
+    "A preservation oracle checked source fidelity.",
+    "Token, whitespace, comment, or formatting fidelity has been validated.",
+    "Source-preserving roundtrip is supported.",
+    "Full non-generated C/Rust source roundtrip is supported.",
+    "Frontend branch/control-flow lowering was widened.",
+    "General C/Rust branch/control-flow support is established.",
+    "Compiler correctness has been proved.",
+    "Formal semantic equivalence has been proved.",
+    "Runtime performance has been established.",
+    "Forge/eFrog is public-ready or package-ready."
+  ],
+  "bundleEvidence": [
+    {
+      "decision": "source_preserving_fixture_gate_recorded_support_blocked_review_hold_preserved",
+      "fixtureIds": [
+        "c_if_else_source_layout_v0",
+        "c_nested_source_order_v0",
+        "rust_if_expr_source_layout_v0",
+        "rust_early_return_source_order_v0"
+      ],
+      "phase": "P121",
+      "purpose": "Four blocked C/Rust source-preserving fixture shapes for layout, comments, token boundaries, Rust tail expressions, and fallthrough order.",
+      "reviewFocus": "Confirm the source-preserving lane starts blocked and preserves the P120 reviewer hold."
+    },
+    {
+      "decision": "source_preserving_expected_rows_recorded_support_blocked",
+      "expectedRows": 8,
+      "phase": "P122",
+      "purpose": "Expected preservation rows for c_if_else_source_layout_v0.",
+      "reviewFocus": "Confirm the selected C if/else layout surface is explicit before any checker or implementation claim."
+    },
+    {
+      "checkerPasses": 8,
+      "decision": "source_preserving_expected_row_checker_recorded_support_blocked",
+      "phase": "P123",
+      "purpose": "Local expected-row checker for the selected C if/else source sketch.",
+      "reviewFocus": "Confirm the checker matches the stored sketch but does not parse, re-emit, or validate fidelity."
+    },
+    {
+      "decision": "source_preserving_negative_control_checker_recorded_support_blocked",
+      "expectedFailedRows": 12,
+      "negativeControls": 4,
+      "phase": "P124",
+      "purpose": "Negative-control checker for mutated c_if_else_source_layout_v0 sketches.",
+      "reviewFocus": "Confirm intentionally mutated sketches fail closed with expected failed-row sets."
+    },
+    {
+      "decision": "second_source_preserving_fixture_expected_rows_checker_negative_controls_recorded_support_blocked",
+      "expectedRows": 7,
+      "negativeControls": 3,
+      "phase": "P125",
+      "purpose": "Same checker discipline for c_nested_source_order_v0.",
+      "reviewFocus": "Confirm a second C source-order fixture uses the discipline without claiming support."
+    },
+    {
+      "decision": "rust_source_preserving_fixture_expected_rows_checker_negative_controls_recorded_support_blocked",
+      "expectedRows": 7,
+      "negativeControls": 3,
+      "phase": "P126",
+      "purpose": "Same checker discipline for rust_if_expr_source_layout_v0.",
+      "reviewFocus": "Confirm the first Rust source-preserving fixture is bounded to source-sketch rows."
+    },
+    {
+      "decision": "rust_early_return_source_order_expected_rows_checker_negative_controls_recorded_support_blocked",
+      "expectedRows": 8,
+      "negativeControls": 3,
+      "phase": "P127",
+      "purpose": "Same checker discipline for rust_early_return_source_order_v0.",
+      "reviewFocus": "Confirm the Rust early-return/fallthrough fixture is checked and still support-blocked."
+    }
+  ],
+  "claimFlags": {
+    "arbitrary_source_family_claim": false,
+    "assignment_phi_support_claim": false,
+    "branch_control_flow_reingest_claim": false,
+    "checkout_enabled": false,
+    "compiler_correctness_claim": false,
+    "compound_condition_support_claim": false,
+    "control_flow_ir_implemented": false,
+    "formal_equivalence_claim": false,
+    "frontend_lowering_changed": false,
+    "full_c_rust_roundtrip_claim": false,
+    "full_non_generated_source_roundtrip_claim": false,
+    "general_branch_control_flow_claim": false,
+    "implementation_change_applied": false,
+    "implementation_change_approved": false,
+    "implementation_diff_produced": false,
+    "loop_backedge_support_claim": false,
+    "nested_branch_support_claim": false,
+    "non_generated_source_roundtrip_claim": false,
+    "package_published": false,
+    "preservation_oracle_executed": false,
+    "production_ready": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_decision_recorded": false,
+    "reviewer_rejection_recorded": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "side_effect_memory_support_claim": false,
+    "source_fidelity_validated": false,
+    "source_parser_executed": false,
+    "source_preserving_private_reviewer_handoff_claim": false,
+    "source_preserving_roundtrip_support_claim": false,
+    "source_reemitter_executed": false,
+    "unsupported_constructs_supported": false
+  },
+  "date": "2026-06-01",
+  "decision": "source_preserving_private_reviewer_handoff_ready_response_not_recorded_implementation_held",
+  "handoffChecklist": [
+    {
+      "id": "p121_fixture_gate_reviewed",
+      "status": "ready"
+    },
+    {
+      "id": "p122_expected_rows_reviewed",
+      "status": "ready"
+    },
+    {
+      "id": "p123_checker_reviewed",
+      "status": "ready"
+    },
+    {
+      "id": "p124_negative_controls_reviewed",
+      "status": "ready"
+    },
+    {
+      "id": "p125_second_fixture_reviewed",
+      "status": "ready"
+    },
+    {
+      "id": "p126_rust_if_expr_fixture_reviewed",
+      "status": "ready"
+    },
+    {
+      "id": "p127_rust_early_return_fixture_reviewed",
+      "status": "ready"
+    }
+  ],
+  "nextMilestones": [
+    "Record the actual private reviewer response to P121-P128.",
+    "If approved, create a separate implementation phase with source diffs, parser/re-emitter scope, preservation-oracle criteria, and rollback checks.",
+    "If held, keep source-preserving support blocked and pivot to reviewer response capture or release-boundary consolidation."
+  ],
+  "nonClaims": [
+    "FEF-P128 records a private reviewer handoff hold gate only.",
+    "FEF-P128 does not record reviewer approval or rejection.",
+    "FEF-P128 does not approve source-preserving roundtrip implementation.",
+    "FEF-P128 does not apply source parser or re-emitter changes.",
+    "FEF-P128 does not run a preservation oracle.",
+    "FEF-P128 does not validate token, whitespace, comment, formatting, or source-layout fidelity.",
+    "FEF-P128 does not execute source, generated, or re-ingested code.",
+    "FEF-P128 does not implement source-preserving roundtrip support.",
+    "FEF-P128 does not widen Forge or eFrog frontend lowering.",
+    "FEF-P128 does not apply held P111 or P119 proposals.",
+    "FEF-P128 does not claim general branch/control-flow support.",
+    "FEF-P128 does not claim full non-generated source roundtrip.",
+    "FEF-P128 does not claim arbitrary C/Rust source-family support.",
+    "FEF-P128 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P128 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+  ],
+  "releaseGates": [
+    {
+      "id": "source_preserving_private_reviewer_handoff",
+      "status": "ready"
+    },
+    {
+      "id": "reviewer_decision",
+      "status": "not_recorded"
+    },
+    {
+      "id": "implementation_change",
+      "status": "held"
+    },
+    {
+      "id": "implementation_diff",
+      "status": "not_produced"
+    },
+    {
+      "id": "source_parser_execution",
+      "status": "not_performed"
+    },
+    {
+      "id": "source_reemitter_execution",
+      "status": "not_performed"
+    },
+    {
+      "id": "preservation_oracle_execution",
+      "status": "not_run"
+    },
+    {
+      "id": "source_fidelity_validation",
+      "status": "not_performed"
+    },
+    {
+      "id": "source_preserving_roundtrip_support",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness",
+      "status": "blocked"
+    }
+  ],
+  "reviewerHandoffPacket": {
+    "allowedPrivateOutcomes": [
+      "accept_fixture_discipline_private_scope",
+      "request_copy_tightening",
+      "request_real_parser_or_reemitter_design_before_support",
+      "request_preservation_oracle_before_support",
+      "request_token_comment_whitespace_fidelity_tests",
+      "request_runtime_or_reingest_attachment",
+      "request_reviewer_hold"
+    ],
+    "bundleRange": "P121-P127",
+    "handoffStatus": "ready_for_private_review",
+    "implementationStatus": "held_pending_reviewer_response",
+    "pivotCriteria": [
+      "A real reviewer response is recorded before any implementation posture changes.",
+      "A separate implementation phase is created before source parser, re-emitter, or preservation-oracle work.",
+      "Source-preserving support remains blocked until token/comment/layout fidelity evidence exists.",
+      "Public/package/checkout posture remains blocked until a separate release gate changes it."
+    ],
+    "reviewSurface": "private_only",
+    "reviewerDecisionStatus": "not_recorded",
+    "reviewerMustInspect": [
+      "P121 blocked fixture matrix and P120 hold preservation.",
+      "P122 expected rows for c_if_else_source_layout_v0.",
+      "P123 local expected-row checker and mismatch behavior.",
+      "P124 negative controls for c_if_else_source_layout_v0.",
+      "P125 second C source-order fixture checker.",
+      "P126 Rust if-expression source-layout checker.",
+      "P127 Rust early-return/fallthrough source-order checker."
+    ]
+  },
+  "schemaVersion": "monogate.fef_p128_source_preserving_private_reviewer_handoff_hold_gate.v0",
+  "sourcePacket": {
+    "packetPath": "reports/evidence_packets/fef_p127_rust_early_return_source_order_checker.json",
+    "phase": "P127",
+    "resultPath": "python/results/fef_p127_rust_early_return_source_order_checker/fef_p127_rust_early_return_source_order_checker_2026_06_01.json",
+    "reviewDecision": "rust_early_return_source_order_expected_rows_checker_negative_controls_recorded_support_blocked",
+    "validationStatus": "pass"
+  },
+  "status": "FEF_P128_SOURCE_PRESERVING_PRIVATE_REVIEWER_HANDOFF_HOLD_GATE_PASS",
+  "summary": {
+    "allowedPrivateOutcomeCount": 7,
+    "arbitrarySourceFamilyClaim": false,
+    "assignmentPhiSupportClaim": false,
+    "branchControlFlowReingestClaim": false,
+    "bundleEvidenceEntryCount": 7,
+    "bundleRange": "P121-P127",
+    "checkerFixtureCount": 4,
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "compoundConditionSupportClaim": false,
+    "controlFlowIrImplemented": false,
+    "formalEquivalenceClaim": false,
+    "frontendLoweringChanged": false,
+    "fullCRustRoundtripClaim": false,
+    "fullNonGeneratedSourceRoundtripClaim": false,
+    "generalBranchControlFlowClaim": false,
+    "handoffChecklistCount": 7,
+    "implementationApplied": false,
+    "implementationApproved": false,
+    "implementationDiffProduced": false,
+    "implementationHeldPendingReview": true,
+    "loopBackedgeSupportClaim": false,
+    "nestedBranchSupportClaim": false,
+    "p121ToP127BundleComplete": true,
+    "p127CheckerPassCount": 8,
+    "p127ClaimFlagsAllFalse": true,
+    "p127NegativeControlExpectedFailureCount": 9,
+    "p127ValidationPass": true,
+    "packagePublished": false,
+    "pivotCriteriaCount": 4,
+    "preservationOracleExecuted": false,
+    "productionReady": false,
+    "publicReady": false,
+    "reviewerDecisionRecorded": false,
+    "reviewerDecisionStatus": "not_recorded",
+    "reviewerHandoffReady": true,
+    "reviewerMustInspectCount": 7,
+    "runtimeExecutionPerformed": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedFixtureId": "rust_early_return_source_order_v0",
+    "selectedFixtureStillBlocked": true,
+    "sideEffectMemorySupportClaim": false,
+    "sourceFidelityValidated": false,
+    "sourcePacketCount": 1,
+    "sourceParserExecuted": false,
+    "sourcePreservingFixtureCount": 4,
+    "sourcePreservingRoundtripSupportClaim": false,
+    "sourceReemitterExecuted": false,
+    "totalCheckerPassesAcrossCheckerFixtures": 30,
+    "totalExpectedFailedRowsAcrossNegativeControls": 37,
+    "totalExpectedRowsAcrossCheckerFixtures": 30,
+    "totalNegativeControlsAcrossCheckerFixtures": 13,
+    "unsupportedConstructsSupported": false
+  }
+}
