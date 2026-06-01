@@ -1,0 +1,921 @@
+{
+  "allowedPrivateReviewerStatements": [
+    "P121 records selected source-preserving roundtrip fixture shapes for private review.",
+    "P121 keeps source parsing, source re-emission, and fidelity claims blocked.",
+    "P121 preserves the P120 reviewer handoff hold status."
+  ],
+  "artifactId": "fef-p121-source-preserving-roundtrip-fixture-gate",
+  "blockedStatements": [
+    "Non-generated source was parsed for source-preserving roundtrip.",
+    "Non-generated source was re-emitted.",
+    "Token, whitespace, comment, or formatting fidelity has been established.",
+    "Source-preserving roundtrip is supported.",
+    "Full non-generated C/Rust source roundtrip is supported.",
+    "Frontend branch/control-flow lowering was widened.",
+    "General C/Rust branch/control-flow support is established.",
+    "Branch/control-flow re-ingest is generally supported.",
+    "Compiler correctness has been proved.",
+    "Formal semantic equivalence has been proved.",
+    "Runtime performance has been established."
+  ],
+  "claimFlags": {
+    "arbitrary_source_family_claim": false,
+    "assignment_phi_support_claim": false,
+    "branch_control_flow_reingest_claim": false,
+    "checkout_enabled": false,
+    "compiler_correctness_claim": false,
+    "compound_condition_support_claim": false,
+    "control_flow_ir_implemented": false,
+    "formal_equivalence_claim": false,
+    "frontend_lowering_changed": false,
+    "full_c_rust_roundtrip_claim": false,
+    "full_non_generated_source_roundtrip_claim": false,
+    "general_branch_control_flow_claim": false,
+    "implementation_change_applied": false,
+    "implementation_change_approved": false,
+    "loop_backedge_support_claim": false,
+    "nested_branch_support_claim": false,
+    "non_generated_source_roundtrip_claim": false,
+    "package_published": false,
+    "private_reviewer_decision_recorded": false,
+    "production_ready": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "side_effect_memory_support_claim": false,
+    "source_fidelity_claim": false,
+    "source_parse_execution_claim": false,
+    "source_preserving_roundtrip_fixture_gate_claim": false,
+    "source_preserving_roundtrip_support_claim": false,
+    "source_reemission_claim": false,
+    "unsupported_constructs_supported": false
+  },
+  "date": "2026-06-01",
+  "decision": "source_preserving_roundtrip_fixture_gate_recorded_support_blocked_review_hold_preserved",
+  "fixtureMatrix": [
+    {
+      "blockedBy": "non_generated_branch_roundtrip_gate",
+      "branchConstructCount": 1,
+      "commentCount": 1,
+      "constructId": "source_preserving_roundtrip",
+      "formatSensitive": true,
+      "id": "c_if_else_source_layout_v0",
+      "requiredSemanticObligations": [
+        "source_ast_roundtrip_boundary",
+        "condition_truth_semantics"
+      ],
+      "roundtripFidelityClaim": false,
+      "runtimeExecutionPerformed": false,
+      "schemaFragment": {
+        "blocks": [
+          {
+            "id": "entry",
+            "kind": "cfg_entry",
+            "statements": [
+              {
+                "blockedBy": "non_generated_branch_roundtrip_gate",
+                "constructId": "source_preserving_roundtrip",
+                "expr": "/* clamp */\nif (x < lo) {\n  return lo;\n} else {\n  return x;\n}",
+                "kind": "unsupported_construct"
+              }
+            ],
+            "terminator": {
+              "kind": "unreachable"
+            }
+          },
+          {
+            "id": "exit",
+            "kind": "cfg_exit",
+            "statements": [],
+            "terminator": {
+              "kind": "unreachable"
+            }
+          }
+        ],
+        "claimFlags": {
+          "arbitrary_source_family_claim": false,
+          "assignment_phi_support_claim": false,
+          "branch_control_flow_reingest_claim": false,
+          "checkout_enabled": false,
+          "compiler_correctness_claim": false,
+          "compound_condition_support_claim": false,
+          "control_flow_ir_implemented": false,
+          "formal_equivalence_claim": false,
+          "frontend_lowering_changed": false,
+          "full_c_rust_roundtrip_claim": false,
+          "full_non_generated_source_roundtrip_claim": false,
+          "general_branch_control_flow_claim": false,
+          "implementation_change_applied": false,
+          "implementation_change_approved": false,
+          "loop_backedge_support_claim": false,
+          "nested_branch_support_claim": false,
+          "non_generated_source_roundtrip_claim": false,
+          "package_published": false,
+          "private_reviewer_decision_recorded": false,
+          "production_ready": false,
+          "public_preview_release_claim": false,
+          "public_ready": false,
+          "runtime_performance_claim": false,
+          "safe_to_publish_publicly": false,
+          "side_effect_memory_support_claim": false,
+          "source_fidelity_claim": false,
+          "source_parse_execution_claim": false,
+          "source_preserving_roundtrip_fixture_gate_claim": false,
+          "source_preserving_roundtrip_support_claim": false,
+          "source_reemission_claim": false,
+          "unsupported_constructs_supported": false
+        },
+        "entryBlockId": "entry",
+        "exitBlockId": "exit",
+        "feature": "if_else_with_layout_and_comment",
+        "functionName": "c_if_else_source_layout",
+        "nonClaims": [
+          "FEF-P121 records source-preserving roundtrip fixtures only.",
+          "FEF-P121 does not parse or re-emit non-generated source.",
+          "FEF-P121 does not execute source-preserving roundtrip fixtures.",
+          "FEF-P121 does not claim token, whitespace, comment, or formatting fidelity.",
+          "FEF-P121 does not implement source-preserving roundtrip support.",
+          "FEF-P121 does not widen Forge or eFrog frontend lowering.",
+          "FEF-P121 preserves the P120 private reviewer handoff hold status.",
+          "FEF-P121 does not record reviewer approval or rejection.",
+          "FEF-P121 does not claim general branch/control-flow support.",
+          "FEF-P121 does not claim branch/control-flow re-ingest support.",
+          "FEF-P121 does not claim full non-generated source roundtrip.",
+          "FEF-P121 does not claim arbitrary C/Rust source-family support.",
+          "FEF-P121 does not claim compiler correctness or formal semantic equivalence.",
+          "FEF-P121 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+        ],
+        "programId": "c_if_else_source_layout_v0",
+        "schemaVersion": "monogate.control_flow_ir.v0",
+        "semanticObligations": [
+          {
+            "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+            "id": "condition_truth_semantics",
+            "status": "open"
+          },
+          {
+            "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+            "id": "unsupported_construct_fail_closed",
+            "status": "open"
+          },
+          {
+            "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+            "id": "source_ast_roundtrip_boundary",
+            "status": "open"
+          },
+          {
+            "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+            "id": "dominance_and_merge_preservation",
+            "status": "open"
+          },
+          {
+            "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+            "id": "return_and_fallthrough_preservation",
+            "status": "open"
+          },
+          {
+            "description": "Mutable updates must preserve statement order and branch-local state.",
+            "id": "assignment_order_preservation",
+            "status": "open"
+          }
+        ],
+        "sourceLanguage": "c",
+        "unsupportedConstructs": [
+          {
+            "id": "nested_statement_branches",
+            "nextValidator": "nested_branch_fixture_matrix",
+            "reason": "selected closures do not cover arbitrary nested statement bodies",
+            "status": "blocked"
+          },
+          {
+            "id": "boolean_compound_conditions",
+            "nextValidator": "compound_condition_semantics_gate",
+            "reason": "selected closures do not cover short-circuit and/or condition semantics",
+            "status": "blocked"
+          },
+          {
+            "id": "mutable_assignments_across_branches",
+            "nextValidator": "assignment_phi_fixture_gate",
+            "reason": "selected closures are scalar return-only or expression-valued cases",
+            "status": "blocked"
+          },
+          {
+            "id": "loops_and_back_edges",
+            "nextValidator": "loop_construct_blocker_gate",
+            "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+            "status": "blocked"
+          },
+          {
+            "id": "side_effecting_calls_or_memory",
+            "nextValidator": "side_effect_boundary_inventory",
+            "reason": "current selected branch evidence is side-effect free",
+            "status": "blocked"
+          },
+          {
+            "id": "source_preserving_roundtrip",
+            "nextValidator": "non_generated_branch_roundtrip_gate",
+            "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+            "status": "blocked"
+          }
+        ]
+      },
+      "shape": "if_else_with_layout_and_comment",
+      "sourceFidelityFeatures": [
+        "block_comment",
+        "brace_layout",
+        "else_token",
+        "return_spacing"
+      ],
+      "sourceLanguage": "c",
+      "sourceParsePerformed": false,
+      "sourceReemissionPerformed": false,
+      "sourceSketch": "/* clamp */\nif (x < lo) {\n  return lo;\n} else {\n  return x;\n}",
+      "status": "blocked_fixture_defined",
+      "supportClaimAllowed": false,
+      "tokenBoundaryCount": 6
+    },
+    {
+      "blockedBy": "non_generated_branch_roundtrip_gate",
+      "branchConstructCount": 2,
+      "commentCount": 0,
+      "constructId": "source_preserving_roundtrip",
+      "formatSensitive": true,
+      "id": "c_nested_source_order_v0",
+      "requiredSemanticObligations": [
+        "source_ast_roundtrip_boundary",
+        "dominance_and_merge_preservation"
+      ],
+      "roundtripFidelityClaim": false,
+      "runtimeExecutionPerformed": false,
+      "schemaFragment": {
+        "blocks": [
+          {
+            "id": "entry",
+            "kind": "cfg_entry",
+            "statements": [
+              {
+                "blockedBy": "non_generated_branch_roundtrip_gate",
+                "constructId": "source_preserving_roundtrip",
+                "expr": "if (x > 0.0) {\n  if (y > 0.0) return x + y;\n}\nreturn 0.0;",
+                "kind": "unsupported_construct"
+              }
+            ],
+            "terminator": {
+              "kind": "unreachable"
+            }
+          },
+          {
+            "id": "exit",
+            "kind": "cfg_exit",
+            "statements": [],
+            "terminator": {
+              "kind": "unreachable"
+            }
+          }
+        ],
+        "claimFlags": {
+          "arbitrary_source_family_claim": false,
+          "assignment_phi_support_claim": false,
+          "branch_control_flow_reingest_claim": false,
+          "checkout_enabled": false,
+          "compiler_correctness_claim": false,
+          "compound_condition_support_claim": false,
+          "control_flow_ir_implemented": false,
+          "formal_equivalence_claim": false,
+          "frontend_lowering_changed": false,
+          "full_c_rust_roundtrip_claim": false,
+          "full_non_generated_source_roundtrip_claim": false,
+          "general_branch_control_flow_claim": false,
+          "implementation_change_applied": false,
+          "implementation_change_approved": false,
+          "loop_backedge_support_claim": false,
+          "nested_branch_support_claim": false,
+          "non_generated_source_roundtrip_claim": false,
+          "package_published": false,
+          "private_reviewer_decision_recorded": false,
+          "production_ready": false,
+          "public_preview_release_claim": false,
+          "public_ready": false,
+          "runtime_performance_claim": false,
+          "safe_to_publish_publicly": false,
+          "side_effect_memory_support_claim": false,
+          "source_fidelity_claim": false,
+          "source_parse_execution_claim": false,
+          "source_preserving_roundtrip_fixture_gate_claim": false,
+          "source_preserving_roundtrip_support_claim": false,
+          "source_reemission_claim": false,
+          "unsupported_constructs_supported": false
+        },
+        "entryBlockId": "entry",
+        "exitBlockId": "exit",
+        "feature": "nested_if_source_order",
+        "functionName": "c_nested_source_order",
+        "nonClaims": [
+          "FEF-P121 records source-preserving roundtrip fixtures only.",
+          "FEF-P121 does not parse or re-emit non-generated source.",
+          "FEF-P121 does not execute source-preserving roundtrip fixtures.",
+          "FEF-P121 does not claim token, whitespace, comment, or formatting fidelity.",
+          "FEF-P121 does not implement source-preserving roundtrip support.",
+          "FEF-P121 does not widen Forge or eFrog frontend lowering.",
+          "FEF-P121 preserves the P120 private reviewer handoff hold status.",
+          "FEF-P121 does not record reviewer approval or rejection.",
+          "FEF-P121 does not claim general branch/control-flow support.",
+          "FEF-P121 does not claim branch/control-flow re-ingest support.",
+          "FEF-P121 does not claim full non-generated source roundtrip.",
+          "FEF-P121 does not claim arbitrary C/Rust source-family support.",
+          "FEF-P121 does not claim compiler correctness or formal semantic equivalence.",
+          "FEF-P121 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+        ],
+        "programId": "c_nested_source_order_v0",
+        "schemaVersion": "monogate.control_flow_ir.v0",
+        "semanticObligations": [
+          {
+            "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+            "id": "dominance_and_merge_preservation",
+            "status": "open"
+          },
+          {
+            "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+            "id": "unsupported_construct_fail_closed",
+            "status": "open"
+          },
+          {
+            "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+            "id": "source_ast_roundtrip_boundary",
+            "status": "open"
+          },
+          {
+            "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+            "id": "condition_truth_semantics",
+            "status": "open"
+          },
+          {
+            "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+            "id": "return_and_fallthrough_preservation",
+            "status": "open"
+          },
+          {
+            "description": "Mutable updates must preserve statement order and branch-local state.",
+            "id": "assignment_order_preservation",
+            "status": "open"
+          }
+        ],
+        "sourceLanguage": "c",
+        "unsupportedConstructs": [
+          {
+            "id": "nested_statement_branches",
+            "nextValidator": "nested_branch_fixture_matrix",
+            "reason": "selected closures do not cover arbitrary nested statement bodies",
+            "status": "blocked"
+          },
+          {
+            "id": "boolean_compound_conditions",
+            "nextValidator": "compound_condition_semantics_gate",
+            "reason": "selected closures do not cover short-circuit and/or condition semantics",
+            "status": "blocked"
+          },
+          {
+            "id": "mutable_assignments_across_branches",
+            "nextValidator": "assignment_phi_fixture_gate",
+            "reason": "selected closures are scalar return-only or expression-valued cases",
+            "status": "blocked"
+          },
+          {
+            "id": "loops_and_back_edges",
+            "nextValidator": "loop_construct_blocker_gate",
+            "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+            "status": "blocked"
+          },
+          {
+            "id": "side_effecting_calls_or_memory",
+            "nextValidator": "side_effect_boundary_inventory",
+            "reason": "current selected branch evidence is side-effect free",
+            "status": "blocked"
+          },
+          {
+            "id": "source_preserving_roundtrip",
+            "nextValidator": "non_generated_branch_roundtrip_gate",
+            "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+            "status": "blocked"
+          }
+        ]
+      },
+      "shape": "nested_if_source_order",
+      "sourceFidelityFeatures": [
+        "nested_if_order",
+        "single_line_inner_return",
+        "fallthrough_return"
+      ],
+      "sourceLanguage": "c",
+      "sourceParsePerformed": false,
+      "sourceReemissionPerformed": false,
+      "sourceSketch": "if (x > 0.0) {\n  if (y > 0.0) return x + y;\n}\nreturn 0.0;",
+      "status": "blocked_fixture_defined",
+      "supportClaimAllowed": false,
+      "tokenBoundaryCount": 7
+    },
+    {
+      "blockedBy": "non_generated_branch_roundtrip_gate",
+      "branchConstructCount": 1,
+      "commentCount": 0,
+      "constructId": "source_preserving_roundtrip",
+      "formatSensitive": true,
+      "id": "rust_if_expr_source_layout_v0",
+      "requiredSemanticObligations": [
+        "source_ast_roundtrip_boundary",
+        "dominance_and_merge_preservation"
+      ],
+      "roundtripFidelityClaim": false,
+      "runtimeExecutionPerformed": false,
+      "schemaFragment": {
+        "blocks": [
+          {
+            "id": "entry",
+            "kind": "cfg_entry",
+            "statements": [
+              {
+                "blockedBy": "non_generated_branch_roundtrip_gate",
+                "constructId": "source_preserving_roundtrip",
+                "expr": "if x > 0.0 {\n    x\n} else {\n    0.0\n}",
+                "kind": "unsupported_construct"
+              }
+            ],
+            "terminator": {
+              "kind": "unreachable"
+            }
+          },
+          {
+            "id": "exit",
+            "kind": "cfg_exit",
+            "statements": [],
+            "terminator": {
+              "kind": "unreachable"
+            }
+          }
+        ],
+        "claimFlags": {
+          "arbitrary_source_family_claim": false,
+          "assignment_phi_support_claim": false,
+          "branch_control_flow_reingest_claim": false,
+          "checkout_enabled": false,
+          "compiler_correctness_claim": false,
+          "compound_condition_support_claim": false,
+          "control_flow_ir_implemented": false,
+          "formal_equivalence_claim": false,
+          "frontend_lowering_changed": false,
+          "full_c_rust_roundtrip_claim": false,
+          "full_non_generated_source_roundtrip_claim": false,
+          "general_branch_control_flow_claim": false,
+          "implementation_change_applied": false,
+          "implementation_change_approved": false,
+          "loop_backedge_support_claim": false,
+          "nested_branch_support_claim": false,
+          "non_generated_source_roundtrip_claim": false,
+          "package_published": false,
+          "private_reviewer_decision_recorded": false,
+          "production_ready": false,
+          "public_preview_release_claim": false,
+          "public_ready": false,
+          "runtime_performance_claim": false,
+          "safe_to_publish_publicly": false,
+          "side_effect_memory_support_claim": false,
+          "source_fidelity_claim": false,
+          "source_parse_execution_claim": false,
+          "source_preserving_roundtrip_fixture_gate_claim": false,
+          "source_preserving_roundtrip_support_claim": false,
+          "source_reemission_claim": false,
+          "unsupported_constructs_supported": false
+        },
+        "entryBlockId": "entry",
+        "exitBlockId": "exit",
+        "feature": "rust_if_expression_layout",
+        "functionName": "rust_if_expr_source_layout",
+        "nonClaims": [
+          "FEF-P121 records source-preserving roundtrip fixtures only.",
+          "FEF-P121 does not parse or re-emit non-generated source.",
+          "FEF-P121 does not execute source-preserving roundtrip fixtures.",
+          "FEF-P121 does not claim token, whitespace, comment, or formatting fidelity.",
+          "FEF-P121 does not implement source-preserving roundtrip support.",
+          "FEF-P121 does not widen Forge or eFrog frontend lowering.",
+          "FEF-P121 preserves the P120 private reviewer handoff hold status.",
+          "FEF-P121 does not record reviewer approval or rejection.",
+          "FEF-P121 does not claim general branch/control-flow support.",
+          "FEF-P121 does not claim branch/control-flow re-ingest support.",
+          "FEF-P121 does not claim full non-generated source roundtrip.",
+          "FEF-P121 does not claim arbitrary C/Rust source-family support.",
+          "FEF-P121 does not claim compiler correctness or formal semantic equivalence.",
+          "FEF-P121 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+        ],
+        "programId": "rust_if_expr_source_layout_v0",
+        "schemaVersion": "monogate.control_flow_ir.v0",
+        "semanticObligations": [
+          {
+            "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+            "id": "dominance_and_merge_preservation",
+            "status": "open"
+          },
+          {
+            "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+            "id": "unsupported_construct_fail_closed",
+            "status": "open"
+          },
+          {
+            "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+            "id": "source_ast_roundtrip_boundary",
+            "status": "open"
+          },
+          {
+            "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+            "id": "condition_truth_semantics",
+            "status": "open"
+          },
+          {
+            "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+            "id": "return_and_fallthrough_preservation",
+            "status": "open"
+          },
+          {
+            "description": "Mutable updates must preserve statement order and branch-local state.",
+            "id": "assignment_order_preservation",
+            "status": "open"
+          }
+        ],
+        "sourceLanguage": "rust",
+        "unsupportedConstructs": [
+          {
+            "id": "nested_statement_branches",
+            "nextValidator": "nested_branch_fixture_matrix",
+            "reason": "selected closures do not cover arbitrary nested statement bodies",
+            "status": "blocked"
+          },
+          {
+            "id": "boolean_compound_conditions",
+            "nextValidator": "compound_condition_semantics_gate",
+            "reason": "selected closures do not cover short-circuit and/or condition semantics",
+            "status": "blocked"
+          },
+          {
+            "id": "mutable_assignments_across_branches",
+            "nextValidator": "assignment_phi_fixture_gate",
+            "reason": "selected closures are scalar return-only or expression-valued cases",
+            "status": "blocked"
+          },
+          {
+            "id": "loops_and_back_edges",
+            "nextValidator": "loop_construct_blocker_gate",
+            "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+            "status": "blocked"
+          },
+          {
+            "id": "side_effecting_calls_or_memory",
+            "nextValidator": "side_effect_boundary_inventory",
+            "reason": "current selected branch evidence is side-effect free",
+            "status": "blocked"
+          },
+          {
+            "id": "source_preserving_roundtrip",
+            "nextValidator": "non_generated_branch_roundtrip_gate",
+            "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+            "status": "blocked"
+          }
+        ]
+      },
+      "shape": "rust_if_expression_layout",
+      "sourceFidelityFeatures": [
+        "expression_tail_position",
+        "brace_layout",
+        "indentation"
+      ],
+      "sourceLanguage": "rust",
+      "sourceParsePerformed": false,
+      "sourceReemissionPerformed": false,
+      "sourceSketch": "if x > 0.0 {\n    x\n} else {\n    0.0\n}",
+      "status": "blocked_fixture_defined",
+      "supportClaimAllowed": false,
+      "tokenBoundaryCount": 5
+    },
+    {
+      "blockedBy": "non_generated_branch_roundtrip_gate",
+      "branchConstructCount": 1,
+      "commentCount": 1,
+      "constructId": "source_preserving_roundtrip",
+      "formatSensitive": true,
+      "id": "rust_early_return_source_order_v0",
+      "requiredSemanticObligations": [
+        "source_ast_roundtrip_boundary",
+        "return_and_fallthrough_preservation"
+      ],
+      "roundtripFidelityClaim": false,
+      "runtimeExecutionPerformed": false,
+      "schemaFragment": {
+        "blocks": [
+          {
+            "id": "entry",
+            "kind": "cfg_entry",
+            "statements": [
+              {
+                "blockedBy": "non_generated_branch_roundtrip_gate",
+                "constructId": "source_preserving_roundtrip",
+                "expr": "if x < lo {\n    return lo;\n}\n// fall through\nx",
+                "kind": "unsupported_construct"
+              }
+            ],
+            "terminator": {
+              "kind": "unreachable"
+            }
+          },
+          {
+            "id": "exit",
+            "kind": "cfg_exit",
+            "statements": [],
+            "terminator": {
+              "kind": "unreachable"
+            }
+          }
+        ],
+        "claimFlags": {
+          "arbitrary_source_family_claim": false,
+          "assignment_phi_support_claim": false,
+          "branch_control_flow_reingest_claim": false,
+          "checkout_enabled": false,
+          "compiler_correctness_claim": false,
+          "compound_condition_support_claim": false,
+          "control_flow_ir_implemented": false,
+          "formal_equivalence_claim": false,
+          "frontend_lowering_changed": false,
+          "full_c_rust_roundtrip_claim": false,
+          "full_non_generated_source_roundtrip_claim": false,
+          "general_branch_control_flow_claim": false,
+          "implementation_change_applied": false,
+          "implementation_change_approved": false,
+          "loop_backedge_support_claim": false,
+          "nested_branch_support_claim": false,
+          "non_generated_source_roundtrip_claim": false,
+          "package_published": false,
+          "private_reviewer_decision_recorded": false,
+          "production_ready": false,
+          "public_preview_release_claim": false,
+          "public_ready": false,
+          "runtime_performance_claim": false,
+          "safe_to_publish_publicly": false,
+          "side_effect_memory_support_claim": false,
+          "source_fidelity_claim": false,
+          "source_parse_execution_claim": false,
+          "source_preserving_roundtrip_fixture_gate_claim": false,
+          "source_preserving_roundtrip_support_claim": false,
+          "source_reemission_claim": false,
+          "unsupported_constructs_supported": false
+        },
+        "entryBlockId": "entry",
+        "exitBlockId": "exit",
+        "feature": "rust_early_return_source_order",
+        "functionName": "rust_early_return_source_order",
+        "nonClaims": [
+          "FEF-P121 records source-preserving roundtrip fixtures only.",
+          "FEF-P121 does not parse or re-emit non-generated source.",
+          "FEF-P121 does not execute source-preserving roundtrip fixtures.",
+          "FEF-P121 does not claim token, whitespace, comment, or formatting fidelity.",
+          "FEF-P121 does not implement source-preserving roundtrip support.",
+          "FEF-P121 does not widen Forge or eFrog frontend lowering.",
+          "FEF-P121 preserves the P120 private reviewer handoff hold status.",
+          "FEF-P121 does not record reviewer approval or rejection.",
+          "FEF-P121 does not claim general branch/control-flow support.",
+          "FEF-P121 does not claim branch/control-flow re-ingest support.",
+          "FEF-P121 does not claim full non-generated source roundtrip.",
+          "FEF-P121 does not claim arbitrary C/Rust source-family support.",
+          "FEF-P121 does not claim compiler correctness or formal semantic equivalence.",
+          "FEF-P121 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+        ],
+        "programId": "rust_early_return_source_order_v0",
+        "schemaVersion": "monogate.control_flow_ir.v0",
+        "semanticObligations": [
+          {
+            "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+            "id": "return_and_fallthrough_preservation",
+            "status": "open"
+          },
+          {
+            "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+            "id": "unsupported_construct_fail_closed",
+            "status": "open"
+          },
+          {
+            "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+            "id": "source_ast_roundtrip_boundary",
+            "status": "open"
+          },
+          {
+            "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+            "id": "condition_truth_semantics",
+            "status": "open"
+          },
+          {
+            "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+            "id": "dominance_and_merge_preservation",
+            "status": "open"
+          },
+          {
+            "description": "Mutable updates must preserve statement order and branch-local state.",
+            "id": "assignment_order_preservation",
+            "status": "open"
+          }
+        ],
+        "sourceLanguage": "rust",
+        "unsupportedConstructs": [
+          {
+            "id": "nested_statement_branches",
+            "nextValidator": "nested_branch_fixture_matrix",
+            "reason": "selected closures do not cover arbitrary nested statement bodies",
+            "status": "blocked"
+          },
+          {
+            "id": "boolean_compound_conditions",
+            "nextValidator": "compound_condition_semantics_gate",
+            "reason": "selected closures do not cover short-circuit and/or condition semantics",
+            "status": "blocked"
+          },
+          {
+            "id": "mutable_assignments_across_branches",
+            "nextValidator": "assignment_phi_fixture_gate",
+            "reason": "selected closures are scalar return-only or expression-valued cases",
+            "status": "blocked"
+          },
+          {
+            "id": "loops_and_back_edges",
+            "nextValidator": "loop_construct_blocker_gate",
+            "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+            "status": "blocked"
+          },
+          {
+            "id": "side_effecting_calls_or_memory",
+            "nextValidator": "side_effect_boundary_inventory",
+            "reason": "current selected branch evidence is side-effect free",
+            "status": "blocked"
+          },
+          {
+            "id": "source_preserving_roundtrip",
+            "nextValidator": "non_generated_branch_roundtrip_gate",
+            "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+            "status": "blocked"
+          }
+        ]
+      },
+      "shape": "rust_early_return_source_order",
+      "sourceFidelityFeatures": [
+        "early_return_order",
+        "line_comment",
+        "fallthrough_expression"
+      ],
+      "sourceLanguage": "rust",
+      "sourceParsePerformed": false,
+      "sourceReemissionPerformed": false,
+      "sourceSketch": "if x < lo {\n    return lo;\n}\n// fall through\nx",
+      "status": "blocked_fixture_defined",
+      "supportClaimAllowed": false,
+      "tokenBoundaryCount": 5
+    }
+  ],
+  "nextMilestones": [
+    "Attach expected preservation rows for one selected source-preserving fixture before any parser/re-emitter claim.",
+    "Record actual private reviewer response to P47-P121 if one exists.",
+    "Keep held proposals P111 and P119 unapplied without reviewer approval."
+  ],
+  "nonClaims": [
+    "FEF-P121 records source-preserving roundtrip fixtures only.",
+    "FEF-P121 does not parse or re-emit non-generated source.",
+    "FEF-P121 does not execute source-preserving roundtrip fixtures.",
+    "FEF-P121 does not claim token, whitespace, comment, or formatting fidelity.",
+    "FEF-P121 does not implement source-preserving roundtrip support.",
+    "FEF-P121 does not widen Forge or eFrog frontend lowering.",
+    "FEF-P121 preserves the P120 private reviewer handoff hold status.",
+    "FEF-P121 does not record reviewer approval or rejection.",
+    "FEF-P121 does not claim general branch/control-flow support.",
+    "FEF-P121 does not claim branch/control-flow re-ingest support.",
+    "FEF-P121 does not claim full non-generated source roundtrip.",
+    "FEF-P121 does not claim arbitrary C/Rust source-family support.",
+    "FEF-P121 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P121 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+  ],
+  "releaseGates": [
+    {
+      "id": "source_preserving_roundtrip_fixture_gate",
+      "status": "recorded"
+    },
+    {
+      "id": "source_preserving_roundtrip_support",
+      "status": "blocked"
+    },
+    {
+      "id": "source_parse_execution",
+      "status": "not_performed"
+    },
+    {
+      "id": "source_reemission",
+      "status": "not_performed"
+    },
+    {
+      "id": "source_fidelity_claim",
+      "status": "blocked"
+    },
+    {
+      "id": "non_generated_source_roundtrip",
+      "status": "blocked"
+    },
+    {
+      "id": "frontend_lowering_change",
+      "status": "not_performed"
+    },
+    {
+      "id": "general_branch_control_flow_support",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness",
+      "status": "blocked"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p121_source_preserving_roundtrip_fixture_gate.v0",
+  "sourcePackets": [
+    {
+      "packetPath": "reports/evidence_packets/fef_p61_unsupported_construct_blocker_gate.json",
+      "phase": "P61",
+      "reviewDecision": "unsupported_construct_blocker_gate_recorded_support_blocked",
+      "validationStatus": "pass"
+    },
+    {
+      "packetPath": "reports/evidence_packets/fef_p120_compound_condition_private_reviewer_handoff_hold_gate.json",
+      "phase": "P120",
+      "resultPath": "python/results/fef_p120_compound_condition_private_reviewer_handoff_hold_gate/fef_p120_compound_condition_private_reviewer_handoff_hold_gate_2026_06_01.json",
+      "reviewDecision": "compound_condition_private_reviewer_handoff_ready_response_not_recorded_implementation_held",
+      "validationStatus": "pass"
+    }
+  ],
+  "status": "FEF_P121_SOURCE_PRESERVING_ROUNDTRIP_FIXTURE_GATE_PASS",
+  "summary": {
+    "allFixturesBlocked": true,
+    "allRuntimeExecutionNotPerformed": true,
+    "allSourceParseNotPerformed": true,
+    "allSourceReemissionNotPerformed": true,
+    "arbitrarySourceFamilyClaim": false,
+    "assignmentPhiSupportClaim": false,
+    "branchControlFlowReingestClaim": false,
+    "cFixtureCount": 2,
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "compoundConditionSupportClaim": false,
+    "controlFlowIrImplemented": false,
+    "fixtureCount": 4,
+    "formalEquivalenceClaim": false,
+    "formatSensitiveFixtureCount": 4,
+    "frontendLoweringChanged": false,
+    "fullCRustRoundtripClaim": false,
+    "fullNonGeneratedSourceRoundtripClaim": false,
+    "generalBranchControlFlowClaim": false,
+    "implementationChangeApplied": false,
+    "implementationChangeApproved": false,
+    "loopBackedgeSupportClaim": false,
+    "nestedBranchSupportClaim": false,
+    "nonGeneratedSourceRoundtripClaim": false,
+    "p120ClaimFlagsAllFalse": true,
+    "p120ImplementationHeldPendingReview": true,
+    "p120ReviewerDecisionRecorded": false,
+    "p120ValidationPass": true,
+    "p61ClaimFlagsAllFalse": true,
+    "p61ValidationPass": true,
+    "packagePublished": false,
+    "productionReady": false,
+    "publicReady": false,
+    "reviewerDecisionRecorded": false,
+    "runtimePerformanceClaim": false,
+    "rustFixtureCount": 2,
+    "safeToPublishPublicly": false,
+    "schemaFragmentsValidate": true,
+    "sideEffectMemorySupportClaim": false,
+    "sourceFidelityClaim": false,
+    "sourceFidelityFeatureCount": 12,
+    "sourceFidelityFeatures": [
+      "block_comment",
+      "brace_layout",
+      "early_return_order",
+      "else_token",
+      "expression_tail_position",
+      "fallthrough_expression",
+      "fallthrough_return",
+      "indentation",
+      "line_comment",
+      "nested_if_order",
+      "return_spacing",
+      "single_line_inner_return"
+    ],
+    "sourcePacketCount": 2,
+    "sourceParseExecutionClaim": false,
+    "sourcePreservingRoundtripSupportClaim": false,
+    "sourceReemissionClaim": false,
+    "totalBranchConstructCount": 5,
+    "totalCommentCount": 2,
+    "totalTokenBoundaryCount": 23,
+    "unsupportedConstructsSupported": false
+  }
+}
