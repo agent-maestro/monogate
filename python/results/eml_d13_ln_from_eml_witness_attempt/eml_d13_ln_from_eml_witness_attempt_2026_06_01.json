@@ -1,0 +1,57 @@
+{
+  "artifactId": "eml-d13-ln-from-eml-witness-attempt",
+  "attemptType": "eml_ln_from_eml_witness_attempt_v0",
+  "claimFlags": {
+    "compiler_correctness_claim": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false
+  },
+  "date": "2026-06-01",
+  "decision": "ln_from_eml_boundary_witness_checked_in_machlib",
+  "nonClaims": [
+    "EML-D13 checks one scoped ln-from-EML MachLib identity witness selected by D12; it is not a theorem-discovery or broad EML-advantage claim.",
+    "The ln-from-EML witness is proof/teaching-shape evidence only; standard log remains the runtime lowering control.",
+    "D13 does not prove full EML semantics, compiler correctness, runtime performance, formal equivalence, public Atlas promotion, or public readiness."
+  ],
+  "schemaVersion": "monogate.eml_ln_from_eml_witness_attempt.v0",
+  "selectedWitness": {
+    "machlibName": "MachLib.Real.ln_from_eml_boundary_witness",
+    "name": "ln_from_eml_boundary_witness",
+    "path": "../machlib/foundations/MachLib/EMLAtlasWitness.lean",
+    "present": true,
+    "sourceCandidateId": "ln_from_eml_boundary_v1",
+    "statement": "eml 1 (eml (eml 1 y) 1) = log y under 0 < y"
+  },
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceSelector": "eml-d12-next-identity-witness-selector",
+  "status": "EML_D13_LN_FROM_EML_WITNESS_ATTEMPT_PASS",
+  "summary": {
+    "claimFlagsAllFalse": true,
+    "lakeBuildPassed": true,
+    "leanTypecheckPerformed": true,
+    "machlibFileChanged": true,
+    "publicReady": false,
+    "runtimeLoweringControl": "standard_log_remains_runtime_control",
+    "scopedWitnessChecked": true,
+    "selectedCandidateId": "ln_from_eml_boundary_v1",
+    "selectedWitnessName": "MachLib.Real.ln_from_eml_boundary_witness",
+    "selectedWitnessPresent": true,
+    "sourceSelector": "eml-d12-next-identity-witness-selector",
+    "theoremDiscoveryClaim": false
+  },
+  "verification": {
+    "command": "cd ../machlib/foundations && lake build",
+    "observedNotes": [
+      "MachLib.EMLAtlasWitness built.",
+      "Top-level MachLib build completed successfully.",
+      "Pre-existing sorry warnings remain in unrelated MachLib.ForgeTest and MachLib.HighDimensional declarations."
+    ],
+    "observedStatus": "pass"
+  }
+}

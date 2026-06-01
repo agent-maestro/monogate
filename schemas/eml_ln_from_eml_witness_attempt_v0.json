@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML ln-from-EML Witness Attempt v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "attemptType",
+    "artifactId",
+    "status",
+    "sourceSelector",
+    "selectedWitness",
+    "verification",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_ln_from_eml_witness_attempt.v0" },
+    "attemptType": { "const": "eml_ln_from_eml_witness_attempt_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourceSelector": { "type": "string", "minLength": 1 },
+    "selectedWitness": { "type": "object" },
+    "verification": { "type": "object" },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

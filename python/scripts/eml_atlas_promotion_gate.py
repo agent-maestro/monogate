@@ -38,7 +38,7 @@ SAFE_PUBLIC_EDUCATION = {
 
 PROOF_TARGETS = {
     "exp_from_eml": "checked_machlib_witness_available",
-    "ln_from_eml": "candidate_machlib_witness",
+    "ln_from_eml": "checked_machlib_witness_available",
     "constants_zero_and_e": "checked_machlib_witness_available",
     "subtraction_boundary": "checked_machlib_witness_available",
     "prime_signature_log_recovery": "candidate_machlib_witness",
@@ -114,6 +114,11 @@ def build_gate(annex_path: Path, out_dir: Path, report_dir: Path, evidence_dir: 
                 "entryId": "constants_zero_and_e",
                 "machlibName": "MachLib.Real.constants_zero_one_e_boundary_witness",
                 "status": "checked_by_lake_build",
+            },
+            {
+                "entryId": "ln_from_eml",
+                "machlibName": "MachLib.Real.ln_from_eml_boundary_witness",
+                "status": "checked_by_lake_build",
             }
         ],
         "policy": {
@@ -184,7 +189,7 @@ def build_evidence_packet(result: dict[str, Any]) -> dict[str, Any]:
         "nonClaims": result["nonClaims"],
         "reviewHighlights": [
             "Separates public education candidates from proof targets and blocked statements.",
-            "Records exp_from_eml and subtraction_boundary as checked MachLib Atlas witnesses.",
+            "Records exp_from_eml, ln_from_eml, constants_zero_and_e, and subtraction_boundary as checked MachLib Atlas witnesses.",
         ],
         "validationCommands": [
             "python python/scripts/eml_atlas_promotion_gate.py --build --strict",
@@ -226,7 +231,7 @@ def validate_gate(result: dict[str, Any]) -> None:
     if result["bucketCounts"].get("blocked_or_conjectural", 0) < 1:
         raise ValueError("expected blocked bucket")
     checked = {item["entryId"]: item for item in result["checkedWitnesses"]}
-    for entry_id in ["exp_from_eml", "subtraction_boundary"]:
+    for entry_id in ["exp_from_eml", "ln_from_eml", "constants_zero_and_e", "subtraction_boundary"]:
         if checked.get(entry_id, {}).get("status") != "checked_by_lake_build":
             raise ValueError(f"expected checked witness: {entry_id}")
     for key, value in result.get("claimFlags", {}).items():

@@ -29,10 +29,13 @@ def test_gate_records_checked_exp_witness(tmp_path):
     assert checked["exp_from_eml"]["machlibName"] == "MachLib.Real.atlas_exp_from_eml_witness"
     assert checked["subtraction_boundary"]["machlibName"] == "MachLib.Real.atlas_subtraction_boundary_witness"
     assert checked["constants_zero_and_e"]["machlibName"] == "MachLib.Real.constants_zero_one_e_boundary_witness"
+    assert checked["ln_from_eml"]["machlibName"] == "MachLib.Real.ln_from_eml_boundary_witness"
     exp_decision = next(item for item in result["decisions"] if item["id"] == "exp_from_eml")
+    ln_decision = next(item for item in result["decisions"] if item["id"] == "ln_from_eml")
     sub_decision = next(item for item in result["decisions"] if item["id"] == "subtraction_boundary")
     constants_decision = next(item for item in result["decisions"] if item["id"] == "constants_zero_and_e")
     assert exp_decision["publicEducationCandidate"] is True
+    assert ln_decision["proofStatus"] == "checked_machlib_witness_available"
     assert sub_decision["proofStatus"] == "checked_machlib_witness_available"
     assert constants_decision["proofStatus"] == "checked_machlib_witness_available"
 
