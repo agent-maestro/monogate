@@ -1,0 +1,590 @@
+{
+  "allowedPrivateReviewerStatements": [
+    "P94 compiles and runs one selected original C loop fixture locally.",
+    "All seven selected original C runtime comparisons pass with zero absolute error against the P93 reference table.",
+    "P94 is original-source runtime evidence only, not generated-target, re-ingest, lowering, or support evidence."
+  ],
+  "artifactId": "fef-p94-loop-original-c-runtime-gate",
+  "blockedStatements": [
+    "Generated loop target code was executed.",
+    "Re-ingested loop code was executed.",
+    "Loop lowering is implemented.",
+    "Loop headers, latches, variants, or back-edge semantics are supported.",
+    "The P92 boundedness policy is a general loop policy.",
+    "The P89 reviewer hold has been lifted.",
+    "The P88 implementation proposal has been approved or applied.",
+    "Frontend branch lowering was widened.",
+    "General C/Rust branch/control-flow support is established.",
+    "Branch/control-flow re-ingest is generally supported.",
+    "Full non-generated C/Rust source roundtrip is supported.",
+    "Compiler correctness has been proved.",
+    "Formal semantic equivalence has been proved.",
+    "Runtime performance has been established."
+  ],
+  "boundednessPolicy": {
+    "effectiveIterationDefinition": "max(0, int(n)) for the selected C while fixture",
+    "maxEffectiveIterationCount": 16,
+    "policyAppliedToRuntime": false,
+    "policyId": "selected_c_while_accumulate_boundedness_policy_v0",
+    "requiredAcceptedSurface": [
+      {
+        "description": "The selected sample must provide an integer-like n value.",
+        "surfaceId": "integer_like_n"
+      },
+      {
+        "description": "The selected sample must provide finite scalar x.",
+        "surfaceId": "finite_scalar_x"
+      },
+      {
+        "description": "The selected sample must have max(0, n) <= 16.",
+        "surfaceId": "bounded_effective_iteration_count"
+      },
+      {
+        "description": "The selected fixture surface is limited to local acc/i mutation and no observable side effects.",
+        "surfaceId": "local_accumulator_only"
+      }
+    ],
+    "requiredExecutionGate": [
+      "evaluate policy eligibility for each P91 sample",
+      "keep loop execution disabled unless every selected sample is eligible",
+      "run a reference evaluator only in a later phase",
+      "compare reference outputs against P91 expected values only in a later phase",
+      "record all support/correctness/performance claims false after the later gate"
+    ],
+    "requiredRejectedSurface": [
+      {
+        "description": "Reject unknown, symbolic, non-integer, or externally supplied loop bounds without an explicit cap.",
+        "surfaceId": "unknown_or_symbolic_loop_bound"
+      },
+      {
+        "description": "Reject samples whose effective iteration count exceeds the selected cap.",
+        "surfaceId": "iteration_count_above_limit"
+      },
+      {
+        "description": "Reject NaN or infinite numeric inputs.",
+        "surfaceId": "non_finite_numeric_input"
+      },
+      {
+        "description": "Reject calls, memory writes, volatile reads, IO, pointer mutation, and non-local state.",
+        "surfaceId": "side_effecting_loop_body"
+      },
+      {
+        "description": "Reject nested loops, breaks, continues, labels, gotos, and unstructured back edges.",
+        "surfaceId": "nested_or_unstructured_loop"
+      }
+    ],
+    "runtimeExecutionPerformed": false,
+    "scope": "selected_c_while_accumulate_v0_expected_samples_only",
+    "selectedFixtureId": "c_while_accumulate_v0",
+    "status": "policy_recorded_execution_blocked"
+  },
+  "claimFlags": {
+    "arbitrary_source_family_claim": false,
+    "assignment_phi_support_claim": false,
+    "branch_control_flow_reingest_claim": false,
+    "checkout_enabled": false,
+    "compiler_correctness_claim": false,
+    "compound_condition_support_claim": false,
+    "control_flow_ir_implemented": false,
+    "formal_equivalence_claim": false,
+    "frontend_lowering_changed": false,
+    "full_c_rust_roundtrip_claim": false,
+    "full_non_generated_source_roundtrip_claim": false,
+    "general_branch_control_flow_claim": false,
+    "implementation_change_applied": false,
+    "implementation_change_approved": false,
+    "loop_backedge_support_claim": false,
+    "loop_boundedness_policy_general_claim": false,
+    "loop_generated_target_execution_claim": false,
+    "loop_lowering_claim": false,
+    "loop_original_c_runtime_gate_claim": false,
+    "loop_original_source_execution_claim": false,
+    "loop_reingest_execution_claim": false,
+    "nested_branch_support_claim": false,
+    "package_published": false,
+    "private_reviewer_decision_recorded": false,
+    "production_ready": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "unsupported_constructs_supported": false
+  },
+  "date": "2026-05-31",
+  "decision": "loop_original_c_runtime_gate_recorded_support_blocked",
+  "nextMilestones": [
+    "Record generated-target runtime blocker status for the selected loop fixture until loop lowering exists.",
+    "Keep loop/back-edge support blocked until lowering and re-ingest evidence exists.",
+    "Keep the P89/P88 implementation hold unchanged unless a real reviewer response exists."
+  ],
+  "nonClaims": [
+    "FEF-P94 compiles and runs one selected original C loop fixture locally.",
+    "FEF-P94 compares original C loop runtime output against the P93 reference-runtime table.",
+    "FEF-P94 does not execute generated target code.",
+    "FEF-P94 does not execute re-ingested code.",
+    "FEF-P94 does not implement loop headers, latches, variants, or general boundedness policy.",
+    "FEF-P94 does not implement loop lowering.",
+    "FEF-P94 does not widen Forge or eFrog frontend lowering.",
+    "FEF-P94 does not claim loop/back-edge support.",
+    "FEF-P94 does not claim assignment/phi, compound-condition, or nested-branch support.",
+    "FEF-P94 does not record reviewer approval or rejection.",
+    "FEF-P94 does not approve or apply the P88 implementation proposal.",
+    "FEF-P94 does not claim general branch/control-flow support.",
+    "FEF-P94 does not claim branch/control-flow re-ingest support.",
+    "FEF-P94 does not claim full non-generated source roundtrip.",
+    "FEF-P94 does not claim arbitrary C/Rust source-family support.",
+    "FEF-P94 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P94 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+  ],
+  "originalCSourceExecution": {
+    "compileReturnCode": 0,
+    "compileStderr": "",
+    "compiler": "/usr/bin/gcc",
+    "generatedTargetExecuted": false,
+    "reingestedTargetExecuted": false,
+    "runReturnCode": 0,
+    "sampleCount": 7,
+    "sourceExecuted": true,
+    "sourceLanguage": "c"
+  },
+  "releaseGates": [
+    {
+      "id": "loop_original_c_runtime_gate",
+      "status": "recorded"
+    },
+    {
+      "id": "original_c_loop_runtime_execution",
+      "status": "recorded"
+    },
+    {
+      "id": "generated_target_runtime_execution",
+      "status": "not_performed"
+    },
+    {
+      "id": "loop_reingest_execution",
+      "status": "not_performed"
+    },
+    {
+      "id": "loop_lowering",
+      "status": "blocked"
+    },
+    {
+      "id": "loop_backedge_support",
+      "status": "blocked"
+    },
+    {
+      "id": "loop_boundedness_generalization",
+      "status": "blocked"
+    },
+    {
+      "id": "p89_private_reviewer_hold",
+      "status": "preserved"
+    },
+    {
+      "id": "frontend_lowering_change",
+      "status": "not_performed"
+    },
+    {
+      "id": "general_branch_control_flow_support",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness",
+      "status": "blocked"
+    }
+  ],
+  "runtimeComparison": {
+    "comparisonKind": "original_c_loop_runtime_against_p93_reference_runtime_under_p92_policy",
+    "generatedTargetExecuted": false,
+    "originalSourceExecuted": true,
+    "policyAppliedAsPrecondition": true,
+    "reingestedTargetExecuted": false,
+    "rows": [
+      {
+        "absError": 0.0,
+        "backEdgeTakenCount": 0,
+        "expected": 0.0,
+        "generatedTargetExecuted": false,
+        "inputs": {
+          "n": 0,
+          "x": 2.0
+        },
+        "iterationCount": 0,
+        "loopConditionInitiallyTrue": false,
+        "observed": 0.0,
+        "originalCSourceExecuted": true,
+        "pass": true,
+        "path": "zero_iterations",
+        "policyEffectiveIterationCount": 0,
+        "policyEligibleForExecution": true,
+        "referenceObserved": 0.0,
+        "reingestedTargetExecuted": false,
+        "sampleId": "sample_00"
+      },
+      {
+        "absError": 0.0,
+        "backEdgeTakenCount": 1,
+        "expected": 2.0,
+        "generatedTargetExecuted": false,
+        "inputs": {
+          "n": 1,
+          "x": 2.0
+        },
+        "iterationCount": 1,
+        "loopConditionInitiallyTrue": true,
+        "observed": 2.0,
+        "originalCSourceExecuted": true,
+        "pass": true,
+        "path": "single_iteration",
+        "policyEffectiveIterationCount": 1,
+        "policyEligibleForExecution": true,
+        "referenceObserved": 2.0,
+        "reingestedTargetExecuted": false,
+        "sampleId": "sample_01"
+      },
+      {
+        "absError": 0.0,
+        "backEdgeTakenCount": 3,
+        "expected": 6.0,
+        "generatedTargetExecuted": false,
+        "inputs": {
+          "n": 3,
+          "x": 2.0
+        },
+        "iterationCount": 3,
+        "loopConditionInitiallyTrue": true,
+        "observed": 6.0,
+        "originalCSourceExecuted": true,
+        "pass": true,
+        "path": "multi_iteration",
+        "policyEffectiveIterationCount": 3,
+        "policyEligibleForExecution": true,
+        "referenceObserved": 6.0,
+        "reingestedTargetExecuted": false,
+        "sampleId": "sample_02"
+      },
+      {
+        "absError": 0.0,
+        "backEdgeTakenCount": 4,
+        "expected": -6.0,
+        "generatedTargetExecuted": false,
+        "inputs": {
+          "n": 4,
+          "x": -1.5
+        },
+        "iterationCount": 4,
+        "loopConditionInitiallyTrue": true,
+        "observed": -6.0,
+        "originalCSourceExecuted": true,
+        "pass": true,
+        "path": "multi_iteration",
+        "policyEffectiveIterationCount": 4,
+        "policyEligibleForExecution": true,
+        "referenceObserved": -6.0,
+        "reingestedTargetExecuted": false,
+        "sampleId": "sample_03"
+      },
+      {
+        "absError": 0.0,
+        "backEdgeTakenCount": 5,
+        "expected": 0.0,
+        "generatedTargetExecuted": false,
+        "inputs": {
+          "n": 5,
+          "x": 0.0
+        },
+        "iterationCount": 5,
+        "loopConditionInitiallyTrue": true,
+        "observed": 0.0,
+        "originalCSourceExecuted": true,
+        "pass": true,
+        "path": "multi_iteration",
+        "policyEffectiveIterationCount": 5,
+        "policyEligibleForExecution": true,
+        "referenceObserved": 0.0,
+        "reingestedTargetExecuted": false,
+        "sampleId": "sample_04"
+      },
+      {
+        "absError": 0.0,
+        "backEdgeTakenCount": 0,
+        "expected": 0.0,
+        "generatedTargetExecuted": false,
+        "inputs": {
+          "n": -2,
+          "x": 3.0
+        },
+        "iterationCount": 0,
+        "loopConditionInitiallyTrue": false,
+        "observed": 0.0,
+        "originalCSourceExecuted": true,
+        "pass": true,
+        "path": "zero_iterations",
+        "policyEffectiveIterationCount": 0,
+        "policyEligibleForExecution": true,
+        "referenceObserved": 0.0,
+        "reingestedTargetExecuted": false,
+        "sampleId": "sample_05"
+      },
+      {
+        "absError": 0.0,
+        "backEdgeTakenCount": 8,
+        "expected": 2.0,
+        "generatedTargetExecuted": false,
+        "inputs": {
+          "n": 8,
+          "x": 0.25
+        },
+        "iterationCount": 8,
+        "loopConditionInitiallyTrue": true,
+        "observed": 2.0,
+        "originalCSourceExecuted": true,
+        "pass": true,
+        "path": "multi_iteration",
+        "policyEffectiveIterationCount": 8,
+        "policyEligibleForExecution": true,
+        "referenceObserved": 2.0,
+        "reingestedTargetExecuted": false,
+        "sampleId": "sample_06"
+      }
+    ],
+    "sourceLanguage": "c99_original_source_harness"
+  },
+  "schemaVersion": "monogate.fef_p94_loop_original_c_runtime_gate.v0",
+  "selectedFixture": {
+    "backEdgeCount": 1,
+    "blockedBy": "loop_construct_blocker_gate",
+    "boundednessPolicyImplemented": false,
+    "constructId": "loops_and_back_edges",
+    "id": "c_while_accumulate_v0",
+    "loopCount": 1,
+    "loopKind": "while",
+    "loweringPerformed": false,
+    "mutableAssignmentCount": 4,
+    "requiredSemanticObligations": [
+      "assignment_order_preservation",
+      "unsupported_construct_fail_closed"
+    ],
+    "requiresBoundednessPolicy": true,
+    "runtimeExecutionPerformed": false,
+    "schemaFragment": {
+      "blocks": [
+        {
+          "id": "entry",
+          "kind": "cfg_entry",
+          "statements": [
+            {
+              "blockedBy": "loop_construct_blocker_gate",
+              "constructId": "loops_and_back_edges",
+              "expr": "double acc = 0.0; int i = 0; while (i < n) { acc = acc + x; i = i + 1; } return acc;",
+              "kind": "unsupported_construct"
+            }
+          ],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        },
+        {
+          "id": "exit",
+          "kind": "cfg_exit",
+          "statements": [],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        }
+      ],
+      "claimFlags": {
+        "arbitrary_source_family_claim": false,
+        "assignment_phi_support_claim": false,
+        "branch_control_flow_reingest_claim": false,
+        "checkout_enabled": false,
+        "compiler_correctness_claim": false,
+        "compound_condition_support_claim": false,
+        "control_flow_ir_implemented": false,
+        "formal_equivalence_claim": false,
+        "frontend_lowering_changed": false,
+        "full_c_rust_roundtrip_claim": false,
+        "full_non_generated_source_roundtrip_claim": false,
+        "general_branch_control_flow_claim": false,
+        "implementation_change_applied": false,
+        "implementation_change_approved": false,
+        "loop_backedge_fixture_gate_claim": false,
+        "loop_backedge_support_claim": false,
+        "loop_boundedness_policy_claim": false,
+        "loop_lowering_implemented": false,
+        "loop_runtime_execution_claim": false,
+        "nested_branch_support_claim": false,
+        "package_published": false,
+        "private_reviewer_decision_recorded": false,
+        "production_ready": false,
+        "public_preview_release_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "unsupported_constructs_supported": false
+      },
+      "entryBlockId": "entry",
+      "exitBlockId": "exit",
+      "feature": "while_accumulate",
+      "functionName": "c_while_accumulate",
+      "nonClaims": [
+        "FEF-P90 records loop/back-edge fixtures only.",
+        "FEF-P90 does not execute loop fixtures.",
+        "FEF-P90 does not implement loop headers, latches, variants, or boundedness policy.",
+        "FEF-P90 does not implement loop lowering.",
+        "FEF-P90 does not widen Forge or eFrog frontend lowering.",
+        "FEF-P90 does not claim loop/back-edge support.",
+        "FEF-P90 does not claim assignment/phi, compound-condition, or nested-branch support.",
+        "FEF-P90 does not change the P89 private reviewer hold status.",
+        "FEF-P90 does not record reviewer approval or rejection.",
+        "FEF-P90 does not claim general branch/control-flow support.",
+        "FEF-P90 does not claim branch/control-flow re-ingest support.",
+        "FEF-P90 does not claim full non-generated source roundtrip.",
+        "FEF-P90 does not claim arbitrary C/Rust source-family support.",
+        "FEF-P90 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P90 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+      ],
+      "programId": "c_while_accumulate_v0",
+      "schemaVersion": "monogate.control_flow_ir.v0",
+      "semanticObligations": [
+        {
+          "description": "Mutable updates must preserve statement order and branch-local state.",
+          "id": "assignment_order_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+          "id": "unsupported_construct_fail_closed",
+          "status": "open"
+        },
+        {
+          "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+          "id": "condition_truth_semantics",
+          "status": "open"
+        },
+        {
+          "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+          "id": "dominance_and_merge_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+          "id": "return_and_fallthrough_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+          "id": "source_ast_roundtrip_boundary",
+          "status": "open"
+        }
+      ],
+      "sourceLanguage": "c",
+      "unsupportedConstructs": [
+        {
+          "id": "nested_statement_branches",
+          "nextValidator": "nested_branch_fixture_matrix",
+          "reason": "selected closures do not cover arbitrary nested statement bodies",
+          "status": "blocked"
+        },
+        {
+          "id": "boolean_compound_conditions",
+          "nextValidator": "compound_condition_semantics_gate",
+          "reason": "selected closures do not cover short-circuit and/or condition semantics",
+          "status": "blocked"
+        },
+        {
+          "id": "mutable_assignments_across_branches",
+          "nextValidator": "assignment_phi_fixture_gate",
+          "reason": "selected closures are scalar return-only or expression-valued cases",
+          "status": "blocked"
+        },
+        {
+          "id": "loops_and_back_edges",
+          "nextValidator": "loop_construct_blocker_gate",
+          "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+          "status": "blocked"
+        },
+        {
+          "id": "side_effecting_calls_or_memory",
+          "nextValidator": "side_effect_boundary_inventory",
+          "reason": "current selected branch evidence is side-effect free",
+          "status": "blocked"
+        },
+        {
+          "id": "source_preserving_roundtrip",
+          "nextValidator": "non_generated_branch_roundtrip_gate",
+          "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+          "status": "blocked"
+        }
+      ]
+    },
+    "shape": "while_accumulate",
+    "sourceLanguage": "c",
+    "sourceSketch": "double acc = 0.0; int i = 0; while (i < n) { acc = acc + x; i = i + 1; } return acc;",
+    "status": "blocked_fixture_defined",
+    "supportClaimAllowed": false
+  },
+  "sourcePacket": {
+    "packetPath": "reports/evidence_packets/fef_p93_loop_reference_runtime_gate.json",
+    "phase": "P93",
+    "resultPath": "python/results/fef_p93_loop_reference_runtime_gate/fef_p93_loop_reference_runtime_gate_2026_05_31.json",
+    "reviewDecision": "loop_reference_runtime_gate_recorded_support_blocked",
+    "validationStatus": "pass"
+  },
+  "status": "FEF_P94_LOOP_ORIGINAL_C_RUNTIME_GATE_PASS",
+  "summary": {
+    "allObservedFinite": true,
+    "allOriginalCSourceExecuted": true,
+    "allPolicyEligible": true,
+    "arbitrarySourceFamilyClaim": false,
+    "assignmentPhiSupportClaim": false,
+    "branchControlFlowReingestClaim": false,
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "comparisonCount": 7,
+    "compilerCorrectnessClaim": false,
+    "compoundConditionSupportClaim": false,
+    "controlFlowIrImplemented": false,
+    "failCount": 0,
+    "formalEquivalenceClaim": false,
+    "frontendLoweringChanged": false,
+    "fullCRustRoundtripClaim": false,
+    "fullNonGeneratedSourceRoundtripClaim": false,
+    "generalBranchControlFlowClaim": false,
+    "generatedTargetExecuted": false,
+    "implementationChangeApplied": false,
+    "implementationChangeApproved": false,
+    "loopBackedgeSupportClaim": false,
+    "loopBoundednessPolicyGeneralClaim": false,
+    "loopGeneratedTargetExecutionClaim": false,
+    "loopLoweringClaim": false,
+    "loopOriginalSourceExecutionClaim": false,
+    "loopReingestExecutionClaim": false,
+    "maxAbsError": 0.0,
+    "maxIterationCount": 8,
+    "multiIterationCount": 4,
+    "nestedBranchSupportClaim": false,
+    "originalSourceExecuted": true,
+    "p92EligibleSampleCount": 7,
+    "p92PolicyId": "selected_c_while_accumulate_boundedness_policy_v0",
+    "p92PolicyStatus": "policy_recorded_execution_blocked",
+    "p93ClaimFlagsAllFalse": true,
+    "p93ValidationPass": true,
+    "packagePublished": false,
+    "passCount": 7,
+    "productionReady": false,
+    "publicReady": false,
+    "reingestedTargetExecuted": false,
+    "reviewerDecisionRecorded": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedFixtureId": "c_while_accumulate_v0",
+    "selectedFixtureStillBlocked": true,
+    "selectedOriginalCLoopRuntimeEvidenceRecorded": true,
+    "singleIterationCount": 1,
+    "sourcePacketCount": 1,
+    "totalBackEdgeTakenCount": 21,
+    "unsupportedConstructsSupported": false,
+    "zeroIterationCount": 2
+  }
+}
