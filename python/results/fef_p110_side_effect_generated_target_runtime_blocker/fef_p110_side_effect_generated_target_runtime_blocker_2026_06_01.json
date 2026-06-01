@@ -1,0 +1,401 @@
+{
+  "allowedPrivateReviewerStatements": [
+    "P110 records that generated-target runtime comparison is blocked until selected side-effect lowering and codegen policy exist.",
+    "P109 original C stubbed-runtime evidence remains attached as prior evidence.",
+    "P110 is a fail-closed gate, not generated target evidence."
+  ],
+  "artifactId": "fef-p110-side-effect-generated-target-runtime-blocker",
+  "blockedStatements": [
+    "Generated side-effect target code was executed.",
+    "Re-ingested side-effect code was executed.",
+    "Live external calls were performed.",
+    "Unbounded memory mutation or aliasing was supported.",
+    "Side-effect/call/memory lowering is implemented.",
+    "Generated side-effect codegen policy is implemented.",
+    "Side-effect re-ingest policy is implemented.",
+    "Side-effecting calls or memory operations are generally supported.",
+    "Frontend branch/control-flow lowering was widened.",
+    "General C/Rust branch/control-flow support is established.",
+    "Branch/control-flow re-ingest is generally supported.",
+    "Full non-generated C/Rust source roundtrip is supported.",
+    "Compiler correctness has been proved.",
+    "Formal semantic equivalence has been proved.",
+    "Runtime performance has been established."
+  ],
+  "claimFlags": {
+    "arbitrary_source_family_claim": false,
+    "assignment_phi_support_claim": false,
+    "branch_control_flow_reingest_claim": false,
+    "checkout_enabled": false,
+    "compiler_correctness_claim": false,
+    "compound_condition_support_claim": false,
+    "control_flow_ir_implemented": false,
+    "effect_order_policy_implemented": false,
+    "external_call_policy_implemented": false,
+    "formal_equivalence_claim": false,
+    "frontend_lowering_changed": false,
+    "full_c_rust_roundtrip_claim": false,
+    "full_non_generated_source_roundtrip_claim": false,
+    "general_branch_control_flow_claim": false,
+    "generated_target_execution_claim": false,
+    "implementation_change_applied": false,
+    "implementation_change_approved": false,
+    "live_external_call_claim": false,
+    "loop_backedge_support_claim": false,
+    "memory_alias_policy_implemented": false,
+    "nested_branch_support_claim": false,
+    "package_published": false,
+    "private_reviewer_decision_recorded": false,
+    "production_ready": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "reingest_execution_claim": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "side_effect_codegen_policy_claim": false,
+    "side_effect_generated_target_runtime_blocker_claim": false,
+    "side_effect_lowering_implemented": false,
+    "side_effect_memory_support_claim": false,
+    "side_effect_reingest_policy_claim": false,
+    "unbounded_memory_mutation_claim": false,
+    "unsupported_constructs_supported": false
+  },
+  "date": "2026-06-01",
+  "decision": "side_effect_generated_target_runtime_gate_blocked",
+  "generatedTargetRuntimeGate": {
+    "blockedBy": "side_effect_lowering_and_codegen_policy_missing",
+    "gateId": "side_effect_generated_target_runtime_gate_v0",
+    "generatedTargetExecuted": false,
+    "inheritedOriginalStubbedRuntimeEvidence": {
+      "boundedStateWriteCount": 4,
+      "comparisonCount": 7,
+      "maxAbsError": 0.0,
+      "passCount": 7,
+      "phase": "P109",
+      "stubbedCallCount": 4,
+      "stubbedOriginalCSourceExecuted": true
+    },
+    "liveExternalCallPerformed": false,
+    "reingestedTargetExecuted": false,
+    "requiredBeforeRun": [
+      "selected_side_effect_lowering_rule",
+      "generated_side_effect_codegen_fixture",
+      "deterministic_external_call_stub_policy_for_generated_targets",
+      "bounded_state_capture_model_for_generated_targets",
+      "generated_target_runtime_comparison_harness",
+      "side_effect_reingest_policy_for_generated_targets"
+    ],
+    "selectedFixtureId": "c_global_state_update_v0",
+    "status": "blocked_not_run",
+    "supportClaimAllowed": false,
+    "unboundedMemoryMutationPerformed": false
+  },
+  "nextMilestones": [
+    "Define a selected side-effect lowering/codegen proposal before generated-target runtime execution.",
+    "Record private reviewer response to the P47-P110 branch/control-flow bundle.",
+    "Keep generated target and re-ingest execution blocked until policy and fixture text exist."
+  ],
+  "nonClaims": [
+    "FEF-P110 records a generated-target runtime blocker for the selected side-effect fixture only.",
+    "FEF-P110 does not execute generated target code.",
+    "FEF-P110 does not execute re-ingested code.",
+    "FEF-P110 does not perform live external calls.",
+    "FEF-P110 does not perform unbounded memory mutation or aliasing.",
+    "FEF-P110 does not implement side-effect/call/memory lowering.",
+    "FEF-P110 does not implement generated side-effect codegen policy.",
+    "FEF-P110 does not implement side-effect re-ingest policy.",
+    "FEF-P110 does not implement effect ordering, external-call, aliasing, or memory-state policy in Forge or eFrog.",
+    "FEF-P110 does not widen Forge or eFrog frontend lowering.",
+    "FEF-P110 does not claim side-effect/call/memory support.",
+    "FEF-P110 does not claim loop/back-edge, assignment/phi, compound-condition, or nested-branch support.",
+    "FEF-P110 does not record reviewer approval or rejection.",
+    "FEF-P110 does not claim general branch/control-flow support.",
+    "FEF-P110 does not claim branch/control-flow re-ingest support.",
+    "FEF-P110 does not claim full non-generated source roundtrip.",
+    "FEF-P110 does not claim arbitrary C/Rust source-family support.",
+    "FEF-P110 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P110 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+  ],
+  "releaseGates": [
+    {
+      "id": "generated_target_runtime_execution",
+      "status": "blocked_not_run"
+    },
+    {
+      "id": "side_effect_lowering",
+      "status": "blocked"
+    },
+    {
+      "id": "generated_side_effect_codegen_policy",
+      "status": "blocked"
+    },
+    {
+      "id": "side_effect_reingest_policy",
+      "status": "blocked"
+    },
+    {
+      "id": "side_effect_memory_support",
+      "status": "blocked"
+    },
+    {
+      "id": "live_external_call_execution",
+      "status": "not_performed"
+    },
+    {
+      "id": "unbounded_memory_mutation",
+      "status": "not_performed"
+    },
+    {
+      "id": "side_effect_reingest_execution",
+      "status": "not_performed"
+    },
+    {
+      "id": "frontend_lowering_change",
+      "status": "not_performed"
+    },
+    {
+      "id": "compiler_correctness",
+      "status": "blocked"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p110_side_effect_generated_target_runtime_blocker.v0",
+  "selectedFixture": {
+    "blockedBy": "side_effect_boundary_inventory",
+    "constructId": "side_effecting_calls_or_memory",
+    "effectBoundaryCount": 2,
+    "effectKind": "global_state_write_and_external_call",
+    "effectOrderPolicyImplemented": false,
+    "externalCallPolicyImplemented": false,
+    "id": "c_global_state_update_v0",
+    "loweringPerformed": false,
+    "memoryAliasPolicyImplemented": false,
+    "memoryWriteCount": 1,
+    "mutableStateSiteCount": 1,
+    "requiredSemanticObligations": [
+      "assignment_order_preservation",
+      "unsupported_construct_fail_closed"
+    ],
+    "requiresEffectOrderPolicy": true,
+    "requiresExternalCallPolicy": true,
+    "requiresMemoryAliasPolicy": true,
+    "runtimeExecutionPerformed": false,
+    "schemaFragment": {
+      "blocks": [
+        {
+          "id": "entry",
+          "kind": "cfg_entry",
+          "statements": [
+            {
+              "blockedBy": "side_effect_boundary_inventory",
+              "constructId": "side_effecting_calls_or_memory",
+              "expr": "if (x > 0.0) { state = update_state(x); } return state;",
+              "kind": "unsupported_construct"
+            }
+          ],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        },
+        {
+          "id": "exit",
+          "kind": "cfg_exit",
+          "statements": [],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        }
+      ],
+      "claimFlags": {
+        "arbitrary_source_family_claim": false,
+        "assignment_phi_support_claim": false,
+        "branch_control_flow_reingest_claim": false,
+        "checkout_enabled": false,
+        "compiler_correctness_claim": false,
+        "compound_condition_support_claim": false,
+        "control_flow_ir_implemented": false,
+        "effect_order_policy_implemented": false,
+        "external_call_policy_implemented": false,
+        "formal_equivalence_claim": false,
+        "frontend_lowering_changed": false,
+        "full_c_rust_roundtrip_claim": false,
+        "full_non_generated_source_roundtrip_claim": false,
+        "general_branch_control_flow_claim": false,
+        "implementation_change_applied": false,
+        "implementation_change_approved": false,
+        "loop_backedge_support_claim": false,
+        "memory_alias_policy_implemented": false,
+        "nested_branch_support_claim": false,
+        "package_published": false,
+        "private_reviewer_decision_recorded": false,
+        "production_ready": false,
+        "public_preview_release_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "side_effect_lowering_implemented": false,
+        "side_effect_memory_fixture_gate_claim": false,
+        "side_effect_memory_support_claim": false,
+        "side_effect_runtime_execution_claim": false,
+        "unsupported_constructs_supported": false
+      },
+      "entryBlockId": "entry",
+      "exitBlockId": "exit",
+      "feature": "guarded_global_state_update",
+      "functionName": "c_global_state_update",
+      "nonClaims": [
+        "FEF-P105 records side-effect/call/memory fixtures only.",
+        "FEF-P105 does not execute side-effect/call/memory fixtures.",
+        "FEF-P105 does not implement effect ordering, external-call, aliasing, or memory-state policy.",
+        "FEF-P105 does not implement side-effect/call/memory lowering.",
+        "FEF-P105 does not widen Forge or eFrog frontend lowering.",
+        "FEF-P105 does not claim side-effect/call/memory support.",
+        "FEF-P105 does not claim loop/back-edge, assignment/phi, compound-condition, or nested-branch support.",
+        "FEF-P105 preserves the P104 private reviewer handoff hold status.",
+        "FEF-P105 does not record reviewer approval or rejection.",
+        "FEF-P105 does not claim general branch/control-flow support.",
+        "FEF-P105 does not claim branch/control-flow re-ingest support.",
+        "FEF-P105 does not claim full non-generated source roundtrip.",
+        "FEF-P105 does not claim arbitrary C/Rust source-family support.",
+        "FEF-P105 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P105 does not claim runtime performance, public readiness, package publication, checkout, or production readiness."
+      ],
+      "programId": "c_global_state_update_v0",
+      "schemaVersion": "monogate.control_flow_ir.v0",
+      "semanticObligations": [
+        {
+          "description": "Mutable updates must preserve statement order and branch-local state.",
+          "id": "assignment_order_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+          "id": "unsupported_construct_fail_closed",
+          "status": "open"
+        },
+        {
+          "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+          "id": "condition_truth_semantics",
+          "status": "open"
+        },
+        {
+          "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+          "id": "dominance_and_merge_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+          "id": "return_and_fallthrough_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+          "id": "source_ast_roundtrip_boundary",
+          "status": "open"
+        }
+      ],
+      "sourceLanguage": "c",
+      "unsupportedConstructs": [
+        {
+          "id": "nested_statement_branches",
+          "nextValidator": "nested_branch_fixture_matrix",
+          "reason": "selected closures do not cover arbitrary nested statement bodies",
+          "status": "blocked"
+        },
+        {
+          "id": "boolean_compound_conditions",
+          "nextValidator": "compound_condition_semantics_gate",
+          "reason": "selected closures do not cover short-circuit and/or condition semantics",
+          "status": "blocked"
+        },
+        {
+          "id": "mutable_assignments_across_branches",
+          "nextValidator": "assignment_phi_fixture_gate",
+          "reason": "selected closures are scalar return-only or expression-valued cases",
+          "status": "blocked"
+        },
+        {
+          "id": "loops_and_back_edges",
+          "nextValidator": "loop_construct_blocker_gate",
+          "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+          "status": "blocked"
+        },
+        {
+          "id": "side_effecting_calls_or_memory",
+          "nextValidator": "side_effect_boundary_inventory",
+          "reason": "current selected branch evidence is side-effect free",
+          "status": "blocked"
+        },
+        {
+          "id": "source_preserving_roundtrip",
+          "nextValidator": "non_generated_branch_roundtrip_gate",
+          "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+          "status": "blocked"
+        }
+      ]
+    },
+    "shape": "guarded_global_state_update",
+    "sideEffectingCallCount": 1,
+    "sourceLanguage": "c",
+    "sourceSketch": "if (x > 0.0) { state = update_state(x); } return state;",
+    "status": "blocked_fixture_defined",
+    "supportClaimAllowed": false
+  },
+  "sourcePacket": {
+    "packetPath": "reports/evidence_packets/fef_p109_side_effect_original_c_stubbed_runtime_gate.json",
+    "phase": "P109",
+    "resultPath": "python/results/fef_p109_side_effect_original_c_stubbed_runtime_gate/fef_p109_side_effect_original_c_stubbed_runtime_gate_2026_06_01.json",
+    "reviewDecision": "side_effect_original_c_stubbed_runtime_gate_recorded_support_blocked",
+    "validationStatus": "pass"
+  },
+  "status": "FEF_P110_SIDE_EFFECT_GENERATED_TARGET_RUNTIME_BLOCKER_PASS",
+  "summary": {
+    "arbitrarySourceFamilyClaim": false,
+    "assignmentPhiSupportClaim": false,
+    "branchControlFlowReingestClaim": false,
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "compilerCorrectnessClaim": false,
+    "compoundConditionSupportClaim": false,
+    "controlFlowIrImplemented": false,
+    "effectOrderPolicyImplemented": false,
+    "externalCallPolicyImplemented": false,
+    "formalEquivalenceClaim": false,
+    "frontendLoweringChanged": false,
+    "fullCRustRoundtripClaim": false,
+    "fullNonGeneratedSourceRoundtripClaim": false,
+    "generalBranchControlFlowClaim": false,
+    "generatedTargetExecuted": false,
+    "generatedTargetGateBlocked": true,
+    "generatedTargetGateStatus": "blocked_not_run",
+    "implementationChangeApplied": false,
+    "implementationChangeApproved": false,
+    "liveExternalCallPerformed": false,
+    "loopBackedgeSupportClaim": false,
+    "memoryAliasPolicyImplemented": false,
+    "nestedBranchSupportClaim": false,
+    "p109BoundedStateWriteCount": 4,
+    "p109ClaimFlagsAllFalse": true,
+    "p109ComparisonCount": 7,
+    "p109MaxAbsError": 0.0,
+    "p109PassCount": 7,
+    "p109StubbedCallCount": 4,
+    "p109ValidationPass": true,
+    "packagePublished": false,
+    "productionReady": false,
+    "publicReady": false,
+    "reingestedTargetExecuted": false,
+    "requiredBeforeRunCount": 6,
+    "reviewerDecisionRecorded": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedFixtureId": "c_global_state_update_v0",
+    "selectedFixtureStillBlocked": true,
+    "sideEffectCodegenPolicyClaim": false,
+    "sideEffectLoweringImplemented": false,
+    "sideEffectMemorySupportClaim": false,
+    "sideEffectReingestPolicyClaim": false,
+    "sourcePacketCount": 1,
+    "unboundedMemoryMutationPerformed": false,
+    "unsupportedConstructsSupported": false
+  }
+}
