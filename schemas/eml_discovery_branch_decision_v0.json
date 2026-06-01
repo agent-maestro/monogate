@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Discovery Branch Decision v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "decisionType",
+    "artifactId",
+    "status",
+    "sourceInterpretationGate",
+    "branchOptions",
+    "selectedBranch",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_discovery_branch_decision.v0" },
+    "decisionType": { "const": "eml_discovery_branch_decision_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourceInterpretationGate": { "type": "string", "minLength": 1 },
+    "branchOptions": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "selectedBranch": { "type": "object" },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
