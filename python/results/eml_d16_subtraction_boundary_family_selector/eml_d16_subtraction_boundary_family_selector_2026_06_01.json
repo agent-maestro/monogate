@@ -1,0 +1,233 @@
+{
+  "artifactId": "eml-d16-subtraction-boundary-family-selector",
+  "candidateStatements": [
+    {
+      "blockers": [
+        "duplicate base witness"
+      ],
+      "claimFlags": {
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_ready": false,
+        "runtime_lowering_changed": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "domainGuards": [
+        "0 < v"
+      ],
+      "estimatedDifficulty": "already_checked",
+      "priorityScore": 30,
+      "proofTarget": "MachLib.Real.atlas_subtraction_boundary_witness",
+      "rationale": [
+        "This is already checked as MachLib.Real.atlas_subtraction_boundary_witness.",
+        "Selecting it would create duplicate proof work instead of a family generalization."
+      ],
+      "relationToCheckedBase": "exact checked base witness already exists",
+      "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+      "selectionStatus": "rejected_duplicate_checked_base",
+      "statement": "eml (log v) (exp u) = v - u, under 0 < v",
+      "statementId": "subtraction_boundary_base_duplicate_v0"
+    },
+    {
+      "blockers": [
+        "requires exact family statement review before MachLib edit"
+      ],
+      "claimFlags": {
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_ready": false,
+        "runtime_lowering_changed": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "domainGuards": [
+        "0 < x + y"
+      ],
+      "estimatedDifficulty": "small_substitution_from_checked_base",
+      "priorityScore": 72,
+      "proofTarget": "MachLib.Real.subtraction_boundary_affine_offset_witness",
+      "rationale": [
+        "It is a real family-shaped statement rather than a duplicate of the base witness.",
+        "It exposes the positive branch guard on the shifted coordinate x + y.",
+        "It remains close enough to the checked base witness to be a plausible D17 proof attempt."
+      ],
+      "relationToCheckedBase": "substitution instance of checked base witness with v = x + y and u = y",
+      "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+      "selectionStatus": "selected_next",
+      "statement": "eml (log (x + y)) (exp y) = x, under 0 < x + y",
+      "statementId": "subtraction_boundary_affine_offset_family_v1"
+    },
+    {
+      "blockers": [
+        "nested rewrite surface",
+        "avoid deepening before simple family target"
+      ],
+      "claimFlags": {
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_ready": false,
+        "runtime_lowering_changed": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "domainGuards": [
+        "0 < v",
+        "0 < w"
+      ],
+      "estimatedDifficulty": "nested_rewrite",
+      "priorityScore": 51,
+      "proofTarget": "MachLib.Real.subtraction_boundary_two_stage_chain_witness",
+      "rationale": [
+        "This could test compositional proof reuse, but it is more complex than the affine-offset family.",
+        "It should wait until the simple family statement is selected or rejected."
+      ],
+      "relationToCheckedBase": "nested use of checked base witness",
+      "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+      "selectionStatus": "candidate_later",
+      "statement": "eml (log v) (exp (eml (log w) (exp u))) = v - (w - u), under 0 < v and 0 < w",
+      "statementId": "subtraction_boundary_two_stage_chain_v1"
+    },
+    {
+      "blockers": [
+        "missing positive log-domain guard"
+      ],
+      "claimFlags": {
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_ready": false,
+        "runtime_lowering_changed": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "domainGuards": [],
+      "estimatedDifficulty": "invalid_guard_missing",
+      "priorityScore": 5,
+      "proofTarget": "none",
+      "rationale": [
+        "The positive-domain guard is required for the real-branch log expression.",
+        "This row keeps the selector from silently dropping guard obligations."
+      ],
+      "relationToCheckedBase": "negative control for missing log-domain guard",
+      "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+      "selectionStatus": "blocked_negative_control",
+      "statement": "eml (log z) (exp y) = z - y, with no positive-domain guard",
+      "statementId": "subtraction_boundary_unguarded_negative_control_v1"
+    }
+  ],
+  "claimFlags": {
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "implementation_started": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false
+  },
+  "date": "2026-06-01",
+  "decision": "select_subtraction_boundary_affine_offset_family",
+  "nonClaims": [
+    "EML-D16 selects a subtraction-boundary family statement only; it does not edit MachLib or typecheck Lean.",
+    "D16 does not prove a new theorem, prove broad EML advantage, prove full EML semantics, prove compiler correctness, claim runtime performance, claim formal equivalence, or promote public Atlas copy.",
+    "The selected statement remains proof/teaching-shape work; standard subtraction remains the runtime lowering control."
+  ],
+  "schemaVersion": "monogate.eml_subtraction_boundary_family_selector.v0",
+  "selectedStatement": {
+    "blockers": [
+      "requires exact family statement review before MachLib edit"
+    ],
+    "claimFlags": {
+      "candidate_proved": false,
+      "compiler_correctness_claim": false,
+      "eml_advantage_proved": false,
+      "formal_equivalence_claim": false,
+      "full_eml_semantics_claim": false,
+      "general_eml_superiority_claim": false,
+      "implementation_started": false,
+      "lean_typecheck_performed": false,
+      "machlib_file_changed": false,
+      "public_atlas_promotion": false,
+      "public_ready": false,
+      "runtime_lowering_changed": false,
+      "runtime_performance_claim": false,
+      "theorem_discovery_claim": false
+    },
+    "domainGuards": [
+      "0 < x + y"
+    ],
+    "estimatedDifficulty": "small_substitution_from_checked_base",
+    "priorityScore": 72,
+    "proofTarget": "MachLib.Real.subtraction_boundary_affine_offset_witness",
+    "rationale": [
+      "It is a real family-shaped statement rather than a duplicate of the base witness.",
+      "It exposes the positive branch guard on the shifted coordinate x + y.",
+      "It remains close enough to the checked base witness to be a plausible D17 proof attempt."
+    ],
+    "relationToCheckedBase": "substitution instance of checked base witness with v = x + y and u = y",
+    "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+    "selectionStatus": "selected_next",
+    "statement": "eml (log (x + y)) (exp y) = x, under 0 < x + y",
+    "statementId": "subtraction_boundary_affine_offset_family_v1"
+  },
+  "selectorType": "eml_subtraction_boundary_family_selector_v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceDecision": "eml-d15-checked-witness-next-decision",
+  "status": "EML_D16_SUBTRACTION_BOUNDARY_FAMILY_SELECTOR_PASS",
+  "summary": {
+    "candidateProved": false,
+    "candidateStatementCount": 4,
+    "claimFlagsAllFalse": true,
+    "duplicateBaseRejected": true,
+    "implementationStarted": false,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "negativeControlBlocked": true,
+    "publicReady": false,
+    "runtimeLoweringChanged": false,
+    "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+    "selectedNextArtifact": "EML-D17 subtraction-boundary affine-offset witness attempt",
+    "selectedProofTarget": "MachLib.Real.subtraction_boundary_affine_offset_witness",
+    "selectedStatementId": "subtraction_boundary_affine_offset_family_v1",
+    "sourceDecision": "eml-d15-checked-witness-next-decision",
+    "sourceSelectedCandidateId": "subtraction_boundary_family_v1"
+  }
+}

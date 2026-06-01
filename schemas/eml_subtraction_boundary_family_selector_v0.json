@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Subtraction Boundary Family Selector v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "selectorType",
+    "artifactId",
+    "status",
+    "sourceDecision",
+    "candidateStatements",
+    "selectedStatement",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_subtraction_boundary_family_selector.v0" },
+    "selectorType": { "const": "eml_subtraction_boundary_family_selector_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourceDecision": { "type": "string", "minLength": 1 },
+    "candidateStatements": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "selectedStatement": { "type": "object" },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
