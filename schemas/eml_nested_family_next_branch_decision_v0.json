@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Nested Family Next Branch Decision v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "decisionType",
+    "artifactId",
+    "status",
+    "sourceSurfaceReview",
+    "decisionOptions",
+    "selectedOption",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_nested_family_next_branch_decision.v0" },
+    "decisionType": { "const": "eml_nested_family_next_branch_decision_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourceSurfaceReview": { "type": "string", "minLength": 1 },
+    "decisionOptions": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "selectedOption": { "type": "object" },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
