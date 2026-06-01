@@ -1,0 +1,78 @@
+{
+  "artifactId": "eml-d10-machlib-identity-witness-attempt",
+  "attemptType": "eml_machlib_identity_witness_attempt_v0",
+  "claimFlags": {
+    "compiler_correctness_claim": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false
+  },
+  "date": "2026-06-01",
+  "decision": "constants_zero_one_e_boundary_witness_checked_in_machlib",
+  "nonClaims": [
+    "EML-D10 checks one scoped MachLib identity witness selected by D9; it is not a theorem-discovery or broad EML-advantage claim.",
+    "The constants witness is definition-level EML evidence only and does not prove full EML semantics, compiler correctness, runtime performance, formal equivalence, or public readiness.",
+    "The local Lake build may still report pre-existing sorry warnings in unrelated MachLib files; D10 does not upgrade those lanes."
+  ],
+  "schemaVersion": "monogate.eml_machlib_identity_witness_attempt.v0",
+  "selectedWitness": {
+    "machlibName": "MachLib.Real.constants_zero_one_e_boundary_witness",
+    "name": "constants_zero_one_e_boundary_witness",
+    "path": "../machlib/foundations/MachLib/EMLAtlasWitness.lean",
+    "present": true,
+    "sourceCandidateId": "constants_zero_one_e_boundary_v0",
+    "statement": "eml 0 (exp 1) = 0 and eml 0 1 = 1 and eml 1 1 = exp 1"
+  },
+  "sourceSelector": "eml-d9-machlib-identity-witness-selector",
+  "status": "EML_D10_MACHLIB_IDENTITY_WITNESS_ATTEMPT_PASS",
+  "summary": {
+    "claimFlagsAllFalse": true,
+    "lakeBuildPassed": true,
+    "leanTypecheckPerformed": true,
+    "machlibFileChanged": true,
+    "publicReady": false,
+    "scopedWitnessChecked": true,
+    "selectedCandidateId": "constants_zero_one_e_boundary_v0",
+    "selectedWitnessName": "MachLib.Real.constants_zero_one_e_boundary_witness",
+    "selectedWitnessPresent": true,
+    "sourceSelector": "eml-d9-machlib-identity-witness-selector",
+    "supportingLemmaCount": 3,
+    "supportingLemmasPresent": 3,
+    "theoremDiscoveryClaim": false
+  },
+  "supportingLemmas": [
+    {
+      "name": "eml_zero_exp_one_zero",
+      "path": "../machlib/foundations/MachLib/EML.lean",
+      "present": true,
+      "statement": "eml 0 (exp 1) = 0"
+    },
+    {
+      "name": "eml_zero_one_one",
+      "path": "../machlib/foundations/MachLib/EML.lean",
+      "present": true,
+      "statement": "eml 0 1 = 1"
+    },
+    {
+      "name": "eml_one_one_exp_one",
+      "path": "../machlib/foundations/MachLib/EML.lean",
+      "present": true,
+      "statement": "eml 1 1 = exp 1"
+    }
+  ],
+  "verification": {
+    "command": "cd ../machlib/foundations && lake build",
+    "observedNotes": [
+      "MachLib.EML built.",
+      "MachLib.EMLAtlasWitness built.",
+      "Top-level MachLib build completed successfully.",
+      "Pre-existing sorry warnings remain in unrelated MachLib.ForgeTest and MachLib.HighDimensional declarations."
+    ],
+    "observedStatus": "pass"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML MachLib Identity Witness Attempt v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "attemptType",
+    "artifactId",
+    "status",
+    "sourceSelector",
+    "selectedWitness",
+    "supportingLemmas",
+    "verification",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_machlib_identity_witness_attempt.v0" },
+    "attemptType": { "const": "eml_machlib_identity_witness_attempt_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourceSelector": { "type": "string", "minLength": 1 },
+    "selectedWitness": { "type": "object" },
+    "supportingLemmas": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "verification": { "type": "object" },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

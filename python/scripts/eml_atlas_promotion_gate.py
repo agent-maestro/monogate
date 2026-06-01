@@ -39,7 +39,7 @@ SAFE_PUBLIC_EDUCATION = {
 PROOF_TARGETS = {
     "exp_from_eml": "checked_machlib_witness_available",
     "ln_from_eml": "candidate_machlib_witness",
-    "constants_zero_and_e": "candidate_machlib_witness",
+    "constants_zero_and_e": "checked_machlib_witness_available",
     "subtraction_boundary": "checked_machlib_witness_available",
     "prime_signature_log_recovery": "candidate_machlib_witness",
 }
@@ -108,6 +108,11 @@ def build_gate(annex_path: Path, out_dir: Path, report_dir: Path, evidence_dir: 
             {
                 "entryId": "subtraction_boundary",
                 "machlibName": "MachLib.Real.atlas_subtraction_boundary_witness",
+                "status": "checked_by_lake_build",
+            },
+            {
+                "entryId": "constants_zero_and_e",
+                "machlibName": "MachLib.Real.constants_zero_one_e_boundary_witness",
                 "status": "checked_by_lake_build",
             }
         ],
