@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate Electronics Artifact Intake Validation v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "validationType",
+    "artifactId",
+    "status",
+    "sourceContract",
+    "sourceGuardInventory",
+    "acceptedArtifacts",
+    "negativeControls",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.electronics_artifact_intake_validation.v0" },
+    "validationType": { "const": "electronics_artifact_intake_validation_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourceContract": { "type": "string", "minLength": 1 },
+    "sourceGuardInventory": { "type": "string", "minLength": 1 },
+    "acceptedArtifacts": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "negativeControls": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
