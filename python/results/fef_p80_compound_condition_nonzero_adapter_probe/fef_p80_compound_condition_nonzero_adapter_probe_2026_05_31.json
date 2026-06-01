@@ -1,0 +1,353 @@
+{
+  "adapterProbe": {
+    "adapterId": "selected_nonzero_predicate_branch_free_adapter_v0",
+    "replacements": [
+      {
+        "after": "return step01(value * value);",
+        "applied": true,
+        "before": "return value != 0.0 ? 1.0 : 0.0;",
+        "replacementId": "nonzero01_helper_condition"
+      },
+      {
+        "after": "return default_value + (numerator / denominator - (default_value)) * step01(guard * guard);",
+        "applied": true,
+        "before": "return guard != 0.0 ? numerator / denominator : default_value;",
+        "replacementId": "guarded_div_helper_condition"
+      }
+    ],
+    "scope": "selected_generated_c_fixture_only",
+    "sourceChanged": true,
+    "status": "adapter_probe_applied"
+  },
+  "allowedPrivateReviewerStatements": [
+    "P80 applies a selected nonzero-predicate adapter probe to the generated compound-condition fixture.",
+    "The P79 nonzero comparison blocker is cleared in the adapted probe.",
+    "The adapted probe still fails closed on the selected guard-helper call surface."
+  ],
+  "artifactId": "fef-p80-compound-condition-nonzero-adapter-probe",
+  "blockedStatements": [
+    "Re-ingested compound-condition code was executed successfully.",
+    "Compound-condition re-ingest is supported.",
+    "The selected adapter is installed in eFrog or Forge.",
+    "Guard helper calls are supported by eFrog re-ingest.",
+    "Compound-condition lowering is implemented.",
+    "Short-circuit boolean conditions are supported.",
+    "General C/Rust branch/control-flow support is established.",
+    "Compiler correctness has been proved.",
+    "Formal semantic equivalence has been proved.",
+    "Runtime performance has been established."
+  ],
+  "claimFlags": {
+    "arbitrary_source_family_claim": false,
+    "assignment_phi_support_claim": false,
+    "branch_control_flow_reingest_claim": false,
+    "checkout_enabled": false,
+    "compiler_correctness_claim": false,
+    "compound_condition_lowering_implemented": false,
+    "compound_condition_nonzero_adapter_probe_claim": false,
+    "compound_condition_reingest_execution_claim": false,
+    "compound_condition_reingest_supported": false,
+    "compound_condition_support_claim": false,
+    "control_flow_ir_implemented": false,
+    "formal_equivalence_claim": false,
+    "frontend_lowering_changed": false,
+    "full_c_rust_roundtrip_claim": false,
+    "full_non_generated_source_roundtrip_claim": false,
+    "general_branch_control_flow_claim": false,
+    "guarded_division_runtime_helper_installed": false,
+    "nested_branch_support_claim": false,
+    "nonzero_predicate_runtime_helper_installed": false,
+    "package_published": false,
+    "private_reviewer_decision_recorded": false,
+    "production_ready": false,
+    "public_preview_release_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "safe_to_publish_publicly": false,
+    "selected_codegen_fixture_installed_in_forge": false,
+    "short_circuit_semantics_implemented": false,
+    "unsupported_constructs_supported": false
+  },
+  "date": "2026-05-31",
+  "decision": "selected_nonzero_predicate_adapter_clears_first_blocker_next_surface_blocked",
+  "nextMilestones": [
+    "Add selected guard-helper call mapping or adapter for mg_step01, mg_nonzero01, and mg_guarded_div.",
+    "Re-run the selected generated compound-condition re-ingest gate after the helper-call blocker is cleared.",
+    "Record private reviewer response to the P47-P80 branch/control-flow bundle."
+  ],
+  "nonClaims": [
+    "FEF-P80 records a selected nonzero-predicate source adapter probe only.",
+    "FEF-P80 does not change eFrog or Forge source code.",
+    "FEF-P80 does not claim successful re-ingest execution.",
+    "FEF-P80 does not install helper functions in Forge or eFrog.",
+    "FEF-P80 does not implement short-circuit condition semantics in Forge or eFrog.",
+    "FEF-P80 does not claim compound-condition support.",
+    "FEF-P80 does not claim branch/control-flow re-ingest support.",
+    "FEF-P80 does not claim compiler correctness or formal semantic equivalence.",
+    "FEF-P80 does not claim runtime performance."
+  ],
+  "reingestProbe": {
+    "decompiler": "efrog.decompilers.c.decompile_c_source",
+    "errorMessage": "call to non-math function `mg_step01` unsupported in E2",
+    "errorType": "EFrogError",
+    "failure": {
+      "detectedBlockers": [
+        "selected_guard_helper_call_unsupported"
+      ],
+      "failureClass": "efrog_selected_generated_compound_condition_surface_blocked",
+      "message": "call to non-math function `mg_step01` unsupported in E2"
+    },
+    "invocationPerformed": true,
+    "probeId": "selected_nonzero_adapted_c_fixture_efrog_probe",
+    "recompiledPythonExecuted": false,
+    "reingestExecuted": false,
+    "status": "blocked_expected_next_surface"
+  },
+  "releaseGates": [
+    {
+      "id": "selected_nonzero_predicate_adapter_probe",
+      "status": "recorded"
+    },
+    {
+      "id": "selected_reingest_execution",
+      "status": "blocked_not_executed"
+    },
+    {
+      "id": "selected_guard_helper_call_surface",
+      "status": "blocked"
+    },
+    {
+      "id": "helper_runtime_installation",
+      "status": "not_performed"
+    },
+    {
+      "id": "compound_condition_support",
+      "status": "blocked"
+    },
+    {
+      "id": "compiler_correctness",
+      "status": "blocked"
+    }
+  ],
+  "schemaVersion": "monogate.fef_p80_compound_condition_nonzero_adapter_probe.v0",
+  "selectedFixture": {
+    "blockedBy": "compound_condition_semantics_gate",
+    "branchDepth": 1,
+    "conditionCount": 2,
+    "constructId": "boolean_compound_conditions",
+    "id": "c_and_short_circuit_guard_v0",
+    "operator": "&&",
+    "requiredSemanticObligations": [
+      "condition_truth_semantics",
+      "unsupported_construct_fail_closed"
+    ],
+    "runtimeExecutionPerformed": false,
+    "schemaFragment": {
+      "blocks": [
+        {
+          "id": "entry",
+          "kind": "cfg_entry",
+          "statements": [
+            {
+              "blockedBy": "compound_condition_semantics_gate",
+              "constructId": "boolean_compound_conditions",
+              "expr": "if (x > 0.0 && y != 0.0) { return x / y; } return 0.0;",
+              "kind": "unsupported_construct"
+            }
+          ],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        },
+        {
+          "id": "exit",
+          "kind": "cfg_exit",
+          "statements": [],
+          "terminator": {
+            "kind": "unreachable"
+          }
+        }
+      ],
+      "claimFlags": {
+        "arbitrary_source_family_claim": false,
+        "assignment_phi_support_claim": false,
+        "branch_control_flow_reingest_claim": false,
+        "checkout_enabled": false,
+        "compiler_correctness_claim": false,
+        "compound_condition_fixture_gate_claim": false,
+        "compound_condition_runtime_execution_claim": false,
+        "compound_condition_support_claim": false,
+        "control_flow_ir_implemented": false,
+        "formal_equivalence_claim": false,
+        "frontend_lowering_changed": false,
+        "full_c_rust_roundtrip_claim": false,
+        "full_non_generated_source_roundtrip_claim": false,
+        "general_branch_control_flow_claim": false,
+        "nested_branch_support_claim": false,
+        "package_published": false,
+        "private_reviewer_decision_recorded": false,
+        "production_ready": false,
+        "public_preview_release_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "safe_to_publish_publicly": false,
+        "unsupported_constructs_supported": false
+      },
+      "entryBlockId": "entry",
+      "exitBlockId": "exit",
+      "feature": "and_short_circuit_guard",
+      "functionName": "c_and_short_circuit_guard",
+      "nonClaims": [
+        "FEF-P70 records compound-condition fixtures only.",
+        "FEF-P70 does not execute compound-condition fixtures.",
+        "FEF-P70 does not implement short-circuit condition semantics.",
+        "FEF-P70 does not implement compound-condition lowering.",
+        "FEF-P70 does not widen Forge or eFrog frontend lowering.",
+        "FEF-P70 does not claim compound-condition support.",
+        "FEF-P70 does not claim assignment/phi or nested branch support.",
+        "FEF-P70 does not claim general branch/control-flow support.",
+        "FEF-P70 does not claim branch/control-flow re-ingest support.",
+        "FEF-P70 does not claim full non-generated source roundtrip.",
+        "FEF-P70 does not claim arbitrary C/Rust source-family support.",
+        "FEF-P70 does not claim compiler correctness or formal semantic equivalence.",
+        "FEF-P70 does not claim runtime performance."
+      ],
+      "programId": "c_and_short_circuit_guard_v0",
+      "schemaVersion": "monogate.control_flow_ir.v0",
+      "semanticObligations": [
+        {
+          "description": "C/Rust comparison and boolean semantics must be explicit before branch equivalence claims.",
+          "id": "condition_truth_semantics",
+          "status": "open"
+        },
+        {
+          "description": "Loops, labels, effects, calls, and memory must fail closed until separately validated.",
+          "id": "unsupported_construct_fail_closed",
+          "status": "open"
+        },
+        {
+          "description": "Each selected value must come from a dominating definition or explicit phi/select merge.",
+          "id": "dominance_and_merge_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Early returns and fallthrough returns must normalize to equivalent exit behavior.",
+          "id": "return_and_fallthrough_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Mutable updates must preserve statement order and branch-local state.",
+          "id": "assignment_order_preservation",
+          "status": "open"
+        },
+        {
+          "description": "Non-generated source branches need a source AST boundary before full roundtrip claims.",
+          "id": "source_ast_roundtrip_boundary",
+          "status": "open"
+        }
+      ],
+      "sourceLanguage": "c",
+      "unsupportedConstructs": [
+        {
+          "id": "nested_statement_branches",
+          "nextValidator": "nested_branch_fixture_matrix",
+          "reason": "selected closures do not cover arbitrary nested statement bodies",
+          "status": "blocked"
+        },
+        {
+          "id": "boolean_compound_conditions",
+          "nextValidator": "compound_condition_semantics_gate",
+          "reason": "selected closures do not cover short-circuit and/or condition semantics",
+          "status": "blocked"
+        },
+        {
+          "id": "mutable_assignments_across_branches",
+          "nextValidator": "assignment_phi_fixture_gate",
+          "reason": "selected closures are scalar return-only or expression-valued cases",
+          "status": "blocked"
+        },
+        {
+          "id": "loops_and_back_edges",
+          "nextValidator": "loop_construct_blocker_gate",
+          "reason": "candidate IR needs loop headers, latches, variants, and boundedness policy",
+          "status": "blocked"
+        },
+        {
+          "id": "side_effecting_calls_or_memory",
+          "nextValidator": "side_effect_boundary_inventory",
+          "reason": "current selected branch evidence is side-effect free",
+          "status": "blocked"
+        },
+        {
+          "id": "source_preserving_roundtrip",
+          "nextValidator": "non_generated_branch_roundtrip_gate",
+          "reason": "generated-target re-ingest exists, but non-generated source-preserving branch roundtrip does not",
+          "status": "blocked"
+        }
+      ]
+    },
+    "shape": "and_short_circuit_guard",
+    "shortCircuitSites": 1,
+    "sourceLanguage": "c",
+    "sourceSketch": "if (x > 0.0 && y != 0.0) { return x / y; } return 0.0;",
+    "status": "blocked_fixture_defined",
+    "supportClaimAllowed": false
+  },
+  "sourcePacket": {
+    "packetPath": "reports/evidence_packets/fef_p79_compound_condition_reingest_execution_probe.json",
+    "phase": "P79",
+    "resultPath": "python/results/fef_p79_compound_condition_reingest_execution_probe/fef_p79_compound_condition_reingest_execution_probe_2026_05_31.json",
+    "reviewDecision": "selected_compound_condition_reingest_probe_blocked_expected_surface",
+    "validationStatus": "pass"
+  },
+  "status": "FEF_P80_COMPOUND_CONDITION_NONZERO_ADAPTER_PROBE_PASS",
+  "summary": {
+    "adapterId": "selected_nonzero_predicate_branch_free_adapter_v0",
+    "adapterSourceChanged": true,
+    "adapterStatus": "adapter_probe_applied",
+    "arbitrarySourceFamilyClaim": false,
+    "assignmentPhiSupportClaim": false,
+    "branchControlFlowReingestClaim": false,
+    "checkoutEnabled": false,
+    "claimFlagsAllFalse": true,
+    "codegenFixtureInstalledInForge": false,
+    "compilerBehaviorChanged": false,
+    "compilerCorrectnessClaim": false,
+    "compoundConditionLoweringImplemented": false,
+    "compoundConditionReingestSupported": false,
+    "compoundConditionSupportClaim": false,
+    "controlFlowIrImplemented": false,
+    "detectedBlockerCount": 1,
+    "formalEquivalenceClaim": false,
+    "frontendLoweringChanged": false,
+    "fullCRustRoundtripClaim": false,
+    "fullNonGeneratedSourceRoundtripClaim": false,
+    "generalBranchControlFlowClaim": false,
+    "guardedDivisionRuntimeHelperInstalled": false,
+    "helperRuntimeInstalled": false,
+    "nestedBranchSupportClaim": false,
+    "nextBlockerDetected": true,
+    "nonzeroPredicateRuntimeHelperInstalled": false,
+    "p79ClaimFlagsAllFalse": true,
+    "p79ValidationPass": true,
+    "packagePublished": false,
+    "previousBlockerCleared": true,
+    "probeInvocationPerformed": true,
+    "probeStatus": "blocked_expected_next_surface",
+    "productionReady": false,
+    "publicReady": false,
+    "recompiledPythonExecuted": false,
+    "reingestExecuted": false,
+    "replacementAppliedCount": 2,
+    "replacementCount": 2,
+    "reviewerDecisionRecorded": false,
+    "runtimeComparisonExecuted": false,
+    "runtimePerformanceClaim": false,
+    "safeToPublishPublicly": false,
+    "selectedFixtureId": "c_and_short_circuit_guard_v0",
+    "selectedFixtureStillBlocked": true,
+    "shortCircuitSemanticsImplemented": false,
+    "sourcePacketCount": 1,
+    "unsupportedConstructsSupported": false
+  }
+}
