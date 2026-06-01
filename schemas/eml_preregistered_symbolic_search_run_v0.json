@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Preregistered Symbolic Search Run v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "runType",
+    "artifactId",
+    "status",
+    "sourcePreregistration",
+    "runPackets",
+    "negativeControlOutcomes",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_preregistered_symbolic_search_run.v0" },
+    "runType": { "const": "eml_preregistered_symbolic_search_run_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourcePreregistration": { "type": "string", "minLength": 1 },
+    "runPackets": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "negativeControlOutcomes": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
