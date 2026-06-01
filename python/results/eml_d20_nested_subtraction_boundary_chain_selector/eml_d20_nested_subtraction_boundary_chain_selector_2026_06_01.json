@@ -1,0 +1,279 @@
+{
+  "artifactId": "eml-d20-nested-subtraction-boundary-chain-selector",
+  "candidateStatements": [
+    {
+      "blockers": [
+        "requires exact Lean statement review before MachLib edit",
+        "must avoid claiming all nested chains"
+      ],
+      "claimFlags": {
+        "broad_nested_subtraction_claim": false,
+        "broad_subtraction_family_claim": false,
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_education_promotion": false,
+        "public_ready": false,
+        "runtime_lowering_changed": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "domainGuards": [
+        "0 < v",
+        "0 < w"
+      ],
+      "estimatedDifficulty": "nested_two_step_rewrite",
+      "expectedRewriteSteps": [
+        "rewrite inner eml (log w) (exp u) to w - u",
+        "rewrite outer eml (log v) (exp (w - u)) to v - (w - u)"
+      ],
+      "priorityScore": 76,
+      "proofTarget": "MachLib.Real.subtraction_boundary_two_stage_chain_witness",
+      "rationale": [
+        "This is the smallest nested chain that tests compositional reuse of the checked base witness.",
+        "It preserves explicit positive log-domain guards for both real-log arguments.",
+        "It is complex enough to open the next proof-family door but small enough for a D21 MachLib attempt."
+      ],
+      "relationToCheckedBase": "two nested uses of checked subtraction-boundary witness",
+      "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+      "selectionStatus": "selected_next",
+      "statement": "eml (log v) (exp (eml (log w) (exp u))) = v - (w - u), under 0 < v and 0 < w",
+      "statementId": "subtraction_boundary_two_stage_chain_v1"
+    },
+    {
+      "blockers": [
+        "more notation and algebra than the minimal chain",
+        "wait for D21 result"
+      ],
+      "claimFlags": {
+        "broad_nested_subtraction_claim": false,
+        "broad_subtraction_family_claim": false,
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_education_promotion": false,
+        "public_ready": false,
+        "runtime_lowering_changed": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "domainGuards": [
+        "0 < x + y",
+        "0 < z"
+      ],
+      "estimatedDifficulty": "nested_affine_rewrite",
+      "expectedRewriteSteps": [
+        "rewrite inner eml (log z) (exp y) to z - y",
+        "rewrite outer eml (log (x + y)) (exp (z - y)) to (x + y) - (z - y)"
+      ],
+      "priorityScore": 63,
+      "proofTarget": "MachLib.Real.subtraction_boundary_affine_nested_chain_witness",
+      "rationale": [
+        "This may become the next family step after the simple two-stage chain.",
+        "It exercises the D17 affine-offset shape but adds more algebraic normalization burden."
+      ],
+      "relationToCheckedBase": "combines D17 affine-offset substitution with nested base rewrite",
+      "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+      "selectionStatus": "candidate_later",
+      "statement": "eml (log (x + y)) (exp (eml (log z) (exp y))) = (x + y) - (z - y), under 0 < x + y and 0 < z",
+      "statementId": "subtraction_boundary_affine_nested_chain_v1"
+    },
+    {
+      "blockers": [
+        "too deep for the next witness attempt",
+        "higher risk of algebraic surface drift"
+      ],
+      "claimFlags": {
+        "broad_nested_subtraction_claim": false,
+        "broad_subtraction_family_claim": false,
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_education_promotion": false,
+        "public_ready": false,
+        "runtime_lowering_changed": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "domainGuards": [
+        "0 < a",
+        "0 < b",
+        "0 < c"
+      ],
+      "estimatedDifficulty": "overdeep_for_next_witness",
+      "expectedRewriteSteps": [
+        "rewrite innermost subtraction boundary",
+        "rewrite middle subtraction boundary",
+        "rewrite outer subtraction boundary"
+      ],
+      "priorityScore": 45,
+      "proofTarget": "MachLib.Real.subtraction_boundary_three_stage_chain_witness",
+      "rationale": [
+        "A three-stage chain would test deeper composition later.",
+        "It should wait until the two-stage chain either checks cleanly or exposes proof-surface gaps."
+      ],
+      "relationToCheckedBase": "three nested uses of checked subtraction-boundary witness",
+      "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+      "selectionStatus": "candidate_later",
+      "statement": "three nested subtraction-boundary rewrites under positive log-domain guards",
+      "statementId": "subtraction_boundary_three_stage_chain_v1"
+    },
+    {
+      "blockers": [
+        "missing positive log-domain guards"
+      ],
+      "claimFlags": {
+        "broad_nested_subtraction_claim": false,
+        "broad_subtraction_family_claim": false,
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_education_promotion": false,
+        "public_ready": false,
+        "runtime_lowering_changed": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "domainGuards": [],
+      "estimatedDifficulty": "invalid_guard_missing",
+      "expectedRewriteSteps": [],
+      "priorityScore": 5,
+      "proofTarget": "none",
+      "rationale": [
+        "Both log arguments need positive-domain guards.",
+        "This row prevents the nested-chain selector from treating guard obligations as optional."
+      ],
+      "relationToCheckedBase": "negative control for missing nested log-domain guards",
+      "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+      "selectionStatus": "blocked_negative_control",
+      "statement": "eml (log v) (exp (eml (log w) (exp u))) = v - (w - u), with missing positive-domain guards",
+      "statementId": "subtraction_boundary_nested_unguarded_negative_control_v1"
+    }
+  ],
+  "claimFlags": {
+    "broad_nested_subtraction_claim": false,
+    "broad_subtraction_family_claim": false,
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "implementation_started": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "public_atlas_promotion": false,
+    "public_education_promotion": false,
+    "public_ready": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false
+  },
+  "date": "2026-06-01",
+  "decision": "select_subtraction_boundary_two_stage_chain",
+  "nonClaims": [
+    "EML-D20 selects a nested subtraction-boundary chain statement only; it does not edit MachLib or typecheck Lean.",
+    "D20 does not prove a theorem, prove a broad nested subtraction family, prove broad EML advantage, prove full EML semantics, prove compiler correctness, claim runtime performance, claim formal equivalence, or promote public Atlas copy.",
+    "The selected nested chain remains proof/teaching-shape work; standard subtraction remains the runtime lowering control."
+  ],
+  "schemaVersion": "monogate.eml_nested_subtraction_boundary_chain_selector.v0",
+  "selectedStatement": {
+    "blockers": [
+      "requires exact Lean statement review before MachLib edit",
+      "must avoid claiming all nested chains"
+    ],
+    "claimFlags": {
+      "broad_nested_subtraction_claim": false,
+      "broad_subtraction_family_claim": false,
+      "candidate_proved": false,
+      "compiler_correctness_claim": false,
+      "eml_advantage_proved": false,
+      "formal_equivalence_claim": false,
+      "full_eml_semantics_claim": false,
+      "general_eml_superiority_claim": false,
+      "implementation_started": false,
+      "lean_typecheck_performed": false,
+      "machlib_file_changed": false,
+      "public_atlas_promotion": false,
+      "public_education_promotion": false,
+      "public_ready": false,
+      "runtime_lowering_changed": false,
+      "runtime_performance_claim": false,
+      "theorem_discovery_claim": false
+    },
+    "domainGuards": [
+      "0 < v",
+      "0 < w"
+    ],
+    "estimatedDifficulty": "nested_two_step_rewrite",
+    "expectedRewriteSteps": [
+      "rewrite inner eml (log w) (exp u) to w - u",
+      "rewrite outer eml (log v) (exp (w - u)) to v - (w - u)"
+    ],
+    "priorityScore": 76,
+    "proofTarget": "MachLib.Real.subtraction_boundary_two_stage_chain_witness",
+    "rationale": [
+      "This is the smallest nested chain that tests compositional reuse of the checked base witness.",
+      "It preserves explicit positive log-domain guards for both real-log arguments.",
+      "It is complex enough to open the next proof-family door but small enough for a D21 MachLib attempt."
+    ],
+    "relationToCheckedBase": "two nested uses of checked subtraction-boundary witness",
+    "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+    "selectionStatus": "selected_next",
+    "statement": "eml (log v) (exp (eml (log w) (exp u))) = v - (w - u), under 0 < v and 0 < w",
+    "statementId": "subtraction_boundary_two_stage_chain_v1"
+  },
+  "selectorType": "eml_nested_subtraction_boundary_chain_selector_v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceDecision": "eml-d19-next-proof-family-branch-decision",
+  "status": "EML_D20_NESTED_SUBTRACTION_BOUNDARY_CHAIN_SELECTOR_PASS",
+  "summary": {
+    "affineNestedChainParked": true,
+    "broadNestedSubtractionClaim": false,
+    "broadSubtractionFamilyClaim": false,
+    "candidateProved": false,
+    "candidateStatementCount": 4,
+    "claimFlagsAllFalse": true,
+    "deeperChainParked": true,
+    "implementationStarted": false,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "negativeControlBlocked": true,
+    "publicReady": false,
+    "runtimeLoweringChanged": false,
+    "runtimeLoweringControl": "standard_subtraction_remains_runtime_control",
+    "selectedNextArtifact": "EML-D21 subtraction-boundary two-stage chain witness attempt",
+    "selectedProofTarget": "MachLib.Real.subtraction_boundary_two_stage_chain_witness",
+    "selectedStatementId": "subtraction_boundary_two_stage_chain_v1",
+    "sourceDecision": "eml-d19-next-proof-family-branch-decision",
+    "sourceSelectedOptionId": "nested_subtraction_boundary_chain_selector"
+  }
+}
