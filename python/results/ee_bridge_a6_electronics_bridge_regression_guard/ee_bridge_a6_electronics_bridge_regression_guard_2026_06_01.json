@@ -1,0 +1,119 @@
+{
+  "artifactId": "ee-bridge-a6-electronics-bridge-regression-guard",
+  "checkedArtifacts": [
+    {
+      "id": "ee-bridge-a1-electronics-evidence-intake-contract",
+      "schemaVersion": "monogate.electronics_evidence_intake_contract.v0",
+      "status": "EE_BRIDGE_A1_ELECTRONICS_EVIDENCE_INTAKE_CONTRACT_PASS"
+    },
+    {
+      "id": "ee-guard-a1-electronics-guard-obligation-inventory",
+      "schemaVersion": "monogate.electronics_guard_obligation_inventory.v0",
+      "status": "EE_GUARD_A1_ELECTRONICS_GUARD_OBLIGATION_INVENTORY_PASS"
+    },
+    {
+      "id": "ee-bridge-a2-electronics-artifact-intake-validation",
+      "schemaVersion": "monogate.electronics_artifact_intake_validation.v0",
+      "status": "EE_BRIDGE_A2_ELECTRONICS_ARTIFACT_INTAKE_VALIDATION_PASS"
+    },
+    {
+      "id": "ee-bridge-a4-electronics-artifact-inbox-gate",
+      "schemaVersion": "monogate.electronics_artifact_inbox_gate.v0",
+      "status": "EE_BRIDGE_A4_ELECTRONICS_ARTIFACT_INBOX_GATE_PASS"
+    }
+  ],
+  "claimFlags": {
+    "automatic_reviewer_approval": false,
+    "certified_safety_claim": false,
+    "compiler_correctness_claim": false,
+    "electronics_url_modified": false,
+    "formal_equivalence_claim": false,
+    "hardware_observed": false,
+    "live_serial_capture_performed": false,
+    "production_controller_claim": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "source_repo_modified": false
+  },
+  "date": "2026-06-01",
+  "decision": "electronics_bridge_regression_guard_pass_real_artifact_still_pending",
+  "guardRows": [
+    {
+      "description": "EE-BRIDGE-A1 keeps four accepted artifact types.",
+      "id": "a1_contract_artifact_types",
+      "observed": 4,
+      "passed": true
+    },
+    {
+      "description": "EE-BRIDGE-A1 keeps 15 required intake fields.",
+      "id": "a1_required_fields",
+      "observed": 15,
+      "passed": true
+    },
+    {
+      "description": "EE-GUARD-A1 keeps three obligations with two open rows.",
+      "id": "guard_a1_obligation_counts",
+      "observed": {
+        "obligations": 3,
+        "open": 2
+      },
+      "passed": true
+    },
+    {
+      "description": "EE-BRIDGE-A2 keeps one accepted simulated handoff artifact.",
+      "id": "a2_simulated_handoff_accepts_one",
+      "observed": 1,
+      "passed": true
+    },
+    {
+      "description": "EE-BRIDGE-A2 keeps two passing negative controls.",
+      "id": "a2_negative_controls_pass",
+      "observed": 2,
+      "passed": true
+    },
+    {
+      "description": "EE-BRIDGE-A4 default inbox remains pending until a real artifact arrives.",
+      "id": "a4_default_inbox_pending",
+      "observed": {
+        "inboxStatus": "pending_no_artifact",
+        "validationRows": 0
+      },
+      "passed": true
+    },
+    {
+      "description": "All electronics bridge artifact claim flags remain false.",
+      "id": "all_claim_flags_false",
+      "observed": "all false",
+      "passed": true
+    },
+    {
+      "description": "No bridge artifact touches monogate-electronics or /electronics.",
+      "id": "electronics_ownership_boundary",
+      "observed": "not touched",
+      "passed": true
+    }
+  ],
+  "guardType": "electronics_bridge_regression_guard_v0",
+  "nonClaims": [
+    "EE-BRIDGE-A6 is a regression guard over existing electronics bridge artifacts only.",
+    "EE-BRIDGE-A6 does not ingest a real laptop-agent artifact.",
+    "EE-BRIDGE-A6 does not modify monogate-electronics or /electronics.",
+    "EE-BRIDGE-A6 does not perform hardware capture, serial reads, flashing, FPGA programming, or hardware operation.",
+    "EE-BRIDGE-A6 does not claim hardware-observed behavior, production control, certified safety, public readiness, runtime performance, compiler correctness, or formal equivalence."
+  ],
+  "schemaVersion": "monogate.electronics_bridge_regression_guard.v0",
+  "status": "EE_BRIDGE_A6_ELECTRONICS_BRIDGE_REGRESSION_GUARD_PASS",
+  "summary": {
+    "checkedArtifactCount": 4,
+    "claimFlagsAllFalse": true,
+    "defaultInboxStatus": "pending_no_artifact",
+    "electronicsSurfaceTouched": false,
+    "guardFailCount": 0,
+    "guardPassCount": 8,
+    "guardRowCount": 8,
+    "hardwareObserved": false,
+    "liveCapturePerformed": false,
+    "monogateElectronicsRepoTouched": false,
+    "realLaptopAgentArtifactReceived": false
+  }
+}

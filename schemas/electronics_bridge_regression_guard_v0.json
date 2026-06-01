@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate Electronics Bridge Regression Guard v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "guardType",
+    "artifactId",
+    "status",
+    "checkedArtifacts",
+    "guardRows",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.electronics_bridge_regression_guard.v0" },
+    "guardType": { "const": "electronics_bridge_regression_guard_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "checkedArtifacts": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "guardRows": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
