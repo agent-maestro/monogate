@@ -1,0 +1,129 @@
+"""Tests for FEF-P119 compound-condition lowering/codegen proposal."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+from scripts.fef_p119_compound_condition_lowering_codegen_proposal import (
+    CLAIM_FLAGS,
+    build_outputs,
+    build_payload,
+    build_proposal,
+    validate_payload,
+)
+
+
+def test_fef_p119_records_proposal_without_applying_it():
+    payload = build_payload()
+    validate_payload(payload)
+    summary = payload["summary"]
+    assert payload["status"] == "FEF_P119_COMPOUND_CONDITION_LOWERING_CODEGEN_PROPOSAL_PASS"
+    assert payload["decision"] == "selected_compound_condition_lowering_codegen_proposal_recorded_not_applied"
+    assert summary["selectedFixtureId"] == "c_and_guard_return_v0"
+    assert summary["proposalStatus"] == "proposal_recorded_not_applied"
+    assert summary["proposalApplied"] is False
+    assert summary["implementationDiffProduced"] is False
+
+
+def test_fef_p119_proposal_names_ordered_short_circuit_lowering_intent():
+    payload = build_payload()
+    proposal = payload["loweringCodegenProposal"]
+    intent = proposal["loweringIntent"]
+    assert intent["loweringKind"] == "ordered_short_circuit_guard_region_with_selected_return"
+    assert intent["compoundOperator"] == "&&"
+    assert intent["predicateEvaluationOrder"] == [
+        "evaluate_left_predicate_x_gt_zero",
+        "evaluate_right_predicate_y_gt_zero_only_if_left_true",
+        "select_sum_return_only_if_both_predicates_true",
+        "select_zero_return_otherwise",
+    ]
+    assert intent["booleanNormalizationModel"] == "source_order_preserving_boolean_temps"
+    assert intent["returnModel"] == "selected_two_path_return_phi_or_select"
+
+
+def test_fef_p119_pipeline_hooks_and_review_checks_are_complete():
+    payload = build_payload()
+    summary = payload["summary"]
+    assert summary["intendedPipelineHookCount"] == 4
+    assert summary["requiredApprovalGateCount"] == 6
+    assert summary["rollbackCriteriaCount"] == 5
+    assert summary["reviewCheckCount"] == 12
+    assert summary["reviewCheckPassCount"] == 12
+    assert summary["reviewCheckFailCount"] == 0
+
+
+def test_fef_p119_build_proposal_remains_not_applied():
+    p118_payload = {
+        "summary": {
+            "selectedFixtureId": "c_and_guard_return_v0",
+        }
+    }
+    proposal = build_proposal(p118_payload)
+    assert proposal["scope"] == "selected_c_and_guard_return_v0_only"
+    assert proposal["proposalApplied"] is False
+    assert proposal["implementationDiffProduced"] is False
+    assert proposal["generatedFixtureTextProduced"] is False
+    assert proposal["generatedTargetExecuted"] is False
+    assert proposal["reingestedTargetExecuted"] is False
+    assert proposal["installedInForge"] is False
+    assert proposal["installedInEfrog"] is False
+
+
+def test_fef_p119_inherits_p118_blocker_and_p117_runtime_counts():
+    payload = build_payload()
+    summary = payload["summary"]
+    assert summary["p118GeneratedTargetGateStatus"] == "blocked_not_run"
+    assert summary["p118RequiredBeforeRunCount"] == 5
+    assert summary["p117ComparisonCount"] == 7
+    assert summary["p117PassCount"] == 7
+    assert summary["p117MaxAbsError"] == 0.0
+    assert summary["p117RightPredicateEvaluatedCount"] == 4
+    assert summary["p117ShortCircuitCount"] == 3
+
+
+def test_fef_p119_blocks_execution_lowering_codegen_reingest_and_support():
+    payload = build_payload()
+    summary = payload["summary"]
+    assert summary["generatedFixtureTextProduced"] is False
+    assert summary["generatedTargetExecuted"] is False
+    assert summary["reingestedTargetExecuted"] is False
+    assert summary["compoundConditionLoweringImplemented"] is False
+    assert summary["compoundConditionCodegenPolicyImplemented"] is False
+    assert summary["compoundConditionReingestPolicyImplemented"] is False
+    assert summary["shortCircuitPolicyImplemented"] is False
+    assert summary["compoundConditionSupportClaim"] is False
+    assert all(value is False for value in CLAIM_FLAGS.values())
+    assert all(value is False for value in payload["claimFlags"].values())
+
+
+def test_fef_p119_writes_outputs(tmp_path):
+    built = build_outputs(tmp_path / "results", tmp_path / "reports", tmp_path / "evidence", tmp_path / "feeds")
+    for key in ["result_path", "evidence_path", "feed_path"]:
+        json.loads(Path(built[key]).read_text(encoding="utf-8"))
+    assert Path(built["report_path"]).read_text(encoding="utf-8").startswith("# FEF-P119")
+
+
+def test_fef_p119_cli_build_strict(tmp_path):
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "python/scripts/fef_p119_compound_condition_lowering_codegen_proposal.py",
+            "--build",
+            "--out-dir",
+            str(tmp_path / "results"),
+            "--report-dir",
+            str(tmp_path / "reports"),
+            "--evidence-dir",
+            str(tmp_path / "evidence"),
+            "--command-feed-dir",
+            str(tmp_path / "feeds"),
+            "--strict",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "FEF_P119_COMPOUND_CONDITION_LOWERING_CODEGEN_PROPOSAL_OK" in proc.stdout
