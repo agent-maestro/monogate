@@ -1,0 +1,190 @@
+{
+  "artifactId": "eml-d12-next-identity-witness-selector",
+  "candidateSelectors": [
+    {
+      "atlasProofStatus": "candidate_machlib_witness",
+      "blockers": [
+        "nested EML rewrite proof surface",
+        "positive-domain guard wording"
+      ],
+      "candidateId": "ln_from_eml_boundary_v1",
+      "claimFlags": {
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "emlForm": "ln(y) = eml(1, eml(eml(1,y),1)), under y > 0",
+      "estimatedDifficulty": "medium_nested_rewrite",
+      "family": "generator_identity",
+      "nextArtifact": "EML-D13 ln-from-EML MachLib witness attempt",
+      "priorityScore": 70,
+      "proofTarget": "MachLib.Real.ln_from_eml_boundary_witness",
+      "rationale": [
+        "It remains a current Atlas proof target after constants are checked.",
+        "R10C already records scoped semantic-proof evidence for ln_from_eml_v0.",
+        "The target is more valuable than a duplicate subtraction base proof and less speculative than prime-signature recovery."
+      ],
+      "selectionStatus": "selected_next",
+      "standardForm": "ln(y)"
+    },
+    {
+      "atlasProofStatus": "checked_machlib_witness_available",
+      "blockers": [
+        "avoid duplicate base witness",
+        "define what family generalization means"
+      ],
+      "candidateId": "subtraction_boundary_family_v1",
+      "claimFlags": {
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "emlForm": "eml(log(v), exp(u)) = v - u, under 0 < v",
+      "estimatedDifficulty": "family_generalization_after_base_checked",
+      "family": "subtraction_boundary",
+      "nextArtifact": "Future subtraction-boundary family generalization selector",
+      "priorityScore": 58,
+      "proofTarget": "MachLib.Real.subtraction_boundary_family_generalization_witness",
+      "rationale": [
+        "The selected base subtraction-boundary witness is already checked.",
+        "A family generalization could be useful later but is less urgent than closing a still-candidate Atlas proof target.",
+        "D9 already prevented duplicate work on the base case."
+      ],
+      "selectionStatus": "candidate_later",
+      "standardForm": "v - u"
+    },
+    {
+      "atlasProofStatus": "candidate_machlib_witness",
+      "blockers": [
+        "requires clearer statement",
+        "avoid RH/zeta implication leakage"
+      ],
+      "candidateId": "prime_signature_log_recovery_v2",
+      "claimFlags": {
+        "candidate_proved": false,
+        "compiler_correctness_claim": false,
+        "eml_advantage_proved": false,
+        "formal_equivalence_claim": false,
+        "full_eml_semantics_claim": false,
+        "general_eml_superiority_claim": false,
+        "implementation_started": false,
+        "lean_typecheck_performed": false,
+        "machlib_file_changed": false,
+        "public_atlas_promotion": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "theorem_discovery_claim": false
+      },
+      "emlForm": "ln(n)=eml(sigma(n),1), sigma(n)=ln(ln(n))",
+      "estimatedDifficulty": "speculative_identity_review",
+      "family": "signature_coordinate",
+      "nextArtifact": "Future prime-signature witness feasibility selector",
+      "priorityScore": 46,
+      "proofTarget": "MachLib.Real.prime_signature_log_recovery_witness",
+      "rationale": [
+        "The prime-signature row is interesting but remains more speculative and less foundational than ln-from-EML.",
+        "It should wait until the small generator identities are better covered.",
+        "Selecting it now would risk mixing proof-shaped cleanup with research-frontier interpretation."
+      ],
+      "selectionStatus": "candidate_later",
+      "standardForm": "ln(n)"
+    }
+  ],
+  "claimFlags": {
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "implementation_started": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "public_atlas_promotion": false,
+    "public_ready": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false
+  },
+  "date": "2026-06-01",
+  "decision": "select_ln_from_eml_as_next_identity_witness_target",
+  "nonClaims": [
+    "EML-D12 selects the next private identity witness target after the checked constants witness; it does not edit MachLib or typecheck Lean.",
+    "D12 does not prove ln-from-EML, discover a theorem, prove broad EML advantage, prove full EML semantics, prove compiler correctness, claim runtime performance, claim formal equivalence, or promote public Atlas copy.",
+    "The selected target remains proof/teaching shape only; standard log remains the runtime lowering control unless later evidence changes that boundary."
+  ],
+  "schemaVersion": "monogate.eml_next_identity_witness_selector.v0",
+  "selectedCandidate": {
+    "atlasProofStatus": "candidate_machlib_witness",
+    "blockers": [
+      "nested EML rewrite proof surface",
+      "positive-domain guard wording"
+    ],
+    "candidateId": "ln_from_eml_boundary_v1",
+    "claimFlags": {
+      "candidate_proved": false,
+      "compiler_correctness_claim": false,
+      "eml_advantage_proved": false,
+      "formal_equivalence_claim": false,
+      "full_eml_semantics_claim": false,
+      "general_eml_superiority_claim": false,
+      "implementation_started": false,
+      "lean_typecheck_performed": false,
+      "machlib_file_changed": false,
+      "public_atlas_promotion": false,
+      "public_ready": false,
+      "runtime_performance_claim": false,
+      "theorem_discovery_claim": false
+    },
+    "emlForm": "ln(y) = eml(1, eml(eml(1,y),1)), under y > 0",
+    "estimatedDifficulty": "medium_nested_rewrite",
+    "family": "generator_identity",
+    "nextArtifact": "EML-D13 ln-from-EML MachLib witness attempt",
+    "priorityScore": 70,
+    "proofTarget": "MachLib.Real.ln_from_eml_boundary_witness",
+    "rationale": [
+      "It remains a current Atlas proof target after constants are checked.",
+      "R10C already records scoped semantic-proof evidence for ln_from_eml_v0.",
+      "The target is more valuable than a duplicate subtraction base proof and less speculative than prime-signature recovery."
+    ],
+    "selectionStatus": "selected_next",
+    "standardForm": "ln(y)"
+  },
+  "selectorType": "eml_next_identity_witness_selector_v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceSurfaceReview": "eml-d11-checked-witness-surface-review",
+  "status": "EML_D12_NEXT_IDENTITY_WITNESS_SELECTOR_PASS",
+  "summary": {
+    "candidateCount": 3,
+    "candidateProved": false,
+    "claimFlagsAllFalse": true,
+    "constantsWitnessAlreadyChecked": true,
+    "implementationStarted": false,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "publicReady": false,
+    "selectedCandidateId": "ln_from_eml_boundary_v1",
+    "selectedNextArtifact": "EML-D13 ln-from-EML MachLib witness attempt",
+    "selectedProofTarget": "MachLib.Real.ln_from_eml_boundary_witness",
+    "sourceSurfaceReview": "eml-d11-checked-witness-surface-review"
+  }
+}

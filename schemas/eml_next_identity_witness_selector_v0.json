@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Next Identity Witness Selector v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "selectorType",
+    "artifactId",
+    "status",
+    "sourceSurfaceReview",
+    "candidateSelectors",
+    "selectedCandidate",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_next_identity_witness_selector.v0" },
+    "selectorType": { "const": "eml_next_identity_witness_selector_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "sourceSurfaceReview": { "type": "string", "minLength": 1 },
+    "candidateSelectors": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "selectedCandidate": { "type": "object" },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
