@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate Electronics Evidence Intake Contract v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "contractType",
+    "artifactId",
+    "status",
+    "acceptedArtifactTypes",
+    "requiredFields",
+    "captureStatuses",
+    "reviewerOutcomes",
+    "candidateVerticals",
+    "handoffBoundary",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.electronics_evidence_intake_contract.v0" },
+    "contractType": { "const": "electronics_evidence_intake_contract_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "acceptedArtifactTypes": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "requiredFields": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "captureStatuses": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "reviewerOutcomes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "candidateVerticals": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "handoffBoundary": { "type": "object" },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

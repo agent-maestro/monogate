@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate Electronics Guard Obligation Inventory v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "inventoryType",
+    "artifactId",
+    "status",
+    "obligations",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.electronics_guard_obligation_inventory.v0" },
+    "inventoryType": { "const": "electronics_guard_obligation_inventory_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["obligationId", "kernelId", "predicate", "status"],
+        "properties": {
+          "obligationId": { "type": "string", "minLength": 1 },
+          "kernelId": { "type": "string", "minLength": 1 },
+          "predicate": { "type": "string", "minLength": 1 },
+          "status": {
+            "enum": [
+              "prior_selected_witness_linked",
+              "open_guard_obligation",
+              "blocked"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
