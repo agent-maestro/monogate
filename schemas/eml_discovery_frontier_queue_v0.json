@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Monogate EML Discovery Frontier Queue v0",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "queueType",
+    "artifactId",
+    "status",
+    "frontierCandidates",
+    "summary",
+    "claimFlags",
+    "nonClaims"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "monogate.eml_discovery_frontier_queue.v0" },
+    "queueType": { "const": "eml_discovery_frontier_queue_v0" },
+    "artifactId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "frontierCandidates": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "summary": { "type": "object" },
+    "claimFlags": {
+      "type": "object",
+      "additionalProperties": { "const": false }
+    },
+    "nonClaims": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
