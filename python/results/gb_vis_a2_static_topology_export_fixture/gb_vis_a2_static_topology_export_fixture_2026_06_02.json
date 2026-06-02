@@ -1,0 +1,1054 @@
+{
+  "artifactId": "gb-vis-a2-static-topology-export-fixture",
+  "claimFlags": {
+    "abstract_interpretation_soundness_proved": false,
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "edge_views_exported": true,
+    "electronics_repo_touched": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "full_galois_connection_claim": false,
+    "gb_vis_a1_contract_consumed": true,
+    "general_eml_superiority_claim": false,
+    "interactive_renderer_implemented": false,
+    "laptop_artifact_consumed": false,
+    "layout_metadata_exported": true,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "node_views_exported": true,
+    "production_validator_implemented": false,
+    "proof_attempt_started": false,
+    "public_copy_approved": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "renderer_guardrails_preserved": true,
+    "renderer_implemented": false,
+    "reviewer_filters_exported": true,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "soundness_proved": false,
+    "static_topology_export_fixture_recorded": true,
+    "theorem_discovery_claim": false,
+    "validator_soundness_proved": false,
+    "visualization_rendered": false,
+    "visualization_started": false
+  },
+  "date": "2026-06-02",
+  "decision": "record_private_static_topology_export_fixture_no_interactive_renderer",
+  "nonClaims": [
+    "GB-VIS-A2 records a private static topology export fixture only; it does not implement or execute an interactive renderer.",
+    "GB-VIS-A2 derives reviewer-inspectable node views, edge views, filters, and layout metadata from GB-VIS-A1 without proving soundness, a Galois connection, abstract interpretation correctness, compiler correctness, formal equivalence, or full EML semantics.",
+    "GB-VIS-A2 does not update public surfaces, runtime behavior, MachLib, production validators, laptop-owned repos, or electronics repos."
+  ],
+  "packetType": "static_topology_export_fixture_v0",
+  "schemaVersion": "monogate.static_topology_export_fixture.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceContract": "gb-vis-a1-claim-topology-renderer-contract",
+  "staticTopologyExport": {
+    "edgeViews": [
+      {
+        "edgeId": "source_freeze_to_abstract_claim_alpha",
+        "edgeKind": "alpha_abstraction",
+        "operator": "alpha",
+        "preserves": [
+          "checkedStatement",
+          "runtimeControl",
+          "publicStatus",
+          "nonClaims"
+        ],
+        "route": "left_to_right_alpha",
+        "source": "source_freeze_packet",
+        "styleRefs": [
+          "edge_kind:alpha_abstraction",
+          "operator:alpha"
+        ],
+        "target": "abstract_claim_object",
+        "viewId": "edge_view:source_freeze_to_abstract_claim_alpha"
+      },
+      {
+        "edgeId": "abstract_claim_to_artifact_class:lean_checked_witness",
+        "edgeKind": "gamma_admissibility",
+        "operator": "gamma",
+        "preserves": [
+          "artifactClass",
+          "claimStrengthBound",
+          "traceability"
+        ],
+        "route": "left_to_right_gamma",
+        "source": "abstract_claim_object",
+        "styleRefs": [
+          "edge_kind:gamma_admissibility",
+          "operator:gamma"
+        ],
+        "target": "artifact_class:lean_checked_witness",
+        "viewId": "edge_view:abstract_claim_to_artifact_class:lean_checked_witness"
+      },
+      {
+        "edgeId": "abstract_claim_to_artifact_class:evidence_packet",
+        "edgeKind": "gamma_admissibility",
+        "operator": "gamma",
+        "preserves": [
+          "artifactClass",
+          "claimStrengthBound",
+          "traceability"
+        ],
+        "route": "left_to_right_gamma",
+        "source": "abstract_claim_object",
+        "styleRefs": [
+          "edge_kind:gamma_admissibility",
+          "operator:gamma"
+        ],
+        "target": "artifact_class:evidence_packet",
+        "viewId": "edge_view:abstract_claim_to_artifact_class:evidence_packet"
+      },
+      {
+        "edgeId": "abstract_claim_to_artifact_class:runtime_trace",
+        "edgeKind": "gamma_admissibility",
+        "operator": "gamma",
+        "preserves": [
+          "artifactClass",
+          "claimStrengthBound",
+          "traceability"
+        ],
+        "route": "left_to_right_gamma",
+        "source": "abstract_claim_object",
+        "styleRefs": [
+          "edge_kind:gamma_admissibility",
+          "operator:gamma"
+        ],
+        "target": "artifact_class:runtime_trace",
+        "viewId": "edge_view:abstract_claim_to_artifact_class:runtime_trace"
+      },
+      {
+        "edgeId": "abstract_claim_to_artifact_class:lesson_or_hardware_artifact",
+        "edgeKind": "gamma_admissibility",
+        "operator": "gamma",
+        "preserves": [
+          "artifactClass",
+          "claimStrengthBound",
+          "traceability"
+        ],
+        "route": "left_to_right_gamma",
+        "source": "abstract_claim_object",
+        "styleRefs": [
+          "edge_kind:gamma_admissibility",
+          "operator:gamma"
+        ],
+        "target": "artifact_class:lesson_or_hardware_artifact",
+        "viewId": "edge_view:abstract_claim_to_artifact_class:lesson_or_hardware_artifact"
+      },
+      {
+        "edgeId": "obligation_to_dry_run:alpha_source_identity_required",
+        "edgeKind": "validated_by_dry_run_skeleton",
+        "operator": "alpha",
+        "preserves": [
+          "obligationIdentity",
+          "operator",
+          "noRejectedFailureModes"
+        ],
+        "route": "left_to_right_alpha",
+        "source": "validator_obligation:alpha_source_identity_required",
+        "styleRefs": [
+          "edge_kind:validated_by_dry_run_skeleton",
+          "operator:alpha"
+        ],
+        "target": "dry_run_check:alpha_source_identity_required_dry_run",
+        "viewId": "edge_view:obligation_to_dry_run:alpha_source_identity_required"
+      },
+      {
+        "edgeId": "obligation_to_dry_run:alpha_claim_strength_bounded",
+        "edgeKind": "validated_by_dry_run_skeleton",
+        "operator": "alpha",
+        "preserves": [
+          "obligationIdentity",
+          "operator",
+          "noRejectedFailureModes"
+        ],
+        "route": "left_to_right_alpha",
+        "source": "validator_obligation:alpha_claim_strength_bounded",
+        "styleRefs": [
+          "edge_kind:validated_by_dry_run_skeleton",
+          "operator:alpha"
+        ],
+        "target": "dry_run_check:alpha_claim_strength_bounded_dry_run",
+        "viewId": "edge_view:obligation_to_dry_run:alpha_claim_strength_bounded"
+      },
+      {
+        "edgeId": "obligation_to_dry_run:alpha_traceability_complete",
+        "edgeKind": "validated_by_dry_run_skeleton",
+        "operator": "alpha",
+        "preserves": [
+          "obligationIdentity",
+          "operator",
+          "noRejectedFailureModes"
+        ],
+        "route": "left_to_right_alpha",
+        "source": "validator_obligation:alpha_traceability_complete",
+        "styleRefs": [
+          "edge_kind:validated_by_dry_run_skeleton",
+          "operator:alpha"
+        ],
+        "target": "dry_run_check:alpha_traceability_complete_dry_run",
+        "viewId": "edge_view:obligation_to_dry_run:alpha_traceability_complete"
+      },
+      {
+        "edgeId": "obligation_to_dry_run:gamma_admissible_artifact_class",
+        "edgeKind": "validated_by_dry_run_skeleton",
+        "operator": "gamma",
+        "preserves": [
+          "obligationIdentity",
+          "operator",
+          "noRejectedFailureModes"
+        ],
+        "route": "left_to_right_gamma",
+        "source": "validator_obligation:gamma_admissible_artifact_class",
+        "styleRefs": [
+          "edge_kind:validated_by_dry_run_skeleton",
+          "operator:gamma"
+        ],
+        "target": "dry_run_check:gamma_admissible_artifact_class_dry_run",
+        "viewId": "edge_view:obligation_to_dry_run:gamma_admissible_artifact_class"
+      },
+      {
+        "edgeId": "obligation_to_dry_run:gamma_boundary_preservation",
+        "edgeKind": "validated_by_dry_run_skeleton",
+        "operator": "gamma",
+        "preserves": [
+          "obligationIdentity",
+          "operator",
+          "noRejectedFailureModes"
+        ],
+        "route": "left_to_right_gamma",
+        "source": "validator_obligation:gamma_boundary_preservation",
+        "styleRefs": [
+          "edge_kind:validated_by_dry_run_skeleton",
+          "operator:gamma"
+        ],
+        "target": "dry_run_check:gamma_boundary_preservation_dry_run",
+        "viewId": "edge_view:obligation_to_dry_run:gamma_boundary_preservation"
+      },
+      {
+        "edgeId": "obligation_to_dry_run:roundtrip_no_claim_escalation",
+        "edgeKind": "validated_by_dry_run_skeleton",
+        "operator": "alpha_gamma_roundtrip",
+        "preserves": [
+          "obligationIdentity",
+          "operator",
+          "noRejectedFailureModes"
+        ],
+        "route": "roundtrip_check",
+        "source": "validator_obligation:roundtrip_no_claim_escalation",
+        "styleRefs": [
+          "edge_kind:validated_by_dry_run_skeleton",
+          "operator:alpha_gamma_roundtrip"
+        ],
+        "target": "dry_run_check:roundtrip_no_claim_escalation_dry_run",
+        "viewId": "edge_view:obligation_to_dry_run:roundtrip_no_claim_escalation"
+      },
+      {
+        "edgeId": "failure_mode_blocks:claim_flag_escalation",
+        "edgeKind": "blocks_claim_escalation",
+        "operator": "guard",
+        "preserves": [
+          "claimBoundary",
+          "publicGate",
+          "runtimeBoundary"
+        ],
+        "route": "guard_backlink",
+        "source": "failure_mode:claim_flag_escalation",
+        "styleRefs": [
+          "edge_kind:blocks_claim_escalation",
+          "operator:guard"
+        ],
+        "target": "abstract_claim_object",
+        "viewId": "edge_view:failure_mode_blocks:claim_flag_escalation"
+      },
+      {
+        "edgeId": "failure_mode_blocks:trace_gap",
+        "edgeKind": "blocks_claim_escalation",
+        "operator": "guard",
+        "preserves": [
+          "claimBoundary",
+          "publicGate",
+          "runtimeBoundary"
+        ],
+        "route": "guard_backlink",
+        "source": "failure_mode:trace_gap",
+        "styleRefs": [
+          "edge_kind:blocks_claim_escalation",
+          "operator:guard"
+        ],
+        "target": "abstract_claim_object",
+        "viewId": "edge_view:failure_mode_blocks:trace_gap"
+      },
+      {
+        "edgeId": "failure_mode_blocks:public_gate_bypass",
+        "edgeKind": "blocks_claim_escalation",
+        "operator": "guard",
+        "preserves": [
+          "claimBoundary",
+          "publicGate",
+          "runtimeBoundary"
+        ],
+        "route": "guard_backlink",
+        "source": "failure_mode:public_gate_bypass",
+        "styleRefs": [
+          "edge_kind:blocks_claim_escalation",
+          "operator:guard"
+        ],
+        "target": "abstract_claim_object",
+        "viewId": "edge_view:failure_mode_blocks:public_gate_bypass"
+      },
+      {
+        "edgeId": "failure_mode_blocks:runtime_control_drift",
+        "edgeKind": "blocks_claim_escalation",
+        "operator": "guard",
+        "preserves": [
+          "claimBoundary",
+          "publicGate",
+          "runtimeBoundary"
+        ],
+        "route": "guard_backlink",
+        "source": "failure_mode:runtime_control_drift",
+        "styleRefs": [
+          "edge_kind:blocks_claim_escalation",
+          "operator:guard"
+        ],
+        "target": "abstract_claim_object",
+        "viewId": "edge_view:failure_mode_blocks:runtime_control_drift"
+      },
+      {
+        "edgeId": "failure_mode_blocks:lane_owner_drift",
+        "edgeKind": "blocks_claim_escalation",
+        "operator": "guard",
+        "preserves": [
+          "claimBoundary",
+          "publicGate",
+          "runtimeBoundary"
+        ],
+        "route": "guard_backlink",
+        "source": "failure_mode:lane_owner_drift",
+        "styleRefs": [
+          "edge_kind:blocks_claim_escalation",
+          "operator:guard"
+        ],
+        "target": "abstract_claim_object",
+        "viewId": "edge_view:failure_mode_blocks:lane_owner_drift"
+      }
+    ],
+    "exportFormat": "monogate.claim_topology_static_export.v0",
+    "layoutMetadata": {
+      "edgeCount": 16,
+      "groupOrder": [
+        "source_boundary",
+        "abstract_claim",
+        "artifact_class",
+        "validator_obligation",
+        "dry_run_check",
+        "failure_mode"
+      ],
+      "layoutId": "gb_vis_a2_static_columns_v0",
+      "layoutType": "deterministic_columns",
+      "nodeCount": 23,
+      "publicStatus": "held_private",
+      "runtimeControl": "protected_expm1_remains_runtime_control",
+      "sourceStatement": "eml x (exp 1) = exp x - 1"
+    },
+    "nodeViews": [
+      {
+        "boundaryBadges": [
+          "held_private",
+          "protected_expm1_runtime_control"
+        ],
+        "group": "source_boundary",
+        "label": "eml-d62-expm1-boundary-branch-pause-freeze-packet",
+        "layout": {
+          "column": 0,
+          "row": 0,
+          "x": 0,
+          "y": 0
+        },
+        "nodeId": "source_freeze_packet",
+        "nodeKind": "source_boundary",
+        "slot": 0,
+        "styleRefs": [
+          "node_kind:source_boundary",
+          "public_status:held_private",
+          "runtime_boundary:preserved"
+        ],
+        "viewId": "node_view:source_freeze_packet"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "protected_expm1_runtime_control"
+        ],
+        "group": "abstract_claim",
+        "label": "expm1_boundary_checked_witness_private_claim",
+        "layout": {
+          "column": 1,
+          "row": 0,
+          "x": 240,
+          "y": 0
+        },
+        "nodeId": "abstract_claim_object",
+        "nodeKind": "abstract_claim",
+        "slot": 0,
+        "styleRefs": [
+          "node_kind:abstract_claim",
+          "public_status:held_private",
+          "runtime_boundary:preserved"
+        ],
+        "viewId": "node_view:abstract_claim_object"
+      },
+      {
+        "boundaryBadges": [],
+        "group": "artifact_class",
+        "label": "lean_checked_witness",
+        "layout": {
+          "column": 2,
+          "row": 0,
+          "x": 480,
+          "y": 0
+        },
+        "nodeId": "artifact_class:lean_checked_witness",
+        "nodeKind": "artifact_class",
+        "slot": 0,
+        "styleRefs": [
+          "node_kind:artifact_class"
+        ],
+        "viewId": "node_view:artifact_class:lean_checked_witness"
+      },
+      {
+        "boundaryBadges": [],
+        "group": "artifact_class",
+        "label": "evidence_packet",
+        "layout": {
+          "column": 2,
+          "row": 1,
+          "x": 480,
+          "y": 72
+        },
+        "nodeId": "artifact_class:evidence_packet",
+        "nodeKind": "artifact_class",
+        "slot": 1,
+        "styleRefs": [
+          "node_kind:artifact_class"
+        ],
+        "viewId": "node_view:artifact_class:evidence_packet"
+      },
+      {
+        "boundaryBadges": [],
+        "group": "artifact_class",
+        "label": "runtime_trace",
+        "layout": {
+          "column": 2,
+          "row": 2,
+          "x": 480,
+          "y": 144
+        },
+        "nodeId": "artifact_class:runtime_trace",
+        "nodeKind": "artifact_class",
+        "slot": 2,
+        "styleRefs": [
+          "node_kind:artifact_class"
+        ],
+        "viewId": "node_view:artifact_class:runtime_trace"
+      },
+      {
+        "boundaryBadges": [],
+        "group": "artifact_class",
+        "label": "lesson_or_hardware_artifact",
+        "layout": {
+          "column": 2,
+          "row": 3,
+          "x": 480,
+          "y": 216
+        },
+        "nodeId": "artifact_class:lesson_or_hardware_artifact",
+        "nodeKind": "artifact_class",
+        "slot": 3,
+        "styleRefs": [
+          "node_kind:artifact_class"
+        ],
+        "viewId": "node_view:artifact_class:lesson_or_hardware_artifact"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "validator_requirement_only"
+        ],
+        "group": "validator_obligation",
+        "label": "alpha_source_identity_required",
+        "layout": {
+          "column": 3,
+          "row": 0,
+          "x": 720,
+          "y": 0
+        },
+        "nodeId": "validator_obligation:alpha_source_identity_required",
+        "nodeKind": "validator_obligation",
+        "slot": 0,
+        "styleRefs": [
+          "node_kind:validator_obligation",
+          "public_status:held_private",
+          "runtime_boundary:preserved"
+        ],
+        "viewId": "node_view:validator_obligation:alpha_source_identity_required"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "validator_requirement_only"
+        ],
+        "group": "validator_obligation",
+        "label": "alpha_claim_strength_bounded",
+        "layout": {
+          "column": 3,
+          "row": 1,
+          "x": 720,
+          "y": 72
+        },
+        "nodeId": "validator_obligation:alpha_claim_strength_bounded",
+        "nodeKind": "validator_obligation",
+        "slot": 1,
+        "styleRefs": [
+          "node_kind:validator_obligation",
+          "public_status:held_private",
+          "runtime_boundary:preserved"
+        ],
+        "viewId": "node_view:validator_obligation:alpha_claim_strength_bounded"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "validator_requirement_only"
+        ],
+        "group": "validator_obligation",
+        "label": "alpha_traceability_complete",
+        "layout": {
+          "column": 3,
+          "row": 2,
+          "x": 720,
+          "y": 144
+        },
+        "nodeId": "validator_obligation:alpha_traceability_complete",
+        "nodeKind": "validator_obligation",
+        "slot": 2,
+        "styleRefs": [
+          "node_kind:validator_obligation",
+          "public_status:held_private",
+          "runtime_boundary:preserved"
+        ],
+        "viewId": "node_view:validator_obligation:alpha_traceability_complete"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "validator_requirement_only"
+        ],
+        "group": "validator_obligation",
+        "label": "gamma_admissible_artifact_class",
+        "layout": {
+          "column": 3,
+          "row": 3,
+          "x": 720,
+          "y": 216
+        },
+        "nodeId": "validator_obligation:gamma_admissible_artifact_class",
+        "nodeKind": "validator_obligation",
+        "slot": 3,
+        "styleRefs": [
+          "node_kind:validator_obligation",
+          "public_status:held_private",
+          "runtime_boundary:preserved"
+        ],
+        "viewId": "node_view:validator_obligation:gamma_admissible_artifact_class"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "validator_requirement_only"
+        ],
+        "group": "validator_obligation",
+        "label": "gamma_boundary_preservation",
+        "layout": {
+          "column": 3,
+          "row": 4,
+          "x": 720,
+          "y": 288
+        },
+        "nodeId": "validator_obligation:gamma_boundary_preservation",
+        "nodeKind": "validator_obligation",
+        "slot": 4,
+        "styleRefs": [
+          "node_kind:validator_obligation",
+          "public_status:held_private",
+          "runtime_boundary:preserved"
+        ],
+        "viewId": "node_view:validator_obligation:gamma_boundary_preservation"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "validator_requirement_only"
+        ],
+        "group": "validator_obligation",
+        "label": "roundtrip_no_claim_escalation",
+        "layout": {
+          "column": 3,
+          "row": 5,
+          "x": 720,
+          "y": 360
+        },
+        "nodeId": "validator_obligation:roundtrip_no_claim_escalation",
+        "nodeKind": "validator_obligation",
+        "slot": 5,
+        "styleRefs": [
+          "node_kind:validator_obligation",
+          "public_status:held_private",
+          "runtime_boundary:preserved"
+        ],
+        "viewId": "node_view:validator_obligation:roundtrip_no_claim_escalation"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "dry_run_skeleton_check_only"
+        ],
+        "group": "dry_run_check",
+        "label": "alpha_source_identity_required_dry_run",
+        "layout": {
+          "column": 4,
+          "row": 0,
+          "x": 960,
+          "y": 0
+        },
+        "nodeId": "dry_run_check:alpha_source_identity_required_dry_run",
+        "nodeKind": "dry_run_check",
+        "slot": 0,
+        "styleRefs": [
+          "node_kind:dry_run_check",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "dry_run_status:pass"
+        ],
+        "viewId": "node_view:dry_run_check:alpha_source_identity_required_dry_run"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "dry_run_skeleton_check_only"
+        ],
+        "group": "dry_run_check",
+        "label": "alpha_claim_strength_bounded_dry_run",
+        "layout": {
+          "column": 4,
+          "row": 1,
+          "x": 960,
+          "y": 72
+        },
+        "nodeId": "dry_run_check:alpha_claim_strength_bounded_dry_run",
+        "nodeKind": "dry_run_check",
+        "slot": 1,
+        "styleRefs": [
+          "node_kind:dry_run_check",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "dry_run_status:pass"
+        ],
+        "viewId": "node_view:dry_run_check:alpha_claim_strength_bounded_dry_run"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "dry_run_skeleton_check_only"
+        ],
+        "group": "dry_run_check",
+        "label": "alpha_traceability_complete_dry_run",
+        "layout": {
+          "column": 4,
+          "row": 2,
+          "x": 960,
+          "y": 144
+        },
+        "nodeId": "dry_run_check:alpha_traceability_complete_dry_run",
+        "nodeKind": "dry_run_check",
+        "slot": 2,
+        "styleRefs": [
+          "node_kind:dry_run_check",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "dry_run_status:pass"
+        ],
+        "viewId": "node_view:dry_run_check:alpha_traceability_complete_dry_run"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "dry_run_skeleton_check_only"
+        ],
+        "group": "dry_run_check",
+        "label": "gamma_admissible_artifact_class_dry_run",
+        "layout": {
+          "column": 4,
+          "row": 3,
+          "x": 960,
+          "y": 216
+        },
+        "nodeId": "dry_run_check:gamma_admissible_artifact_class_dry_run",
+        "nodeKind": "dry_run_check",
+        "slot": 3,
+        "styleRefs": [
+          "node_kind:dry_run_check",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "dry_run_status:pass"
+        ],
+        "viewId": "node_view:dry_run_check:gamma_admissible_artifact_class_dry_run"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "dry_run_skeleton_check_only"
+        ],
+        "group": "dry_run_check",
+        "label": "gamma_boundary_preservation_dry_run",
+        "layout": {
+          "column": 4,
+          "row": 4,
+          "x": 960,
+          "y": 288
+        },
+        "nodeId": "dry_run_check:gamma_boundary_preservation_dry_run",
+        "nodeKind": "dry_run_check",
+        "slot": 4,
+        "styleRefs": [
+          "node_kind:dry_run_check",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "dry_run_status:pass"
+        ],
+        "viewId": "node_view:dry_run_check:gamma_boundary_preservation_dry_run"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "dry_run_skeleton_check_only"
+        ],
+        "group": "dry_run_check",
+        "label": "roundtrip_no_claim_escalation_dry_run",
+        "layout": {
+          "column": 4,
+          "row": 5,
+          "x": 960,
+          "y": 360
+        },
+        "nodeId": "dry_run_check:roundtrip_no_claim_escalation_dry_run",
+        "nodeKind": "dry_run_check",
+        "slot": 5,
+        "styleRefs": [
+          "node_kind:dry_run_check",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "dry_run_status:pass"
+        ],
+        "viewId": "node_view:dry_run_check:roundtrip_no_claim_escalation_dry_run"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "blocking_guard"
+        ],
+        "group": "failure_mode",
+        "label": "claim_flag_escalation",
+        "layout": {
+          "column": 5,
+          "row": 0,
+          "x": 1200,
+          "y": 0
+        },
+        "nodeId": "failure_mode:claim_flag_escalation",
+        "nodeKind": "failure_mode",
+        "slot": 0,
+        "styleRefs": [
+          "node_kind:failure_mode",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "failure_mode:block"
+        ],
+        "viewId": "node_view:failure_mode:claim_flag_escalation"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "blocking_guard"
+        ],
+        "group": "failure_mode",
+        "label": "trace_gap",
+        "layout": {
+          "column": 5,
+          "row": 1,
+          "x": 1200,
+          "y": 72
+        },
+        "nodeId": "failure_mode:trace_gap",
+        "nodeKind": "failure_mode",
+        "slot": 1,
+        "styleRefs": [
+          "node_kind:failure_mode",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "failure_mode:block"
+        ],
+        "viewId": "node_view:failure_mode:trace_gap"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "blocking_guard"
+        ],
+        "group": "failure_mode",
+        "label": "public_gate_bypass",
+        "layout": {
+          "column": 5,
+          "row": 2,
+          "x": 1200,
+          "y": 144
+        },
+        "nodeId": "failure_mode:public_gate_bypass",
+        "nodeKind": "failure_mode",
+        "slot": 2,
+        "styleRefs": [
+          "node_kind:failure_mode",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "failure_mode:block"
+        ],
+        "viewId": "node_view:failure_mode:public_gate_bypass"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "blocking_guard"
+        ],
+        "group": "failure_mode",
+        "label": "runtime_control_drift",
+        "layout": {
+          "column": 5,
+          "row": 3,
+          "x": 1200,
+          "y": 216
+        },
+        "nodeId": "failure_mode:runtime_control_drift",
+        "nodeKind": "failure_mode",
+        "slot": 3,
+        "styleRefs": [
+          "node_kind:failure_mode",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "failure_mode:block"
+        ],
+        "viewId": "node_view:failure_mode:runtime_control_drift"
+      },
+      {
+        "boundaryBadges": [
+          "held_private",
+          "no_runtime_change",
+          "blocking_guard"
+        ],
+        "group": "failure_mode",
+        "label": "lane_owner_drift",
+        "layout": {
+          "column": 5,
+          "row": 4,
+          "x": 1200,
+          "y": 288
+        },
+        "nodeId": "failure_mode:lane_owner_drift",
+        "nodeKind": "failure_mode",
+        "slot": 4,
+        "styleRefs": [
+          "node_kind:failure_mode",
+          "public_status:held_private",
+          "runtime_boundary:preserved",
+          "failure_mode:block"
+        ],
+        "viewId": "node_view:failure_mode:lane_owner_drift"
+      }
+    ],
+    "rendererGuardrails": [
+      {
+        "blocks": [
+          "public_surface_updated",
+          "public_ready",
+          "public_copy_approved"
+        ],
+        "guardrailId": "no_public_surface_without_gate"
+      },
+      {
+        "blocks": [
+          "soundness_proved",
+          "full_galois_connection_claim",
+          "abstract_interpretation_soundness_proved"
+        ],
+        "guardrailId": "no_soundness_by_visual_pattern"
+      },
+      {
+        "blocks": [
+          "runtime_lowering_changed",
+          "runtime_performance_claim"
+        ],
+        "guardrailId": "no_runtime_change_by_renderer"
+      },
+      {
+        "blocks": [
+          "electronics_repo_touched",
+          "laptop_artifact_consumed",
+          "machlib_file_changed"
+        ],
+        "guardrailId": "no_lane_touch_by_renderer_contract"
+      }
+    ],
+    "reviewerFilters": [
+      {
+        "default": true,
+        "field": "publicStatus",
+        "filterId": "show_private_boundaries",
+        "values": [
+          "held_private",
+          "inherits_source_boundary"
+        ]
+      },
+      {
+        "default": true,
+        "field": "runtimeControl",
+        "filterId": "show_runtime_boundaries",
+        "values": [
+          "protected_expm1_remains_runtime_control",
+          "no_runtime_change",
+          "inherits_source_boundary"
+        ]
+      },
+      {
+        "default": true,
+        "field": "nodeKind",
+        "filterId": "show_failure_blocks",
+        "values": [
+          "failure_mode"
+        ]
+      },
+      {
+        "default": true,
+        "field": "nodeKind",
+        "filterId": "node_kind_filter",
+        "values": [
+          "abstract_claim",
+          "artifact_class",
+          "dry_run_check",
+          "failure_mode",
+          "source_boundary",
+          "validator_obligation"
+        ]
+      },
+      {
+        "default": true,
+        "field": "edgeKind",
+        "filterId": "edge_kind_filter",
+        "values": [
+          "alpha_abstraction",
+          "blocks_claim_escalation",
+          "gamma_admissibility",
+          "validated_by_dry_run_skeleton"
+        ]
+      }
+    ],
+    "sourceContract": "gb-vis-a1-claim-topology-renderer-contract",
+    "visualEncodings": [
+      {
+        "contract": "Different node kinds must be visibly distinguishable before any renderer is eligible.",
+        "encodingId": "node_kind_shape",
+        "field": "nodeKind"
+      },
+      {
+        "contract": "Claim strength must be represented as bounded weight or emphasis, never as proof status.",
+        "encodingId": "claim_strength_weight",
+        "field": "claimStrength"
+      },
+      {
+        "contract": "Held-private and public-ready states must be visually separable, with held-private as the default.",
+        "encodingId": "public_status_gate_color",
+        "field": "publicStatus"
+      },
+      {
+        "contract": "Runtime-control boundaries must be visible wherever a node or edge could imply implementation change.",
+        "encodingId": "runtime_boundary_marker",
+        "field": "runtimeControl"
+      },
+      {
+        "contract": "Blocking failure modes must render as blockers, not warnings or decorative annotations.",
+        "encodingId": "failure_mode_block_marker",
+        "field": "severity"
+      }
+    ]
+  },
+  "status": "GB_VIS_A2_STATIC_TOPOLOGY_EXPORT_FIXTURE_PASS",
+  "summary": {
+    "abstractInterpretationSoundnessProved": false,
+    "claimFlagsBounded": true,
+    "edgeViewCount": 16,
+    "edgeViewsExported": true,
+    "electronicsRepoTouched": false,
+    "fullGaloisConnectionClaim": false,
+    "gbVisA1ContractConsumed": true,
+    "interactiveRendererImplemented": false,
+    "laptopArtifactConsumed": false,
+    "layoutGroupCount": 6,
+    "layoutMetadataExported": true,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "nextAction": "GB-VIS-A3 implement a private renderer smoke fixture or ACT-A4 expand dry-run validator fixtures without public promotion.",
+    "nodeViewCount": 23,
+    "nodeViewsExported": true,
+    "productionValidatorImplemented": false,
+    "proofAttemptStarted": false,
+    "publicCopyApproved": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "rendererGuardrailCount": 4,
+    "rendererGuardrailsPreserved": true,
+    "rendererImplemented": false,
+    "reviewerFilterCount": 5,
+    "reviewerFiltersExported": true,
+    "runtimeLoweringChanged": false,
+    "soundnessProved": false,
+    "sourceCheckedStatement": "eml x (exp 1) = exp x - 1",
+    "sourceContract": "gb-vis-a1-claim-topology-renderer-contract",
+    "sourceEdgeCount": 16,
+    "sourceNodeCount": 23,
+    "sourcePublicStatus": "held_private",
+    "sourceRuntimeControl": "protected_expm1_remains_runtime_control",
+    "staticTopologyExportFixtureRecorded": true,
+    "validatorSoundnessProved": false,
+    "visualEncodingCount": 5,
+    "visualizationRendered": false,
+    "visualizationStarted": false
+  }
+}
