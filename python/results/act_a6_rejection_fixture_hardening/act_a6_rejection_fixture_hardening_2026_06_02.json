@@ -1,0 +1,268 @@
+{
+  "artifactId": "act-a6-rejection-fixture-hardening",
+  "claimFlags": {
+    "abstract_interpretation_soundness_proved": false,
+    "act_a5_rejection_fixtures_consumed": true,
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "coverage_obligations_recorded": true,
+    "electronics_repo_touched": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "full_galois_connection_claim": false,
+    "general_eml_superiority_claim": false,
+    "hardening_checks_passed": true,
+    "hardening_checks_recorded": true,
+    "hardening_rows_recorded": true,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "production_validator_implemented": false,
+    "proof_attempt_started": false,
+    "public_copy_approved": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "rejection_fixture_hardening_recorded": true,
+    "renderer_executed": false,
+    "renderer_implemented": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "soundness_proved": false,
+    "theorem_discovery_claim": false,
+    "validator_soundness_proved": false,
+    "visualization_started": false
+  },
+  "date": "2026-06-02",
+  "decision": "record_alpha_gamma_rejection_fixture_hardening_no_production_validator_no_soundness_claim",
+  "hardeningChecks": [
+    {
+      "checkId": "act_a5_source_consumed",
+      "expected": "act-a5-negative-rejection-fixtures",
+      "observed": "act-a5-negative-rejection-fixtures",
+      "status": "pass"
+    },
+    {
+      "checkId": "all_rejection_modes_have_hardening_rows",
+      "expected": [
+        "claim_escalation",
+        "lane_owner_drift",
+        "public_gate_bypass",
+        "runtime_drift",
+        "trace_gap"
+      ],
+      "observed": [
+        "claim_escalation",
+        "lane_owner_drift",
+        "public_gate_bypass",
+        "runtime_drift",
+        "trace_gap"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "boundary_families_are_complete",
+      "expected": [
+        "claim_strength",
+        "lane_ownership",
+        "public_boundary",
+        "runtime_boundary",
+        "traceability"
+      ],
+      "observed": [
+        "claim_strength",
+        "lane_ownership",
+        "public_boundary",
+        "runtime_boundary",
+        "traceability"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "required_mutation_paths_are_present",
+      "expected": 0,
+      "observed": 0,
+      "status": "pass"
+    },
+    {
+      "checkId": "all_rows_remain_expected_reject",
+      "expected": [
+        "reject",
+        "reject",
+        "reject",
+        "reject",
+        "reject"
+      ],
+      "observed": [
+        "reject",
+        "reject",
+        "reject",
+        "reject",
+        "reject"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "reviewer_cues_are_unique",
+      "expected": 5,
+      "observed": 5,
+      "status": "pass"
+    },
+    {
+      "checkId": "coverage_statuses_are_covered",
+      "expected": [
+        "covered"
+      ],
+      "observed": [
+        "covered"
+      ],
+      "status": "pass"
+    }
+  ],
+  "hardeningRows": [
+    {
+      "boundaryFamily": "claim_strength",
+      "coverageStatus": "covered",
+      "expectedRejectReason": "positive fixture attempts theorem discovery and soundness claims",
+      "expectedStatus": "reject",
+      "failureMode": "claim_escalation",
+      "missingRequiredMutationPaths": [],
+      "mutationPaths": [
+        "claimFlags.soundness_proved",
+        "claimFlags.theorem_discovery_claim"
+      ],
+      "requiredMutationPaths": [
+        "claimFlags.soundness_proved",
+        "claimFlags.theorem_discovery_claim"
+      ],
+      "reviewerCue": "escalates_private_claim_strength",
+      "rowId": "act_a6_hardening:claim_escalation",
+      "sourceFixture": "act_a5_claim_escalation_negative_fixture",
+      "sourceObligation": "alpha_claim_strength_bounded"
+    },
+    {
+      "boundaryFamily": "traceability",
+      "coverageStatus": "covered",
+      "expectedRejectReason": "fixture lacks checked statement traceability",
+      "expectedStatus": "reject",
+      "failureMode": "trace_gap",
+      "missingRequiredMutationPaths": [],
+      "mutationPaths": [
+        "checkedStatement"
+      ],
+      "requiredMutationPaths": [
+        "checkedStatement"
+      ],
+      "reviewerCue": "removes_checked_statement_trace",
+      "rowId": "act_a6_hardening:trace_gap",
+      "sourceFixture": "act_a5_trace_gap_negative_fixture",
+      "sourceObligation": "alpha_traceability_complete"
+    },
+    {
+      "boundaryFamily": "public_boundary",
+      "coverageStatus": "covered",
+      "expectedRejectReason": "fixture bypasses private hold and public readiness gate",
+      "expectedStatus": "reject",
+      "failureMode": "public_gate_bypass",
+      "missingRequiredMutationPaths": [],
+      "mutationPaths": [
+        "claimFlags.public_ready",
+        "publicStatus"
+      ],
+      "requiredMutationPaths": [
+        "claimFlags.public_ready",
+        "publicStatus"
+      ],
+      "reviewerCue": "bypasses_private_public_gate",
+      "rowId": "act_a6_hardening:public_gate_bypass",
+      "sourceFixture": "act_a5_public_gate_bypass_negative_fixture",
+      "sourceObligation": "gamma_boundary_preservation"
+    },
+    {
+      "boundaryFamily": "runtime_boundary",
+      "coverageStatus": "covered",
+      "expectedRejectReason": "fixture changes protected runtime lowering boundary",
+      "expectedStatus": "reject",
+      "failureMode": "runtime_drift",
+      "missingRequiredMutationPaths": [],
+      "mutationPaths": [
+        "claimFlags.runtime_lowering_changed",
+        "runtimeControl"
+      ],
+      "requiredMutationPaths": [
+        "claimFlags.runtime_lowering_changed",
+        "runtimeControl"
+      ],
+      "reviewerCue": "changes_runtime_lowering_boundary",
+      "rowId": "act_a6_hardening:runtime_drift",
+      "sourceFixture": "act_a5_runtime_drift_negative_fixture",
+      "sourceObligation": "gamma_boundary_preservation"
+    },
+    {
+      "boundaryFamily": "lane_ownership",
+      "coverageStatus": "covered",
+      "expectedRejectReason": "fixture claims electronics/laptop lane ownership changed",
+      "expectedStatus": "reject",
+      "failureMode": "lane_owner_drift",
+      "missingRequiredMutationPaths": [],
+      "mutationPaths": [
+        "claimFlags.electronics_repo_touched",
+        "claimFlags.laptop_artifact_consumed"
+      ],
+      "requiredMutationPaths": [
+        "claimFlags.electronics_repo_touched",
+        "claimFlags.laptop_artifact_consumed"
+      ],
+      "reviewerCue": "crosses_laptop_electronics_lane_boundary",
+      "rowId": "act_a6_hardening:lane_owner_drift",
+      "sourceFixture": "act_a5_lane_owner_drift_negative_fixture",
+      "sourceObligation": "gamma_admissible_artifact_class"
+    }
+  ],
+  "nonClaims": [
+    "ACT-A6 records private rejection-fixture coverage hardening only; it is not a production alpha/gamma validator.",
+    "ACT-A6 hardening rows require source obligations, mutation-path coverage, reviewer cues, and boundary-family labels without proving validator soundness, a Galois connection, abstract interpretation correctness, compiler correctness, formal equivalence, or full EML semantics.",
+    "ACT-A6 does not update public surfaces, runtime behavior, MachLib, visualization tooling, laptop-owned repos, or electronics repos."
+  ],
+  "packetType": "alpha_gamma_rejection_fixture_hardening_v0",
+  "schemaVersion": "monogate.alpha_gamma_rejection_fixture_hardening.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceRejectionPacket": "act-a5-negative-rejection-fixtures",
+  "status": "ACT_A6_REJECTION_FIXTURE_HARDENING_PASS",
+  "summary": {
+    "abstractInterpretationSoundnessProved": false,
+    "actA5RejectionFixturesConsumed": true,
+    "boundaryFamilyCount": 5,
+    "claimFlagsBounded": true,
+    "coverageObligationCount": 9,
+    "coverageObligationsRecorded": true,
+    "electronicsRepoTouched": false,
+    "fullGaloisConnectionClaim": false,
+    "hardeningCheckCount": 7,
+    "hardeningCheckPassCount": 7,
+    "hardeningChecksPassed": true,
+    "hardeningChecksRecorded": true,
+    "hardeningRowCount": 5,
+    "hardeningRowsRecorded": true,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "missingMutationPathCount": 0,
+    "nextAction": "GB-VIS-A6 private renderer adapter contract or ACT-A7 dry-run validator reporting contract without public promotion.",
+    "productionValidatorImplemented": false,
+    "proofAttemptStarted": false,
+    "publicCopyApproved": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "rejectionFixtureHardeningRecorded": true,
+    "rendererExecuted": false,
+    "rendererImplemented": false,
+    "reviewerCueCount": 5,
+    "runtimeLoweringChanged": false,
+    "soundnessProved": false,
+    "sourceNegativeFixtureCount": 5,
+    "sourceRejectionPacket": "act-a5-negative-rejection-fixtures",
+    "unexpectedAcceptCount": 0,
+    "validatorSoundnessProved": false,
+    "visualizationStarted": false
+  }
+}
