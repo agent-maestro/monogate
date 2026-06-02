@@ -1,0 +1,226 @@
+{
+  "artifactId": "act-a7-dry-run-validator-reporting-contract",
+  "claimFlags": {
+    "abstract_interpretation_soundness_proved": false,
+    "act_a6_hardening_consumed": true,
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "dry_run_validator_reporting_contract_recorded": true,
+    "electronics_repo_touched": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "full_galois_connection_claim": false,
+    "general_eml_superiority_claim": false,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "production_validator_implemented": false,
+    "proof_attempt_started": false,
+    "public_copy_approved": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "renderer_executed": false,
+    "renderer_implemented": false,
+    "report_rows_recorded": true,
+    "report_sections_recorded": true,
+    "reporting_checks_passed": true,
+    "reporting_checks_recorded": true,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "soundness_proved": false,
+    "theorem_discovery_claim": false,
+    "validator_soundness_proved": false,
+    "visualization_started": false
+  },
+  "date": "2026-06-02",
+  "decision": "record_dry_run_validator_reporting_contract_no_production_validator_no_soundness_claim",
+  "nonClaims": [
+    "ACT-A7 records a private dry-run validator reporting contract only; it is not a production alpha/gamma validator.",
+    "ACT-A7 formats ACT-A6 hardening evidence into reviewer report rows without proving validator soundness, a Galois connection, abstract interpretation correctness, compiler correctness, formal equivalence, or full EML semantics.",
+    "ACT-A7 does not update public surfaces, runtime behavior, MachLib, visualization tooling, laptop-owned repos, or electronics repos."
+  ],
+  "packetType": "alpha_gamma_dry_run_validator_reporting_contract_v0",
+  "reportRows": [
+    {
+      "boundaryFamily": "claim_strength",
+      "coverageStatus": "covered",
+      "expectedStatus": "reject",
+      "failureMode": "claim_escalation",
+      "missingMutationPathCount": 0,
+      "reportDisposition": "include_private_reviewer_report",
+      "reportRowId": "act_a7_report:claim_escalation",
+      "requiredMutationPathCount": 2,
+      "reviewerCue": "escalates_private_claim_strength",
+      "sourceHardeningRow": "act_a6_hardening:claim_escalation"
+    },
+    {
+      "boundaryFamily": "traceability",
+      "coverageStatus": "covered",
+      "expectedStatus": "reject",
+      "failureMode": "trace_gap",
+      "missingMutationPathCount": 0,
+      "reportDisposition": "include_private_reviewer_report",
+      "reportRowId": "act_a7_report:trace_gap",
+      "requiredMutationPathCount": 1,
+      "reviewerCue": "removes_checked_statement_trace",
+      "sourceHardeningRow": "act_a6_hardening:trace_gap"
+    },
+    {
+      "boundaryFamily": "public_boundary",
+      "coverageStatus": "covered",
+      "expectedStatus": "reject",
+      "failureMode": "public_gate_bypass",
+      "missingMutationPathCount": 0,
+      "reportDisposition": "include_private_reviewer_report",
+      "reportRowId": "act_a7_report:public_gate_bypass",
+      "requiredMutationPathCount": 2,
+      "reviewerCue": "bypasses_private_public_gate",
+      "sourceHardeningRow": "act_a6_hardening:public_gate_bypass"
+    },
+    {
+      "boundaryFamily": "runtime_boundary",
+      "coverageStatus": "covered",
+      "expectedStatus": "reject",
+      "failureMode": "runtime_drift",
+      "missingMutationPathCount": 0,
+      "reportDisposition": "include_private_reviewer_report",
+      "reportRowId": "act_a7_report:runtime_drift",
+      "requiredMutationPathCount": 2,
+      "reviewerCue": "changes_runtime_lowering_boundary",
+      "sourceHardeningRow": "act_a6_hardening:runtime_drift"
+    },
+    {
+      "boundaryFamily": "lane_ownership",
+      "coverageStatus": "covered",
+      "expectedStatus": "reject",
+      "failureMode": "lane_owner_drift",
+      "missingMutationPathCount": 0,
+      "reportDisposition": "include_private_reviewer_report",
+      "reportRowId": "act_a7_report:lane_owner_drift",
+      "requiredMutationPathCount": 2,
+      "reviewerCue": "crosses_laptop_electronics_lane_boundary",
+      "sourceHardeningRow": "act_a6_hardening:lane_owner_drift"
+    }
+  ],
+  "reportSections": [
+    "source_packet",
+    "accepted_fixture_context",
+    "negative_rejection_coverage",
+    "hardening_obligations",
+    "non_claims",
+    "next_action"
+  ],
+  "reportingChecks": [
+    {
+      "checkId": "source_hardening_packet_is_act_a6",
+      "expected": "act-a6-rejection-fixture-hardening",
+      "observed": "act-a6-rejection-fixture-hardening",
+      "status": "pass"
+    },
+    {
+      "checkId": "report_rows_match_hardening_rows",
+      "expected": 5,
+      "observed": 5,
+      "status": "pass"
+    },
+    {
+      "checkId": "report_sections_are_complete",
+      "expected": [
+        "accepted_fixture_context",
+        "hardening_obligations",
+        "negative_rejection_coverage",
+        "next_action",
+        "non_claims",
+        "source_packet"
+      ],
+      "observed": [
+        "accepted_fixture_context",
+        "hardening_obligations",
+        "negative_rejection_coverage",
+        "next_action",
+        "non_claims",
+        "source_packet"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "all_report_rows_are_private_reviewer_rows",
+      "expected": [
+        "include_private_reviewer_report"
+      ],
+      "observed": [
+        "include_private_reviewer_report"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "all_report_rows_are_covered",
+      "expected": [
+        "covered"
+      ],
+      "observed": [
+        "covered"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "no_missing_mutation_paths_reported",
+      "expected": 0,
+      "observed": 0,
+      "status": "pass"
+    },
+    {
+      "checkId": "production_validator_claims_remain_false",
+      "expected": {
+        "productionValidatorImplemented": false,
+        "publicReady": false,
+        "validatorSoundnessProved": false
+      },
+      "observed": {
+        "productionValidatorImplemented": false,
+        "publicReady": false,
+        "validatorSoundnessProved": false
+      },
+      "status": "pass"
+    }
+  ],
+  "schemaVersion": "monogate.alpha_gamma_dry_run_validator_reporting_contract.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceHardeningPacket": "act-a6-rejection-fixture-hardening",
+  "status": "ACT_A7_DRY_RUN_VALIDATOR_REPORTING_CONTRACT_PASS",
+  "summary": {
+    "abstractInterpretationSoundnessProved": false,
+    "actA6HardeningConsumed": true,
+    "claimFlagsBounded": true,
+    "coveredReportRowCount": 5,
+    "dryRunValidatorReportingContractRecorded": true,
+    "electronicsRepoTouched": false,
+    "fullGaloisConnectionClaim": false,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "missingMutationPathCount": 0,
+    "nextAction": "GB-VIS-A7 private adapter smoke fixture or ACT-A8 reviewer report snapshot without public promotion.",
+    "productionValidatorImplemented": false,
+    "proofAttemptStarted": false,
+    "publicCopyApproved": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "rendererExecuted": false,
+    "rendererImplemented": false,
+    "reportRowCount": 5,
+    "reportRowsRecorded": true,
+    "reportSectionCount": 6,
+    "reportSectionsRecorded": true,
+    "reportingCheckCount": 7,
+    "reportingCheckPassCount": 7,
+    "reportingChecksPassed": true,
+    "reportingChecksRecorded": true,
+    "runtimeLoweringChanged": false,
+    "soundnessProved": false,
+    "sourceHardeningPacket": "act-a6-rejection-fixture-hardening",
+    "sourceHardeningRowCount": 5,
+    "validatorSoundnessProved": false,
+    "visualizationStarted": false
+  }
+}
