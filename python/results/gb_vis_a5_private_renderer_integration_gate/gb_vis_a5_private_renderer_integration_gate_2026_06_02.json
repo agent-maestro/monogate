@@ -1,0 +1,260 @@
+{
+  "artifactId": "gb-vis-a5-private-renderer-integration-gate",
+  "claimFlags": {
+    "abstract_interpretation_soundness_proved": false,
+    "act_a5_rejection_fixtures_consumed": true,
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "electronics_repo_touched": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "full_galois_connection_claim": false,
+    "gb_vis_a4_snapshot_consumed": true,
+    "general_eml_superiority_claim": false,
+    "integration_gate_checks_passed": true,
+    "integration_gate_checks_recorded": true,
+    "integration_rows_recorded": true,
+    "interactive_renderer_implemented": false,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "pixel_renderer_implemented": false,
+    "private_renderer_integration_gate_recorded": true,
+    "production_validator_implemented": false,
+    "proof_attempt_started": false,
+    "public_copy_approved": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "renderer_executed": false,
+    "renderer_implemented": false,
+    "renderer_input_contract_recorded": true,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "soundness_proved": false,
+    "theorem_discovery_claim": false,
+    "validator_soundness_proved": false,
+    "visual_correctness_proved": false,
+    "visualization_rendered": false,
+    "visualization_started": false
+  },
+  "date": "2026-06-02",
+  "decision": "record_private_renderer_integration_gate_no_renderer_execution_no_public_promotion",
+  "integrationChecks": [
+    {
+      "checkId": "snapshot_source_is_gb_vis_a4",
+      "expected": "gb-vis-a4-snapshot-comparison-fixture",
+      "observed": "gb-vis-a4-snapshot-comparison-fixture",
+      "status": "pass"
+    },
+    {
+      "checkId": "rejection_source_is_act_a5",
+      "expected": "act-a5-negative-rejection-fixtures",
+      "observed": "act-a5-negative-rejection-fixtures",
+      "status": "pass"
+    },
+    {
+      "checkId": "snapshot_comparison_still_passes",
+      "expected": 6,
+      "observed": 6,
+      "status": "pass"
+    },
+    {
+      "checkId": "rejection_modes_have_overlay_rows",
+      "expected": [
+        "claim_escalation",
+        "lane_owner_drift",
+        "public_gate_bypass",
+        "runtime_drift",
+        "trace_gap"
+      ],
+      "observed": [
+        "claim_escalation",
+        "lane_owner_drift",
+        "public_gate_bypass",
+        "runtime_drift",
+        "trace_gap"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "overlay_rows_remain_expected_reject",
+      "expected": [
+        "reject",
+        "reject",
+        "reject",
+        "reject",
+        "reject"
+      ],
+      "observed": [
+        "reject",
+        "reject",
+        "reject",
+        "reject",
+        "reject"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "private_renderer_input_status_only",
+      "expected": [
+        "private_input_contract_only"
+      ],
+      "observed": [
+        "private_input_contract_only"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "no_unexpected_accepts_from_act_a5",
+      "expected": 0,
+      "observed": 0,
+      "status": "pass"
+    },
+    {
+      "checkId": "renderer_execution_claims_remain_false",
+      "expected": {
+        "publicReady": false,
+        "rendererExecuted": false,
+        "rendererImplemented": false,
+        "visualizationRendered": false
+      },
+      "observed": {
+        "publicReady": false,
+        "rendererExecuted": false,
+        "rendererImplemented": false,
+        "visualizationRendered": false
+      },
+      "status": "pass"
+    }
+  ],
+  "integrationRows": [
+    {
+      "digestFields": [
+        "nodeDigest",
+        "edgeDigest",
+        "legendDigest",
+        "smokeCheckDigest",
+        "guardrailDigest",
+        "viewportDigest"
+      ],
+      "edgeCommandCount": 16,
+      "legendCommandCount": 5,
+      "nodeCommandCount": 23,
+      "rendererInputStatus": "private_input_contract_only",
+      "rowId": "gb_vis_a5_snapshot_structure_layer",
+      "rowType": "structure_layer",
+      "sourcePacket": "gb-vis-a4-snapshot-comparison-fixture",
+      "sourceSnapshot": "gb_vis_a4_observed_private_command_snapshot"
+    },
+    {
+      "expectedStatus": "reject",
+      "failureMode": "claim_escalation",
+      "overlayBadge": "expected_reject:claim_escalation",
+      "rendererInputStatus": "private_input_contract_only",
+      "rowId": "gb_vis_a5_rejection_overlay:claim_escalation",
+      "rowType": "rejection_overlay",
+      "sourceFixture": "act_a5_claim_escalation_negative_fixture",
+      "sourceObligation": "alpha_claim_strength_bounded",
+      "sourcePacket": "act-a5-negative-rejection-fixtures"
+    },
+    {
+      "expectedStatus": "reject",
+      "failureMode": "trace_gap",
+      "overlayBadge": "expected_reject:trace_gap",
+      "rendererInputStatus": "private_input_contract_only",
+      "rowId": "gb_vis_a5_rejection_overlay:trace_gap",
+      "rowType": "rejection_overlay",
+      "sourceFixture": "act_a5_trace_gap_negative_fixture",
+      "sourceObligation": "alpha_traceability_complete",
+      "sourcePacket": "act-a5-negative-rejection-fixtures"
+    },
+    {
+      "expectedStatus": "reject",
+      "failureMode": "public_gate_bypass",
+      "overlayBadge": "expected_reject:public_gate_bypass",
+      "rendererInputStatus": "private_input_contract_only",
+      "rowId": "gb_vis_a5_rejection_overlay:public_gate_bypass",
+      "rowType": "rejection_overlay",
+      "sourceFixture": "act_a5_public_gate_bypass_negative_fixture",
+      "sourceObligation": "gamma_boundary_preservation",
+      "sourcePacket": "act-a5-negative-rejection-fixtures"
+    },
+    {
+      "expectedStatus": "reject",
+      "failureMode": "runtime_drift",
+      "overlayBadge": "expected_reject:runtime_drift",
+      "rendererInputStatus": "private_input_contract_only",
+      "rowId": "gb_vis_a5_rejection_overlay:runtime_drift",
+      "rowType": "rejection_overlay",
+      "sourceFixture": "act_a5_runtime_drift_negative_fixture",
+      "sourceObligation": "gamma_boundary_preservation",
+      "sourcePacket": "act-a5-negative-rejection-fixtures"
+    },
+    {
+      "expectedStatus": "reject",
+      "failureMode": "lane_owner_drift",
+      "overlayBadge": "expected_reject:lane_owner_drift",
+      "rendererInputStatus": "private_input_contract_only",
+      "rowId": "gb_vis_a5_rejection_overlay:lane_owner_drift",
+      "rowType": "rejection_overlay",
+      "sourceFixture": "act_a5_lane_owner_drift_negative_fixture",
+      "sourceObligation": "gamma_admissible_artifact_class",
+      "sourcePacket": "act-a5-negative-rejection-fixtures"
+    }
+  ],
+  "nonClaims": [
+    "GB-VIS-A5 records a private renderer integration gate only; it does not implement, execute, or pixel-render a renderer.",
+    "GB-VIS-A5 connects GB-VIS-A4 command snapshots to ACT-A5 rejection fixtures as private renderer inputs without proving visualization correctness, validator soundness, a Galois connection, abstract interpretation correctness, compiler correctness, formal equivalence, or full EML semantics.",
+    "GB-VIS-A5 does not update public surfaces, runtime behavior, MachLib, production validators, laptop-owned repos, or electronics repos."
+  ],
+  "packetType": "private_renderer_integration_gate_v0",
+  "schemaVersion": "monogate.private_renderer_integration_gate.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceRejectionPacket": "act-a5-negative-rejection-fixtures",
+  "sourceSnapshotPacket": "gb-vis-a4-snapshot-comparison-fixture",
+  "status": "GB_VIS_A5_PRIVATE_RENDERER_INTEGRATION_GATE_PASS",
+  "summary": {
+    "abstractInterpretationSoundnessProved": false,
+    "actA5RejectionFixturesConsumed": true,
+    "claimFlagsBounded": true,
+    "electronicsRepoTouched": false,
+    "fullGaloisConnectionClaim": false,
+    "gbVisA4SnapshotConsumed": true,
+    "integrationCheckCount": 8,
+    "integrationCheckPassCount": 8,
+    "integrationGateChecksPassed": true,
+    "integrationGateChecksRecorded": true,
+    "integrationRowCount": 6,
+    "integrationRowsRecorded": true,
+    "interactiveRendererImplemented": false,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "nextAction": "ACT-A6 rejection fixture hardening or GB-VIS-A6 private renderer adapter contract without public promotion.",
+    "pixelRendererImplemented": false,
+    "privateRendererIntegrationGateRecorded": true,
+    "productionValidatorImplemented": false,
+    "proofAttemptStarted": false,
+    "publicCopyApproved": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "rejectionFailureModeCount": 5,
+    "rejectionOverlayRowCount": 5,
+    "rendererExecuted": false,
+    "rendererImplemented": false,
+    "rendererInputContractRecorded": true,
+    "runtimeLoweringChanged": false,
+    "snapshotComparisonPassCount": 6,
+    "snapshotEdgeCommandCount": 16,
+    "snapshotNodeCommandCount": 23,
+    "soundnessProved": false,
+    "sourceRejectionPacket": "act-a5-negative-rejection-fixtures",
+    "sourceSnapshotPacket": "gb-vis-a4-snapshot-comparison-fixture",
+    "structureLayerRowCount": 1,
+    "unexpectedAcceptCount": 0,
+    "validatorSoundnessProved": false,
+    "visualCorrectnessProved": false,
+    "visualizationRendered": false,
+    "visualizationStarted": false
+  }
+}
