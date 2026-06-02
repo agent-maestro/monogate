@@ -1,0 +1,93 @@
+{
+  "artifactId": "eml-d40-positive-log-exp-roundtrip-witness-attempt",
+  "attemptType": "eml_positive_log_exp_roundtrip_witness_attempt_v0",
+  "claimFlags": {
+    "arbitrary_depth_claim": false,
+    "bounded_identity_branch_selected": true,
+    "broad_nested_subtraction_claim": false,
+    "broad_subtraction_family_claim": false,
+    "candidate_proved": true,
+    "compiler_correctness_claim": false,
+    "electronics_repo_touched": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "implementation_started": true,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": true,
+    "log_exp_replacement_claim": false,
+    "machlib_file_changed": true,
+    "proof_attempt_started": true,
+    "public_atlas_promotion": false,
+    "public_education_promotion": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "scoped_witness_checked": true,
+    "theorem_discovery_claim": false,
+    "witness_feasibility_recorded": true
+  },
+  "date": "2026-06-01",
+  "decision": "positive_log_exp_roundtrip_witness_checked_in_machlib",
+  "nonClaims": [
+    "EML-D40 checks one scoped guarded MachLib witness selected by D38 and made feasible by D39.",
+    "D40 does not claim log/exp replacement, runtime advantage, theorem discovery, or broad EML superiority.",
+    "D40 does not update public surfaces, course materials, laptop artifacts, or laptop-owned repos."
+  ],
+  "schemaVersion": "monogate.eml_positive_log_exp_roundtrip_witness_attempt.v0",
+  "selectedWitness": {
+    "guardShape": [
+      "0 < x"
+    ],
+    "machlibName": "MachLib.Real.positive_log_exp_roundtrip_witness",
+    "name": "positive_log_exp_roundtrip_witness",
+    "path": "../machlib/foundations/MachLib/EMLAtlasWitness.lean",
+    "present": true,
+    "proofSketch": "exact exp_log hx",
+    "sourceCandidateId": "positive_log_exp_roundtrip_identity",
+    "statement": "exp (log x) = x under 0 < x"
+  },
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceFeasibilityPacket": "eml-d39-positive-log-exp-roundtrip-feasibility-packet",
+  "status": "EML_D40_POSITIVE_LOG_EXP_ROUNDTRIP_WITNESS_ATTEMPT_PASS",
+  "summary": {
+    "blockerRecorded": false,
+    "candidateProved": true,
+    "claimFlagsBounded": true,
+    "electronicsRepoTouched": false,
+    "guardCount": 1,
+    "implementationStarted": true,
+    "lakeBuildPassed": true,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": true,
+    "logExpReplacementClaim": false,
+    "machlibFileChanged": true,
+    "nextArtifact": "EML-D41 positive log-exp witness private surface review",
+    "positiveDomainGuardRequired": true,
+    "proofAttemptStarted": true,
+    "proposedStatement": "0 < x -> exp (log x) = x",
+    "publicEducationPromotionPerformed": false,
+    "publicPromotionPerformed": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "runtimeLoweringChanged": false,
+    "runtimeLoweringControl": "standard_log_exp_remains_runtime_control",
+    "scopedWitnessChecked": true,
+    "selectedWitnessName": "MachLib.Real.positive_log_exp_roundtrip_witness",
+    "selectedWitnessPresent": true,
+    "sourceFeasibilityPacket": "eml-d39-positive-log-exp-roundtrip-feasibility-packet",
+    "sourceSelectedCandidateId": "positive_log_exp_roundtrip_identity",
+    "sourceSelectedFamily": "positive_domain_log_exp_roundtrip"
+  },
+  "verification": {
+    "command": "cd ../machlib/foundations && lake build",
+    "observedNotes": [
+      "MachLib.EMLAtlasWitness built.",
+      "Top-level MachLib build completed successfully.",
+      "Pre-existing sorry warnings remain in unrelated MachLib.ForgeTest and MachLib.HighDimensional declarations."
+    ],
+    "observedStatus": "pass"
+  }
+}
