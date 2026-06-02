@@ -1,0 +1,554 @@
+{
+  "artifactId": "gb-vis-a1-claim-topology-renderer-contract",
+  "claimFlags": {
+    "abstract_interpretation_soundness_proved": false,
+    "act_sources_consumed": true,
+    "candidate_proved": false,
+    "claim_topology_contract_recorded": true,
+    "compiler_correctness_claim": false,
+    "electronics_repo_touched": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "full_galois_connection_claim": false,
+    "general_eml_superiority_claim": false,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "production_validator_implemented": false,
+    "proof_attempt_started": false,
+    "public_copy_approved": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "renderer_guardrails_recorded": true,
+    "renderer_implemented": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "soundness_proved": false,
+    "theorem_discovery_claim": false,
+    "topology_edges_recorded": true,
+    "topology_nodes_recorded": true,
+    "validator_soundness_proved": false,
+    "visual_encoding_contract_recorded": true,
+    "visualization_rendered": false,
+    "visualization_started": false
+  },
+  "date": "2026-06-02",
+  "decision": "record_claim_topology_renderer_contract_no_visualization_execution",
+  "nonClaims": [
+    "GB-VIS-A1 records a claim-topology renderer contract seed only; it does not implement or execute a visualization renderer.",
+    "GB-VIS-A1 maps ACT-A1/A2/A3 artifact relationships into inspectable topology nodes, edges, and visual encodings without proving soundness, a Galois connection, abstract interpretation correctness, compiler correctness, formal equivalence, or full EML semantics.",
+    "GB-VIS-A1 does not update public surfaces, runtime behavior, MachLib, production validators, laptop-owned repos, or electronics repos."
+  ],
+  "packetType": "claim_topology_renderer_contract_v0",
+  "rendererGuardrails": [
+    {
+      "blocks": [
+        "public_surface_updated",
+        "public_ready",
+        "public_copy_approved"
+      ],
+      "guardrailId": "no_public_surface_without_gate"
+    },
+    {
+      "blocks": [
+        "soundness_proved",
+        "full_galois_connection_claim",
+        "abstract_interpretation_soundness_proved"
+      ],
+      "guardrailId": "no_soundness_by_visual_pattern"
+    },
+    {
+      "blocks": [
+        "runtime_lowering_changed",
+        "runtime_performance_claim"
+      ],
+      "guardrailId": "no_runtime_change_by_renderer"
+    },
+    {
+      "blocks": [
+        "electronics_repo_touched",
+        "laptop_artifact_consumed",
+        "machlib_file_changed"
+      ],
+      "guardrailId": "no_lane_touch_by_renderer_contract"
+    }
+  ],
+  "schemaVersion": "monogate.claim_topology_renderer_contract.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceContract": "act-a1-abstract-concrete-trace-contract",
+  "sourceDryRunPacket": "act-a3-alpha-gamma-dry-run-validator-skeleton",
+  "sourceObligationsPacket": "act-a2-alpha-gamma-validator-obligations",
+  "status": "GB_VIS_A1_CLAIM_TOPOLOGY_RENDERER_CONTRACT_PASS",
+  "summary": {
+    "abstractInterpretationSoundnessProved": false,
+    "actSourcesConsumed": true,
+    "artifactClassNodeCount": 4,
+    "claimFlagsBounded": true,
+    "claimTopologyContractRecorded": true,
+    "dryRunCheckNodeCount": 6,
+    "edgeCount": 16,
+    "electronicsRepoTouched": false,
+    "failureModeNodeCount": 5,
+    "fullGaloisConnectionClaim": false,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "nextAction": "GB-VIS-A2 implement a private static topology export fixture or ACT-A4 expand dry-run validator fixtures without public promotion.",
+    "nodeCount": 23,
+    "productionValidatorImplemented": false,
+    "proofAttemptStarted": false,
+    "publicCopyApproved": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "rendererGuardrailCount": 4,
+    "rendererGuardrailsRecorded": true,
+    "rendererImplemented": false,
+    "runtimeLoweringChanged": false,
+    "soundnessProved": false,
+    "sourceCheckedStatement": "eml x (exp 1) = exp x - 1",
+    "sourceContract": "act-a1-abstract-concrete-trace-contract",
+    "sourceDryRunPacket": "act-a3-alpha-gamma-dry-run-validator-skeleton",
+    "sourceObligationsPacket": "act-a2-alpha-gamma-validator-obligations",
+    "sourcePublicStatus": "held_private",
+    "sourceRuntimeControl": "protected_expm1_remains_runtime_control",
+    "topologyEdgesRecorded": true,
+    "topologyNodesRecorded": true,
+    "validatorObligationNodeCount": 6,
+    "validatorSoundnessProved": false,
+    "visualEncodingContractRecorded": true,
+    "visualEncodingCount": 5,
+    "visualizationRendered": false,
+    "visualizationStarted": false
+  },
+  "topologyEdges": [
+    {
+      "edgeId": "source_freeze_to_abstract_claim_alpha",
+      "edgeKind": "alpha_abstraction",
+      "operator": "alpha",
+      "preserves": [
+        "checkedStatement",
+        "runtimeControl",
+        "publicStatus",
+        "nonClaims"
+      ],
+      "source": "source_freeze_packet",
+      "target": "abstract_claim_object"
+    },
+    {
+      "edgeId": "abstract_claim_to_artifact_class:lean_checked_witness",
+      "edgeKind": "gamma_admissibility",
+      "operator": "gamma",
+      "preserves": [
+        "artifactClass",
+        "claimStrengthBound",
+        "traceability"
+      ],
+      "source": "abstract_claim_object",
+      "target": "artifact_class:lean_checked_witness"
+    },
+    {
+      "edgeId": "abstract_claim_to_artifact_class:evidence_packet",
+      "edgeKind": "gamma_admissibility",
+      "operator": "gamma",
+      "preserves": [
+        "artifactClass",
+        "claimStrengthBound",
+        "traceability"
+      ],
+      "source": "abstract_claim_object",
+      "target": "artifact_class:evidence_packet"
+    },
+    {
+      "edgeId": "abstract_claim_to_artifact_class:runtime_trace",
+      "edgeKind": "gamma_admissibility",
+      "operator": "gamma",
+      "preserves": [
+        "artifactClass",
+        "claimStrengthBound",
+        "traceability"
+      ],
+      "source": "abstract_claim_object",
+      "target": "artifact_class:runtime_trace"
+    },
+    {
+      "edgeId": "abstract_claim_to_artifact_class:lesson_or_hardware_artifact",
+      "edgeKind": "gamma_admissibility",
+      "operator": "gamma",
+      "preserves": [
+        "artifactClass",
+        "claimStrengthBound",
+        "traceability"
+      ],
+      "source": "abstract_claim_object",
+      "target": "artifact_class:lesson_or_hardware_artifact"
+    },
+    {
+      "edgeId": "obligation_to_dry_run:alpha_source_identity_required",
+      "edgeKind": "validated_by_dry_run_skeleton",
+      "operator": "alpha",
+      "preserves": [
+        "obligationIdentity",
+        "operator",
+        "noRejectedFailureModes"
+      ],
+      "source": "validator_obligation:alpha_source_identity_required",
+      "target": "dry_run_check:alpha_source_identity_required_dry_run"
+    },
+    {
+      "edgeId": "obligation_to_dry_run:alpha_claim_strength_bounded",
+      "edgeKind": "validated_by_dry_run_skeleton",
+      "operator": "alpha",
+      "preserves": [
+        "obligationIdentity",
+        "operator",
+        "noRejectedFailureModes"
+      ],
+      "source": "validator_obligation:alpha_claim_strength_bounded",
+      "target": "dry_run_check:alpha_claim_strength_bounded_dry_run"
+    },
+    {
+      "edgeId": "obligation_to_dry_run:alpha_traceability_complete",
+      "edgeKind": "validated_by_dry_run_skeleton",
+      "operator": "alpha",
+      "preserves": [
+        "obligationIdentity",
+        "operator",
+        "noRejectedFailureModes"
+      ],
+      "source": "validator_obligation:alpha_traceability_complete",
+      "target": "dry_run_check:alpha_traceability_complete_dry_run"
+    },
+    {
+      "edgeId": "obligation_to_dry_run:gamma_admissible_artifact_class",
+      "edgeKind": "validated_by_dry_run_skeleton",
+      "operator": "gamma",
+      "preserves": [
+        "obligationIdentity",
+        "operator",
+        "noRejectedFailureModes"
+      ],
+      "source": "validator_obligation:gamma_admissible_artifact_class",
+      "target": "dry_run_check:gamma_admissible_artifact_class_dry_run"
+    },
+    {
+      "edgeId": "obligation_to_dry_run:gamma_boundary_preservation",
+      "edgeKind": "validated_by_dry_run_skeleton",
+      "operator": "gamma",
+      "preserves": [
+        "obligationIdentity",
+        "operator",
+        "noRejectedFailureModes"
+      ],
+      "source": "validator_obligation:gamma_boundary_preservation",
+      "target": "dry_run_check:gamma_boundary_preservation_dry_run"
+    },
+    {
+      "edgeId": "obligation_to_dry_run:roundtrip_no_claim_escalation",
+      "edgeKind": "validated_by_dry_run_skeleton",
+      "operator": "alpha_gamma_roundtrip",
+      "preserves": [
+        "obligationIdentity",
+        "operator",
+        "noRejectedFailureModes"
+      ],
+      "source": "validator_obligation:roundtrip_no_claim_escalation",
+      "target": "dry_run_check:roundtrip_no_claim_escalation_dry_run"
+    },
+    {
+      "edgeId": "failure_mode_blocks:claim_flag_escalation",
+      "edgeKind": "blocks_claim_escalation",
+      "operator": "guard",
+      "preserves": [
+        "claimBoundary",
+        "publicGate",
+        "runtimeBoundary"
+      ],
+      "source": "failure_mode:claim_flag_escalation",
+      "target": "abstract_claim_object"
+    },
+    {
+      "edgeId": "failure_mode_blocks:trace_gap",
+      "edgeKind": "blocks_claim_escalation",
+      "operator": "guard",
+      "preserves": [
+        "claimBoundary",
+        "publicGate",
+        "runtimeBoundary"
+      ],
+      "source": "failure_mode:trace_gap",
+      "target": "abstract_claim_object"
+    },
+    {
+      "edgeId": "failure_mode_blocks:public_gate_bypass",
+      "edgeKind": "blocks_claim_escalation",
+      "operator": "guard",
+      "preserves": [
+        "claimBoundary",
+        "publicGate",
+        "runtimeBoundary"
+      ],
+      "source": "failure_mode:public_gate_bypass",
+      "target": "abstract_claim_object"
+    },
+    {
+      "edgeId": "failure_mode_blocks:runtime_control_drift",
+      "edgeKind": "blocks_claim_escalation",
+      "operator": "guard",
+      "preserves": [
+        "claimBoundary",
+        "publicGate",
+        "runtimeBoundary"
+      ],
+      "source": "failure_mode:runtime_control_drift",
+      "target": "abstract_claim_object"
+    },
+    {
+      "edgeId": "failure_mode_blocks:lane_owner_drift",
+      "edgeKind": "blocks_claim_escalation",
+      "operator": "guard",
+      "preserves": [
+        "claimBoundary",
+        "publicGate",
+        "runtimeBoundary"
+      ],
+      "source": "failure_mode:lane_owner_drift",
+      "target": "abstract_claim_object"
+    }
+  ],
+  "topologyNodes": [
+    {
+      "claimStrength": "private_checked_witness_copy_frozen",
+      "label": "eml-d62-expm1-boundary-branch-pause-freeze-packet",
+      "nodeId": "source_freeze_packet",
+      "nodeKind": "source_boundary",
+      "publicStatus": "held_private",
+      "runtimeControl": "protected_expm1_remains_runtime_control"
+    },
+    {
+      "claimStrength": "private_checked_witness_copy_frozen",
+      "label": "expm1_boundary_checked_witness_private_claim",
+      "nodeId": "abstract_claim_object",
+      "nodeKind": "abstract_claim",
+      "publicStatus": "held_private",
+      "runtimeControl": "protected_expm1_remains_runtime_control"
+    },
+    {
+      "claimStrength": "admissible_concretion_class",
+      "label": "lean_checked_witness",
+      "nodeId": "artifact_class:lean_checked_witness",
+      "nodeKind": "artifact_class",
+      "publicStatus": "inherits_source_boundary",
+      "runtimeControl": "inherits_source_boundary"
+    },
+    {
+      "claimStrength": "admissible_concretion_class",
+      "label": "evidence_packet",
+      "nodeId": "artifact_class:evidence_packet",
+      "nodeKind": "artifact_class",
+      "publicStatus": "inherits_source_boundary",
+      "runtimeControl": "inherits_source_boundary"
+    },
+    {
+      "claimStrength": "admissible_concretion_class",
+      "label": "runtime_trace",
+      "nodeId": "artifact_class:runtime_trace",
+      "nodeKind": "artifact_class",
+      "publicStatus": "inherits_source_boundary",
+      "runtimeControl": "inherits_source_boundary"
+    },
+    {
+      "claimStrength": "admissible_concretion_class",
+      "label": "lesson_or_hardware_artifact",
+      "nodeId": "artifact_class:lesson_or_hardware_artifact",
+      "nodeKind": "artifact_class",
+      "publicStatus": "inherits_source_boundary",
+      "runtimeControl": "inherits_source_boundary"
+    },
+    {
+      "claimStrength": "validator_requirement_only",
+      "label": "alpha_source_identity_required",
+      "nodeId": "validator_obligation:alpha_source_identity_required",
+      "nodeKind": "validator_obligation",
+      "operator": "alpha",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change"
+    },
+    {
+      "claimStrength": "validator_requirement_only",
+      "label": "alpha_claim_strength_bounded",
+      "nodeId": "validator_obligation:alpha_claim_strength_bounded",
+      "nodeKind": "validator_obligation",
+      "operator": "alpha",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change"
+    },
+    {
+      "claimStrength": "validator_requirement_only",
+      "label": "alpha_traceability_complete",
+      "nodeId": "validator_obligation:alpha_traceability_complete",
+      "nodeKind": "validator_obligation",
+      "operator": "alpha",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change"
+    },
+    {
+      "claimStrength": "validator_requirement_only",
+      "label": "gamma_admissible_artifact_class",
+      "nodeId": "validator_obligation:gamma_admissible_artifact_class",
+      "nodeKind": "validator_obligation",
+      "operator": "gamma",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change"
+    },
+    {
+      "claimStrength": "validator_requirement_only",
+      "label": "gamma_boundary_preservation",
+      "nodeId": "validator_obligation:gamma_boundary_preservation",
+      "nodeKind": "validator_obligation",
+      "operator": "gamma",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change"
+    },
+    {
+      "claimStrength": "validator_requirement_only",
+      "label": "roundtrip_no_claim_escalation",
+      "nodeId": "validator_obligation:roundtrip_no_claim_escalation",
+      "nodeKind": "validator_obligation",
+      "operator": "alpha_gamma_roundtrip",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change"
+    },
+    {
+      "claimStrength": "dry_run_skeleton_check_only",
+      "label": "alpha_source_identity_required_dry_run",
+      "nodeId": "dry_run_check:alpha_source_identity_required_dry_run",
+      "nodeKind": "dry_run_check",
+      "operator": "alpha",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "status": "pass"
+    },
+    {
+      "claimStrength": "dry_run_skeleton_check_only",
+      "label": "alpha_claim_strength_bounded_dry_run",
+      "nodeId": "dry_run_check:alpha_claim_strength_bounded_dry_run",
+      "nodeKind": "dry_run_check",
+      "operator": "alpha",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "status": "pass"
+    },
+    {
+      "claimStrength": "dry_run_skeleton_check_only",
+      "label": "alpha_traceability_complete_dry_run",
+      "nodeId": "dry_run_check:alpha_traceability_complete_dry_run",
+      "nodeKind": "dry_run_check",
+      "operator": "alpha",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "status": "pass"
+    },
+    {
+      "claimStrength": "dry_run_skeleton_check_only",
+      "label": "gamma_admissible_artifact_class_dry_run",
+      "nodeId": "dry_run_check:gamma_admissible_artifact_class_dry_run",
+      "nodeKind": "dry_run_check",
+      "operator": "gamma",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "status": "pass"
+    },
+    {
+      "claimStrength": "dry_run_skeleton_check_only",
+      "label": "gamma_boundary_preservation_dry_run",
+      "nodeId": "dry_run_check:gamma_boundary_preservation_dry_run",
+      "nodeKind": "dry_run_check",
+      "operator": "gamma",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "status": "pass"
+    },
+    {
+      "claimStrength": "dry_run_skeleton_check_only",
+      "label": "roundtrip_no_claim_escalation_dry_run",
+      "nodeId": "dry_run_check:roundtrip_no_claim_escalation_dry_run",
+      "nodeKind": "dry_run_check",
+      "operator": "alpha_gamma_roundtrip",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "status": "pass"
+    },
+    {
+      "claimStrength": "blocking_guard",
+      "label": "claim_flag_escalation",
+      "nodeId": "failure_mode:claim_flag_escalation",
+      "nodeKind": "failure_mode",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "severity": "block"
+    },
+    {
+      "claimStrength": "blocking_guard",
+      "label": "trace_gap",
+      "nodeId": "failure_mode:trace_gap",
+      "nodeKind": "failure_mode",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "severity": "block"
+    },
+    {
+      "claimStrength": "blocking_guard",
+      "label": "public_gate_bypass",
+      "nodeId": "failure_mode:public_gate_bypass",
+      "nodeKind": "failure_mode",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "severity": "block"
+    },
+    {
+      "claimStrength": "blocking_guard",
+      "label": "runtime_control_drift",
+      "nodeId": "failure_mode:runtime_control_drift",
+      "nodeKind": "failure_mode",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "severity": "block"
+    },
+    {
+      "claimStrength": "blocking_guard",
+      "label": "lane_owner_drift",
+      "nodeId": "failure_mode:lane_owner_drift",
+      "nodeKind": "failure_mode",
+      "publicStatus": "held_private",
+      "runtimeControl": "no_runtime_change",
+      "severity": "block"
+    }
+  ],
+  "visualEncodings": [
+    {
+      "contract": "Different node kinds must be visibly distinguishable before any renderer is eligible.",
+      "encodingId": "node_kind_shape",
+      "field": "nodeKind"
+    },
+    {
+      "contract": "Claim strength must be represented as bounded weight or emphasis, never as proof status.",
+      "encodingId": "claim_strength_weight",
+      "field": "claimStrength"
+    },
+    {
+      "contract": "Held-private and public-ready states must be visually separable, with held-private as the default.",
+      "encodingId": "public_status_gate_color",
+      "field": "publicStatus"
+    },
+    {
+      "contract": "Runtime-control boundaries must be visible wherever a node or edge could imply implementation change.",
+      "encodingId": "runtime_boundary_marker",
+      "field": "runtimeControl"
+    },
+    {
+      "contract": "Blocking failure modes must render as blockers, not warnings or decorative annotations.",
+      "encodingId": "failure_mode_block_marker",
+      "field": "severity"
+    }
+  ]
+}
