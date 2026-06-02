@@ -1,0 +1,164 @@
+{
+  "artifactId": "eml-d56-expm1-boundary-identity-feasibility-packet",
+  "blockers": [
+    {
+      "blockerId": "runtime_relabeling",
+      "description": "The identity must not be relabeled as runtime lowering, protected expm1 replacement, or runtime advantage.",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "duplicate_exp_branch_witness",
+      "description": "Any future witness attempt must distinguish eml x (exp 1) from the already checked eml x 1 = exp x branch.",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "broad_family_language",
+      "description": "The packet must not broaden the single identity into all expm1-style, log/exp, or constant-coordinate identities.",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "proof_or_typecheck_claim",
+      "description": "D56 records feasibility only; any proof, Lean typecheck, or MachLib edit requires a separate D57 phase.",
+      "severity": "hard_blocker"
+    }
+  ],
+  "claimFlags": {
+    "advantage_lab_case_added": false,
+    "arbitrary_depth_claim": false,
+    "bounded_identity_candidate_selected": true,
+    "bounded_trig_feasibility_selected": false,
+    "broad_nested_subtraction_claim": false,
+    "broad_subtraction_family_claim": false,
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "electronics_repo_touched": false,
+    "eml_advantage_proved": false,
+    "expm1_boundary_candidate_selected": true,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "human_public_copy_gate_selected": false,
+    "implementation_started": false,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": false,
+    "log_exp_replacement_claim": false,
+    "machlib_file_changed": false,
+    "proof_attempt_started": false,
+    "protected_expm1_replacement_claim": false,
+    "public_atlas_promotion": false,
+    "public_copy_approved": false,
+    "public_education_promotion": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "witness_feasibility_recorded": true
+  },
+  "date": "2026-06-02",
+  "decision": "record_expm1_boundary_identity_feasibility",
+  "feasibilityItems": [
+    {
+      "evidence": "D55 selected expm1_boundary_identity as selected_next.",
+      "itemId": "selected_branch_matches_d55",
+      "reviewNote": "The feasibility packet stays inside the selected bounded identity candidate.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "The proposed statement is eml x (exp 1) = exp x - 1.",
+      "itemId": "statement_shape_small",
+      "reviewNote": "This is one scoped identity candidate, not a family theorem.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "Unfolding eml gives exp x - log (exp 1); log_exp reduces log (exp 1) to 1.",
+      "itemId": "proof_shape_visible",
+      "reviewNote": "The expected witness attempt should be a small definitional/log-exp rewrite, not a search result.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "D55 records no duplicate checked witness and distinguishes the candidate from eml x 1 = exp x plus the D10 constants bundle.",
+      "itemId": "non_duplicate_boundary_preserved",
+      "reviewNote": "The candidate uses argument exp 1, so it should not be treated as the checked eml x 1 witness.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "The packet keeps protected_expm1_remains_runtime_control and makes no runtime lowering claim.",
+      "itemId": "protected_expm1_runtime_control_preserved",
+      "reviewNote": "The identity may be proof-shape useful while protected expm1 remains the numerical runtime control.",
+      "status": "satisfied"
+    }
+  ],
+  "nonClaims": [
+    "EML-D56 records feasibility only; it does not edit MachLib, typecheck Lean, or start a proof attempt.",
+    "D56 keeps protected expm1 as the runtime and numerical-stability control and makes no protected expm1 replacement claim.",
+    "D56 does not approve public copy, promote public surfaces, consume laptop artifacts, touch laptop-owned repos, or claim theorem discovery, runtime advantage, log/exp replacement, or broad EML superiority."
+  ],
+  "packetType": "eml_expm1_boundary_identity_feasibility_v0",
+  "proposedWitness": {
+    "candidateId": "expm1_boundary_identity",
+    "emlShape": "eml x (exp 1)",
+    "expectedProofShape": [
+      "unfold eml",
+      "rewrite log (exp 1) to 1",
+      "normalize subtraction expression without changing runtime lowering"
+    ],
+    "family": "protected_runtime_boundary_identity",
+    "guardPolicy": "no_domain_guard_required_for_log_exp_one",
+    "guardShape": [],
+    "nextArtifact": "EML-D57 expm1 boundary identity MachLib witness attempt or blocker",
+    "proposedMachlibName": "MachLib.Real.expm1_boundary_identity_witness",
+    "proposedStatement": "eml x (exp 1) = exp x - 1",
+    "runtimeControl": "protected_expm1_remains_runtime_control",
+    "semanticControl": "standard_real_exp_log_exp_one_control",
+    "sourceFrontierId": "expm1_failure_boundary_v1",
+    "standardShape": "exp x - 1",
+    "statementKind": "unguarded_real_identity"
+  },
+  "schemaVersion": "monogate.eml_expm1_boundary_identity_feasibility.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceCandidateSelector": "eml-d55-bounded-identity-branch-candidate-selector",
+  "status": "EML_D56_EXPM1_BOUNDARY_IDENTITY_FEASIBILITY_PASS",
+  "summary": {
+    "advantageLabCaseAdded": false,
+    "blockerCount": 4,
+    "boundedTrigFeasibilitySelected": false,
+    "candidateProved": false,
+    "claimFlagsAllBounded": true,
+    "electronicsRepoTouched": false,
+    "expectedProofStepCount": 3,
+    "feasibilityItemCount": 5,
+    "feasibilityRecorded": true,
+    "feasibilityStatus": "feasible_for_scoped_witness_attempt",
+    "guardCount": 0,
+    "humanPublicCopyGateSelected": false,
+    "implementationStarted": false,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": false,
+    "logExpReplacementClaim": false,
+    "machlibFileChanged": false,
+    "nextArtifact": "EML-D57 expm1 boundary identity MachLib witness attempt or blocker",
+    "noDomainGuardRequired": true,
+    "proofAttemptStarted": false,
+    "proposedMachlibName": "MachLib.Real.expm1_boundary_identity_witness",
+    "proposedStatement": "eml x (exp 1) = exp x - 1",
+    "protectedExpm1ReplacementClaim": false,
+    "publicCopyApproved": false,
+    "publicEducationPromotionPerformed": false,
+    "publicPromotionPerformed": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "runtimeLoweringChanged": false,
+    "runtimeLoweringControl": "protected_expm1_remains_runtime_control",
+    "sourceCandidateSelector": "eml-d55-bounded-identity-branch-candidate-selector",
+    "sourceFrozenBlockedPhraseCount": 10,
+    "sourceFrozenCaveatCount": 8,
+    "sourceFrozenStatement": "eml 0 (exp (1 + 1)) = -1",
+    "sourceFrozenWitnessName": "MachLib.Real.constant_coordinate_zero_exp_two_witness",
+    "sourceRuntimeLoweringControl": "protected_expm1_remains_runtime_control",
+    "sourceSelectedCandidateId": "expm1_boundary_identity",
+    "sourceSelectedFamily": "protected_runtime_boundary_identity",
+    "sourceSelectedProposedStatement": "eml x (exp 1) = exp x - 1",
+    "sourceSelectedSourceFrontierId": "expm1_failure_boundary_v1"
+  }
+}
