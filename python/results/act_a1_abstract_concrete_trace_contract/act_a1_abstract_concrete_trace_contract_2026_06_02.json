@@ -1,0 +1,224 @@
+{
+  "artifactClasses": [
+    {
+      "alphaOutput": "checked_witness_claim_object",
+      "classId": "lean_checked_witness",
+      "examples": [
+        "MachLib theorem",
+        "Lean build result"
+      ],
+      "gammaAdmits": [
+        "Lean theorem reference",
+        "build log",
+        "proof-source path"
+      ]
+    },
+    {
+      "alphaOutput": "claim_boundary_packet",
+      "classId": "evidence_packet",
+      "examples": [
+        "D57-D62 JSON",
+        "Command Center feed",
+        "review report"
+      ],
+      "gammaAdmits": [
+        "result JSON",
+        "evidence packet",
+        "feed",
+        "report"
+      ]
+    },
+    {
+      "alphaOutput": "bounded_runtime_observation",
+      "classId": "runtime_trace",
+      "examples": [
+        "future bounded runtime trace",
+        "comparison packet"
+      ],
+      "gammaAdmits": [
+        "trace rows",
+        "comparison method",
+        "error bound"
+      ]
+    },
+    {
+      "alphaOutput": "reviewable_teaching_or_capture_claim",
+      "classId": "lesson_or_hardware_artifact",
+      "examples": [
+        "course packet",
+        "simulated lesson",
+        "future live capture"
+      ],
+      "gammaAdmits": [
+        "laptop-agent packet only after intake validation"
+      ]
+    }
+  ],
+  "artifactId": "act-a1-abstract-concrete-trace-contract",
+  "claimFlags": {
+    "abstract_interpretation_soundness_proved": false,
+    "alpha_operator_defined": true,
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "contract_seed_recorded": true,
+    "d62_example_bound": true,
+    "electronics_repo_touched": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "full_galois_connection_claim": false,
+    "gamma_operator_defined": true,
+    "general_eml_superiority_claim": false,
+    "implementation_started": false,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "proof_attempt_started": false,
+    "public_copy_approved": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "visualization_started": false
+  },
+  "contractType": "abstract_concrete_trace_contract_v0",
+  "date": "2026-06-02",
+  "decision": "record_alpha_gamma_trace_contract_seed_private_only",
+  "nonClaims": [
+    "ACT-A1 records a seed contract for abstract/concrete trace semantics; it does not prove a Galois connection or full abstract interpretation soundness.",
+    "ACT-A1 defines operator roles, admissible artifact classes, and preservation obligations only; it does not implement visualization, runtime lowering, compiler behavior, or public copy.",
+    "ACT-A1 uses the D57-D62 expm1-boundary chain as a worked private example without editing MachLib, typechecking Lean, consuming laptop artifacts, touching laptop-owned repos, or claiming theorem discovery or broad EML superiority."
+  ],
+  "operators": [
+    {
+      "description": "Maps a concrete artifact into a bounded abstract claim object with evidence, guards, caveats, blocked phrases, and non-claims.",
+      "mustPreserve": [
+        "artifact identity and source path",
+        "claim flags and non-claims",
+        "guards and domain restrictions",
+        "verification status and reviewer outcome",
+        "blocked phrases and public/private status"
+      ],
+      "operator": "alpha",
+      "role": "abstraction",
+      "spelling": "alpha : ConcreteArtifact -> AbstractClaimObject"
+    },
+    {
+      "description": "Maps an abstract claim object to the concrete artifacts allowed to count as evidence or realization for that claim.",
+      "mustPreserve": [
+        "allowed artifact classes",
+        "required fields and guard obligations",
+        "maximum claim strength",
+        "traceability back to evidence packets",
+        "public-copy and runtime-control boundaries"
+      ],
+      "operator": "gamma",
+      "role": "concretion",
+      "spelling": "gamma : AbstractClaimObject -> AdmissibleConcreteArtifacts"
+    }
+  ],
+  "preservationObligations": [
+    {
+      "blockedIf": [
+        "missing evidence source",
+        "claim flag overreach",
+        "unreviewed public copy"
+      ],
+      "obligationId": "soundness_of_claim_strength",
+      "rule": "alpha(c) may not support a claim stronger than the concrete artifact c records."
+    },
+    {
+      "blockedIf": [
+        "missing artifact id",
+        "missing source path",
+        "missing caveat list"
+      ],
+      "obligationId": "traceability",
+      "rule": "Every abstract claim must point to concrete evidence, guard/caveat records, non-claims, and blocked phrases."
+    },
+    {
+      "blockedIf": [
+        "wrong artifact class",
+        "missing guard",
+        "runtime/public boundary drift"
+      ],
+      "obligationId": "concretion_admissibility",
+      "rule": "gamma(a) admits only concrete artifacts that satisfy the frozen caveats and required fields of a."
+    },
+    {
+      "blockedIf": [
+        "runtime advantage phrase without evidence",
+        "missing error bound",
+        "missing control"
+      ],
+      "obligationId": "bounded_error_or_guard_record",
+      "rule": "Numeric or runtime claims require explicit guard, error, comparison, or control records."
+    },
+    {
+      "blockedIf": [
+        "public_ready true",
+        "public surface update",
+        "missing human approval"
+      ],
+      "obligationId": "public_copy_gate",
+      "rule": "Public copy remains inadmissible unless a separate human-approved public gate records approval."
+    }
+  ],
+  "schemaVersion": "monogate.abstract_concrete_trace_contract.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceFreezePacket": "eml-d62-expm1-boundary-branch-pause-freeze-packet",
+  "status": "ACT_A1_ABSTRACT_CONCRETE_TRACE_CONTRACT_PASS",
+  "summary": {
+    "abstractInterpretationSoundnessProved": false,
+    "alphaOperatorDefined": true,
+    "artifactClassCount": 4,
+    "claimFlagsBounded": true,
+    "contractSeedRecorded": true,
+    "d62ExampleBound": true,
+    "electronicsRepoTouched": false,
+    "fullGaloisConnectionClaim": false,
+    "gammaOperatorDefined": true,
+    "implementationStarted": false,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "nextAction": "ACT-A2 define first alpha/gamma validator obligations or GB-VIS-A1 claim topology renderer seed without public promotion.",
+    "operatorCount": 2,
+    "preservationObligationCount": 5,
+    "proofAttemptStarted": false,
+    "publicCopyApproved": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "runtimeLoweringChanged": false,
+    "sourceCheckedStatement": "eml x (exp 1) = exp x - 1",
+    "sourceFreezePacket": "eml-d62-expm1-boundary-branch-pause-freeze-packet",
+    "sourcePublicStatus": "held_private",
+    "sourceRuntimeControl": "protected_expm1_remains_runtime_control",
+    "visualizationStarted": false,
+    "workedExampleCount": 1
+  },
+  "workedExamples": [
+    {
+      "alphaResult": {
+        "abstractClaimObjectId": "expm1_boundary_checked_witness_private_claim",
+        "checkedStatement": "eml x (exp 1) = exp x - 1",
+        "claimStrength": "private_checked_witness_copy_frozen",
+        "publicStatus": "held_private",
+        "runtimeControl": "protected_expm1_remains_runtime_control"
+      },
+      "concreteArtifacts": [
+        "MachLib.Real.expm1_boundary_identity_witness",
+        "python/results/eml_d62_expm1_boundary_branch_pause_freeze_packet/eml_d62_expm1_boundary_branch_pause_freeze_packet_2026_06_02.json",
+        "reports/evidence_packets/eml_d62_expm1_boundary_branch_pause_freeze_packet.json",
+        "command_center_feeds/eml_d62_expm1_boundary_branch_pause_freeze_packet_feed_2026_06_02.json"
+      ],
+      "exampleId": "d57_d62_expm1_boundary_private_chain",
+      "gammaAdmissibleConcrete": [
+        "private evidence packet with D60 caveats and blockers preserved",
+        "Lean witness reference with checked statement unchanged",
+        "future public copy gate only with explicit human approval"
+      ],
+      "sourceFreezePacket": "eml-d62-expm1-boundary-branch-pause-freeze-packet"
+    }
+  ]
+}
