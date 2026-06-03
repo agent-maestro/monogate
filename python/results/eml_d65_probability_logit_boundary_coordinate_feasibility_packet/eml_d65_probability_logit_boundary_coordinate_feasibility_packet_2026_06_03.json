@@ -1,0 +1,215 @@
+{
+  "artifactId": "eml-d65-probability-logit-boundary-coordinate-feasibility-packet",
+  "blockers": [
+    {
+      "blockerId": "domain_edge_loss",
+      "description": "Any future witness attempt must carry both guards and derive the 0 < 1 - p obligation before rewriting log (1 - p).",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "runtime_relabeling",
+      "description": "The identity must not be relabeled as runtime lowering, log/log1p replacement, logit replacement, or runtime advantage.",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "proof_or_typecheck_claim",
+      "description": "D65 records feasibility only; any proof, Lean typecheck, or MachLib edit requires a separate D66 phase.",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "broad_probability_language",
+      "description": "The packet must not broaden the single guarded coordinate into all logit, probability, entropy, or logistic identities.",
+      "severity": "hard_blocker"
+    }
+  ],
+  "claimFlags": {
+    "advantage_lab_case_added": false,
+    "arbitrary_depth_claim": false,
+    "bounded_identity_candidate_selected": true,
+    "bounded_trig_feasibility_selected": false,
+    "broad_nested_subtraction_claim": false,
+    "broad_subtraction_family_claim": false,
+    "candidate_proved": false,
+    "compiler_correctness_claim": false,
+    "electronics_repo_touched": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "guarded_domain_obligations_recorded": true,
+    "human_public_copy_gate_selected": false,
+    "implementation_started": false,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": false,
+    "log_exp_replacement_claim": false,
+    "machlib_file_changed": false,
+    "negative_controls_recorded": true,
+    "probability_logit_boundary_candidate_selected": true,
+    "proof_attempt_started": false,
+    "protected_expm1_replacement_claim": false,
+    "protected_log1p_replacement_claim": false,
+    "protected_log_replacement_claim": false,
+    "public_atlas_promotion": false,
+    "public_copy_approved": false,
+    "public_education_promotion": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "theorem_discovery_claim": false,
+    "witness_feasibility_recorded": true
+  },
+  "date": "2026-06-03",
+  "decision": "record_probability_logit_boundary_coordinate_feasibility",
+  "feasibilityItems": [
+    {
+      "evidence": "D64 selected probability_logit_boundary_coordinate as selected_next.",
+      "itemId": "selected_branch_matches_d64",
+      "reviewNote": "The feasibility packet stays inside the selected bounded identity candidate.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "The statement carries guards 0 < p and p < 1, giving 0 < p and 0 < 1 - p for logarithmic rewrites.",
+      "itemId": "domain_obligations_visible",
+      "reviewNote": "The coordinate is feasible only as a guarded-domain statement.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "Unfolding eml gives exp (log p) - log (exp (log (1 - p))); guarded exp-log/log-exp rewrites reduce this to p - log (1 - p).",
+      "itemId": "proof_shape_visible",
+      "reviewNote": "The expected witness attempt should be a small guarded rewrite, not a search or runtime claim.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "Boundary controls for p <= 0, p >= 1, and unguarded statements are recorded as blockers.",
+      "itemId": "negative_controls_required",
+      "reviewNote": "Any future proof attempt must preserve the two domain guards.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "The packet keeps protected_log_and_log1p_remain_runtime_controls and records no runtime lowering change.",
+      "itemId": "protected_log_runtime_control_preserved",
+      "reviewNote": "The identity may be proof-shape useful while protected logarithmic routines remain runtime controls.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "D64 records no duplicate checked witness for the selected probability-logit coordinate.",
+      "itemId": "non_duplicate_boundary_preserved",
+      "reviewNote": "The candidate is a new guarded coordinate, not a relabeling of an existing checked witness.",
+      "status": "satisfied"
+    }
+  ],
+  "negativeControls": [
+    {
+      "blockedCondition": "p = 0",
+      "controlId": "p_zero_boundary_blocked",
+      "reason": "log p is outside the guarded real-log rewrite domain.",
+      "status": "blocked_by_guard"
+    },
+    {
+      "blockedCondition": "p = 1",
+      "controlId": "p_one_boundary_blocked",
+      "reason": "log (1 - p) is outside the guarded real-log rewrite domain.",
+      "status": "blocked_by_guard"
+    },
+    {
+      "blockedCondition": "missing either 0 < p or p < 1",
+      "controlId": "ungarded_probability_coordinate_blocked",
+      "reason": "The feasibility argument depends on both positive logarithm arguments.",
+      "status": "blocked_by_guard"
+    },
+    {
+      "blockedCondition": "claiming log/log1p/logit runtime replacement",
+      "controlId": "runtime_logit_replacement_blocked",
+      "reason": "D65 records proof-shape feasibility only and keeps protected log/log1p runtime controls.",
+      "status": "blocked_by_claim_boundary"
+    }
+  ],
+  "nonClaims": [
+    "EML-D65 records guarded feasibility only; it does not edit MachLib, typecheck Lean, or start a proof attempt.",
+    "D65 keeps protected log/log1p controls as runtime controls and makes no log, log1p, or logit replacement claim.",
+    "D65 does not approve public copy, promote public surfaces, consume laptop artifacts, touch laptop-owned repos, or claim theorem discovery, runtime advantage, formal equivalence, or broad EML superiority."
+  ],
+  "packetType": "eml_probability_logit_boundary_coordinate_feasibility_v0",
+  "proposedWitness": {
+    "candidateId": "probability_logit_boundary_coordinate",
+    "derivedDomainObligations": [
+      "0 < p",
+      "0 < 1 - p"
+    ],
+    "emlShape": "eml (log p) (exp (log (1 - p)))",
+    "expectedProofShape": [
+      "introduce guards 0 < p and p < 1",
+      "derive 0 < 1 - p from p < 1",
+      "unfold eml",
+      "rewrite exp (log p) to p under 0 < p",
+      "rewrite log (exp (log (1 - p))) to log (1 - p)",
+      "normalize subtraction expression without changing runtime lowering"
+    ],
+    "family": "guarded_probability_log_coordinate",
+    "guardPolicy": "both_probability_interval_guards_required",
+    "guardShape": [
+      "0 < p",
+      "p < 1"
+    ],
+    "nextArtifact": "EML-D66 probability logit boundary coordinate MachLib witness attempt or blocker",
+    "proposedMachlibName": "MachLib.Real.probability_logit_boundary_coordinate_witness",
+    "proposedStatement": "0 < p -> p < 1 -> eml (log p) (exp (log (1 - p))) = p - log (1 - p)",
+    "runtimeControl": "protected_log_and_log1p_remain_runtime_controls",
+    "semanticControl": "guarded_real_exp_log_rewrite_control",
+    "sourceFrontierId": "probability_logit_boundary_v0",
+    "sourceProposedStatement": "0 < p and p < 1 -> eml (log p) (exp (log (1 - p))) = p - log (1 - p)",
+    "standardShape": "p - log (1 - p)",
+    "statementKind": "guarded_real_identity"
+  },
+  "schemaVersion": "monogate.eml_probability_logit_boundary_coordinate_feasibility.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceCandidateSelector": "eml-d64-bounded-identity-branch-candidate-selector",
+  "status": "EML_D65_PROBABILITY_LOGIT_BOUNDARY_COORDINATE_FEASIBILITY_PASS",
+  "summary": {
+    "advantageLabCaseAdded": false,
+    "blockerCount": 4,
+    "boundedTrigFeasibilitySelected": false,
+    "candidateProved": false,
+    "claimFlagsFeasibilityOnly": true,
+    "derivedDomainObligationCount": 2,
+    "electronicsRepoTouched": false,
+    "expectedProofStepCount": 6,
+    "feasibilityItemCount": 6,
+    "feasibilityRecorded": true,
+    "feasibilityStatus": "feasible_for_guarded_scoped_witness_attempt",
+    "guardCount": 2,
+    "humanPublicCopyGateSelected": false,
+    "implementationStarted": false,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": false,
+    "logExpReplacementClaim": false,
+    "machlibFileChanged": false,
+    "negativeControlCount": 4,
+    "nextArtifact": "EML-D66 probability logit boundary coordinate MachLib witness attempt or blocker",
+    "proofAttemptStarted": false,
+    "proposedMachlibName": "MachLib.Real.probability_logit_boundary_coordinate_witness",
+    "proposedStatement": "0 < p -> p < 1 -> eml (log p) (exp (log (1 - p))) = p - log (1 - p)",
+    "protectedExpm1ReplacementClaim": false,
+    "protectedLog1pReplacementClaim": false,
+    "protectedLogReplacementClaim": false,
+    "publicCopyApproved": false,
+    "publicEducationPromotionPerformed": false,
+    "publicPromotionPerformed": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "runtimeLoweringChanged": false,
+    "runtimeLoweringControl": "protected_log_and_log1p_remain_runtime_controls",
+    "sourceCandidateSelector": "eml-d64-bounded-identity-branch-candidate-selector",
+    "sourceFrozenBlockedPhraseCount": 10,
+    "sourceFrozenCaveatCount": 8,
+    "sourceFrozenStatement": "eml x (exp 1) = exp x - 1",
+    "sourceFrozenWitnessName": "MachLib.Real.expm1_boundary_identity_witness",
+    "sourceRuntimeLoweringControl": "protected_log_and_log1p_remain_runtime_controls",
+    "sourceSelectedCandidateId": "probability_logit_boundary_coordinate",
+    "sourceSelectedFamily": "guarded_probability_log_coordinate",
+    "sourceSelectedNextArtifact": "EML-D65 probability logit boundary coordinate feasibility packet",
+    "sourceSelectedProposedStatement": "0 < p and p < 1 -> eml (log p) (exp (log (1 - p))) = p - log (1 - p)",
+    "sourceSelectedSourceFrontierId": "probability_logit_boundary_v0"
+  }
+}
