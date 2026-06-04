@@ -91,6 +91,11 @@ def _advantage_class(roundtrip_status: str, eml_nodes: int, standard_nodes: int)
     return "roundtrip_pass_standard_surface_smaller"
 
 
+def _is_license_blocked(message: str) -> bool:
+    lowered = message.lower()
+    return "license" in lowered and "expired" in lowered
+
+
 def build_case_packet(fixture: Any, target: str, tmp_path: Path) -> dict[str, Any]:
     source = _fixture_source(fixture)
     mod = _decompile_fixture(fixture)
@@ -124,6 +129,7 @@ def build_case_packet(fixture: Any, target: str, tmp_path: Path) -> dict[str, An
         "normalizedShapeHash": shape.shape_hash,
         "roundtripStatus": status,
         "roundtripMessage": message,
+        "licenseBlocked": _is_license_blocked(message),
         "advantageClass": _advantage_class(status, eml_nodes, standard_nodes),
         "reviewerDecision": "private_roundtrip_evidence",
         "missingEvidence": [
@@ -149,6 +155,8 @@ def summarize(case_packets: list[dict[str, Any]]) -> dict[str, Any]:
         "roundtripPassCount": sum(1 for packet in case_packets if packet["roundtripStatus"] == "pass"),
         "roundtripBlockedCount": sum(1 for packet in case_packets if packet["roundtripStatus"] == "blocked"),
         "roundtripFailCount": sum(1 for packet in case_packets if packet["roundtripStatus"] == "fail"),
+        "licenseBlockedCount": sum(1 for packet in case_packets if packet["licenseBlocked"]),
+        "allRoundtripsBlockedByExpiredLicense": all(packet["licenseBlocked"] for packet in case_packets),
         "emlToolchainSurfaceWinCount": class_counts.get("eml_toolchain_surface_win", 0),
         "standardSurfaceSmallerCount": class_counts.get("roundtrip_pass_standard_surface_smaller", 0),
         "advantageClassCounts": class_counts,
@@ -256,6 +264,8 @@ def validate_case_packet(packet: dict[str, Any]) -> None:
         raise ValueError("canonical EML hash must be sha256")
     if packet["roundtripStatus"] not in {"pass", "fail", "blocked"}:
         raise ValueError("invalid roundtrip status")
+    if packet["licenseBlocked"] is True and "license expired" not in packet["roundtripMessage"].lower():
+        raise ValueError("license-blocked packets must preserve the expired-license message")
     if packet["canonicalEmlBytes"] <= 0 or packet["functionCount"] <= 0:
         raise ValueError("packet must contain decompiled EML")
     for key, value in packet["claimFlags"].items():
@@ -275,8 +285,8 @@ def validate_payload(payload: dict[str, Any]) -> None:
         raise ValueError("expected holdout source cases")
     if set(summary["targetLanguages"]) != set(TARGETS):
         raise ValueError("expected Python and JavaScript Forge targets")
-    if summary["roundtripPassCount"] < 20:
-        raise ValueError("expected at least 10 passing roundtrips")
+    if summary["roundtripPassCount"] < 20 and summary["allRoundtripsBlockedByExpiredLicense"] is not True:
+        raise ValueError("expected at least 20 passing roundtrips or explicit expired-license blockage")
     for key in [
         "forgeBehaviorChanged",
         "efrogBehaviorChanged",
