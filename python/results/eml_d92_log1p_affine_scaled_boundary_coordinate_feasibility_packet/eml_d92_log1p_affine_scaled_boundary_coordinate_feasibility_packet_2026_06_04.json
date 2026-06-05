@@ -1,0 +1,261 @@
+{
+  "artifactId": "eml-d92-log1p-affine-scaled-boundary-coordinate-feasibility-packet",
+  "blockers": [
+    {
+      "blockerId": "domain_edge_loss",
+      "description": "Any future witness attempt must carry the guard 0 < 1 + a * x before rewriting exp (log (1 + a * x)).",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "affine_specialization_overclaim",
+      "description": "The a = 1 specialization must remain identified as the already checked log1p-shifted witness, not a fresh result.",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "runtime_relabeling",
+      "description": "The identity must not be relabeled as runtime lowering, log/log1p replacement, or runtime advantage.",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "proof_or_typecheck_claim",
+      "description": "D92 records feasibility only; any proof, Lean typecheck, or MachLib edit requires a separate D93 phase.",
+      "severity": "hard_blocker"
+    },
+    {
+      "blockerId": "broad_log1p_family_language",
+      "description": "The packet must not broaden the single guarded affine-scaled coordinate into all log1p, logarithm, or affine-domain identities.",
+      "severity": "hard_blocker"
+    }
+  ],
+  "claimFlags": {
+    "advantage_lab_case_added": false,
+    "arbitrary_depth_claim": false,
+    "bounded_identity_candidate_selected": true,
+    "bounded_trig_feasibility_selected": false,
+    "broad_log1p_family_claim": false,
+    "broad_nested_subtraction_claim": false,
+    "broad_subtraction_family_claim": false,
+    "candidate_proved": false,
+    "candidate_proved_this_phase": false,
+    "compiler_correctness_claim": false,
+    "duplicate_shifted_blocks_preserved": true,
+    "electronics_repo_touched": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "guarded_domain_obligations_recorded": true,
+    "human_approval_recorded": false,
+    "human_public_copy_gate_selected": false,
+    "implementation_started": false,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": false,
+    "log1p_affine_scaled_candidate_selected": true,
+    "log_exp_replacement_claim": false,
+    "machlib_file_changed": false,
+    "negative_controls_recorded": true,
+    "private_reviewer_response_intake_selected": false,
+    "proof_attempt_started": false,
+    "protected_expm1_replacement_claim": false,
+    "protected_log1p_replacement_claim": false,
+    "protected_log_replacement_claim": false,
+    "public_atlas_promotion": false,
+    "public_copy_approved": false,
+    "public_education_promotion": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_decision_recorded": false,
+    "reviewer_rejection_recorded": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "source_d91_selector_observed": true,
+    "theorem_discovery_claim": false,
+    "witness_feasibility_recorded": true
+  },
+  "date": "2026-06-04",
+  "decision": "record_log1p_affine_scaled_boundary_coordinate_feasibility",
+  "feasibilityItems": [
+    {
+      "evidence": "D91 selected log1p_affine_scaled_boundary_coordinate as selected_next_feasibility_packet.",
+      "itemId": "selected_branch_matches_d91",
+      "reviewNote": "The feasibility packet stays inside the selected bounded identity candidate.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "The statement carries guard 0 < 1 + a * x, making the logarithm argument positive.",
+      "itemId": "domain_obligation_visible",
+      "reviewNote": "The coordinate is feasible only as a guarded-domain statement.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "Unfolding eml gives exp (log (1 + a * x)) - log (exp 1); guarded exp-log and log-exp rewrites reduce this to (1 + a * x) - 1.",
+      "itemId": "proof_shape_visible",
+      "reviewNote": "The expected witness attempt should be a small guarded rewrite, not a search or runtime claim.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "The affine payload a * x is kept inside the guarded shifted-log argument instead of asserting a separate global condition on a or x.",
+      "itemId": "affine_payload_boundary_visible",
+      "reviewNote": "The guard is on the composed argument, not on standalone a or x values.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "Boundary controls for 1 + a * x = 0, 1 + a * x < 0, unguarded statements, and a = 1 duplicate collapse are recorded as blockers.",
+      "itemId": "negative_controls_required",
+      "reviewNote": "Any future proof attempt must preserve the positive affine-shifted-domain guard.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "The packet keeps protected_log_and_log1p_remain_runtime_controls and records no runtime lowering change.",
+      "itemId": "protected_log1p_runtime_control_preserved",
+      "reviewNote": "The identity may be proof-shape useful while protected logarithmic routines remain runtime controls.",
+      "status": "satisfied"
+    },
+    {
+      "evidence": "D91 blocked both checked shifted-coordinate duplicates: MachLib.Real.log1p_shifted_boundary_coordinate_witness and MachLib.Real.log1m_shifted_boundary_coordinate_witness.",
+      "itemId": "duplicate_shifted_blocks_preserved",
+      "reviewNote": "D92 evaluates only the affine-scaled candidate and does not reopen either checked shifted-log lane.",
+      "status": "satisfied"
+    }
+  ],
+  "negativeControls": [
+    {
+      "blockedCondition": "1 + a * x = 0",
+      "controlId": "affine_shift_zero_boundary_blocked",
+      "reason": "log (1 + a * x) is outside the guarded real-log rewrite domain.",
+      "status": "blocked_by_guard"
+    },
+    {
+      "blockedCondition": "1 + a * x < 0",
+      "controlId": "affine_shift_negative_boundary_blocked",
+      "reason": "1 + a * x is not positive, so the guarded exp-log rewrite is unavailable.",
+      "status": "blocked_by_guard"
+    },
+    {
+      "blockedCondition": "missing 0 < 1 + a * x",
+      "controlId": "unguarded_affine_scaled_coordinate_blocked",
+      "reason": "The feasibility argument depends on the affine-shifted logarithm argument being positive.",
+      "status": "blocked_by_guard"
+    },
+    {
+      "blockedCondition": "treating the a = 1 specialization as fresh work",
+      "controlId": "a_equals_one_duplicate_collapse_blocked_as_fresh_claim",
+      "reason": "The a = 1 specialization collapses to the already checked log1p-shifted witness and must not be claimed as a new artifact.",
+      "status": "blocked_by_duplicate_boundary"
+    },
+    {
+      "blockedCondition": "claiming log/log1p runtime replacement",
+      "controlId": "runtime_log1p_replacement_blocked",
+      "reason": "D92 records proof-shape feasibility only and keeps protected log/log1p runtime controls.",
+      "status": "blocked_by_claim_boundary"
+    }
+  ],
+  "nonClaims": [
+    "EML-D92 records guarded feasibility only; it does not edit MachLib, typecheck Lean, or start a proof attempt.",
+    "D92 keeps protected log/log1p controls as runtime controls and makes no log, log1p, or log-exp replacement claim.",
+    "D92 preserves D91's duplicate blocks for the already checked log1p-shifted and log1m-shifted witnesses.",
+    "D92 does not approve public copy, promote public surfaces, consume laptop artifacts, touch laptop-owned repos, or claim theorem discovery, runtime advantage, formal equivalence, broad log1p-family scope, or broad EML superiority."
+  ],
+  "packetType": "eml_d92_log1p_affine_scaled_boundary_coordinate_feasibility_v0",
+  "proposedWitness": {
+    "candidateId": "log1p_affine_scaled_boundary_coordinate",
+    "derivedDomainObligations": [
+      "0 < 1 + a * x",
+      "0 < exp 1"
+    ],
+    "expectedProofShape": [
+      "introduce guard 0 < 1 + a * x",
+      "unfold eml",
+      "rewrite exp (log (1 + a * x)) to 1 + a * x under the guard",
+      "rewrite log (exp 1) to 1",
+      "normalize (1 + a * x) - 1 to a * x",
+      "preserve protected log/log1p runtime controls"
+    ],
+    "family": "guarded_log1p_affine_scaled_coordinate",
+    "guardPolicy": "affine_shifted_positive_log_guard_required",
+    "guardShape": [
+      "0 < 1 + a * x"
+    ],
+    "nextArtifact": "EML-D93 log1p affine-scaled boundary coordinate MachLib witness attempt or blocker",
+    "proposedMachlibName": "MachLib.Real.log1p_affine_scaled_boundary_coordinate_witness",
+    "proposedStatement": "0 < 1 + a * x -> eml (log (1 + a * x)) (exp 1) = a * x",
+    "runtimeControl": "protected_log_and_log1p_remain_runtime_controls",
+    "semanticControl": "guarded_real_exp_log_and_log_exp_rewrite_control",
+    "sourceProposedStatement": "0 < 1 + a * x -> eml (log (1 + a * x)) (exp 1) = a * x",
+    "statementKind": "guarded_real_identity"
+  },
+  "schemaVersion": "monogate.eml_d92_log1p_affine_scaled_boundary_coordinate_feasibility.v0",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceCandidateSelector": "eml-d91-bounded-identity-branch-candidate-selector",
+  "status": "EML_D92_LOG1P_AFFINE_SCALED_BOUNDARY_COORDINATE_FEASIBILITY_PASS",
+  "summary": {
+    "advantageLabCaseAdded": false,
+    "blockedDuplicateCandidateIds": [
+      "log1p_shifted_boundary_coordinate",
+      "log1m_shifted_boundary_coordinate"
+    ],
+    "blockedDuplicateCheckedWitnesses": [
+      "MachLib.Real.log1p_shifted_boundary_coordinate_witness",
+      "MachLib.Real.log1m_shifted_boundary_coordinate_witness"
+    ],
+    "blockedDuplicateStatuses": [
+      "blocked_duplicate_checked_witness",
+      "blocked_duplicate_checked_witness"
+    ],
+    "blockerCount": 5,
+    "boundedTrigFeasibilitySelected": false,
+    "candidateProved": false,
+    "candidateProvedThisPhase": false,
+    "claimFlagsFeasibilityOnly": true,
+    "derivedDomainObligationCount": 2,
+    "duplicateShiftedBlocksPreserved": true,
+    "electronicsRepoTouched": false,
+    "expectedProofStepCount": 6,
+    "feasibilityItemCount": 7,
+    "feasibilityRecorded": true,
+    "feasibilityStatus": "feasible_for_guarded_scoped_witness_attempt",
+    "guardCount": 1,
+    "humanApprovalRecorded": false,
+    "humanPublicCopyGateSelected": false,
+    "implementationStarted": false,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": false,
+    "logExpReplacementClaim": false,
+    "machlibFileChanged": false,
+    "negativeControlCount": 5,
+    "nextArtifact": "EML-D93 log1p affine-scaled boundary coordinate MachLib witness attempt or blocker",
+    "privateReviewerResponseIntakeSelected": false,
+    "proofAttemptStarted": false,
+    "proposedMachlibName": "MachLib.Real.log1p_affine_scaled_boundary_coordinate_witness",
+    "proposedStatement": "0 < 1 + a * x -> eml (log (1 + a * x)) (exp 1) = a * x",
+    "protectedExpm1ReplacementClaim": false,
+    "protectedLog1pReplacementClaim": false,
+    "protectedLogReplacementClaim": false,
+    "publicCopyApproved": false,
+    "publicEducationPromotionPerformed": false,
+    "publicPromotionPerformed": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "reviewerApprovalRecorded": false,
+    "reviewerDecisionRecorded": false,
+    "reviewerRejectionRecorded": false,
+    "runtimeLoweringChanged": false,
+    "runtimeLoweringControl": "protected_log_and_log1p_remain_runtime_controls",
+    "sourceActHandoffReady": true,
+    "sourceActPromotionAllowed": false,
+    "sourceActReviewerDecisionRecorded": false,
+    "sourceCandidateSelector": "eml-d91-bounded-identity-branch-candidate-selector",
+    "sourceD91SelectorObserved": true,
+    "sourceFrozenCheckedStatement": "0 < 1 - x -> eml (log (1 - x)) (exp 1) = -x",
+    "sourceFrozenGuards": [
+      "0 < 1 - x"
+    ],
+    "sourceFrozenWitnessName": "MachLib.Real.log1m_shifted_boundary_coordinate_witness",
+    "sourceRuntimeLoweringControl": "protected_log_and_log1p_remain_runtime_controls",
+    "sourceSelectedCandidateId": "log1p_affine_scaled_boundary_coordinate",
+    "sourceSelectedFamily": "guarded_log1p_affine_scaled_coordinate",
+    "sourceSelectedNextArtifact": "EML-D92 log1p affine-scaled boundary coordinate feasibility packet",
+    "sourceSelectedProposedStatement": "0 < 1 + a * x -> eml (log (1 + a * x)) (exp 1) = a * x"
+  }
+}
