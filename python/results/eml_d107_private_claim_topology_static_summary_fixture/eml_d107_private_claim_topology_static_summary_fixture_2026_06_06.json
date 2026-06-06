@@ -1,0 +1,291 @@
+{
+  "artifactId": "eml-d107-private-claim-topology-static-summary-fixture",
+  "claimFlags": {
+    "advantage_lab_case_added": false,
+    "candidate_proved": false,
+    "catalog_completeness_claim": false,
+    "claim_topology_surface_created": false,
+    "compiler_correctness_claim": false,
+    "course_material_created": false,
+    "d106_seed_consumed": true,
+    "electronics_repo_touched": false,
+    "eml_advantage_proved": false,
+    "formal_equivalence_claim": false,
+    "full_eml_semantics_claim": false,
+    "general_eml_superiority_claim": false,
+    "human_approval_recorded": false,
+    "implementation_started": false,
+    "interactive_renderer_implemented": false,
+    "laptop_artifact_consumed": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "new_identity_candidate_selected": false,
+    "next_bounded_identity_branch_selected": false,
+    "next_public_witness_candidate_selected": false,
+    "private_guardrails_preserved": true,
+    "private_static_summary_fixture_recorded": true,
+    "proof_attempt_started": false,
+    "protected_expm1_replacement_claim": false,
+    "public_copy_approved": false,
+    "public_page_created": false,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "renderer_correctness_claim": false,
+    "renderer_executed": false,
+    "renderer_implemented": false,
+    "renderer_soundness_proved": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_cards_recorded": true,
+    "reviewer_decision_recorded": false,
+    "reviewer_rejection_recorded": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "sdk_compiler_docs_created": false,
+    "static_tables_recorded": true,
+    "theorem_discovery_claim": false,
+    "visualization_quality_claim": false,
+    "visualization_rendered": false
+  },
+  "date": "2026-06-06",
+  "decision": "record_private_static_claim_topology_summary_no_renderer_no_public_promotion",
+  "guardrailCards": [
+    {
+      "blockedClaimCount": 3,
+      "blocks": [
+        "public_surface_updated",
+        "public_page_created",
+        "public_ready"
+      ],
+      "cardId": "private_first",
+      "displayTextRequired": "Private review aid only."
+    },
+    {
+      "blockedClaimCount": 3,
+      "blocks": [
+        "renderer_correctness_claim",
+        "visualization_quality_claim",
+        "renderer_soundness_proved"
+      ],
+      "cardId": "no_visual_truth",
+      "displayTextRequired": "Topology display is an index, not proof."
+    },
+    {
+      "blockedClaimCount": 3,
+      "blocks": [
+        "broad_eml_advantage",
+        "runtime_performance_claim",
+        "compiler_correctness_claim"
+      ],
+      "cardId": "claim_boundary_visible",
+      "displayTextRequired": "Claims remain bounded to cited evidence."
+    }
+  ],
+  "nonClaims": [
+    "EML-D107 records a private static summary fixture only; it does not create, render, or execute a Claim Topology surface.",
+    "D107 summarizes D106 seed rows into static reviewer tables and cards without claiming renderer correctness, visualization quality, public readiness, or public copy approval.",
+    "D107 preserves the D104-D106 expm1 boundary and keeps MachLib, Lean, runtime lowering, SDK/compiler docs, course material, electronics, laptop-owned repos, and public surfaces untouched."
+  ],
+  "packetType": "eml_private_claim_topology_static_summary_fixture_v0",
+  "reviewerCards": [
+    {
+      "body": "Private static summary of one frozen expm1 witness-copy boundary and its blocked claims.",
+      "cardId": "current_scope",
+      "sourceArtifact": "eml-d106-private-claim-topology-surface-seed",
+      "title": "Current Scope"
+    },
+    {
+      "body": "eml x (exp 1) = exp x - 1",
+      "cardId": "witness_boundary",
+      "sourceArtifact": "MachLib.Real.expm1_boundary_identity_witness",
+      "title": "Witness Boundary"
+    },
+    {
+      "body": "protected_expm1_remains_runtime_control",
+      "cardId": "runtime_boundary",
+      "sourceArtifact": "eml-d106-private-claim-topology-surface-seed",
+      "title": "Runtime Boundary"
+    },
+    {
+      "body": "Record reviewer response or create a later private implementation packet only if approved.",
+      "cardId": "next_action",
+      "sourceArtifact": "eml-d106-private-claim-topology-surface-seed",
+      "title": "Next Action"
+    }
+  ],
+  "schemaVersion": "monogate.eml_private_claim_topology_static_summary_fixture.v0",
+  "sourceSeed": "eml-d106-private-claim-topology-surface-seed",
+  "staticTables": [
+    {
+      "rowCount": 2,
+      "rows": [
+        {
+          "checkedWitnessName": "MachLib.Real.expm1_boundary_identity_witness",
+          "fixtureKind": "accepted_frozen_private_copy_boundary",
+          "guardSummary": "no extra real-domain guard recorded",
+          "publicStatus": "held_private",
+          "reviewState": "frozen_private_no_public_approval",
+          "rowId": "d104_expm1_public_witness_copy_freeze",
+          "runtimeControl": "protected_expm1_remains_runtime_control",
+          "sourceStatement": "eml x (exp 1) = exp x - 1"
+        },
+        {
+          "checkedWitnessName": "MachLib.Real.expm1_boundary_identity_witness",
+          "fixtureKind": "selected_next_action",
+          "guardSummary": "no extra real-domain guard recorded",
+          "publicStatus": "held_private",
+          "reviewState": "selected_private_seed_only",
+          "rowId": "d105_private_claim_topology_surface_seed_selection",
+          "runtimeControl": "protected_expm1_remains_runtime_control",
+          "sourceStatement": "eml x (exp 1) = exp x - 1"
+        }
+      ],
+      "tableId": "accepted_fixtures",
+      "title": "Accepted/Frozen Fixtures"
+    },
+    {
+      "rowCount": 4,
+      "rows": [
+        {
+          "claimId": "public_copy_approved",
+          "reason": "D105 selected a private seed; no human approval or reviewer decision exists.",
+          "sourceArtifact": "eml-d105-post-expm1-public-witness-copy-freeze-next-selector",
+          "status": "blocked"
+        },
+        {
+          "claimId": "renderer_correctness",
+          "reason": "D106 seeds data shape only and no renderer is created or executed.",
+          "sourceArtifact": "eml-d106-private-claim-topology-surface-seed",
+          "status": "blocked"
+        },
+        {
+          "claimId": "protected_expm1_replacement",
+          "reason": "The expm1 witness remains a checked identity and protected expm1 remains runtime control.",
+          "sourceArtifact": "eml-d105-post-expm1-public-witness-copy-freeze-next-selector",
+          "status": "blocked"
+        },
+        {
+          "claimId": "broad_eml_advantage",
+          "reason": "A single bounded witness-copy boundary cannot support broad EML advantage claims.",
+          "sourceArtifact": "eml-d105-post-expm1-public-witness-copy-freeze-next-selector",
+          "status": "blocked"
+        }
+      ],
+      "tableId": "blocked_claims",
+      "title": "Blocked Claims"
+    },
+    {
+      "rowCount": 2,
+      "rows": [
+        {
+          "edgeId": "d104_to_d105_preserve_freeze_boundary",
+          "preservedBoundaryCount": 5,
+          "preserves": [
+            "checkedStatement",
+            "guardSummary",
+            "runtimeControl",
+            "frozenCopySections",
+            "claimBoundaries"
+          ],
+          "relationship": "consumed_by_selector",
+          "sourceArtifact": "eml-d104-expm1-public-witness-copy-freeze-packet",
+          "targetArtifact": "eml-d105-post-expm1-public-witness-copy-freeze-next-selector"
+        },
+        {
+          "edgeId": "d105_to_d106_select_private_topology_seed",
+          "preservedBoundaryCount": 4,
+          "preserves": [
+            "selectedNextArtifact",
+            "publicHold",
+            "rendererNonClaims",
+            "reviewerDecisionHold"
+          ],
+          "relationship": "selected_next_private_artifact",
+          "sourceArtifact": "eml-d105-post-expm1-public-witness-copy-freeze-next-selector",
+          "targetArtifact": "eml-d106-private-claim-topology-surface-seed"
+        }
+      ],
+      "tableId": "artifact_dependencies",
+      "title": "Artifact Dependencies"
+    },
+    {
+      "rowCount": 3,
+      "rows": [
+        {
+          "actionId": "review_d104_expm1_copy_boundary",
+          "blockedUntil": "none",
+          "nextEvidenceNeeded": "human review note or explicit hold",
+          "owner": "research_reviewer",
+          "status": "available_private_review"
+        },
+        {
+          "actionId": "decide_public_copy_gate",
+          "blockedUntil": "reviewer decision exists",
+          "nextEvidenceNeeded": "explicit human approval with preserved caveats",
+          "owner": "human",
+          "status": "blocked"
+        },
+        {
+          "actionId": "implement_private_surface_mvp",
+          "blockedUntil": "D106 seed accepted",
+          "nextEvidenceNeeded": "D107 or later explicit implementation packet",
+          "owner": "research_tooling",
+          "status": "candidate_later"
+        }
+      ],
+      "tableId": "reviewer_actions",
+      "title": "Reviewer Actions"
+    }
+  ],
+  "status": "EML_D107_PRIVATE_CLAIM_TOPOLOGY_STATIC_SUMMARY_FIXTURE_PASS",
+  "summary": {
+    "acceptedFixtureRowCount": 2,
+    "blockedClaimRowCount": 4,
+    "catalogCompletenessClaim": false,
+    "checkedStatement": "eml x (exp 1) = exp x - 1",
+    "claimFlagsBounded": true,
+    "claimTopologySurfaceCreated": false,
+    "compilerCorrectnessClaim": false,
+    "courseMaterialCreated": false,
+    "d106SeedConsumed": true,
+    "dependencyRowCount": 2,
+    "electronicsRepoTouched": false,
+    "formalEquivalenceClaim": false,
+    "fullEmlSemanticsClaim": false,
+    "guardSummary": "no extra real-domain guard recorded",
+    "guardrailCardCount": 3,
+    "humanApprovalRecorded": false,
+    "implementationStarted": false,
+    "interactiveRendererImplemented": false,
+    "laptopArtifactConsumed": false,
+    "leanTypecheckPerformed": false,
+    "machlibFileChanged": false,
+    "newIdentityCandidateSelected": false,
+    "privateGuardrailsPreserved": true,
+    "privateStaticSummaryFixtureRecorded": true,
+    "protectedExpm1ReplacementClaim": false,
+    "publicCopyApproved": false,
+    "publicPageCreated": false,
+    "publicReady": false,
+    "publicSurfaceUpdated": false,
+    "rendererCorrectnessClaim": false,
+    "rendererExecuted": false,
+    "rendererImplemented": false,
+    "rendererSoundnessProved": false,
+    "reviewerActionRowCount": 3,
+    "reviewerCardCount": 4,
+    "reviewerCardsRecorded": true,
+    "reviewerDecisionRecorded": false,
+    "runtimeControl": "protected_expm1_remains_runtime_control",
+    "runtimeLoweringChanged": false,
+    "runtimePerformanceClaim": false,
+    "sdkCompilerDocsCreated": false,
+    "selectedWitnessName": "MachLib.Real.expm1_boundary_identity_witness",
+    "sourceSectionSeedRowCount": 14,
+    "sourceSeed": "eml-d106-private-claim-topology-surface-seed",
+    "sourceSurfaceSectionCount": 5,
+    "staticTableCount": 4,
+    "staticTablesRecorded": true,
+    "visualizationQualityClaim": false,
+    "visualizationRendered": false
+  }
+}
