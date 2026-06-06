@@ -1,0 +1,154 @@
+{
+  "artifactId": "sdk-a6-private-explore-cli-help-import-boundary-remediation",
+  "artifactType": "private_explore_cli_help_import_boundary_remediation",
+  "claimFlags": {
+    "api_compatibility_claim": false,
+    "benchmark_executed": false,
+    "broad_eml_advantage_claim": false,
+    "compiler_correctness_claim": false,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "dependency_gate_obligations_checked": true,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "explore_cli_import_boundary_remediated": true,
+    "forge_emit_check_executed": false,
+    "hardware_readiness_claim": false,
+    "help_boundary_obligations_executed": true,
+    "laptop_owned_repo_touched": false,
+    "optional_dependency_installed": false,
+    "public_copy_approved": false,
+    "public_package_install_executed": false,
+    "public_package_release_claim": false,
+    "public_readiness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_performance_claim": false,
+    "sdk_a5_consumed": true,
+    "sdk_implementation_changed": true,
+    "sdk_public_ready": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "semantic_versioning_commitment": false,
+    "silicon_readiness_claim": false,
+    "training_savings_claim": false
+  },
+  "commandResults": [
+    {
+      "argv": [
+        "/usr/bin/python",
+        "-m",
+        "monogate.cli.explore",
+        "--help"
+      ],
+      "commandId": "top_level_help_no_optional_substrate_import",
+      "expectedMode": "help_pass",
+      "resultStatus": "pass",
+      "returnCode": 0,
+      "stderrPreview": "",
+      "stdoutPreview": "usage: monogate-explore [-h] [--version] [--json]\n                        {witness,analyze,identify,class,corpus,example} ...\n\nCross-domain explorer for the EML substrate. Composes fingerprint, identify,\npath, build_graph, and universality_witness through one CLI.\n\npositional arguments:\n  {witness,analyze,identify,class,corpus,example}\n    witness             Universality witness for an expression.\n    analyze             Pfaffian profile of an expression.\n    identify            Registry matche"
+    },
+    {
+      "argv": [
+        "/usr/bin/python",
+        "-m",
+        "monogate.cli.explore",
+        "--version"
+      ],
+      "commandId": "top_level_version_no_optional_substrate_import",
+      "expectedMode": "version_pass",
+      "resultStatus": "pass",
+      "returnCode": 0,
+      "stderrPreview": "",
+      "stdoutPreview": "monogate-explore (monogate 2.5.0)\n"
+    },
+    {
+      "argv": [
+        "/usr/bin/python",
+        "-m",
+        "monogate.cli.explore",
+        "witness",
+        "--help"
+      ],
+      "commandId": "subcommand_help_no_optional_substrate_import",
+      "expectedMode": "help_pass",
+      "resultStatus": "pass",
+      "returnCode": 0,
+      "stderrPreview": "",
+      "stdoutPreview": "usage: monogate-explore witness [-h] [--no-walk] expr\n\npositional arguments:\n  expr\n\noptions:\n  -h, --help  show this help message and exit\n  --no-walk   Skip the canonical-equivalent walk (faster).\n"
+    },
+    {
+      "argv": [
+        "/usr/bin/python",
+        "-m",
+        "monogate.cli.explore",
+        "witness",
+        "exp(x)"
+      ],
+      "commandId": "witness_command_dependency_gate",
+      "expectedMode": "pass_or_dependency_gate",
+      "resultStatus": "pass",
+      "returnCode": 2,
+      "stderrPreview": "error: optional dependency 'eml_discover' is required for this monogate-explore command; install monogate[cli].\n",
+      "stdoutPreview": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/python",
+        "-m",
+        "monogate.cli.explore",
+        "analyze",
+        "exp(x)"
+      ],
+      "commandId": "analyze_command_dependency_gate",
+      "expectedMode": "pass_or_dependency_gate",
+      "resultStatus": "pass",
+      "returnCode": 0,
+      "stderrPreview": "",
+      "stdoutPreview": "expression: exp(x)\n  predicted_depth:    1\n  pfaffian_r:         1\n  max_path_r:         1\n  eml_depth:          1\n  structural_overhead:0\n  corrections:        c_osc=0 c_composite=0 delta_fused=0\n  fingerprint:        p1-d1-w1-c0-hd61687\n  axes:               p1-d1-w1-c0\n  Pfaffian-not-EML:   False\n"
+    },
+    {
+      "argv": [
+        "/usr/bin/python",
+        "-m",
+        "monogate.cli.explore",
+        "identify",
+        "exp(x)"
+      ],
+      "commandId": "identify_command_dependency_gate",
+      "expectedMode": "pass_or_dependency_gate",
+      "resultStatus": "pass",
+      "returnCode": 2,
+      "stderrPreview": "error: optional dependency 'eml_discover' is required for this monogate-explore command; install monogate[cli].\n",
+      "stdoutPreview": ""
+    }
+  ],
+  "date": "2026-06-06",
+  "nonClaims": [
+    "SDK-A6 implements only the private explore CLI import-boundary remediation described by SDK-A5.",
+    "SDK-A6 does not install optional dependencies, build native extensions, install public packages, or claim installed-extra behavior.",
+    "SDK-A6 does not claim SDK stability, public readiness, public package release readiness, API compatibility, or semantic-versioning commitments.",
+    "SDK-A6 does not claim compiler correctness, semantic preservation, runtime performance, training savings, estimator accuracy, hardware readiness, silicon readiness, or broad EML advantage.",
+    "SDK-A6 respects the D109 hold and does not start D110, consume reviewer response, or touch laptop-owned electronics repositories."
+  ],
+  "schemaVersion": "monogate.private_explore_cli_help_import_boundary_remediation.v0",
+  "sourceArtifact": "sdk-a5-private-explore-cli-help-import-boundary-contract",
+  "status": "SDK_A6_PRIVATE_EXPLORE_CLI_HELP_IMPORT_BOUNDARY_REMEDIATION_PASS",
+  "summary": {
+    "dependencyGateCommandCount": 3,
+    "dependencyGatePassCount": 3,
+    "helpBoundaryCommandCount": 3,
+    "helpBoundaryPassCount": 3,
+    "implementationChangedFiles": [
+      "python/monogate/cli/explore.py"
+    ],
+    "nextRecommendedArtifact": "SDK-A7 private SDK smoke chain refresh after explore CLI remediation",
+    "optionalDependencyInstalled": false,
+    "publicReadinessClaim": false,
+    "sdkStabilityClaim": false,
+    "sourceArtifact": "sdk-a5-private-explore-cli-help-import-boundary-contract",
+    "testFilesAdded": [
+      "python/tests/test_cli_explore_import_boundary.py"
+    ]
+  }
+}

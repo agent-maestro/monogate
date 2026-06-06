@@ -25,16 +25,10 @@ which pulls ``[witness]`` plus ``eml-graph``.
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import sys
 from typing import Any, Callable, Sequence
-
-import sympy as sp
-
-from eml_cost import analyze, fingerprint, fingerprint_axes
-from eml_discover import identify
-
-from ..witness import universality_witness, witness_to_dict
 
 
 __all__ = ["main", "build_parser", "EXAMPLES"]
@@ -50,9 +44,21 @@ def _emit(args: argparse.Namespace, text: str, payload: dict[str, Any]) -> None:
         print(text)
 
 
-def _parse_expr(s: str) -> sp.Basic:
+def _load_optional(module_name: str) -> Any:
     try:
-        result: sp.Basic = sp.sympify(s)
+        return importlib.import_module(module_name)
+    except ModuleNotFoundError as exc:
+        missing = exc.name or module_name
+        raise RuntimeError(
+            f"optional dependency {missing!r} is required for this "
+            "monogate-explore command; install monogate[cli]."
+        ) from exc
+
+
+def _parse_expr(s: str) -> Any:
+    sp = _load_optional("sympy")
+    try:
+        result = sp.sympify(s)
         return result
     except Exception as exc:
         raise ValueError(f"could not parse expression {s!r}: {exc}") from exc
@@ -62,10 +68,11 @@ def _parse_expr(s: str) -> sp.Basic:
 
 
 def cmd_analyze(args: argparse.Namespace) -> int:
+    eml_cost = _load_optional("eml_cost")
     expr = _parse_expr(args.expr)
-    a = analyze(expr)
-    fp = fingerprint(expr)
-    axes = fingerprint_axes(expr)
+    a = eml_cost.analyze(expr)
+    fp = eml_cost.fingerprint(expr)
+    axes = eml_cost.fingerprint_axes(expr)
     text = (
         f"expression: {expr}\n"
         f"  predicted_depth:    {a.predicted_depth}\n"
@@ -101,8 +108,9 @@ def cmd_analyze(args: argparse.Namespace) -> int:
 
 
 def cmd_identify(args: argparse.Namespace) -> int:
+    eml_discover = _load_optional("eml_discover")
     expr = _parse_expr(args.expr)
-    matches = identify(expr, max_results=args.max)
+    matches = eml_discover.identify(expr, max_results=args.max)
     if not matches:
         text = f"no registry match for {expr}"
         _emit(args, text, {"expr": str(expr), "matches": []})
@@ -126,10 +134,10 @@ def cmd_identify(args: argparse.Namespace) -> int:
 
 
 def cmd_witness(args: argparse.Namespace) -> int:
-    expr = _parse_expr(args.expr)
-    w = universality_witness(expr, walk_canonical=not args.no_walk)
+    witness = _load_optional("monogate.witness")
+    w = witness.universality_witness(args.expr, walk_canonical=not args.no_walk)
     if args.json:
-        print(json.dumps(witness_to_dict(w), indent=2, default=str))
+        print(json.dumps(witness.witness_to_dict(w), indent=2, default=str))
         return 0
     lines = [f"witness for {w.input_expr_str}", "=" * 60]
     lines.append(f"  predicted_depth:    {w.profile.predicted_depth}")
@@ -167,13 +175,14 @@ def cmd_witness(args: argparse.Namespace) -> int:
 
 def cmd_class(args: argparse.Namespace) -> int:
     """Print every registry formula whose axes match the given string."""
-    from eml_discover import FORMULAS
+    eml_cost = _load_optional("eml_cost")
+    eml_discover = _load_optional("eml_discover")
 
     target = args.axes.strip()
     members: list[dict[str, str]] = []
-    for f in FORMULAS:
+    for f in eml_discover.FORMULAS:
         try:
-            ax = fingerprint_axes(f.expression_factory())
+            ax = eml_cost.fingerprint_axes(f.expression_factory())
         except Exception:
             continue
         if ax == target:
@@ -195,12 +204,13 @@ def cmd_class(args: argparse.Namespace) -> int:
 
 def cmd_corpus(args: argparse.Namespace) -> int:
     """Read a file with one expression per line and cluster the corpus."""
-    from eml_graph import build_graph
+    sp = _load_optional("sympy")
+    eml_graph = _load_optional("eml_graph")
 
     with open(args.file, "r", encoding="utf-8") as f:
         raw_lines = [ln.strip() for ln in f if ln.strip() and not ln.startswith("#")]
 
-    parsed: list[sp.Basic] = []
+    parsed: list[Any] = []
     skipped: list[str] = []
     for s in raw_lines:
         try:
@@ -208,7 +218,7 @@ def cmd_corpus(args: argparse.Namespace) -> int:
         except Exception:
             skipped.append(s)
 
-    g = build_graph(parsed, label_with_discover=True)
+    g = eml_graph.build_graph(parsed, label_with_discover=True)
     sizes = g.class_sizes()
 
     text_lines = [
@@ -255,6 +265,8 @@ def cmd_corpus(args: argparse.Namespace) -> int:
 def example_cross_domain(args: argparse.Namespace) -> int:
     """Demo: Stefan-Boltzmann + perpetuity + kinetic-energy + Coulomb +
     de-Broglie all collapse into the same Pfaffian cost class."""
+    sp = _load_optional("sympy")
+    eml_cost = _load_optional("eml_cost")
     targets = [
         ("Stefan-Boltzmann (sigma * T^4)", "sigma_sb * T**4"),
         ("perpetuity (C / r)",              "C / r"),
@@ -272,7 +284,7 @@ def example_cross_domain(args: argparse.Namespace) -> int:
     for label, src in targets:
         try:
             expr = sp.sympify(src)
-            axes = fingerprint_axes(expr)
+            axes = eml_cost.fingerprint_axes(expr)
         except Exception:
             text_lines.append(f"  ({label} failed to parse)")
             continue
@@ -295,6 +307,7 @@ def example_cross_domain(args: argparse.Namespace) -> int:
 
 def example_witness_walkthrough(args: argparse.Namespace) -> int:
     """Demo: run the witness pipeline on three illustrative expressions."""
+    witness = _load_optional("monogate.witness")
     targets = [
         ("textbook sigmoid",  "exp(x) / (1 + exp(x))"),
         ("Pythagorean LHS",   "sin(x)**2 + cos(x)**2"),
@@ -303,7 +316,7 @@ def example_witness_walkthrough(args: argparse.Namespace) -> int:
     text_lines = ["Witness walkthrough - three expressions, three behaviours.", ""]
     payload_rows: list[dict[str, Any]] = []
     for label, src in targets:
-        w = universality_witness(src)
+        w = witness.universality_witness(src)
         text_lines.append(f"  --- {label} ---")
         text_lines.append(f"    expr:      {w.input_expr_str}")
         text_lines.append(f"    cost:      d={w.profile.predicted_depth}, r={w.profile.pfaffian_r}")
@@ -322,7 +335,7 @@ def example_witness_walkthrough(args: argparse.Namespace) -> int:
         else:
             text_lines.append("    walked:    already canonical")
         text_lines.append("")
-        payload_rows.append(witness_to_dict(w))
+        payload_rows.append(witness.witness_to_dict(w))
     _emit(args, "\n".join(text_lines), {
         "example": "witness-walkthrough",
         "rows": payload_rows,
