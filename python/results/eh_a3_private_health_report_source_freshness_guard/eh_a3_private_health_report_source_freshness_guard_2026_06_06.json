@@ -1,0 +1,170 @@
+{
+  "aggregateChecks": [
+    {
+      "checkId": "all_source_feed_files_exist",
+      "status": "pass"
+    },
+    {
+      "checkId": "all_source_feed_json_parse",
+      "status": "pass"
+    },
+    {
+      "checkId": "all_source_feed_dates_match_snapshot",
+      "snapshotDate": "2026-06-06",
+      "status": "pass"
+    },
+    {
+      "checkId": "all_source_feed_ids_match_health_summary",
+      "status": "pass"
+    },
+    {
+      "checkId": "all_source_feed_private_only_flags_false",
+      "checkedFlags": [
+        "broad_eml_advantage_claim",
+        "compiler_correctness_claim",
+        "dashboard_ui_created",
+        "hardware_readiness_claim",
+        "public_copy_approved",
+        "public_dashboard_created",
+        "public_page_created",
+        "public_product_ready",
+        "public_readiness_claim",
+        "public_ready",
+        "public_surface_updated",
+        "runtime_performance_claim",
+        "silicon_readiness_claim",
+        "training_savings_claim"
+      ],
+      "status": "pass"
+    }
+  ],
+  "artifactId": "eh-a3-private-health-report-source-freshness-guard",
+  "artifactType": "private_health_report_source_freshness_guard",
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "compiler_correctness_claim": false,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "dashboard_ui_created": false,
+    "eh_a2_consumed": true,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "external_source_checked": false,
+    "feed_recency_guarantee_claim": false,
+    "hardware_readiness_claim": false,
+    "health_report_completeness_claim": false,
+    "laptop_owned_repo_touched": false,
+    "public_copy_approved": false,
+    "public_dashboard_created": false,
+    "public_readiness_claim": false,
+    "renderer_correctness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_performance_claim": false,
+    "silicon_readiness_claim": false,
+    "source_feed_date_alignment_checked": true,
+    "source_feed_files_checked": true,
+    "source_feed_json_parse_checked": true,
+    "source_feed_private_only_flags_checked": true,
+    "source_freshness_guard_created": true,
+    "training_savings_claim": false,
+    "visualization_quality_claim": false
+  },
+  "date": "2026-06-06",
+  "healthReportArtifact": "eh-a1-private-ecosystem-health-report-seed",
+  "nonClaims": [
+    "EH-A3 checks selected local source feeds for the 2026-06-06 private health snapshot; it is not a live recency guarantee.",
+    "EH-A3 does not check external systems, remote repositories, dashboards, public pages, or renderer behavior.",
+    "EH-A3 does not approve public copy, public readiness, compiler correctness, runtime performance, training savings, estimator accuracy, hardware readiness, silicon readiness, or broad EML advantage claims.",
+    "EH-A3 respects the D109 hold and does not start D110, consume reviewer response, or record reviewer approval.",
+    "EH-A3 does not touch laptop-owned electronics repositories."
+  ],
+  "privateOnlyFalseFlags": [
+    "broad_eml_advantage_claim",
+    "compiler_correctness_claim",
+    "dashboard_ui_created",
+    "hardware_readiness_claim",
+    "public_copy_approved",
+    "public_dashboard_created",
+    "public_page_created",
+    "public_product_ready",
+    "public_readiness_claim",
+    "public_ready",
+    "public_surface_updated",
+    "runtime_performance_claim",
+    "silicon_readiness_claim",
+    "training_savings_claim"
+  ],
+  "schemaVersion": "monogate.private_health_report_source_freshness_guard.v0",
+  "sourceArtifact": "eh-a2-private-health-report-fixture-validator",
+  "sourceFeedChecks": [
+    {
+      "dateAligned": true,
+      "feedId": "eml_d109_private_reviewer_response_availability_guard_feed",
+      "feedIdMatches": true,
+      "fileExists": true,
+      "jsonParseOk": true,
+      "parsedDate": "2026-06-06",
+      "parsedFeedId": "eml_d109_private_reviewer_response_availability_guard_feed",
+      "parsedStatus": "EML_D109_PRIVATE_REVIEWER_RESPONSE_AVAILABILITY_GUARD_PASS",
+      "privateOnlyFlagsFalse": true,
+      "sourcePath": "command_center_feeds/eml_d109_private_reviewer_response_availability_guard_feed_2026_06_06.json",
+      "status": "pass"
+    },
+    {
+      "dateAligned": true,
+      "feedId": "prod_a6_training_cost_estimator_fixture_packet_feed",
+      "feedIdMatches": true,
+      "fileExists": true,
+      "jsonParseOk": true,
+      "parsedDate": "2026-06-06",
+      "parsedFeedId": "prod_a6_training_cost_estimator_fixture_packet_feed",
+      "parsedStatus": "PROD_A6_TRAINING_COST_ESTIMATOR_FIXTURE_PACKET_PASS",
+      "privateOnlyFlagsFalse": true,
+      "sourcePath": "command_center_feeds/prod_a6_training_cost_estimator_fixture_packet_feed_2026_06_06.json",
+      "status": "pass"
+    },
+    {
+      "dateAligned": true,
+      "feedId": "ea_a1_shared_evidence_artifact_toolkit_seed_feed",
+      "feedIdMatches": true,
+      "fileExists": true,
+      "jsonParseOk": true,
+      "parsedDate": "2026-06-06",
+      "parsedFeedId": "ea_a1_shared_evidence_artifact_toolkit_seed_feed",
+      "parsedStatus": "EA_A1_SHARED_EVIDENCE_ARTIFACT_TOOLKIT_SEED_PASS",
+      "privateOnlyFlagsFalse": true,
+      "sourcePath": "command_center_feeds/ea_a1_shared_evidence_artifact_toolkit_seed_feed_2026_06_06.json",
+      "status": "pass"
+    },
+    {
+      "dateAligned": true,
+      "feedId": "ea_a2_single_artifact_toolkit_migration_smoke_feed",
+      "feedIdMatches": true,
+      "fileExists": true,
+      "jsonParseOk": true,
+      "parsedDate": "2026-06-06",
+      "parsedFeedId": "ea_a2_single_artifact_toolkit_migration_smoke_feed",
+      "parsedStatus": "EA_A2_SINGLE_ARTIFACT_TOOLKIT_MIGRATION_SMOKE_PASS",
+      "privateOnlyFlagsFalse": true,
+      "sourcePath": "command_center_feeds/ea_a2_single_artifact_toolkit_migration_smoke_feed_2026_06_06.json",
+      "status": "pass"
+    }
+  ],
+  "status": "EH_A3_PRIVATE_HEALTH_REPORT_SOURCE_FRESHNESS_GUARD_PASS",
+  "summary": {
+    "aggregateCheckCount": 5,
+    "d109HoldRespected": true,
+    "d110Started": false,
+    "dashboardUiCreated": false,
+    "healthReportArtifact": "eh-a1-private-ecosystem-health-report-seed",
+    "nextRecommendedArtifact": "EH-A4 private ecosystem health digest export or pause selector",
+    "passedAggregateCheckCount": 5,
+    "passedSourceFeedCheckCount": 4,
+    "publicReadinessClaim": false,
+    "reviewerResponseConsumed": false,
+    "snapshotDate": "2026-06-06",
+    "sourceArtifact": "eh-a2-private-health-report-fixture-validator",
+    "sourceFeedCount": 4
+  }
+}
