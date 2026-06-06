@@ -2,8 +2,16 @@
 
 Status: `PROD_A1_PRIVATE_PRODUCT_EVIDENCE_SURFACE_SEED_PASS`
 
-PROD-A1 maps six product lanes into private next artifacts and blocked public claims.
-It does not implement or launch any product.
+## Summary
+
+- lane count: `6`
+- next recommended artifact: `PROD-A2 training cost estimator private spec`
+- D109 hold respected: `True`
+- D110 started: `False`
+- public product ready: `False`
+- compiler correctness claim: `False`
+- runtime performance claim: `False`
+- hardware readiness claim: `False`
 
 ## Product Lanes
 
@@ -15,17 +23,6 @@ It does not implement or launch any product.
 | `eml_ip_core_license` | `license_scope_memo_only_until_hardware_evidence_exists` | License-scope memo: evaluation-only terms, excluded claims, provenance obligations |
 | `eml_accelerator_card` | `long_horizon_dependency_ladder_only` | Dependency ladder: Arty proof-of-life, fixed-point smoke, capture packet, card feasibility |
 | `pinn_advisor` | `diagnostic_concept_downstream_of_cost_estimator` | PINN advisor brief: inputs, diagnostics, caveats, examples, blocked claims |
-
-## Summary
-
-- lane count: `6`
-- next recommended artifact: `PROD-A2 training cost estimator private spec`
-- D109 hold respected: `True`
-- D110 started: `False`
-- public product ready: `False`
-- compiler correctness claim: `False`
-- runtime performance claim: `False`
-- hardware readiness claim: `False`
 
 ## Non-Claims
 

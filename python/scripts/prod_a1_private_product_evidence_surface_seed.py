@@ -4,16 +4,26 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
+import sys
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
+PYTHON_ROOT = ROOT / "python"
+if str(PYTHON_ROOT) not in sys.path:
+    sys.path.insert(0, str(PYTHON_ROOT))
+
+from scripts.evidence_artifact_toolkit import (  # noqa: E402
+    build_claim_flagged_packet,
+    build_command_feed,
+    build_evidence_packet,
+    render_markdown_report,
+    write_json,
+)
 
 DATE = "2026-06-06"
 STAMP = DATE.replace("-", "_")
 SCHEMA_VERSION = "monogate.private_product_evidence_surface_seed.v0"
-EVIDENCE_SCHEMA_VERSION = "monogate.evidence_public_packet.v0"
 STATUS = "PROD_A1_PRIVATE_PRODUCT_EVIDENCE_SURFACE_SEED_PASS"
 
 LANE_IDS = {
@@ -200,18 +210,21 @@ def build_payload() -> dict[str, Any]:
         "claimFlagsBounded": all(CLAIM_FLAGS[key] is True for key in TRUE_CLAIM_FLAGS)
         and all(value is False for key, value in CLAIM_FLAGS.items() if key not in TRUE_CLAIM_FLAGS),
     }
-    return {
-        "schemaVersion": SCHEMA_VERSION,
-        "artifactId": "prod-a1-private-product-evidence-surface-seed",
-        "artifactType": "private_product_evidence_surface_seed",
-        "status": STATUS,
-        "date": DATE,
-        "sourceOverlay": "monogate-research/roadmap/product-roadmap-current-readiness-overlay.md",
-        "productLanes": lanes,
-        "summary": summary,
-        "claimFlags": dict(CLAIM_FLAGS),
-        "nonClaims": list(NON_CLAIMS),
-    }
+    return build_claim_flagged_packet(
+        schema_version=SCHEMA_VERSION,
+        artifact_id="prod-a1-private-product-evidence-surface-seed",
+        artifact_type="private_product_evidence_surface_seed",
+        status=STATUS,
+        date=DATE,
+        summary=summary,
+        claim_flags=CLAIM_FLAGS,
+        true_claim_flags=TRUE_CLAIM_FLAGS,
+        non_claims=NON_CLAIMS,
+        extra={
+            "sourceOverlay": "monogate-research/roadmap/product-roadmap-current-readiness-overlay.md",
+            "productLanes": lanes,
+        },
+    )
 
 
 def validate_payload(payload: dict[str, Any]) -> None:
@@ -259,79 +272,56 @@ def validate_payload(payload: dict[str, Any]) -> None:
 
 
 def build_evidence(payload: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "schemaVersion": EVIDENCE_SCHEMA_VERSION,
-        "artifactId": payload["artifactId"],
-        "artifactType": "private_product_evidence_surface_seed",
-        "validationStatus": "pass",
-        "semanticStrength": "private_product_lane_mapping_no_public_readiness_no_implementation",
-        "source": f"python/results/prod_a1_private_product_evidence_surface_seed/prod_a1_private_product_evidence_surface_seed_{STAMP}.json",
-        "summary": payload["summary"],
-        "claimFlags": dict(CLAIM_FLAGS),
-        "nonClaims": list(NON_CLAIMS),
-    }
+    return build_evidence_packet(
+        artifact_id=payload["artifactId"],
+        artifact_type="private_product_evidence_surface_seed",
+        semantic_strength="private_product_lane_mapping_no_public_readiness_no_implementation",
+        source=f"python/results/prod_a1_private_product_evidence_surface_seed/prod_a1_private_product_evidence_surface_seed_{STAMP}.json",
+        summary=payload["summary"],
+        claim_flags=payload["claimFlags"],
+        non_claims=payload["nonClaims"],
+    )
 
 
 def build_feed(payload: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "feedId": "prod_a1_private_product_evidence_surface_seed_feed",
-        "date": DATE,
-        "status": payload["status"],
-        "laneCount": payload["summary"]["laneCount"],
-        "nextRecommendedArtifact": payload["summary"]["nextRecommendedArtifact"],
-        "d109HoldRespected": payload["summary"]["d109HoldRespected"],
-        "publicProductReady": payload["summary"]["publicProductReady"],
-        "compilerCorrectnessClaim": payload["summary"]["compilerCorrectnessClaim"],
-        "runtimePerformanceClaim": payload["summary"]["runtimePerformanceClaim"],
-        "hardwareReadinessClaim": payload["summary"]["hardwareReadinessClaim"],
-        "nextAction": "Create PROD-A2 training cost estimator private spec, or hold if product work is paused.",
-        "claimFlags": dict(CLAIM_FLAGS),
-    }
-
-
-def write_json(path: Path, data: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return build_command_feed(
+        feed_id="prod_a1_private_product_evidence_surface_seed_feed",
+        date=DATE,
+        status=payload["status"],
+        next_action="Create PROD-A2 training cost estimator private spec, or hold if product work is paused.",
+        claim_flags=payload["claimFlags"],
+        fields={
+            "laneCount": payload["summary"]["laneCount"],
+            "nextRecommendedArtifact": payload["summary"]["nextRecommendedArtifact"],
+            "d109HoldRespected": payload["summary"]["d109HoldRespected"],
+            "publicProductReady": payload["summary"]["publicProductReady"],
+            "compilerCorrectnessClaim": payload["summary"]["compilerCorrectnessClaim"],
+            "runtimePerformanceClaim": payload["summary"]["runtimePerformanceClaim"],
+            "hardwareReadinessClaim": payload["summary"]["hardwareReadinessClaim"],
+        },
+    )
 
 
 def build_report(payload: dict[str, Any]) -> str:
-    lines = [
-        "# PROD-A1 Private Product Evidence Surface Seed",
-        "",
-        f"Status: `{payload['status']}`",
-        "",
-        "PROD-A1 maps six product lanes into private next artifacts and blocked public claims.",
-        "It does not implement or launch any product.",
-        "",
-        "## Product Lanes",
-        "",
-        "| Lane | Current posture | Next private artifact |",
-        "|---|---|---|",
-    ]
+    lane_lines = ["| Lane | Current posture | Next private artifact |", "|---|---|---|"]
     for lane in payload["productLanes"]:
-        lines.append(
-            f"| `{lane['laneId']}` | `{lane['currentPosture']}` | {lane['nextPrivateArtifact']} |"
-        )
-    lines.extend(
-        [
-            "",
-            "## Summary",
-            "",
-            f"- lane count: `{payload['summary']['laneCount']}`",
-            f"- next recommended artifact: `{payload['summary']['nextRecommendedArtifact']}`",
-            f"- D109 hold respected: `{payload['summary']['d109HoldRespected']}`",
-            f"- D110 started: `{payload['summary']['d110Started']}`",
-            f"- public product ready: `{payload['summary']['publicProductReady']}`",
-            f"- compiler correctness claim: `{payload['summary']['compilerCorrectnessClaim']}`",
-            f"- runtime performance claim: `{payload['summary']['runtimePerformanceClaim']}`",
-            f"- hardware readiness claim: `{payload['summary']['hardwareReadinessClaim']}`",
-            "",
-            "## Non-Claims",
-            "",
-        ]
+        lane_lines.append(f"| `{lane['laneId']}` | `{lane['currentPosture']}` | {lane['nextPrivateArtifact']} |")
+    return render_markdown_report(
+        title="PROD-A1 Private Product Evidence Surface Seed",
+        status=payload["status"],
+        summary_rows=[
+            ("lane count", payload["summary"]["laneCount"]),
+            ("next recommended artifact", payload["summary"]["nextRecommendedArtifact"]),
+            ("D109 hold respected", payload["summary"]["d109HoldRespected"]),
+            ("D110 started", payload["summary"]["d110Started"]),
+            ("public product ready", payload["summary"]["publicProductReady"]),
+            ("compiler correctness claim", payload["summary"]["compilerCorrectnessClaim"]),
+            ("runtime performance claim", payload["summary"]["runtimePerformanceClaim"]),
+            ("hardware readiness claim", payload["summary"]["hardwareReadinessClaim"]),
+        ],
+        sections=[("Product Lanes", lane_lines)],
+        non_claims=payload["nonClaims"],
     )
-    lines.extend(f"- {item}" for item in payload["nonClaims"])
-    return "\n".join(lines) + "\n"
 
 
 def build_outputs(out_dir: Path, report_dir: Path, evidence_dir: Path, command_feed_dir: Path) -> dict[str, Any]:
