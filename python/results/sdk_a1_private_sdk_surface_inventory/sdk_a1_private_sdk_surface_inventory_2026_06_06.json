@@ -1,0 +1,221 @@
+{
+  "artifactId": "sdk-a1-private-sdk-surface-inventory",
+  "artifactType": "private_sdk_surface_inventory",
+  "blockedSdkClaims": [
+    {
+      "claim": "SDK stability",
+      "reason": "Inventory has not reviewed or frozen import/API compatibility."
+    },
+    {
+      "claim": "public readiness",
+      "reason": "No public release gate or reviewer approval is recorded."
+    },
+    {
+      "claim": "API compatibility",
+      "reason": "No compatibility matrix or deprecation policy is recorded."
+    },
+    {
+      "claim": "semantic versioning commitment",
+      "reason": "No versioning policy is selected by SDK-A1."
+    },
+    {
+      "claim": "compiler correctness",
+      "reason": "Forge preview remains bounded and does not prove compilation."
+    },
+    {
+      "claim": "runtime performance",
+      "reason": "Inventory reads surfaces only; it runs no benchmarks."
+    },
+    {
+      "claim": "hardware readiness",
+      "reason": "Hardware/electronics evidence is outside this research-side artifact."
+    },
+    {
+      "claim": "broad EML advantage",
+      "reason": "SDK-A1 is an inventory, not an advantage proof."
+    }
+  ],
+  "claimFlags": {
+    "api_compatibility_claim": false,
+    "blocked_sdk_claims_recorded": true,
+    "broad_eml_advantage_claim": false,
+    "compiler_correctness_claim": false,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "dashboard_ui_created": false,
+    "eh_a4_consumed": true,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "hardware_readiness_claim": false,
+    "laptop_owned_repo_touched": false,
+    "private_sdk_surface_inventory_created": true,
+    "public_copy_approved": false,
+    "public_package_release_claim": false,
+    "public_readiness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_performance_claim": false,
+    "sdk_implementation_changed": false,
+    "sdk_public_ready": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "semantic_versioning_commitment": false,
+    "silicon_readiness_claim": false,
+    "surface_rows_recorded": true,
+    "training_savings_claim": false
+  },
+  "date": "2026-06-06",
+  "nonClaims": [
+    "SDK-A1 is a private inventory of existing SDK/API surfaces; it does not change implementation.",
+    "SDK-A1 does not claim SDK stability, public readiness, public package release readiness, API compatibility, or semantic-versioning commitments.",
+    "SDK-A1 does not claim compiler correctness, semantic preservation, runtime performance, training savings, estimator accuracy, hardware readiness, silicon readiness, or broad EML advantage.",
+    "SDK-A1 respects the D109 hold and does not start D110, consume reviewer response, or record reviewer approval.",
+    "SDK-A1 does not touch laptop-owned electronics repositories."
+  ],
+  "schemaVersion": "monogate.private_sdk_surface_inventory.v0",
+  "sourceArtifact": "eh-a4-private-ecosystem-health-digest-export-or-pause-selector",
+  "status": "SDK_A1_PRIVATE_SDK_SURFACE_INVENTORY_PASS",
+  "summary": {
+    "blockedBoundarySurfaceCount": 1,
+    "blockedSdkClaimCount": 8,
+    "d109HoldRespected": true,
+    "d110Started": false,
+    "dashboardUiCreated": false,
+    "experimentalOrPrivateSurfaceCount": 5,
+    "nextRecommendedArtifact": "SDK-A2 private SDK import and CLI smoke contract",
+    "publicReadinessClaim": false,
+    "reviewerResponseConsumed": false,
+    "sdkImplementationChanged": false,
+    "sdkStabilityClaim": false,
+    "sourceArtifact": "eh-a4-private-ecosystem-health-digest-export-or-pause-selector",
+    "stableSurfaceCount": 0,
+    "surfaceRowCount": 6
+  },
+  "surfaceRows": [
+    {
+      "allowedPrivateUse": "Inventory imports, CLI names, extras, and examples before any stability promise.",
+      "blockedClaims": [
+        "SDK stability",
+        "API compatibility",
+        "runtime performance",
+        "public readiness"
+      ],
+      "currentPosture": "existing_public_package_claims_require_review",
+      "displayName": "Python package: monogate",
+      "knownEntryPoints": [
+        "monogate-optimize",
+        "monogate-validate",
+        "monogate-capability-card",
+        "monogate-explore",
+        "eml-explore"
+      ],
+      "paths": [
+        "python/pyproject.toml",
+        "python/monogate",
+        "python/README.md"
+      ],
+      "surfaceId": "python_package_core",
+      "surfaceType": "python_imports_and_cli"
+    },
+    {
+      "allowedPrivateUse": "Track native extension boundary and wrapper relationship.",
+      "blockedClaims": [
+        "runtime performance",
+        "wheel distribution readiness",
+        "hardware readiness"
+      ],
+      "currentPosture": "experimental_native_backend",
+      "displayName": "Rust extension: monogate-core",
+      "knownEntryPoints": [
+        "monogate_core.eval_eml_batch",
+        "monogate_core.eval_best_batch",
+        "monogate_core.benchmark_rust"
+      ],
+      "paths": [
+        "monogate-core/pyproject.toml",
+        "monogate-core/src",
+        "monogate-core/README.md"
+      ],
+      "surfaceId": "rust_extension_core",
+      "surfaceType": "native_extension"
+    },
+    {
+      "allowedPrivateUse": "Use for bounded fixture preview and packet generation only.",
+      "blockedClaims": [
+        "compiler correctness",
+        "semantic preservation",
+        "public package release readiness"
+      ],
+      "currentPosture": "private_preview_scaffold",
+      "displayName": "Forge preview package",
+      "knownEntryPoints": [
+        "monogate-forge-preview"
+      ],
+      "paths": [
+        "packages/monogate-forge-preview/pyproject.toml",
+        "packages/monogate-forge-preview/README.md"
+      ],
+      "surfaceId": "forge_preview_package",
+      "surfaceType": "local_preview_cli"
+    },
+    {
+      "allowedPrivateUse": "Use as claim-bounded evidence contracts and review inputs.",
+      "blockedClaims": [
+        "complete ecosystem audit",
+        "public readiness",
+        "automatic approval"
+      ],
+      "currentPosture": "private_review_contracts",
+      "displayName": "Schemas and evidence packet artifacts",
+      "knownEntryPoints": [
+        "JSON schema files",
+        "evidence packet JSON",
+        "command feed JSON"
+      ],
+      "paths": [
+        "schemas",
+        "reports/evidence_packets",
+        "command_center_feeds"
+      ],
+      "surfaceId": "schemas_and_evidence_packets",
+      "surfaceType": "json_contracts"
+    },
+    {
+      "allowedPrivateUse": "Generate bounded artifacts and focused tests.",
+      "blockedClaims": [
+        "public SDK",
+        "framework completeness",
+        "automatic correctness"
+      ],
+      "currentPosture": "private_generator_tooling",
+      "displayName": "Research artifact generators",
+      "knownEntryPoints": [
+        "python python/scripts/* --build --strict"
+      ],
+      "paths": [
+        "python/scripts",
+        "python/tests"
+      ],
+      "surfaceId": "research_artifact_scripts",
+      "surfaceType": "private_cli_scripts"
+    },
+    {
+      "allowedPrivateUse": "Read-only status checks only unless a later explicit handoff changes ownership.",
+      "blockedClaims": [
+        "electronics readiness",
+        "hardware readiness",
+        "laptop-owned repo touch"
+      ],
+      "currentPosture": "not_sdk_surface_for_research_agent",
+      "displayName": "Laptop-owned electronics/dev repositories",
+      "knownEntryPoints": [],
+      "paths": [
+        "monogate-electronics",
+        "monogate-dev",
+        "/electronics"
+      ],
+      "surfaceId": "blocked_electronics_and_dev_repos",
+      "surfaceType": "blocked_boundary"
+    }
+  ]
+}
