@@ -1,0 +1,161 @@
+{
+  "artifactId": "eh-a2-private-health-report-fixture-validator",
+  "artifactType": "private_health_report_fixture_validator",
+  "claimFlags": {
+    "blocked_claim_invariants_checked": true,
+    "broad_eml_advantage_claim": false,
+    "compiler_correctness_claim": false,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "dashboard_renderer_implemented": false,
+    "dashboard_ui_created": false,
+    "eh_a1_consumed": true,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "feed_invariants_checked": true,
+    "fixture_validator_created": true,
+    "forbidden_claim_flags_checked": true,
+    "hardware_readiness_claim": false,
+    "health_report_completeness_claim": false,
+    "lane_invariants_checked": true,
+    "laptop_owned_repo_touched": false,
+    "public_copy_approved": false,
+    "public_dashboard_created": false,
+    "public_readiness_claim": false,
+    "renderer_correctness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_performance_claim": false,
+    "schema_validator_implemented": false,
+    "silicon_readiness_claim": false,
+    "training_savings_claim": false,
+    "visualization_quality_claim": false
+  },
+  "date": "2026-06-06",
+  "expectedBlockedClaims": [
+    "D110 reviewer response consumed",
+    "broad EML advantage",
+    "compiler correctness",
+    "estimator accuracy",
+    "hardware readiness",
+    "public copy approval",
+    "public readiness",
+    "renderer correctness",
+    "runtime performance",
+    "silicon readiness",
+    "training savings",
+    "visualization quality"
+  ],
+  "expectedFeedIds": [
+    "ea_a1_shared_evidence_artifact_toolkit_seed_feed",
+    "ea_a2_single_artifact_toolkit_migration_smoke_feed",
+    "eml_d109_private_reviewer_response_availability_guard_feed",
+    "prod_a6_training_cost_estimator_fixture_packet_feed"
+  ],
+  "expectedLaneIds": [
+    "d-series-private-reviewer",
+    "electronics-course-and-capture",
+    "product-training-cost-estimator",
+    "shared-evidence-infrastructure"
+  ],
+  "fixtureChecks": [
+    {
+      "checkId": "expected_feed_ids_present",
+      "missing": [],
+      "status": "pass",
+      "unexpected": []
+    },
+    {
+      "checkId": "expected_lane_ids_present",
+      "missing": [],
+      "status": "pass",
+      "unexpected": []
+    },
+    {
+      "checkId": "expected_blocked_claims_present",
+      "missing": [],
+      "status": "pass",
+      "unexpected": []
+    },
+    {
+      "checkId": "d109_hold_preserved",
+      "d110BlockedUntilResponseExists": true,
+      "laneStatus": "held",
+      "status": "pass"
+    },
+    {
+      "checkId": "forbidden_claim_flags_remain_false",
+      "checkedFlags": [
+        "broad_eml_advantage_claim",
+        "compiler_correctness_claim",
+        "d110_started",
+        "dashboard_ui_created",
+        "electronics_repo_touched",
+        "estimator_accuracy_claim",
+        "hardware_readiness_claim",
+        "laptop_owned_repo_touched",
+        "public_copy_approved",
+        "public_dashboard_created",
+        "public_readiness_claim",
+        "renderer_correctness_claim",
+        "reviewer_approval_recorded",
+        "reviewer_response_consumed",
+        "runtime_performance_claim",
+        "silicon_readiness_claim",
+        "training_savings_claim",
+        "visualization_quality_claim"
+      ],
+      "status": "pass"
+    },
+    {
+      "checkId": "next_action_points_to_eh_a2",
+      "nextRecommendedArtifact": "EH-A2 private health report fixture or feed aggregation validator",
+      "status": "pass"
+    }
+  ],
+  "forbiddenTrueFlags": [
+    "broad_eml_advantage_claim",
+    "compiler_correctness_claim",
+    "d110_started",
+    "dashboard_ui_created",
+    "electronics_repo_touched",
+    "estimator_accuracy_claim",
+    "hardware_readiness_claim",
+    "laptop_owned_repo_touched",
+    "public_copy_approved",
+    "public_dashboard_created",
+    "public_readiness_claim",
+    "renderer_correctness_claim",
+    "reviewer_approval_recorded",
+    "reviewer_response_consumed",
+    "runtime_performance_claim",
+    "silicon_readiness_claim",
+    "training_savings_claim",
+    "visualization_quality_claim"
+  ],
+  "nonClaims": [
+    "EH-A2 validates a narrow private fixture shape for EH-A1; it is not a complete ecosystem auditor.",
+    "EH-A2 does not implement a schema validator framework, dashboard UI, dashboard renderer, public page, or public dashboard.",
+    "EH-A2 does not approve public copy, public readiness, compiler correctness, runtime performance, training savings, estimator accuracy, hardware readiness, silicon readiness, or broad EML advantage claims.",
+    "EH-A2 respects the D109 hold and does not start D110, consume reviewer response, or record reviewer approval.",
+    "EH-A2 does not touch laptop-owned electronics repositories."
+  ],
+  "schemaVersion": "monogate.private_health_report_fixture_validator.v0",
+  "sourceArtifact": "eh-a1-private-ecosystem-health-report-seed",
+  "status": "EH_A2_PRIVATE_HEALTH_REPORT_FIXTURE_VALIDATOR_PASS",
+  "summary": {
+    "d109HoldRespected": true,
+    "d110Started": false,
+    "dashboardUiCreated": false,
+    "expectedBlockedClaimCount": 12,
+    "expectedFeedCount": 4,
+    "expectedLaneCount": 4,
+    "fixtureCheckCount": 6,
+    "forbiddenClaimFlagCount": 18,
+    "nextRecommendedArtifact": "EH-A3 private health report source freshness guard",
+    "passedFixtureCheckCount": 6,
+    "publicReadinessClaim": false,
+    "reviewerResponseConsumed": false,
+    "sourceArtifact": "eh-a1-private-ecosystem-health-report-seed"
+  }
+}
