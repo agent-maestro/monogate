@@ -1,0 +1,250 @@
+{
+  "artifactId": "prod-a2-training-cost-estimator-private-spec",
+  "artifactType": "training_cost_estimator_private_spec",
+  "blockedClaims": [
+    "training cost savings",
+    "estimator accuracy",
+    "wall-clock runtime performance",
+    "model quality improvement",
+    "scientific correctness",
+    "compiler correctness",
+    "semantic preservation",
+    "public product readiness",
+    "SDK stability",
+    "hardware readiness",
+    "silicon readiness",
+    "broad EML advantage"
+  ],
+  "calibrationCaveats": [
+    {
+      "caveatId": "not_wall_clock_runtime",
+      "text": "The estimate is not a wall-clock runtime benchmark."
+    },
+    {
+      "caveatId": "not_training_savings",
+      "text": "The estimate does not claim lower cost, lower spend, or faster training."
+    },
+    {
+      "caveatId": "hardware_context_missing",
+      "text": "Hardware, kernel fusion, memory bandwidth, dataloader, and compiler effects may dominate real runtime."
+    },
+    {
+      "caveatId": "model_quality_out_of_scope",
+      "text": "The estimate says nothing about accuracy, convergence, stability, or scientific validity."
+    },
+    {
+      "caveatId": "calibration_required",
+      "text": "Any numeric estimator implementation must later carry calibration source, version, and residual/error notes."
+    }
+  ],
+  "claimFlags": {
+    "blocked_claims_recorded": true,
+    "broad_eml_advantage_claim": false,
+    "calibration_caveats_recorded": true,
+    "compiler_correctness_claim": false,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "estimator_executed": false,
+    "estimator_implemented": false,
+    "hardware_readiness_claim": false,
+    "ip_license_terms_finalized": false,
+    "laptop_owned_repo_touched": false,
+    "model_quality_claim": false,
+    "model_training_executed": false,
+    "output_schema_recorded": true,
+    "private_training_cost_spec_created": true,
+    "prod_a1_consumed": true,
+    "public_launch_copy_approved": false,
+    "public_product_ready": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_benchmark_executed": false,
+    "runtime_performance_claim": false,
+    "scientific_correctness_claim": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "silicon_readiness_claim": false,
+    "supported_inputs_recorded": true,
+    "training_savings_claim": false
+  },
+  "date": "2026-06-06",
+  "exampleBoundaries": [
+    {
+      "allowedUse": "private example of how batch/epoch/parameter metadata could shape a budget estimate",
+      "blockedUse": "public claim about MNIST training savings or estimator accuracy",
+      "exampleId": "mnist_mlp_budget_shape"
+    },
+    {
+      "allowedUse": "private example of graph/layer cost visibility",
+      "blockedUse": "claim that traced graph cost equals full runtime cost",
+      "exampleId": "torch_fx_layer_profile"
+    },
+    {
+      "allowedUse": "downstream advisory input for PINN diagnostics",
+      "blockedUse": "claim of better PDE solution quality or scientific correctness",
+      "exampleId": "pinn_diagnostic_context"
+    }
+  ],
+  "nonClaims": [
+    "PROD-A2 is a private specification for a training cost estimator; it does not implement or execute an estimator.",
+    "PROD-A2 defines supported inputs, output fields, calibration caveats, example boundaries, and blocked claims only.",
+    "PROD-A2 does not claim training savings, estimator accuracy, runtime performance, model-quality improvement, compiler correctness, semantic preservation, public product readiness, hardware readiness, silicon readiness, reviewer approval, or broad EML advantage.",
+    "PROD-A2 respects the D109 hold and does not start D110 or consume a reviewer response."
+  ],
+  "outputSchemaFields": [
+    {
+      "field": "estimate_id",
+      "meaning": "Stable identifier for the private estimate packet.",
+      "type": "string"
+    },
+    {
+      "field": "input_summary",
+      "meaning": "Compact description of accepted inputs and missing optional context.",
+      "type": "object"
+    },
+    {
+      "field": "static_expression_cost",
+      "meaning": "Expression-level cost profile when symbolic expressions are supplied.",
+      "type": "object|null"
+    },
+    {
+      "field": "graph_cost_profile",
+      "meaning": "Layer/node-level profile when graph-summary input is supplied.",
+      "type": "object|null"
+    },
+    {
+      "field": "training_budget_context",
+      "meaning": "Epoch/batch/parameter context used to scale a private advisory estimate.",
+      "type": "object|null"
+    },
+    {
+      "field": "calibration_caveats",
+      "meaning": "Required caveats attached to the estimate.",
+      "type": "array[string]"
+    },
+    {
+      "field": "blocked_claims",
+      "meaning": "Claims that the estimate must not imply.",
+      "type": "array[string]"
+    },
+    {
+      "field": "reviewer_next_steps",
+      "meaning": "Private reviewer actions before implementation or public copy.",
+      "type": "array[string]"
+    }
+  ],
+  "reviewerNextSteps": [
+    {
+      "question": "Are these inputs enough for a useful private estimator MVP without implying runtime truth?",
+      "status": "open_private_review",
+      "stepId": "review_supported_inputs"
+    },
+    {
+      "question": "Do the output fields force caveats and blocked claims to travel with every estimate?",
+      "status": "open_private_review",
+      "stepId": "review_output_schema"
+    },
+    {
+      "question": "Should PROD-A3 be a schema validator, example packet, or implementation hold gate?",
+      "status": "open_private_review",
+      "stepId": "select_a3_path"
+    }
+  ],
+  "schemaVersion": "monogate.training_cost_estimator_private_spec.v0",
+  "selectedLane": "training_cost_estimator",
+  "sourceArtifact": "prod-a1-private-product-evidence-surface-seed",
+  "status": "PROD_A2_TRAINING_COST_ESTIMATOR_PRIVATE_SPEC_PASS",
+  "summary": {
+    "blockedClaimCount": 12,
+    "broadEmlAdvantageClaim": false,
+    "calibrationCaveatCount": 5,
+    "claimFlagsBounded": true,
+    "compilerCorrectnessClaim": false,
+    "d109HoldRespected": true,
+    "d110Started": false,
+    "estimatorAccuracyClaim": false,
+    "estimatorExecuted": false,
+    "estimatorImplemented": false,
+    "exampleBoundaryCount": 3,
+    "hardwareReadinessClaim": false,
+    "modelQualityClaim": false,
+    "modelTrainingExecuted": false,
+    "nextRecommendedArtifact": "PROD-A3 training cost estimator schema validator or example packet selector",
+    "outputFieldCount": 8,
+    "prodA1NextRecommendedArtifact": "PROD-A2 training cost estimator private spec",
+    "publicProductReady": false,
+    "reviewerNextStepCount": 3,
+    "reviewerResponseConsumed": false,
+    "runtimeBenchmarkExecuted": false,
+    "runtimePerformanceClaim": false,
+    "scientificCorrectnessClaim": false,
+    "selectedLane": "training_cost_estimator",
+    "semanticPreservationClaim": false,
+    "siliconReadinessClaim": false,
+    "sourceArtifact": "prod-a1-private-product-evidence-surface-seed",
+    "supportedInputCount": 4,
+    "trainingSavingsClaim": false
+  },
+  "supportedInputs": [
+    {
+      "boundary": "Static expression cost shape only; no runtime measurement or training outcome prediction.",
+      "inputId": "sympy_expression_or_expression_list",
+      "optionalFields": [
+        "expression_label",
+        "batch_role",
+        "source_file"
+      ],
+      "requiredFields": [
+        "expression",
+        "variable_names"
+      ],
+      "status": "supported_for_static_cost_shape_spec"
+    },
+    {
+      "boundary": "Profiler-shape input only; no guarantee that traced graph captures all runtime work.",
+      "inputId": "torch_fx_graph_summary",
+      "optionalFields": [
+        "parameter_counts",
+        "activation_shapes",
+        "dtype",
+        "device_label"
+      ],
+      "requiredFields": [
+        "node_kinds",
+        "layer_labels"
+      ],
+      "status": "supported_for_private_profiler_spec"
+    },
+    {
+      "boundary": "Budget-context metadata only; no claim that training dynamics, convergence, or data pipeline cost are fully modeled.",
+      "inputId": "training_loop_metadata",
+      "optionalFields": [
+        "optimizer_name",
+        "loss_name",
+        "precision_policy",
+        "gradient_accumulation_steps"
+      ],
+      "requiredFields": [
+        "epoch_count",
+        "batch_count_or_dataset_size",
+        "batch_size"
+      ],
+      "status": "supported_for_budget_context_spec"
+    },
+    {
+      "boundary": "Reviewer-supplied rows must remain labeled as supplied estimates, not measured truth.",
+      "inputId": "manual_operation_count_packet",
+      "optionalFields": [
+        "confidence_label",
+        "calibration_reference"
+      ],
+      "requiredFields": [
+        "operation_rows",
+        "source_note"
+      ],
+      "status": "supported_for_reviewer_supplied_estimate_spec"
+    }
+  ]
+}
