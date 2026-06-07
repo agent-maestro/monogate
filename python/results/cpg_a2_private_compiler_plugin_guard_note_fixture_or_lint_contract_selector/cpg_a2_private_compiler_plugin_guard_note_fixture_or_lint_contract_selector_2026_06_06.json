@@ -1,0 +1,116 @@
+{
+  "artifactId": "cpg-a2-private-compiler-plugin-guard-note-fixture-or-lint-contract-selector",
+  "artifactType": "private_compiler_plugin_guard_note_fixture_or_lint_contract_selector",
+  "candidateNextActions": [
+    {
+      "actionId": "static_guard_note_fixture_packet",
+      "decision": "selected_next",
+      "expectedFixtureFamilies": [
+        "accepted_advisory_expression_surface_detection",
+        "accepted_guard_requirement_note",
+        "accepted_evidence_packet_link_hint",
+        "rejected_automatic_rewrite_or_lowering",
+        "rejected_runtime_performance_claim",
+        "rejected_public_readiness_claim"
+      ],
+      "nextArtifact": "CPG-A3 private compiler-plugin guard-note static fixture packet",
+      "reason": "Static fixtures can exercise advisory boundaries without implementing or executing a lint engine."
+    },
+    {
+      "actionId": "executable_lint_contract",
+      "blockedUntil": "CPG-A3 static fixture packet exists and is reviewed",
+      "decision": "parked_until_static_fixtures_reviewed",
+      "nextArtifact": "CPG-A4 private executable lint contract selector after CPG-A3 review",
+      "reason": "Executable lint contracts would imply tool behavior; static advisory fixtures should be reviewed first."
+    },
+    {
+      "actionId": "compiler_plugin_implementation",
+      "blockedUntil": "explicit implementation approval and bounded contract evidence",
+      "decision": "blocked",
+      "nextArtifact": "none",
+      "reason": "Implementation remains blocked until advisory fixture and executable contract boundaries are reviewed."
+    },
+    {
+      "actionId": "public_docs_or_package",
+      "blockedUntil": "explicit public approval and separate release/readiness evidence",
+      "decision": "blocked",
+      "nextArtifact": "none",
+      "reason": "Public product/docs/package work would exceed the private advisory selector boundary."
+    }
+  ],
+  "claimFlags": {
+    "accelerator_card_ready": false,
+    "automatic_lowering_safety_claim": false,
+    "broad_eml_advantage_claim": false,
+    "code_generation_claim": false,
+    "compiler_correctness_claim": false,
+    "compiler_plugin_executed": false,
+    "compiler_plugin_implemented": false,
+    "cpg_a1_consumed": true,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "executable_lint_contract_created": false,
+    "executable_lint_contract_parked": true,
+    "guard_note_next_selector_created": true,
+    "hardware_readiness_claim": false,
+    "ip_license_terms_finalized": false,
+    "laptop_owned_repo_touched": false,
+    "lint_engine_executed": false,
+    "lint_engine_implemented": false,
+    "public_copy_approved": false,
+    "public_package_release_claim": false,
+    "public_product_ready": false,
+    "public_readiness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "scientific_correctness_claim": false,
+    "sdk_public_ready": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "silicon_readiness_claim": false,
+    "static_fixture_packet_created": false,
+    "static_fixture_packet_selected": true,
+    "training_savings_claim": false
+  },
+  "date": "2026-06-06",
+  "nonClaims": [
+    "CPG-A2 is a private selector only; it does not create fixtures or executable lint contracts.",
+    "CPG-A2 selects static advisory fixtures before executable lint-contract work.",
+    "CPG-A2 does not implement or execute a compiler plugin, lint engine, rewrite engine, code generator, or runtime lowering path.",
+    "CPG-A2 does not claim compiler correctness, semantic preservation, automatic lowering safety, code generation correctness, runtime performance, SDK stability, public readiness, or public package release readiness.",
+    "CPG-A2 respects the D109 hold and does not start D110, consume reviewer response, or touch laptop-owned electronics repositories."
+  ],
+  "schemaVersion": "monogate.private_compiler_plugin_guard_note_fixture_or_lint_contract_selector.v0",
+  "selectedFixtureFamilies": [
+    "accepted_advisory_expression_surface_detection",
+    "accepted_guard_requirement_note",
+    "accepted_evidence_packet_link_hint",
+    "rejected_automatic_rewrite_or_lowering",
+    "rejected_runtime_performance_claim",
+    "rejected_public_readiness_claim"
+  ],
+  "sourceArtifact": "cpg-a1-private-compiler-plugin-guard-note-packet",
+  "status": "CPG_A2_PRIVATE_COMPILER_PLUGIN_GUARD_NOTE_FIXTURE_OR_LINT_CONTRACT_SELECTOR_PASS",
+  "summary": {
+    "automaticLoweringSafetyClaim": false,
+    "candidateActionCount": 4,
+    "compilerCorrectnessClaim": false,
+    "compilerPluginExecuted": false,
+    "compilerPluginImplemented": false,
+    "executableLintContractCreated": false,
+    "expectedFixtureFamilyCount": 6,
+    "lintEngineExecuted": false,
+    "lintEngineImplemented": false,
+    "nextRecommendedArtifact": "CPG-A3 private compiler-plugin guard-note static fixture packet",
+    "runtimePerformanceClaim": false,
+    "selectedActionId": "static_guard_note_fixture_packet",
+    "selectedNextArtifact": "CPG-A3 private compiler-plugin guard-note static fixture packet",
+    "semanticPreservationClaim": false,
+    "sourceArtifact": "cpg-a1-private-compiler-plugin-guard-note-packet",
+    "staticFixturePacketCreated": false
+  }
+}
