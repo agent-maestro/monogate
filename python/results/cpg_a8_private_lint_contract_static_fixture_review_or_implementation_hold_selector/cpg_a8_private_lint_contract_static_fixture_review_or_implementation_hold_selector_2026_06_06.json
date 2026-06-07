@@ -1,0 +1,159 @@
+{
+  "artifactId": "cpg-a8-private-lint-contract-static-fixture-review-or-implementation-hold-selector",
+  "artifactType": "private_lint_contract_static_fixture_review_or_implementation_hold_selector",
+  "candidateNextActions": [
+    {
+      "actionId": "implementation_hold_boundary_packet",
+      "decision": "selected_next",
+      "nextArtifact": "CPG-A9 private lint contract implementation hold boundary packet",
+      "reason": "Static fixture shapes are broad enough to draft a boundary packet for whether implementation should remain held or be scoped."
+    },
+    {
+      "actionId": "static_fixture_revision_packet",
+      "decision": "parked",
+      "nextArtifact": "CPG-A9-alt private lint contract static fixture revision packet",
+      "reason": "No fixture-review failure was recorded in this selector."
+    },
+    {
+      "actionId": "static_test_execution",
+      "decision": "blocked",
+      "nextArtifact": "none",
+      "reason": "Static fixture shapes are not executable static tests."
+    },
+    {
+      "actionId": "lint_contract_implementation",
+      "decision": "blocked",
+      "nextArtifact": "none",
+      "reason": "Implementation remains blocked until an implementation-hold boundary packet exists and is reviewed."
+    },
+    {
+      "actionId": "public_docs_or_package",
+      "decision": "blocked",
+      "nextArtifact": "none",
+      "reason": "Public docs or package work requires separate approval and readiness evidence."
+    }
+  ],
+  "claimFlags": {
+    "accelerator_card_ready": false,
+    "automatic_lowering_safety_claim": false,
+    "automatic_rewrite_enabled": false,
+    "broad_eml_advantage_claim": false,
+    "code_generation_claim": false,
+    "compiler_correctness_claim": false,
+    "compiler_plugin_executed": false,
+    "compiler_plugin_implemented": false,
+    "cpg_a7_consumed": true,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "executable_lint_contract_created": false,
+    "executable_lint_contract_executed": false,
+    "fixture_runner_executed": false,
+    "fixture_runner_implemented": false,
+    "hardware_readiness_claim": false,
+    "implementation_hold_approved": false,
+    "implementation_hold_boundary_packet_created": false,
+    "implementation_hold_boundary_selected": true,
+    "ip_license_terms_finalized": false,
+    "laptop_owned_repo_touched": false,
+    "lint_contract_implementation_created": false,
+    "lint_contract_static_fixture_revision_created": false,
+    "lint_contract_static_tests_created": false,
+    "lint_contract_static_tests_executed": false,
+    "lint_engine_executed": false,
+    "lint_engine_implemented": false,
+    "public_copy_approved": false,
+    "public_package_release_claim": false,
+    "public_product_ready": false,
+    "public_readiness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "scientific_correctness_claim": false,
+    "sdk_public_ready": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "silicon_readiness_claim": false,
+    "static_fixture_review_created": true,
+    "static_fixture_review_passed": true,
+    "training_savings_claim": false
+  },
+  "date": "2026-06-06",
+  "nonClaims": [
+    "CPG-A8 is a private static-fixture review and next-action selector only.",
+    "CPG-A8 selects an implementation-hold boundary packet; it does not approve implementation.",
+    "CPG-A8 does not create or execute static tests, lint contracts, compiler plugins, lint engines, fixture runners, rewrite engines, code generators, or runtime lowering paths.",
+    "CPG-A8 does not claim compiler correctness, semantic preservation, automatic lowering safety, runtime performance, SDK stability, public readiness, or public package release readiness.",
+    "CPG-A8 respects the D109 hold and does not start D110, consume reviewer response, or touch laptop-owned electronics repositories."
+  ],
+  "reviewChecks": [
+    {
+      "checkId": "accepted_static_fixture_count",
+      "reason": "CPG-A7 records four accepted static fixture shapes.",
+      "status": "pass"
+    },
+    {
+      "checkId": "rejection_static_fixture_count",
+      "reason": "CPG-A7 records four rejection static fixture shapes.",
+      "status": "pass"
+    },
+    {
+      "checkId": "allowed_output_kind_coverage",
+      "reason": "Accepted fixtures cover every allowed output kind from the boundary packet.",
+      "status": "pass"
+    },
+    {
+      "checkId": "blocked_output_kind_coverage",
+      "reason": "Rejection fixtures cover rewrite, performance, public/package, and guard-proof requests.",
+      "status": "pass"
+    },
+    {
+      "checkId": "no_static_tests_created_or_executed",
+      "reason": "CPG-A7 records fixture shapes only.",
+      "status": "pass"
+    },
+    {
+      "checkId": "no_lint_contract_or_engine_execution",
+      "reason": "No lint contract or lint engine execution is recorded.",
+      "status": "pass"
+    },
+    {
+      "checkId": "forbidden_claims_remain_false",
+      "reason": "Compiler-correctness and runtime-performance claims remain false.",
+      "status": "pass"
+    }
+  ],
+  "schemaVersion": "monogate.private_lint_contract_static_fixture_review_or_implementation_hold_selector.v0",
+  "sourceArtifact": "cpg-a7-private-lint-contract-static-test-fixture-packet",
+  "status": "CPG_A8_PRIVATE_LINT_CONTRACT_STATIC_FIXTURE_REVIEW_OR_IMPLEMENTATION_HOLD_SELECTOR_PASS",
+  "summary": {
+    "automaticLoweringSafetyClaim": false,
+    "candidateActionCount": 5,
+    "compilerCorrectnessClaim": false,
+    "compilerPluginExecuted": false,
+    "compilerPluginImplemented": false,
+    "executableLintContractCreated": false,
+    "executableLintContractExecuted": false,
+    "fixtureRunnerExecuted": false,
+    "fixtureRunnerImplemented": false,
+    "implementationHoldApproved": false,
+    "implementationHoldBoundaryPacketCreated": false,
+    "lintContractImplementationCreated": false,
+    "lintContractStaticFixtureRevisionCreated": false,
+    "lintContractStaticTestsCreated": false,
+    "lintContractStaticTestsExecuted": false,
+    "lintEngineExecuted": false,
+    "lintEngineImplemented": false,
+    "nextRecommendedArtifact": "CPG-A9 private lint contract implementation hold boundary packet",
+    "reviewCheckCount": 7,
+    "reviewFailCount": 0,
+    "reviewPassCount": 7,
+    "runtimePerformanceClaim": false,
+    "selectedActionId": "implementation_hold_boundary_packet",
+    "selectedNextArtifact": "CPG-A9 private lint contract implementation hold boundary packet",
+    "semanticPreservationClaim": false,
+    "sourceArtifact": "cpg-a7-private-lint-contract-static-test-fixture-packet"
+  }
+}
