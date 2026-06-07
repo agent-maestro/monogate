@@ -1,0 +1,205 @@
+{
+  "artifactId": "cpg-a5-private-executable-lint-contract-boundary-packet",
+  "artifactType": "private_executable_lint_contract_boundary_packet",
+  "claimFlags": {
+    "accelerator_card_ready": false,
+    "automatic_lowering_safety_claim": false,
+    "automatic_rewrite_enabled": false,
+    "broad_eml_advantage_claim": false,
+    "code_generation_claim": false,
+    "compiler_correctness_claim": false,
+    "compiler_plugin_executed": false,
+    "compiler_plugin_implemented": false,
+    "contract_input_shape_recorded": true,
+    "contract_output_shape_recorded": true,
+    "contract_rejection_obligations_recorded": true,
+    "cpg_a4_consumed": true,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "executable_lint_contract_created": false,
+    "executable_lint_contract_executed": false,
+    "execution_gate_recorded": true,
+    "fixture_runner_executed": false,
+    "fixture_runner_implemented": false,
+    "hardware_readiness_claim": false,
+    "ip_license_terms_finalized": false,
+    "laptop_owned_repo_touched": false,
+    "lint_contract_boundary_packet_created": true,
+    "lint_contract_implementation_created": false,
+    "lint_contract_static_tests_created": false,
+    "lint_contract_static_tests_executed": false,
+    "lint_engine_executed": false,
+    "lint_engine_implemented": false,
+    "public_copy_approved": false,
+    "public_package_release_claim": false,
+    "public_product_ready": false,
+    "public_readiness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "scientific_correctness_claim": false,
+    "sdk_public_ready": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "silicon_readiness_claim": false,
+    "training_savings_claim": false
+  },
+  "contractInputShape": [
+    {
+      "boundary": "the snippet is not compiled, rewritten, or executed by this packet",
+      "field": "source_snippet",
+      "requirement": "short source expression or statement under advisory review"
+    },
+    {
+      "boundary": "family labels are hints, not completeness or theorem-discovery claims",
+      "field": "expression_family",
+      "requirement": "bounded family label such as expm1_boundary or positive_log_exp_guard"
+    },
+    {
+      "boundary": "a pointer does not establish applicability to the snippet",
+      "field": "evidence_pointer",
+      "requirement": "optional private witness/evidence packet id when one is known"
+    },
+    {
+      "boundary": "the contract may report missing guards but does not prove guards",
+      "field": "guard_context",
+      "requirement": "explicit domain or guard notes supplied by the reviewer or caller"
+    }
+  ],
+  "contractOutputShape": [
+    {
+      "allowed": "human-readable lint/profile/review note",
+      "blocked": "automatic rewrite, replacement, or lowering instruction",
+      "output": "advisory_notice"
+    },
+    {
+      "allowed": "explicit guard reminder tied to a bounded evidence pointer",
+      "blocked": "claim that the guard is satisfied or mechanically proven",
+      "output": "guard_checklist_item"
+    },
+    {
+      "allowed": "private packet id, witness id, or report path for reviewer follow-up",
+      "blocked": "public readiness, library completeness, or SDK stability statement",
+      "output": "evidence_pointer"
+    },
+    {
+      "allowed": "notice that a requested compiler/performance/public claim is out of scope",
+      "blocked": "soft approval wording for the blocked claim",
+      "output": "blocked_claim_notice"
+    }
+  ],
+  "contractRejectionObligations": [
+    {
+      "blockedClaims": [
+        "semantic_preservation_claim",
+        "automatic_lowering_safety_claim"
+      ],
+      "mustReject": [
+        "automatic_rewrite",
+        "automatic_lowering",
+        "replacement_patch"
+      ],
+      "obligationId": "reject_automatic_rewrite_or_lowering",
+      "requiredReason": "The advisory lane has no semantic-preservation or lowering-safety proof."
+    },
+    {
+      "blockedClaims": [
+        "runtime_performance_claim",
+        "training_savings_claim"
+      ],
+      "mustReject": [
+        "runtime_speedup",
+        "training_savings",
+        "benchmark_win"
+      ],
+      "obligationId": "reject_runtime_or_training_savings_claim",
+      "requiredReason": "The contract boundary records no measurement protocol or benchmark execution."
+    },
+    {
+      "blockedClaims": [
+        "public_readiness_claim",
+        "public_package_release_claim",
+        "sdk_stability_claim"
+      ],
+      "mustReject": [
+        "public_docs_ready",
+        "package_release_ready",
+        "sdk_stable"
+      ],
+      "obligationId": "reject_public_or_package_readiness_claim",
+      "requiredReason": "Public copy, package release, and SDK stability require separate approval."
+    },
+    {
+      "blockedClaims": [
+        "compiler_correctness_claim",
+        "broad_eml_advantage_claim"
+      ],
+      "mustReject": [
+        "guard_proven",
+        "new_theorem_discovered",
+        "applicability_proven"
+      ],
+      "obligationId": "reject_guard_proven_or_theorem_discovered_claim",
+      "requiredReason": "A lint contract may surface guard notes but cannot prove guards or discover theorems."
+    }
+  ],
+  "date": "2026-06-06",
+  "executionGates": [
+    {
+      "gateId": "contract_boundary_review_required",
+      "reason": "The boundary packet must be reviewed before static executable-contract tests are drafted.",
+      "status": "required_before_static_tests"
+    },
+    {
+      "gateId": "static_test_fixtures_required",
+      "reason": "Executable behavior must be checked against accepted and rejection examples before implementation.",
+      "status": "required_before_implementation"
+    },
+    {
+      "gateId": "implementation_hold_gate_required",
+      "reason": "A separate hold gate must explicitly approve implementation scope.",
+      "status": "required_before_any_lint_engine"
+    },
+    {
+      "gateId": "public_docs_gate_required",
+      "reason": "Public docs or package wording requires separate approval and readiness evidence.",
+      "status": "required_before_public_copy"
+    }
+  ],
+  "nonClaims": [
+    "CPG-A5 is a private boundary packet for a possible executable lint contract; it is not the executable contract.",
+    "CPG-A5 records input, output, rejection, and execution-gate obligations only.",
+    "CPG-A5 does not implement or execute a compiler plugin, lint engine, lint contract, fixture runner, rewrite engine, code generator, or runtime lowering path.",
+    "CPG-A5 does not claim compiler correctness, semantic preservation, automatic lowering safety, runtime performance, SDK stability, public readiness, or public package release readiness.",
+    "CPG-A5 respects the D109 hold and does not start D110, consume reviewer response, or touch laptop-owned electronics repositories."
+  ],
+  "schemaVersion": "monogate.private_executable_lint_contract_boundary_packet.v0",
+  "sourceArtifact": "cpg-a4-private-compiler-plugin-static-fixture-review-or-lint-contract-selector",
+  "status": "CPG_A5_PRIVATE_EXECUTABLE_LINT_CONTRACT_BOUNDARY_PACKET_PASS",
+  "summary": {
+    "automaticLoweringSafetyClaim": false,
+    "compilerCorrectnessClaim": false,
+    "compilerPluginExecuted": false,
+    "compilerPluginImplemented": false,
+    "executableLintContractCreated": false,
+    "executableLintContractExecuted": false,
+    "executionGateCount": 4,
+    "fixtureRunnerExecuted": false,
+    "fixtureRunnerImplemented": false,
+    "inputFieldCount": 4,
+    "lintContractImplementationCreated": false,
+    "lintContractStaticTestsCreated": false,
+    "lintContractStaticTestsExecuted": false,
+    "lintEngineExecuted": false,
+    "lintEngineImplemented": false,
+    "nextRecommendedArtifact": "CPG-A6 private lint contract boundary review or static test selector",
+    "outputFieldCount": 4,
+    "rejectionObligationCount": 4,
+    "runtimePerformanceClaim": false,
+    "semanticPreservationClaim": false,
+    "sourceArtifact": "cpg-a4-private-compiler-plugin-static-fixture-review-or-lint-contract-selector"
+  }
+}
