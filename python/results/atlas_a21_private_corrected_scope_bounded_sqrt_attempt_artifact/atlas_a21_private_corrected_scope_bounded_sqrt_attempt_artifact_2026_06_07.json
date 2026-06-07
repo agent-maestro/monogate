@@ -1,0 +1,299 @@
+{
+  "artifactId": "atlas-a21-private-corrected-scope-bounded-sqrt-attempt-artifact",
+  "artifactType": "private_corrected_scope_bounded_sqrt_attempt_artifact",
+  "attemptReview": {
+    "allowedFile": "foundations/MachLib/EMLAtlasWitness.lean",
+    "allowedFileExists": true,
+    "attemptStatus": "blocked_before_patch_due_eml_definition_alignment",
+    "blocker": {
+      "blockerId": "eml_boundary_alignment_not_justified_by_current_eml_definition",
+      "status": "blocks_patch_before_machlib_edit",
+      "whyAbortInsteadOfPatch": [
+        "A19 requires confirming the target statement before any future patch.",
+        "The proposed EML alignment does not follow from the current EML definition and recorded route.",
+        "Forcing a MachLib theorem here would either fail or require a different candidate statement."
+      ]
+    },
+    "futureSafeOptions": [
+      "park the sqrt candidate without rejection",
+      "reframe as a pure sqrt/abs witness outside EML boundary alignment",
+      "reframe only if a precise EML-shaped statement can be stated before editing"
+    ],
+    "targetStatementsReviewed": [
+      {
+        "note": "This may be a meaningful sqrt/abs route, but A21 stops before proving it because the EML boundary alignment fails first.",
+        "shape": "sqrt (x * x) = abs x",
+        "statementId": "abs_normalization",
+        "status": "not_attempted_this_phase"
+      },
+      {
+        "note": "This depends on the abs-normalized route and remains unproved in A21.",
+        "shape": "0 <= x -> sqrt (x * x) = x",
+        "statementId": "guard_reduction",
+        "status": "not_attempted_this_phase"
+      },
+      {
+        "note": "The local EML definition is `eml a b := exp a - log b`; the proposed statement would require an additional relationship between `exp (sqrt (x * x)) - log x` and `x` that is not part of the current route.",
+        "shape": "0 <= x -> eml (sqrt (x * x)) x = x",
+        "statementId": "eml_boundary_alignment",
+        "status": "blocked_before_patch"
+      }
+    ]
+  },
+  "claimFlags": {
+    "atlas_a20_consumed": true,
+    "atlas_v0_doc_pause_selected": false,
+    "attempt_aborted_before_edit": true,
+    "bounded_attempt_artifact_created": true,
+    "broad_eml_advantage_claim": false,
+    "candidate_proved": false,
+    "candidate_proved_this_phase": false,
+    "candidate_selected_for_proof": false,
+    "candidate_validity_blocked": true,
+    "candidate_validity_claim": false,
+    "catalog_completeness_claim": false,
+    "claim_topology_ui_created": false,
+    "compiler_correctness_claim": false,
+    "corrected_allowed_file_preflight_performed": true,
+    "course_material_created": false,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "electronics_repo_touched": false,
+    "eml_definition_alignment_blocker_recorded": true,
+    "exact_theorem_names_claimed": false,
+    "formal_equivalence_claim": false,
+    "laptop_artifact_consumed": false,
+    "laptop_owned_repo_touched": false,
+    "lean_typecheck_blocked": true,
+    "lean_typecheck_passed": false,
+    "lean_typecheck_performed": false,
+    "machlib_commit_created": false,
+    "machlib_edit_blocked": true,
+    "machlib_file_changed": false,
+    "product_implementation_started": false,
+    "proof_attempt_completed": false,
+    "proof_attempt_started": false,
+    "public_atlas_promotion": false,
+    "public_copy_approved": false,
+    "public_education_promotion": false,
+    "public_promotion_blocked": true,
+    "public_ready": false,
+    "public_surface_updated": false,
+    "reframe_or_park_selector_recommended": true,
+    "renderer_implemented": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_rejection_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "runtime_sqrt_replacement_claim": false,
+    "sdk_compiler_docs_created": false,
+    "sqrt_candidate_parked": false,
+    "sqrt_candidate_reframed": false,
+    "target_lower_bound_reached_claim": false,
+    "target_statement_alignment_reviewed": true,
+    "theorem_lookup_performed": false,
+    "visualization_quality_claim": false
+  },
+  "date": "2026-06-07",
+  "nonClaims": [
+    "ATLAS-A21 creates a private corrected-scope bounded attempt artifact and aborts before edit because the proposed EML alignment is not justified by the current EML definition.",
+    "ATLAS-A21 performs pre-edit target-statement alignment review only; it does not edit MachLib, run Lean, perform theorem lookup, claim exact theorem names, or claim the sqrt candidate is true, valid, checked, Lean-ready, or provable.",
+    "ATLAS-A21 does not reframe or park the candidate, change runtime lowering, replace sqrt, publish or approve public copy, create SDK/compiler/course copy, consume reviewer responses, touch laptop-owned repositories, or claim public readiness, runtime performance, compiler correctness, formal equivalence, visualization quality, or broad EML advantage."
+  ],
+  "schemaVersion": "monogate.private_corrected_scope_bounded_sqrt_attempt_artifact.v0",
+  "sourceArtifact": "atlas-a20-private-corrected-scope-sqrt-attempt-readiness-selector",
+  "sourceAtlasGatePath": "/home/monogate/monogate/monogate/python/results/eml_atlas_promotion_gate/eml_atlas_promotion_gate_2026_05_27.json",
+  "sourceCorrectedScopeGate": {
+    "abortConditions": [
+      "abort if corrected allowed file no longer exists",
+      "abort if exact expression alignment cannot be stated before editing",
+      "abort if the proof route needs a new helper theorem",
+      "abort if the candidate requires broad EML boundary rewrites",
+      "abort if the nonnegative guard direction becomes ambiguous",
+      "abort if any public, runtime, SDK, or course claim becomes tempting"
+    ],
+    "allowedScope": {
+      "allowedFiles": [
+        "foundations/MachLib/EMLAtlasWitness.lean"
+      ],
+      "allowedOperations": [
+        "read existing local witness surroundings in a later artifact",
+        "draft at most one private proof-attempt patch in a later artifact",
+        "abort before helper theorem expansion or broad refactor"
+      ],
+      "allowedRepositories": [
+        "machlib"
+      ],
+      "blockedOperations": [
+        "no edits in ATLAS-A19",
+        "no Lean run in ATLAS-A19",
+        "no theorem lookup in ATLAS-A19",
+        "no runtime changes",
+        "no public/dev/electronics repository touch"
+      ]
+    },
+    "blockedClaims": [
+      "not a checked witness",
+      "not selected for proof",
+      "no proof attempt started",
+      "no theorem lookup performed",
+      "no exact theorem names claimed",
+      "no MachLib edit",
+      "no Lean typecheck",
+      "no runtime sqrt replacement",
+      "no public copy approval"
+    ],
+    "candidateId": "sqrt_square_abs_normalized_nonnegative_boundary_candidate",
+    "claimFlags": {
+      "abort_conditions_recorded": true,
+      "actual_proof_attempt_blocked": true,
+      "atlas_a18_consumed": true,
+      "atlas_v0_doc_pause_selected": false,
+      "broad_eml_advantage_claim": false,
+      "candidate_proved": false,
+      "candidate_proved_this_phase": false,
+      "candidate_selected_for_proof": false,
+      "candidate_validity_blocked": true,
+      "candidate_validity_claim": false,
+      "catalog_completeness_claim": false,
+      "claim_topology_ui_created": false,
+      "compiler_correctness_claim": false,
+      "corrected_allowed_scope_recorded": true,
+      "corrected_scope_gate_created": true,
+      "course_material_created": false,
+      "d109_hold_respected": true,
+      "d110_started": false,
+      "electronics_repo_touched": false,
+      "exact_theorem_names_claimed": false,
+      "formal_equivalence_claim": false,
+      "laptop_artifact_consumed": false,
+      "laptop_owned_repo_touched": false,
+      "lean_typecheck_blocked": true,
+      "lean_typecheck_passed": false,
+      "lean_typecheck_performed": false,
+      "machlib_commit_created": false,
+      "machlib_edit_blocked": true,
+      "machlib_file_changed": false,
+      "product_implementation_started": false,
+      "proof_attempt_completed": false,
+      "proof_attempt_readiness_selector_created": false,
+      "proof_attempt_started": false,
+      "public_atlas_promotion": false,
+      "public_copy_approved": false,
+      "public_education_promotion": false,
+      "public_promotion_blocked": true,
+      "public_ready": false,
+      "public_surface_updated": false,
+      "readiness_selector_recommended": true,
+      "renderer_implemented": false,
+      "required_route_recorded": true,
+      "review_checkpoints_recorded": true,
+      "reviewer_approval_recorded": false,
+      "reviewer_rejection_recorded": false,
+      "reviewer_response_consumed": false,
+      "runtime_lowering_changed": false,
+      "runtime_performance_claim": false,
+      "runtime_sqrt_replacement_claim": false,
+      "sdk_compiler_docs_created": false,
+      "sqrt_candidate_parked": false,
+      "target_lower_bound_reached_claim": false,
+      "theorem_lookup_performed": false,
+      "timeout_budget_recorded": true,
+      "visualization_quality_claim": false
+    },
+    "gateId": "sqrt_abs_normalized_nonnegative_corrected_scope_private_attempt_gate",
+    "gateStatus": "private_corrected_scope_gate_only_no_attempt_no_validity",
+    "nextDecision": {
+      "decisionStatus": "recommend_corrected_scope_readiness_selector_not_attempt",
+      "nextArtifact": "ATLAS-A20 private corrected-scope sqrt attempt readiness selector",
+      "rationale": [
+        "A19 creates the corrected-scope gate; a separate readiness selector should decide whether to consume it.",
+        "Actual proof work remains blocked until a later explicit artifact opens it."
+      ]
+    },
+    "requiredStartingRoute": [
+      {
+        "required": true,
+        "shape": "sqrt (x * x) = |x|",
+        "stepId": "abs_normalization"
+      },
+      {
+        "required": true,
+        "shape": "0 <= x -> sqrt (x * x) = x",
+        "stepId": "guard_reduction"
+      },
+      {
+        "required": true,
+        "shape": "0 <= x -> eml (sqrt (x * x)) x = x",
+        "stepId": "eml_boundary_alignment"
+      }
+    ],
+    "reviewCheckpoints": [
+      "confirm corrected allowed file before any future patch",
+      "confirm target statement before any future patch",
+      "confirm abs-normalized route is still the first proof step",
+      "confirm guard reduction remains under `0 <= x`",
+      "confirm future attempt leaves runtime sqrt behavior untouched",
+      "record blocker instead of forcing proof if the route drifts"
+    ],
+    "timeoutBudget": {
+      "budgetStatus": "budget_for_future_corrected_scope_attempt_not_consumed",
+      "futureAttemptWallClockLimitMinutes": 30,
+      "futureLeanRunLimit": 1,
+      "futurePatchSizeGuidance": "minimal candidate-local edit only"
+    }
+  },
+  "status": "ATLAS_A21_PRIVATE_CORRECTED_SCOPE_BOUNDED_SQRT_ATTEMPT_ARTIFACT_BLOCKED",
+  "summary": {
+    "additionalArtifactsNeededForLowerBound": 2,
+    "allowedFileExists": true,
+    "allowedFiles": [
+      "foundations/MachLib/EMLAtlasWitness.lean"
+    ],
+    "atlasRowCount": 13,
+    "attemptAbortedBeforeEdit": true,
+    "attemptStatus": "blocked_before_patch_due_eml_definition_alignment",
+    "blockerId": "eml_boundary_alignment_not_justified_by_current_eml_definition",
+    "boundedAttemptArtifactCreated": true,
+    "candidateId": "sqrt_square_abs_normalized_nonnegative_boundary_candidate",
+    "candidateProved": false,
+    "candidateSelectedForProof": false,
+    "candidateValidityBlocked": true,
+    "candidateValidityClaim": false,
+    "catalogCompletenessClaim": false,
+    "correctedAllowedFilePreflightPerformed": true,
+    "courseMaterialCreated": false,
+    "d109HoldRespected": true,
+    "d110Started": false,
+    "emlDefinitionAlignmentBlockerRecorded": true,
+    "exactTheoremNamesClaimed": false,
+    "leanTypecheckBlocked": true,
+    "leanTypecheckPassed": false,
+    "leanTypecheckPerformed": false,
+    "machlibCommitCreated": false,
+    "machlibEditBlocked": true,
+    "machlibFileChanged": false,
+    "nextRecommendedArtifact": "ATLAS-A22 private sqrt candidate reframe-or-park selector",
+    "proofAttemptCompleted": false,
+    "proofAttemptStarted": false,
+    "publicCopyApproved": false,
+    "publicPromotionAllowed": false,
+    "publicSurfaceUpdated": false,
+    "reviewerResponseConsumed": false,
+    "runtimeLoweringChanged": false,
+    "runtimeSqrtReplacementClaim": false,
+    "sdkCompilerDocsCreated": false,
+    "sourceArtifact": "atlas-a20-private-corrected-scope-sqrt-attempt-readiness-selector",
+    "sourceSelectedOptionId": "recommend_future_corrected_scope_bounded_attempt_artifact",
+    "sourceStatus": "ATLAS_A20_PRIVATE_CORRECTED_SCOPE_SQRT_ATTEMPT_READINESS_SELECTOR_PASS",
+    "sqrtCandidateParked": false,
+    "sqrtCandidateReframed": false,
+    "targetLowerBoundReached": false,
+    "targetLowerBoundReachedClaim": false,
+    "targetMax": 25,
+    "targetMin": 15,
+    "targetStatementAlignmentReviewed": true,
+    "theoremLookupPerformed": false
+  }
+}
