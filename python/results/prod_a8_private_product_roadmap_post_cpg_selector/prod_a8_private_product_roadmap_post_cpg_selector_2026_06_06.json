@@ -1,0 +1,118 @@
+{
+  "artifactId": "prod-a8-private-product-roadmap-post-cpg-selector",
+  "artifactType": "private_product_roadmap_post_cpg_selector",
+  "candidateLaneActions": [
+    {
+      "decision": "selected",
+      "laneId": "pinn_advisor",
+      "nextArtifact": "PINN-A1 private PINN advisor brief",
+      "reason": "PINN advisor can advance as a private diagnostic brief downstream of training-cost caveats without claiming solver correctness or training improvement.",
+      "sourceNextPrivateArtifact": "PINN advisor brief: inputs, diagnostics, caveats, examples, blocked claims"
+    },
+    {
+      "decision": "parked_as_seeded",
+      "laneId": "training_cost_estimator",
+      "nextArtifact": "PROD-A9 training cost estimator executable validator or release-condition selector",
+      "reason": "Training-cost spec/schema/fixtures are seeded through PROD-A6; further estimator work should wait for an explicit estimator request or real-user validation condition.",
+      "sourceNextPrivateArtifact": "Private estimator spec: inputs, output schema, calibration caveats, examples"
+    },
+    {
+      "decision": "paused_as_seeded",
+      "laneId": "eml_compiler_plugin",
+      "nextArtifact": "reopen only with explicit reviewer approval or concrete product need",
+      "reason": "CPG-A10 pauses the compiler-plugin lane as sufficiently bounded with no implementation approval.",
+      "sourceNextPrivateArtifact": "Compiler-plugin guard-note packet: lint/advice boundary versus compile/proof boundary"
+    },
+    {
+      "decision": "paused_as_seeded",
+      "laneId": "monogate_sdk",
+      "nextArtifact": "reopen only on concrete SDK docs/product request",
+      "reason": "SDK-A8 already paused the SDK smoke lane as sufficiently seeded.",
+      "sourceNextPrivateArtifact": "SDK surface inventory: stable, experimental, private, and blocked APIs"
+    },
+    {
+      "decision": "blocked_until_hardware_evidence",
+      "laneId": "eml_ip_core_license",
+      "nextArtifact": "IP-A1 license-scope memo after concrete hardware evidence",
+      "reason": "IP/license wording should wait for concrete hardware/core evidence and legal review.",
+      "sourceNextPrivateArtifact": "License-scope memo: evaluation-only terms, excluded claims, provenance obligations"
+    },
+    {
+      "decision": "blocked_until_laptop_hardware_evidence",
+      "laneId": "eml_accelerator_card",
+      "nextArtifact": "ACCEL-A1 dependency ladder after Arty proof-of-life/capture evidence",
+      "reason": "Accelerator-card feasibility depends on hardware evidence owned by the laptop/electronics lane.",
+      "sourceNextPrivateArtifact": "Dependency ladder: Arty proof-of-life, fixed-point smoke, capture packet, card feasibility"
+    }
+  ],
+  "claimFlags": {
+    "accelerator_card_ready": false,
+    "automatic_lowering_safety_claim": false,
+    "broad_eml_advantage_claim": false,
+    "compiler_correctness_claim": false,
+    "compiler_plugin_executed": false,
+    "compiler_plugin_implemented": false,
+    "compiler_plugin_lane_paused": true,
+    "cpg_a10_consumed": true,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "hardware_readiness_claim": false,
+    "ip_license_terms_finalized": false,
+    "laptop_owned_repo_touched": false,
+    "pinn_advisor_brief_selected": true,
+    "pinn_advisor_executed": false,
+    "pinn_advisor_implemented": false,
+    "pinn_diagnostic_claim": false,
+    "prod_a1_consumed": true,
+    "product_roadmap_post_cpg_selector_created": true,
+    "public_copy_approved": false,
+    "public_package_release_claim": false,
+    "public_product_ready": false,
+    "public_readiness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_performance_claim": false,
+    "scientific_correctness_claim": false,
+    "sdk_public_ready": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "silicon_readiness_claim": false,
+    "training_cost_estimator_implemented": false,
+    "training_improvement_claim": false,
+    "training_savings_claim": false
+  },
+  "date": "2026-06-06",
+  "nonClaims": [
+    "PROD-A8 is a private product-roadmap selector; it does not implement a PINN advisor.",
+    "PROD-A8 selects a PINN advisor brief only because SDK and compiler-plugin lanes are paused and the training-cost caveat lane is seeded.",
+    "PROD-A8 does not claim scientific correctness, training improvement, estimator accuracy, runtime performance, public readiness, SDK stability, hardware readiness, silicon readiness, or broad EML advantage.",
+    "PROD-A8 does not touch laptop-owned electronics repositories and does not start D110 or consume reviewer response."
+  ],
+  "schemaVersion": "monogate.private_product_roadmap_post_cpg_selector.v0",
+  "sourceArtifacts": [
+    "prod-a1-private-product-evidence-surface-seed",
+    "cpg-a10-private-lint-contract-implementation-hold-review-or-pause-selector"
+  ],
+  "status": "PROD_A8_PRIVATE_PRODUCT_ROADMAP_POST_CPG_SELECTOR_PASS",
+  "summary": {
+    "candidateLaneActionCount": 6,
+    "compilerPluginLanePaused": true,
+    "estimatorAccuracyClaim": false,
+    "nextRecommendedArtifact": "PINN-A1 private PINN advisor brief",
+    "pinnAdvisorExecuted": false,
+    "pinnAdvisorImplemented": false,
+    "publicReadinessClaim": false,
+    "runtimePerformanceClaim": false,
+    "scientificCorrectnessClaim": false,
+    "selectedLaneId": "pinn_advisor",
+    "selectedNextArtifact": "PINN-A1 private PINN advisor brief",
+    "sourceArtifacts": [
+      "prod-a1-private-product-evidence-surface-seed",
+      "cpg-a10-private-lint-contract-implementation-hold-review-or-pause-selector"
+    ],
+    "trainingImprovementClaim": false,
+    "trainingSavingsClaim": false
+  }
+}
