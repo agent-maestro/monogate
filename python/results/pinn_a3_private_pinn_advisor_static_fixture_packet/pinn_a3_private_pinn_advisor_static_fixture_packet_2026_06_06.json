@@ -1,0 +1,562 @@
+{
+  "acceptedFixtures": [
+    {
+      "expectedDisposition": "accept_private_advisory_note",
+      "fixtureId": "accepted_loss_balance_warning_note",
+      "packet": {
+        "advisor_note_id": "private-loss-balance-warning-example",
+        "advisory_text_shape": "Flag loss-scale imbalance for human review without interpreting solution quality.",
+        "blocked_claims": [
+          "PINN solver correctness",
+          "scientific correctness",
+          "PDE solution validity",
+          "training improvement",
+          "training cost savings",
+          "estimator accuracy",
+          "model quality improvement",
+          "wall-clock runtime performance",
+          "public product readiness",
+          "broad EML advantage"
+        ],
+        "claim_flags": {
+          "broad_eml_advantage_claim": false,
+          "estimator_accuracy_claim": false,
+          "pde_solution_validity_claim": false,
+          "pinn_diagnostic_claim": false,
+          "public_product_ready": false,
+          "public_readiness_claim": false,
+          "runtime_performance_claim": false,
+          "scientific_correctness_claim": false,
+          "training_improvement_claim": false,
+          "training_savings_claim": false
+        },
+        "diagnostic_id": "loss_balance_warning",
+        "input_summary": {
+          "equation_family": "harmonic_oscillator",
+          "input_type": "loss_component_history_summary",
+          "missing_optional_context": [
+            "regularization_loss_summary"
+          ]
+        },
+        "required_caveats": [
+          "not_solver_correctness",
+          "not_scientific_claim",
+          "not_training_improvement",
+          "cost_context_is_caveated",
+          "human_review_required"
+        ],
+        "reviewer_next_steps": [
+          "check loss scaling notes",
+          "confirm no solution-quality wording"
+        ]
+      }
+    },
+    {
+      "expectedDisposition": "accept_private_advisory_note",
+      "fixtureId": "accepted_residual_sampling_gap_note",
+      "packet": {
+        "advisor_note_id": "private-residual-sampling-gap-example",
+        "advisory_text_shape": "Prompt human review of sparse/static collocation sampling without asserting coverage.",
+        "blocked_claims": [
+          "PINN solver correctness",
+          "scientific correctness",
+          "PDE solution validity",
+          "training improvement",
+          "training cost savings",
+          "estimator accuracy",
+          "model quality improvement",
+          "wall-clock runtime performance",
+          "public product readiness",
+          "broad EML advantage"
+        ],
+        "claim_flags": {
+          "broad_eml_advantage_claim": false,
+          "estimator_accuracy_claim": false,
+          "pde_solution_validity_claim": false,
+          "pinn_diagnostic_claim": false,
+          "public_product_ready": false,
+          "public_readiness_claim": false,
+          "runtime_performance_claim": false,
+          "scientific_correctness_claim": false,
+          "training_improvement_claim": false,
+          "training_savings_claim": false
+        },
+        "diagnostic_id": "residual_sampling_gap",
+        "input_summary": {
+          "equation_family": "burgers",
+          "input_type": "residual_sampling_summary",
+          "missing_optional_context": [
+            "known_singularity_notes"
+          ]
+        },
+        "required_caveats": [
+          "not_solver_correctness",
+          "not_scientific_claim",
+          "not_training_improvement",
+          "cost_context_is_caveated",
+          "human_review_required"
+        ],
+        "reviewer_next_steps": [
+          "review collocation strategy",
+          "confirm no coverage guarantee"
+        ]
+      }
+    },
+    {
+      "expectedDisposition": "accept_private_advisory_note",
+      "fixtureId": "accepted_cost_caveat_attachment_note",
+      "packet": {
+        "advisor_note_id": "private-cost-caveat-attachment-example",
+        "advisory_text_shape": "Require cost caveats and blocked claims to travel with any cost-context note.",
+        "blocked_claims": [
+          "PINN solver correctness",
+          "scientific correctness",
+          "PDE solution validity",
+          "training improvement",
+          "training cost savings",
+          "estimator accuracy",
+          "model quality improvement",
+          "wall-clock runtime performance",
+          "public product readiness",
+          "broad EML advantage"
+        ],
+        "claim_flags": {
+          "broad_eml_advantage_claim": false,
+          "estimator_accuracy_claim": false,
+          "pde_solution_validity_claim": false,
+          "pinn_diagnostic_claim": false,
+          "public_product_ready": false,
+          "public_readiness_claim": false,
+          "runtime_performance_claim": false,
+          "scientific_correctness_claim": false,
+          "training_improvement_claim": false,
+          "training_savings_claim": false
+        },
+        "diagnostic_id": "cost_context_caveat_check",
+        "input_summary": {
+          "estimate_id": "private-static-expression-cost-shape-example",
+          "input_type": "cost_estimator_packet_summary",
+          "missing_optional_context": [
+            "graph_cost_profile"
+          ]
+        },
+        "required_caveats": [
+          "not_solver_correctness",
+          "not_scientific_claim",
+          "not_training_improvement",
+          "cost_context_is_caveated",
+          "human_review_required"
+        ],
+        "reviewer_next_steps": [
+          "verify cost caveat carriage",
+          "confirm no wall-clock or savings claim"
+        ]
+      }
+    }
+  ],
+  "artifactId": "pinn-a3-private-pinn-advisor-static-fixture-packet",
+  "artifactType": "private_pinn_advisor_static_fixture_packet",
+  "claimFlags": {
+    "accepted_fixtures_created": true,
+    "blocked_claims_required": true,
+    "broad_eml_advantage_claim": false,
+    "compiler_correctness_claim": false,
+    "compiler_plugin_executed": false,
+    "compiler_plugin_implemented": false,
+    "d109_hold_respected": true,
+    "d110_started": false,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "fixture_runner_created": false,
+    "hardware_readiness_claim": false,
+    "implementation_blocked": true,
+    "laptop_owned_repo_touched": false,
+    "model_quality_claim": false,
+    "pde_solution_validity_claim": false,
+    "pinn_a2_consumed": true,
+    "pinn_advisor_executed": false,
+    "pinn_advisor_implemented": false,
+    "pinn_diagnostic_claim": false,
+    "pinn_solver_invoked": false,
+    "pinn_training_executed": false,
+    "public_docs_created": false,
+    "public_package_release_claim": false,
+    "public_product_ready": false,
+    "public_readiness_claim": false,
+    "rejection_fixtures_created": true,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_performance_claim": false,
+    "scientific_correctness_claim": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "silicon_readiness_claim": false,
+    "static_fixture_packet_created": true,
+    "static_fixtures_executed": false,
+    "training_improvement_claim": false,
+    "training_savings_claim": false
+  },
+  "date": "2026-06-06",
+  "nonClaims": [
+    "PINN-A3 creates static accepted/rejection fixture shapes only; it does not implement or execute a fixture runner.",
+    "PINN-A3 does not implement or execute a PINN advisor, run training, invoke a solver, benchmark runtime, or evaluate scientific correctness.",
+    "PINN-A3 fixtures are review examples for claim boundaries, not evidence that an advisor is useful or correct.",
+    "PINN-A3 does not approve public docs, product readiness, solver correctness, training improvement, runtime performance, or broad EML advantage.",
+    "PINN-A3 does not touch laptop-owned electronics repositories, start D110, or consume reviewer response."
+  ],
+  "rejectionFixtures": [
+    {
+      "expectedDisposition": "reject",
+      "fixtureId": "missing_blocked_claims",
+      "mutation": "remove blocked_claims",
+      "packet": {
+        "advisor_note_id": "private-loss-balance-warning-example",
+        "advisory_text_shape": "Flag loss-scale imbalance for human review without interpreting solution quality.",
+        "claim_flags": {
+          "broad_eml_advantage_claim": false,
+          "estimator_accuracy_claim": false,
+          "pde_solution_validity_claim": false,
+          "pinn_diagnostic_claim": false,
+          "public_product_ready": false,
+          "public_readiness_claim": false,
+          "runtime_performance_claim": false,
+          "scientific_correctness_claim": false,
+          "training_improvement_claim": false,
+          "training_savings_claim": false
+        },
+        "diagnostic_id": "loss_balance_warning",
+        "input_summary": {
+          "equation_family": "harmonic_oscillator",
+          "input_type": "loss_component_history_summary",
+          "missing_optional_context": [
+            "regularization_loss_summary"
+          ]
+        },
+        "required_caveats": [
+          "not_solver_correctness",
+          "not_scientific_claim",
+          "not_training_improvement",
+          "cost_context_is_caveated",
+          "human_review_required"
+        ],
+        "reviewer_next_steps": [
+          "check loss scaling notes",
+          "confirm no solution-quality wording"
+        ]
+      }
+    },
+    {
+      "expectedDisposition": "reject",
+      "fixtureId": "missing_required_caveats",
+      "mutation": "remove required_caveats",
+      "packet": {
+        "advisor_note_id": "private-loss-balance-warning-example",
+        "advisory_text_shape": "Flag loss-scale imbalance for human review without interpreting solution quality.",
+        "blocked_claims": [
+          "PINN solver correctness",
+          "scientific correctness",
+          "PDE solution validity",
+          "training improvement",
+          "training cost savings",
+          "estimator accuracy",
+          "model quality improvement",
+          "wall-clock runtime performance",
+          "public product readiness",
+          "broad EML advantage"
+        ],
+        "claim_flags": {
+          "broad_eml_advantage_claim": false,
+          "estimator_accuracy_claim": false,
+          "pde_solution_validity_claim": false,
+          "pinn_diagnostic_claim": false,
+          "public_product_ready": false,
+          "public_readiness_claim": false,
+          "runtime_performance_claim": false,
+          "scientific_correctness_claim": false,
+          "training_improvement_claim": false,
+          "training_savings_claim": false
+        },
+        "diagnostic_id": "loss_balance_warning",
+        "input_summary": {
+          "equation_family": "harmonic_oscillator",
+          "input_type": "loss_component_history_summary",
+          "missing_optional_context": [
+            "regularization_loss_summary"
+          ]
+        },
+        "reviewer_next_steps": [
+          "check loss scaling notes",
+          "confirm no solution-quality wording"
+        ]
+      }
+    },
+    {
+      "expectedDisposition": "reject",
+      "fixtureId": "scientific_correctness_true",
+      "mutation": "set scientific_correctness_claim true",
+      "packet": {
+        "advisor_note_id": "private-loss-balance-warning-example",
+        "advisory_text_shape": "Flag loss-scale imbalance for human review without interpreting solution quality.",
+        "blocked_claims": [
+          "PINN solver correctness",
+          "scientific correctness",
+          "PDE solution validity",
+          "training improvement",
+          "training cost savings",
+          "estimator accuracy",
+          "model quality improvement",
+          "wall-clock runtime performance",
+          "public product readiness",
+          "broad EML advantage"
+        ],
+        "claim_flags": {
+          "broad_eml_advantage_claim": false,
+          "estimator_accuracy_claim": false,
+          "pde_solution_validity_claim": false,
+          "pinn_diagnostic_claim": false,
+          "public_product_ready": false,
+          "public_readiness_claim": false,
+          "runtime_performance_claim": false,
+          "scientific_correctness_claim": true,
+          "training_improvement_claim": false,
+          "training_savings_claim": false
+        },
+        "diagnostic_id": "loss_balance_warning",
+        "input_summary": {
+          "equation_family": "harmonic_oscillator",
+          "input_type": "loss_component_history_summary",
+          "missing_optional_context": [
+            "regularization_loss_summary"
+          ]
+        },
+        "required_caveats": [
+          "not_solver_correctness",
+          "not_scientific_claim",
+          "not_training_improvement",
+          "cost_context_is_caveated",
+          "human_review_required"
+        ],
+        "reviewer_next_steps": [
+          "check loss scaling notes",
+          "confirm no solution-quality wording"
+        ]
+      }
+    },
+    {
+      "expectedDisposition": "reject",
+      "fixtureId": "training_improvement_true",
+      "mutation": "set training_improvement_claim true",
+      "packet": {
+        "advisor_note_id": "private-residual-sampling-gap-example",
+        "advisory_text_shape": "Prompt human review of sparse/static collocation sampling without asserting coverage.",
+        "blocked_claims": [
+          "PINN solver correctness",
+          "scientific correctness",
+          "PDE solution validity",
+          "training improvement",
+          "training cost savings",
+          "estimator accuracy",
+          "model quality improvement",
+          "wall-clock runtime performance",
+          "public product readiness",
+          "broad EML advantage"
+        ],
+        "claim_flags": {
+          "broad_eml_advantage_claim": false,
+          "estimator_accuracy_claim": false,
+          "pde_solution_validity_claim": false,
+          "pinn_diagnostic_claim": false,
+          "public_product_ready": false,
+          "public_readiness_claim": false,
+          "runtime_performance_claim": false,
+          "scientific_correctness_claim": false,
+          "training_improvement_claim": true,
+          "training_savings_claim": false
+        },
+        "diagnostic_id": "residual_sampling_gap",
+        "input_summary": {
+          "equation_family": "burgers",
+          "input_type": "residual_sampling_summary",
+          "missing_optional_context": [
+            "known_singularity_notes"
+          ]
+        },
+        "required_caveats": [
+          "not_solver_correctness",
+          "not_scientific_claim",
+          "not_training_improvement",
+          "cost_context_is_caveated",
+          "human_review_required"
+        ],
+        "reviewer_next_steps": [
+          "review collocation strategy",
+          "confirm no coverage guarantee"
+        ]
+      }
+    },
+    {
+      "expectedDisposition": "reject",
+      "fixtureId": "runtime_performance_true",
+      "mutation": "set runtime_performance_claim true",
+      "packet": {
+        "advisor_note_id": "private-cost-caveat-attachment-example",
+        "advisory_text_shape": "Require cost caveats and blocked claims to travel with any cost-context note.",
+        "blocked_claims": [
+          "PINN solver correctness",
+          "scientific correctness",
+          "PDE solution validity",
+          "training improvement",
+          "training cost savings",
+          "estimator accuracy",
+          "model quality improvement",
+          "wall-clock runtime performance",
+          "public product readiness",
+          "broad EML advantage"
+        ],
+        "claim_flags": {
+          "broad_eml_advantage_claim": false,
+          "estimator_accuracy_claim": false,
+          "pde_solution_validity_claim": false,
+          "pinn_diagnostic_claim": false,
+          "public_product_ready": false,
+          "public_readiness_claim": false,
+          "runtime_performance_claim": true,
+          "scientific_correctness_claim": false,
+          "training_improvement_claim": false,
+          "training_savings_claim": false
+        },
+        "diagnostic_id": "cost_context_caveat_check",
+        "input_summary": {
+          "estimate_id": "private-static-expression-cost-shape-example",
+          "input_type": "cost_estimator_packet_summary",
+          "missing_optional_context": [
+            "graph_cost_profile"
+          ]
+        },
+        "required_caveats": [
+          "not_solver_correctness",
+          "not_scientific_claim",
+          "not_training_improvement",
+          "cost_context_is_caveated",
+          "human_review_required"
+        ],
+        "reviewer_next_steps": [
+          "verify cost caveat carriage",
+          "confirm no wall-clock or savings claim"
+        ]
+      }
+    },
+    {
+      "expectedDisposition": "reject",
+      "fixtureId": "public_product_ready_true",
+      "mutation": "set public_product_ready true",
+      "packet": {
+        "advisor_note_id": "private-cost-caveat-attachment-example",
+        "advisory_text_shape": "Require cost caveats and blocked claims to travel with any cost-context note.",
+        "blocked_claims": [
+          "PINN solver correctness",
+          "scientific correctness",
+          "PDE solution validity",
+          "training improvement",
+          "training cost savings",
+          "estimator accuracy",
+          "model quality improvement",
+          "wall-clock runtime performance",
+          "public product readiness",
+          "broad EML advantage"
+        ],
+        "claim_flags": {
+          "broad_eml_advantage_claim": false,
+          "estimator_accuracy_claim": false,
+          "pde_solution_validity_claim": false,
+          "pinn_diagnostic_claim": false,
+          "public_product_ready": true,
+          "public_readiness_claim": false,
+          "runtime_performance_claim": false,
+          "scientific_correctness_claim": false,
+          "training_improvement_claim": false,
+          "training_savings_claim": false
+        },
+        "diagnostic_id": "cost_context_caveat_check",
+        "input_summary": {
+          "estimate_id": "private-static-expression-cost-shape-example",
+          "input_type": "cost_estimator_packet_summary",
+          "missing_optional_context": [
+            "graph_cost_profile"
+          ]
+        },
+        "required_caveats": [
+          "not_solver_correctness",
+          "not_scientific_claim",
+          "not_training_improvement",
+          "cost_context_is_caveated",
+          "human_review_required"
+        ],
+        "reviewer_next_steps": [
+          "verify cost caveat carriage",
+          "confirm no wall-clock or savings claim"
+        ]
+      }
+    }
+  ],
+  "requiredBlockedClaims": [
+    "PINN solver correctness",
+    "scientific correctness",
+    "PDE solution validity",
+    "training improvement",
+    "training cost savings",
+    "estimator accuracy",
+    "model quality improvement",
+    "wall-clock runtime performance",
+    "public product readiness",
+    "broad EML advantage"
+  ],
+  "requiredCaveats": [
+    "not_solver_correctness",
+    "not_scientific_claim",
+    "not_training_improvement",
+    "cost_context_is_caveated",
+    "human_review_required"
+  ],
+  "reviewerQuestions": [
+    {
+      "question": "Do the accepted fixtures cover useful advisor notes without implying solver or training claims?",
+      "questionId": "accepted_fixtures_cover_safe_advice"
+    },
+    {
+      "question": "Do the rejection fixtures catch the most likely claim-boundary escapes?",
+      "questionId": "rejection_fixtures_cover_claim_escape"
+    },
+    {
+      "question": "Should PINN-A4 review these fixtures or pause the PINN advisor lane as sufficiently bounded?",
+      "questionId": "pause_or_review_next"
+    }
+  ],
+  "schemaVersion": "monogate.private_pinn_advisor_static_fixture_packet.v0",
+  "sourceArtifact": "pinn-a2-private-pinn-advisor-fixture-or-hold-selector",
+  "status": "PINN_A3_PRIVATE_PINN_ADVISOR_STATIC_FIXTURE_PACKET_PASS",
+  "summary": {
+    "acceptedFixtureCount": 3,
+    "acceptedFixturesCreated": true,
+    "advisorExecuted": false,
+    "advisorImplemented": false,
+    "fixtureRunnerCreated": false,
+    "nextRecommendedArtifact": "PINN-A4 private PINN advisor static fixture review or pause selector",
+    "pinnA2SelectedNextArtifact": "PINN-A3 private PINN advisor static fixture packet",
+    "publicReadinessClaim": false,
+    "rejectionFixtureCount": 6,
+    "rejectionFixturesCreated": true,
+    "requiredBlockedClaimCount": 10,
+    "requiredCaveatCount": 5,
+    "reviewerQuestionCount": 3,
+    "runtimePerformanceClaim": false,
+    "scientificCorrectnessClaim": false,
+    "solverInvoked": false,
+    "sourceArtifact": "pinn-a2-private-pinn-advisor-fixture-or-hold-selector",
+    "staticFixtureCount": 9,
+    "staticFixturePacketCreated": true,
+    "staticFixturesExecuted": false,
+    "trainingExecuted": false,
+    "trainingImprovementClaim": false
+  }
+}
