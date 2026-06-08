@@ -24,21 +24,21 @@ copy. Each row remains bounded by its source artifact and non-claims.
 
 | # | Witness | Family | Guard | Runtime Boundary | Source |
 |---:|---|---|---|---|---|
-| 1 | `MachLib.Real.constants_zero_one_e_boundary_witness` | `constants_boundary` | constant-domain boundary | standard constants remain runtime controls | `atlas-a1-private-checked-witness-table` |
-| 2 | `MachLib.Real.ln_from_eml_boundary_witness` | `log_boundary` | positive logarithm domain guard | standard_log_exp_remains_runtime_control | `atlas-a1-private-checked-witness-table` |
-| 3 | `MachLib.Real.subtraction_boundary_affine_offset_witness` | `subtraction_boundary` | 0 < x + y | standard_subtraction_remains_runtime_control | `atlas-a1-private-checked-witness-table` |
-| 4 | `MachLib.Real.subtraction_boundary_two_stage_chain_witness` | `nested_subtraction_boundary` | positive log-input guards | standard_subtraction_remains_runtime_control | `atlas-a1-private-checked-witness-table` |
-| 5 | `MachLib.Real.subtraction_boundary_affine_nested_chain_witness` | `nested_subtraction_boundary` | 0 < x + y and 0 < z | standard_subtraction_remains_runtime_control | `atlas-a1-private-checked-witness-table` |
-| 6 | `MachLib.Real.subtraction_boundary_three_stage_chain_witness` | `nested_subtraction_boundary` | positive log-input guards | standard_subtraction_remains_runtime_control | `atlas-a1-private-checked-witness-table` |
-| 7 | `MachLib.Real.positive_log_exp_roundtrip_witness` | `positive_log_exp` | 0 < x | standard_log_exp_remains_runtime_control | `atlas-a1-private-checked-witness-table` |
-| 8 | `MachLib.Real.expm1_boundary_identity_witness` | `expm1_boundary` | no extra real-domain guard recorded | protected_expm1_remains_runtime_control | `atlas-a1-private-checked-witness-table` |
-| 9 | `MachLib.Real.constant_coordinate_zero_exp_two_witness` | `constant_coordinate` | local exp (1 + 1) spelling boundary | standard constants remain runtime controls | `atlas-a1-private-checked-witness-table` |
-| 10 | `MachLib.Real.probability_logit_boundary_coordinate_witness` | `probability_logit_boundary` | 0 < p and p < 1 | protected_log_and_log1p_remain_runtime_controls | `atlas-a1-private-checked-witness-table` |
-| 11 | `MachLib.Real.log1p_shifted_boundary_coordinate_witness` | `log1p_shifted_boundary` | 0 < 1 + x | protected_log_and_log1p_remain_runtime_controls | `atlas-a1-private-checked-witness-table` |
-| 12 | `MachLib.Real.log1m_shifted_boundary_coordinate_witness` | `log1m_shifted_boundary` | 0 < 1 - x | protected_log_and_log1p_remain_runtime_controls | `atlas-a1-private-checked-witness-table` |
-| 13 | `MachLib.Real.log1p_affine_scaled_boundary_coordinate_witness` | `log1p_affine_scaled_boundary` | 0 < 1 + a * x | protected_log_and_log1p_remain_runtime_controls | `atlas-a1-private-checked-witness-table` |
-| 14 | `MachLib.Real.exp_negation_multiplicative_identity_witness` | `exp_algebra_boundary` | all_real_no_extra_guard | standard_exp_remains_runtime_control | `atlas-a33-private-exp-negation-bounded-wrapper-attempt-artifact` |
-| 15 | `MachLib.Real.trig_pythagorean_unit_identity_witness` | `trig_boundary` | all_real_no_extra_guard | standard_trig_functions_remain_runtime_controls | `atlas-a43-private-trig-pythagorean-bounded-wrapper-attempt-artifact` |
+| 1 | `MachLib.Real.constants_zero_one_e_boundary_witness` | constants boundary | constant-domain boundary | standard constants remain runtime controls | `atlas-a1-private-checked-witness-table` |
+| 2 | `MachLib.Real.ln_from_eml_boundary_witness` | log boundary | positive logarithm domain guard | standard log/exp remains the runtime control | `atlas-a1-private-checked-witness-table` |
+| 3 | `MachLib.Real.subtraction_boundary_affine_offset_witness` | subtraction boundary | `0 < x + y` | standard subtraction remains the runtime control | `atlas-a1-private-checked-witness-table` |
+| 4 | `MachLib.Real.subtraction_boundary_two_stage_chain_witness` | nested subtraction boundary | positive log-input guards | standard subtraction remains the runtime control | `atlas-a1-private-checked-witness-table` |
+| 5 | `MachLib.Real.subtraction_boundary_affine_nested_chain_witness` | nested subtraction boundary | `0 < x + y` and `0 < z` | standard subtraction remains the runtime control | `atlas-a1-private-checked-witness-table` |
+| 6 | `MachLib.Real.subtraction_boundary_three_stage_chain_witness` | nested subtraction boundary | positive log-input guards | standard subtraction remains the runtime control | `atlas-a1-private-checked-witness-table` |
+| 7 | `MachLib.Real.positive_log_exp_roundtrip_witness` | positive log/exp roundtrip | `0 < x` | standard log/exp remains the runtime control | `atlas-a1-private-checked-witness-table` |
+| 8 | `MachLib.Real.expm1_boundary_identity_witness` | expm1 boundary | no extra real-domain guard recorded | protected `expm1` remains the runtime control | `atlas-a1-private-checked-witness-table` |
+| 9 | `MachLib.Real.constant_coordinate_zero_exp_two_witness` | constant coordinate | local `exp (1 + 1)` spelling boundary | standard constants remain runtime controls | `atlas-a1-private-checked-witness-table` |
+| 10 | `MachLib.Real.probability_logit_boundary_coordinate_witness` | probability-logit boundary | `0 < p` and `p < 1` | protected `log` and `log1p` remain the runtime controls | `atlas-a1-private-checked-witness-table` |
+| 11 | `MachLib.Real.log1p_shifted_boundary_coordinate_witness` | log1p shifted boundary | `0 < 1 + x` | protected `log` and `log1p` remain the runtime controls | `atlas-a1-private-checked-witness-table` |
+| 12 | `MachLib.Real.log1m_shifted_boundary_coordinate_witness` | log1m shifted boundary | `0 < 1 - x` | protected `log` and `log1p` remain the runtime controls | `atlas-a1-private-checked-witness-table` |
+| 13 | `MachLib.Real.log1p_affine_scaled_boundary_coordinate_witness` | log1p affine-scaled boundary | `0 < 1 + a * x` | protected `log` and `log1p` remain the runtime controls | `atlas-a1-private-checked-witness-table` |
+| 14 | `MachLib.Real.exp_negation_multiplicative_identity_witness` | exp algebra boundary | all real inputs; no extra guard | standard `exp` remains the runtime control | `atlas-a33-private-exp-negation-bounded-wrapper-attempt-artifact` |
+| 15 | `MachLib.Real.trig_pythagorean_unit_identity_witness` | trig boundary | all real inputs; no extra guard | standard trig functions remain the runtime controls | `atlas-a43-private-trig-pythagorean-bounded-wrapper-attempt-artifact` |
 
 ## Usefulness Notes
 
