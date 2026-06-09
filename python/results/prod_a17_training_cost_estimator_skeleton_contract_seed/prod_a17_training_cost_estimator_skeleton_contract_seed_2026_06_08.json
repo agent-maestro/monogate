@@ -1,0 +1,162 @@
+{
+  "apiBoundaries": [
+    {
+      "allowedBehavior": "constructs with contract metadata and exposes no estimate-producing method",
+      "apiId": "TrainingCostEstimatorSkeleton",
+      "blockedBehavior": "no training, benchmarking, calibration, runtime probing, or estimate value generation",
+      "kind": "class"
+    },
+    {
+      "allowedBehavior": "returns a claim-bounded hold packet with caveats and blocked claims",
+      "apiId": "build_hold_packet",
+      "blockedBehavior": "must not return static_expression_cost, graph_cost_profile, or training_budget_context values",
+      "kind": "function"
+    },
+    {
+      "allowedBehavior": "checks required input metadata and returns accept/reject metadata only",
+      "apiId": "validate_input_shape",
+      "blockedBehavior": "must not infer numeric cost, runtime, savings, accuracy, or model quality",
+      "kind": "function"
+    }
+  ],
+  "artifactId": "prod-a17-training-cost-estimator-skeleton-contract-seed",
+  "artifactType": "training_cost_estimator_skeleton_contract_seed",
+  "claimFlags": {
+    "api_boundary_recorded": true,
+    "broad_eml_advantage_claim": false,
+    "calibration_performed": false,
+    "compiler_correctness_claim": false,
+    "electronics_repo_touched": false,
+    "estimate_values_produced": false,
+    "estimator_accuracy_claim": false,
+    "estimator_executed": false,
+    "estimator_implemented": false,
+    "estimator_skeleton_contract_created": true,
+    "estimator_skeleton_implemented": false,
+    "execution_blocked": true,
+    "hardware_readiness_claim": false,
+    "hold_behavior_recorded": true,
+    "laptop_owned_repo_touched": false,
+    "model_quality_claim": false,
+    "model_training_executed": false,
+    "module_boundary_recorded": true,
+    "prod_a16_consumed": true,
+    "public_claims_blocked": true,
+    "public_docs_created": false,
+    "public_package_release_claim": false,
+    "public_product_ready": false,
+    "public_readiness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_benchmark_executed": false,
+    "runtime_performance_claim": false,
+    "scientific_correctness_claim": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "silicon_readiness_claim": false,
+    "training_savings_claim": false
+  },
+  "date": "2026-06-08",
+  "holdBehavior": {
+    "requiredDisposition": "hold_no_estimate",
+    "requiredFalseClaimFlags": [
+      "public_product_ready",
+      "training_savings_claim",
+      "estimator_accuracy_claim",
+      "runtime_performance_claim",
+      "broad_eml_advantage_claim"
+    ],
+    "requiredOutputNulls": [
+      "static_expression_cost",
+      "graph_cost_profile",
+      "training_budget_context"
+    ],
+    "requiredReason": "estimator implementation remains blocked pending a later explicit gate",
+    "requiredReviewerNextStep": "review skeleton implementation before enabling estimate-producing behavior"
+  },
+  "moduleBoundary": {
+    "allowedImports": [
+      "dataclasses",
+      "typing",
+      "monogate.training_cost_io_contract_validator"
+    ],
+    "blockedImports": [
+      "torch",
+      "tensorflow",
+      "timeit",
+      "subprocess",
+      "network"
+    ],
+    "boundary": "Future module may expose contract-shaped dataclasses and hold errors only; it must not compute estimates.",
+    "modulePath": "python/monogate/training_cost_estimator_skeleton.py",
+    "status": "future_private_module_contract"
+  },
+  "nonClaims": [
+    "PROD-A17 creates a private non-executing skeleton contract seed only; it does not implement the skeleton.",
+    "PROD-A17 defines module/API/hold boundaries for a future skeleton and explicitly blocks estimate production.",
+    "PROD-A17 does not implement or execute a training-cost estimator, validate estimate values, train models, run benchmarks, or calibrate estimates.",
+    "PROD-A17 does not publish docs, update public/dev surfaces, approve public copy, or claim estimator accuracy, training savings, runtime performance, SDK stability, compiler correctness, semantic preservation, hardware readiness, silicon readiness, public readiness, reviewer approval, or broad EML advantage."
+  ],
+  "reviewerQuestions": [
+    {
+      "question": "Is the proposed private module path acceptable for a non-executing skeleton?",
+      "questionId": "module_path_ok"
+    },
+    {
+      "question": "Does the hold packet shape force non-estimate behavior clearly enough?",
+      "questionId": "hold_packet_enough"
+    },
+    {
+      "question": "Should PROD-A18 implement only this skeleton, or hold before any module code?",
+      "questionId": "a18_path"
+    }
+  ],
+  "schemaVersion": "monogate.training_cost_estimator_skeleton_contract_seed.v0",
+  "skeletonContractFixtures": [
+    {
+      "expectedDisposition": "accept_skeleton_hold_shape",
+      "fixtureId": "accepted_hold_packet_shape",
+      "requiredDisposition": "hold_no_estimate"
+    },
+    {
+      "expectedDisposition": "reject_skeleton_shape",
+      "fixtureId": "reject_estimate_values_present",
+      "mutation": "populate one cost-view field with estimate values"
+    },
+    {
+      "expectedDisposition": "reject_skeleton_shape",
+      "fixtureId": "reject_true_public_or_accuracy_flag",
+      "mutation": "set public_product_ready or estimator_accuracy_claim true"
+    },
+    {
+      "expectedDisposition": "reject_skeleton_shape",
+      "fixtureId": "reject_missing_hold_reason",
+      "mutation": "remove hold reason from skeleton output"
+    }
+  ],
+  "sourceArtifact": "prod-a16-training-cost-estimator-implementation-gate-or-hold-selector",
+  "status": "PROD_A17_TRAINING_COST_ESTIMATOR_SKELETON_CONTRACT_SEED_PASS",
+  "summary": {
+    "acceptedSkeletonFixtureCount": 1,
+    "apiBoundaryCount": 3,
+    "calibrationPerformed": false,
+    "estimateValuesProduced": false,
+    "estimatorAccuracyClaim": false,
+    "estimatorExecuted": false,
+    "estimatorImplemented": false,
+    "estimatorSkeletonContractCreated": true,
+    "estimatorSkeletonImplemented": false,
+    "holdDisposition": "hold_no_estimate",
+    "moduleBoundaryRecorded": true,
+    "nextRecommendedArtifact": "PROD-A18 private training-cost estimator non-executing skeleton implementation",
+    "publicProductReady": false,
+    "rejectionSkeletonFixtureCount": 3,
+    "reviewerQuestionCount": 3,
+    "runtimeBenchmarkExecuted": false,
+    "runtimePerformanceClaim": false,
+    "skeletonContractFixtureCount": 4,
+    "sourceArtifact": "prod-a16-training-cost-estimator-implementation-gate-or-hold-selector",
+    "sourceSelectedActionId": "private_estimator_skeleton_contract_seed",
+    "trainingSavingsClaim": false
+  }
+}
