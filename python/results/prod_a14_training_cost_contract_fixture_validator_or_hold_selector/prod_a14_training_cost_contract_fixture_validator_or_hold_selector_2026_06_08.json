@@ -1,0 +1,115 @@
+{
+  "artifactId": "prod-a14-training-cost-contract-fixture-validator-or-hold-selector",
+  "artifactType": "training_cost_contract_fixture_validator_or_hold_selector",
+  "candidateActions": [
+    {
+      "actionId": "implement_private_contract_fixture_validator",
+      "decision": "selected",
+      "nextArtifact": "PROD-A15 private training-cost estimator I/O contract fixture validator implementation",
+      "reason": "The PROD-A13 contract fixtures are stable enough to validate structurally before estimator work."
+    },
+    {
+      "actionId": "immediate_estimator_implementation",
+      "decision": "blocked",
+      "nextArtifact": "Requires PROD-A15 validator implementation first.",
+      "reason": "A contract seed without executable fixture validation is not enough to implement an estimator."
+    },
+    {
+      "actionId": "public_product_or_docs",
+      "decision": "blocked",
+      "nextArtifact": "Requires separate public-copy and product-readiness gates.",
+      "reason": "No public readiness, package release, or public-copy approval exists."
+    },
+    {
+      "actionId": "hold_estimator_lane",
+      "decision": "parked",
+      "nextArtifact": "Hold only if no explicit product/tooling request remains.",
+      "reason": "Hold remains available if the next request shifts away from this product lane."
+    }
+  ],
+  "claimFlags": {
+    "broad_eml_advantage_claim": false,
+    "calibration_performed": false,
+    "compiler_correctness_claim": false,
+    "contract_fixture_path_reviewed": true,
+    "contract_fixture_validator_executed": false,
+    "contract_fixture_validator_implemented": false,
+    "electronics_repo_touched": false,
+    "estimator_accuracy_claim": false,
+    "estimator_executed": false,
+    "estimator_implemented": false,
+    "hardware_readiness_claim": false,
+    "immediate_estimator_implementation_blocked": true,
+    "laptop_owned_repo_touched": false,
+    "model_training_executed": false,
+    "next_action_selected": true,
+    "prod_a13_consumed": true,
+    "public_claims_blocked": true,
+    "public_docs_created": false,
+    "public_package_release_claim": false,
+    "public_product_ready": false,
+    "public_readiness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_benchmark_executed": false,
+    "runtime_performance_claim": false,
+    "sdk_stability_claim": false,
+    "semantic_preservation_claim": false,
+    "silicon_readiness_claim": false,
+    "training_savings_claim": false,
+    "validator_implementation_path_selected": true
+  },
+  "date": "2026-06-08",
+  "decisionCriteria": [
+    {
+      "criterionId": "contract_fixtures_exist",
+      "detail": "6 contract fixtures exist in PROD-A13.",
+      "status": "pass"
+    },
+    {
+      "criterionId": "accepted_and_rejection_balance",
+      "detail": "2 accepted and 4 rejection fixtures are recorded.",
+      "status": "pass"
+    },
+    {
+      "criterionId": "output_boundary_carried",
+      "detail": "Output contract carries required fields, caveats, blocked claims, and false claim flags.",
+      "status": "pass"
+    },
+    {
+      "criterionId": "estimator_still_blocked",
+      "detail": "Fixture validation can harden the contract, but cannot justify estimator implementation, accuracy, savings, or runtime claims.",
+      "status": "bounded"
+    }
+  ],
+  "nonClaims": [
+    "PROD-A14 is a private selector; it does not implement or execute a contract fixture validator.",
+    "PROD-A14 selects a bounded validator implementation path before any training-cost estimator implementation.",
+    "PROD-A14 does not implement or execute an estimator, train models, run benchmarks, calibrate estimates, publish docs, update public/dev surfaces, or approve public copy.",
+    "PROD-A14 does not claim estimator accuracy, training savings, runtime performance, SDK stability, compiler correctness, semantic preservation, hardware readiness, silicon readiness, public readiness, reviewer approval, or broad EML advantage."
+  ],
+  "schemaVersion": "monogate.training_cost_contract_fixture_validator_or_hold_selector.v0",
+  "sourceArtifact": "prod-a13-training-cost-estimator-io-contract-seed",
+  "status": "PROD_A14_TRAINING_COST_CONTRACT_FIXTURE_VALIDATOR_OR_HOLD_SELECTOR_PASS",
+  "summary": {
+    "blockedActionCount": 2,
+    "candidateActionCount": 4,
+    "contractFixtureValidatorExecuted": false,
+    "contractFixtureValidatorImplemented": false,
+    "decisionCriterionCount": 4,
+    "estimatorAccuracyClaim": false,
+    "estimatorExecuted": false,
+    "estimatorImplemented": false,
+    "immediateEstimatorImplementationBlocked": true,
+    "nextRecommendedArtifact": "PROD-A15 private training-cost estimator I/O contract fixture validator implementation",
+    "publicProductReady": false,
+    "runtimePerformanceClaim": false,
+    "selectedActionId": "implement_private_contract_fixture_validator",
+    "sourceAcceptedContractFixtureCount": 2,
+    "sourceArtifact": "prod-a13-training-cost-estimator-io-contract-seed",
+    "sourceContractFixtureCount": 6,
+    "sourceRejectionContractFixtureCount": 4,
+    "trainingSavingsClaim": false,
+    "validatorImplementationPathSelected": true
+  }
+}
