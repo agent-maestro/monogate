@@ -1,0 +1,142 @@
+{
+  "artifactId": "eh-a8-private-next-lane-selector",
+  "artifactType": "private_next_lane_selector",
+  "blockedLaneContinuations": [
+    {
+      "blockedContinuation": "estimator implementation or estimate-producing work",
+      "laneId": "training-cost-estimator",
+      "reason": "held_by_prod_a21",
+      "requiredTrigger": "explicit bounded reviewer or user request plus a concrete usefulness review condition"
+    },
+    {
+      "blockedContinuation": "proof work, row expansion, SDK/course extraction, or public Atlas promotion",
+      "laneId": "private-atlas-v0",
+      "reason": "held_pending_reviewer_response_or_explicit_redirect",
+      "requiredTrigger": "actual reviewer response text or explicit user redirect"
+    },
+    {
+      "blockedContinuation": "public witness promotion or D110 response intake",
+      "laneId": "public-math-review",
+      "reason": "held_pending_actual_reviewer_response",
+      "requiredTrigger": "actual private reviewer response text"
+    },
+    {
+      "blockedContinuation": "roadmap implementation or public product/docs work",
+      "laneId": "product-roadmap",
+      "reason": "paused_by_product_roadmap_pause_digest",
+      "requiredTrigger": "explicit bounded product/tooling request"
+    },
+    {
+      "blockedContinuation": "electronics artifact intake or reviewer conversion",
+      "laneId": "electronics-inbox",
+      "reason": "pending_no_artifact",
+      "requiredTrigger": "real laptop-agent artifact at inbox path or explicit --artifact-path"
+    }
+  ],
+  "candidateDoors": [
+    {
+      "candidateId": "private_command_center_readability_queue_contract",
+      "decision": "selected",
+      "nextArtifact": "EH-A9 private command-center readability queue contract",
+      "why": "It improves human review of existing evidence without reopening held lanes or creating public/product claims."
+    },
+    {
+      "candidateId": "atlas_v0_reference_document_revision",
+      "decision": "blocked_for_now",
+      "nextArtifact": null,
+      "why": "ATLAS-A51 holds the private Atlas lane until actual reviewer response or explicit redirect."
+    },
+    {
+      "candidateId": "public_math_witness_promotion",
+      "decision": "blocked_for_now",
+      "nextArtifact": null,
+      "why": "D109 records no reviewer response and blocks D110/public promotion until response exists."
+    },
+    {
+      "candidateId": "training_cost_estimator_reopen",
+      "decision": "blocked_for_now",
+      "nextArtifact": null,
+      "why": "PROD-A21 holds the estimator lane; no implementation or estimate values are authorized."
+    },
+    {
+      "candidateId": "electronics_artifact_intake",
+      "decision": "blocked_for_now",
+      "nextArtifact": null,
+      "why": "EE-BRIDGE-A4/A6 record that a real laptop-agent artifact is still pending."
+    }
+  ],
+  "claimFlags": {
+    "all_feeds_scanned": false,
+    "atlas_catalog_completeness_claim": false,
+    "atlas_public_promotion": false,
+    "atlas_reviewer_response_consumed": false,
+    "blocked_lane_continuations_recorded": true,
+    "broad_eml_advantage_claim": false,
+    "command_center_readability_contract_selected": true,
+    "compiler_correctness_claim": false,
+    "d110_started": false,
+    "dashboard_implementation_started": false,
+    "dashboard_ui_created": false,
+    "eh_a7_consumed": true,
+    "electronics_inbox_reopened": false,
+    "electronics_repo_touched": false,
+    "estimate_values_produced": false,
+    "estimator_accuracy_claim": false,
+    "hardware_readiness_claim": false,
+    "health_report_completeness_claim": false,
+    "held_lane_states_reviewed": true,
+    "laptop_artifact_consumed": false,
+    "laptop_owned_repo_touched": false,
+    "lean_typecheck_performed": false,
+    "machlib_file_changed": false,
+    "private_next_lane_selected": true,
+    "product_implementation_started": false,
+    "product_roadmap_reopened": false,
+    "public_copy_approved": false,
+    "public_dashboard_created": false,
+    "public_math_promotion": false,
+    "public_readiness_claim": false,
+    "public_surface_blocked": true,
+    "public_surface_updated": false,
+    "renderer_correctness_claim": false,
+    "reviewer_approval_recorded": false,
+    "reviewer_response_consumed": false,
+    "runtime_lowering_changed": false,
+    "runtime_performance_claim": false,
+    "silicon_readiness_claim": false,
+    "training_cost_estimator_implemented": false,
+    "training_cost_estimator_reopened": false,
+    "training_savings_claim": false,
+    "visualization_quality_claim": false
+  },
+  "date": "2026-06-09",
+  "nonClaims": [
+    "EH-A8 selects a private next-lane direction from EH-A7; it does not implement that direction.",
+    "EH-A8 does not create a dashboard, scan all feeds, check external sources, verify renderer correctness, or claim visualization quality or ecosystem completeness.",
+    "EH-A8 does not reopen training-cost, Atlas, public math, product roadmap, or electronics lanes.",
+    "EH-A8 does not publish, approve public copy, update public/dev surfaces, create SDK/course material, consume reviewer response, record reviewer approval, start D110, edit MachLib, run Lean, change runtime lowering, or touch laptop-owned repositories.",
+    "EH-A8 does not claim estimator accuracy, training savings, runtime performance, compiler correctness, hardware readiness, silicon readiness, public readiness, catalog completeness, or broad EML advantage."
+  ],
+  "schemaVersion": "monogate.private_next_lane_selector.v0",
+  "sourceArtifact": "eh-a7-private-command-feed-lane-state-aggregation",
+  "status": "EH_A8_PRIVATE_NEXT_LANE_SELECTOR_PASS",
+  "summary": {
+    "blockedContinuationCount": 5,
+    "candidateDoorCount": 5,
+    "d110Started": false,
+    "dashboardUiCreated": false,
+    "digestVisibility": "private",
+    "laptopArtifactConsumed": false,
+    "laptopOwnedRepoTouched": false,
+    "productRoadmapReopened": false,
+    "publicSurfaceUpdated": false,
+    "reviewerApprovalRecorded": false,
+    "reviewerResponseConsumed": false,
+    "selectedNextArtifact": "EH-A9 private command-center readability queue contract",
+    "selectedPath": "private_command_center_readability_queue_contract",
+    "sourceArtifact": "eh-a7-private-command-feed-lane-state-aggregation",
+    "sourceHeldOrPausedRowCount": 6,
+    "sourceLaneStateRowCount": 7,
+    "trainingCostEstimatorReopened": false
+  }
+}
