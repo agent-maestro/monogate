@@ -8,8 +8,8 @@ Status: `PUB_R1_PUBLIC_SURFACE_READ_PARITY_PASS`
 - page relative path: `evidence-status/index.html`
 - live URL: `https://monogate.net/evidence-status/`
 - content classes: `5`
-- expected HTML SHA-256: `47d906bf6bd3…`
-- expected HTML bytes: `6463`
+- expected HTML SHA-256: `9e27aeaaafa0…`
+- expected HTML bytes: `8942`
 - build-time drift: `False`
 - live deploy executed: `False`
 - post-deploy probe passed: `False`

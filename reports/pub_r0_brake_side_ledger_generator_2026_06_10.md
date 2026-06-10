@@ -5,9 +5,9 @@ Status: `PUB_R0_BRAKE_SIDE_LEDGER_GENERATOR_PASS`
 ## Summary
 
 - held lanes: `5`
-- retracted claims: `8`
+- retracted claims: `19`
 - negative results: `5`
-- Lean theorems: `468`
+- Lean theorems: `470`
 - Lean sorries: `5`
 - MachLib core sorries: `0`
 - MachLib discovered sorries: `222`
@@ -26,12 +26,23 @@ Status: `PUB_R0_BRAKE_SIDE_LEDGER_GENERATOR_PASS`
 ## Retracted Claims
 
 - `claim:C259_cross_genome_3` @ `exploration/C259_cross_genome/FINDINGS.md:93`: ## Falsifiability — what would have killed the claim
+- `claim:CapCard_Distributed_Evidence_Quarantine_2026_05_16_2` @ `exploration/CapCard_Distributed_Evidence_Quarantine_2026_05_16/FINDINGS.md:13`: - A summary file that records source rows, accepted rows, rejected rows, and boundary counts.
+- `claim:CapCard_Distributed_Evidence_Review_Gate_2026_05_16_1` @ `exploration/CapCard_Distributed_Evidence_Review_Gate_2026_05_16/FINDINGS.md:25`: - rows that should be rejected
+- `claim:CapCard_Distributed_Evidence_Revision_Review_2026_05_16_1` @ `exploration/CapCard_Distributed_Evidence_Revision_Review_2026_05_16/FINDINGS.md:21`: - Revised rows rejected: 0
+- `claim:CapCard_Distributed_Lifecycle_Closeout_2026_05_16_1` @ `exploration/CapCard_Distributed_Lifecycle_Closeout_2026_05_16/FINDINGS.md:14`: - rejected rows: 0
+- `claim:CapCard_Distributed_Lifecycle_Control_Panel_2026_05_16_1` @ `exploration/CapCard_Distributed_Lifecycle_Control_Panel_2026_05_16/FINDINGS.md:12`: - Counts accepted, revision-needed, and rejected rows.
+- `claim:CapCard_Distributed_Reviewed_Evidence_Ledger_2026_05_16_1` @ `exploration/CapCard_Distributed_Reviewed_Evidence_Ledger_2026_05_16/FINDINGS.md:14`: - Rejected rows JSONL.
+- `claim:CapCard_Distributed_Reviewed_Evidence_Ledger_2026_05_16_2` @ `exploration/CapCard_Distributed_Reviewed_Evidence_Ledger_2026_05_16/FINDINGS.md:23`: Rejected rows remain useful as negative evidence.
 - `claim:E196_algorithmic_corpus_5` @ `exploration/E196_algorithmic_corpus/FINDINGS.md:116`: prediction in the session prompt is rejected. Real-world
 - `claim:E196_algorithmic_corpus_16` @ `exploration/E196_algorithmic_corpus/FINDINGS.md:224`: **Verdict: REJECTED.** Median `max_path_r` is 1.0 for BOTH groups.
+- `claim:EML_Puzzle_Curriculum_Evidence_Ledger_2026_05_16_1` @ `exploration/EML_Puzzle_Curriculum_Evidence_Ledger_2026_05_16/FINDINGS.md:8`: - Rejected: 0
+- `claim:EML_Puzzle_Evidence_Ledger_2026_05_16_1` @ `exploration/EML_Puzzle_Evidence_Ledger_2026_05_16/FINDINGS.md:11`: - Rejected: 0
 - `claim:Frontier_A_resolution_096_097_2026_05_11_1` @ `exploration/Frontier_A_resolution_096_097_2026_05_11/FINDINGS.md:70`: guess to 2×10⁻⁵ /t is **RETRACTED.**
 - `claim:Frontier_A_sigma099_T1e6_2026_05_10_1` @ `exploration/Frontier_A_sigma099_T1e6_2026_05_10/FINDINGS.md:10`: (PARTIAL_OBSERVATIONS only — killed to free CPU for this run).
 - `claim:Frontier_A_sigma099_T1e6_2026_05_10_4` @ `exploration/Frontier_A_sigma099_T1e6_2026_05_10/FINDINGS.md:43`: killed T=10⁵ probe earlier today.
 - `claim:Frontier_D_hd_vs_chain_2026_05_10_1` @ `exploration/Frontier_D_hd_vs_chain_2026_05_10/FINDINGS.md:99`: spectrum) is **rejected at this resolution and corpus size**. The
+- `claim:PETAL_Local_Attempt_Ingestion_Simulator_2026_05_16_1` @ `exploration/PETAL_Local_Attempt_Ingestion_Simulator_2026_05_16/FINDINGS.md:10`: - Invalid local cases rejected: 3
+- `claim:Qwen_Puzzle_Curriculum_Pack_Evidence_Ledger_2026_05_16_1` @ `exploration/Qwen_Puzzle_Curriculum_Pack_Evidence_Ledger_2026_05_16/FINDINGS.md:8`: - Rejected: 0
 - `claim:alpha-6.214-recheck-2026-04-27_2` @ `exploration/alpha-6.214-recheck-2026-04-27/FINDINGS.md:5`: **Status:** REJECTED-IN-CURRENT-SETUP (the value does not appear at any
 
 ## Negative Results
@@ -48,7 +59,7 @@ Status: `PUB_R0_BRAKE_SIDE_LEDGER_GENERATOR_PASS`
 
 ## Lean Status (from builder_v2.py summary)
 
-- Lean theorems: 468
+- Lean theorems: 470
 - Lean sorries: 5
 - MachLib core sorries: 0
 - MachLib discovered sorries: 222
