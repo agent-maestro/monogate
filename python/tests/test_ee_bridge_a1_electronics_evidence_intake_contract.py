@@ -53,6 +53,20 @@ def test_ee_bridge_a1_recommends_voltage_divider_as_first_vertical():
     assert "RH-A2" in verticals["voltage_divider_v0"]["whyFirst"]
 
 
+def test_ee_bridge_a1_registers_pid_dual_target_kernel():
+    """`pid_dual_target_v0` is the 4th candidate vertical and the first
+    dual-target (ESP32 + Arty A7) kernel. Pinned here so future contract
+    edits don't accidentally drop it — the simulated_lesson_packet
+    artifact under electronics_intake/ is keyed off this kernelId."""
+    contract = build_contract()
+    verticals = {item["kernelId"]: item for item in contract["candidateVerticals"]}
+    assert "pid_dual_target_v0" in verticals
+    assert verticals["pid_dual_target_v0"]["recommendedOrder"] == 4
+    why = verticals["pid_dual_target_v0"]["whyFirst"]
+    assert "ESP32" in why and "Arty A7" in why
+    assert contract["summary"]["candidateVerticalCount"] >= 4
+
+
 def test_ee_bridge_a1_claim_flags_remain_false():
     contract = build_contract()
     assert all(value is False for value in CLAIM_FLAGS.values())

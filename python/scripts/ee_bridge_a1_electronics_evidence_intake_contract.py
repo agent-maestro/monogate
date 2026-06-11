@@ -99,6 +99,12 @@ def candidate_verticals() -> list[dict[str, Any]]:
             "whyFirst": "Good bounded-output teaching kernel for claim hygiene and clamp-style guard review.",
             "nextValidator": "Comparison packet and guard-obligation review.",
         },
+        {
+            "kernelId": "pid_dual_target_v0",
+            "recommendedOrder": 4,
+            "whyFirst": "First dual-target (ESP32 + Arty A7) end-to-end kernel — exercises Forge's C and Verilog backends from the same EML source against the same plant fixture, so the comparison packet has a real cross-backend equivalence check.",
+            "nextValidator": "Simulated lesson packet (research side, no hardware) lands first; then laptop agent produces ESP32 live_capture_packet and Arty A7 live_capture_packet; then comparison packet equivalence-checks the two traces against the simulated reference.",
+        },
     ]
 
 
