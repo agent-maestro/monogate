@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+import pytest
+
+# Blanket-marked heavy: CLI-contract test (subprocess.run of a
+# script that loads large JSON evidence). Skipped from the fast
+# dev loop via `pytest -m "not heavy"`; runs in CI by default.
+# A follow-up measurement pass will UN-mark individual fast files.
+pytestmark = pytest.mark.heavy
+
 import copy
 import json
 from pathlib import Path
