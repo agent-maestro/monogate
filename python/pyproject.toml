@@ -102,3 +102,6 @@ testpaths = ["tests"]
 # Override with `pytest -n 0` for serial debugging or
 # `pytest -p no:xdist` to disable xdist entirely.
 addopts = "-n auto"
+markers = [
+    "heavy: tests that load torch / numpy heavy / run iterative optimisation / drive the prover. Each takes seconds-to-minutes. Skipped from the fast dev loop via `pytest -m 'not heavy'`; included by default in CI. Currently applied at file scope to test_{edl,optimize,prover,best_routing,pinn,analog_renaissance,quantum,core}.py.",
+]

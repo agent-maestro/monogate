@@ -5,6 +5,13 @@ from __future__ import annotations
 import math
 import pytest
 
+# File-scope pytestmark — every test in this module exercises the
+# heavy library path (torch / numpy / prover / iterative solver)
+# and runs in seconds-to-minutes per test. Marked so the fast dev
+# loop can skip them via `pytest -m "not heavy"`; CI runs them
+# normally.
+pytestmark = pytest.mark.heavy
+
 from monogate.frontiers.analog_renaissance import (
     AnalogRenaissance,
     CrossDomainAnalogy,

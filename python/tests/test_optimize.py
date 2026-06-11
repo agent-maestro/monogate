@@ -14,6 +14,13 @@ import math
 
 import pytest
 
+# File-scope pytestmark — every test in this module exercises the
+# heavy library path (torch / numpy / prover / iterative solver)
+# and runs in seconds-to-minutes per test. Marked so the fast dev
+# loop can skip them via `pytest -m "not heavy"`; CI runs them
+# normally.
+pytestmark = pytest.mark.heavy
+
 from monogate import best_optimize, optimize, OptimizeResult, OpMatch
 from monogate.optimize import BestRewriter, _ast_rewrite
 
