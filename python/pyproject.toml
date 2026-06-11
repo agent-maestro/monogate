@@ -52,6 +52,15 @@ all = [
 
 dev = [
     "pytest>=7",
+    # pytest-xdist: -n auto in [tool.pytest.ini_options].addopts
+    # parallelises this suite's ~509 test files across logical CPUs.
+    # 453 of those files invoke a CLI script via subprocess.run, so
+    # the wallclock is dominated by Python interpreter startup
+    # (~100ms per subprocess × 453 tests = ~45s of pure overhead
+    # serially). xdist spreads that across cores, expected ~5-10×
+    # wallclock improvement on a multi-core box (measured pattern
+    # on efrog 2026-06-11: 3m47s → 1m05s, 3.5×).
+    "pytest-xdist>=3.5",
     "torch>=2.0",
     "mpmath>=1.3",
     "matplotlib>=3.8",
@@ -84,3 +93,12 @@ monogate = ["data/*.json", "_routing.pkl"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# -n auto: pytest-xdist with one worker per logical CPU. The bulk
+# of this suite (453 / 509 files as of 2026-06-11) invokes a CLI
+# script through subprocess.run; each subprocess pays Python's
+# cold-start cost (~100ms), so the suite is interpreter-overhead-
+# bound when run serially. Tests are independent (each uses pytest's
+# tmp_path fixture), so xdist parallelises without coordination.
+# Override with `pytest -n 0` for serial debugging or
+# `pytest -p no:xdist` to disable xdist entirely.
+addopts = "-n auto"
