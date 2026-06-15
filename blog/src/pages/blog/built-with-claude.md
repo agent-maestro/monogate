@@ -19,7 +19,9 @@ featured: true
 > For the current state, see the dashboard; for the methodology this post
 > describes, the numbers below are the right reference point.*
 
-In April 2026 I went from "I have an interesting idea about a binary operator" to "the research program has 578 catalogued expressions across 12 domains, 50 Lean-formalized theorems, five published Python packages, an npm port, a HuggingFace dataset, three deployed websites, and four interactive demos." It took roughly two weeks.
+In April 2026 I went from "I just read [an arXiv paper](https://arxiv.org/abs/2603.21852) about a binary operator and I'm curious where it goes" to "the research program has 578 catalogued expressions across 12 domains, 50 Lean-formalized theorems, five published Python packages, an npm port, a HuggingFace dataset, three deployed websites, and four interactive demos." It took roughly two weeks.
+
+The arc was: read the paper → didn't fully follow every step of it → built a calculator to evaluate the operator myself → built audio and visual displays to see what it sounded and looked like → the displays threw up patterns I wanted to understand → that pulled in more tooling, more analysis, more verification, until what started as a single visualization had become an ecosystem. The original spark was someone else's math; the work was figuring out how to look at it, and then how to keep myself honest about what I was looking at.
 
 I did not work alone. The other half of the keyboard was Claude Code, running across a small fleet of VS Code windows. People keep asking me how. This essay is the answer.
 
