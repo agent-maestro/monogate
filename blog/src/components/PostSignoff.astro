@@ -1,0 +1,121 @@
+---
+// PostSignoff — renders an AI-model attribution block at the bottom of
+// blog posts that declare an `author_model_family` in their frontmatter.
+//
+// Schema (in the post's markdown frontmatter):
+//
+//   author_model_family: "claude"            // claude | grok | codex | gemini | gpt | other
+//   author_model_label:  "Claude Opus 4.7"   // human-readable model name
+//   author_model_context: "1M context"       // optional sub-label
+//   date: "2026-06-14"                       // existing field; reused
+//   human_operator: "agent-maestro"          // optional; defaults to "agent-maestro" on monogate.org
+//
+// Posts WITHOUT `author_model_family` render nothing — the 68 legacy
+// posts that pre-date this schema are unaffected. New posts gain the
+// signoff automatically when the field is added.
+//
+// Why per-model attribution: the Monogate ecosystem is built by a
+// single human operator orchestrating multiple AI models. Different
+// posts come from different models (Claude for the formal-verification
+// work, Grok for the X.com narrative threads, Codex for code-heavy
+// engineering posts, etc.). Conflating them under one byline would be
+// less honest than naming who wrote what.
+
+interface SignoffFrontmatter {
+  author_model_family?: string;
+  author_model_label?: string;
+  author_model_context?: string;
+  date?: string;
+  human_operator?: string;
+}
+
+interface Props {
+  frontmatter?: SignoffFrontmatter;
+}
+
+const fm = Astro.props.frontmatter ?? {};
+
+const family = fm.author_model_family;
+if (!family) {
+  // Render nothing — caller still gets a valid component, just empty.
+}
+
+const label = fm.author_model_label ?? family ?? "";
+const context = fm.author_model_context ?? "";
+const date = fm.date ?? "";
+const operator = fm.human_operator ?? "agent-maestro";
+
+// Per-family accent colour. Keep these muted — the signoff is metadata,
+// not a marketing banner.
+const FAMILY_COLORS: Record<string, string> = {
+  claude:  "#c87b3a",
+  grok:    "#5b8ddb",
+  codex:   "#10a37f",
+  gemini:  "#7b61ff",
+  gpt:     "#10a37f",
+  other:   "#6b7280",
+};
+const accent = FAMILY_COLORS[family ?? "other"] ?? FAMILY_COLORS.other;
+---
+{family && (
+  <aside class="post-signoff" aria-label="post attribution">
+    <span class="signoff-mark" style={`color: ${accent};`}>✦</span>
+    <span class="signoff-text">
+      <span class="signoff-model">Written by <strong style={`color: ${accent};`}>{label}</strong>{context && <span class="signoff-context"> ({context})</span>}</span>
+      {date && <span class="signoff-sep"> · </span>}
+      {date && <time class="signoff-date" datetime={date}>{date}</time>}
+      <span class="signoff-sep"> · </span>
+      <span class="signoff-operator">orchestrated by <code>{operator}</code></span>
+    </span>
+  </aside>
+)}
+
+<style>
+  .post-signoff {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin: 2.5rem 0 1.5rem;
+    padding: 0.8rem 1rem;
+    border-top: 1px solid #1f2937;
+    border-bottom: 1px solid #1f2937;
+    background: rgba(15, 23, 42, 0.4);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #9ca3af;
+  }
+  .signoff-mark {
+    font-size: 1.05rem;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+  .signoff-text {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .signoff-context {
+    color: #6b7280;
+  }
+  .signoff-sep {
+    color: #374151;
+    margin: 0 0.05rem;
+  }
+  .signoff-date {
+    font-variant-numeric: tabular-nums;
+  }
+  .signoff-operator code {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.05rem 0.35rem;
+    border-radius: 0.2rem;
+    font-size: 0.9em;
+    color: #e5e7eb;
+  }
+  @media (max-width: 480px) {
+    .post-signoff {
+      font-size: 0.78rem;
+      padding: 0.65rem 0.75rem;
+    }
+  }
+</style>

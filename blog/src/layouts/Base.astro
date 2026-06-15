@@ -1,12 +1,22 @@
 ---
 import Reactions from '../components/Reactions.astro';
+import PostSignoff from '../components/PostSignoff.astro';
 
 interface Props {
   title?: string;
   description?: string;
   date?: string;
   type?: "website" | "article";
-  frontmatter?: { title?: string; description?: string; date?: string };
+  frontmatter?: {
+    title?: string;
+    description?: string;
+    date?: string;
+    // Per-model attribution (optional; see PostSignoff.astro for schema).
+    author_model_family?: string;
+    author_model_label?: string;
+    author_model_context?: string;
+    human_operator?: string;
+  };
 }
 // Astro passes markdown frontmatter via Astro.props.frontmatter, NOT as
 // top-level props. Read both shapes so .astro pages and .md posts (with
@@ -284,6 +294,7 @@ const articleLd = (type === "article" || date) ? {
         <a href="/proofs">Proofs</a>
         <a href="/blog">Blog</a>
         <a href="/paper">Paper</a>
+        <a href="/about">About</a>
       </div>
       <button class="hamburger" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </nav>
@@ -297,9 +308,11 @@ const articleLd = (type === "article" || date) ? {
       <a href="/proofs" role="menuitem">Proofs</a>
       <a href="/blog" role="menuitem">Blog</a>
       <a href="/paper" role="menuitem">Paper</a>
+      <a href="/about" role="menuitem">About</a>
     </div>
     <main>
       <slot />
+      {isBlogPost && <PostSignoff frontmatter={props.frontmatter} />}
       {isBlogPost && <Reactions slug={postSlug} />}
     </main>
     <footer>

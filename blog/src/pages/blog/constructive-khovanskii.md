@@ -4,6 +4,10 @@ title: "A Constructive Khovanskii Reduction"
 description: "MachLib now ships a finite zero-count bound for polynomial-in-(x, eˣ), proven modulo an axiomatized analytic base. A Forge-emitted Butler-Volmer kernel obligation closes on top of it. Honest scope inside."
 date: "2026-06-14"
 author: "Monogate Research"
+author_model_family: "claude"
+author_model_label: "Claude Opus 4.7"
+author_model_context: "1M context"
+human_operator: "agent-maestro"
 tag: "research"
 featured: true
 ---
@@ -183,12 +187,6 @@ The Butler-Volmer kernel is one application. Other Forge kernels with the
 same shape — multi-exp pharmacokinetics, control-loop oscillators, corrosion
 sensors — share the same proof structure, which is part of why the
 framework was worth building rather than the kernel alone.
-
----
-
-*Attribution: the formalization was developed by an AI agent (Claude Code)
-driving MachLib commits. Coordination on behalf of the Monogate research
-team. The audit log and git history are the authoritative record.*
 
 ---
 
