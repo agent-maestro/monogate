@@ -33,6 +33,11 @@ import Base from '../../layouts/Base.astro';
       <li><strong>3</strong><span>mixed cases</span></li>
       <li><strong>1</strong><span>research-only case</span></li>
     </ul>
+    <p class="metrics-asof">
+      Scoreboard frozen at 2026-04-24 (first Advantage Lab fixture).
+      The live counts are at <a href="https://monogate.dev/explorer/eml-advantage">monogate.dev/explorer/eml-advantage</a>;
+      they may have moved since.
+    </p>
     <div class="links">
       <a href="https://monogate.dev/explorer/eml-advantage">Open Advantage Lab</a>
       <a href="/blog/eml-advantage-lab">Read research note</a>
@@ -197,6 +202,14 @@ import Base from '../../layouts/Base.astro';
       line-height: 1;
       margin-bottom: 6px;
     }
+    .metrics-asof {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 6px 0 12px;
+    }
+    .metrics-asof a { color: var(--cyan); }
     .metrics span {
       display: block;
       color: var(--muted);

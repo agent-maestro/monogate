@@ -12,6 +12,13 @@ featured: true
 
 **Tier: DEEP DIVE** (process essay, not a research result)
 
+> *Counts in this post are pinned to 2026-04-27 (publication date). Since
+> then the research program has grown — MachLib now ships a constructive
+> Khovanskii framework, four strengthened Forge `@verify` contracts, and a
+> CI-emitted verification dashboard at [monogate.net](https://monogate.net).
+> For the current state, see the dashboard; for the methodology this post
+> describes, the numbers below are the right reference point.*
+
 In April 2026 I went from "I have an interesting idea about a binary operator" to "the research program has 578 catalogued expressions across 12 domains, 50 Lean-formalized theorems, five published Python packages, an npm port, a HuggingFace dataset, three deployed websites, and four interactive demos." It took roughly two weeks.
 
 I did not work alone. The other half of the keyboard was Claude Code, running across a small fleet of VS Code windows. People keep asking me how. This essay is the answer.
