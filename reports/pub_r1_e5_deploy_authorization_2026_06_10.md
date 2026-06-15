@@ -6,7 +6,7 @@ Status: `DEPLOY_AUTHORIZATION_RECORDED_PENDING_OPERATOR_PER_ACTION_CONFIRMATION`
 
 ## Authorizing party
 
-Monogate operator (`almaguer1986@gmail.com`), attended.
+Monogate operator (`contact@monogate.dev`), attended.
 
 ## Authorizing message (verbatim)
 
