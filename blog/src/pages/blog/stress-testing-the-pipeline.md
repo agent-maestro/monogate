@@ -34,7 +34,7 @@ artifact set.
 | `roundtrip_stress_v0.6` | Do 63 single-purpose math kernels emit numerically-equivalent code across 6 software backends? | **63/63 ok on every backend, 0 drift flags.** |
 | `real_modules_v0.1`     | Do 17 multi-function modules lift end-to-end through eFrog and compile through Forge? | **15/17 lift; the 2 fails are documented coverage deferrals.** |
 | `lean_proofs_v0`        | Does Forge's Lean target produce code that lean-checks under MachLib? | **63/63 emit + lean-check pass under MachLib.** |
-| `lean_proofs_v1.1`      | Does Forge's Lean target produce *non-trivial* theorems that close under MachLib? | **15 of 18 close — 4 with `rfl`, 11 with hand-proven tactics. The 3 remaining are blocked on a single MachLib gap (literal-to-canonical bridge).** |
+| `lean_proofs_v1.2`      | Does Forge's Lean target produce *non-trivial* theorems that close under MachLib? | **18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics. Closing the final 3 required adding 3 operator-approved literal-bridge axioms to MachLib (C-243).** |
 | `verilog_simulation_v0.1` | Same question but Verilator behavioural simulation. | **Scaffold complete; two gates remain (F11 license + verilator install).** |
 | (writeup: this post)    | Can we explain the work outside-legibly? | You're reading it. |
 
@@ -163,51 +163,62 @@ worked around this with a programmatic verify prelude. Without
 `requires`/`ensures` clauses, the emitted theorems are tautologies
 (`True := by trivial`) — F10 surfaced as the v1 follow-up.
 
-**Lean v1.1 — Non-trivial theorems, 15 of 18 close**
+**Lean v1.2 — Non-trivial theorems, 18 of 18 close**
 
-The v1 packet (`lean_proofs_v1.1`) closes F10. 18 hand-authored
-kernels each with realistic `requires`/`ensures` clauses producing
-non-trivial Lean theorems. The harness tries `rfl`, `simp`, `trivial`,
-then a per-kernel hand-proven tactic dictionary using MachLib's
-primitive axioms (with `MachLib.Linarith` auto-imported when
-Linarith-only lemmas are referenced).
+The v1 packet (`lean_proofs_v1.2`) closes F10 completely. 18
+hand-authored kernels each with realistic `requires`/`ensures` clauses
+producing non-trivial Lean theorems. The harness tries `rfl`, `simp`,
+`trivial`, then a per-kernel hand-proven tactic dictionary using
+MachLib's primitive axioms (with `MachLib.Linarith` auto-imported
+when Linarith-only lemmas are referenced).
 
-| Closure path | Count | Kernels |
-|---|---|---|
-| `rfl` (algebraic identity) | 4 | `quadratic_eq`, `horner5_eq`, `lerp_endpoint_zero`, `linear_interp_eq` |
-| Hand-proven via MachLib primitives | 11 | exp positivity (5), bounded divisions (4), log positivity (1), substitution + zero-div (1) |
-| `sorry` remaining | 3 | `cosh_at_zero`, `smoothstep_bounded`, `lerp_endpoint_one` — all blocked on the same MachLib gap |
+| Closure path | Count |
+|---|---|
+| `rfl` (algebraic identity) | 4 |
+| Hand-proven via MachLib primitives | 14 |
+| `sorry` remaining | **0** |
 
-Of the 11 hand-proven closures, most are 1-3 lines. The longest is
-`sinh_sign_matches` at 8 lines (substitute `x=0`, handle `-0=0`,
-use `sub_def + add_neg` to reduce `exp 0 - exp 0 = 0`, then
-`zero_div_of_pos` via `ofScientific_pos`).
+Most hand-proven closures are 1-3 lines. The longest is
+`smoothstep_bounded` at ~25 lines (`mul_nonneg` over (`sq_nonneg`,
+`sub_nonneg_of_le`), with the sub-goal needing
+`mul_le_mul_of_nonneg_left` to bound `2.0*x ≤ 2.0` from `x ≤ 1`,
+plus `2.0 ≤ 3.0` proven via the literal-bridge axioms +
+`add_le_add_left`).
 
-The 3 remaining theorems hit the **same** MachLib gap — bridging
-numeric literals (`1.0`, `2.0`, `3.0`) to canonical `1`, `2`, `3`
-values. MachLib's `Real` carries a custom `ofScientific` instance
-for decimal literals that doesn't reduce definitionally to the
-natural-number-cast values. A 3-line axiom family in MachLib would
-close all three:
+Closing the final 3 theorems (`cosh_at_zero`, `smoothstep_bounded`,
+`lerp_endpoint_one`) required **operator-approved MachLib axiom
+additions**. The literals `(1.0 : Real)`, `(2.0 : Real)`,
+`(3.0 : Real)` desugar definitionally to
+`realOfScientific 10 true 1`, `realOfScientific 20 true 1`,
+`realOfScientific 30 true 1` (verified via `: rfl`), but
+`realOfScientific` is otherwise opaque — equalities to the
+canonical-sum forms aren't derivable from MachLib's other axioms.
+
+The three new axioms, added in commit C-243 to `MachLib/Basic.lean`
+immediately after `realOfScientific_pos`:
 
 ```lean
-axiom literal_1_0_eq_one   : (1.0 : Real) = 1
-axiom literal_2_0_eq_two   : (2.0 : Real) = 1 + 1
-axiom literal_3_0_eq_three : (3.0 : Real) = 1 + 1 + 1
+axiom realOfScientific_one_dot_zero   : realOfScientific 10 true 1 = 1
+axiom realOfScientific_two_dot_zero   : realOfScientific 20 true 1 = 1 + 1
+axiom realOfScientific_three_dot_zero : realOfScientific 30 true 1 = 1 + 1 + 1
 ```
 
-True axioms (the `ofScientific` instance does produce those values),
-just not currently in MachLib's axiom set. Until they're added, the
-3 remaining theorems are blocked at the **MachLib layer**, not at
-the Forge or eFrog layer.
+All three are consistent with the standard `OfScientific`
+interpretation (m × 10^±e = numerical value); they add no analytic
+content, only let the canonical-form path through proofs of the form
+`(2.0 : Real) / 2.0 = 1`.
 
-The 83% close rate (15/18) on a hand-chosen corpus is the
-load-bearing v1 result. 100% would suggest the corpus is too easy;
-0% would suggest MachLib's primitives aren't reachable. 15 closed
-with a single named MachLib gap blocking the other 3 is honest
-evidence that Forge emits non-trivial provable theorems AND
-MachLib's primitive axiom set is rich enough to close most of them
-with short tactic chains.
+Every kernel in the v1 corpus now has a fully-closed Lean proof
+checked in under `emitted/<name>.lean`. The artifacts are real
+proofs, not skeletons — copy any of them and `lean <name>.lean`
+checks cleanly against MachLib with no `sorry` remaining.
+
+100% close rate on a hand-chosen 18-kernel corpus. A larger or
+more adversarial corpus would push the rate down; this one was
+designed to be in MachLib's reach. The honest framing is "Forge
+emits non-trivial provable theorems AND MachLib's primitive axiom
+set + 3 operator-approved literal bridges is rich enough to close
+every theorem in the v1 corpus via short tactic chains."
 
 **F11 — Hardware targets Pro-tier locked**
 
@@ -299,7 +310,7 @@ exercised on the Free tier the research environment runs.
 - `monogate-research/electronics_intake/kernels/lean_proofs_v0/` —
   63-kernel Lean-emit + lean-check survey.
 - `monogate-research/electronics_intake/kernels/lean_proofs_v1/` —
-  18-kernel non-trivial-theorem closure survey (15/18 close).
+  18-kernel non-trivial-theorem closure survey (18/18 close).
 - `monogate-research/electronics_intake/kernels/verilog_simulation_v0/` —
   Complete Verilator scaffold; F11 + verilator-install gates.
 - `agent-maestro/forge` commits `8948a27`, `a7465aa`, `8e554da` — F3,
@@ -314,13 +325,12 @@ the toolchain plus `gcc`, `g++`, `node`, `javac`, `rustc`, `python3`,
 
 ## What's next
 
-F11 (Pro-tier hardware emit) is the single biggest open question.
-F10 (non-trivial Lean theorems) is mostly addressed — Lean v1.1
-closes 15 of 18; the 3 remaining all hit the same MachLib gap
-(literal-to-canonical bridge), closable by 3 small axioms. Both
-downstream of the same engineering pipeline; the missing pieces
-are a license activation, a verilator install, and a small
-MachLib axiom-addition pass.
+F11 (Pro-tier hardware emit) is the single biggest open question
+remaining. F10 (non-trivial Lean theorems) is fully addressed —
+Lean v1.2 closes 18 of 18 with hand-proven tactics after the
+operator approved the C-243 literal-bridge axioms in MachLib. The
+hardware-track gates (Pro license + verilator install) are the
+last actionable items in this sprint.
 
 The stress-test → finding → fix loop itself works. The infrastructure
 is checked in; the cost of running the next sprint is dominated by
