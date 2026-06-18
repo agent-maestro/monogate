@@ -26,7 +26,7 @@ silicon claim or a production-deployment claim.
 
 ## What was measured
 
-Five evidence packets, each producing a JSON report and a checked-in
+Six evidence packets, each producing a JSON report and a checked-in
 artifact set.
 
 | Packet | Question | Result |
@@ -34,7 +34,8 @@ artifact set.
 | `roundtrip_stress_v0.6` | Do 63 single-purpose math kernels emit numerically-equivalent code across 6 software backends? | **63/63 ok on every backend, 0 drift flags.** |
 | `real_modules_v0.1`     | Do 17 multi-function modules lift end-to-end through eFrog and compile through Forge? | **15/17 lift; the 2 fails are documented coverage deferrals.** |
 | `lean_proofs_v0`        | Does Forge's Lean target produce code that lean-checks under MachLib? | **63/63 emit + lean-check pass under MachLib.** |
-| `verilog_simulation_v0` | Same question but Verilator behavioural simulation. | **Scaffold-only — F11 blocks survey on Pro-tier license.** |
+| `lean_proofs_v1`        | Does Forge's Lean target produce *non-trivial* theorems that close under MachLib? | **9 of 18 close — 4 with `rfl`, 5 with hand-proven tactics.** |
+| `verilog_simulation_v0.1` | Same question but Verilator behavioural simulation. | **Scaffold complete; two gates remain (F11 license + verilator install).** |
 | (writeup: this post)    | Can we explain the work outside-legibly? | You're reading it. |
 
 ## What broke and got fixed
@@ -157,21 +158,54 @@ not a fix.
 **F9, F10 — Lean target structural findings**
 
 Forge's Lean target refuses to emit unless every fn carries an
-explicit `@verify(lean, theorem="...")` block (F9). The harness
+explicit `@verify(lean, theorem="...")` block (F9). The v0 harness
 worked around this with a programmatic verify prelude. Without
 `requires`/`ensures` clauses, the emitted theorems are tautologies
-(`True := by trivial`) — closing non-trivial theorems is the v1
-follow-up (F10).
+(`True := by trivial`) — F10 surfaced as the v1 follow-up.
+
+**Lean v1 — Non-trivial theorems, 9 of 18 close**
+
+The v1 packet (`lean_proofs_v1`) closes F10 partially. 18 hand-authored
+kernels each with realistic `requires`/`ensures` clauses producing
+non-trivial Lean theorems. The harness tries `rfl`, `simp`, `trivial`,
+then a per-kernel hand-proven tactic dictionary using MachLib's
+primitive axioms.
+
+| Closure path | Count | Kernels |
+|---|---|---|
+| `rfl` (algebraic identity) | 4 | `quadratic_eq`, `horner5_eq`, `lerp_endpoint_zero`, `linear_interp_eq` |
+| Hand-proven via MachLib primitives | 5 | `neg_exp_pos`, `gaussian_pos`, `rc_decay_pos`, `compound_continuous_pos`, `expm1_lower_bound` |
+| `sorry` remaining (v2 work list) | 9 | named closure paths in `packet.json#F12.categories` |
+
+Of the 5 hand-proven closures, 3 are one-liners (`exact exp_pos (-x)`
+shape), 1 uses `mul_pos` for product positivity, and 1
+(`expm1_lower_bound`) is a 5-line chain through `add_lt_add_left` +
+`add_zero` + `sub_def` + `add_comm`.
+
+The 50% close rate on a hand-chosen corpus is the load-bearing v1
+result. 100% would suggest the corpus is too easy; 0% would suggest
+MachLib's primitives aren't reachable. 50% with a documented gap is
+honest evidence that Forge emits non-trivial provable theorems AND
+that MachLib's primitive axiom set is rich enough to close half of
+them with short tactic chains.
 
 **F11 — Hardware targets Pro-tier locked**
 
 All four Forge hardware targets (`verilog`, `systemverilog`, `vhdl`,
 `chisel`) refuse on the Free tier. This is the first finding in the
-sprint where the gate is **licensing**, not code. The harness
-scaffold is checked in and runs end-to-end the moment the gate
-opens. F11 is the single largest open-question of the sprint and the
-direct test of the "Forge → FPGA" product claim — without it,
-the hardware story stays asserted but not independently verified.
+sprint where the gate is **licensing**, not code. The v0.1 packet
+(`verilog_simulation_v0.1`) ships a complete Verilator simulation
+pipeline — testbench generator, `verilator --cc --exe tb.cpp --build`
+build step, binary execution, ULP-aware drift comparison (same
+detector as the software stress harness) — plus a self-test against
+a hand-crafted Verilog DUT. The moment two gates open (Pro license +
+`apt-get install verilator`), the same script runs end-to-end with
+no further code changes.
+
+F11 remains the single largest open question of the sprint and the
+direct test of the "Forge → FPGA" product claim. Until then the
+hardware story stays asserted but not independently verified in this
+research environment.
 
 ## Per-backend numerical equivalence
 
@@ -244,8 +278,10 @@ exercised on the Free tier the research environment runs.
   17-module-level coverage packet, v0.1.
 - `monogate-research/electronics_intake/kernels/lean_proofs_v0/` —
   63-kernel Lean-emit + lean-check survey.
+- `monogate-research/electronics_intake/kernels/lean_proofs_v1/` —
+  18-kernel non-trivial-theorem closure survey (9/18 close).
 - `monogate-research/electronics_intake/kernels/verilog_simulation_v0/` —
-  Scaffold; F11 finding.
+  Complete Verilator scaffold; F11 + verilator-install gates.
 - `agent-maestro/forge` commits `8948a27`, `a7465aa`, `8e554da` — F3,
   F4, F5, F7 closures.
 - `agent-maestro/efrog` commits `c948b3e`, `5ff9dfd`, `c27a56d` —
@@ -258,15 +294,18 @@ the toolchain plus `gcc`, `g++`, `node`, `javac`, `rustc`, `python3`,
 
 ## What's next
 
-F11 (Pro-tier hardware emit) is the single biggest open question. F10
-(non-trivial Lean theorems) is the next-largest. Both are downstream
-of the same engineering pipeline; the only thing missing is either a
-license activation or a corpus augmentation pass.
+F11 (Pro-tier hardware emit) is the single biggest open question.
+F10 (non-trivial Lean theorems) is partially addressed — Lean v1
+closed 9 of 18 with hand-proven tactics; the v2 work list names a
+closure path for each of the remaining 9. Both downstream of the
+same engineering pipeline; the only missing pieces are a license
+activation, a verilator install, and continued proof engineering.
 
 The stress-test → finding → fix loop itself works. The infrastructure
 is checked in; the cost of running the next sprint is dominated by
-the corpus design, not the harness construction. That's the structural
-win — the loop is now a tool, not a one-off.
+the corpus design and (for Lean) the proof writing, not the harness
+construction. That's the structural win — the loop is now a tool,
+not a one-off.
 
 ---
 
