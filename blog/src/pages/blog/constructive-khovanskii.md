@@ -1,6 +1,6 @@
 ---
 layout: ../../layouts/Base.astro
-title: "A Constructive Khovanskii Reduction"
+title: "A Constructive Khovanskii Reduction — the SingleExp (eˣ) Case"
 description: "MachLib now ships a finite zero-count bound for polynomial-in-(x, eˣ), proven modulo an axiomatized analytic base. A Forge-emitted Butler-Volmer kernel obligation closes on top of it. Honest scope inside."
 date: "2026-06-14"
 author: "Monogate Research"
@@ -12,7 +12,7 @@ tag: "research"
 featured: true
 ---
 
-# A Constructive Khovanskii Reduction
+# A Constructive Khovanskii Reduction — the SingleExp (eˣ) Case
 
 MachLib's current foundations capstone is a constructive zero-count bound for
 functions of the form
@@ -190,4 +190,4 @@ framework was worth building rather than the kernel alone.
 
 ---
 
-*Monogate Research (2026). "A Constructive Khovanskii Reduction." monogate research blog. https://monogate.org/blog/constructive-khovanskii*
+*Monogate Research (2026). "A Constructive Khovanskii Reduction — the SingleExp (eˣ) Case." monogate research blog. https://monogate.org/blog/constructive-khovanskii*
