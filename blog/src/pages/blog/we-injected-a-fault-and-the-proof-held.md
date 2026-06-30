@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/Base.astro
 title: "We Injected a Fault and the Safety Proof Held"
-description: "A saturating guard keeps a plant's state inside a safe envelope for all time, for any controller, under any bounded disturbance. We proved it in Lean (sorryAx-free), turned the proof into a number, and then measured that number holding — on a real FPGA, and on a noisy breadboard, while we injected an actuator fault on purpose. The breadboard limit-cycled and looked nothing like the simulation; the envelope held anyway, because safety rides on the saturation, not on good control. Here is the receipt, the one place a skeptic would push, and exactly what we do not claim."
+description: "A saturating guard keeps a plant's state inside a safe envelope for all time, for any controller, under any bounded disturbance. We proved it in Lean (sorryAx-free), turned the proof into a number — and then made that number a machine-checked theorem too — and measured it holding on a real FPGA, on a noisy breadboard, and on a genuinely nonlinear plant, while we injected an actuator fault on purpose. The breadboard limit-cycled and looked nothing like the simulation; the envelope held anyway, because safety rides on the saturation, not on good control. Here is the receipt, the one place a skeptic would push, and exactly what we do not claim."
 date: "2026-06-30"
 author: "Monogate Research"
 tag: engineering
@@ -42,6 +42,17 @@ becomes an actual number, read straight off the source constants. With no fault 
 plant regardless of the exact time constant. Under a full-scale actuator fault the envelope grows to
 **`2.0`**. Two numbers a bench can check a captured trajectory against.
 
+There's a quiet irony we only just closed. That arithmetic — `1 − 0.99 = 0.01`, hence `1.0` — was,
+until this week, computed in Python `float`, *not* Lean: our Mathlib-free `Real` left decimal literals
+opaque, so the proof assistant literally could not evaluate `1 − 0.99`. We built the missing
+foundation (`MachLib.Decimal`): one axiom for what a decimal *means* (`m·10⁻ᵉ · 10ᵉ = m`, which
+subsumes the three hand-written bridges it replaces), and from it the decimal subtraction and
+multiplication needed to reduce a decimal identity to plain integer arithmetic. The two flagship
+envelope numbers are now theorems — `(1 − 0.99)·1 = 0.01` and `(1 − 0.996)·2.0 = 0.008` —
+`sorryAx`-free. The proof was already a number; now the *number* is a proof too. (The general tool
+still instantiates arbitrary controllers in floating point; it's the two silicon-validated kernels
+whose exact arithmetic is now machine-checked.)
+
 ## On a real FPGA — and the one joint a skeptic pushes
 
 We compiled the same source to RTL, put a timing-closed bitstream on an **Arty A7-100T**, and
@@ -71,6 +82,19 @@ hardware). The control is, frankly, not good. **And the envelope holds anyway:**
 bound is a *safety* guarantee resting on the saturation, not a tracking claim. Messy real behavior
 doesn't threaten the result; it demonstrates it.
 
+### Then we made the plant nonlinear
+
+A first-order RC is still *linear*. So we put a **diode** (a 1N4148) in series with the resistor and
+ran the *same* verified controller again — now the plant's decay is genuinely nonlinear: its local
+time constant runs from ~17 ms at small signals to ~46 ms at large ones (a linear RC has exactly one).
+The theorem covers this, because it never needed linearity — only that the plant's drift is a
+contraction, `|f(x)| ≤ L·|x| + c` with `L < 1`. So we **measured** that bound on the real circuit (an
+open-loop decay sweep) instead of assuming it, got `L = 0.984 < 1`, and re-derived the envelope from
+it: `2.34` nominal, `3.28` under the fault. Measured peaks `0.855` and `1.375` — inside again, real
+analog noise again. The envelope is *loose* here — a decay rate that close to `1` amplifies the
+measured noise floor — so it's a wide safe bound rather than a tight one, and we say so. But the chain
+is intact on a plant that is real **and** nonlinear, which is the strongest version of the claim.
+
 ## One source, the whole span
 
 The controller is one small source file. From it, the same toolchain emits the proof obligations
@@ -86,8 +110,10 @@ actually certify.
 - It bounds the **plant state**, treating the control as adversarially clamp-bounded. It is **safety,
   not tracking** — no settling-time or accuracy claim. (The breadboard's limit cycle is the honest
   proof of that distinction.)
-- The plant we ran is a **first-order RC** — a faithful physical instance of the first-order model,
-  not a motor (which would add nonlinearity we did not model).
+- We ran two physical plants: a **first-order RC** (linear) and a **diode-in-RC** (genuinely
+  nonlinear). The nonlinear case needs a *measured* drift bound `|f(x)| ≤ L·|x| + c` with `L < 1` — a
+  real restriction (many plants are only locally contractive) — and yields a looser,
+  noise-floor-dominated envelope. We claim a *safe* bound there, not a tight one.
 - The automatic envelope tool covers the **first-order clamp-guarded class**. Richer plants (coupled,
   vector, a genuine oscillator) are separate theorems we've proven — the last one unconditional, for
   any stable decay rate — but the auto-tool doesn't reach them yet, and we don't pretend it does.
@@ -104,5 +130,6 @@ proven, what's measured, and what's pending — and the one joint a skeptic woul
 on the FPGA) is closed by the breadboard, not waved away.
 
 We set out to do the leap almost nobody pairs: prove the property that matters, measure it on real
-hardware, and survive an injected fault. It's closed — on a deterministic FPGA *and* a noisy
-breadboard — and stated without overclaiming the parts that aren't.
+hardware, and survive an injected fault. It's closed — on a deterministic FPGA, a noisy breadboard,
+*and* a genuinely nonlinear plant, with the envelope number itself now a machine-checked theorem — and
+stated without overclaiming the parts that aren't.
