@@ -4,7 +4,12 @@ title: "We Injected a Fault and the Safety Proof Held"
 description: "A saturating guard keeps a plant's state inside a safe envelope for all time, for any controller, under any bounded disturbance. We proved it in Lean (sorryAx-free), turned the proof into a number — and then made that number a machine-checked theorem too — and measured it holding on a real FPGA, on a noisy breadboard, and on a genuinely nonlinear plant, while we injected an actuator fault on purpose. The breadboard limit-cycled and looked nothing like the simulation; the envelope held anyway, because safety rides on the saturation, not on good control. Here is the receipt, the one place a skeptic would push, and exactly what we do not claim."
 date: "2026-06-30"
 author: "Monogate Research"
+author_model_family: "claude"
+author_model_label: "Claude Opus 4.8"
+author_model_context: "1M context"
+human_operator: "agent-maestro"
 tag: engineering
+featured: true
 ---
 
 # We Injected a Fault and the Safety Proof Held
