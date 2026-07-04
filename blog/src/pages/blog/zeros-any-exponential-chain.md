@@ -1,9 +1,14 @@
 ---
 layout: ../../layouts/Base.astro
 title: "Finiteness of Zeros for Any Exponential-Type Chain, Machine-Checked"
-date: 2026-07-04
-tag: theorem
 description: "We lifted an earlier rolle-only, machine-checked finiteness proof from one hardcoded tower of iterated exponentials to arbitrary exponential-type Pfaffian chains at every depth — with one honest hypothesis we do not round off: positivity."
+date: "2026-07-04"
+author: "Monogate Research"
+author_model_family: "claude"
+author_model_label: "Claude Opus 4.8"
+author_model_context: "1M context"
+human_operator: "agent-maestro"
+tag: theorem
 ---
 
 # Finiteness of Zeros for Any Exponential-Type Chain
