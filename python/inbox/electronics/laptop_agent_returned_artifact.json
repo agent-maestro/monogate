@@ -1,0 +1,637 @@
+{
+  "schemaVersion": "monogate.laptop_agent_returned_artifact.v0",
+  "sourceRepo": "monogate-electronics",
+  "note": "ARTY-001..007 live-hardware guard-clamp captures mapped to the ee_bridge_a1 intake contract. Claim-neutral (intake gate makes no hardware claim); real hardware_observed lives in each referenced capture packet.",
+  "artifacts": [
+    {
+      "lessonId": "arty001_switch_guard",
+      "kernelId": "logic_guard_v0",
+      "sourceRepo": "monogate-electronics",
+      "sourcePath": "evidence/courses/arty001_switch_guard/arty001_switch_guard_hw_capture_2026_06_15",
+      "artifactType": "comparison_packet",
+      "equation": "safe_output never exceeds the safe_limit or the requested_output",
+      "captureStatus": "live_capture_performed",
+      "deviceMetadata": {
+        "deviceObserved": true,
+        "deviceId": "Digilent Arty A7-100T (xc7a100tcsg324-1)",
+        "serialLink": "FTDI USB-UART (COM5) @ 115200 8N1",
+        "programming": "volatile JTAG bitstream",
+        "shipBitstreamSha256": "00DECDAA16A75CC9A2FBDA9E25163DD0FB202F74EE3909C9A8B27EA48683F6A4",
+        "traceSha256": "a6074f082585dc1947dbb238f04efd2e2216464a9d35d499d057ba3e897f6ba3",
+        "traceFrames": 832
+      },
+      "calibrationContext": {
+        "calibrated": true,
+        "method": "digital golden-vector derivation: exact Q8 comparison of measured silicon output vs golden thermometer/clamp reference, 0 derivation mismatches. Digital capture -- no analog calibration performed or claimed.",
+        "analogCalibration": "not_applicable_digital"
+      },
+      "sampleRows": [
+        {
+          "sample_index": 1468,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 1469,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 1470,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 1471,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 1472,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 1473,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        }
+      ],
+      "comparisonMethod": "measured silicon Q8 output vs golden derivation (exact)",
+      "maxObservedError": 0.0,
+      "claimFlags": {
+        "automatic_reviewer_approval": false,
+        "certified_safety_claim": false,
+        "compiler_correctness_claim": false,
+        "electronics_url_modified": false,
+        "formal_equivalence_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "source_repo_modified": false
+      },
+      "reviewerAction": "live_capture_reviewable",
+      "nextValidator": "ee_bridge_a4_private_review"
+    },
+    {
+      "lessonId": "ARTY-002 Pmod 8LD Output Guard",
+      "kernelId": "logic_guard_v0",
+      "sourceRepo": "monogate-electronics",
+      "sourcePath": "evidence/courses/arty002_pmod_8ld/arty002_pmod_8ld_hw_capture_2026_06_22",
+      "artifactType": "comparison_packet",
+      "equation": "safe_output never exceeds the safe_limit or the requested_output",
+      "captureStatus": "live_capture_performed",
+      "deviceMetadata": {
+        "deviceObserved": true,
+        "deviceId": "Digilent Arty A7-100T (xc7a100tcsg324-1)",
+        "serialLink": "FTDI USB-UART (COM5) @ 115200 8N1",
+        "programming": "volatile JTAG bitstream",
+        "shipBitstreamSha256": "bf8d1149a77921e719d308baf6d37e7c8fdae69496fc29240d7e5ef61a9f0c3a",
+        "traceSha256": "bbe0b9684d6ee762b4db8738b45ada7fcbd9119738cc0295f2f10f24bdecfc31",
+        "traceFrames": 814
+      },
+      "calibrationContext": {
+        "calibrated": true,
+        "method": "digital golden-vector derivation: exact Q8 comparison of measured silicon output vs golden thermometer/clamp reference, 0 derivation mismatches. Digital capture -- no analog calibration performed or claimed.",
+        "analogCalibration": "not_applicable_digital"
+      },
+      "sampleRows": [
+        {
+          "sample_index": 24880,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 24881,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 24882,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 24883,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 24884,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 24885,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        }
+      ],
+      "comparisonMethod": "measured silicon Q8 output vs golden derivation (exact)",
+      "maxObservedError": 0.0,
+      "claimFlags": {
+        "automatic_reviewer_approval": false,
+        "certified_safety_claim": false,
+        "compiler_correctness_claim": false,
+        "electronics_url_modified": false,
+        "formal_equivalence_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "source_repo_modified": false
+      },
+      "reviewerAction": "live_capture_reviewable",
+      "nextValidator": "ee_bridge_a4_private_review"
+    },
+    {
+      "lessonId": "ARTY-003 Reflex Knob",
+      "kernelId": "logic_guard_v0",
+      "sourceRepo": "monogate-electronics",
+      "sourcePath": "evidence/courses/arty003_enc_knob/arty003_enc_knob_hw_capture_2026_06_22",
+      "artifactType": "comparison_packet",
+      "equation": "safe_output never exceeds the safe_limit or the requested_output",
+      "captureStatus": "live_capture_performed",
+      "deviceMetadata": {
+        "deviceObserved": true,
+        "deviceId": "Digilent Arty A7-100T (xc7a100tcsg324-1)",
+        "serialLink": "FTDI USB-UART (COM5) @ 115200 8N1",
+        "programming": "volatile JTAG bitstream",
+        "shipBitstreamSha256": "1aa835bc7ffc0ee5c369553697072fb1c0db90c05ba09070eca5e986120c79d4",
+        "traceSha256": "de331c3bfbc43ded63c4d7dd0a2c3c9ae05a3e7065b01f6c83765db025b25d04",
+        "traceFrames": 7573
+      },
+      "calibrationContext": {
+        "calibrated": true,
+        "method": "digital golden-vector derivation: exact Q8 comparison of measured silicon output vs golden thermometer/clamp reference, 0 derivation mismatches. Digital capture -- no analog calibration performed or claimed.",
+        "analogCalibration": "not_applicable_digital"
+      },
+      "sampleRows": [
+        {
+          "sample_index": 503,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 504,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 505,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 506,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 507,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 508,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        }
+      ],
+      "comparisonMethod": "measured silicon Q8 output vs golden derivation (exact)",
+      "maxObservedError": 0.0,
+      "claimFlags": {
+        "automatic_reviewer_approval": false,
+        "certified_safety_claim": false,
+        "compiler_correctness_claim": false,
+        "electronics_url_modified": false,
+        "formal_equivalence_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "source_repo_modified": false
+      },
+      "reviewerAction": "live_capture_reviewable",
+      "nextValidator": "ee_bridge_a4_private_review"
+    },
+    {
+      "lessonId": "ARTY-004 Reflex Readout",
+      "kernelId": "logic_guard_v0",
+      "sourceRepo": "monogate-electronics",
+      "sourcePath": "evidence/courses/arty004_ssd_readout/arty004_ssd_readout_hw_capture_2026_06_22",
+      "artifactType": "comparison_packet",
+      "equation": "safe_output never exceeds the safe_limit or the requested_output",
+      "captureStatus": "live_capture_performed",
+      "deviceMetadata": {
+        "deviceObserved": true,
+        "deviceId": "Digilent Arty A7-100T (xc7a100tcsg324-1)",
+        "serialLink": "FTDI USB-UART (COM5) @ 115200 8N1",
+        "programming": "volatile JTAG bitstream",
+        "shipBitstreamSha256": "41b73ae4893d1381c17ff9c9e331e7931bec95ac92be448028ecd7317662a2c6",
+        "traceSha256": "cc8ff1ee50ce0d1d674baa35c9627bd80c0394d5560ea1d238e05d99e1e57c0e",
+        "traceFrames": 4783
+      },
+      "calibrationContext": {
+        "calibrated": true,
+        "method": "digital golden-vector derivation: exact Q8 comparison of measured silicon output vs golden thermometer/clamp reference, 0 derivation mismatches. Digital capture -- no analog calibration performed or claimed.",
+        "analogCalibration": "not_applicable_digital"
+      },
+      "sampleRows": [
+        {
+          "sample_index": 164,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 165,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 166,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 167,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 168,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 169,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        }
+      ],
+      "comparisonMethod": "measured silicon Q8 output vs golden derivation (exact)",
+      "maxObservedError": 0.0,
+      "claimFlags": {
+        "automatic_reviewer_approval": false,
+        "certified_safety_claim": false,
+        "compiler_correctness_claim": false,
+        "electronics_url_modified": false,
+        "formal_equivalence_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "source_repo_modified": false
+      },
+      "reviewerAction": "live_capture_reviewable",
+      "nextValidator": "ee_bridge_a4_private_review"
+    },
+    {
+      "lessonId": "ARTY-005 ADC Guard",
+      "kernelId": "logic_guard_v0",
+      "sourceRepo": "monogate-electronics",
+      "sourcePath": "evidence/courses/arty005_adc_guard/arty005_adc_guard_hw_capture_2026_06_23",
+      "artifactType": "comparison_packet",
+      "equation": "safe_output never exceeds the safe_limit or the requested_output",
+      "captureStatus": "live_capture_performed",
+      "deviceMetadata": {
+        "deviceObserved": true,
+        "deviceId": "Digilent Arty A7-100T (xc7a100tcsg324-1)",
+        "serialLink": "FTDI USB-UART (COM5) @ 115200 8N1",
+        "programming": "volatile JTAG bitstream",
+        "shipBitstreamSha256": "0fedbd790467ae1442b3bfd1a6cc572b2dd2ecf649ef730ce919f0e3a5444d1e",
+        "traceSha256": "cf227cdb6dbb6a462ecb62153a3b445ccf0e83b821a3bccb6cd4a479bb05ff7f",
+        "traceFrames": 6024
+      },
+      "calibrationContext": {
+        "calibrated": true,
+        "method": "digital golden-vector derivation: exact Q8 comparison of measured silicon output vs golden thermometer/clamp reference, 0 derivation mismatches. Digital capture -- no analog calibration performed or claimed.",
+        "analogCalibration": "not_applicable_digital"
+      },
+      "sampleRows": [
+        {
+          "sample_index": 547,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": true
+        },
+        {
+          "sample_index": 548,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": true
+        },
+        {
+          "sample_index": 549,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": true
+        },
+        {
+          "sample_index": 550,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": true
+        },
+        {
+          "sample_index": 551,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": true
+        },
+        {
+          "sample_index": 552,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": true
+        }
+      ],
+      "comparisonMethod": "measured silicon Q8 output vs golden derivation (exact)",
+      "maxObservedError": 0.0,
+      "claimFlags": {
+        "automatic_reviewer_approval": false,
+        "certified_safety_claim": false,
+        "compiler_correctness_claim": false,
+        "electronics_url_modified": false,
+        "formal_equivalence_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "source_repo_modified": false
+      },
+      "reviewerAction": "live_capture_reviewable",
+      "nextValidator": "ee_bridge_a4_private_review"
+    },
+    {
+      "lessonId": "ARTY-006 OLED Scope",
+      "kernelId": "logic_guard_v0",
+      "sourceRepo": "monogate-electronics",
+      "sourcePath": "evidence/courses/arty006_oled_scope/arty006_oled_scope_hw_capture_2026_06_24",
+      "artifactType": "comparison_packet",
+      "equation": "safe_output == min(requested_output, safe_limit); guard clamps iff requested_output > safe_limit",
+      "captureStatus": "live_capture_performed",
+      "deviceMetadata": {
+        "deviceObserved": true,
+        "deviceId": "Digilent Arty A7-100T (xc7a100tcsg324-1)",
+        "serialLink": "FTDI USB-UART (COM5) @ 115200 8N1",
+        "programming": "volatile JTAG bitstream",
+        "shipBitstreamSha256": "557299ea6868f0074d54519528c342e16bff71e83fe5bd5f83ba5423e1e62641",
+        "traceSha256": "a019b92e63e14883c59445353e4e288582cda39903bfad8144447042c30d408b",
+        "traceFrames": 5168
+      },
+      "calibrationContext": {
+        "calibrated": true,
+        "method": "digital golden-vector derivation: exact Q8 comparison of measured silicon output vs golden thermometer/clamp reference, 0 derivation mismatches. Digital capture -- no analog calibration performed or claimed.",
+        "analogCalibration": "not_applicable_digital"
+      },
+      "sampleRows": [
+        {
+          "sample_index": 7239,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 7240,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 7241,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 7242,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 7243,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        },
+        {
+          "sample_index": 7244,
+          "requested_output": 0.0,
+          "safe_output": 0.0,
+          "safe_limit": 0.6,
+          "guard_action": "pass_through",
+          "violation_latched": false
+        }
+      ],
+      "comparisonMethod": "measured silicon Q8 output vs golden derivation (exact)",
+      "maxObservedError": 0.0,
+      "claimFlags": {
+        "automatic_reviewer_approval": false,
+        "certified_safety_claim": false,
+        "compiler_correctness_claim": false,
+        "electronics_url_modified": false,
+        "formal_equivalence_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "source_repo_modified": false
+      },
+      "reviewerAction": "live_capture_reviewable",
+      "nextValidator": "ee_bridge_a4_private_review"
+    },
+    {
+      "lessonId": "008-arty-a7-reflex-logic / ARTY-007 Servo Guard",
+      "kernelId": "logic_guard_v0",
+      "sourceRepo": "monogate-electronics",
+      "sourcePath": "evidence/courses/arty007_servo_guard/arty007_servo_guard_hw_capture_2026_06_27",
+      "artifactType": "comparison_packet",
+      "equation": "safe_output must never exceed the safe_limit or the requested_output",
+      "captureStatus": "live_capture_performed",
+      "deviceMetadata": {
+        "deviceObserved": true,
+        "deviceId": "Digilent Arty A7-100T (xc7a100tcsg324-1)",
+        "serialLink": "FTDI USB-UART (COM5) @ 115200 8N1",
+        "programming": "volatile JTAG bitstream (configuration only; QSPI flash not written)",
+        "shipBitstreamSha256": null,
+        "traceSha256": "3091c1bb64945ff771610262fc6248bc00ac856843b6082c855a8cc105f656a5",
+        "traceFrames": 3183
+      },
+      "calibrationContext": {
+        "calibrated": true,
+        "method": "digital golden-vector derivation: exact Q8 comparison of measured silicon output vs golden thermometer/clamp reference, 0 derivation mismatches. Digital capture -- no analog calibration performed or claimed.",
+        "analogCalibration": "not_applicable_digital"
+      },
+      "sampleRows": [
+        {
+          "sample_index": "0x00000FC5",
+          "requested_output": null,
+          "safe_output": null,
+          "safe_limit": null,
+          "guard_action": null,
+          "violation_latched": "0"
+        },
+        {
+          "sample_index": "0x00000FC6",
+          "requested_output": null,
+          "safe_output": null,
+          "safe_limit": null,
+          "guard_action": null,
+          "violation_latched": "0"
+        },
+        {
+          "sample_index": "0x00000FC7",
+          "requested_output": null,
+          "safe_output": null,
+          "safe_limit": null,
+          "guard_action": null,
+          "violation_latched": "0"
+        },
+        {
+          "sample_index": "0x00000FC8",
+          "requested_output": null,
+          "safe_output": null,
+          "safe_limit": null,
+          "guard_action": null,
+          "violation_latched": "0"
+        },
+        {
+          "sample_index": "0x00000FC9",
+          "requested_output": null,
+          "safe_output": null,
+          "safe_limit": null,
+          "guard_action": null,
+          "violation_latched": "0"
+        },
+        {
+          "sample_index": "0x00000FCA",
+          "requested_output": null,
+          "safe_output": null,
+          "safe_limit": null,
+          "guard_action": null,
+          "violation_latched": "0"
+        }
+      ],
+      "comparisonMethod": "measured silicon Q8 output vs golden derivation (exact)",
+      "maxObservedError": 0.0,
+      "claimFlags": {
+        "automatic_reviewer_approval": false,
+        "certified_safety_claim": false,
+        "compiler_correctness_claim": false,
+        "electronics_url_modified": false,
+        "formal_equivalence_claim": false,
+        "hardware_observed": false,
+        "live_serial_capture_performed": false,
+        "production_controller_claim": false,
+        "public_ready": false,
+        "runtime_performance_claim": false,
+        "source_repo_modified": false
+      },
+      "reviewerAction": "live_capture_reviewable",
+      "nextValidator": "ee_bridge_a4_private_review"
+    }
+  ]
+}
