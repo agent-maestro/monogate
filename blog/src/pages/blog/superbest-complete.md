@@ -89,9 +89,8 @@ any universal operator family. No other framework has:
 1. A single binary operator that generates all elementary functions, AND
 2. A fully characterized minimum-cost dispatch table for that family
 
-**For the patent:** The method (dynamic per-operation dispatch to minimum-cost
-operator) is covered by the provisional filing. The addendum establishes:
-- The 2n neg identity as a specific claimed construction
+The addendum establishes:
+- The 2n neg identity as a specific construction
 - The positive-domain completeness theorem (all entries proved)
 - The general-domain optimality theorem (all proved except add general)
 

@@ -1,7 +1,0 @@
-program sigmoid_derivative_v0
-family sigmoid_logistic
-meaning Derivative-shaped logistic fixture with repeated sigmoid subexpressions.
-source_repo monogate
-input x unit dimensionless range -12 12
-guard nonzero(1 + exp(-x))
-return (1 / (1 + exp(-x))) * (1 - (1 / (1 + exp(-x))))

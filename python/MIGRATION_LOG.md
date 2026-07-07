@@ -6,9 +6,9 @@
 
 The `_make_best()` routing table in `monogate/core.py` previously contained
 a readable Python dict mapping each arithmetic operation to its optimal base
-operator (EML, EDL, EXL, DEML). That table is a patent candidate: it encodes
-which operator minimizes node count for each operation, derived from research
-sessions that are not yet public.
+operator (EML, EDL, EXL, DEML). That table encodes which operator minimizes
+node count for each operation, derived from research sessions that are not
+yet public.
 
 The full dispatch table has been moved out of `core.py` and into:
 
