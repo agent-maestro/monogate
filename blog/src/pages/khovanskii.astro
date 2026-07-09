@@ -1,0 +1,520 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Exact axiom footprint of chainN_khovanskii_bound_explicit, grouped.
+// Re-derived from `#print axioms` on the machine-checked theorem.
+const axiomGroups: { label: string; note: string; color: string; items: string[] }[] = [
+  {
+    label: 'Logical core', color: 'var(--muted)',
+    note: 'Lean’s three standard axioms — shared by essentially every formal proof.',
+    items: ['propext', 'Classical.choice', 'Quot.sound'],
+  },
+  {
+    label: 'The real line — ordered field', color: 'var(--cyan)',
+    note: 'The carrier type and its field & order structure. Nothing analytic yet.',
+    items: [
+      'Real', 'addR', 'mulR', 'negR', 'subR', 'divR', 'oneR', 'zeroR', 'natCast',
+      'add_assoc', 'add_comm', 'add_zero', 'add_neg', 'mul_assoc', 'mul_comm',
+      'mul_one_ax', 'mul_distrib', 'mul_inv', 'sub_def', 'natCast_succ', 'natCast_zero',
+      'leR', 'ltR', 'le_iff_lt_or_eq', 'lt_irrefl_ax', 'lt_total', 'lt_trans_ax',
+      'add_lt_add_left', 'zero_lt_one_ax', 'zero_ne_one_ax',
+    ],
+  },
+  {
+    label: 'The exponential', color: 'var(--cyan)',
+    note: 'exp exists and is strictly positive. That is all the tower is built from.',
+    items: ['exp', 'exp_pos'],
+  },
+  {
+    label: 'Differentiation calculus', color: 'var(--cyan)',
+    note: 'The derivative relation and its rules: sum, difference, product, composition, constant, identity, exp, and uniqueness.',
+    items: [
+      'HasDerivAt', 'HasDerivAt_add', 'HasDerivAt_sub', 'HasDerivAt_mul',
+      'HasDerivAt_comp', 'HasDerivAt_const', 'HasDerivAt_id', 'HasDerivAt_exp',
+      'HasDerivAt_unique',
+    ],
+  },
+  {
+    label: 'The analytic engine', color: 'var(--accent)',
+    note: 'Rolle’s theorem — between two zeros of a differentiable function lies a zero of its derivative. The single nontrivial analytic input; the only place completeness of the reals does any work.',
+    items: ['rolle'],
+  },
+];
+const axiomTotal = axiomGroups.reduce((n, g) => n + g.items.length, 0);
+
+// Dependency ladder. Each rung is a mathematical result; the two-column rung
+// is the pair of ingredients that the outer recursion consumes together.
+const ladder = [
+  { name: 'Rolle’s theorem', kind: 'axiom',
+    desc: 'The sole analytic input. A zero of the derivative between any two zeros of the function.' },
+  { name: 'Single‑exponential bound', kind: 'lemma',
+    desc: 'A polynomial in x and eˣ has at most (degree + number of reduction steps) real zeros.' },
+  { name: 'Reduce step + well‑founded measure', kind: 'lemma',
+    desc: 'Eliminating the top exponential costs one zero (Rolle) and strictly lowers a terminating measure.' },
+  { name: 'Chain‑2 explicit bound', kind: 'theorem',
+    desc: 'The level‑indexed budget Φ counts the zeros of p(x, eˣ, e^(eˣ)) exactly, from degrees alone.' },
+];
+const ladderBranch = [
+  { name: 'Recursive descent rank', kind: 'lemma',
+    desc: 'A nested, level‑indexed rank whose per‑level cap is a lower‑depth budget — strictly bounded, and it drops on every reduce.' },
+  { name: 'Degree‑evolution accounting', kind: 'lemma',
+    desc: 'Under reduce and trim, x‑degree never rises and each exponential degree grows by at most one.' },
+];
+const ladderTail = [
+  { name: 'One‑level recursion', kind: 'theorem',
+    desc: 'A single well‑founded recursion over one exponential level: reduce, trim, and lift arms, budgeted by Φ with the recursive cap.' },
+  { name: 'Depth induction', kind: 'theorem',
+    desc: 'Induct on the height of the tower. Base: chain‑2. Step: peel the top exponential; the shorter tower supplies the leaf.' },
+  { name: 'Constructive Khovanskii bound', kind: 'headline',
+    desc: 'For every depth and every polynomial, an explicit finite ceiling Ndep(m, D) on the zero count — machine‑checked, from Rolle alone.' },
+];
+const kindColor: Record<string, string> = {
+  axiom: 'var(--accent)', lemma: 'var(--cyan)', theorem: 'var(--green)', headline: 'var(--accent)',
+};
+---
+
+<Base
+  title="Constructive Khovanskii in Lean — monogate.org"
+  description="A machine-checked, explicit bound on the real zeros of a function along an iterated-exponential tower — reduced to Rolle's theorem, with an exact axiom footprint and nothing swept under the rug."
+>
+  <p class="eyebrow">Formalization · iterated exponentials · Lean 4</p>
+  <h1>Constructive Khovanskii in Lean</h1>
+  <p class="lede">
+    Khovanskii’s theorem says a function built from iterated exponentials has only
+    finitely many real zeros. We give that counting bound a fully constructive,
+    machine‑checked proof at <em>every</em> depth — an explicit ceiling reduced
+    to a single analytic fact: Rolle’s theorem.
+  </p>
+
+  <div class="jump">
+    <a href="#classical">Classical statement</a>
+    <a href="#architecture">Constructive architecture</a>
+    <a href="#recurrence">Explicit recurrence</a>
+    <a href="#graph">Dependency graph</a>
+    <a href="#axioms">Axiom footprint</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================ 1 ============================ -->
+  <section id="classical">
+    <p class="sec-kicker">01 — Classical statement</p>
+    <h2>A tower of exponentials has finitely many zeros</h2>
+
+    <p>
+      Fix a height <em>n</em> and build the iterated‑exponential tower
+    </p>
+    <div class="math-block">
+      y₀ = eˣ,   y₁ = e^(y₀) = e^(eˣ),   …,   yₖ₊₁ = e^(yₖ).
+    </div>
+    <p>
+      Let <em>p</em> be an ordinary polynomial in the variable <em>x</em> and the tower
+      variables <em>y₀, …, yₙ₋₁</em>, and evaluate it along the tower:
+    </p>
+    <div class="math-block">
+      f(x) = p(x,  eˣ,  e^(eˣ),  …).
+    </div>
+    <p>
+      This is a <strong>Pfaffian function</strong>: each tower variable satisfies a
+      first‑order differential equation polynomial in the earlier ones
+      (<em>yₖ′ = yₖ·⋯</em>). Khovanskii’s theory of fewnomials (1980)
+      proves that any such <em>f</em> has only finitely many real zeros on an interval,
+      with a bound depending only on the degree of <em>p</em> and the height of the tower.
+      Classically this is a landmark of real‑analytic geometry — but the usual
+      arguments interleave the induction on the chain with analytic and integral‑geometric
+      machinery, and the “explicit” constant is left abstract.
+    </p>
+
+    <p>The statement proved here, in a proof assistant, is:</p>
+    <blockquote>
+      For every height and every polynomial <em>p</em> whose syntactic degrees are bounded
+      by <em>D</em>, the function <em>f</em> above has at most <strong>Ndep(m, D)</strong>
+      zeros on any interval where it is not identically zero — where Ndep is an explicit
+      closed‑form recurrence in <em>D</em>.
+    </blockquote>
+    <p>
+      No existence quantifier hides the constant; Ndep is written down in
+      <a href="#recurrence">§03</a>. At the base of the tower (a single nested
+      exponential) the ceiling is a concrete number: <em>e^(eˣ) − x·eˣ</em>
+      crosses zero at most <strong>47</strong> times on any interval, and
+      <em>x·e^(eˣ) − e^(2x)</em> at most <strong>71</strong> times — both
+      checked by evaluating the recurrence.
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================ 2 ============================ -->
+  <section id="architecture">
+    <p class="sec-kicker">02 — Constructive architecture</p>
+    <h2>Everything is Rolle, twice nested</h2>
+
+    <p>
+      The proof turns zero‑counting into repeated applications of Rolle’s theorem.
+      There is no measure theory, no analytic continuation, no transcendence input —
+      just the ordered real field, the exponential, a differentiation calculus, and Rolle.
+      Two nested inductions carry it:
+    </p>
+
+    <h3>Within a level — reduce and trim</h3>
+    <p>
+      Suppose the top tower variable genuinely appears in <em>p</em>. A
+      <strong>reduce</strong> step forms a new polynomial by eliminating the leading power
+      of that top variable — a chain‑total‑derivative, the algebraic shadow of
+      differentiating <em>f</em>. By Rolle, <em>f</em> has at most one more zero than the
+      reduced function. When instead the top variable’s leading coefficient vanishes
+      identically, a <strong>trim</strong> lowers the top degree at no analytic cost. A
+      measure on the polynomial strictly decreases under both moves, so a well‑founded
+      recursion terminates; the number of reduces it performs is the zero budget for that
+      level.
+    </p>
+
+    <h3>Down the tower — induction on height</h3>
+    <p>
+      Once the top exponential is eliminated entirely, the problem drops to a tower one
+      shorter, and the bound for that shorter tower — the induction hypothesis —
+      supplies the leaf. The base case is a single nested exponential, proved by the very
+      same reduce/Rolle loop.
+    </p>
+
+    <div class="note">
+      <p class="note-kicker">The subtlety that makes it close</p>
+      <p>
+        A <em>flat</em> numeric rank on the measure does not survive the descent. A reduce
+        may raise an exponential’s degree by one, forcing a larger degree budget; but a
+        flat rank is monotone in that budget, so enlarging it fights the very drop the
+        reduce is supposed to buy. The fix is a <strong>recursive rank</strong>: a
+        level‑indexed budget whose per‑level cap is itself a lower‑depth budget,
+        mirroring the recursive shape of the tower. Each digit of the measure then behaves
+        as its own level index — non‑increasing on its own descent — rather than
+        as a bounded high digit fighting the growth. This is what lifts the chain‑2
+        argument to arbitrary depth.
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================ 3 ============================ -->
+  <section id="recurrence">
+    <p class="sec-kicker">03 — Explicit recurrence</p>
+    <h2>The ceiling, written down</h2>
+
+    <p>
+      The whole bound rests on one <strong>level‑indexed budget</strong>. With an
+      x‑degree budget <em>B</em>, a level count <em>d</em>, an inner rank <em>r</em>,
+      and a growth budget <em>g</em>:
+    </p>
+    <pre><code>L(B, 0,   G) = (G+1)(B+1)
+L(B, d+1, G) = (G+1)(B+1) + L(B, d, G + (G+1)(B+1))
+
+Φ(B, 0,   r, g) = r
+Φ(B, d+1, r, g) = r + L(B, d, g + r + 1)</code></pre>
+    <p>
+      At the base of the tower (a single nested exponential) the zero count of
+      <em>p(x, eˣ, e^(eˣ))</em> is exactly <em>Φ</em> read off the degrees.
+      This is the engine; the depth recurrence wraps it.
+    </p>
+
+    <h3>The depth recurrence</h3>
+    <p>
+      Write <em>budgetMax(m, D)</em> for the largest reduce‑budget of any depth‑<em>m</em>
+      polynomial with degrees <em>≤ D</em>. Then the ceiling is:
+    </p>
+    <pre><code>Ndep(0,   D) = Φ(D+2, D, D(D+3) + (D+2), D)
+
+    writing  b = budgetMax(m, D+2):
+Ndep(m+1, D) = b + Ndep(m, (D+2) + b)</code></pre>
+    <p>
+      The first term counts the reduces that peel the top exponential; the second is the
+      bound for the tower one shorter, evaluated at the larger degree those peels can
+      produce. The two terms are kept separate — a leaf added <em>beside</em> the budget,
+      not folded into it — which is what removes the circularity that a single fused
+      constant would create.
+    </p>
+
+    <h3>The recursive per‑level cap</h3>
+    <p>
+      The cap inside <em>budgetMax</em> is where the recursion lives. It is the same
+      level‑indexed shape as <em>Φ</em>, but with the per‑level weight replaced by a
+      strictly‑lower‑depth budget:
+    </p>
+    <pre><code>ℓ(κ, 0,   B) = κ(B)
+ℓ(κ, d+1, B) = κ(B) + ℓ(κ, d, B + κ(B) + 1)
+
+descentBound(0,   B) = B + 1
+descentBound(n+1, B) = ℓ(descentBound(n), B, B)</code></pre>
+    <p>
+      <em>budgetMax(m, D)</em> is <em>Φ</em> evaluated with <em>κ = descentBound(m+2)</em>
+      as its per‑level cap. One level of the budget per digit of the nested measure —
+      exactly the structure that lets the rank drop thread through the descent.
+    </p>
+
+    <div class="note">
+      <p class="note-kicker">On the size of the number</p>
+      <p>
+        Unrolled, <em>Ndep(m, D)</em> is a tower of exponentials of height <em>m</em>. That
+        growth is intrinsic to iterated exponentials, not an artifact of the proof — and
+        the point was never that the number is small. It is that the number is
+        <em>explicit, finite, and machine‑checked</em>, from Rolle alone. At depth two it
+        is a plain numeral (47, 71 above); deeper, it is a closed‑form recurrence rather
+        than a digit one would print.
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================ 4 ============================ -->
+  <section id="graph">
+    <p class="sec-kicker">04 — Dependency graph</p>
+    <h2>What rests on what</h2>
+    <p>
+      Every rung is a mathematical result, and each depends only on the ones above it.
+      Read top to bottom: a single analytic axiom at the summit, the constructive bound
+      at the foot.
+    </p>
+
+    <div class="dep">
+      {ladder.map((n, i) => (
+        <>
+          <div class={`dep-node k-${n.kind}`} style={`--k:${kindColor[n.kind]}`}>
+            <span class="dep-kind">{n.kind}</span>
+            <span class="dep-name">{n.name}</span>
+            <span class="dep-desc">{n.desc}</span>
+          </div>
+          <div class="dep-arrow" aria-hidden="true">▼</div>
+        </>
+      ))}
+
+      <div class="dep-split">
+        {ladderBranch.map((n) => (
+          <div class={`dep-node k-${n.kind}`} style={`--k:${kindColor[n.kind]}`}>
+            <span class="dep-kind">{n.kind}</span>
+            <span class="dep-name">{n.name}</span>
+            <span class="dep-desc">{n.desc}</span>
+          </div>
+        ))}
+      </div>
+      <div class="dep-arrow" aria-hidden="true">▼</div>
+
+      {ladderTail.map((n, i) => (
+        <>
+          <div class={`dep-node k-${n.kind}`} style={`--k:${kindColor[n.kind]}`}>
+            <span class="dep-kind">{n.kind}</span>
+            <span class="dep-name">{n.name}</span>
+            <span class="dep-desc">{n.desc}</span>
+          </div>
+          {i < ladderTail.length - 1 && <div class="dep-arrow" aria-hidden="true">▼</div>}
+        </>
+      ))}
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================ 5 ============================ -->
+  <section id="axioms">
+    <p class="sec-kicker">05 — Exact axiom footprint</p>
+    <h2>What the proof trusts</h2>
+    <p>
+      The theorem’s complete axiom footprint is <strong>{axiomTotal} axioms</strong> —
+      no more, no less. Three are Lean’s logical core. The rest specify the real line as an
+      ordered field with an exponential and a differentiation calculus. Exactly
+      <strong>one</strong> — Rolle’s theorem — carries the analysis.
+    </p>
+
+    {axiomGroups.map((g) => (
+      <div class="ax-group" style={`--k:${g.color}`}>
+        <div class="ax-head">
+          <span class="ax-label">{g.label}</span>
+          <span class="ax-count">{g.items.length}</span>
+        </div>
+        <p class="ax-note">{g.note}</p>
+        <div class="ax-items">
+          {g.items.map((it) => <code class="ax-item">{it}</code>)}
+        </div>
+      </div>
+    ))}
+
+    <div class="ax-absent">
+      <p class="note-kicker" style="color: var(--green);">Verified absent</p>
+      <p>
+        No <code>sorry</code> anywhere in the proof or its dependencies. And crucially, no
+        classical zero‑counting axiom: the earlier result gave only <em>“finitely
+        many”</em> with an unnamed bound, and could have leaned on such an axiom — this
+        one does not. Every zero is accounted for by construction.
+      </p>
+    </div>
+
+    <p class="ax-foot">
+      These real‑analysis axioms are an interface, not an appeal to authority: each is
+      discharged against the standard real numbers in a companion soundness check — see
+      <a href="/blog/a-model-for-the-axioms">A Model for the Axioms</a>. So the footprint
+      above is genuinely the whole of it: an ordered field, exp, differentiation, and Rolle.
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <div class="closing">
+    <a href="/theorems">Theorem catalog →</a>
+    <a href="/proofs">Proofs →</a>
+    <a href="/blog/tight-zeros-bound">Tight zeros bound →</a>
+    <a href="https://github.com/agent-maestro/machlib" target="_blank" rel="noopener" style="color: var(--green);">Machine‑checked source (Lean 4) →</a>
+  </div>
+</Base>
+
+<style>
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  h1 { font-size: 2.4rem; margin-bottom: 18px; }
+  .lede {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 26px;
+  }
+  .lede em { color: var(--accent); font-style: italic; }
+
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .jump a { color: var(--muted); }
+  .jump a:hover { color: var(--accent); text-decoration: none; }
+
+  .sec-kicker {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  section h2 { margin-top: 4px; }
+  section h3 { color: var(--cyan); }
+
+  .math-block { font-size: 1.05em; }
+
+  blockquote { font-size: 1.02rem; }
+  blockquote em { color: var(--cyan); font-style: normal; }
+
+  /* callout note */
+  .note {
+    background: rgba(196,167,125,0.06);
+    border: 1px solid rgba(196,167,125,0.20);
+    border-left: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 26px 0;
+  }
+  .note p { margin: 0; color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+  .note em { color: var(--text); font-style: italic; }
+  .note-kicker {
+    font-family: var(--mono);
+    font-size: 10px !important;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px !important;
+  }
+
+  /* dependency ladder */
+  .dep { display: flex; flex-direction: column; align-items: stretch; margin: 26px 0 8px; }
+  .dep-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--k);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .dep-kind {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--k);
+  }
+  .dep-name { font-size: 1rem; color: var(--text); font-weight: 600; }
+  .dep-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.6; }
+  .dep-arrow { text-align: center; color: var(--muted); font-size: 11px; line-height: 1; padding: 7px 0; }
+  .dep-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dep-node.k-headline {
+    border: 1px solid rgba(196,167,125,0.5);
+    border-left: 3px solid var(--accent);
+    background: rgba(196,167,125,0.08);
+    box-shadow: 0 0 0 1px rgba(196,167,125,0.10);
+  }
+  .dep-node.k-headline .dep-name { color: var(--accent); }
+  @media (max-width: 560px) {
+    .dep-split { grid-template-columns: 1fr; }
+  }
+
+  /* axiom groups */
+  .ax-group {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--k);
+    border-radius: 8px;
+    padding: 13px 16px;
+    margin: 12px 0;
+    background: var(--surface);
+  }
+  .ax-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .ax-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--k);
+    font-weight: 700;
+  }
+  .ax-count { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .ax-note { font-size: 0.85rem; color: var(--muted); margin: 6px 0 10px; line-height: 1.6; }
+  .ax-items { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ax-item {
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 2px 7px;
+  }
+  .ax-group[style*="--accent"] .ax-item { color: var(--accent); border-color: rgba(196,167,125,0.35); }
+
+  .ax-absent {
+    background: rgba(95,181,122,0.06);
+    border: 1px solid rgba(95,181,122,0.24);
+    border-left: 2px solid var(--green);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 22px 0;
+  }
+  .ax-absent p { margin: 0; color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+  .ax-absent em { color: var(--text); font-style: italic; }
+  .ax-foot { font-size: 0.9rem; color: var(--muted); margin-top: 18px; }
+
+  .closing {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .closing a { color: var(--cyan); }
+</style>
