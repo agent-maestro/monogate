@@ -136,10 +136,15 @@ const kindColor: Record<string, string> = {
     <p>
       No existence quantifier hides the constant; Ndep is written down in
       <a href="#recurrence">§03</a>. At the base of the tower (a single nested
-      exponential) the ceiling is a concrete number: <em>e^(eˣ) − x·eˣ</em>
-      crosses zero at most <strong>47</strong> times on any interval, and
-      <em>x·e^(eˣ) − e^(2x)</em> at most <strong>71</strong> times — both
-      checked by evaluating the recurrence.
+      exponential) the ceiling is a concrete number — and now a
+      machine-checked theorem: <em>e^(eˣ) − x·eˣ</em> crosses zero at most
+      <strong>47</strong> times on any interval containing a point where it is
+      nonzero (the ceiling <em>Ndep(0, 1)</em> evaluates to 47, and the count is
+      discharged in the kernel — no floating-point, no external oracle). The
+      finer per-barrier recurrence sharpens this further —
+      <em>x·e^(eˣ) − e^(2x)</em> to at most <strong>71</strong> — though that
+      tighter figure is read off the canonical measure rather than the
+      degree-class ceiling, so it stays a computation rather than a theorem.
     </p>
   </section>
 
