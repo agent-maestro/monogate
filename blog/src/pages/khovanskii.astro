@@ -75,7 +75,7 @@ const kindColor: Record<string, string> = {
 
 <Base
   title="Constructive Khovanskii in Lean — monogate.org"
-  description="A machine-checked, explicit bound on the real zeros of a function along an iterated-exponential tower — reduced to Rolle's theorem, with an exact axiom footprint and nothing swept under the rug."
+  description="A machine-checked, explicit bound on the real zeros of a function along an iterated-exponential tower — reduced to Rolle's theorem, with an exact axiom footprint and nothing swept under the rug. Now extended to the full exp/log/reciprocal barrier class."
 >
   <p class="eyebrow">Formalization · iterated exponentials · Lean 4</p>
   <h1>Constructive Khovanskii in Lean</h1>
@@ -92,6 +92,7 @@ const kindColor: Record<string, string> = {
     <a href="#recurrence">Explicit recurrence</a>
     <a href="#graph">Dependency graph</a>
     <a href="#axioms">Axiom footprint</a>
+    <a href="#beyond">Beyond the exponential</a>
   </div>
 
   <div class="divider"></div>
@@ -353,6 +354,53 @@ descentBound(n+1, B) = ℓ(descentBound(n), B, B)</code></pre>
       <a href="/blog/a-model-for-the-axioms">A Model for the Axioms</a>. So the footprint
       above is genuinely the whole of it: an ordered field, exp, differentiation, and Rolle.
     </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ============================ 6 ============================ -->
+  <section id="beyond">
+    <p class="sec-kicker">06 — Beyond the exponential</p>
+    <h2>Logarithms and reciprocals, on the same descent</h2>
+
+    <p>
+      The tower above is exponentials alone. But the reduce/Rolle architecture never
+      depended on <em>which</em> Pfaffian functions the chain is made of — only that each
+      variable satisfies a first‑order differential equation in the earlier ones.
+      Logarithms and reciprocals do too. Carrying the same two nested inductions across a
+      chain that mixes all three closes the general case:
+    </p>
+    <blockquote>
+      Any function assembled from <em>x</em>, exponentials, logarithms, and reciprocals —
+      the whole class an expression language produces — has finitely many real zeros on
+      any interval where it is not identically zero. Machine‑checked.
+    </blockquote>
+    <p>
+      Two things make the mixed chain harder than the pure tower, and both are now
+      discharged. A <strong>logarithm</strong> can <em>lower</em> the top degree under
+      differentiation, so the plain reduce is replaced by a Wronskian against the leading
+      coefficient — an elimination whose leading term provably cancels. A
+      <strong>reciprocal</strong> makes the naïve chain measure <em>grow</em> instead of
+      shrink; the remedy is to recurse on the top variable’s degree — a bare natural
+      number — rather than on a measure of the whole chain, so a reciprocal level is never
+      descended, and its zeros enter only through the bound for the shorter chain beneath
+      it. This was the one step the classical descent left open; it is now filled in.
+    </p>
+
+    <div class="note">
+      <p class="note-kicker">The honest footprint of the general case</p>
+      <p>
+        Two caveats, stated plainly. The mixed bound is <em>qualitative</em> — a finite
+        ceiling exists, without the closed‑form <em>Ndep</em> the pure tower carries. And
+        its analytic footprint is <em>larger than Rolle</em>: the degenerate cases, where
+        two functions in the chain turn out proportional, are retired by the standard
+        theorem that a real‑analytic function has finitely many zeros on a compact
+        interval unless it vanishes identically. The descent itself is still Rolle; the
+        identity theorem enters only to close those degenerate leaves — and the interface
+        gains the logarithm and the reciprocal alongside the exponential. No classical
+        zero‑counting axiom, and no <code>sorry</code>, in either result.
+      </p>
+    </div>
   </section>
 
   <div class="divider"></div>
