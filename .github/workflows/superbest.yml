@@ -1,5 +1,16 @@
 name: SuperBEST Surface Drift
 
+# superbest-dag-optimizer / superbest-expression-frontier / superbest-dag-lowering /
+# superbest-primitive-frontier are dropped: their scripts (python/scripts/superbest_dag_optimizer.py
+# etc.) and every test file that exercised them were deleted in bec74da7 ("purge internal
+# agent-workflow machinery... from public repo", 2026-07-06). Confirmed via local `act` run
+# 2026-07-23 that this workflow had been failing on every invocation since (it's
+# workflow_dispatch-only, so nobody had actually run it since the purge). superbest-check
+# also had its own dead reference (python/scripts/sync_superbest_canonical.py, same purge
+# commit) removed from the Makefile target — the pytest half of that target
+# (test_superbest_canonical_sync.py) already covers the sync-check purpose on its own,
+# reading blog/src/data/superbest.json against python/monogate/superbest.py directly.
+
 on:
   workflow_dispatch:
 
@@ -30,8 +41,4 @@ jobs:
       - name: Run SuperBEST surface drift check
         run: |
           make superbest-check
-          make superbest-dag-optimizer
-          make superbest-expression-frontier
-          make superbest-dag-lowering
           make superbest-lowering-ui
-          make superbest-primitive-frontier

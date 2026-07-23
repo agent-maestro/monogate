@@ -125,8 +125,15 @@ class TestBestPow:
             assert abs(BEST.pow(x, 1) - x) < TOL
 
     def test_pow_n_zero_domain_constraint(self):
-        # The current BEST route handles the algebraic identity x^0 = 1.
-        assert abs(BEST.pow(2.0, 0) - 1.0) < TOL
+        # pow_exl's derivation (core.py) computes ln(n) on the EXPONENT in
+        # its first step -- n=0 needs ln(0), undefined. x^0=1 holds for
+        # EML (BEST's complete fallback when no routing config is set), not
+        # for the 3-node EXL route BEST.pow uses under the real routing
+        # table (confirmed 2026-07-23: this only ever ran under the EML
+        # fallback before, since pytest.yml -- the one place that sets
+        # MONOGATE_ROUTING -- was workflow_dispatch-only and never run).
+        with pytest.raises((ValueError, ZeroDivisionError)):
+            BEST.pow(2.0, 0)
 
     def test_pow_fractional_base(self):
         assert abs(BEST.pow(0.5, 2) - 0.25) < TOL
@@ -176,8 +183,14 @@ class TestBestDiv:
             assert abs(BEST.div(x, x) - 1.0) < TOL
 
     def test_div_singularity_at_x_equals_one(self):
-        # The current BEST route handles x=1 without the older EDL singularity.
-        assert abs(BEST.div(1.0, 4.0) - 0.25) < TOL
+        # div_edl(x, y) = edl(ln_edl(x), exp_edl(y)); ln_edl(1) hits EDL's
+        # own y==1 singularity internally. recip_edl's docstring already
+        # documents bypassing div_edl(1, x) for exactly this reason -- this
+        # test previously asserted the opposite of that documented behavior
+        # (only ever exercised under the EML fallback; see the pow test
+        # above for why that went unnoticed).
+        with pytest.raises((ValueError, ZeroDivisionError)):
+            BEST.div(1.0, 4.0)
 
 
 # ── recip ─────────────────────────────────────────────────────────────────────
@@ -217,8 +230,12 @@ class TestBestNeg:
             assert abs(neg_eml(neg_eml(x)) - x) < TOL
 
     def test_neg_domain_rejects_zero(self):
-        # The current BEST route handles zero directly.
-        assert abs(BEST.neg(0.0)) < TOL
+        # neg_edl(x) requires ln_edl(x), domain x > 0 -- neg_edl's own
+        # docstring states "Domain: x > 0, x != 1", so x=0 has no logarithm
+        # and the 6-node EDL route can't represent -0. Test name already
+        # said "rejects_zero"; the assertion body just contradicted it.
+        with pytest.raises((ValueError, ZeroDivisionError)):
+            BEST.neg(0.0)
 
 
 # ── sub ───────────────────────────────────────────────────────────────────────

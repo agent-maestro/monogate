@@ -19,7 +19,7 @@ PY      := cd python && $(PYTHON)
 PYTEST  := cd python && $(PYTHON) -m pytest
 PAPER   := cd python/paper && pdflatex
 
-.PHONY: help test test-new superbest-check superbest-dag-audit superbest-dag-optimizer superbest-expression-frontier superbest-dag-lowering superbest-lowering-ui superbest-primitive-frontier eml-ir-pipeline eml-ir-inspector high-d-corner-probe forge-attractor-trace forge-heuristic-frontier high-d-useful-volume high-d-formalization ir-evidence-corpus frontier-high-d explorer-build reproduce-n11 reproduce-all \
+.PHONY: help test test-new superbest-check superbest-dag-audit superbest-lowering-ui eml-ir-pipeline eml-ir-inspector high-d-corner-probe forge-attractor-trace forge-heuristic-frontier high-d-useful-volume high-d-formalization ir-evidence-corpus frontier-high-d explorer-build reproduce-n11 reproduce-all \
         paper theory docker-build docker-run \
         clean lint version-check
 
@@ -33,11 +33,7 @@ help:
 	@echo "  make test-new        Run only v0.10.0 new tests"
 	@echo "  make superbest-check Check canonical SuperBEST table/public surfaces"
 	@echo "  make superbest-dag-audit Run expression-level SuperBEST DAG savings audit"
-	@echo "  make superbest-dag-optimizer Run SuperBEST DAG optimizer prototype checks"
-	@echo "  make superbest-expression-frontier Run targeted expression frontier exploration"
-	@echo "  make superbest-dag-lowering Run compiler-style SuperBEST DAG lowering checks"
 	@echo "  make superbest-lowering-ui Smoke-test Explorer DAG lowering playground"
-	@echo "  make superbest-primitive-frontier Run bounded primitive-row frontier harness"
 	@echo "  make eml-ir-pipeline Build EML IR v0 DAG/replay packet examples"
 	@echo "  make eml-ir-inspector Build local EML IR inspector packet"
 	@echo "  make high-d-corner-probe Run sampled high-dimensional EML tree-space probe"
@@ -72,8 +68,6 @@ test-search:
 	$(PYTEST) tests/ -k "mcts or beam or search" -v --tb=short
 
 superbest-check:
-	@echo "── SuperBEST canonical surface sync check ──"
-	PYTHONPATH=python $(PYTHON) python/scripts/sync_superbest_canonical.py --strict
 	@echo "── SuperBEST regression tests ──"
 	PYTHONPATH=python $(PYTHON) -m pytest -q \
 	    python/tests/test_superbest_canonical_sync.py \
@@ -90,25 +84,9 @@ superbest-dag-audit:
 	PYTHONPATH=python $(PYTHON) python/scripts/superbest_dag_savings_audit.py --strict
 	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_dag_savings_audit.py
 
-superbest-dag-optimizer:
-	PYTHONPATH=python $(PYTHON) python/scripts/superbest_dag_optimizer.py --strict
-	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_dag_savings_audit.py python/tests/test_superbest_dag_optimizer.py
-
-superbest-expression-frontier:
-	PYTHONPATH=python $(PYTHON) python/scripts/superbest_expression_frontier.py --strict
-	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_expression_frontier.py
-
-superbest-dag-lowering:
-	PYTHONPATH=python $(PYTHON) python/scripts/superbest_dag_lowering.py --strict
-	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_dag_lowering.py python/tests/test_superbest_dag_optimizer.py python/tests/test_superbest_expression_frontier.py
-
 superbest-lowering-ui:
 	node --input-type=module -e "import { lowerDagExpression, defaultDagLoweringPreset } from './explorer/src/superbest.js'; const r = lowerDagExpression(defaultDagLoweringPreset().expression); if (r.status !== 'LOWERED_PRESET' || r.treeSuperbestNodes !== 46 || r.dagSuperbestNodes !== 20 || !r.pythonSource.includes('def lowered_expr') || !r.javascriptSource.includes('function loweredExpr')) throw new Error('Explorer DAG lowering smoke failed'); console.log('SUPERBEST_EXPLORER_LOWERING_SMOKE_OK')"
 	cd explorer && npm run build
-
-superbest-primitive-frontier:
-	PYTHONPATH=python $(PYTHON) python/scripts/superbest_primitive_frontier_harness.py --strict
-	PYTHONPATH=python $(PYTHON) -m pytest -q python/tests/test_superbest_primitive_frontier_harness.py
 
 eml-ir-pipeline:
 	PYTHONPATH=python $(PYTHON) python/scripts/eml_ir_pipeline.py --strict
