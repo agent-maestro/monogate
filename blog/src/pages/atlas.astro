@@ -1,213 +1,69 @@
 ---
 import Base from '../layouts/Base.astro';
+import atlasData from '../data/atlas.json';
+import towersData from '../data/pfaffian-towers.json';
+import superbestData from '../data/superbest.json';
 
-// ── DEPTH STRATA ───────────────────────────────────────────────────────────
-const strata = [
-  {
-    depth: '0',
-    name: 'Arithmetic',
-    color: 'var(--muted)',
-    desc: 'Constants and polynomials. No exp or ln required.',
-    entries: [
-      { name: 'Integers, rationals',        cost: '0 nodes', proof: null },
-      { name: 'Polynomials p(x)',            cost: '0 nodes (constants only)', proof: null },
-      { name: 'Arithmetic: +, −, ×, ÷',    cost: 'see SuperBEST table', proof: 'T08' },
-      { name: 'π (as constant terminal)',   cost: '0 nodes', proof: null },
-    ],
-  },
-  {
-    depth: '1',
-    name: 'Exponential',
-    color: 'var(--cyan)',
-    desc: 'One application of exp or ln. The native depth of EML.',
-    entries: [
-      { name: 'exp(x)',                     cost: '1 node (EML)',  proof: 'T03' },
-      { name: 'exp(−x)',                    cost: '1 node (DEML)', proof: 'T08' },
-      { name: 'sin(x) over ℂ',             cost: '1 node (ceml(ix, 1))', proof: 'T07, T16' },
-      { name: 'cos(x) over ℂ',             cost: '1 node (ceml(ix, 1))', proof: 'T07' },
-      { name: 'softplus(x) = ln(1+eˣ)',    cost: '1 node (LEAd(x,1))', proof: null },
-      { name: 'x · y  (multiplication)',    cost: '1 node (ELAd)', proof: 'T_SUPERBEST_UB' },
-      { name: 'x / y  (division)',          cost: '2 nodes (EDL)',  proof: 'T08' },
-      { name: 'Fourier kernel exp(iωt)',    cost: '1 complex node', proof: 'T16' },
-      { name: 'Laplace kernel exp(−st)',    cost: '1 real node',   proof: 'T16' },
-    ],
-  },
-  {
-    depth: '2',
-    name: 'Logarithmic',
-    color: '#1d4ed8',
-    desc: 'Requires composing exp and ln once. Power functions, reciprocals.',
-    entries: [
-      { name: 'ln(x)',                      cost: '1 node (EXL)', proof: 'T04, T08' },
-      { name: 'neg(x) = −x',               cost: '2 nodes (EXL∘DEML)', proof: 'T09' },
-      { name: 'recip(x) = 1/x',            cost: '1 node (ELSb)', proof: 'R16-C1' },
-      { name: 'x^n  (integer power), x>0',  cost: '1 node (EPL/ELMl)', proof: 'T_SUPERBEST_UB' },
-      { name: 'x^r  (real power), x>0',     cost: '1 node (EPL/ELMl)', proof: 'T_SUPERBEST_UB' },
-      { name: 'sqrt(x), x>0',               cost: '1 node (EPL, F13)', proof: 'T_SUPERBEST_UB' },
-      { name: 'add(x,y), all reals',        cost: '2 nodes (LEdiv+DEML)', proof: 'ADD-T1' },
-      { name: 'sub(x,y)',                   cost: '2 nodes (EML)', proof: 'T33' },
-      { name: 'mul(x,y), x,y>0',            cost: '1 node (EPL/ELMl) — duplicate of the depth-1 entry above', proof: 'T_SUPERBEST_UB' },
-      { name: 'abs(x)',                     cost: '2 nodes',       proof: null },
-      { name: 'Gaussian exp(−x²/2)',        cost: '3 nodes',       proof: 'T08' },
-      { name: 'log-sum-exp (N terms)',       cost: 'N−1 LEAd nodes', proof: null },
-      { name: 'softmax denominator (N)',    cost: 'N−1 nodes',     proof: null },
-    ],
-  },
-  {
-    depth: '3',
-    name: 'Oscillatory (ℂ path)',
-    color: 'var(--pink)',
-    desc: 'Requires the complex bypass — sin, cos, trig via Euler. Depth-∞ over ℝ, depth-1 to 3 over ℂ.',
-    entries: [
-      { name: 'sin(x) Taylor, 8 terms',    cost: '101 nodes (real path)', proof: 'T16' },
-      { name: 'Fourier series, N terms',    cost: 'N nodes (complex path)', proof: 'T16' },
-      { name: 'Heat equation mode eᵏᵗ',    cost: '2 nodes',               proof: 'CAL-4' },
-      { name: 'tan(x)',                     cost: '3 complex nodes',        proof: null },
-    ],
-  },
-  {
-    depth: '∞',
-    name: 'Non-constructible (ℝ)',
-    color: 'var(--red)',
-    desc: 'Provably unreachable as finite real EML trees. Require either infinite depth or complex domain.',
-    entries: [
-      { name: 'sin(x)  over ℝ',            cost: '∞ (Infinite Zeros Barrier)', proof: 'T01' },
-      { name: 'cos(x)  over ℝ',            cost: '∞',                          proof: 'T01' },
-      { name: 'i = √−1 (strict branch)',   cost: '∞ (nearest: 4.76×10⁻⁶ at depth 6)', proof: 'T17' },
-    ],
-  },
-];
+// ─── All facts live in JSON. This file is presentation only. ───
+// src/data/atlas.json        — depth strata, operator census, special functions,
+//                               calculus costs, domain catalog highlights, cost theory.
+// src/data/pfaffian-towers.json — the 8 Pfaffian tower generators. Shared with
+//                               /superbest (superbest.astro) so the two pages
+//                               cannot independently drift the way they did before
+//                               2026-07-23 (function_total was 42 here, 33 there,
+//                               35 in the actual verification source — both wrong).
+// src/data/superbest.json    — the canonical per-op SuperBEST costs, synced against
+//                               monogate/python/monogate/superbest.py. atlas's own
+//                               mini-table below JOINS into this rather than keeping
+//                               a second copy of the node counts.
 
-// ── OPERATOR CENSUS ────────────────────────────────────────────────────────
-const operators = [
-  // complete
-  { name: 'EML',   formula: 'exp(x) − ln(y)',        complete: 'exact',  mechanism: 'exp(+x), no restriction' },
-  { name: 'EAL',   formula: 'exp(x) + ln(y)',         complete: 'exact',  mechanism: 'exp(+x), add' },
-  { name: 'EXL',   formula: 'exp(x) · ln(y)',         complete: 'exact',  mechanism: 'exp(+x), mul' },
-  { name: 'EDL',   formula: 'exp(x) / ln(y)',         complete: 'exact',  mechanism: 'exp(+x), div' },
-  { name: 'EPL',   formula: 'exp(x) ^ ln(y)',         complete: 'exact',  mechanism: 'exp(+x), pow' },
-  { name: 'LEAd',  formula: 'ln(exp(x) + y)',         complete: 'exact',  mechanism: 'exp(+x), composition' },
-  { name: 'ELAd',  formula: 'exp(x + ln(y))',         complete: 'exact',  mechanism: 'exp(+x), composition' },
-  { name: 'ELSb',  formula: 'exp(x − ln(y))',         complete: 'exact',  mechanism: 'exp(+x), composition' },
-  // approximate
-  { name: 'EMN',   formula: 'ln(y) − exp(x)',         complete: 'approx', mechanism: '−exp(x) outside: unbounded ↓ but exp residual' },
-  // incomplete
-  { name: 'DEML',  formula: 'exp(−x) − ln(y)',        complete: 'no',     mechanism: 'Slope barrier: self-comp slope = +1' },
-  { name: 'DEMN',  formula: 'ln(y) − exp(−x)',        complete: 'no',     mechanism: 'Domain failure: output always < 0' },
-  { name: 'DEAL',  formula: 'exp(−x) + ln(y)',        complete: 'no',     mechanism: 'Domain collapse: offset e⁻¹ irremovable' },
-  { name: 'DEXL',  formula: 'exp(−x) · ln(y)',        complete: 'no',     mechanism: 'Dead constant: dexl(x,1) ≡ 0' },
-  { name: 'DEDL',  formula: 'exp(−x) / ln(y)',        complete: 'no',     mechanism: 'Decay barrier: outputs → 0' },
-  { name: 'DEPL',  formula: 'exp(−x) ^ ln(y)',        complete: 'no',     mechanism: 'Decay barrier: bounded above by 1' },
-  { name: 'LEX',   formula: 'ln(exp(x) − y)',         complete: 'no',     mechanism: 'Domain barrier: domain → ∅ at depth 2' },
-];
+const {
+  strata, operators, specialFunctions, calculusCosts,
+  domainCatalog, structuralClasses, keyCostFacts, patternBonus,
+  superbestDisplay,
+} = atlasData;
 
-// ── PFAFFIAN TOWER GENERATORS (OBSERVATION) ────────────────────────────────
-// Source: exploration/E201_extended_atlas/ — 8 tower generators verified
-// against mpmath@30 (relerr <= 1.2e-31 for integral towers; Airy via the
-// defining ODE Ai''(x) = x*Ai(x) at 1.5e-7). Independence per C-198
-// Phase 2/4 search. Public-surface tier OBSERVATION (not Lean-verified).
-const pfaffianTowers = [
-  {
-    name: 'T_erf',
-    family: 'Error Function',
-    generator: '∫₀ˣ exp(−y·t²) dt',
-    covers: 'erf, erfc, erfi, dawson, fresnels, fresnelc',
-    chain: 2,
-    maxDepth: 4,
-    relerr: '1.2×10⁻³¹',
-  },
-  {
-    name: 'T_Si',
-    family: 'Sine/Cosine Integral',
-    generator: '∫₀ˣ sin(y·t)/t dt',
-    covers: 'Si, Ci, Shi, Chi, Ein, Ei, li',
-    chain: 3,
-    maxDepth: 3,
-    relerr: '2.1×10⁻³⁰',
-  },
-  {
-    name: 'T_J',
-    family: 'Bessel',
-    generator: '(1/π)∫₀^π cos(x sin(t) − y·t) dt',
-    covers: 'J_n, Y_n, I_n, K_n, Hankel H_n',
-    chain: 3,
-    maxDepth: 3,
-    relerr: '1.2×10⁻³¹',
-  },
-  {
-    name: 'T_Ai',
-    family: 'Airy',
-    generator: '(1/π)∫₀^∞ cos(t³/3 + x·t + y) dt',
-    covers: 'Ai, Bi, Ai′, Bi′, Scorer',
-    chain: 3,
-    maxDepth: 2,
-    relerr: '1.5×10⁻⁷ (via ODE)',
-  },
-  {
-    name: 'T_Γ',
-    family: 'Gamma',
-    generator: '∫₀^∞ t^(x−1) exp(−y·t) dt',
-    covers: 'Γ, β, ψ (digamma), ψₙ (polygamma), n! = Γ(n+1)',
-    chain: 2,
-    maxDepth: 4,
-    relerr: '8.0×10⁻¹⁸',
-  },
-  {
-    name: 'T_W',
-    family: 'Lambert W',
-    generator: 'solve w·exp(w) = x + y',
-    covers: 'W₀, W₋₁ (real branches)',
-    chain: 2,
-    maxDepth: 1,
-    relerr: '0',
-  },
-  {
-    name: 'T_K',
-    family: 'Elliptic Integrals',
-    generator: '∫₀^(π/2) 1/√(1 − m sin²(t) + y) dt',
-    covers: 'K(m), E(m), F(φ,m), Π(n;φ,m)',
-    chain: 3,
-    maxDepth: 2,
-    relerr: '4.3×10⁻³¹',
-  },
-  {
-    name: 'T_F',
-    family: 'Hypergeometric (series)',
-    generator: '∑ (a)ₙ(b)ₙ/(c)ₙ · zⁿ/n!',
-    covers: '₂F₁, ₁F₁, ₀F₁, Legendre, Gegenbauer, Jacobi, Laguerre, Hermite',
-    chain: '2–4',
-    maxDepth: 3,
-    relerr: '0',
-  },
-];
+const pfaffianTowers = towersData.towers;
 
-// ── SUPERBEST TABLE ────────────────────────────────────────────────────────
-const superbest = [
-  { op: 'exp(x)',   family: 'EML',      nodes: 1,  naive: 1,  note: 'native' },
-  { op: 'ln(x)',    family: 'EXL',      nodes: 1,  naive: 3,  note: '' },
-  { op: 'neg(x)',   family: 'EXL+DEML', nodes: 2,  naive: 9,  note: 'T09' },
-  { op: 'recip(x)', family: 'ELSb',     nodes: 1,  naive: 5,  note: 'R16-C1' },
-  { op: 'sqrt(x)',  family: 'EPL (F13)', nodes: 1,  naive: 7,  note: 'x>0, T_SUPERBEST_UB (was 2n pre-v5.3)' },
-  { op: 'sub(x,y)', family: 'EML',      nodes: 2,  naive: 5,  note: 'T33' },
-  { op: 'add(x,y)', family: 'EAL',      nodes: 2,  naive: 11, note: 'ADD-T1, all reals (was 3n, x>0-only, pre-v5)' },
-  { op: 'mul(x,y)', family: 'EPL/ELMl', nodes: 1,  naive: 13, note: 'x,y>0, T_SUPERBEST_UB; general domain is 3n (was 2n F16-optimal claim, superseded)' },
-  { op: 'pow(x,n)', family: 'EPL/ELMl', nodes: 1,  naive: 15, note: 'x>0, T_SUPERBEST_UB; general domain is 3n (was 3n positive too, pre-v5.1)' },
-  { op: 'div(x,y)', family: 'ELSb',     nodes: 2,  naive: 15, note: 'x,y>0, T08; general domain is 3n, partly Lean-proved — see /superbest' },
-  { op: 'sin(x)',   family: 'ceml (ℂ)', nodes: 1,  naive: 101, note: 'complex, T07' },
-  { op: 'cos(x)',   family: 'ceml (ℂ)', nodes: 1,  naive: 101, note: 'complex, T07' },
-  { op: 'softplus', family: 'LEAd',     nodes: 1,  naive: 3,  note: 'T19' },
-];
+// ─── Join superbestDisplay (atlas-specific presentation: family name, naive cost)
+// against superbest.json (canonical node counts) by op_key. Fails the build if a
+// row can't be resolved either way — no silent fallback to a stale number. ───
+const superbestByKey: Record<string, { cost_positive: number; cost_general: number }> = {};
+for (const row of superbestData.table as Array<{ op: string; cost_positive: number; cost_general: number }>) {
+  const m = row.op.match(/^[a-zA-Z]+/);
+  if (m) superbestByKey[m[0]] = row;
+}
+type DisplayRow = { op_key: string; display: string; family: string; naive: number; note: string; nodes_override?: number };
+const superbest = (superbestDisplay as DisplayRow[]).map(r => {
+  const canonical = superbestByKey[r.op_key];
+  const nodes = r.nodes_override ?? canonical?.cost_positive;
+  if (nodes === undefined) {
+    throw new Error(`atlas.json: superbestDisplay op_key "${r.op_key}" has no match in superbest.json's table and no nodes_override — add one or the other.`);
+  }
+  return { op: r.display, family: r.family, nodes, naive: r.naive, note: r.note };
+});
 
-const totalSuperbest = superbest.reduce((s,r) => s + r.nodes, 0);
-const totalNaive = superbest.reduce((s,r) => s + r.naive, 0);
-const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
+const totalSuperbest = superbest.reduce((s, r) => s + r.nodes, 0);
+const totalNaive = superbest.reduce((s, r) => s + r.naive, 0);
+const savings = Math.round((1 - totalSuperbest / totalNaive) * 100);
+
+const completeCount = (operators as Array<{ complete: string }>).filter(o => o.complete === 'exact').length;
+const approxCount = (operators as Array<{ complete: string }>).filter(o => o.complete === 'approx').length;
+const incompleteCount = (operators as Array<{ complete: string }>).filter(o => o.complete === 'no').length;
+
+// ─── Referential integrity: every `proof` id used in strata/specialFunctions that
+// looks like a catalog id should exist on /theorems. Doesn't import theorems.json
+// directly (keeps this page's data dependency one-directional) — this is a light,
+// same-page-family check; the full cross-repo version lives in
+// scripts/audit-citations.mjs (checked at commit time, not build time, since it
+// needs theorems.json + the Lean repos both on disk).
 ---
 
 <Base title="EML Atlas — monogate.org" description="Classification of mathematical objects and functions by EML depth and node cost. The complete reference for the exp-ln operator family.">
 
   <h1>EML Atlas</h1>
   <div class="status-banner">
-    <p class="status-kicker">Current status · July 2026 (SuperBEST-cost sections audited; the 295+-equation domain catalog below is not independently re-verified this pass)</p>
+    <p class="status-kicker">Current status · July 2026</p>
     <p>
       The Atlas is a map of EML representations, depth/cost estimates, proof
       targets, and exploratory extensions. It is useful for education and
@@ -216,12 +72,22 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       runtime advantage, or symbolic discovery should be read as bounded
       research notes unless a card says otherwise.
     </p>
+    <p style="margin-top: 10px; font-size: 11px; opacity: 0.8;">
+      This page is rendered directly from <code>src/data/atlas.json</code> and
+      <code>src/data/pfaffian-towers.json</code> at build time — the SuperBEST
+      mini-table below is joined against <code>src/data/superbest.json</code>'s
+      canonical costs rather than keeping its own copy. The 295+-equation domain
+      catalog linked below is not independently re-verified by this page.
+    </p>
   </div>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 8px;">
     Mathematical objects classified by EML depth and operator cost.
   </p>
   <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 32px;">
-    Last updated: 2026-07-22 · SuperBEST v5.3 headline: 14n positive / 16n general (was misstated as 22n general — corrected against the canonical Python table, see /superbest) · 16 elementary operators (THEOREM) + 8 Pfaffian towers (OBSERVATION) = 24 total · 35/36 calculator coverage
+    SuperBEST {superbestData.version} headline: {superbestData.totals.total_positive.value}n positive /
+    {superbestData.totals.total_general.value}n general (joined from <a href="/superbest" style="color: var(--cyan);">/superbest</a>, not typed here) ·
+    {operators.length} elementary operators (THEOREM) + {pfaffianTowers.length} Pfaffian towers (OBSERVATION)
+    = {operators.length + pfaffianTowers.length} total · 35/36 calculator coverage
   </p>
 
   <div class="divider"></div>
@@ -257,7 +123,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     Depth 0 = no exp/ln. Depth 1 = one application. Depth ∞ = impossible as a finite real tree.
   </p>
 
-  {strata.map(s => (
+  {strata.map((s: any) => (
     <section style={`border-left: 3px solid ${s.color}; padding: 0 0 0 20px; margin-bottom: 32px;`}>
       <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px;">
         <span style={`font-family: var(--mono); font-size: 1.4rem; font-weight: 700; color: ${s.color};`}>
@@ -275,7 +141,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
           </tr>
         </thead>
         <tbody>
-          {s.entries.map(e => (
+          {s.entries.map((e: any) => (
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 5px 8px 5px 0; color: var(--text); font-family: var(--mono); font-size: 0.8rem;">{e.name}</td>
               <td style={`padding: 5px 8px; color: ${s.color}; font-family: var(--mono); font-size: 0.78rem;`}>{e.cost}</td>
@@ -336,9 +202,9 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     Completeness class determined by the position of negation relative to exp (T26–T28).
   </p>
   <p style="color: var(--muted); font-size: 0.8rem; margin-bottom: 20px;">
-    <span style="color: var(--green);">■</span> Exactly complete (8) ·
-    <span style="color: var(--orange);">■</span> Approximately complete (1) ·
-    <span style="color: var(--red);">■</span> Incomplete (7)
+    <span style="color: var(--green);">■</span> Exactly complete ({completeCount}) ·
+    <span style="color: var(--orange);">■</span> Approximately complete ({approxCount}) ·
+    <span style="color: var(--red);">■</span> Incomplete ({incompleteCount})
   </p>
 
   <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 32px;">
@@ -351,7 +217,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       </tr>
     </thead>
     <tbody>
-      {operators.map(o => {
+      {operators.map((o: any) => {
         const c = o.complete === 'exact' ? 'var(--green)' : o.complete === 'approx' ? 'var(--orange)' : 'var(--red)';
         const label = o.complete === 'exact' ? 'YES' : o.complete === 'approx' ? 'APPROX' : 'NO';
         return (
@@ -385,14 +251,12 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     primitives — one generator per family.
   </p>
   <p style="color: var(--muted); font-size: 0.82rem; margin-bottom: 6px;">
-    8 independent tower generators. 35+ Pfaffian functions reachable as finite EML trees of
-    depth ≤ 4 from <code>{'{EML, T_X}'}</code>. Per-tower verification against mpmath@30 in
-    <span style="font-family: var(--mono); font-size: 0.78rem;">exploration/E201_extended_atlas/</span>.
+    {pfaffianTowers.length} independent tower generators. {towersData.function_total} Pfaffian functions reachable as finite EML trees of
+    depth ≤ {towersData.max_depth} from <code>{'{EML, T_X}'}</code>. Source: {towersData.source}
   </p>
   <p style="color: var(--pink); font-size: 0.78rem; margin-bottom: 20px;">
-    Tier note: the elementary 16 are <strong>THEOREM</strong>-tier (Lean-verified).
-    The 8 towers are <strong>OBSERVATION</strong>-tier (numerical verification only;
-    independence empirical per C-198, not proven minimal).
+    Tier note: the elementary {operators.length} are <strong>THEOREM</strong>-tier (Lean-verified).
+    The {pfaffianTowers.length} towers are <strong>{towersData.tier}</strong>-tier ({towersData.tier_note})
   </p>
 
   <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 22px;">
@@ -408,7 +272,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       </tr>
     </thead>
     <tbody>
-      {pfaffianTowers.map(t => (
+      {pfaffianTowers.map((t: any) => (
         <tr style="border-bottom: 1px solid var(--border);">
           <td style="padding: 6px 8px 6px 0; font-family: var(--mono); font-weight: 700; color: var(--pink); font-size: 0.8rem;">{t.name}</td>
           <td style="padding: 6px 8px; color: var(--text); font-size: 0.78rem;">{t.family}</td>
@@ -427,9 +291,9 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     <li><strong style="color: var(--text);">Calculator coverage 34/36 → 35/36.</strong>
         <code>factorial(n) = Γ(n+1)</code> becomes a finite Pfaffian tree at depth 2 via T_Γ.
         Modulo stays at 1/36 (discrete; no continuous representation).</li>
-    <li><strong style="color: var(--text);">42 named special functions reachable</strong> across the 8 families.
-        Max depth 4 from any tower; node range 1–11 in BEST routing.</li>
-    <li><strong style="color: var(--text);">8 / 8 towers independent.</strong>
+    <li><strong style="color: var(--text);">{towersData.function_total} named special functions reachable</strong> across the {pfaffianTowers.length} families.
+        Max depth {towersData.max_depth} from any tower; node range 1–11 in BEST routing.</li>
+    <li><strong style="color: var(--text);">{pfaffianTowers.length} / {pfaffianTowers.length} towers independent.</strong>
         No single fixed integral kernel spans more than one tower at finite depth (C-198).</li>
   </ul>
 
@@ -438,8 +302,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     Even with all 24 operators, some functions remain outside: Riemann zeta <code>ζ(s)</code>
     (infinite Dirichlet series + functional equation), modular forms, non-computable functions
     (Chaitin's Ω), and discrete operations like <code>mod</code> (no continuous Pfaffian
-    representation). The Pfaffian closure covers most of applied mathematics, not all of
-    mathematics.
+    representation). {towersData.outside_note}
   </p>
 
   <div class="divider"></div>
@@ -460,23 +323,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       </tr>
     </thead>
     <tbody>
-      {[
-        { fn: 'exp(x)', dr: '1', dc: '1', note: 'Native. eml(x,1).' },
-        { fn: 'exp(−x)', dr: '1', dc: '1', note: 'deml(x,1).' },
-        { fn: 'ln(x)', dr: '2', dc: '2', note: '1 EXL node.' },
-        { fn: 'x^r', dr: '2', dc: '2', note: '3 nodes via EXL.' },
-        { fn: 'neg(x)', dr: '2', dc: '2', note: '2 nodes. T09.' },
-        { fn: 'x + y', dr: '2', dc: '2', note: '3 nodes (EAL, x>0). 11n (general).' },
-        { fn: 'x · y', dr: '2', dc: '2', note: '1 node (ELAd) or 3n (EXL).' },
-        { fn: 'softplus(x)', dr: '2', dc: '2', note: '1 LEAd node. T19.' },
-        { fn: 'sin(x)', dr: '∞', dc: '1', note: 'T01 (ℝ barrier). T07 (ℂ bypass).' },
-        { fn: 'cos(x)', dr: '∞', dc: '1', note: 'T01 (ℝ barrier). T07 (ℂ bypass).' },
-        { fn: 'tan(x)', dr: '∞', dc: '3', note: 'sin/cos ratio.' },
-        { fn: 'sinh(x)', dr: '3', dc: '3', note: '(eˣ − e⁻ˣ)/2: 3 real nodes.' },
-        { fn: 'cosh(x)', dr: '3', dc: '3', note: '(eˣ + e⁻ˣ)/2: 3 real nodes.' },
-        { fn: 'sigmoid σ(x)', dr: '3', dc: '3', note: '1/(1+e⁻ˣ): 2–3 nodes.' },
-        { fn: 'i = √−1', dr: '∞', dc: '∞*', note: 'T17. *Nearest depth-6: gap 4.76×10⁻⁶.' },
-      ].map(r => (
+      {specialFunctions.map((r: any) => (
         <tr style="border-bottom: 1px solid var(--border);">
           <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--text); font-size: 0.8rem;">{r.fn}</td>
           <td style="padding: 5px 8px; text-align: center; font-family: var(--mono); color: var(--violet); font-size: 0.8rem;">{r.dr}</td>
@@ -504,16 +351,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       </tr>
     </thead>
     <tbody>
-      {[
-        { op: 'Taylor series, N terms', cost: '9N − 3 nodes', note: 'T25. sin(x) 8 terms = 69n.' },
-        { op: 'Fourier series, N harmonics', cost: 'N complex nodes', note: 'T16. Each harmonic 1 ceml.' },
-        { op: 'Derivative d/dx [exp(f)]', cost: '+ 0 nodes', note: 'Native: d/dx eml(f,1) = exp(f)·f′.' },
-        { op: 'Gaussian integral ∫e^(−x²)dx', cost: '3 nodes (no elementary antiderivative)', note: 'Depth-2 approx.' },
-        { op: 'Heat equation mode exp(−kt)sin(nx)', cost: '4 nodes', note: '2 real + 2 complex.' },
-        { op: 'U(t) = exp(−iHt) (quantum)', cost: '1 matrix EML node', note: 'Q-3. Exact.' },
-        { op: 'Partition function Z = Tr[exp(−βH)]', cost: '2 matrix nodes', note: 'Q-1. Tr + matrix exp.' },
-        { op: 'Softmax over N logits', cost: 'N − 1 LEAd + N EML nodes', note: 'T19.' },
-      ].map(r => (
+      {calculusCosts.map((r: any) => (
         <tr style="border-bottom: 1px solid var(--border);">
           <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--text); font-size: 0.78rem;">{r.op}</td>
           <td style="padding: 5px 8px; color: var(--violet); font-family: var(--mono); font-size: 0.78rem;">{r.cost}</td>
@@ -535,73 +373,12 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     Expanded from 157 (Monster Sprint) → 214 (COMP-ALL) → 295+ (domain-2: FIN, INFO, QM, THERMO, CHEM, BIO, ECON sessions).
   </p>
 
-  {[
-    {
-      domain: 'Technology',
-      color: 'var(--cyan)',
-      entries: [
-        { name: 'PageRank (per page, N pages)',    cost: '5N+4 nodes', note: 'web ranking' },
-        { name: 'TF-IDF',                          cost: '7n',        note: 'document relevance' },
-        { name: 'Haversine distance',              cost: '28n',       note: 'GPS/navigation' },
-      ],
-    },
-    {
-      domain: 'Sports',
-      color: '#c2410c',
-      entries: [
-        { name: 'NFL passer rating',               cost: '33n',       note: 'most complex sports formula' },
-        { name: 'ELO rating update',               cost: '26n',       note: 'chess/competitive ratings' },
-        { name: 'Pythagorean expectation',         cost: '11n',       note: 'same structure as Hill equation' },
-      ],
-    },
-    {
-      domain: 'Neural Networks',
-      color: 'var(--violet)',
-      entries: [
-        { name: 'Softplus ln(1+eˣ)',               cost: '1n via LEAd(x,1)', note: 'cheapest smooth activation' },
-        { name: 'Sigmoid σ(x)',                    cost: '7n',               note: 'standard activation' },
-        { name: 'Cross-entropy loss (N classes)',  cost: '8N−3n',            note: 'training loss' },
-      ],
-    },
-    {
-      domain: 'Physics',
-      color: 'var(--green)',
-      entries: [
-        { name: "Ohm's law V=IR",                  cost: '2n',   note: 'product of two scalars' },
-        { name: 'Kinetic energy ½mv²',             cost: '7n',   note: 'v² = mul chain' },
-        { name: 'Gravitational force GMm/r²',      cost: '9n',   note: 'power-law denominator' },
-      ],
-    },
-    {
-      domain: 'Biology / Epidemiology',
-      color: 'var(--orange)',
-      entries: [
-        { name: 'Basic reproduction number R₀=β/γ', cost: '2n',  note: 'cheapest important metric' },
-        { name: 'SIR model per-step',               cost: '20n', note: 'full epidemic simulation' },
-      ],
-    },
-    {
-      domain: 'Quantum',
-      color: 'var(--pink)',
-      entries: [
-        { name: 'Fermi-Dirac distribution',          cost: '9n',   note: 'same structure as sigmoid' },
-        { name: 'Partition function Z (N terms)',     cost: '6N−3n', note: 'same as softmax denominator' },
-      ],
-    },
-    {
-      domain: 'Finance',
-      color: '#1d4ed8',
-      entries: [
-        { name: 'Sharpe ratio',                      cost: '4n',  note: 'mean/std ratio' },
-        { name: 'Black-Scholes full DAG (shared)',   cost: '83n', note: 'most expensive EML computation' },
-      ],
-    },
-  ].map(sec => (
+  {domainCatalog.map((sec: any) => (
     <section style={`border-left: 3px solid ${sec.color}; padding: 0 0 0 20px; margin-bottom: 24px;`}>
       <div style={`font-size: 0.85rem; font-weight: 700; color: ${sec.color}; margin-bottom: 8px; font-family: var(--mono);`}>{sec.domain}</div>
       <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem;">
         <tbody>
-          {sec.entries.map(e => (
+          {sec.entries.map((e: any) => (
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 4px 8px 4px 0; color: var(--text); font-family: var(--mono); font-size: 0.8rem; width: 44%;">{e.name}</td>
               <td style={`padding: 4px 8px; color: ${sec.color}; font-family: var(--mono); font-size: 0.78rem; width: 18%;`}>{e.cost}</td>
@@ -624,7 +401,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     Cost(E) = NaiveCost(E) − SharingDiscount(E) − PatternBonus(E)
   </p>
 
-  <h3 style="font-size: 0.9rem; color: var(--text); margin-bottom: 12px;">Structural Classes (T41)</h3>
+  <h3 style="font-size: 0.9rem; color: var(--text); margin-bottom: 12px;">Structural Classes</h3>
   <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 24px;">
     <thead>
       <tr style="border-bottom: 1px solid var(--border);">
@@ -636,12 +413,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       </tr>
     </thead>
     <tbody>
-      {[
-        { cls: 'A', sig: '(1, 0)', desc: 'Pure exponential', mean: '10.4n', ex: 'Boltzmann, Arrhenius' },
-        { cls: 'B', sig: '(0, 0)', desc: 'Rational / polynomial', mean: '12.2n', ex: 'Newton gravity, Coulomb' },
-        { cls: 'C', sig: '(0, 1)', desc: 'Log-ratio (cheapest)', mean: '9.5n', ex: 'Shannon entropy, pH' },
-        { cls: 'D', sig: '(1,1)+', desc: 'Mixed exp+log', mean: '20.1n', ex: 'Black-Scholes (47n)' },
-      ].map(r => (
+      {structuralClasses.map((r: any) => (
         <tr style="border-bottom: 1px solid var(--border);">
           <td style="padding: 5px 8px 5px 0; font-family: var(--mono); font-weight: 700; color: var(--orange); font-size: 0.82rem;">{r.cls}</td>
           <td style="padding: 5px 8px; font-family: var(--mono); color: var(--muted); font-size: 0.78rem;">{r.sig}</td>
@@ -663,17 +435,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       </tr>
     </thead>
     <tbody>
-      {[
-        { thm: 'T34 (Naive UB)',  stmt: 'Cost(E) ≤ NaiveCost(E)',             detail: 'Always achievable; no sharing or pattern required.' },
-        { thm: 'T38 (Decomp)',    stmt: 'Three-term formula',                  detail: 'Cost = NC − SD − PB. Unique decomposition for each expression.' },
-        { thm: 'T38-NNP',        stmt: 'No Nesting Penalty',                  detail: 'Cost(O₁(O₂(A,B),C)) = c(O₁)+c(O₂)+Cost(A)+Cost(B)+Cost(C).' },
-        { thm: 'T40 (Add Law)',   stmt: 'Cost(op(E₁,E₂)) = Cost(E₁)+Cost(E₂)+1', detail: 'For independent sub-expressions. Explains Lorentz (57n).' },
-        { thm: 'T40 (Linear)',    stmt: 'N-term sum: (α₀+3)N − 3',            detail: 'Exact formula. Softmax: 4N−3. Shannon: 6N−3. Taylor: 8N−3.' },
-        { thm: 'Domain routing (2026-07-22 correction)', stmt: 'Positive routing still saves on mul/sqrt/pow/div, no longer on add', detail: 'add is now 2n for ALL reals (ADD-T1) — no positive/general gap left to route around. mul (1n vs 3n), sqrt (1n vs 2n), and pow (1n vs 3n) still have a real gap; div (2n vs 3n) is Lean-proved for the exp-outer case only (see /superbest). The old "~1750n saved across 295-eq catalog" figure was computed from add\'s pre-ADD-T1 numbers and is retracted — recomputing it needs the underlying equation dataset, not attempted here.' },
-        { thm: 'O-ISO',       stmt: '8 cross-domain isomorphism families', detail: 'Radioactive decay = compound interest = population growth (same tree).' },
-        { thm: 'QCC',       stmt: 'Cost ≤ O(N²) conjecture',             detail: 'No standard scientific equation exceeds quadratic growth. Open.' },
-        { thm: 'T39',       stmt: 'Cost ≤ O(N) conjecture',           detail: 'Linear Ceiling: no standard equation exceeds O(N). Open.' },
-      ].map(r => (
+      {keyCostFacts.map((r: any) => (
         <tr style="border-bottom: 1px solid var(--border);">
           <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--violet); font-size: 0.78rem; font-weight: 600;">{r.thm}</td>
           <td style="padding: 5px 8px; color: var(--text); font-size: 0.78rem; font-family: var(--mono);">{r.stmt}</td>
@@ -693,14 +455,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
       </tr>
     </thead>
     <tbody>
-      {[
-        { pat: 'DEML',  bonus: '5', formula: 'exp(−x) − ln(y)' },
-        { pat: 'EAL',   bonus: '4', formula: 'exp(x) + ln(y)' },
-        { pat: 'LEAd',  bonus: '4', formula: 'ln(exp(x) + y)' },
-        { pat: 'ELAd',  bonus: '4', formula: 'exp(x + ln(y))' },
-        { pat: 'EML',   bonus: '3', formula: 'exp(x) − ln(y)' },
-        { pat: 'EXL',   bonus: '3', formula: 'exp(x) · ln(y)' },
-      ].map(r => (
+      {patternBonus.map((r: any) => (
         <tr style="border-bottom: 1px solid var(--border);">
           <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--cyan); font-weight: 600; font-size: 0.8rem;">{r.pat}</td>
           <td style="padding: 5px 8px; text-align: right; font-family: var(--mono); color: var(--green); font-weight: 700; font-size: 0.8rem;">−{r.bonus}n</td>

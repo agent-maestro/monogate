@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "source": "monogate-research/exploration/E201_extended_atlas/ (extended_node_counts.csv + extended_node_counts_summary.json). Reconciled 2026-07-23: atlas.astro's own copy of this table and blog/src/data/superbest.json's `pfaffian_towers` key had each independently drifted from this source AND from each other (function_total 42 vs 33 vs the source's actual 35; several towers' `covers` lists included functions that were never in the verification run at all). This file is now the single copy both /atlas and /superbest read — see scripts/audit-citations.mjs for the check that would catch a future drift.",
+  "tier": "OBSERVATION",
+  "tier_note": "Empirically verified at sample points, not Lean-proved. The 'no single operator spans two towers' theorem is open (CONJECTURE). The 8 tower families form a 3-rooted hierarchy under DLMF closed-form identities (see hierarchy_note below).",
+  "max_depth": 4,
+  "function_total": 35,
+  "verification": "2 towers exact (W, F); 4 towers to ~1e-31 — erf, Si, J, K (mpmath@30-digit precision at sample points); Gamma to ~1e-18 (one tricky sample, others 0.0); Airy via the defining ODE Ai''(x) = x·Ai(x) to 1.5e-7 (the cubic-phase improper integral resists direct mpmath.quadosc convergence).",
+  "outside_note": "Functions still outside the 23-op + 8-tower closure: zeta-family beyond polylog, modular forms, modulo, set/Boolean ops, generic non-computable. See the atlas page for the full out-of-closure list.",
+  "hierarchy_note": "Pairwise pass over all 28 tower pairs (28-pair probe in exploration/tower-independence-2026-04-27/): 5 SUBSUMES — T_F (₂F₁) covers T_erf, T_Si, T_J, T_Ai, T_K via DLMF identities (7.18.5, 6.11.2, 10.1x, 9.x, 19.x); T_Gamma and T_W remain independent of everything else found.",
+  "hierarchy_min_set": 3,
+  "towers": [
+    {
+      "name": "T_erf", "family": "Error Function",
+      "generator": "∫₀ˣ exp(−y·t²) dt",
+      "covers": "erf, erfc, erfi, dawson, fresnels, fresnelc",
+      "count": 6, "chain": 2, "maxDepth": 4, "relerr": "1.2×10⁻³¹"
+    },
+    {
+      "name": "T_Si", "family": "Sine/Cosine Integral",
+      "generator": "∫₀ˣ sin(y·t)/t dt",
+      "covers": "Si, Ci, Shi, Chi, Ei, li",
+      "count": 6, "chain": 3, "maxDepth": 3, "relerr": "2.1×10⁻³⁰"
+    },
+    {
+      "name": "T_J", "family": "Bessel",
+      "generator": "(1/π)∫₀^π cos(x sin(t) − y·t) dt",
+      "covers": "J_0, J_1, J_n (general), Y_0, I_0, K_0",
+      "count": 6, "chain": 3, "maxDepth": 3, "relerr": "1.2×10⁻³¹"
+    },
+    {
+      "name": "T_Ai", "family": "Airy",
+      "generator": "(1/π)∫₀^∞ cos(t³/3 + x·t + y) dt",
+      "covers": "Ai, Bi, Ai′, Bi′",
+      "count": 4, "chain": 3, "maxDepth": 2, "relerr": "1.5×10⁻⁷ (via ODE)"
+    },
+    {
+      "name": "T_Γ", "family": "Gamma",
+      "generator": "∫₀^∞ t^(x−1) exp(−y·t) dt",
+      "covers": "Γ, lnΓ, ψ (digamma), β, ψₙ (polygamma), n! = Γ(n+1)",
+      "count": 6, "chain": 2, "maxDepth": 4, "relerr": "8.0×10⁻¹⁸"
+    },
+    {
+      "name": "T_W", "family": "Lambert W",
+      "generator": "solve w·exp(w) = x + y",
+      "covers": "W₀, W₋₁ (real branches)",
+      "count": 2, "chain": 2, "maxDepth": 1, "relerr": "0"
+    },
+    {
+      "name": "T_K", "family": "Elliptic Integrals",
+      "generator": "∫₀^(π/2) 1/√(1 − m sin²(t) + y) dt",
+      "covers": "K(m), E(m), F(φ,m)",
+      "count": 3, "chain": 3, "maxDepth": 2, "relerr": "4.3×10⁻³¹"
+    },
+    {
+      "name": "T_F", "family": "Hypergeometric (series)",
+      "generator": "∑ (a)ₙ(b)ₙ/(c)ₙ · zⁿ/n!",
+      "covers": "₂F₁, ₁F₁",
+      "count": 2, "chain": "2–4", "maxDepth": 1, "relerr": "0"
+    }
+  ]
+}

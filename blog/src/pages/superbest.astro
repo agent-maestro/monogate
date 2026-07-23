@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import superbest from '../data/superbest.json';
+import towersData from '../data/pfaffian-towers.json';
 
 const ops = superbest.table;
 const totals = superbest.totals;
@@ -10,7 +11,26 @@ const summary = superbest.savings_summary;
 const lock = superbest.taxonomy_lock;
 const hero = superbest.hero_stats;
 const heroBridge = superbest.hero_tier_bridge;
-const towers = superbest.pfaffian_towers;
+// Shared with /atlas (src/data/pfaffian-towers.json) — this used to be its own
+// copy (`superbest.pfaffian_towers`), which had independently drifted from
+// atlas.astro's copy (function_total 33 here vs 42 there vs the actual
+// verification source's 35). Reconciled 2026-07-23; that key in superbest.json
+// is now unused/inert (left in place rather than deleted, since nothing else
+// reads it — see the note in pfaffian-towers.json).
+const towers = {
+  tier: towersData.tier,
+  tier_note: towersData.tier_note,
+  max_depth: towersData.max_depth,
+  function_total: towersData.function_total,
+  verification: towersData.verification,
+  outside_note: towersData.outside_note,
+  hierarchy_note: towersData.hierarchy_note,
+  hierarchy_min_set: towersData.hierarchy_min_set,
+  rows: towersData.towers.map(t => ({
+    tower: t.name, generator: t.generator, n_functions: t.count,
+    examples: t.covers, max_relerr: t.relerr,
+  })),
+};
 const verify = superbest.verify_terminal;
 ---
 

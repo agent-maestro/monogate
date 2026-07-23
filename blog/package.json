@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "audit": "node scripts/audit-citations.mjs",
+    "predeploy": "npm run audit && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.0",

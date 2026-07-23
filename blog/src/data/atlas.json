@@ -1,0 +1,782 @@
+{
+  "schema_version": 1,
+  "superbestDisplayNote": "nodes for op_key values present in superbest.json are looked up from there at build time (cost_positive) -- NOT duplicated here. nodes_override is only for ops (sin/cos/softplus) outside superbest.json's canonical 10-op table.",
+  "superbestDisplay": [
+    {
+      "op_key": "exp",
+      "display": "exp(x)",
+      "family": "EML",
+      "naive": 1,
+      "note": "native"
+    },
+    {
+      "op_key": "ln",
+      "display": "ln(x)",
+      "family": "EXL",
+      "naive": 3,
+      "note": ""
+    },
+    {
+      "op_key": "neg",
+      "display": "neg(x)",
+      "family": "EXL+DEML",
+      "naive": 9,
+      "note": "T09"
+    },
+    {
+      "op_key": "recip",
+      "display": "recip(x)",
+      "family": "ELSb",
+      "naive": 5,
+      "note": "R16-C1"
+    },
+    {
+      "op_key": "sqrt",
+      "display": "sqrt(x)",
+      "family": "EPL (F13)",
+      "naive": 7,
+      "note": "x>0, T_SUPERBEST_UB"
+    },
+    {
+      "op_key": "sub",
+      "display": "sub(x,y)",
+      "family": "EML",
+      "naive": 5,
+      "note": "T33"
+    },
+    {
+      "op_key": "add",
+      "display": "add(x,y)",
+      "family": "EAL",
+      "naive": 11,
+      "note": "ADD-T1, all reals"
+    },
+    {
+      "op_key": "mul",
+      "display": "mul(x,y)",
+      "family": "EPL/ELMl",
+      "naive": 13,
+      "note": "x,y>0, T_SUPERBEST_UB; general domain is 3n"
+    },
+    {
+      "op_key": "pow",
+      "display": "pow(x,n)",
+      "family": "EPL/ELMl",
+      "naive": 15,
+      "note": "x>0, T_SUPERBEST_UB; general domain is 3n"
+    },
+    {
+      "op_key": "div",
+      "display": "div(x,y)",
+      "family": "ELSb",
+      "naive": 15,
+      "note": "x,y>0, T08; general domain is 3n, partly Lean-proved -- see /superbest"
+    },
+    {
+      "op_key": "sin",
+      "display": "sin(x)",
+      "family": "ceml (ℂ)",
+      "naive": 101,
+      "note": "complex, T_EULER_LEAN",
+      "nodes_override": 1
+    },
+    {
+      "op_key": "cos",
+      "display": "cos(x)",
+      "family": "ceml (ℂ)",
+      "naive": 101,
+      "note": "complex, T_EULER_LEAN",
+      "nodes_override": 1
+    },
+    {
+      "op_key": "softplus",
+      "display": "softplus",
+      "family": "LEAd",
+      "naive": 3,
+      "note": "",
+      "nodes_override": 1
+    }
+  ],
+  "strata": [
+    {
+      "depth": "0",
+      "name": "Arithmetic",
+      "color": "var(--muted)",
+      "desc": "Constants and polynomials. No exp or ln required.",
+      "entries": [
+        {
+          "name": "Integers, rationals",
+          "cost": "0 nodes",
+          "proof": null
+        },
+        {
+          "name": "Polynomials p(x)",
+          "cost": "0 nodes (constants only)",
+          "proof": null
+        },
+        {
+          "name": "Arithmetic: +, −, ×, ÷",
+          "cost": "see SuperBEST table",
+          "proof": "T08"
+        },
+        {
+          "name": "π (as constant terminal)",
+          "cost": "0 nodes",
+          "proof": null
+        }
+      ]
+    },
+    {
+      "depth": "1",
+      "name": "Exponential",
+      "color": "var(--cyan)",
+      "desc": "One application of exp or ln. The native depth of EML.",
+      "entries": [
+        {
+          "name": "exp(x)",
+          "cost": "1 node (EML)",
+          "proof": null
+        },
+        {
+          "name": "exp(−x)",
+          "cost": "1 node (DEML)",
+          "proof": "T08"
+        },
+        {
+          "name": "sin(x) over ℂ",
+          "cost": "1 node (ceml(ix, 1))",
+          "proof": "T_EULER_LEAN"
+        },
+        {
+          "name": "cos(x) over ℂ",
+          "cost": "1 node (ceml(ix, 1))",
+          "proof": "T_EULER_LEAN"
+        },
+        {
+          "name": "softplus(x) = ln(1+eˣ)",
+          "cost": "1 node (LEAd(x,1))",
+          "proof": null
+        },
+        {
+          "name": "x · y  (multiplication)",
+          "cost": "1 node (ELAd)",
+          "proof": "T_SUPERBEST_UB"
+        },
+        {
+          "name": "x / y  (division)",
+          "cost": "2 nodes (EDL)",
+          "proof": "T08"
+        },
+        {
+          "name": "Fourier kernel exp(iωt)",
+          "cost": "1 complex node",
+          "proof": null
+        },
+        {
+          "name": "Laplace kernel exp(−st)",
+          "cost": "1 real node",
+          "proof": null
+        }
+      ]
+    },
+    {
+      "depth": "2",
+      "name": "Logarithmic",
+      "color": "#1d4ed8",
+      "desc": "Requires composing exp and ln once. Power functions, reciprocals.",
+      "entries": [
+        {
+          "name": "ln(x)",
+          "cost": "1 node (EXL)",
+          "proof": "T08"
+        },
+        {
+          "name": "neg(x) = −x",
+          "cost": "2 nodes (EXL∘DEML)",
+          "proof": "T09"
+        },
+        {
+          "name": "recip(x) = 1/x",
+          "cost": "1 node (ELSb)",
+          "proof": "R16-C1"
+        },
+        {
+          "name": "x^n  (integer power), x>0",
+          "cost": "1 node (EPL/ELMl)",
+          "proof": "T_SUPERBEST_UB"
+        },
+        {
+          "name": "x^r  (real power), x>0",
+          "cost": "1 node (EPL/ELMl)",
+          "proof": "T_SUPERBEST_UB"
+        },
+        {
+          "name": "sqrt(x), x>0",
+          "cost": "1 node (EPL, F13)",
+          "proof": "T_SUPERBEST_UB"
+        },
+        {
+          "name": "add(x,y), all reals",
+          "cost": "2 nodes (LEdiv+DEML)",
+          "proof": "ADD-T1"
+        },
+        {
+          "name": "sub(x,y)",
+          "cost": "2 nodes (EML)",
+          "proof": "T33"
+        },
+        {
+          "name": "mul(x,y), x,y>0",
+          "cost": "1 node (EPL/ELMl) — duplicate of the depth-1 entry above",
+          "proof": "T_SUPERBEST_UB"
+        },
+        {
+          "name": "abs(x)",
+          "cost": "2 nodes",
+          "proof": null
+        },
+        {
+          "name": "Gaussian exp(−x²/2)",
+          "cost": "3 nodes",
+          "proof": "T08"
+        },
+        {
+          "name": "log-sum-exp (N terms)",
+          "cost": "N−1 LEAd nodes",
+          "proof": null
+        },
+        {
+          "name": "softmax denominator (N)",
+          "cost": "N−1 nodes",
+          "proof": null
+        }
+      ]
+    },
+    {
+      "depth": "3",
+      "name": "Oscillatory (ℂ path)",
+      "color": "var(--pink)",
+      "desc": "Requires the complex bypass — sin, cos, trig via Euler. Depth-∞ over ℝ, depth-1 to 3 over ℂ.",
+      "entries": [
+        {
+          "name": "sin(x) Taylor, 8 terms",
+          "cost": "101 nodes (real path)",
+          "proof": "O-FOURIER"
+        },
+        {
+          "name": "Fourier series, N terms",
+          "cost": "N nodes (complex path)",
+          "proof": "O-FOURIER"
+        },
+        {
+          "name": "Heat equation mode eᵏᵗ",
+          "cost": "2 nodes",
+          "proof": "CAL-4"
+        },
+        {
+          "name": "tan(x)",
+          "cost": "3 complex nodes",
+          "proof": null
+        }
+      ]
+    },
+    {
+      "depth": "∞",
+      "name": "Non-constructible (ℝ)",
+      "color": "var(--red)",
+      "desc": "Provably unreachable as finite real EML trees. Require either infinite depth or complex domain.",
+      "entries": [
+        {
+          "name": "sin(x)  over ℝ",
+          "cost": "∞ (Infinite Zeros Barrier)",
+          "proof": "T01"
+        },
+        {
+          "name": "cos(x)  over ℝ",
+          "cost": "∞",
+          "proof": "T01"
+        },
+        {
+          "name": "i = √−1 (strict branch)",
+          "cost": "∞ (nearest: 4.76×10⁻⁶ at depth 6)",
+          "proof": "T17"
+        }
+      ]
+    }
+  ],
+  "operators": [
+    {
+      "name": "EML",
+      "formula": "exp(x) − ln(y)",
+      "complete": "exact",
+      "mechanism": "exp(+x), no restriction"
+    },
+    {
+      "name": "EAL",
+      "formula": "exp(x) + ln(y)",
+      "complete": "exact",
+      "mechanism": "exp(+x), add"
+    },
+    {
+      "name": "EXL",
+      "formula": "exp(x) · ln(y)",
+      "complete": "exact",
+      "mechanism": "exp(+x), mul"
+    },
+    {
+      "name": "EDL",
+      "formula": "exp(x) / ln(y)",
+      "complete": "exact",
+      "mechanism": "exp(+x), div"
+    },
+    {
+      "name": "EPL",
+      "formula": "exp(x) ^ ln(y)",
+      "complete": "exact",
+      "mechanism": "exp(+x), pow"
+    },
+    {
+      "name": "LEAd",
+      "formula": "ln(exp(x) + y)",
+      "complete": "exact",
+      "mechanism": "exp(+x), composition"
+    },
+    {
+      "name": "ELAd",
+      "formula": "exp(x + ln(y))",
+      "complete": "exact",
+      "mechanism": "exp(+x), composition"
+    },
+    {
+      "name": "ELSb",
+      "formula": "exp(x − ln(y))",
+      "complete": "exact",
+      "mechanism": "exp(+x), composition"
+    },
+    {
+      "name": "EMN",
+      "formula": "ln(y) − exp(x)",
+      "complete": "approx",
+      "mechanism": "−exp(x) outside: unbounded ↓ but exp residual"
+    },
+    {
+      "name": "DEML",
+      "formula": "exp(−x) − ln(y)",
+      "complete": "no",
+      "mechanism": "Slope barrier: self-comp slope = +1"
+    },
+    {
+      "name": "DEMN",
+      "formula": "ln(y) − exp(−x)",
+      "complete": "no",
+      "mechanism": "Domain failure: output always < 0"
+    },
+    {
+      "name": "DEAL",
+      "formula": "exp(−x) + ln(y)",
+      "complete": "no",
+      "mechanism": "Domain collapse: offset e⁻¹ irremovable"
+    },
+    {
+      "name": "DEXL",
+      "formula": "exp(−x) · ln(y)",
+      "complete": "no",
+      "mechanism": "Dead constant: dexl(x,1) ≡ 0"
+    },
+    {
+      "name": "DEDL",
+      "formula": "exp(−x) / ln(y)",
+      "complete": "no",
+      "mechanism": "Decay barrier: outputs → 0"
+    },
+    {
+      "name": "DEPL",
+      "formula": "exp(−x) ^ ln(y)",
+      "complete": "no",
+      "mechanism": "Decay barrier: bounded above by 1"
+    },
+    {
+      "name": "LEX",
+      "formula": "ln(exp(x) − y)",
+      "complete": "no",
+      "mechanism": "Domain barrier: domain → ∅ at depth 2"
+    }
+  ],
+  "specialFunctions": [
+    {
+      "fn": "exp(x)",
+      "dr": "1",
+      "dc": "1",
+      "note": "Native. eml(x,1)."
+    },
+    {
+      "fn": "exp(−x)",
+      "dr": "1",
+      "dc": "1",
+      "note": "deml(x,1)."
+    },
+    {
+      "fn": "ln(x)",
+      "dr": "2",
+      "dc": "2",
+      "note": "1 EXL node."
+    },
+    {
+      "fn": "x^r",
+      "dr": "2",
+      "dc": "2",
+      "note": "3 nodes via EXL."
+    },
+    {
+      "fn": "neg(x)",
+      "dr": "2",
+      "dc": "2",
+      "note": "2 nodes. T09."
+    },
+    {
+      "fn": "x + y",
+      "dr": "2",
+      "dc": "2",
+      "note": "3 nodes (EAL, x>0). 11n (general)."
+    },
+    {
+      "fn": "x · y",
+      "dr": "2",
+      "dc": "2",
+      "note": "1 node (ELAd) or 3n (EXL)."
+    },
+    {
+      "fn": "softplus(x)",
+      "dr": "2",
+      "dc": "2",
+      "note": "1 LEAd node (definitional: LEAd(x,1) = ln(exp(x)+1))."
+    },
+    {
+      "fn": "sin(x)",
+      "dr": "∞",
+      "dc": "1",
+      "note": "T01 (ℝ barrier). T_EULER_LEAN (ℂ bypass)."
+    },
+    {
+      "fn": "cos(x)",
+      "dr": "∞",
+      "dc": "1",
+      "note": "T01 (ℝ barrier). T_EULER_LEAN (ℂ bypass)."
+    },
+    {
+      "fn": "tan(x)",
+      "dr": "∞",
+      "dc": "3",
+      "note": "sin/cos ratio."
+    },
+    {
+      "fn": "sinh(x)",
+      "dr": "3",
+      "dc": "3",
+      "note": "(eˣ − e⁻ˣ)/2: 3 real nodes."
+    },
+    {
+      "fn": "cosh(x)",
+      "dr": "3",
+      "dc": "3",
+      "note": "(eˣ + e⁻ˣ)/2: 3 real nodes."
+    },
+    {
+      "fn": "sigmoid σ(x)",
+      "dr": "3",
+      "dc": "3",
+      "note": "1/(1+e⁻ˣ): 2–3 nodes."
+    },
+    {
+      "fn": "i = √−1",
+      "dr": "∞",
+      "dc": "∞*",
+      "note": "T17. *Nearest depth-6: gap 4.76×10⁻⁶."
+    }
+  ],
+  "calculusCosts": [
+    {
+      "op": "Taylor series, N terms",
+      "cost": "9N − 3 nodes",
+      "note": "T25. sin(x) 8 terms = 69n."
+    },
+    {
+      "op": "Fourier series, N harmonics",
+      "cost": "N complex nodes",
+      "note": "O-FOURIER. Each harmonic 1 ceml."
+    },
+    {
+      "op": "Derivative d/dx [exp(f)]",
+      "cost": "+ 0 nodes",
+      "note": "Native: d/dx eml(f,1) = exp(f)·f′."
+    },
+    {
+      "op": "Gaussian integral ∫e^(−x²)dx",
+      "cost": "3 nodes (no elementary antiderivative)",
+      "note": "Depth-2 approx."
+    },
+    {
+      "op": "Heat equation mode exp(−kt)sin(nx)",
+      "cost": "4 nodes",
+      "note": "2 real + 2 complex."
+    },
+    {
+      "op": "U(t) = exp(−iHt) (quantum)",
+      "cost": "1 matrix EML node",
+      "note": "Q-3. Exact."
+    },
+    {
+      "op": "Partition function Z = Tr[exp(−βH)]",
+      "cost": "2 matrix nodes",
+      "note": "Q-1. Tr + matrix exp."
+    },
+    {
+      "op": "Softmax over N logits",
+      "cost": "N − 1 LEAd + N EML nodes",
+      "note": "N-1 LEAd nodes for the log-sum-exp denominator (not independently Lean- or paper-cited; see /theorems T_SUPERBEST_UB for the LEAd operator itself)."
+    }
+  ],
+  "domainCatalog": [
+    {
+      "domain": "Technology",
+      "color": "var(--cyan)",
+      "entries": [
+        {
+          "name": "PageRank (per page, N pages)",
+          "cost": "5N+4 nodes",
+          "note": "web ranking"
+        },
+        {
+          "name": "TF-IDF",
+          "cost": "7n",
+          "note": "document relevance"
+        },
+        {
+          "name": "Haversine distance",
+          "cost": "28n",
+          "note": "GPS/navigation"
+        }
+      ]
+    },
+    {
+      "domain": "Sports",
+      "color": "#c2410c",
+      "entries": [
+        {
+          "name": "NFL passer rating",
+          "cost": "33n",
+          "note": "most complex sports formula"
+        },
+        {
+          "name": "ELO rating update",
+          "cost": "26n",
+          "note": "chess/competitive ratings"
+        },
+        {
+          "name": "Pythagorean expectation",
+          "cost": "11n",
+          "note": "same structure as Hill equation"
+        }
+      ]
+    },
+    {
+      "domain": "Neural Networks",
+      "color": "var(--violet)",
+      "entries": [
+        {
+          "name": "Softplus ln(1+eˣ)",
+          "cost": "1n via LEAd(x,1)",
+          "note": "cheapest smooth activation"
+        },
+        {
+          "name": "Sigmoid σ(x)",
+          "cost": "7n",
+          "note": "standard activation"
+        },
+        {
+          "name": "Cross-entropy loss (N classes)",
+          "cost": "8N−3n",
+          "note": "training loss"
+        }
+      ]
+    },
+    {
+      "domain": "Physics",
+      "color": "var(--green)",
+      "entries": [
+        {
+          "name": "Ohm's law V=IR",
+          "cost": "2n",
+          "note": "product of two scalars"
+        },
+        {
+          "name": "Kinetic energy ½mv²",
+          "cost": "7n",
+          "note": "v² = mul chain"
+        },
+        {
+          "name": "Gravitational force GMm/r²",
+          "cost": "9n",
+          "note": "power-law denominator"
+        }
+      ]
+    },
+    {
+      "domain": "Biology / Epidemiology",
+      "color": "var(--orange)",
+      "entries": [
+        {
+          "name": "Basic reproduction number R₀=β/γ",
+          "cost": "2n",
+          "note": "cheapest important metric"
+        },
+        {
+          "name": "SIR model per-step",
+          "cost": "20n",
+          "note": "full epidemic simulation"
+        }
+      ]
+    },
+    {
+      "domain": "Quantum",
+      "color": "var(--pink)",
+      "entries": [
+        {
+          "name": "Fermi-Dirac distribution",
+          "cost": "9n",
+          "note": "same structure as sigmoid"
+        },
+        {
+          "name": "Partition function Z (N terms)",
+          "cost": "6N−3n",
+          "note": "same as softmax denominator"
+        }
+      ]
+    },
+    {
+      "domain": "Finance",
+      "color": "#1d4ed8",
+      "entries": [
+        {
+          "name": "Sharpe ratio",
+          "cost": "4n",
+          "note": "mean/std ratio"
+        },
+        {
+          "name": "Black-Scholes full DAG (shared)",
+          "cost": "83n",
+          "note": "most expensive EML computation"
+        }
+      ]
+    }
+  ],
+  "structuralClasses": [
+    {
+      "cls": "A",
+      "sig": "(1, 0)",
+      "desc": "Pure exponential",
+      "mean": "10.4n",
+      "ex": "Boltzmann, Arrhenius"
+    },
+    {
+      "cls": "B",
+      "sig": "(0, 0)",
+      "desc": "Rational / polynomial",
+      "mean": "12.2n",
+      "ex": "Newton gravity, Coulomb"
+    },
+    {
+      "cls": "C",
+      "sig": "(0, 1)",
+      "desc": "Log-ratio (cheapest)",
+      "mean": "9.5n",
+      "ex": "Shannon entropy, pH"
+    },
+    {
+      "cls": "D",
+      "sig": "(1,1)+",
+      "desc": "Mixed exp+log",
+      "mean": "20.1n",
+      "ex": "Black-Scholes (47n)"
+    }
+  ],
+  "keyCostFacts": [
+    {
+      "thm": "T34 (Naive UB)",
+      "stmt": "Cost(E) ≤ NaiveCost(E)",
+      "detail": "Always achievable; no sharing or pattern required."
+    },
+    {
+      "thm": "T38 (Decomp)",
+      "stmt": "Three-term formula",
+      "detail": "Cost = NC − SD − PB. Unique decomposition for each expression."
+    },
+    {
+      "thm": "T38-NNP",
+      "stmt": "No Nesting Penalty",
+      "detail": "Cost(O₁(O₂(A,B),C)) = c(O₁)+c(O₂)+Cost(A)+Cost(B)+Cost(C)."
+    },
+    {
+      "thm": "T40 (Add Law)",
+      "stmt": "Cost(op(E₁,E₂)) = Cost(E₁)+Cost(E₂)+1",
+      "detail": "For independent sub-expressions. Explains Lorentz (57n)."
+    },
+    {
+      "thm": "T40 (Linear)",
+      "stmt": "N-term sum: (α₀+3)N − 3",
+      "detail": "Exact formula. Softmax: 4N−3. Shannon: 6N−3. Taylor: 8N−3."
+    },
+    {
+      "thm": "Domain routing (2026-07-22 correction)",
+      "stmt": "Positive routing still saves on mul/sqrt/pow/div, no longer on add",
+      "detail": "add is now 2n for ALL reals (ADD-T1) — no positive/general gap left to route around. mul (1n vs 3n), sqrt (1n vs 2n), and pow (1n vs 3n) still have a real gap; div (2n vs 3n) is Lean-proved for the exp-outer case only (see /superbest). The old \"~1750n saved across 295-eq catalog\" figure was computed from add's pre-ADD-T1 numbers and is retracted — recomputing it needs the underlying equation dataset, not attempted here."
+    },
+    {
+      "thm": "O-ISO",
+      "stmt": "8 cross-domain isomorphism families",
+      "detail": "Radioactive decay = compound interest = population growth (same tree)."
+    },
+    {
+      "thm": "QCC",
+      "stmt": "Cost ≤ O(N²) conjecture",
+      "detail": "No standard scientific equation exceeds quadratic growth. Open."
+    },
+    {
+      "thm": "T39",
+      "stmt": "Cost ≤ O(N) conjecture",
+      "detail": "Linear Ceiling: no standard equation exceeds O(N). Open."
+    }
+  ],
+  "patternBonus": [
+    {
+      "pat": "DEML",
+      "bonus": "5",
+      "formula": "exp(−x) − ln(y)"
+    },
+    {
+      "pat": "EAL",
+      "bonus": "4",
+      "formula": "exp(x) + ln(y)"
+    },
+    {
+      "pat": "LEAd",
+      "bonus": "4",
+      "formula": "ln(exp(x) + y)"
+    },
+    {
+      "pat": "ELAd",
+      "bonus": "4",
+      "formula": "exp(x + ln(y))"
+    },
+    {
+      "pat": "EML",
+      "bonus": "3",
+      "formula": "exp(x) − ln(y)"
+    },
+    {
+      "pat": "EXL",
+      "bonus": "3",
+      "formula": "exp(x) · ln(y)"
+    }
+  ]
+}
