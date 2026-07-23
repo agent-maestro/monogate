@@ -74,11 +74,17 @@ because it reads files outside this repo:
 Set `MONOGATE_LEAN_PATH` if `monogate-lean` isn't checked out as a sibling of this repo's
 parent directory (default: `../../monogate-lean` relative to `blog/`).
 
-Exit code 0 = clean. This is not wired into CI (this repo has none — deploys are manual,
-`wrangler pages deploy dist --project-name monogate-org --branch main`, from a box with
-`monogate-lean` and this repo checked out side by side) — running `npm run predeploy` by
-hand before every deploy is the actual enforcement mechanism right now. A real CI job that
-runs this on every push would close that gap; not built yet.
+Exit code 0 = clean. This now ALSO runs automatically on every push/PR that touches `blog/**`
+— see `.github/workflows/blog-checks.yml` at the repo root (checks out `monogate-lean` as a
+sibling so the cross-repo Lean checks run for real, not just the build-time-only subset).
+It's a check, not a deploy — same pattern as this repo's existing
+`.github/workflows/eml-guard-contract.yml`. Deploys themselves are still manual (`wrangler
+pages deploy dist --project-name monogate-org --branch main`, from a box with `monogate-lean`
+and this repo checked out side by side) — deliberately: this repo doesn't auto-deploy on
+push (see the Cloudflare migration notes), and CI here means "block bad state from looking
+green," not "ship automatically." Running `npm run predeploy` by hand before deploying is
+still worth doing (catches it before you even push), but a broken commit can no longer sit
+on `master` indefinitely with nothing surfacing it.
 
 ## Commands
 

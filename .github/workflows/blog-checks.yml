@@ -1,0 +1,54 @@
+name: Blog Data Checks
+
+# Automatic, push/PR-triggered validation for monogate.org's data-driven pages
+# (/theorems, /atlas, /superbest — see blog/README.md). This does NOT deploy
+# anything; deploys stay manual (`wrangler pages deploy`, run by hand from a
+# box with monogate-lean checked out as a sibling repo — see blog/README.md).
+# What this closes: before this workflow existed, `npm run predeploy` was the
+# only enforcement of the citation/staleness checks in blog/scripts/
+# audit-citations.mjs, and it only ran if a human remembered to run it before
+# deploying. A bad commit (e.g. a dangling /theorems id, a Lean citation to a
+# file that doesn't exist) could sit on master, live on the site, indefinitely
+# with nothing red anywhere. This makes that a failed check on every push/PR
+# that touches blog/, same pattern as .github/workflows/eml-guard-contract.yml
+# already uses elsewhere in this repo.
+
+on:
+  pull_request:
+    paths:
+      - 'blog/**'
+  push:
+    branches: [master, main]
+    paths:
+      - 'blog/**'
+  workflow_dispatch:
+
+jobs:
+  audit-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v6
+
+      - name: Checkout monogate-lean (cross-repo Lean citation checks need real source)
+        uses: actions/checkout@v6
+        with:
+          repository: agent-maestro/monogate-lean
+          path: monogate-lean
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: blog/package-lock.json
+
+      - name: Install dependencies
+        working-directory: blog
+        run: npm ci
+
+      - name: Citation audit + build (npm run predeploy)
+        working-directory: blog
+        env:
+          MONOGATE_LEAN_PATH: ${{ github.workspace }}/monogate-lean
+        run: npm run predeploy
