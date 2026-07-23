@@ -54,10 +54,10 @@
       "cost_positive": 2,
       "cost_general": 3,
       "construction_positive": "EXL(0,x) then ELSb(ln(x), y) = x/y, x > 0, y > 0",
-      "construction_general": "3-node general-domain construction tracked by the Python canonical table; DivLowerBound3Full records the 3-node lower-bound status.",
+      "construction_general": "3-node general-domain construction tracked by the Python canonical table. Lower-bound status is mixed, not fully Lean-proved: the 2-node exp-outer-operator case (F13-F16) IS Lean-proved (DivLowerBound3.lean, no_exp_outer_2node_div, 0 sorries); the remaining F1-F12 cases are Python-search-certified only (4096 circuits x 14 test points, 0 matches) -- DivLowerBound3.lean's own SB_div_ge_three_full is a filed placeholder (proves True, not the stated bound), not a completed Lean proof.",
       "domain_positive": "x > 0, y > 0 — full-tree cost is 2n",
-      "domain_general": "general signed-real basket entry tracked at 3n",
-      "notes": "v5.3 canonical sync: div_positive=2n full tree; div_general=3n.",
+      "domain_general": "general signed-real basket entry tracked at 3n (upper-bound construction verified; lower bound partially Lean-proved, partially Python-certified — see construction_general)",
+      "notes": "v5.3 canonical sync: div_positive=2n full tree (Lean-verified). div_general=3n: upper bound tracked, lower bound Python-certified with a Lean-verified partial case (exp-outer), not yet a complete Lean proof.",
       "v4_cost": 2,
       "delta": 0
     },

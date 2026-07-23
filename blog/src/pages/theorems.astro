@@ -27,9 +27,10 @@ type Result = {
 const results: Result[] = [
   // ─── THEOREMS (21) ──────────────────────────────────────────────────────────
   { id: 'T01', tier: 'THEOREM', name: 'EML Universality',
-    session: 'External (Odrzywołek 2026)', category: 'Core Algebra',
-    statement: 'eml(x, y) = exp(x) − ln(y) generates every elementary function as a finite binary tree. Published arXiv:2603.21852.',
-    evidence: 'Published, peer-reviewable proof. Constructs explicit trees for each elementary function using the Log Recovery identity and composition rules.' },
+    session: 'External (Odrzywołek 2026) + Lean, 2026-04-25', category: 'Core Algebra',
+    statement: 'eml(x, y) = exp(x) − ln(y) generates every elementary function as a finite binary tree. Published arXiv:2603.21852. Independently re-derived as a local Lean formalization: an EML-elementary predicate closed under composition, with the universality statement as its capstone.',
+    evidence: 'Published, peer-reviewable proof, plus an independent local Lean 4 formalization (0 sorries): eml_universality, built from EML_k_closed_comp / IsEMLElementary.comp over the complex EML grammar.',
+    lean: { file: 'Universality.lean', theorem: 'eml_universality', status: 'verified' } },
   { id: 'T09', tier: 'THEOREM', name: 'Negation in 2 Nodes — Optimal',
     session: 'Sprint2', category: 'Core Algebra',
     statement: 'neg(x) = −x is computable in exactly 2 EML-family nodes: exl(0, deml(x,1)) = −x. Optimal; 1 node is impossible by exhaustive search.',
@@ -125,6 +126,12 @@ const results: Result[] = [
     statement: 'No single F16 operator computes x/y for all real x, y. Positive domain: exp(ln x − ln y) is 1 node. General domain: ≥ 2 nodes (Lean-verified).',
     evidence: 'Lean 4, 0 sorries. Witness (0,1) for each of 16 F16 operators.',
     lean: { file: 'DivLowerBound.lean', theorem: 'SB_div_ge_two', status: 'verified' } },
+  { id: 'T_DIV_EXP_OUTER', tier: 'THEOREM', name: 'Division, General Domain: No 2-Node exp-Outer Circuit — Lean',
+    session: 'Lean, 2026-04-24', category: 'Core Algebra',
+    statement: 'No 2-node F16 circuit with an exp-type outer operator (F13–F16) computes x/y for all real x, y — such circuits are always positive, but x/y takes negative values (witness (x,y) = (−1,2)). A further, Lean-proved step toward a general-domain ≥ 3 bound. Honest scope: the remaining F1–F12 outer cases are NOT Lean-proved — see the SuperBEST table\'s div=3n entry for the precise status of that stronger claim.',
+    evidence: 'Lean 4, 0 sorries. no_F13_outer_2node_div / no_F14_outer_2node_div / no_F15_outer_2node_div / no_F16fn_outer_2node_div, each via the shared lemma always_pos_ne_div (an always-positive function cannot equal x/y, which is negative at (−1,2)).',
+    lean: { file: 'DivLowerBound3.lean', theorem: 'no_F13_outer_2node_div (+ F14/F15/F16fn)', status: 'verified' },
+    deps: 'T_DIV_GEN_LB.' },
   { id: 'T_SUPERBEST_UB', tier: 'THEOREM', name: 'SuperBEST Upper Bounds — 5 Positive-Domain Identities (Lean)',
     session: 'Lean Sprint 2026-04-21', category: 'Core Algebra',
     statement: 'Lean-verified (0 sorries): exp(x)=F1(x,1) (1n); exp(ln x+ln y)=xy for x,y>0 (1n); exp(n·ln x)=xⁿ for x>0 (1n); exp(−ln x)=1/x for x>0 (1n); exp(½·ln x)=√x for x>0 (1n). SuperBEST v5.3 positive total: 14n (savings 80.8%).',
@@ -137,10 +144,16 @@ const results: Result[] = [
     lean: { file: 'EMLDepth.lean', theorem: 'euler_gateway / euler_identity / exp_not_constant', status: 'verified' } },
   { id: 'T01a', tier: 'THEOREM', name: 'sin Has Infinitely Many Zeros — Lean (Part A of T01)',
     session: 'Lean Sprint 2026-04-21', category: 'Analytic Properties',
-    statement: 'The set {x∈ℝ | sin(x)=0} is infinite. Explicit: sin(nπ)=0 for all n∈ℤ, map n↦nπ is injective. Part A of the Infinite Zeros Barrier; Parts B and C (EML trees have finitely many zeros) remain open in Lean.',
+    statement: 'The set {x∈ℝ | sin(x)=0} is infinite. Explicit: sin(nπ)=0 for all n∈ℤ, map n↦nπ is injective. Part A of the Infinite Zeros Barrier. Parts B (analytic non-zero functions have finitely many zeros) and C (well-formed EML trees are analytic on (0,∞)) are now also closed in Lean, 0 sorries each — only Part D, the uniform-in-depth barrier (sin_not_in_eml / sin_not_in_real_EML_k), remains open, gated on Khovanskii zero-count / o-minimal machinery not yet in Mathlib. See T01b for what is provable at small fixed depths without that machinery.',
     evidence: 'Lean 4, 0 sorries. sin_int_pi_zero: Real.sin_int_mul_pi. sin_has_infinitely_many_zeros: Set.infinite_range_of_injective.',
     lean: { file: 'InfiniteZerosBarrier.lean', theorem: 'sin_has_infinitely_many_zeros', status: 'verified' },
     deps: 'T01 (partial).' },
+  { id: 'T01b', tier: 'THEOREM', name: 'sin ∉ EML at Fixed Small Depths 0–1 — Lean (no Khovanskii needed)',
+    session: 'Lean, 2026-06-10', category: 'Analytic Properties',
+    statement: 'No depth-0 or depth-1 EML tree equals sin(x) for all real x. Proved by direct two-point evaluation (at x=0 and x=π/2), case-split over each of the six grammar shapes reachable at depth ≤ 1 — sidestepping Part D\'s Khovanskii/o-minimal requirement entirely. The technique is stated to generalize mechanically to any fixed depth by extending the case enumeration; depth ≤ 2 has not been carried out.',
+    evidence: 'Lean 4, 0 sorries. sin_not_in_eml_depth_le_0 (const/var, two-point contradiction). sin_not_in_eml_depth_le_1 (adds the four ceml(const/var, const/var) shapes).',
+    lean: { file: 'SinNotInEMLDepthBounds.lean', theorem: 'sin_not_in_eml_depth_le_0 / sin_not_in_eml_depth_le_1', status: 'verified' },
+    deps: 'T01a.' },
   { id: 'T_EXP_LOG_DUALITY', tier: 'THEOREM', name: 'Exp–Log Multiplier Duality at Fixed Points (Lean)',
     session: 'Blind Session Follow-up 2026-04-22', category: 'Complex EML',
     statement: 'At any z ∈ slit plane with Complex.exp(z) = z, the multiplier product (exp)′(z)·(log)′(z) = 1. Corollary: every fixed point of exp is repelling under exp (|mult| = |z| > 1 for Lambert z_k*) and attracting under log on its branch (|mult| = 1/|z| < 1).',
@@ -218,6 +231,10 @@ const results: Result[] = [
     statement: 'For any N-parameter scientific model, SuperBEST cost is O(N²). No standard scientific formula exceeds O(N²) cost. Pairwise interaction models (Hopfield: 7N²) are the ceiling.',
     evidence: 'Verified on 187+ equations. No known counterexample. Supported by physical argument: standard textbook equations model at most pairwise interactions.',
     deps: 'T39.' },
+  { id: 'CHA', tier: 'CONJECTURE', name: 'Chain-Order Additivity',
+    session: 'Filed 2026-04-27', category: 'Analytic Properties',
+    statement: 'For any symbolic expression f, the Pfaffian chain order of f equals the sum of chain orders over the multiset of Pfaffian-not-elementary primitive AST occurrences in f, counted with multiplicity. Proof requires the Khovanskii zero-count theorem on Pfaffian chains, not yet in Mathlib — the same gap blocking T01\'s Part D. Two downstream corollaries are filed alongside it, both conditionally sorry\'d on this conjecture closing first.',
+    evidence: '22 of 23 test cases (drawn from two independent exploration sessions) hit the predicted chain order exactly. The one exception, J₀(x) + Y₀(x) at Δ = +3, is consistent with the rule once AST-occurrence counting is applied correctly: Y₀ contains a J₀ component internally, so the explicit sum\'s AST counts J₀ twice.' },
   // ─── RESOLVED CONJECTURES ───────────────────────────────────────────────────
   { id: 'C02', tier: 'CONJECTURE', name: 'Complex EML Closure Density',
     session: 'S35', category: 'Complex EML',
@@ -315,7 +332,7 @@ const obsCount = byTier['OBSERVATION'].length;
 
   <h1>Theorem Catalog</h1>
   <div class="status-banner">
-    <p class="status-kicker">Current status · May 2026</p>
+    <p class="status-kicker">Current status · July 2026</p>
     <p>
       This catalog mixes external theorems, local Lean witnesses,
       propositions, conjectures, and observations. A theorem label means the
