@@ -27,7 +27,7 @@ const strata = [
       { name: 'cos(x) over ℂ',             cost: '1 node (ceml(ix, 1))', proof: 'T07' },
       { name: 'softplus(x) = ln(1+eˣ)',    cost: '1 node (LEAd(x,1))', proof: 'T19 (new)' },
       { name: 'x · y  (multiplication)',    cost: '1 node (ELAd)', proof: 'T22 (new)' },
-      { name: 'x / y  (division)',          cost: '1 node (EDL)',  proof: 'T08' },
+      { name: 'x / y  (division)',          cost: '2 nodes (EDL)',  proof: 'T08' },
       { name: 'Fourier kernel exp(iωt)',    cost: '1 complex node', proof: 'T16' },
       { name: 'Laplace kernel exp(−st)',    cost: '1 real node',   proof: 'T16' },
     ],
@@ -41,13 +41,13 @@ const strata = [
       { name: 'ln(x)',                      cost: '1 node (EXL)', proof: 'T04, T08' },
       { name: 'neg(x) = −x',               cost: '2 nodes (EXL∘DEML)', proof: 'T09' },
       { name: 'recip(x) = 1/x',            cost: '1 node (ELSb)', proof: 'R16-C1' },
-      { name: 'x^n  (integer power)',       cost: '3 nodes (EXL)', proof: 'T08' },
-      { name: 'x^r  (real power)',          cost: '3 nodes',       proof: 'T08' },
-      { name: 'sqrt(x)',                    cost: '2 nodes',       proof: 'T08' },
-      { name: 'add(x,y)  x>0',             cost: '3 nodes (EAL)', proof: 'T11 (new)' },
-      { name: 'sub(x,y)',                   cost: '3 nodes (EML)', proof: 'T11 (new)' },
-      { name: 'mul(x,y)  x>0',             cost: '3 nodes (EXL)', proof: 'T10' },
-      { name: 'abs(x)',                     cost: '4 nodes',       proof: 'T08' },
+      { name: 'x^n  (integer power), x>0',  cost: '1 node (EPL/ELMl)', proof: 'T_SUPERBEST_UB' },
+      { name: 'x^r  (real power), x>0',     cost: '1 node (EPL/ELMl)', proof: 'T_SUPERBEST_UB' },
+      { name: 'sqrt(x), x>0',               cost: '1 node (EPL, F13)', proof: 'T_SUPERBEST_UB' },
+      { name: 'add(x,y), all reals',        cost: '2 nodes (LEdiv+DEML)', proof: 'ADD-T1' },
+      { name: 'sub(x,y)',                   cost: '2 nodes (EML)', proof: 'T33' },
+      { name: 'mul(x,y), x,y>0',            cost: '1 node (EPL/ELMl) — duplicate of the depth-1 entry above', proof: 'T_SUPERBEST_UB' },
+      { name: 'abs(x)',                     cost: '2 nodes',       proof: null },
       { name: 'Gaussian exp(−x²/2)',        cost: '3 nodes',       proof: 'T08' },
       { name: 'log-sum-exp (N terms)',       cost: 'N−1 LEAd nodes', proof: 'T19 (new)' },
       { name: 'softmax denominator (N)',    cost: 'N−1 nodes',     proof: 'T19 (new)' },
@@ -187,12 +187,12 @@ const superbest = [
   { op: 'ln(x)',    family: 'EXL',      nodes: 1,  naive: 3,  note: '' },
   { op: 'neg(x)',   family: 'EXL+DEML', nodes: 2,  naive: 9,  note: 'T09' },
   { op: 'recip(x)', family: 'ELSb',     nodes: 1,  naive: 5,  note: 'R16-C1' },
-  { op: 'sqrt(x)',  family: 'EXL',      nodes: 2,  naive: 7,  note: '' },
+  { op: 'sqrt(x)',  family: 'EPL (F13)', nodes: 1,  naive: 7,  note: 'x>0, T_SUPERBEST_UB (was 2n pre-v5.3)' },
   { op: 'sub(x,y)', family: 'EML',      nodes: 2,  naive: 5,  note: 'T33' },
-  { op: 'add(x,y)', family: 'EAL',      nodes: 3,  naive: 11, note: 'x>0' },
-  { op: 'mul(x,y)', family: 'ELAd',     nodes: 2,  naive: 13, note: 'T10u' },
-  { op: 'pow(x,n)', family: 'EXL',      nodes: 3,  naive: 15, note: '' },
-  { op: 'div(x,y)', family: 'ELSb',     nodes: 2,  naive: 15, note: 'T08' },
+  { op: 'add(x,y)', family: 'EAL',      nodes: 2,  naive: 11, note: 'ADD-T1, all reals (was 3n, x>0-only, pre-v5)' },
+  { op: 'mul(x,y)', family: 'EPL/ELMl', nodes: 1,  naive: 13, note: 'x,y>0, T_SUPERBEST_UB; general domain is 3n (was 2n F16-optimal claim, superseded)' },
+  { op: 'pow(x,n)', family: 'EPL/ELMl', nodes: 1,  naive: 15, note: 'x>0, T_SUPERBEST_UB; general domain is 3n (was 3n positive too, pre-v5.1)' },
+  { op: 'div(x,y)', family: 'ELSb',     nodes: 2,  naive: 15, note: 'x,y>0, T08; general domain is 3n, partly Lean-proved — see /superbest' },
   { op: 'sin(x)',   family: 'ceml (ℂ)', nodes: 1,  naive: 101, note: 'complex, T07' },
   { op: 'cos(x)',   family: 'ceml (ℂ)', nodes: 1,  naive: 101, note: 'complex, T07' },
   { op: 'softplus', family: 'LEAd',     nodes: 1,  naive: 3,  note: 'T19' },
@@ -207,7 +207,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
 
   <h1>EML Atlas</h1>
   <div class="status-banner">
-    <p class="status-kicker">Current status · May 2026</p>
+    <p class="status-kicker">Current status · July 2026 (SuperBEST-cost sections audited; the 295+-equation domain catalog below is not independently re-verified this pass)</p>
     <p>
       The Atlas is a map of EML representations, depth/cost estimates, proof
       targets, and exploratory extensions. It is useful for education and
@@ -221,7 +221,7 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
     Mathematical objects classified by EML depth and operator cost.
   </p>
   <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 32px;">
-    Last updated: 2026-04-27 · SuperBEST v5.2 headline: 14n positive / 22n general · 16 elementary operators (THEOREM) + 8 Pfaffian towers (OBSERVATION) = 24 total · 35/36 calculator coverage
+    Last updated: 2026-07-22 · SuperBEST v5.3 headline: 14n positive / 16n general (was misstated as 22n general — corrected against the canonical Python table, see /superbest) · 16 elementary operators (THEOREM) + 8 Pfaffian towers (OBSERVATION) = 24 total · 35/36 calculator coverage
   </p>
 
   <div class="divider"></div>
