@@ -25,8 +25,8 @@ const strata = [
       { name: 'exp(−x)',                    cost: '1 node (DEML)', proof: 'T08' },
       { name: 'sin(x) over ℂ',             cost: '1 node (ceml(ix, 1))', proof: 'T07, T16' },
       { name: 'cos(x) over ℂ',             cost: '1 node (ceml(ix, 1))', proof: 'T07' },
-      { name: 'softplus(x) = ln(1+eˣ)',    cost: '1 node (LEAd(x,1))', proof: 'T19 (new)' },
-      { name: 'x · y  (multiplication)',    cost: '1 node (ELAd)', proof: 'T22 (new)' },
+      { name: 'softplus(x) = ln(1+eˣ)',    cost: '1 node (LEAd(x,1))', proof: null },
+      { name: 'x · y  (multiplication)',    cost: '1 node (ELAd)', proof: 'T_SUPERBEST_UB' },
       { name: 'x / y  (division)',          cost: '2 nodes (EDL)',  proof: 'T08' },
       { name: 'Fourier kernel exp(iωt)',    cost: '1 complex node', proof: 'T16' },
       { name: 'Laplace kernel exp(−st)',    cost: '1 real node',   proof: 'T16' },
@@ -49,8 +49,8 @@ const strata = [
       { name: 'mul(x,y), x,y>0',            cost: '1 node (EPL/ELMl) — duplicate of the depth-1 entry above', proof: 'T_SUPERBEST_UB' },
       { name: 'abs(x)',                     cost: '2 nodes',       proof: null },
       { name: 'Gaussian exp(−x²/2)',        cost: '3 nodes',       proof: 'T08' },
-      { name: 'log-sum-exp (N terms)',       cost: 'N−1 LEAd nodes', proof: 'T19 (new)' },
-      { name: 'softmax denominator (N)',    cost: 'N−1 nodes',     proof: 'T19 (new)' },
+      { name: 'log-sum-exp (N terms)',       cost: 'N−1 LEAd nodes', proof: null },
+      { name: 'softmax denominator (N)',    cost: 'N−1 nodes',     proof: null },
     ],
   },
   {
@@ -669,10 +669,10 @@ const savings = Math.round((1 - totalSuperbest/totalNaive)*100);
         { thm: 'T38-NNP',        stmt: 'No Nesting Penalty',                  detail: 'Cost(O₁(O₂(A,B),C)) = c(O₁)+c(O₂)+Cost(A)+Cost(B)+Cost(C).' },
         { thm: 'T40 (Add Law)',   stmt: 'Cost(op(E₁,E₂)) = Cost(E₁)+Cost(E₂)+1', detail: 'For independent sub-expressions. Explains Lorentz (57n).' },
         { thm: 'T40 (Linear)',    stmt: 'N-term sum: (α₀+3)N − 3',            detail: 'Exact formula. Softmax: 4N−3. Shannon: 6N−3. Taylor: 8N−3.' },
-        { thm: 'T41 (Domain)',    stmt: 'Positive routing saves 8n/add',       detail: '3n (EAL) vs 11n (general add). ~1750n saved across 295-eq catalog.' },
-        { thm: 'T41 (ISO)',       stmt: '8 cross-domain isomorphism families', detail: 'Radioactive decay = compound interest = population growth (same tree).' },
-        { thm: 'T42 (QCC)',       stmt: 'Cost ≤ O(N²) conjecture',             detail: 'No standard scientific equation exceeds quadratic growth. Open.' },
-        { thm: 'T43 (Linear Ceil)', stmt: 'Cost ≤ O(N) conjecture',           detail: 'Linear Ceiling: no standard equation exceeds O(N). Open.' },
+        { thm: 'Domain routing (2026-07-22 correction)', stmt: 'Positive routing still saves on mul/sqrt/pow/div, no longer on add', detail: 'add is now 2n for ALL reals (ADD-T1) — no positive/general gap left to route around. mul (1n vs 3n), sqrt (1n vs 2n), and pow (1n vs 3n) still have a real gap; div (2n vs 3n) is Lean-proved for the exp-outer case only (see /superbest). The old "~1750n saved across 295-eq catalog" figure was computed from add\'s pre-ADD-T1 numbers and is retracted — recomputing it needs the underlying equation dataset, not attempted here.' },
+        { thm: 'O-ISO',       stmt: '8 cross-domain isomorphism families', detail: 'Radioactive decay = compound interest = population growth (same tree).' },
+        { thm: 'QCC',       stmt: 'Cost ≤ O(N²) conjecture',             detail: 'No standard scientific equation exceeds quadratic growth. Open.' },
+        { thm: 'T39',       stmt: 'Cost ≤ O(N) conjecture',           detail: 'Linear Ceiling: no standard equation exceeds O(N). Open.' },
       ].map(r => (
         <tr style="border-bottom: 1px solid var(--border);">
           <td style="padding: 5px 8px 5px 0; font-family: var(--mono); color: var(--violet); font-size: 0.78rem; font-weight: 600;">{r.thm}</td>
