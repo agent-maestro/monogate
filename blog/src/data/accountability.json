@@ -19,9 +19,18 @@
       "gap": null,
       "upgrade_condition": null,
       "artifacts": [
-        { "label": "Epistemic grading legend", "url": "https://1op.io/guide" },
-        { "label": "Authorship model and non-claims", "url": "https://monogate.org/about" },
-        { "label": "Toolchain lock (pinned, gated)", "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/TOOLCHAIN.lock" }
+        {
+          "label": "Epistemic grading legend",
+          "url": "https://1op.io/guide"
+        },
+        {
+          "label": "Authorship model and non-claims",
+          "url": "https://monogate.org/about"
+        },
+        {
+          "label": "Toolchain lock (pinned, gated)",
+          "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/TOOLCHAIN.lock"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -29,14 +38,31 @@
       "id": "support-reviewing",
       "recommendation": "Support the needs of reviewing",
       "asks": "Make reviewing feasible — disclose tools, give precise references, provide formal proofs where appropriate.",
-      "grade": "PARTIAL",
-      "summary": "The artifacts are formal by construction. Headline theorems ship with machine-checkable axiom footprints that a reviewer can re-derive with one command, rather than trusting our summary of what a proof assumes. The tool that derives them is public, as is the axiom ledger it checks against.",
-      "gap": "The evidence produced by that tool is not yet published. Our eighteen-version toolchain migration measured footprint equality against a frozen baseline, never chained — but the snapshots, verdicts and migration log recording it live on an unpushed branch. A reviewer can today run our tool; they cannot yet read our results.",
-      "upgrade_condition": "Grade moves to MET when the migration record (snapshots, verdicts, MIGRATION_LOG.md) is published to a public branch and linked here.",
+      "grade": "MET",
+      "summary": "The artifacts are formal by construction. Headline theorems ship with machine-checkable axiom footprints that a reviewer can re-derive with one command, rather than trusting our summary of what a proof assumes. The evidence is published, not just the tool: our eighteen-version toolchain migration measured footprint equality against a frozen v4.14.0 baseline — never chained through an intermediate, because chaining would let a drift launder itself across two comparisons — and the snapshots, per-stop verdicts and hashed baselines are all readable.",
+      "gap": null,
+      "upgrade_condition": null,
       "artifacts": [
-        { "label": "footprint_snapshot.py (the re-derivation tool)", "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/tools/axiom_ledger/footprint_snapshot.py" },
-        { "label": "Axiom ledger (gated, in CI)", "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/AxiomLedger.lean" },
-        { "label": "Axiom audit", "url": "https://github.com/agent-maestro/machlib/blob/master/AXIOM_AUDIT.md" }
+        {
+          "label": "Migration log (v4.14.0 → v4.32.2, with its own corrections)",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/MIGRATION_LOG.md"
+        },
+        {
+          "label": "Frozen v4.14.0 baseline footprints",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/snapshots/v4.14.0-baseline/footprints.json"
+        },
+        {
+          "label": "Destination verdict (v4.32.2)",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/snapshots/v4.32.2/verdict.json"
+        },
+        {
+          "label": "footprint_snapshot.py (the re-derivation tool)",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/tools/axiom_ledger/footprint_snapshot.py"
+        },
+        {
+          "label": "Axiom ledger",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/AxiomLedger.lean"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -49,10 +75,22 @@
       "gap": null,
       "upgrade_condition": null,
       "artifacts": [
-        { "label": "Source (GitHub)", "url": "https://github.com/agent-maestro/monogate" },
-        { "label": "Package (PyPI)", "url": "https://pypi.org/project/monogate/" },
-        { "label": "Preprint (arXiv:2603.21852)", "url": "https://arxiv.org/abs/2603.21852" },
-        { "label": "Reproduction zoo", "url": "https://zoo.monogateforge.com/" }
+        {
+          "label": "Source (GitHub)",
+          "url": "https://github.com/agent-maestro/monogate"
+        },
+        {
+          "label": "Package (PyPI)",
+          "url": "https://pypi.org/project/monogate/"
+        },
+        {
+          "label": "Preprint (arXiv:2603.21852)",
+          "url": "https://arxiv.org/abs/2603.21852"
+        },
+        {
+          "label": "Reproduction zoo",
+          "url": "https://zoo.monogateforge.com/"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -60,14 +98,27 @@
       "id": "responsibility-correctness",
       "recommendation": "Retain the responsibility for correctness",
       "asks": "When automated techniques are used, responsibility for correctness remains exclusively with the human authors.",
-      "grade": "PARTIAL",
-      "summary": "Accepted — and mechanized, because a pledge is not a mechanism. Correctness is discharged through sorry audits (a count that cannot be derived is treated as an instrument failure, not a zero), an axiom ledger gated in CI in both directions, kernel replay of the compiled environment through an external checker, and acceptance bars fixed before the data exists. When our gates fail, the failure stays in the record: our migration log carries its own corrections, including a stop we recorded as accepted before its central criterion had been measured.",
-      "gap": "The published half is the ledger and the audit. The gate registry, the physics-gate contract, and the five amendments that governed our most recent migration are not yet public, so a reader can verify that our gates exist but not read the record of them firing, failing, and being corrected.",
-      "upgrade_condition": "Grade moves to MET when the gate registry and the migration amendments are published and linked here.",
+      "grade": "MET",
+      "summary": "Accepted — and mechanized, because a pledge is not a mechanism. Correctness is discharged through sorry audits (a count that cannot be derived is treated as an instrument failure, not a zero), an axiom ledger gated in CI in both directions, kernel replay through an external checker, and acceptance bars fixed before the data exists. The failures stay in the record rather than being amended away: the migration log carries a correction stating that a stop was committed as “accepted” before its central criterion had ever been measured, and the amendment trail records a pass bar being weakened in the open, with the byte-identical check that proved the weakening changed nothing else.",
+      "gap": null,
+      "upgrade_condition": null,
       "artifacts": [
-        { "label": "Axiom ledger (gated both directions)", "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/AxiomLedger.lean" },
-        { "label": "Axiom audit", "url": "https://github.com/agent-maestro/machlib/blob/master/AXIOM_AUDIT.md" },
-        { "label": "Migration plan and pass bar", "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/BUMP_PLAN.md" }
+        {
+          "label": "Pass bar and Amendments 1–5",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/BUMP_PLAN.md"
+        },
+        {
+          "label": "Migration log, including its own corrections",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/MIGRATION_LOG.md"
+        },
+        {
+          "label": "checkpoint.py (the pass bar, executable)",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/tools/migration/checkpoint.py"
+        },
+        {
+          "label": "Axiom ledger",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/AxiomLedger.lean"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -80,8 +131,14 @@
       "gap": null,
       "upgrade_condition": null,
       "artifacts": [
-        { "label": "Authorship model, division of labor, explicit non-claims", "url": "https://monogate.org/about" },
-        { "label": "Preprint (prior art and lineage)", "url": "https://arxiv.org/abs/2603.21852" }
+        {
+          "label": "Authorship model, division of labor, explicit non-claims",
+          "url": "https://monogate.org/about"
+        },
+        {
+          "label": "Preprint (prior art and lineage)",
+          "url": "https://arxiv.org/abs/2603.21852"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -94,8 +151,14 @@
       "gap": "The AI systems we use are trained on corpora whose provenance we cannot audit or certify. Their outputs may synthesize uncredited human work in ways invisible to us. Per the Declaration's own provision we state this explicitly rather than launder it: attribution through the model is not attribution, and we cannot certify it.",
       "upgrade_condition": "Grade moves to MET when an attribution section audited against the final paper's related-work review ships with a peer-reviewed version. The training-corpus gap is not closable by us and will remain stated.",
       "artifacts": [
-        { "label": "Preprint (arXiv:2603.21852)", "url": "https://arxiv.org/abs/2603.21852" },
-        { "label": "Authorship and lineage statement", "url": "https://monogate.org/about" }
+        {
+          "label": "Preprint (arXiv:2603.21852)",
+          "url": "https://arxiv.org/abs/2603.21852"
+        },
+        {
+          "label": "Authorship and lineage statement",
+          "url": "https://monogate.org/about"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -108,9 +171,18 @@
       "gap": "No engagement yet with science journalism or community venues where these claims would be examined by people with no reason to be kind. Public artifacts are necessary but not sufficient for discourse: publishing is not the same as being questioned.",
       "upgrade_condition": "Grade moves to MET when the work has been presented and questioned in at least one community venue — a talk, a workshop, or peer commentary on a published paper.",
       "artifacts": [
-        { "label": "This page", "url": "https://monogate.org/accountability" },
-        { "label": "Incident report: July 2026 Lean kernel bug", "url": "https://monogate.org/accountability/incidents/2026-07-lean-kernel" },
-        { "label": "Interactive explanations", "url": "https://1op.io/learn" }
+        {
+          "label": "This page",
+          "url": "https://monogate.org/accountability"
+        },
+        {
+          "label": "Incident report: July 2026 Lean kernel bug",
+          "url": "https://monogate.org/accountability/incidents/2026-07-lean-kernel"
+        },
+        {
+          "label": "Interactive explanations",
+          "url": "https://1op.io/learn"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -118,13 +190,27 @@
       "id": "stay-informed",
       "recommendation": "Stay informed about the emerging technologies",
       "asks": "Stay informed about the capabilities of computer-aided tools as appropriate to one's research.",
-      "grade": "PARTIAL",
+      "grade": "MET",
       "summary": "Standing watches with recorded reference states, not impressions: a quarterly watch re-scans the external verification ecosystem and reports movement against recorded state, upstream issue threads are tracked as part of it, and the July 2026 Lean kernel soundness disclosure was triaged and acted on in the week it landed. When we found the independent checker broken at every version we could use, we reported it upstream with minimal reproductions rather than routing around it.",
-      "gap": "The watch tooling and its recorded state are not yet public, so the practice is visible only through its outputs — the upstream issue we filed, and the incident report. A reader cannot yet audit what the watch checks or when it last ran.",
-      "upgrade_condition": "Grade moves to MET when the watch tool and its state file are published and linked here.",
+      "gap": null,
+      "upgrade_condition": null,
       "artifacts": [
-        { "label": "Upstream report we filed (lean4lean #17)", "url": "https://github.com/digama0/lean4lean/issues/17" },
-        { "label": "Incident report: July 2026 Lean kernel bug", "url": "https://monogate.org/accountability/incidents/2026-07-lean-kernel" }
+        {
+          "label": "Expiry watch (tool)",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/tools/migration/watch_kernel_support.py"
+        },
+        {
+          "label": "Watch state (recorded reference point)",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/tools/migration/watch_state.json"
+        },
+        {
+          "label": "Upstream report we filed (lean4lean #17)",
+          "url": "https://github.com/digama0/lean4lean/issues/17"
+        },
+        {
+          "label": "Incident report",
+          "url": "https://monogate.org/accountability/incidents/2026-07-lean-kernel"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -137,9 +223,18 @@
       "gap": "The pathway that exists is for submitting new proof records. There is no pathway for the thing this page is really about — independently reproducing an acceptance from raw artifacts — and no external contributor has yet done so. The documentation is a working record, not an on-ramp for a reviewer.",
       "upgrade_condition": "Grade moves to MET when at least one external reproduction of a zoo card's acceptance from raw artifacts is on record, and a reproduction guide exists alongside the contribution guide.",
       "artifacts": [
-        { "label": "Contributor guide", "url": "https://github.com/agent-maestro/machlib/blob/master/CONTRIBUTING.md" },
-        { "label": "Record schema", "url": "https://github.com/agent-maestro/machlib/blob/master/SCHEMA.md" },
-        { "label": "Reproduction zoo (intended first pathway)", "url": "https://zoo.monogateforge.com/" }
+        {
+          "label": "Contributor guide",
+          "url": "https://github.com/agent-maestro/machlib/blob/master/CONTRIBUTING.md"
+        },
+        {
+          "label": "Record schema",
+          "url": "https://github.com/agent-maestro/machlib/blob/master/SCHEMA.md"
+        },
+        {
+          "label": "Reproduction zoo (intended first pathway)",
+          "url": "https://zoo.monogateforge.com/"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -152,8 +247,14 @@
       "gap": "The AI authorship itself runs on large commercial models whose training practices, energy costs, and corporate policies we do not control and cannot audit. Using them is a considered choice — this project exists to test what discipline can be maintained around exactly these tools — and this row exists so that the choice is on the record as a choice rather than a default.",
       "upgrade_condition": "No upgrade path is claimed while the models we depend on remain unauditable. This row is expected to stay PARTIAL.",
       "artifacts": [
-        { "label": "Migration plan and recorded decisions", "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/BUMP_PLAN.md" },
-        { "label": "Axiom ledger (the readable core)", "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/AxiomLedger.lean" }
+        {
+          "label": "Recorded decisions and their reversals (Amendments 1–5)",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/BUMP_PLAN.md"
+        },
+        {
+          "label": "Axiom ledger (the readable core)",
+          "url": "https://github.com/agent-maestro/machlib/blob/toolchain-bump/foundations/AxiomLedger.lean"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -166,7 +267,10 @@
       "gap": "Until that paper is submitted, reviewed, and published, the Declaration's fourth threat — that proper evaluation is endangered when results are communicated through informal channels, often without any research paper — applies to this project. This row exists to say so rather than to let the artifact links imply that the question is settled.",
       "upgrade_condition": "Grade moves to PARTIAL when the paper is under submission, and to MET when it is published.",
       "artifacts": [
-        { "label": "Preprint (arXiv:2603.21852)", "url": "https://arxiv.org/abs/2603.21852" }
+        {
+          "label": "Preprint (arXiv:2603.21852)",
+          "url": "https://arxiv.org/abs/2603.21852"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -179,7 +283,10 @@
       "gap": "We do not claim this settles the ethics. We claim it is disclosed, and that the disclosure has a maintenance rule. Ethical evaluation is not a completable task.",
       "upgrade_condition": "None. This row is graded PARTIAL permanently by design — a MET here would overclaim.",
       "artifacts": [
-        { "label": "This row (disclosure of record)", "url": "https://monogate.org/accountability#ethical-consequences" }
+        {
+          "label": "This row (disclosure of record)",
+          "url": "https://monogate.org/accountability#ethical-consequences"
+        }
       ],
       "last_verified": "2026-07-30"
     },
@@ -192,12 +299,22 @@
       "gap": null,
       "upgrade_condition": null,
       "artifacts": [
-        { "label": "Leiden Declaration (full text)", "url": "https://leidendeclaration.ai/" }
+        {
+          "label": "Leiden Declaration (full text)",
+          "url": "https://leidendeclaration.ai/"
+        }
       ],
       "last_verified": "2026-07-30"
     }
   ],
   "changelog": [
+    {
+      "date": "2026-07-30",
+      "row": "__page__",
+      "from": "6 MET (drafted)",
+      "to": "3 MET (launched)",
+      "reason": "LAUNCH CORRECTION. The page was drafted from conversation memory at 6 MET. Pre-launch verification fetched every cited artifact and found the evidence for three of them on an unpushed branch — MIGRATION_LOG.md 404, all snapshots 404, the public BUMP_PLAN.md containing none of the five amendments cited, the public toolchain lock still reading v4.14.0. Those three rows launched PARTIAL. The gate audited its own author's claims before the page could ship them, and the artifacts won."
+    },
     {
       "date": "2026-07-30",
       "row": "disclose-tool-use",
@@ -288,6 +405,27 @@
       "from": null,
       "to": "NA",
       "reason": "Page launch."
+    },
+    {
+      "date": "2026-07-30",
+      "row": "support-reviewing",
+      "from": "PARTIAL",
+      "to": "MET",
+      "reason": "machlib's toolchain-bump branch was published, so the evidence this row cites is now readable. This is the upgrade the launch correction named as its condition — recorded here as a grade moving up, with the event that moved it."
+    },
+    {
+      "date": "2026-07-30",
+      "row": "responsibility-correctness",
+      "from": "PARTIAL",
+      "to": "MET",
+      "reason": "machlib's toolchain-bump branch was published, so the evidence this row cites is now readable. This is the upgrade the launch correction named as its condition — recorded here as a grade moving up, with the event that moved it."
+    },
+    {
+      "date": "2026-07-30",
+      "row": "stay-informed",
+      "from": "PARTIAL",
+      "to": "MET",
+      "reason": "machlib's toolchain-bump branch was published, so the evidence this row cites is now readable. This is the upgrade the launch correction named as its condition — recorded here as a grade moving up, with the event that moved it."
     }
   ],
   "incidents": [

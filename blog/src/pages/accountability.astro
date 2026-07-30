@@ -31,7 +31,10 @@ const tally = GRADE_ORDER
 
 const decl = data.declaration;
 const changelog = data.changelog as { date: string; row: string; from: string | null; to: string; reason: string }[];
-const rowName = (id: string) => rows.find(r => r.id === id)?.recommendation ?? id;
+// `__page__` targets the page as a whole rather than one row — used by the launch correction.
+const rowName = (id: string) =>
+  id === '__page__' ? 'the whole page' : (rows.find(r => r.id === id)?.recommendation ?? id);
+const rowHref = (id: string) => (id === '__page__' ? '#' : `#${id}`);
 ---
 
 <Base
@@ -136,7 +139,7 @@ const rowName = (id: string) => rows.find(r => r.id === id)?.recommendation ?? i
           {changelog.map(c => (
             <tr>
               <td class="mono nowrap">{c.date}</td>
-              <td><a href={`#${c.row}`}>{rowName(c.row)}</a></td>
+              <td><a href={rowHref(c.row)}>{rowName(c.row)}</a></td>
               <td class="mono nowrap">{c.from ? `${c.from} → ${c.to}` : `→ ${GRADE_META[c.to]?.label ?? c.to}`}</td>
               <td>{c.reason}</td>
             </tr>

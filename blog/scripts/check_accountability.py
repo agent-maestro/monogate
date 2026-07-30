@@ -103,8 +103,10 @@ def main() -> int:
         if rid in seen_ids:
             fail(f"duplicate row id {rid!r} — anchors must be unique"); errors += 1
         seen_ids.add(rid)
+    # `__page__` is the one legal non-row target: a changelog entry about the page as a whole
+    # (e.g. the launch correction, which moved no single row but restated the whole tally).
     for c in data.get("changelog", []):
-        if c.get("row") not in seen_ids:
+        if c.get("row") not in seen_ids | {"__page__"}:
             fail(f"changelog references unknown row {c.get('row')!r}"); errors += 1
     print(f"    {len(rows)} rows, {len(data.get('changelog', []))} changelog entries\n")
 
