@@ -1,0 +1,134 @@
+---
+import Base from '../../../layouts/Base.astro';
+import data from '../../../data/accountability.json';
+
+const inc = data.incidents.find(i => i.id === '2026-07-lean-kernel')!;
+---
+
+<Base
+  title="What the July 2026 Lean kernel bug meant for us — Monogate Research"
+  description="A soundness bug in the Lean 4 kernel, an AI-generated Collatz 'proof' that exploited it, and what we did in the week it landed. Incident report."
+  date={inc.date}
+>
+  <article class="inc">
+    <header class="page-head">
+      <p class="crumb"><a href="/accountability">Accountability</a> / Incidents</p>
+      <h1>{inc.title}</h1>
+      <p class="dateline">Filed {inc.date}</p>
+    </header>
+
+    <p>
+      On July 28, 2026, a fix merged for a soundness bug in the Lean 4 kernel: nested inductive types
+      with phantom parameters could bypass the type checker, enabling an axiom-free proof of False.
+      Within a day, an AI-generated “proof” of the Collatz conjecture exploiting it was public — and
+      dead. It died fast because Lean artifacts are re-checkable by anyone. That is the lesson most
+      coverage missed: <strong>the prover was never trusted; the checker was, and the checker's bug was
+      found by checking.</strong>
+    </p>
+
+    <h2>Our exposure when the news broke</h2>
+    <p>
+      Our Lean pin was eighteen minor versions behind the fix. Our library contains roughly ten
+      parametric inductive types whose exposure to the bug class was not settleable by reading — and
+      “we inspected it and it looked fine” is not a verdict our own rules accept. Our axiom-audit gates
+      are structurally blind to kernel-implementation bugs, because a proof built on one carries a clean
+      axiom footprint. That blindness was already recorded in our gate registry's blindness column;
+      this was the week it stopped being theoretical.
+    </p>
+
+    <h2>What we did, in order</h2>
+    <ol>
+      <li>
+        Locked the toolchain identity as a gated artifact, both directions — a silent version change
+        fails the build, and the gate states what it checks: identity, not soundness.
+      </li>
+      <li>
+        Added kernel replay of our compiled environment through an external checker to CI, which fired
+        on first contact: 26 orphaned build artifacts asserting declarations our source no longer makes.
+        Not the bug we installed it for. A real defect anyway.
+      </li>
+      <li>
+        Migrated the pin v4.14.0 → v4.32.2 through six intermediate versions, each accepted against a
+        pass bar written before the step was walked. End-to-end result: 57 headline theorems, axiom
+        footprints identical across eighteen versions of kernel drift, measured against a frozen
+        v4.14.0 baseline — never chained through an intermediate, because chaining would let a drift
+        launder itself across two comparisons.
+      </li>
+    </ol>
+
+    <h2>What we will not claim</h2>
+    <p>
+      Immunity. Our current pin is patched but externally unreplayed: the independent kernel
+      reimplementation is broken at every version that can read our environment — it segfaults on
+      Lean's own core library, with no Monogate code involved — which we
+      <a href="https://github.com/digama0/lean4lean/issues/17">reported upstream</a> with minimal
+      reproductions. Until that is fixed or the alternative checker gains a matching tag, v4.28.0
+      stands sealed as our last dual-verified position, and our current state is graded accordingly in
+      the migration record: <strong>accepted, with two criteria formally recorded as unmeasured and the
+      reason named.</strong>
+    </p>
+    <p>
+      The compensating control, unchanged since before the incident: no headline claim rests on the
+      prover or the checker alone — each is also enumerated, numerically certified, or measured on
+      physical hardware, and a false theorem would have to defeat those independent oracles too.
+    </p>
+
+    <h2>Standing consequence</h2>
+    <p>
+      Safety, in a verification system, is not a state. It is an enumerated exposure with a watch on
+      every open item. Ours is public, and the
+      <a href="/accountability">accountability page</a> is where it drifts loudly instead of silently.
+    </p>
+
+    <aside class="disclosure">
+      <h3>Disclosure about this report's own evidence</h3>
+      <p>
+        The migration record this report describes — the log, the pass-bar amendments, the footprint
+        snapshots — is <strong>not yet published</strong>. It exists on an unpushed branch. That is why
+        the accountability page grades
+        <a href="/accountability#support-reviewing">“Support the needs of reviewing”</a> and
+        <a href="/accountability#responsibility-correctness">“Retain the responsibility for
+        correctness”</a> as PARTIAL rather than MET. A reader can verify the tools we used and the
+        upstream issue we filed; they cannot yet verify the results reported here. Publishing that
+        branch is the single change that would move both rows.
+      </p>
+    </aside>
+
+    <p class="artifacts">
+      Artifacts: <a href="https://github.com/digama0/lean4lean/issues/17">upstream issue (lean4lean
+      #17)</a> · <a href="https://github.com/agent-maestro/machlib/blob/master/foundations/BUMP_PLAN.md">migration
+      plan and pass bar</a> ·
+      <a href="https://github.com/agent-maestro/machlib/blob/master/foundations/AxiomLedger.lean">axiom
+      ledger</a> · migration log and snapshots (unpublished — see disclosure above).
+    </p>
+
+    <p class="back"><a href="/accountability">← Back to Accountability</a></p>
+  </article>
+</Base>
+
+<style>
+  .inc { max-width: 42rem; margin: 0 auto; padding: 0 1.1rem 5rem; }
+  .page-head { padding: 2.5rem 0 1.2rem; }
+  .crumb { font-family: var(--mono); font-size: .72rem; letter-spacing: .06em;
+           color: var(--muted); margin: 0 0 .8rem; }
+  .crumb a { color: var(--muted); }
+  .page-head h1 { font-family: var(--serif); font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+                  margin: 0 0 .6rem; line-height: 1.25; }
+  .dateline { font-family: var(--mono); font-size: .74rem; color: var(--muted); margin: 0; }
+  .inc p { line-height: 1.75; margin: 0 0 1.2rem; }
+  .inc h2 { font-family: var(--serif); font-size: 1.25rem; margin: 2.2rem 0 .8rem; }
+  .inc ol { line-height: 1.75; padding-left: 1.3rem; }
+  .inc ol li { margin-bottom: .9rem; }
+
+  .disclosure { border: 1px solid var(--border); border-left: 3px solid #d9a441;
+                background: var(--surface); border-radius: 4px;
+                padding: 1.1rem 1.2rem; margin: 2.2rem 0; }
+  .disclosure h3 { font-family: var(--mono); font-size: .72rem; letter-spacing: .09em;
+                   text-transform: uppercase; color: #d9a441; margin: 0 0 .6rem; }
+  .disclosure p { font-size: .92rem; margin: 0; }
+
+  .artifacts { font-size: .85rem; color: var(--muted); border-top: 1px solid var(--border);
+               padding-top: 1.2rem; margin-top: 2rem; }
+  .artifacts a { color: var(--cyan); }
+  .back { font-size: .88rem; margin-top: 1.5rem; }
+</style>

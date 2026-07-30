@@ -1,0 +1,245 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/accountability.json';
+
+// ─── Presentation config only. No grades or facts live here — see
+// ─── src/data/accountability.json. If this file and the JSON could
+// ─── disagree about a grade, the build is wrong.
+const GRADE_META: Record<string, { label: string; color: string; border: string; legend: string }> = {
+  MET:      { label: 'MET',     color: 'var(--green)', border: 'var(--green)',
+              legend: 'A mechanism exists, is in CI or in the shipped record, and the linked artifact shows it.' },
+  PARTIAL:  { label: 'PARTIAL', color: '#d9a441',      border: '#d9a441',
+              legend: 'Real practice exists; a named gap remains, stated in the row.' },
+  NOT_YET:  { label: 'NOT YET', color: '#9a9691',      border: '#4a4742',
+              legend: 'The recommendation is accepted as an obligation; the work is not done. The row says what would change the grade.' },
+  NA:       { label: 'N/A',     color: '#5c5955',      border: 'transparent',
+              legend: 'The recommendation addresses institutions or policymakers; noted for completeness.' },
+};
+const GRADE_ORDER = ['MET', 'PARTIAL', 'NOT_YET', 'NA'];
+
+type Artifact = { label: string; url: string };
+type Row = {
+  id: string; recommendation: string; asks: string; grade: string;
+  summary: string; gap: string | null; upgrade_condition: string | null;
+  artifacts: Artifact[]; last_verified: string;
+};
+
+const rows = data.rows as Row[];
+const tally = GRADE_ORDER
+  .map(g => ({ grade: g, ...GRADE_META[g], count: rows.filter(r => r.grade === g).length }))
+  .filter(t => t.count > 0);
+
+const decl = data.declaration;
+const changelog = data.changelog as { date: string; row: string; from: string | null; to: string; reason: string }[];
+const rowName = (id: string) => rows.find(r => r.id === id)?.recommendation ?? id;
+---
+
+<Base
+  title="Accountability — Monogate Research"
+  description="Monogate uses AI as a primary author of formal mathematics. This page grades the project against the Leiden Declaration's recommendations, point by point, including the rows where it fails."
+>
+  <article class="acc">
+    <header class="page-head">
+      <h1>Accountability</h1>
+      <p class="standfirst">
+        Monogate uses artificial intelligence as a primary author of formal mathematics and verified
+        hardware. The <a href={decl.url}>Leiden Declaration on Artificial Intelligence and
+        Mathematics</a> ({decl.date}, endorsed by the {decl.endorsed_by}) identifies what that practice
+        puts at risk: correctness, attribution, evaluation, and the values of the mathematical
+        community. This page states, for each of its recommendations to individual researchers, what we
+        do, what we don't yet do, and where the evidence lives.
+      </p>
+      <p class="standfirst">
+        It is maintained under the same discipline as our proofs: graded claims, linked artifacts, a CI
+        gate on the links, and a changelog when any grade moves.
+        <strong>Grades here can go down as well as up.</strong>
+      </p>
+    </header>
+
+    <section class="tally-wrap" aria-label="Grade tally">
+      <div class="tally">
+        {tally.map(t => (
+          <a class="tally-chip" href={`#grade-${t.grade}`} style={`--chip: ${t.color}; --chip-border: ${t.border}`}>
+            <span class="tally-n">{t.count}</span>
+            <span class="tally-g">{t.label}</span>
+          </a>
+        ))}
+      </div>
+      <p class="tally-note">
+        We counted, and the count includes our failures. Verified {data.page_last_verified};
+        every artifact link below is checked in CI.
+      </p>
+    </section>
+
+    <section class="legend" aria-label="Grade legend">
+      {GRADE_ORDER.filter(g => rows.some(r => r.grade === g)).map(g => (
+        <p class="legend-line" id={`grade-${g}`}>
+          <span class="chip" style={`--chip: ${GRADE_META[g].color}; --chip-border: ${GRADE_META[g].border}`}>{GRADE_META[g].label}</span>
+          <span>{GRADE_META[g].legend}</span>
+        </p>
+      ))}
+    </section>
+
+    <section class="rows">
+      {rows.map((r, i) => (
+        <article class="row" id={r.id}>
+          <header class="row-head">
+            <span class="row-n">{String(i + 1).padStart(2, '0')}</span>
+            <h2><a href={`#${r.id}`}>{r.recommendation}</a></h2>
+            <span class="chip" style={`--chip: ${GRADE_META[r.grade].color}; --chip-border: ${GRADE_META[r.grade].border}`}>
+              {GRADE_META[r.grade].label}
+            </span>
+          </header>
+
+          <p class="asks"><span class="lbl">The Declaration asks</span>{r.asks}</p>
+          <p class="summary">{r.summary}</p>
+
+          {r.gap && (
+            <p class="gap"><span class="lbl">The named gap</span>{r.gap}</p>
+          )}
+          {r.upgrade_condition && (
+            <p class="upgrade"><span class="lbl">What would change the grade</span>{r.upgrade_condition}</p>
+          )}
+
+          <ul class="artifacts">
+            {r.artifacts.map(a => (
+              <li><a href={a.url}>{a.label}</a></li>
+            ))}
+          </ul>
+          <p class="verified">Row verified {r.last_verified}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="incidents">
+      <h2>Incidents</h2>
+      <p class="sec-note">
+        When something goes wrong that bears on the claims here, it gets its own document with the
+        detail. This page stays short; the incidents carry the weight.
+      </p>
+      <ul>
+        {data.incidents.map(inc => (
+          <li><a href={inc.url}>{inc.title}</a> <span class="dim">— {inc.date}</span></li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="changelog">
+      <h2>Revision history</h2>
+      <p class="sec-note">
+        Every grade movement, in both directions, with its reason. A grade that improves cites the
+        event that improved it.
+      </p>
+      <table>
+        <thead><tr><th>Date</th><th>Row</th><th>Change</th><th>Reason</th></tr></thead>
+        <tbody>
+          {changelog.map(c => (
+            <tr>
+              <td class="mono nowrap">{c.date}</td>
+              <td><a href={`#${c.row}`}>{rowName(c.row)}</a></td>
+              <td class="mono nowrap">{c.from ? `${c.from} → ${c.to}` : `→ ${GRADE_META[c.to]?.label ?? c.to}`}</td>
+              <td>{c.reason}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <footer class="acc-foot">
+      <p>
+        Source of truth for this page: <code>src/data/accountability.json</code>. The grades are not
+        written in the page — it renders from that file, and <code>check_accountability.py</code>
+        fails the build if a link dies, if a row goes stale, or if a row claims MET with an
+        unresolved artifact.
+      </p>
+      <p class="dim">
+        Declaration: <a href={decl.url}>{decl.name}</a> ·
+        DOI <a href={decl.doi_url}>{decl.doi}</a> · {decl.date}
+      </p>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .acc { max-width: 46rem; margin: 0 auto; padding: 0 1.1rem 5rem; }
+  .page-head { padding: 2.5rem 0 1.5rem; }
+  .page-head h1 { font-family: var(--serif); font-size: clamp(2.2rem, 6vw, 3rem); margin: 0 0 1rem; }
+  .standfirst { color: var(--text); line-height: 1.7; margin: 0 0 1rem; }
+  .standfirst a { color: var(--accent); }
+
+  /* Tally strip — the page's thesis in one line. */
+  .tally-wrap { margin: 1rem 0 2rem; }
+  .tally { display: flex; flex-wrap: wrap; gap: .55rem; }
+  .tally-chip {
+    display: inline-flex; align-items: baseline; gap: .4rem;
+    padding: .5rem .8rem; border: 1px solid var(--chip-border);
+    border-radius: 6px; background: var(--surface); text-decoration: none;
+    color: var(--chip); transition: border-color .15s ease;
+  }
+  .tally-chip:hover { border-color: var(--chip); }
+  .tally-n { font-family: var(--mono); font-size: 1.15rem; font-weight: 600; }
+  .tally-g { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; color: var(--muted); }
+  .tally-note { color: var(--muted); font-size: .85rem; margin: .7rem 0 0; }
+
+  .legend { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            padding: 1.1rem 0; margin-bottom: 2.5rem; }
+  .legend-line { display: flex; gap: .7rem; align-items: baseline; margin: 0 0 .55rem;
+                 color: var(--muted); font-size: .88rem; line-height: 1.5; }
+  .legend-line:last-child { margin-bottom: 0; }
+
+  .chip {
+    flex: none; font-family: var(--mono); font-size: .68rem; letter-spacing: .09em;
+    padding: .2rem .5rem; border: 1px solid var(--chip-border); border-radius: 4px;
+    color: var(--chip); white-space: nowrap;
+  }
+
+  .row { border-top: 1px solid var(--border); padding: 1.9rem 0; scroll-margin-top: 2rem; }
+  .row-head { display: flex; align-items: baseline; gap: .7rem; flex-wrap: wrap; margin-bottom: .9rem; }
+  .row-n { font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+  .row-head h2 { font-size: 1.15rem; margin: 0; flex: 1 1 auto; }
+  .row-head h2 a { color: var(--text); text-decoration: none; }
+  .row-head h2 a:hover { color: var(--accent); }
+
+  .lbl { display: block; font-family: var(--mono); font-size: .66rem; letter-spacing: .1em;
+         text-transform: uppercase; color: var(--muted); margin-bottom: .25rem; }
+  .asks { color: var(--muted); font-style: italic; line-height: 1.6; margin: 0 0 1rem; }
+  .summary { line-height: 1.7; margin: 0 0 1rem; }
+  .gap, .upgrade { line-height: 1.65; margin: 0 0 1rem; padding-left: .9rem;
+                   border-left: 2px solid var(--border); }
+  .gap { color: var(--text); }
+  .upgrade { color: var(--muted); }
+
+  .artifacts { list-style: none; padding: 0; margin: 0 0 .6rem;
+               display: flex; flex-wrap: wrap; gap: .4rem .5rem; }
+  .artifacts li::after { content: '·'; color: var(--border); margin-left: .5rem; }
+  .artifacts li:last-child::after { content: ''; }
+  .artifacts a { font-size: .85rem; color: var(--cyan); }
+  .verified { font-family: var(--mono); font-size: .7rem; color: var(--muted); margin: 0; }
+
+  .incidents, .changelog { border-top: 1px solid var(--border); padding-top: 2rem; margin-top: 1rem; }
+  .incidents h2, .changelog h2 { font-family: var(--serif); font-size: 1.4rem; margin: 0 0 .5rem; }
+  .sec-note { color: var(--muted); font-size: .88rem; line-height: 1.6; margin: 0 0 1rem; }
+  .incidents ul { padding-left: 1.1rem; line-height: 1.7; }
+
+  .changelog table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  .changelog th { text-align: left; font-family: var(--mono); font-size: .66rem;
+                  letter-spacing: .09em; text-transform: uppercase; color: var(--muted);
+                  border-bottom: 1px solid var(--border); padding: .4rem .5rem .4rem 0; }
+  .changelog td { border-bottom: 1px solid var(--border); padding: .55rem .5rem .55rem 0;
+                  vertical-align: top; line-height: 1.55; color: var(--muted); }
+  .changelog td a { color: var(--cyan); }
+  .mono { font-family: var(--mono); font-size: .75rem; }
+  .nowrap { white-space: nowrap; }
+  .dim { color: var(--muted); }
+
+  .acc-foot { border-top: 1px solid var(--border); margin-top: 2rem; padding-top: 1.5rem;
+              color: var(--muted); font-size: .85rem; line-height: 1.65; }
+  .acc-foot code { font-family: var(--mono); font-size: .8rem; color: var(--text); }
+
+  @media (max-width: 640px) {
+    .changelog table, .changelog thead, .changelog tbody, .changelog tr, .changelog td { display: block; width: 100%; }
+    .changelog thead { display: none; }
+    .changelog tr { border-bottom: 1px solid var(--border); padding: .6rem 0; }
+    .changelog td { border: 0; padding: .15rem 0; }
+  }
+</style>

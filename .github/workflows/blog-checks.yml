@@ -52,3 +52,13 @@ jobs:
         env:
           MONOGATE_LEAN_PATH: ${{ github.workspace }}/monogate-lean
         run: npm run predeploy
+
+      # Runs AFTER the build on purpose: this gate resolves /accountability's internal links
+      # against dist/, so a link to an incident page that was never built fails here rather than
+      # 404-ing in public. HTTP-checking the live site could not catch that — the live site still
+      # serves the previous build. External artifact URLs ARE fetched live, because the entire
+      # page is a claim that they resolve.
+      # Firing specimen (both directions): blog/scripts/ACCOUNTABILITY_GATE_SPECIMEN.md
+      - name: Accountability gate (/accountability links, staleness, grade rigour)
+        working-directory: blog
+        run: python3 scripts/check_accountability.py
