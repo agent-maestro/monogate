@@ -1,0 +1,37 @@
+{
+  "session_id": "2026-07-31-premise-audit",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T16:24:03",
+      "kind": "direction",
+      "actor": "human",
+      "description": "Chose the premise audit over the depth-3 session, on the reasoning that a fallen premise rots quietly and the audit is bounded and cheap while depth 3 is neither urgent nor at risk.",
+      "artifact_link": "AUDIT_2026_07_31_no_native_addition.md"
+    },
+    {
+      "ts": "2026-07-31T16:24:03",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Enumerated the six NOT-AFFECTED documents rather than reporting only the three hits, so documents-examined equals documents-reported-on. A hit list alone lets the reader assume the search was exhaustive without evidence of its denominator.",
+      "via": "spontaneous",
+      "artifact_link": "AUDIT \u2014 finding 4"
+    },
+    {
+      "ts": "2026-07-31T16:24:03",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Refused to report route 2 as refuted outright. mulTree carries two real hypotheses (1 < a.eval x, 0 < b.eval x); the corpus argument's REASONING is dead but its CONCLUSION may survive if its trees meet those bounds. Wrote the hypotheses into the theorem statement and recorded that nobody has checked.",
+      "via": "spontaneous",
+      "artifact_link": "machlib mulTree_eval"
+    }
+  ],
+  "findings": [
+    {
+      "description": "THREE corpus claims fell with the no-native-addition premise: the Lambert-W any-depth barrier's proposed route (its key sub-question answered YES by selfPlusLog_eval), the products/quotients reasoning in the differentiation-closure argument, and two entries in the 2026-06-13 overnight handoff. No shipped theorem was invalidated \u2014 every affected item is a route, conjecture, or cost estimate.",
+      "class": "falsification",
+      "artifact_link": "monogate-research 3f7a0e46 \u2014 AUDIT_2026_07_31_no_native_addition.md"
+    }
+  ]
+}
