@@ -1,0 +1,29 @@
+{
+  "session_id": "2026-07-30-phase24",
+  "date": "2026-07-30",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-30T22:21:12",
+      "kind": "direction",
+      "actor": "human",
+      "description": "Directed continuation into phase 24.",
+      "artifact_link": "PROTOCOL.md#e5"
+    },
+    {
+      "ts": "2026-07-30T22:21:12",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Invented three lemma names in one proof (lt_add_of_pos_right_ax, div_lt_of_lt_mul_local, wgc_not_lt_of_le-unreachable) and wrote an unusable contradiction. Caught by the build plus the reachable-lemma index built this morning, which named where div_lt_of_lt_mul actually lives.",
+      "via": "structural",
+      "artifact_link": "machlib/foundations/tools/reachable_lemmas.py"
+    }
+  ],
+  "findings": [
+    {
+      "description": "The hypothesis a cell needs is monotone in how hard the dividend pulls: unbounded needs none, vanishing needs 0<log d, merely-bounded needs 1<=log d. Four rows, one ordering. Nobody asked for it.",
+      "class": "surprise",
+      "artifact_link": "machlib/foundations/MachLib/EMLAsymptoticClass.lean"
+    }
+  ]
+}
