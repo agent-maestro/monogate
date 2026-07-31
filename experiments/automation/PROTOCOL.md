@@ -259,7 +259,7 @@ self-authored traps, one level up.
 
 # E5 — Open-problem attempt: `1/x ∉ EML` at any depth
 
-**Status: NOT STARTED as an experiment. THE UNDERLYING WORK IS NOT NEW — see baseline below.**
+**Status: RUNNING — session 1 of 8 (phase 18). Countersigned 2026-07-30. THE UNDERLYING WORK IS NOT NEW — see baseline below.**
 **Do not begin until all three slots (route, session budget, abandonment criteria) are filled and committed.**
 
 ### The prior recommendation, copied from the record
@@ -305,7 +305,7 @@ abandonment criterion expressed in closure-matrix movement rather than in "did i
 `TODO: orchestrator` — confirm phase 17 is still the frontier at the time E5 begins; the count above is a
 2026-07-30 measurement of a record that continues to move.
 
-### Slots — DRAFTED BY AI, REQUIRING ORCHESTRATOR COUNTERSIGN BEFORE E5 BEGINS
+### Slots — COUNTERSIGNED 2026-07-30. E5 IS PRE-REGISTERED AND MAY BEGIN.
 
 **Read the provenance line before reading the drafts.** E5 measures whether this loop can finish an
 open problem. If the AI sets the bar it will be judged against, that is the instrument grading its own
@@ -313,18 +313,23 @@ exam — the same defect E3 exists to detect and the retrospective refuses to co
 **drafts with teeth, not pre-registrations.** They become pre-registered only when the orchestrator
 countersigns, and the countersignature is what makes them binding.
 
-| slot | DRAFT (AI, 2026-07-30) | countersigned? |
+| slot | PRE-REGISTERED VALUE | countersigned |
 |---|---|---|
-| **Route** | Continue route (b) from phase 17: close the class-level closure matrix, currently **11/25**. Do not restart the framework; do not switch to route (a) (the depth-2 brute-force sweep) — the record already shows it does not scale to depth 3. | ☐ |
-| **Session budget** | **8 sessions from phase 17.** Rationale, from the baseline: the route absorbed 21 sessions to reach 11/25, ≈0.52 matrix-cells per session. 8 sessions is ~4 cells at the observed rate — enough to distinguish "still moving" from "stalled", and short enough that a stall is visible before it becomes sunk cost. | ☐ |
-| **Abandonment criteria** | **Abandon if, after 8 sessions, the closure matrix has advanced fewer than 3 cells beyond 11/25 AND no new structural mechanism has been identified.** Both conditions, because cells-only would abandon a session that found the right idea and had not yet cashed it, and mechanism-only is unfalsifiable — every stalled session can claim to have learned something. | ☐ |
+| **Route** | Continue route (b) from phase 17: close the class-level closure matrix, currently **11/25**. Do not restart the framework; do not switch to route (a) (the depth-2 brute-force sweep) — the record already shows it does not scale to depth 3. | ✅ orchestrator, in-session, 2026-07-30 |
+| **Session budget** | **8 sessions from phase 17.** Rationale, from the baseline: the route absorbed 21 sessions to reach 11/25, ≈0.52 matrix-cells per session. 8 sessions is ~4 cells at the observed rate — enough to distinguish "still moving" from "stalled", and short enough that a stall is visible before it becomes sunk cost. | ✅ orchestrator, in-session, 2026-07-30 |
+| **Abandonment criteria** | **Abandon if, after 8 sessions, the closure matrix has advanced fewer than 3 cells beyond 11/25 AND no new structural mechanism has been identified.** Both conditions, because cells-only would abandon a session that found the right idea and had not yet cashed it, and mechanism-only is unfalsifiable — every stalled session can claim to have learned something. | ✅ orchestrator, in-session, 2026-07-30 |
 
 **Why the budget has teeth:** the baseline is a route that absorbed **21 sessions without resolving the
 general-depth claim**. A criterion that cannot fire against that history is not a criterion. The draft
 above fires on the observed rate, not on an aspiration.
 
-`TODO: orchestrator` — countersign, amend, or replace. **Do not begin until countersigned**; an
-AI-set bar on an AI-run attempt measures nothing about either.
+**COUNTERSIGNED without amendment**, orchestrator, in-session, 2026-07-30. The drafts stand as
+written and are now binding pre-registration: route (b) continued from phase 17, **8 sessions**,
+abandon at **fewer than 3 closure-matrix cells AND no new structural mechanism**.
+
+The provenance distinction still holds and is why this line exists: the bar was *drafted* by the AI
+and *ratified* by the human. Had it been set and met by the same party, E5 would measure nothing about
+either. **Session 1 of 8 is phase 18.**
 
 ---
 
