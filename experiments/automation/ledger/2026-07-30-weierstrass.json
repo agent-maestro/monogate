@@ -43,6 +43,14 @@
       "description": "Judged that the AI's visibility warning (all interventions logged as ai/unrecorded) was a finding about the claim rather than a caveat about the ledger. No error existed; the warning was correct as written. The judgement was that it changed what the experiment measures.",
       "via": "spontaneous",
       "artifact_link": "PROTOCOL.md#e1"
+    },
+    {
+      "ts": "2026-07-30T20:15:32",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Backticks in a bash -m commit string were command-substituted, silently deleting a word from the message. Caught by reading the committed message back rather than trusting the exit code \u2014 git reported success because the commit DID succeed; only its content was wrong.",
+      "via": "structural",
+      "artifact_link": "monogate-research commit 99ec13c9"
     }
   ],
   "findings": [
