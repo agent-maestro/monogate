@@ -2,7 +2,13 @@
 
 **Status:** protocol committed 2026-07-30. E1 live at commit. E2–E5 NOT STARTED.
 **Instruments built by:** AI (Claude Opus 5), this commit. **Experiments run by:** orchestrator.
-**Nothing in this file has been measured.** Every `PREDICTION:` slot is empty by design.
+**Nothing in this file has been measured.** No experiment has run.
+
+Prediction slots as of 2026-07-30: **E2's is FILLED** (orchestrator, before any session, with its
+disconfirming observation named). **E5's are DRAFTED BY AI and require countersign** — see E5, and read
+the provenance note before the drafts. All others empty. The header used to read "every slot is empty
+by design"; that stopped being true the moment one was filled, and a status line that outlives its
+subject is the failure this project files under *the word preceding its evidence*.
 
 ---
 
@@ -110,8 +116,22 @@ is contaminated and the sessions are void.
 predicted class are written **before** the session and scored after. A session with no pre-registration
 file is not scorable and is excluded — recorded as excluded, not silently dropped.
 
+### PRE-REGISTERED PREDICTION — orchestrator, 2026-07-30, before any E2 session
+
+> **AI-selected sessions produce more closures and fewer surprises. The catches where the win was
+> smelling that a prior session's caveat was load-bearing concentrate in the human-selected arm.**
+
+**Quantitative form, which is the part that can be wrong:**
+
+> **If surprise-rate is indistinguishable between arms over the first ten sessions, the prediction is
+> wrong in the direction that matters** — i.e. the outer loop is more automatable than this program's
+> central claim assumes, and that is the finding.
+
+Recorded before the schedule exists, before any session runs, and stated so that the disconfirming
+observation is named rather than left to interpretation afterwards. Provenance: orchestrator,
+in-session, 2026-07-30.
+
 **Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first run]`
-**Pre-registered prediction:** `PREDICTION: [to be filled by orchestrator before first run]`
 
 ---
 
@@ -220,9 +240,26 @@ abandonment criterion expressed in closure-matrix movement rather than in "did i
 `TODO: orchestrator` — confirm phase 17 is still the frontier at the time E5 begins; the count above is a
 2026-07-30 measurement of a record that continues to move.
 
-**Route:** `PREDICTION: [to be filled by orchestrator before first run]`
-**Session budget:** `PREDICTION: [to be filled by orchestrator before first run]`
-**Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first run]`
+### Slots — DRAFTED BY AI, REQUIRING ORCHESTRATOR COUNTERSIGN BEFORE E5 BEGINS
+
+**Read the provenance line before reading the drafts.** E5 measures whether this loop can finish an
+open problem. If the AI sets the bar it will be judged against, that is the instrument grading its own
+exam — the same defect E3 exists to detect and the retrospective refuses to commit. So these are
+**drafts with teeth, not pre-registrations.** They become pre-registered only when the orchestrator
+countersigns, and the countersignature is what makes them binding.
+
+| slot | DRAFT (AI, 2026-07-30) | countersigned? |
+|---|---|---|
+| **Route** | Continue route (b) from phase 17: close the class-level closure matrix, currently **11/25**. Do not restart the framework; do not switch to route (a) (the depth-2 brute-force sweep) — the record already shows it does not scale to depth 3. | ☐ |
+| **Session budget** | **8 sessions from phase 17.** Rationale, from the baseline: the route absorbed 21 sessions to reach 11/25, ≈0.52 matrix-cells per session. 8 sessions is ~4 cells at the observed rate — enough to distinguish "still moving" from "stalled", and short enough that a stall is visible before it becomes sunk cost. | ☐ |
+| **Abandonment criteria** | **Abandon if, after 8 sessions, the closure matrix has advanced fewer than 3 cells beyond 11/25 AND no new structural mechanism has been identified.** Both conditions, because cells-only would abandon a session that found the right idea and had not yet cashed it, and mechanism-only is unfalsifiable — every stalled session can claim to have learned something. | ☐ |
+
+**Why the budget has teeth:** the baseline is a route that absorbed **21 sessions without resolving the
+general-depth claim**. A criterion that cannot fire against that history is not a criterion. The draft
+above fires on the observed rate, not on an aspiration.
+
+`TODO: orchestrator` — countersign, amend, or replace. **Do not begin until countersigned**; an
+AI-set bar on an AI-run attempt measures nothing about either.
 
 ---
 
