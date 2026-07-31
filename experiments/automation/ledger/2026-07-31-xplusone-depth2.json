@@ -1,0 +1,30 @@
+{
+  "session_id": "2026-07-31-xplusone-depth2",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T14:25:48",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Ran this as a baseline session rather than as E2 session 2. It closes a gap the E2 session recorded against itself, but the schedule assigns session 2 to E2-human; consuming that slot would have taken the orchestrator's arm and contaminated the comparison. The arm assignment is frozen and is not mine to spend.",
+      "via": "structural",
+      "artifact_link": "e2_schedule.lock"
+    },
+    {
+      "ts": "2026-07-31T14:25:48",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Refused to claim minimality. Depth 3 is untouched, so the honest statement is 'witness at depth 4, none below depth 3'. Wrote the precise obstruction into the file: the negation gadget makes depth-<=2 trees unbounded on the negative axis, so the constant bound must become linear and the threshold N becomes necessary, not cosmetic.",
+      "via": "structural",
+      "artifact_link": "machlib 5ab04d31 \u2014 depth-3 scoping section"
+    }
+  ],
+  "findings": [
+    {
+      "description": "x+1 notin EML at depth <= 2, closed WITHOUT the 36-case enumeration the 2026-06-13 note budgeted: witness_divisor_ge constrains the divisor of ANY witness at ANY depth (t2.eval x >= exp(-x-1)), and a depth-<=1 divisor is constant-bounded on the negative axis.",
+      "class": "closure",
+      "artifact_link": "machlib 5ab04d31 \u2014 x_plus_one_not_in_eml_2"
+    }
+  ]
+}
