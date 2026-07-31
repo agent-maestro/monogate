@@ -1,8 +1,19 @@
 # Research-automation experiment — pre-registered protocol
 
-**Status:** protocol committed 2026-07-30. E1 live at commit. E2–E5 NOT STARTED.
-**Instruments built by:** AI (Claude Opus 5), this commit. **Experiments run by:** orchestrator.
-**Nothing in this file has been measured.** No experiment has run.
+**Status (2026-07-31):** E1 **live** — 16 sessions, 25 findings, 52 interventions. E2 **running** — 1
+of 10, schedule frozen. E5 **closed** — 8 of 8, plus continuation arms E5-ter and E5-quater at 6 of 6.
+E3 and E4 **not started** (both orchestrator-gated). Per-arm detail below; this line is a summary and
+the arm sections are authoritative.
+**Instruments built by:** AI (Claude Opus 5). **Experiments run by:** orchestrator, except the arms
+explicitly assigned to `E2-ai` and the `baseline` sessions.
+
+**The header used to read "Nothing in this file has been measured. No experiment has run."** That
+stopped being true on 2026-07-30 and was not updated until 2026-07-31 — a stale status line surviving
+its own subject for a full day, in the file whose second paragraph warns about exactly that. Recorded
+rather than quietly replaced, because the failure is the point: **prose does not fail a build.** The
+only load-bearing fix is `status.py`, which derives arm status from this file — and it faithfully
+reported "E2 NOT STARTED" the day after E2 session 1 ran, because it reads the prose. **A deriving tool
+inherits the staleness of what it derives from.**
 
 Prediction slots as of 2026-07-30: **E2's is FILLED** (orchestrator, before any session, with its
 disconfirming observation named). **E5's are DRAFTED BY AI and require countersign** — see E5, and read
@@ -130,7 +141,18 @@ entries where the distinction is real.
 
 **If preventive catches recur, they become their own finding** about what the discipline is for — at
 which point a schema field is warranted and this note is the evidence that it was earned rather than
-guessed. Entries logged before this convention are unmarked, in the same way pre-Amendment-1 entries
+guessed.
+
+> **SCORED 2026-07-31: they recurred, the field was added (AMENDMENT 3), and the field does not work.**
+> A cross-derivation during an unrelated status sweep found **3** entries carrying `preventive: true`
+> against **13** whose descriptions name a decline, a refusal, or a stop-before-execution. The flag
+> under-counts by a factor of four, because — unlike `actor` and `via` — it is **optional and never
+> required by the validator**, so it is applied ad hoc by the same party that writes the entries.
+> **Any tally of preventives from the flag alone is invalid.** The prediction in this paragraph was
+> right about recurrence and wrong about sufficiency: earning a field is not the same as enforcing it.
+> Fix options and a recommendation are in `ledger/MIGRATIONS.md` (2026-07-31, second entry); the choice
+> needs an orchestrator countersignature, since the party that benefits from a higher preventive count
+> must not be the party that decides how preventives are counted. Entries logged before this convention are unmarked, in the same way pre-Amendment-1 entries
 carry no `actor`: the past is not relabelled.
 
 ### The append-only argument, recorded because the tempting middle path is seductive
@@ -205,7 +227,11 @@ than at analysis time.
 
 # E2 — AI-selected frontier ablation
 
-**Status: NOT STARTED.**
+**Status: RUNNING — 1 of 10 sessions. Schedule FROZEN (`e2_schedule.lock`) at session 1.**
+Session 1 (`2026-07-31-e2s1`, arm `E2-ai`): 2 findings, 1 a surprise, **prediction WRONG** —
+pre-registered `closure`, got `falsification`. That runs *against* E2's own pre-registered prediction
+at n=1. Sessions 2–5 and 7 are `E2-human` and await orchestrator-named targets; the contamination rule
+requires they be named without reading `e2_sessions/2026-07-31-e2s1.md`.
 
 **Hypothesis.** Sessions whose target was selected by a human produce more findings — and more
 *surprises* specifically — than sessions whose target was selected by the AI. If the outer loop is not

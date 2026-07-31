@@ -1,0 +1,31 @@
+{
+  "session_id": "2026-07-31-status-sweep",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T16:05:17",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Caught my own MIGRATIONS.md claim that preventive ENTRIES over-count preventive ACTS by one. Backwards and wrong in magnitude \u2014 the flag under-counts 4x. The wrong statement was already committed in a document that INSTRUCTS THE AUDITOR how to tally, so it would have propagated into the scoring. Stopped before it was read.",
+      "via": "spontaneous",
+      "preventive": true,
+      "artifact_link": "ledger/MIGRATIONS.md"
+    },
+    {
+      "ts": "2026-07-31T16:05:17",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "PROTOCOL.md header still read 'Nothing in this file has been measured. No experiment has run.' a full day after E5 closed and E2 session 1 ran, and status.py faithfully reported 'E2 NOT STARTED' because it derives from that prose. A deriving tool inherits the staleness of its source; prose does not fail a build.",
+      "via": "spontaneous",
+      "artifact_link": "experiments/automation/PROTOCOL.md"
+    }
+  ],
+  "findings": [
+    {
+      "description": "AMENDMENT 3's preventive flag DOES NOT MEASURE PREVENTIVES: 3 entries flagged vs 13 whose descriptions name a decline/refusal/stop-before-execution. Under-counts 4x because the field is optional and never validator-required, unlike actor and via. Any tally from the flag alone is invalid.",
+      "class": "falsification",
+      "artifact_link": "experiments/automation/ledger/MIGRATIONS.md \u2014 2026-07-31 second entry"
+    }
+  ]
+}
