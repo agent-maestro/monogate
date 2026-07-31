@@ -1,0 +1,43 @@
+{
+  "session_id": "2026-07-31-e2s1",
+  "date": "2026-07-31",
+  "arm": "E2-ai",
+  "entries": [
+    {
+      "ts": "2026-07-31T13:16:18",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Ran the adversarial construction before the proof attempt, per the pre-registration's stated reason rather than out of habit. The pre-registered target (24 depth-2 subcases) was moot within the hour; a proof attempt would have spent the session on case analysis toward a false theorem.",
+      "via": "structural",
+      "artifact_link": "e2_sessions/2026-07-31-e2s1.md"
+    },
+    {
+      "ts": "2026-07-31T13:16:18",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Corrected three stale prose sections in the same commit rather than deferring: the file header, the 'does NOT do' list, and the 'any-depth conjecture (open)' section all asserted an open conjecture that the same commit refutes. Binding-integrity discipline \u2014 prose and theorems must not disagree at any commit.",
+      "via": "structural",
+      "artifact_link": "machlib 5586963e"
+    },
+    {
+      "ts": "2026-07-31T13:16:18",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Shipped subTree_eval_needs_positivity, a machine-checked counter-specimen showing the identity FAILS at a.eval = 0, alongside the positive result. Without it the closure theorem reads as unconditional; the positivity hypothesis is doing real work and a reader should be able to see it fire.",
+      "via": "structural",
+      "artifact_link": "machlib 5586963e \u2014 subTree_eval_needs_positivity"
+    }
+  ],
+  "findings": [
+    {
+      "description": "x + 1 IS an EML tree at depth 4. The any-depth addition-closure conjecture (open in the repo since 2026-06-13) is FALSE. Gadget: log.exp = id lets eml NEGATE a subtree via the divisor position; negating twice adds.",
+      "class": "falsification",
+      "artifact_link": "machlib 5586963e \u2014 x_plus_one_in_eml"
+    },
+    {
+      "description": "The general conjecture falls too: EML is closed under addition of two arbitrary trees wherever one summand is positive (addTree_eval). The 2026-06-13 note's circularity was real only along its own route; log.exp = id routes around it.",
+      "class": "surprise",
+      "artifact_link": "machlib 5586963e \u2014 addTree_eval"
+    }
+  ]
+}
