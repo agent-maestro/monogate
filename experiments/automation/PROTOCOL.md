@@ -116,6 +116,23 @@ the report keeps them different. That is UNAVAILABLE-is-not-zero applied to the 
 converts an invisible bias into a recorded attestation — the same grade as E2's arm-label honesty, and
 it belongs on the same list of limits no gate here can cover.
 
+### NOTE CONVENTION (not a schema change) — preventive vs corrective catches
+
+A catch that stops an act before it executes is a different event from one that finds an error after
+it did. On 2026-07-30 the pre-registered E5 budget stopped a session from starting — the structure
+prevented a boundary crossing rather than catching a mistake. **That is the first observation of the
+thing pre-registration theoretically buys: cheaper than any catch is the mistake that never executes.**
+
+Recorded as a **note convention in the description**, deliberately not a schema field: preventive
+catches are rare enough that a fifth column would be mostly empty, and an empty column invites being
+filled for the sake of it. Prefix the description with `PREVENTIVE:` or `CORRECTIVE:` on catch-class
+entries where the distinction is real.
+
+**If preventive catches recur, they become their own finding** about what the discipline is for — at
+which point a schema field is warranted and this note is the evidence that it was earned rather than
+guessed. Entries logged before this convention are unmarked, in the same way pre-Amendment-1 entries
+carry no `actor`: the past is not relabelled.
+
 ### AMENDMENT 2 to E1 — catch-class entries record WHERE the catch fired (2026-07-30)
 
 **Recorded the same day as Amendment 1, after it made the underlying issue visible.**
