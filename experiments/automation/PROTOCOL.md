@@ -213,7 +213,28 @@ Recorded before the schedule exists, before any session runs, and stated so that
 observation is named rather than left to interpretation afterwards. Provenance: orchestrator,
 in-session, 2026-07-30.
 
-**Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first run]`
+### E2 abandonment — DRAFTED BY AI, REQUIRING COUNTERSIGN (2026-07-31)
+
+Same provenance split as E5's slots, and for the same reason: the prediction is already yours and on
+record, so an AI-set abandonment bar on an AI-scored ablation would let the same party set and meet
+the test.
+
+| slot | DRAFT | countersigned |
+|---|---|---|
+| **abandonment** | Abandon E2 if, after **10 sessions** (the horizon the prediction already names), the arms are indistinguishable on BOTH findings-per-session and surprise-rate — i.e. neither arm's advantage exceeds one finding per five sessions. Indistinguishable arms do not mean "keep going until they separate"; they mean the outer loop is more automatable than the central claim assumes, **and that is the result**, to be published as one. | ☐ |
+
+**Why 10 and not more:** the prediction's own disconfirmer is already stated at ten sessions ("if
+surprise-rate is indistinguishable between arms over the first ten sessions, the prediction is wrong
+in the direction that matters"). An abandonment horizon longer than the disconfirmation horizon would
+let a falsified prediction keep collecting data — which is how a study outlives its own result.
+
+**Why the bar is symmetric:** it fires on indistinguishability, not on the AI arm winning. A bar that
+only fires when the hypothesis loses in one specific direction is not an abandonment criterion, it is
+a preference.
+
+`TODO: orchestrator` — countersign, amend, or replace. **`e2_schedule.py generate` must not run until
+this is countersigned**; the schedule freezes at first use and a study whose stopping rule is written
+after its schedule exists has the rule and the data in the wrong order.
 
 ---
 
