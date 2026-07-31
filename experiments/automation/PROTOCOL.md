@@ -259,7 +259,7 @@ self-authored traps, one level up.
 
 # E5 — Open-problem attempt: `1/x ∉ EML` at any depth
 
-**Status: RUNNING — session 1 of 8 (phase 18). Countersigned 2026-07-30. THE UNDERLYING WORK IS NOT NEW — see baseline below.**
+**Status: BUDGET EXHAUSTED 2026-07-30 — 8 of 8 sessions run. Bar CLEARED on both arms. Result below. THE UNDERLYING WORK IS NOT NEW — see baseline below.**
 **Do not begin until all three slots (route, session budget, abandonment criteria) are filled and committed.**
 
 ### The prior recommendation, copied from the record
@@ -304,6 +304,39 @@ abandonment criterion expressed in closure-matrix movement rather than in "did i
 
 `TODO: orchestrator` — confirm phase 17 is still the frontier at the time E5 begins; the count above is a
 2026-07-30 measurement of a record that continues to move.
+
+
+### RESULT — E5, 8 sessions, against the pre-registered bar
+
+**Recorded 2026-07-30, immediately on budget exhaustion, before any decision about continuing.**
+
+| | pre-registered | actual |
+|---|---|---|
+| session budget | 8 from phase 17 | 8 (phases 18–25) |
+| abandon if | **fewer than 3 cells AND no new structural mechanism** | **7 cells and 2 new predicates** |
+| verdict | — | **bar cleared on both arms** |
+
+Matrix **11/25 → 18/25**, against a reachable ceiling of 23/25 (two cells are provably
+indeterminate). Rate 0.88 cells/session versus the 0.52 baseline the budget was derived from.
+
+**The general-depth `1/x ∉ EML` claim remains open.** Seven cells is progress on the closure matrix,
+which is the *instrument* for that claim, not the claim itself. Nothing here should be read as having
+attacked the open problem directly.
+
+**What the sessions actually produced, beyond cells:**
+
+1. **An ordering nobody asked for.** The hypothesis a cell needs is monotone in how hard the dividend
+   pulls: unbounded needs none, vanishing needs `0 < log d`, merely-bounded needs `1 ≤ log d`.
+2. **Two of Phase 17's own labels were wrong** — its prose undercounted its table by a cell, and its
+   "risky" deferral of two rows had aged out once class-level rules existed. Both found by re-reading
+   the record against what is provable, not by new mathematics.
+3. **A predicate pair** (`EventuallyAtMost` / `EventuallyAtLeast`) that Phase 17 had named as a
+   hypothesis and that turned out to carry six of the seven cells.
+
+**Continuing is a NEW pre-registration, not a continuation.** The budget was set relative to phase 17
+and is spent. A further budget must be set relative to phase 25, with its own abandonment criterion,
+and countersigned before the first session — otherwise the bar becomes a thing that moves when it is
+about to bind, which is the failure the whole apparatus exists to prevent.
 
 ### Slots — COUNTERSIGNED 2026-07-30. E5 IS PRE-REGISTERED AND MAY BEGIN.
 
