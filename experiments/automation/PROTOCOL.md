@@ -213,28 +213,32 @@ Recorded before the schedule exists, before any session runs, and stated so that
 observation is named rather than left to interpretation afterwards. Provenance: orchestrator,
 in-session, 2026-07-30.
 
-### E2 abandonment — DRAFTED BY AI, REQUIRING COUNTERSIGN (2026-07-31)
+### E2 abandonment — COUNTERSIGNED 2026-07-31, with both clauses
 
-Same provenance split as E5's slots, and for the same reason: the prediction is already yours and on
-record, so an AI-set abandonment bar on an AI-scored ablation would let the same party set and meet
-the test.
-
-| slot | DRAFT | countersigned |
+| slot | PRE-REGISTERED VALUE | countersigned |
 |---|---|---|
-| **abandonment** | Abandon E2 if, after **10 sessions** (the horizon the prediction already names), the arms are indistinguishable on BOTH findings-per-session and surprise-rate — i.e. neither arm's advantage exceeds one finding per five sessions. Indistinguishable arms do not mean "keep going until they separate"; they mean the outer loop is more automatable than the central claim assumes, **and that is the result**, to be published as one. | ☐ |
+| **abandonment** | Abandon after **10 sessions** if the arms are INDISTINGUISHABLE, defined below. | ✅ orchestrator, 2026-07-31 |
 
-**Why 10 and not more:** the prediction's own disconfirmer is already stated at ten sessions ("if
-surprise-rate is indistinguishable between arms over the first ten sessions, the prediction is wrong
-in the direction that matters"). An abandonment horizon longer than the disconfirmation horizon would
-let a falsified prediction keep collecting data — which is how a study outlives its own result.
+**CLAUSE 1 — "indistinguishable" is defined NOW, before any data.** A stopping rule whose trigger term
+is defined after the data exists is the post-hoc flexibility the rule exists to prevent, one level up.
+At n=10 there is no statistical power worth pretending about, so this is an **effect-size bar, not a
+significance test**:
 
-**Why the bar is symmetric:** it fires on indistinguishability, not on the AI arm winning. A bar that
-only fires when the hypothesis loses in one specific direction is not an abandonment criterion, it is
-a preference.
+> Arms are **indistinguishable** iff BOTH:
+> * the difference in **findings-per-session means** is **< 25% of the pooled mean** — a *relative*
+>   margin, because we have no base rate to anchor an absolute one; and
+> * the difference in **surprise counts** across the arm totals is **< 1** — an *absolute* count,
+>   because at five sessions per arm surprises are countable on one hand and a percentage would be
+>   theatre.
 
-`TODO: orchestrator` — countersign, amend, or replace. **`e2_schedule.py generate` must not run until
-this is countersigned**; the schedule freezes at first use and a study whose stopping rule is written
-after its schedule exists has the rule and the data in the wrong order.
+**CLAUSE 2 — each exit carries its verdict.** A stopping rule that says when to stop but not what
+stopping *means* leaves the interpretation to whoever writes the summary, which is the last place
+discretion should live.
+
+| exit | verdict recorded in the results section |
+|---|---|
+| indistinguishable at 10 | **PREDICTION FALSIFIED, CENTRAL CLAIM DAMAGED.** The prediction named ten sessions as its own disconfirmer. This exit is not a null shrug and is not "the study ended" — it is the recorded finding that the outer loop is more automatable than the claim assumes, published as one. |
+| distinguishable at 10 | Continue to the schedule's horizon, **with the interim direction recorded** — including which arm led and by how much, so a later reversal is visible as a reversal. |
 
 ---
 

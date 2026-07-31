@@ -77,6 +77,8 @@ def cmd_log(a: argparse.Namespace) -> int:
          "actor": a.actor, "description": a.desc}
     if a.via:
         e["via"] = a.via
+    if a.preventive:
+        e["preventive"] = True
     if a.artifact:
         e["artifact_link"] = a.artifact
     if a.boundary:
@@ -132,6 +134,7 @@ def cmd_report(a: argparse.Namespace) -> int:
     actors = Counter(e.get("actor", "unrecorded") for s in sessions for e in s["entries"])
     human_kinds = Counter(e["kind"] for s in sessions for e in s["entries"]
                           if e.get("actor") == "human")
+    preventive_n = sum(1 for s in sessions for e in s["entries"] if e.get("preventive"))
     ai_catch_via = Counter(e.get("via", "unrecorded") for s in sessions for e in s["entries"]
                            if e.get("actor") == "ai" and e["kind"] in CATCH_KINDS)
     boundary = sum(1 for s in sessions for e in s["entries"] if e.get("boundary"))
@@ -205,6 +208,11 @@ def cmd_report(a: argparse.Namespace) -> int:
         print("  [UNAVAILABLE] no AI catch-class entries carry via yet.")
     print()
 
+    print(f"PREVENTIVE CATCHES  (AMENDMENT 3) : {preventive_n} recorded via the field")
+    print("  plus 2 pre-field instances, recorded in ledger/MIGRATIONS.md rather than by editing")
+    print("  the entries — append-only means the prefix is immutable, including for good reasons.")
+    print()
+
     print("FINDINGS BY CLASS")
     for c in CLASSES:
         print(f"  {c:<14} {classes.get(c, 0):>4}   {pct(classes.get(c, 0), n_f)}")
@@ -246,6 +254,8 @@ def main() -> int:
                     help="AMENDMENT 2, required for correction/taste. structural = fired inside a "
                          "human-installed structure (specimen, gate, pre-registered bar); "
                          "spontaneous = arose unprompted in open work.")
+    lg.add_argument("--preventive", action="store_true",
+                    help="AMENDMENT 3: the catch stopped an act before it executed.")
     lg.add_argument("--boundary", action="store_true",
                     help="the `?` flag: the kind was a judgement call. Flag it, never drop it.")
     lg.set_defaults(fn=cmd_log)

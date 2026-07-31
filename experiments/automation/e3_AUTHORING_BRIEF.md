@@ -62,3 +62,25 @@ mistaken for a real trap set.
 `score_traps.py` verifies the key's digest. **It cannot detect contamination.** If the system under
 test saw the traps beforehand, every hash still matches and the score is meaningless. That control is
 procedural and rests entirely on how this brief is executed.
+
+## Attestation record — required, committed with the sealed hash
+
+The seal proves the key did not change. It cannot prove the traps were authored in isolation, and
+nothing can. What *is* available is making the procedural claim **specific enough to be accountable**
+rather than leaving it as an assurance — the same grade as E2's arm labels, and the best grade there
+is for a thing no gate can reach.
+
+Commit `e3_traps/ATTESTATION.md` alongside the manifest, before first evaluation:
+
+```
+authored_by      : <model + version, or human>
+isolation method : <fresh session / separate machine / different provider — say which>
+date             : <YYYY-MM-DD>
+monogate context : NONE PRESENT — no Monogate repo, protocol, or prior session material was in
+                   context during authoring
+signed           : <orchestrator>
+```
+
+If any line cannot be stated truthfully, **say so in the line rather than omitting it.** An attestation
+with a gap named is evidence; an attestation with a gap hidden is worse than none, because it converts
+an unknown into a false assurance — which is the failure this whole programme is built to detect.
