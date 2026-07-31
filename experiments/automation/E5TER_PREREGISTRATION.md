@@ -1,6 +1,7 @@
-# E5-ter — the general-depth claim. PRE-REGISTRATION DRAFT, awaiting countersignature
+# E5-ter — the general-depth claim. PRE-REGISTRATION, COUNTERSIGNED AND BINDING
 
-**DRAFTED BY AI 2026-07-31. Not binding until countersigned.** Same provenance split as E5 and E5-bis,
+**Drafted by AI 2026-07-31; COUNTERSIGNED WITHOUT AMENDMENT by the orchestrator, 2026-07-31. Binding.**
+Route, budget (6 sessions) and both exits stand exactly as drafted. Session 1 may begin. Same provenance split as E5 and E5-bis,
 and for the same reason: a bar set and met by one party measures nothing about either.
 
 ## The claim
@@ -82,4 +83,4 @@ Instrument-building is halted for this route. **Obeying instruments is not.** If
 specimen convicts mid-route, the line halts and the failure is attributed before work continues. The
 moratorium is on building, never on listening.
 
-`TODO: orchestrator` — countersign, amend, or replace. Do not begin until countersigned.
+~~`TODO: orchestrator` — countersign, amend, or replace.~~ **DONE 2026-07-31, without amendment.**
