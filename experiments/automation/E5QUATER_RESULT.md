@@ -97,3 +97,38 @@ to test at n=10, and it points the way E2's pre-registered prediction predicts.
 * `E5QUATER_PREREGISTRATION.md` — both slot tables, including the halt point verbatim.
 * `ledger/2026-07-31-e5quater.json` — 4 interventions, 3 findings.
 * machlib `6cd6c921`, `2ee3a6a4`, `0b7fc035` — the three sessions' commits.
+
+
+## The arm's signature move, named — CONSTRAIN THE DESTINATION
+
+Added after the fact, because it took a result outside the arm to see it clearly.
+
+The E5 arm's cheapest results have twice come from the same move, and it is not "try harder" or "get
+lucky". It is: **instead of walking the candidate space, characterise the property any arrival must
+have.** Stated as a method:
+
+> Before enumerating the shapes that might reach a target, ask what is true of *every* shape that
+> reaches it. If that property is cheap to state, it usually replaces the enumeration outright.
+
+Where it has landed:
+
+| where | the enumeration it replaced | the invariant that replaced it |
+|---|---|---|
+| E5-quater s1 | proving no valid tree decays to `0` | building `e/x` and reading off that it does |
+| E5-quater s2 | characterising reachable `K` case-by-case | `exp ∘ exp` has range `(1, ∞)`, so `K > 1` |
+| `x+1` depth 2 (2026-07-31, baseline arm) | **24 open subcases**, budgeted 2026-06-13 | **`witness_divisor_ge`** — three lines, every witness, every depth |
+
+The third is the clearest specimen because the enumeration had a *price already on it*: the June
+scoping note budgeted depth 2 at 36 subcases and shipped 8. The invariant closed the remaining 24 with
+four one-line cases. **That ratio — 4 one-line cases against 24 subcases — is what the move looks like
+when it lands.**
+
+**This is "classify before grinding" graduated from a session discipline into a proof technique.** The
+discipline said *check whether the destination exists before walking to it*; the technique says
+*characterise what any arrival must look like, and let that do the walking*. Same idea, one level down,
+now living inside the proofs rather than around them.
+
+**And it predicts its own next step.** If it generalises to depth 3, the shape is the same one level
+up: not a constant bound on the divisor but an **eventually-linear bound on the negative axis**,
+against the divisor's required exponential growth. That prediction is recorded here so the depth-3
+session can score it rather than discover it.

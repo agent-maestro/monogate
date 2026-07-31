@@ -21,3 +21,28 @@ and hard to police, since an added key can change how the existing ones read —
 append-only-natively, here. The gate stays exactly as strict as it was, and nothing about the past
 moved. **This is the same call as `unrecorded` actors and unmarked pre-convention catches: the past is
 not relabelled, it is annotated from outside.**
+
+
+## 2026-07-31 — a `preventive` flag cannot be added retroactively
+
+**Situation.** An entry in `2026-07-31-xplusone-depth2.json` recorded a catch that qualified under
+AMENDMENT 3 (`preventive`: the catch stopped an act before it executed) but was logged without the
+flag. The obvious fix — set `preventive: true` on the existing entry — **mutates the append-only
+prefix and correctly trips `check_ledger_append_only.py`**.
+
+**What was done instead.** A NEW entry was appended, flagged `preventive`, whose description names the
+earlier entry and states that it supersedes *by annotation*, not by replacement. Both entries remain.
+This is the only move the append-only property permits, and the property is worth more than the tidiness.
+
+**The cost, stated so it is not discovered during scoring.** The count of `preventive` entries now
+over-counts by one relative to the count of preventive *acts*. **Anyone tallying preventives must
+de-duplicate by artifact, not by entry.** Recorded in
+`../retrospective/PREVENTIVES_ARE_ACTS_NOT_TAKEN.md` as consequence 2, because that is where the
+tallying will actually happen.
+
+**The general rule this establishes.** An amendment that adds a field can only be applied *going
+forward*. Entries predating an amendment are `unrecorded` for that field — never backfilled, never
+inferred. The same principle already governs `actor` (AMENDMENT 1) and `via` (AMENDMENT 2), where the
+gate pins the cutoff to the amendment's actual instant precisely so that pre-amendment entries are not
+convicted. This is that rule meeting its first *post*-amendment omission, and the answer is the same:
+the record says what it said, and corrections are additions.
