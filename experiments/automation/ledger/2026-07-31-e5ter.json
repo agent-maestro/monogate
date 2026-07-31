@@ -9,7 +9,39 @@
       "actor": "human",
       "description": "Countersigned E5-ter without amendment: route (class-induction via the closure matrix), 6 sessions, two distinct exits (route failed vs claim resisted), and a counterexample pre-registered as the better finding. Session 1 may begin.",
       "artifact_link": "experiments/automation/E5TER_PREREGISTRATION.md"
+    },
+    {
+      "ts": "2026-07-31T11:31:23",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Declined to record this as exit 1 (route failed) despite it looking like one. The pre-registration distinguishes 'route failed' from 'claim resisted' and requires the route be shown closed, not merely obstructed \u2014 two repairs are untested. The two-exit structure is what stopped a premature verdict.",
+      "via": "structural",
+      "artifact_link": "experiments/automation/E5TER_PREREGISTRATION.md"
+    },
+    {
+      "ts": "2026-07-31T11:37:34",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Declined to write 'EMLGoodClass refuted' in the commit subject with only one of four negations formalised. No error existed in the mathematics; the counterexample is right. But the Lean record shows the eval and ONE exclusion, and the house rule is that a claim states what its artifact shows.",
+      "via": "structural",
+      "artifact_link": "machlib commit"
     }
   ],
-  "findings": []
+  "findings": [
+    {
+      "description": "The obstruction is not a coarse taxonomy but a wrong induction SHAPE. Validity couples the two arms (log t2 < exp t1) but only in divisor position, and a bottom-up class induction cannot express a node's class depending on where it sits. Two repairs remain live.",
+      "class": "surprise",
+      "artifact_link": "machlib/foundations/MachLib/EMLTreeGroundedPipeline.lean"
+    },
+    {
+      "description": "The Phase 15B frontier (forall t, EMLGoodClass t.eval) is FALSE. Witness: eml(eml(const 0, var), const e^-1/2) evaluates to e/x + 1/2, trapped in (0,1), in none of the four classes. The four classes omit the band of evals decaying to a limit in (0,1). Repair (a) is dead, not untested \u2014 the induction's conclusion is false.",
+      "class": "falsification",
+      "artifact_link": "machlib commit"
+    },
+    {
+      "description": "EXIT VOCABULARY INCOMPLETE: the pre-registration named 'route failed' and 'claim resisted'; the actual outcome was neither \u2014 the destination did not exist. Third exit 'target falsified' was missing. Found by using the vocabulary, not inspecting it.",
+      "class": "dead_end",
+      "artifact_link": "experiments/automation/E5B_RESULT.md"
+    }
+  ]
 }
