@@ -146,3 +146,29 @@ it decides cases it was never shown.
 **Blind to:** whether the self-reported `actor` is true. Nothing verifies it. The amendment converts an
 invisible bias into a recorded attestation — same grade as E2's arm-label honesty, and on the same list
 of limits no gate here can cover.
+
+---
+
+## `check_ledger_append_only.py` — AMENDMENT 2 `via` check (added 2026-07-30)
+
+**CAN-CONVICT.** A catch-class entry logged after the amendment with no `via`:
+
+```
+FAIL  FIXTURE-append-only.json: entries[2] is a catch logged after AMENDMENT 2 with no
+      `via` — cannot distinguish the discipline executing from the outer loop automating
+E1 LEDGER GATE: FAIL — 1 error(s)                       exit 1
+```
+
+**CAN-ACQUIT**, `via` supplied: `PASS  exit 0`.
+
+**The CLI refuses at write time too**, which is the cheaper place to catch it — the distinction is
+unrecoverable once the session is over, so a gate that only objects at review time objects too late:
+
+```
+[REFUSED] --via is required for 'correction' (AMENDMENT 2). A catch that does not say whether
+it fired inside a human-installed structure or arose unprompted cannot distinguish the
+discipline executing from the outer loop automating.
+```
+
+`AMENDMENT_2_TS` was derived from the clock at amendment time, not typed — applying the rule
+Amendment 1's own bug produced.

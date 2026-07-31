@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "monogate-automation-intervention-ledger.v1",
-  "description": "One file per session. Append-only: entries and findings only ever grow. See PROTOCOL.md E1 for what each kind and class MEANS -- the definitions are the measurement, not documentation of it. AMENDMENT 1 (2026-07-30): entries carry `actor`. The claim under test is about the HUMAN outer loop; a ledger that records that taste HAPPENED without recording WHO exercised it would let AI self-catches confirm the hypothesis for the wrong reason. `actor` is not required by the schema so that pre-amendment entries stay valid and append-only holds; the CLI requires it and the gate flags its absence on new entries.",
+  "description": "One file per session. Append-only: entries and findings only ever grow. See PROTOCOL.md E1 for what each kind and class MEANS -- the definitions are the measurement, not documentation of it. AMENDMENT 1 (2026-07-30): entries carry `actor`. The claim under test is about the HUMAN outer loop; a ledger that records that taste HAPPENED without recording WHO exercised it would let AI self-catches confirm the hypothesis for the wrong reason. `actor` is not required by the schema so that pre-amendment entries stay valid and append-only holds; the CLI requires it and the gate flags its absence on new entries. AMENDMENT 2 (2026-07-30): catch-class entries carry `via`. The refined question is not WHO catches -- plausibly the AI, increasingly -- but WHERE THE CHAIN TERMINATES. Every AI self-catch so far fired inside a structure a human built and ratified; that is a different event from one arising unprompted, and only `via` can tell them apart after the fact.",
   "type": "object",
   "required": [
     "session_id",
@@ -67,6 +67,13 @@
               "unclear"
             ],
             "description": "WHO performed the intervention. Added by AMENDMENT 1 (2026-07-30). Absent on entries logged before the amendment -- those are 'unrecorded', which the report keeps in its OWN bucket rather than folding into any actor, because an unrecorded actor and a known actor are different facts. Required on all new entries."
+          },
+          "via": {
+            "enum": [
+              "structural",
+              "spontaneous"
+            ],
+            "description": "AMENDMENT 2 (2026-07-30). For CATCH-class entries (correction, taste) only. `structural` = the catch fired inside a human-installed structure -- a specimen convicting, a gate refusing, a pre-registered bar objecting. `spontaneous` = it arose unprompted in open work. THIS IS THE DISCRIMINATOR: an AI catch that fires because the discipline made it fire is the discipline executing; an AI catch with no structure behind it is the outer loop genuinely automating. Cheap to record now, impossible to reconstruct later."
           }
         }
       }

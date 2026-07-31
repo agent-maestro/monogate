@@ -32,6 +32,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 LEDGER_DIR = os.path.join(HERE, "ledger")
 KINDS = ("direction", "correction", "taste", "mechanical")
 CLASSES = ("closure", "surprise", "falsification", "dead_end")
+CATCH_KINDS = ("correction", "taste")   # AMENDMENT 2: these are the "catch" kinds `via` describes
 ARMS = ("baseline", "E2-ai", "E2-human")
 
 
@@ -65,9 +66,17 @@ def save(d: dict) -> str:
 
 
 def cmd_log(a: argparse.Namespace) -> int:
+    if a.kind in CATCH_KINDS and not a.via:
+        print(f"[REFUSED] --via is required for {a.kind!r} (AMENDMENT 2). A catch that does not say "
+              f"whether it fired inside a human-installed structure or arose unprompted cannot "
+              f"distinguish the discipline executing from the outer loop automating — and that "
+              f"distinction is unrecoverable once the session is over.", file=sys.stderr)
+        raise SystemExit(2)
     d = load_or_init(a.session, a.arm)
     e = {"ts": dt.datetime.now().isoformat(timespec="seconds"), "kind": a.kind,
          "actor": a.actor, "description": a.desc}
+    if a.via:
+        e["via"] = a.via
     if a.artifact:
         e["artifact_link"] = a.artifact
     if a.boundary:
@@ -123,6 +132,8 @@ def cmd_report(a: argparse.Namespace) -> int:
     actors = Counter(e.get("actor", "unrecorded") for s in sessions for e in s["entries"])
     human_kinds = Counter(e["kind"] for s in sessions for e in s["entries"]
                           if e.get("actor") == "human")
+    ai_catch_via = Counter(e.get("via", "unrecorded") for s in sessions for e in s["entries"]
+                           if e.get("actor") == "ai" and e["kind"] in CATCH_KINDS)
     boundary = sum(1 for s in sessions for e in s["entries"] if e.get("boundary"))
     classes = Counter(f["class"] for s in sessions for f in s["findings"])
     by_arm: dict[str, dict] = {}
@@ -179,6 +190,21 @@ def cmd_report(a: argparse.Namespace) -> int:
         print("    it is 'the ledger cannot yet say'. Do not read the mix above as the human mix.")
     print()
 
+    print("AI CATCHES BY VIA  (AMENDMENT 2 — where the chain terminates)")
+    tot_ai = sum(ai_catch_via.values())
+    if tot_ai:
+        for k in ("structural", "spontaneous", "unrecorded"):
+            if ai_catch_via.get(k):
+                print(f"  {k:<14} {ai_catch_via[k]:>4}   {pct(ai_catch_via[k], tot_ai)}")
+        st, sp = ai_catch_via.get("structural", 0), ai_catch_via.get("spontaneous", 0)
+        if st and not sp:
+            print("  READ: every AI catch so far fired inside a human-installed structure. That is")
+            print("  the discipline executing, NOT the outer loop automating. The distinction is the")
+            print("  refined claim's whole content — do not report AI catch counts without it.")
+    else:
+        print("  [UNAVAILABLE] no AI catch-class entries carry via yet.")
+    print()
+
     print("FINDINGS BY CLASS")
     for c in CLASSES:
         print(f"  {c:<14} {classes.get(c, 0):>4}   {pct(classes.get(c, 0), n_f)}")
@@ -216,6 +242,10 @@ def main() -> int:
     lg.add_argument("--actor", required=True, choices=("human", "ai", "unclear"),
                     help="WHO intervened. Required since AMENDMENT 1: the claim under test is about "
                          "the HUMAN outer loop, so an unattributed `taste` entry cannot support it.")
+    lg.add_argument("--via", choices=("structural", "spontaneous"),
+                    help="AMENDMENT 2, required for correction/taste. structural = fired inside a "
+                         "human-installed structure (specimen, gate, pre-registered bar); "
+                         "spontaneous = arose unprompted in open work.")
     lg.add_argument("--boundary", action="store_true",
                     help="the `?` flag: the kind was a judgement call. Flag it, never drop it.")
     lg.set_defaults(fn=cmd_log)

@@ -116,6 +116,42 @@ the report keeps them different. That is UNAVAILABLE-is-not-zero applied to the 
 converts an invisible bias into a recorded attestation — the same grade as E2's arm-label honesty, and
 it belongs on the same list of limits no gate here can cover.
 
+### AMENDMENT 2 to E1 — catch-class entries record WHERE the catch fired (2026-07-30)
+
+**Recorded the same day as Amendment 1, after it made the underlying issue visible.**
+
+Amendment 1 revealed that AI self-catches were about to be counted as evidence for human taste. The
+fix made *who* visible. But it exposed a sharper question, and the honest reading of one session is
+that **the claim as originally stated may be wrong in an interesting way**:
+
+> The live question is not *"who catches errors"* — plausibly the AI does, increasingly — but
+> **where does the chain terminate.**
+
+Every AI self-catch logged today fired **inside a structure a human built and ratified**: the specimen
+doctrine that forced the convict run, the pre-registration that made the E5 baseline checkable, the
+session protocol that pointed a gate at its own threshold. The human interventions are fewer, higher,
+and load-bearing in a different way — selection, ratification, and the standing rules that make AI
+self-catching possible at all.
+
+**If E1 ends up measuring a thin human layer and a thick AI layer, with the thin layer holding the
+termination points, that is not the hypothesis failing. It is the hypothesis being refined into its
+true form** — which is what an instrument is for. But the refined form needs a distinction the
+original schema could not make:
+
+| `via` | means |
+|---|---|
+| `structural` | the catch fired **inside a human-installed structure** — a specimen convicting, a gate refusing, a pre-registered bar objecting |
+| `spontaneous` | the catch **arose unprompted** in open work, with no structure behind it |
+
+**This is the discriminator.** An AI catch that fires because the discipline made it fire is *the
+discipline executing*. An AI catch with nothing behind it is *the outer loop genuinely automating*.
+Reporting AI catch counts without this axis would conflate the two, and the conflation would favour
+the more impressive reading.
+
+Required on `correction` and `taste` entries; the CLI refuses without it and the gate flags it.
+**Cheap to record today, impossible to reconstruct later** — which is why it lands now, at n=5, rather
+than at analysis time.
+
 **Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first report]`
 **Pre-registered prediction:** `PREDICTION: [to be filled by orchestrator before first report]`
 
@@ -310,4 +346,5 @@ Append-only. Date, what changed, why. Empty at commit.
 
 | date | change | reason |
 |---|---|---|
+| 2026-07-30 | E1 catch-class entries gain `via` (structural/spontaneous) | Amendment 1 made WHO visible and exposed the sharper question: not who catches, but where the chain terminates. Every AI catch so far fired inside a human-installed structure — a different event from one arising unprompted, and only `via` separates them after the fact. See E1 Amendment 2. |
 | 2026-07-30 | E1 entries gain `actor` (human/ai/unclear) | The four kinds recorded what happened, never who. E1's first session logged two `taste` entries that were AI self-catches; unattributed, they would have shown the hypothesis's predicted shape produced by the wrong agent. Pre-amendment entries are not retro-labelled — they report as `unrecorded`, in their own bucket. See E1 Amendment 1. |

@@ -51,6 +51,7 @@ ARMS = {"baseline", "E2-ai", "E2-human"}
 # Entries stamped before it legitimately have no actor and report as `unrecorded`; entries stamped
 # after it and lacking one mean the CLI was bypassed. The constant is the amendment's actual commit
 # time, not a rounded hour: a guessed cutoff convicted two pre-amendment entries on the first run.
+AMENDMENT_2_TS = "2026-07-30T18:50:23"   # derived from the clock at amendment time, not typed from memory of it
 AMENDMENT_1_TS = "2026-07-30T18:36:38"
 
 
@@ -71,6 +72,13 @@ def validate(name: str, d: object) -> list[str]:
             errs.append(f"{name}: entries[{i}] has no description")
         # AMENDMENT 1: actor required on entries logged after 2026-07-30. Pre-amendment entries
         # legitimately lack it and must NOT be failed -- they are `unrecorded`, not malformed.
+        # AMENDMENT 2: catch-class entries must say WHERE the catch fired.
+        if "via" in e and e["via"] not in ("structural", "spontaneous"):
+            errs.append(f"{name}: entries[{i}].via {e.get('via')!r} invalid")
+        if (e.get("kind") in ("correction", "taste") and "via" not in e
+                and e.get("ts", "") > AMENDMENT_2_TS):
+            errs.append(f"{name}: entries[{i}] is a catch logged after AMENDMENT 2 with no `via` — "
+                        f"cannot distinguish the discipline executing from the outer loop automating")
         if "actor" in e and e["actor"] not in ("human", "ai", "unclear"):
             errs.append(f"{name}: entries[{i}].actor {e.get('actor')!r} invalid")
         if "actor" not in e and (e.get("ts", "") > AMENDMENT_1_TS):
