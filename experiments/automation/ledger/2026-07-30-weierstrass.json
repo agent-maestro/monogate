@@ -1,0 +1,50 @@
+{
+  "session_id": "2026-07-30-weierstrass",
+  "date": "2026-07-30",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-30T17:50:13",
+      "kind": "direction",
+      "description": "Target selected: the EML Weierstrass theorem (T2.C open target, general case). BOUNDARY: the AI enumerated the five open targets and recommended this one; the human ratified. Is that direction-by-human or direction-by-AI? Logged as direction with the ? flag rather than resolved in favour of either, because resolving it silently would be the exact bias E2 exists to measure.",
+      "artifact_link": "monogate-research/exploration/eml_synthesis_2026_06_25/SYNTHESIS.md",
+      "boundary": true
+    },
+    {
+      "ts": "2026-07-30T18:27:18",
+      "kind": "correction",
+      "description": "Caught own error: inserted a docstring between an existing docstring and its theorem, twice, breaking the parse both times. Second occurrence after the first was already fixed.",
+      "artifact_link": "machlib/foundations/MachLib/EMLWeierstrassTermBound.lean"
+    },
+    {
+      "ts": "2026-07-30T18:34:04",
+      "kind": "taste",
+      "description": "Chose to machine-check non-vacuity rather than assert it. No error existed \u2014 the theorem was already proved and would have passed every gate. hsmall and hmult constrain the same r from opposite directions, so a vacuous statement was a live possibility the gates are structurally blind to.",
+      "artifact_link": "machlib/foundations/MachLib/EMLWeierstrassTermBound.lean"
+    },
+    {
+      "ts": "2026-07-30T18:37:00",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Noticed that the four intervention kinds record what happened but never who, so AI self-catches would confirm the human-outer-loop hypothesis for the wrong reason. Amendment 1 written. Logged actor=ai because this catch was also mine \u2014 which is precisely the pattern the amendment exists to make visible.",
+      "artifact_link": "PROTOCOL.md#e1"
+    }
+  ],
+  "findings": [
+    {
+      "description": "T2.C term bound lifted from the two classical constants to the whole lacunary family in Lean; zero new axioms, identical axiom set to the specific case. Closes the 'not Lean-formalised' flag on the half of the EML Weierstrass theorem that was already proved on paper.",
+      "class": "closure",
+      "artifact_link": "machlib/foundations/MachLib/EMLWeierstrassTermBound.lean"
+    },
+    {
+      "description": "field_simp, linarith, by_contra unavailable in MachLib (Mathlib-free); div_lt_of_lt_mul exists only in a distant module. Working idiom is rcases lt_total + mach_ring + local re-derivation.",
+      "class": "dead_end",
+      "artifact_link": "machlib/foundations/MachLib/EMLWeierstrassTermBound.lean"
+    },
+    {
+      "description": "T2.C restriction (i) discharged: general-kernel term bound proved for the geometric-decay class, with a machine-checked non-vacuity witness. The heat-kernel results become one instance rather than the mechanism.",
+      "class": "closure",
+      "artifact_link": "machlib/foundations/MachLib/EMLWeierstrassTermBound.lean"
+    }
+  ]
+}

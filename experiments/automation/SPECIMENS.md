@@ -117,3 +117,32 @@ means it is not yet known to be a gate.
 
 `TODO: orchestrator` — demonstrate both convict branches at E2 launch, in the same commit as the first
 E2 session, and update this file.
+
+---
+
+## `check_ledger_append_only.py` — AMENDMENT 1 actor check (added 2026-07-30)
+
+**CAN-CONVICT.** A post-amendment entry with no `actor` (the CLI bypassed):
+
+```
+FAIL  FIXTURE-append-only.json: entries[2] logged after AMENDMENT 1 with no actor — the
+      claim under test is about the HUMAN outer loop, so an unattributed entry cannot
+      support it
+E1 LEDGER GATE: FAIL — 1 error(s)                       exit 1
+```
+
+**CAN-ACQUIT**, `actor` supplied:
+
+```
+E1 LEDGER GATE: PASS — 1 session(s), 0 suspect          exit 0
+```
+
+**The first cutoff was wrong and the specimen caught it.** `AMENDMENT_1_TS` was initially a rounded
+hour (`"2026-07-30T18"`), which convicted two entries logged *before* the amendment existed — a gate
+punishing the past for not obeying a rule that did not yet exist. Pinned to the amendment's actual
+instant instead. A guessed threshold in a time-sensitive check is the same class as a guessed pathspec:
+it decides cases it was never shown.
+
+**Blind to:** whether the self-reported `actor` is true. Nothing verifies it. The amendment converts an
+invisible bias into a recorded attestation — same grade as E2's arm-label honesty, and on the same list
+of limits no gate here can cover.

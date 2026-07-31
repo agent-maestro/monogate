@@ -47,6 +47,12 @@ KINDS = {"direction", "correction", "taste", "mechanical"}
 CLASSES = {"closure", "surprise", "falsification", "dead_end"}
 ARMS = {"baseline", "E2-ai", "E2-human"}
 
+# AMENDMENT 1 took effect at this instant -- the moment `ledger.py log` began REQUIRING `--actor`.
+# Entries stamped before it legitimately have no actor and report as `unrecorded`; entries stamped
+# after it and lacking one mean the CLI was bypassed. The constant is the amendment's actual commit
+# time, not a rounded hour: a guessed cutoff convicted two pre-amendment entries on the first run.
+AMENDMENT_1_TS = "2026-07-30T18:36:38"
+
 
 def validate(name: str, d: object) -> list[str]:
     """Hand-rolled against ledger_schema.json's constraints -- no jsonschema dependency in CI."""
@@ -63,6 +69,14 @@ def validate(name: str, d: object) -> list[str]:
             errs.append(f"{name}: entries[{i}].kind {e.get('kind')!r} invalid")
         if not e.get("description"):
             errs.append(f"{name}: entries[{i}] has no description")
+        # AMENDMENT 1: actor required on entries logged after 2026-07-30. Pre-amendment entries
+        # legitimately lack it and must NOT be failed -- they are `unrecorded`, not malformed.
+        if "actor" in e and e["actor"] not in ("human", "ai", "unclear"):
+            errs.append(f"{name}: entries[{i}].actor {e.get('actor')!r} invalid")
+        if "actor" not in e and (e.get("ts", "") > AMENDMENT_1_TS):
+            errs.append(f"{name}: entries[{i}] logged after AMENDMENT 1 with no actor — the claim "
+                        f"under test is about the HUMAN outer loop, so an unattributed entry "
+                        f"cannot support it")
     for i, f in enumerate(d.get("findings", []) or []):
         if f.get("class") not in CLASSES:
             errs.append(f"{name}: findings[{i}].class {f.get('class')!r} invalid")

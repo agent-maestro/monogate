@@ -87,6 +87,35 @@ findings-per-session ratio. Partial mitigation: a session with findings but **ze
 is flagged `SUSPECT` by the gate. That catches "logged the win, skipped the work", not "skipped the
 session".
 
+### AMENDMENT 1 to E1 — entries record WHO intervened (2026-07-30)
+
+**Recorded after E1's first session, before the ledger had enough data to be quoted.**
+
+**The defect.** The four kinds record *what* happened, never *who did it*. But the claim under test is
+specifically that the **human** outer loop is not automating. On E1's first real session, both `taste`
+entries were **AI self-catches** — the AI noticing its own vacuity risk and its own duplicated mistake.
+Under the original schema those would have counted as `taste`, and the report would have shown
+"taste leading, mechanical zero" — the exact shape the hypothesis predicts, **produced by the wrong
+agent.**
+
+> **A ledger that records that taste HAPPENED without recording WHO exercised it lets AI self-catches
+> confirm the human-outer-loop hypothesis for the wrong reason.** That is not a small bias; it is the
+> measurement quietly answering a different question than the one asked.
+
+**The change.** Entries carry `actor : human | ai | unclear`. The CLI requires it. `report` prints a
+by-actor breakdown and, separately, a **HUMAN-ONLY intervention mix** — the figure the central claim
+actually rests on.
+
+**Pre-amendment entries are NOT retro-labelled.** Four entries predate this and carry no `actor`. They
+stay exactly as written — the ledger is append-only, and rewriting history to make a cleaner dataset is
+the one move the whole program forbids. They appear in the report as **`unrecorded`, in their own
+bucket, never folded into any actor**. An unrecorded actor and a known actor are different facts, and
+the report keeps them different. That is UNAVAILABLE-is-not-zero applied to the ledger's own past.
+
+**What this does not fix.** `actor` is self-reported by whoever runs the CLI. Nothing verifies it. It
+converts an invisible bias into a recorded attestation — the same grade as E2's arm-label honesty, and
+it belongs on the same list of limits no gate here can cover.
+
 **Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first report]`
 **Pre-registered prediction:** `PREDICTION: [to be filled by orchestrator before first report]`
 
@@ -281,4 +310,4 @@ Append-only. Date, what changed, why. Empty at commit.
 
 | date | change | reason |
 |---|---|---|
-| — | — | — |
+| 2026-07-30 | E1 entries gain `actor` (human/ai/unclear) | The four kinds recorded what happened, never who. E1's first session logged two `taste` entries that were AI self-catches; unattributed, they would have shown the hypothesis's predicted shape produced by the wrong agent. Pre-amendment entries are not retro-labelled — they report as `unrecorded`, in their own bucket. See E1 Amendment 1. |

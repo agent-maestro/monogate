@@ -66,7 +66,8 @@ def save(d: dict) -> str:
 
 def cmd_log(a: argparse.Namespace) -> int:
     d = load_or_init(a.session, a.arm)
-    e = {"ts": dt.datetime.now().isoformat(timespec="seconds"), "kind": a.kind, "description": a.desc}
+    e = {"ts": dt.datetime.now().isoformat(timespec="seconds"), "kind": a.kind,
+         "actor": a.actor, "description": a.desc}
     if a.artifact:
         e["artifact_link"] = a.artifact
     if a.boundary:
@@ -119,6 +120,9 @@ def cmd_report(a: argparse.Namespace) -> int:
         return 0
 
     kinds = Counter(e["kind"] for s in sessions for e in s["entries"])
+    actors = Counter(e.get("actor", "unrecorded") for s in sessions for e in s["entries"])
+    human_kinds = Counter(e["kind"] for s in sessions for e in s["entries"]
+                          if e.get("actor") == "human")
     boundary = sum(1 for s in sessions for e in s["entries"] if e.get("boundary"))
     classes = Counter(f["class"] for s in sessions for f in s["findings"])
     by_arm: dict[str, dict] = {}
@@ -160,6 +164,21 @@ def cmd_report(a: argparse.Namespace) -> int:
     print(f"  boundary-flagged: {boundary} ({pct(boundary, n_e)} of entries) — judgement calls, "
           f"counted but separable\n")
 
+    print("BY ACTOR  (AMENDMENT 1 — the claim under test is about the HUMAN outer loop)")
+    for k in ("human", "ai", "unclear", "unrecorded"):
+        if actors.get(k):
+            note = "  <- pre-amendment; NOT folded into any actor" if k == "unrecorded" else ""
+            print(f"  {k:<12} {actors[k]:>4}   {pct(actors[k], n_e)}{note}")
+    hk = sum(human_kinds.values())
+    print(f"\n  HUMAN-ONLY intervention mix (the figure the central claim rests on):")
+    if hk:
+        for k in KINDS:
+            print(f"    {k:<12} {human_kinds.get(k, 0):>4}   {pct(human_kinds.get(k, 0), hk)}")
+    else:
+        print("    [UNAVAILABLE] no entries carry actor=human yet. This is not 'humans did nothing' —")
+        print("    it is 'the ledger cannot yet say'. Do not read the mix above as the human mix.")
+    print()
+
     print("FINDINGS BY CLASS")
     for c in CLASSES:
         print(f"  {c:<14} {classes.get(c, 0):>4}   {pct(classes.get(c, 0), n_f)}")
@@ -194,6 +213,9 @@ def main() -> int:
     lg.add_argument("--kind", required=True, choices=KINDS)
     lg.add_argument("--desc", required=True)
     lg.add_argument("--artifact")
+    lg.add_argument("--actor", required=True, choices=("human", "ai", "unclear"),
+                    help="WHO intervened. Required since AMENDMENT 1: the claim under test is about "
+                         "the HUMAN outer loop, so an unattributed `taste` entry cannot support it.")
     lg.add_argument("--boundary", action="store_true",
                     help="the `?` flag: the kind was a judgement call. Flag it, never drop it.")
     lg.set_defaults(fn=cmd_log)
