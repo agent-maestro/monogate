@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "monogate-e3-trap-manifest.v1",
+  "description": "20 trap slots. The planted class of each trap is SEALED: it lives in answer_key.json, which is NOT in this repo until scoring. Only the key's SHA-256 is committed here, before any trap is evaluated.",
+  "type": "object",
+  "required": ["schema", "answer_key_sha256", "sealed_at", "traps"],
+  "properties": {
+    "schema": { "const": "monogate-e3-trap-manifest.v1" },
+    "answer_key_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Committed BEFORE any evaluation. score_traps.py refuses to score a key that does not hash to this. Makes 'adjust the key after seeing the results' mechanically detectable rather than a matter of trust."
+    },
+    "sealed_at": { "type": "string" },
+    "authored_by": {
+      "type": "string",
+      "description": "MUST NOT be the system under test. See PROTOCOL.md E3 contamination warning."
+    },
+    "traps": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["id", "statement_file", "domain", "planted_class"],
+        "properties": {
+          "id": { "type": "string" },
+          "statement_file": { "type": "string" },
+          "domain": { "type": "string" },
+          "planted_class": {
+            "const": "sealed",
+            "description": "Literally the string 'sealed'. The real value (TRUE | SUBTLY_FALSE | MISFORMALIZED) is in answer_key.json only. If a real class appears here the experiment is void -- the manifest is in the repo the system can read."
+          }
+        }
+      }
+    }
+  }
+}

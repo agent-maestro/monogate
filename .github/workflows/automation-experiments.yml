@@ -1,0 +1,46 @@
+name: Automation Experiment Gates
+
+# These gates CONDUCT, they do not merely exist. Registered in
+# experiments/automation/GATE_REGISTRY.md with a blindness note each; firing specimens in
+# experiments/automation/SPECIMENS.md. A gate that is written but never invoked is the third failure
+# class the electronics registry records: documentation asserting a call graph that has no call.
+
+on:
+  pull_request:
+    paths: ['experiments/automation/**']
+  push:
+    branches: [master, main]
+    paths: ['experiments/automation/**']
+  workflow_dispatch:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0   # append-only is checked against git HEAD; a shallow clone cannot see it
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - name: E1 — ledger append-only, schema, SUSPECT
+        working-directory: experiments/automation
+        run: python3 check_ledger_append_only.py
+
+      - name: E1 — specimen fixture must still convict-and-acquit
+        working-directory: experiments/automation
+        run: python3 check_ledger_append_only.py --ledger-dir specimens/ledger_fixture
+
+      - name: E2 — schedule freeze
+        working-directory: experiments/automation
+        run: python3 check_e2_schedule_frozen.py
+
+      - name: E1 — report computes (enumerate-then-count)
+        working-directory: experiments/automation
+        run: python3 ledger.py report
+
+      - name: Status table matches PROTOCOL.md
+        working-directory: experiments/automation
+        run: python3 status.py

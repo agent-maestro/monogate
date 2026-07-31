@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "monogate-e3-evaluation-record.v1",
+  "description": "One per trap. Which pipeline stages SAW it, what each said, and which stage caught it -- or NONE. 'NONE' is the result E3 exists to detect: MISFORMALIZED statements are expected to pass every stage, because every stage checks the formal object and misformalization is a property of the gap between the formal object and the English.",
+  "type": "object",
+  "required": ["trap_id", "stages", "caught_by"],
+  "properties": {
+    "trap_id": { "type": "string" },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stage", "saw_it", "verdict"],
+        "properties": {
+          "stage": { "enum": ["prover", "gates", "certifier", "adversarial_review"] },
+          "saw_it": { "type": "boolean", "description": "Distinct from its verdict. A stage that never ran cannot be credited with a pass -- UNAVAILABLE is not a clean bill." },
+          "verdict": { "enum": ["accepted", "rejected", "inconclusive", "not_run"] },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "caught_by": {
+      "description": "The FIRST stage that rejected it, or null for NONE.",
+      "type": ["string", "null"],
+      "enum": ["prover", "gates", "certifier", "adversarial_review", null]
+    }
+  }
+}

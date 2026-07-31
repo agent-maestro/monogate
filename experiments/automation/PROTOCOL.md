@@ -1,0 +1,247 @@
+# Research-automation experiment — pre-registered protocol
+
+**Status:** protocol committed 2026-07-30. E1 live at commit. E2–E5 NOT STARTED.
+**Instruments built by:** AI (Claude Opus 5), this commit. **Experiments run by:** orchestrator.
+**Nothing in this file has been measured.** Every `PREDICTION:` slot is empty by design.
+
+---
+
+## The claim under test
+
+> **The inner loop of mathematical research (prove/refute a stated conjecture) is automating; the outer
+> loop (select targets, judge significance, catch plausible-wrong and misformalized statements) is not.**
+
+This is a claim about *this project*, testable with *this project's* record. It is not a claim about AI
+in general, and the arms below are scoped so that a negative result is informative rather than merely
+embarrassing.
+
+## Publication commitment
+
+> **Results are published whichever way they cut. A negative result is a finding and is filed as one.**
+
+The most likely negative results, named in advance so their arrival is not reinterpreted: the outer loop
+may turn out to be automatable (E2 shows no arm difference); the inner loop may turn out *not* to be
+automated (E5 fails, or E3 shows the pipeline passing false statements); or the ledger may show that what
+we call "taste" is mostly mechanical relay (E1).
+
+## House rules binding this program
+
+1. **Pre-registration before data.** Bars, predictions and thresholds are committed before the first
+   measurement they judge. Amendments are recorded with date and reason, never silent.
+2. **Every gate ships with its firing specimen** — a demonstrated failure *and* a demonstrated pass, in
+   the same commit. A gate with no firing specimen is UNVALIDATED, not passing.
+3. **Enumerate-then-count.** Summary counts are computed by the tool that enumerated. No hand-written
+   totals anywhere in this directory.
+4. **UNAVAILABLE is failure.** A metric that cannot be derived reports as instrument failure, never as
+   zero. A zero and an unmeasurable are different facts.
+5. **Append-only records.** Ledgers and changelogs only grow; a CI gate diffs against git history.
+6. **No claim without an artifact.** Anything a report asserts links to the file that shows it.
+
+---
+
+# E1 — Intervention ledger
+
+**Status: LIVE at commit.** This is the only arm whose data collection begins immediately, because it
+measures ordinary work rather than a designed intervention.
+
+**Hypothesis.** Human interventions concentrate in *direction*, *correction* and *taste*; the
+*mechanical* share is small and shrinking. If the claim under test is true, findings should track
+direction/taste interventions rather than session count.
+
+**Measurement.** Every session logs its interventions by kind and its findings by class. Reported as
+ratios per session and cumulatively, plus a findings-per-session time series.
+
+### Definitions — these ARE the measurement
+
+| kind | means |
+|---|---|
+| `direction` | chose or changed **what to work on** |
+| `correction` | caught an **error** in AI output |
+| `taste` | judged worth / not-worth, significance, or smell — **without an error being present** |
+| `mechanical` | ran or relayed **without judgment** |
+
+The `taste`/`correction` boundary is the one that matters: a `correction` requires an error to exist. If
+the human said "this is fine but boring", that is `taste`. If they said "this is wrong", that is
+`correction`. **Boundary cases are logged with a `?` flag rather than dropped** — a dropped boundary case
+is a silent thumb on the scale, and the flag lets the ambiguous ones be counted separately later.
+
+| finding class | means |
+|---|---|
+| `closure` | a stated conjecture proved or refuted |
+| `surprise` | something true that nobody asked for |
+| `falsification` | a claim of ours shown false |
+| `dead_end` | a route closed off, negatively informative |
+
+### Known blindness
+
+The append-only gate can detect a *modified* or *deleted* entry. It **cannot detect an entry that was
+never written.** An unlogged session is invisible to this instrument, and that is the failure mode most
+likely to bias E1 — the sessions least likely to get logged are the boring ones, which would inflate the
+findings-per-session ratio. Partial mitigation: a session with findings but **zero** logged interventions
+is flagged `SUSPECT` by the gate. That catches "logged the win, skipped the work", not "skipped the
+session".
+
+**Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first report]`
+**Pre-registered prediction:** `PREDICTION: [to be filled by orchestrator before first report]`
+
+---
+
+# E2 — AI-selected frontier ablation
+
+**Status: NOT STARTED.**
+
+**Hypothesis.** Sessions whose target was selected by a human produce more findings — and more
+*surprises* specifically — than sessions whose target was selected by the AI. If the outer loop is not
+automating, the human-selected arm wins on finding quality even when the inner-loop work is identical.
+
+**Measurement.** Findings per session, falsified-claim rate, and surprise rate, **by arm**. Arms are
+`E2-ai` (AI names the target) and `E2-human` (orchestrator names the target).
+
+**Design.** `e2_schedule.py` generates a session-assignment schedule once, records its seed, and commits
+it. The schedule is **frozen at first use**: `check_e2_schedule_frozen.py` fails if the schedule file's
+hash changes after any E2 session has been logged. Choosing arms as you go, in a study you are also
+scoring, is the failure this prevents.
+
+**Contamination rule.** The AI arm must select its target without having seen the human arm's target
+list for the same period, and vice versa. If both arms are run in one context window, the arm assignment
+is contaminated and the sessions are void.
+
+**Per-session pre-registration** (`e2_session_template.md`): the target, the expected finding, and the
+predicted class are written **before** the session and scored after. A session with no pre-registration
+file is not scorable and is excluded — recorded as excluded, not silently dropped.
+
+**Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first run]`
+**Pre-registered prediction:** `PREDICTION: [to be filled by orchestrator before first run]`
+
+---
+
+# E3 — Trap set
+
+**Status: NOT STARTED. Traps not authored.**
+
+**Hypothesis.** The pipeline catches SUBTLY_FALSE statements (the prover fails, gates fire) but does
+*not* catch MISFORMALIZED ones — where the Lean statement is provable and true, and simply does not mean
+the English claim. Misformalization is invisible to every gate we own, because every gate checks the
+formal object.
+
+**Measurement.** Per trap: which pipeline stages saw it (prover / gates / certifier / adversarial
+review), the verdict at each stage, and **the stage that caught it — or `NONE`**. Reported as catch rate
+by planted class and by stage.
+
+**Planted classes.** `TRUE`, `SUBTLY_FALSE`, `MISFORMALIZED`. 20 slots.
+
+### Contamination warning — verbatim, non-negotiable
+
+> **Traps must not be authored by the same AI system under test, and must not enter any context visible
+> to the system before evaluation. Trap authorship is an orchestrator task, possibly with a different
+> model in an isolated session. An AI grading traps it wrote is the vacuous-test failure mode.**
+
+This is why the traps are **not** authored in this commit and must not be authored by the assistant that
+built this harness.
+
+### Sealing mechanism
+
+The answer key is `answer_key.json`, which **stays out of the repo** (orchestrator holds it) until
+scoring. Its SHA-256 is committed in `e3_traps/manifest.json` *before any trap is evaluated*.
+`score_traps.py` verifies the key against the pre-committed hash before scoring anything; **a key that
+does not match is an invalid experiment and a hard failure**, not a warning. This makes "adjust the key
+after seeing the results" mechanically detectable rather than a matter of trust.
+
+**Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first run]`
+**Pre-registered prediction:** `PREDICTION: [to be filled by orchestrator before first run]`
+
+---
+
+# E4 — External-statement formalization
+
+**Status: NOT STARTED. No tooling built.**
+
+**Hypothesis.** Formalizing a statement from a paper we did not write exposes misformalization risk that
+our own statements do not, because our own statements were written by the same process that formalizes
+them.
+
+**Measurement.** Per run: does the Lean statement mean the paper's claim? Reviewed by a party that did
+**not** write the formalization. Template: `e4_external_statement_template.md`.
+
+**Contamination rule.** The adversarial statement-reviewer must not be the author of the formalization,
+and should not be the same model instance. Self-review of statement fidelity is the same vacuous test as
+self-authored traps, one level up.
+
+**Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first run]`
+**Pre-registered prediction:** `PREDICTION: [to be filled by orchestrator before first run]`
+
+---
+
+# E5 — Open-problem attempt: `1/x ∉ EML` at any depth
+
+**Status: NOT STARTED as an experiment. THE UNDERLYING WORK IS NOT NEW — see baseline below.**
+**Do not begin until all three slots (route, session budget, abandonment criteria) are filled and committed.**
+
+### The prior recommendation, copied from the record
+
+From `monogate-research/exploration/inv_x_not_in_eml_depth_1_2026_06_15/FINDINGS.md`, "Honest
+recommendation":
+
+> The general-depth claim is the same open problem the addition-closure and diff-closure attempts both
+> ended on; **convergence on it is now three-way.** Next session priority: attempt the
+> asymptotic-Hardy-field / Khovanskii-style structural argument for `1/x ∉ EML at any depth`, leveraging
+> MachLib's existing asymptotic and Pfaffian scaffolding. If successful, this single result closes the
+> addition-closure conjecture, the differentiation-closure conjecture, *and* the Lambert-W candidate 1
+> question in one move.
+
+From `monogate-research/exploration/eml_hardy_field_bridge_crack_2026_06_15/FINDINGS.md`, "The natural
+next session" — route (b), the recommended one:
+
+> Build a small asymptotic-class framework in MachLib. Start with: define `EventuallyConstant`,
+> `EventuallyKOverX`, `EventuallyKExpX`, `EventuallyIterExpClass k`. Prove every `EMLTree.eval` falls
+> into one of these classes by structural induction. Show `1/x` falls into `EventuallyKOverX 1`, disjoint
+> from the EMLTree-image classes (because EML's K is always `exp(...)` of something positive).
+>
+> This route is harder but bridges to the general-depth claim. … Recommendation: (b), because (a)
+> doesn't scale to depth 3 anyway.
+
+### BASELINE — read this before filling any slot
+
+**Route (b) was taken, and has been worked for 21 recorded sessions.** Measured 2026-07-30:
+
+| | |
+|---|---|
+| prior sessions on this route | **21** (`exploration/eml_asymptotic_class_*`, phases 1–17 plus depth sweeps) |
+| companion artifact | `machlib/foundations/MachLib/EMLAsymptoticClass.lean`, **4,315 lines** |
+| latest recorded frontier | Phase 17 (2026-06-24): class-level closure matrix **11/25** |
+| the general-depth claim | **still open** |
+
+**Why this matters for pre-registration.** E5 is not a fresh attempt at a fresh problem. Pre-registering
+a "route" that has already been walked for 21 sessions, or a session budget set as though from zero,
+would produce a measurement of something other than what it claims to measure. The slots below must be
+filled *relative to this baseline* — e.g. a budget expressed as sessions-from-phase-17, and an
+abandonment criterion expressed in closure-matrix movement rather than in "did it work".
+
+`TODO: orchestrator` — confirm phase 17 is still the frontier at the time E5 begins; the count above is a
+2026-07-30 measurement of a record that continues to move.
+
+**Route:** `PREDICTION: [to be filled by orchestrator before first run]`
+**Session budget:** `PREDICTION: [to be filled by orchestrator before first run]`
+**Abandonment criteria:** `PREDICTION: [to be filled by orchestrator before first run]`
+
+---
+
+## Scoring rubric (E2, and reused by E1's report)
+
+| metric | definition | computed by |
+|---|---|---|
+| findings per session | count of `findings[]` ÷ sessions in arm | `ledger.py report` |
+| falsified-claim rate | `findings[class=falsification]` ÷ findings | `ledger.py report` |
+| surprise rate | `findings[class=surprise]` ÷ findings | `ledger.py report` |
+| intervention mix | each `kind` ÷ total interventions | `ledger.py report` |
+
+All four are **computed from the ledger**, never transcribed. A rubric number appearing in prose without
+a tool that produced it is a house-rule violation and should be treated as one.
+
+## Amendments
+
+Append-only. Date, what changed, why. Empty at commit.
+
+| date | change | reason |
+|---|---|---|
+| — | — | — |
