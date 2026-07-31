@@ -133,6 +133,35 @@ which point a schema field is warranted and this note is the evidence that it wa
 guessed. Entries logged before this convention are unmarked, in the same way pre-Amendment-1 entries
 carry no `actor`: the past is not relabelled.
 
+### The append-only argument, recorded because the tempting middle path is seductive
+
+A "purely additive mutations are fine" exemption was available and was rejected. The argument, in one
+sentence:
+
+> **An added key can change how the existing ones read.**
+
+Append-only protects *bytes* because meaning supervenes on bytes. Any gate that permits byte changes
+while trying to police meaning directly has taken on an undecidable job — it must decide whether a new
+field reinterprets an old one, which is not a question about the file. So the rule stays byte-level and
+strict, and additions that cannot be made in place are annotated **from outside**, in
+`ledger/MIGRATIONS.md`, with both counts printed separately. That is the demotion rule at the schema
+level.
+
+### Constitutional symmetry, completed 2026-07-31
+
+The rule set has now overridden **both** principals within one week:
+
+| date | overridden | how |
+|---|---|---|
+| 2026-07-30 | the orchestrator's **instruction** | a generic "proceed" could not start a session past an exhausted pre-registered budget |
+| 2026-07-31 | the orchestrator's **instruction** | "proceed into all of that" could not authorise trap authoring or retrospective classification against a contamination rule |
+| 2026-07-31 | the co-author's **ratified wording** | a countersigned migration instruction was declined because the gate would have convicted it |
+
+**A constitution that binds only the junior party is a policy.** This one survived its authors in both
+directions, which is the only test of the distinction that means anything. All three are recorded as
+`preventive` — the class that exists because *cheaper than any catch is the mistake that never
+executes*.
+
 ### AMENDMENT 2 to E1 — catch-class entries record WHERE the catch fired (2026-07-30)
 
 **Recorded the same day as Amendment 1, after it made the underlying issue visible.**
