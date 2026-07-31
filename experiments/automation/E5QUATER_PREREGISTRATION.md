@@ -61,3 +61,25 @@ The target says "bounded below in absolute value". EML trees are built from `exp
 not obviously oscillatory, but **nothing in the slots establishes that**, and a tree crossing zero
 infinitely often would satisfy neither disjunct while still not being `1/x`. If session 1 finds the
 invariant needs a non-oscillation premise, that is an amendment to record, not a route failure.
+
+---
+
+# E5-quater TARGET 2 — the reachable constant floor. AI-DRAFTED, UNCOUNTERSIGNED.
+
+**Opened 2026-07-31 on the orchestrator's instruction, using E5-quater's inherited remainder
+(3 sessions). Drafted by the AI and NOT countersigned — recorded as such.**
+
+**Why proceeding uncountersigned is defensible here and was not before.** The provenance rule exists
+to stop the party that sets a bar from also clearing it. That risk scales with how much discretion the
+grading involves — and here there is none: the question is whether `exp (exp a) > 1` for all real `a`,
+which Lean answers. A binary, machine-checked outcome leaves no room to fudge a verdict, so the
+countersignature is buying much less than it did for a six-session route with a judgement-laden
+abandonment criterion. **If the orchestrator rejects these slots, the work is discardable and the
+finding does not transfer** — which is the property that makes proceeding safe rather than convenient.
+
+| slot | value |
+|---|---|
+| **target** | Characterise which `K` are reachable as `EventuallyKOverX K` by the shape session 1 exposed, and establish whether `K = 1` is below the floor. |
+| **budget** | 1 session of the inherited 3. Arm total stays 6. |
+| **halt** | If the general-shape question (all trees, not just this shape) is needed to answer it, stop — that is the original hard problem and this target does not get to smuggle it in. |
+| **exits** | (1) floor established for the shape — `K = 1` unreachable by it, claim's difficulty localised. (2) `K = 1` reachable by some shape — `1/x ∈ EML`, the claim is FALSE, largest possible finding. (3) needs the general problem — halt per above. |

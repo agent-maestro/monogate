@@ -331,6 +331,15 @@ self-authored traps, one level up.
 # E5 — Open-problem attempt: `1/x ∉ EML` at any depth
 
 **Status: BUDGET EXHAUSTED 2026-07-30 — 8 of 8 sessions run. Bar CLEARED on both arms. Result below. THE UNDERLYING WORK IS NOT NEW — see baseline below.**
+
+**Continuation arms E5-ter and E5-quater are also CLOSED — 6 of 6 sessions, 2026-07-31.** Both were
+separately pre-registered against the same open problem after the original budget ran out. Seven
+findings, **two pre-registered targets falsified by construction**, one halt point fired on schedule,
+and `1/x ∉ EML` still open — better characterised, not closer to proved. See `E5B_RESULT.md` (E5-ter)
+and `E5QUATER_RESULT.md` (E5-quater). **No further E5 sessions without a fresh pre-registration and a
+fresh budget**: an arm that keeps spending its own remainder is an arm whose budget has become
+decorative.
+
 **Do not begin until all three slots (route, session budget, abandonment criteria) are filled and committed.**
 
 ### The prior recommendation, copied from the record

@@ -10,7 +10,55 @@
       "description": "Countersigned the orchestrator-drafted E5-quater slots WITH an amendment: the route's constructor checklist (sums, products, composition, exp, log, division) describes a different inductive type. EMLTree is const|var|eml with no division constructor. Walking that checklist would have burned session 1 discovering the type. Caught by checking the source before ratifying \u2014 which is what makes a countersignature worth more than a rubber stamp.",
       "via": "structural",
       "artifact_link": "experiments/automation/E5QUATER_PREREGISTRATION.md"
+    },
+    {
+      "ts": "2026-07-31T12:15:26",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Ran the adversarial pass before the proof attempt, per the pre-registration. It succeeded in the first hour. The instruction to try building the counterexample first \u2014 not my idea, the drafter's \u2014 is what turned four budgeted sessions into one.",
+      "via": "structural",
+      "artifact_link": "experiments/automation/E5QUATER_PREREGISTRATION.md"
+    },
+    {
+      "ts": "2026-07-31T12:47:07",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Was about to prove 1 < exp(exp a) from scratch; the reachable-lemma index found it already proved 4400 lines up in the same file, since Phase 3. Shipped the citation rather than a duplicate. First time the index prevented redundant work rather than broken work.",
+      "via": "structural",
+      "artifact_link": "machlib/foundations/tools/reachable_lemmas.py"
+    },
+    {
+      "ts": "2026-07-31T12:51:14",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Halted rather than pursuing the general floor, on the pre-registered halt point, having chased it exactly far enough to see it reduce to the original problem. No error existed; the chase was going somewhere. The slot written before the session is what made one session the cost instead of three.",
+      "via": "structural",
+      "artifact_link": "experiments/automation/E5QUATER_PREREGISTRATION.md"
+    },
+    {
+      "ts": "2026-07-31T13:02:25",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Closed the arm with a write-up instead of opening a seventh target. Four of six sessions produced findings by the same move (check the destination exists first); a seventh application would have been pattern-matching, and the arm's results were spread across six commit messages with no single readable statement of what it established.",
+      "via": "structural",
+      "artifact_link": "experiments/automation/E5QUATER_RESULT.md"
     }
   ],
-  "findings": []
+  "findings": [
+    {
+      "description": "EXIT 3: e/x is an EML tree (eml(eml(const 0, var), const 1)), proved exactly. Decays to 0, never 0 \u2014 the lower-bound target is false by construction in session 1. Reframes rather than kills: EventuallyKOverX K is reachable for K = exp(exp a) > 1 always, so K=1 sits below the reachable floor. That is why the framework's lemma is stated for K=1 specifically.",
+      "class": "falsification",
+      "artifact_link": "machlib commit"
+    },
+    {
+      "description": "Constant floor localised: 1 < exp(exp a) is the floor theorem, and it was already proved as one_lt_exp_exp_local since Phase 3. The difficulty in 1/x notin EML is that 1 sits BELOW the reachable constant floor, not that 1/x is hard to approximate.",
+      "class": "closure",
+      "artifact_link": "machlib commit"
+    },
+    {
+      "description": "HALT POINT FIRED: the general floor requires deciding whether any EML tree evaluates to a constant multiple of x \u2014 the original hard problem. Cost of discovery: one session, which is what the halt point was for. Branch result survives: K<=1 needs exp a = log K <= 0, impossible.",
+      "class": "dead_end",
+      "artifact_link": "machlib commit"
+    }
+  ]
 }
