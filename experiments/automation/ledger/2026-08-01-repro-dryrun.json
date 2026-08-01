@@ -130,6 +130,13 @@
       "actor": "human",
       "description": "Performed the 0.14.0 yank in the PyPI web UI and revoked the exposed API token. Logged as mechanical rather than direction: the decision was already made and the act needed a human at a browser only because PyPI has no yank API -- tokens are upload-scoped and yank sits behind CSRF origin validation. Left 0.14.1 unyanked, which was the judgment call flagged and not made for them.",
       "artifact_link": "https://pypi.org/project/monogate-forge/0.14.0/"
+    },
+    {
+      "ts": "2026-08-01T14:01:34",
+      "kind": "mechanical",
+      "actor": "human",
+      "description": "Yanked 0.14.1 as well, and attached reasons to BOTH releases -- taking the recommended inversion rather than the original plan of reasoning 0.14.1 and leaving 0.14.0 bare. Verified stable on two agreeing reads each.",
+      "artifact_link": "https://pypi.org/project/monogate-forge/"
     }
   ],
   "findings": [
@@ -197,6 +204,11 @@
       "description": "THE PUBLICATION CHAIN IS CLOSED. 0.14.0 -- the stale wheel whose bits did not match its version, published outside the release pipeline that has no CI run for it -- is yanked on PyPI, both wheel and sdist. 0.14.3 is latest, released through the gated path with wheel-vs-tagged-tree correspondence checked before upload. The exposed token is revoked. Residual, recorded rather than closed: the yank carries NO REASON, so a downstream user with 0.14.0 pinned sees a bare warning and cannot judge urgency -- the reason field is what surfaces through installer APIs. And 0.14.1 stays unyanked despite shipping a C backend whose output cannot compile.",
       "class": "closure",
       "artifact_link": "https://pypi.org/project/monogate-forge/ \u2014 0.14.0 yanked, 0.14.3 latest"
+    },
+    {
+      "description": "MY OWN CORRECTION WAS ALSO WRONG, AND IN THE SAME FAMILY. Earlier today I found the aggregate PyPI JSON serving stale yank state, and concluded: verify on the PEP 592 simple API or the cache-busted per-version endpoint. THAT CONCLUSION IS FALSE. On the next verification the simple API reported 0.14.1 NOT yanked while the per-version JSON showed it yanked with its reason; and a CACHE-BUSTED per-version read reported yanked_reason=None that a second read seconds later had. Every path is eventually consistent and a cache-buster does not defeat it. THE DEFECT IN MY FIX WAS ITS SHAPE: I responded to one stale endpoint by nominating a different endpoint as authoritative, which is the same single-read trust with a new address. The correct rule is procedural, not topological -- RE-READ UNTIL TWO CONSECUTIVE READS AGREE. I came within one command of reporting the orchestrator's completed work as not-done for the SECOND time in one session, from the same root cause, having already written a finding about the first.",
+      "class": "falsification",
+      "artifact_link": "monogate experiments/automation/ledger/2026-08-01-repro-dryrun.json \u2014 the prior finding it corrects"
     }
   ]
 }
