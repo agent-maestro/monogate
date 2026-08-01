@@ -155,6 +155,39 @@ guessed.
 > must not be the party that decides how preventives are counted. Entries logged before this convention are unmarked, in the same way pre-Amendment-1 entries
 carry no `actor`: the past is not relabelled.
 
+### AMENDMENT 4 to E1 — `preventive` becomes a REQUIRED TERNARY (2026-07-31)
+
+**The defect, measured rather than suspected.** AMENDMENT 3 added `preventive` as an *optional*
+boolean. A cross-derivation during an unrelated status sweep counted it two ways:
+
+| derivation | count |
+|---|---|
+| entries with `preventive: true` | **3** |
+| entries whose description names a decline / refusal / stop-before-execution | **13** |
+
+**A 4× undercount.** Unlike `actor` and `via`, the field was never required, so it was applied by
+whoever remembered it — and the party writing the entry is the party a high preventive count flatters.
+**An optional self-reported flag is not a count of anything.**
+
+**The change.** `--preventive` / `--not-preventive` become a required, mutually exclusive pair on
+`correction` and `taste`. The CLI refuses the entry without one; the gate fails a catch-class entry
+logged after the pinned instant with no declaration. **Absence and `false` are different facts, and
+only one of them is a measurement.**
+
+**The past is not touched.** Entries predating the amendment report as `undeclared`, never as `false`,
+and `report` prints that count separately with a `[PARTIAL]` marker directing any pre-amendment tally to
+derive from descriptions instead. Same treatment as `actor` (AMENDMENT 1) and `via` (AMENDMENT 2); the
+cutoff constant is **measured from the clock at amendment time, not typed**, because a rounded cutoff
+convicted two innocent entries the first time AMENDMENT 1 ran.
+
+**Firing specimen:** `specimens/amendment4/` — one entry, one field of difference, convicting and
+acquitting. Its convicting fixture is timestamped an hour ahead so it cannot expire into a false pass.
+
+**What this does not fix.** Whether a catch *truly* stopped an act before it executed is still
+self-reported and unverifiable. This converts a silently-omitted field into a forced attestation — the
+same grade as `actor`, and it belongs on the same list of limits no gate here can cover. **An act not
+taken remains the cheapest thing in the world to claim credit for.**
+
 ### The append-only argument, recorded because the tempting middle path is seductive
 
 A "purely additive mutations are fine" exemption was available and was rejected. The argument, in one

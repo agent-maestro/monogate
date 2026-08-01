@@ -1,6 +1,8 @@
-# Depth 3 for `x + 1` — pre-registration. AI-DRAFTED, AWAITING COUNTERSIGNATURE.
+# Depth 3 for `x + 1` — pre-registration. **COUNTERSIGNED 2026-07-31, WITH THE BUDGET TIGHTENED.**
 
-**Drafted 2026-07-31, before any depth-3 work. Not yet countersigned; recorded as such.**
+**Drafted by the AI 2026-07-31 before any depth-3 work. Countersigned by the orchestrator the same day,
+who took both of the draft's arguments-against-itself at face value and tightened accordingly.** The
+draft asked to be doubted and was; that is the countersignature working rather than rubber-stamping.
 
 **Why this one is drafted by the AI and why that is weaker here than it was for the constant floor.**
 The E5-quater target-2 precedent was that an AI may draft its own slots when the outcome is binary and
@@ -65,3 +67,45 @@ E2 session 1 predicted `closure`, got `falsification`, and was wrong about the m
 E5-quater target 2's slots were AI-drafted and its route hit the halt point. **The AI's record at
 predicting its own sessions is, at n=2, zero for two.** This prediction should be read against that,
 and a countersigner has grounds to tighten the budget rather than accept it.
+
+
+---
+
+# COUNTERSIGNATURE — 2026-07-31, orchestrator
+
+**Accepted, with the budget tightened as the draft's own adversarial note invites.** The reasoning is
+taken at face value: the AI's session-prediction record is **0-for-2**, and exit 2 is discretion-bearing.
+
+| slot | drafted | **countersigned** |
+|---|---|---|
+| budget | 1 session, not renewable | **1 session, hard checkpoint at session end** |
+| exit 2 | "the bound resists — partials banked" | **must state the obstruction as a LEMMA-SHAPED CLAIM** |
+| route failure | (unspecified) | **no automatic continuation onto the mirror branch** |
+
+### The hard checkpoint
+
+At session end, **one of two things exists** — no third option, and no "made progress":
+
+1. the divisor bound **proven** under `x ↦ −x`; or
+2. a **written characterisation of where the effort actually concentrated.**
+
+### Scoring the route decision
+
+If the effort concentrated in **reflection plumbing** rather than the divisor bound, the route
+prediction is **scored wrong**, and "mirror the vocabulary" **does not inherit the remaining work**. It
+gets its own fresh slot decision. A route that fails must not be able to hand its budget to its
+alternative — that is a two-session allowance wearing one session's clothes.
+
+### Exit 2 is constrained by checkability, not by trust
+
+If exit 2 is invoked, the obstruction must be stated as **"the bound resists because X fails"**, where
+`X` is a named lemma-shaped claim — **not a narrative.** Discretion is permitted; unfalsifiable
+discretion is not. The constraint is not that the AI be trusted less, but that its exercise of judgement
+leave something a later reader can check.
+
+### What a win is worth here
+
+If the substitution lands inside one session anyway, the prediction record improves to **1-for-3, with
+the win scored where it was explicitly doubted.** That is worth more to E1 than an easy allowance would
+have been — a prediction that survives a tightened bar is evidence; one that clears a generous bar is
+not.

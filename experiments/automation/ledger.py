@@ -66,6 +66,19 @@ def save(d: dict) -> str:
 
 
 def cmd_log(a: argparse.Namespace) -> int:
+    # AMENDMENT 4: `preventive` becomes a REQUIRED ternary on catch-class entries rather than an
+    # optional boolean. AMENDMENT 3 made it optional, and a cross-derivation on 2026-07-31 measured
+    # 3 flagged entries against 13 whose text named a decline/refusal/stop-before-execution — a 4x
+    # undercount, because an optional flag applied ad hoc by the party writing the entries is not a
+    # count of anything. Absence must now be impossible, so `false` means "declared not preventive"
+    # rather than "nobody said".
+    if a.kind in CATCH_KINDS and a.preventive is None:
+        print(f"[REFUSED] one of --preventive / --not-preventive is required for {a.kind!r} "
+              f"(AMENDMENT 4). The optional form under-counted preventives 4x, because a flag that "
+              f"may be omitted is applied by whoever remembers it — and the party writing the entry "
+              f"is the party the count flatters. Absence and `false` are different facts.",
+              file=sys.stderr)
+        raise SystemExit(2)
     if a.kind in CATCH_KINDS and not a.via:
         print(f"[REFUSED] --via is required for {a.kind!r} (AMENDMENT 2). A catch that does not say "
               f"whether it fired inside a human-installed structure or arose unprompted cannot "
@@ -77,8 +90,8 @@ def cmd_log(a: argparse.Namespace) -> int:
          "actor": a.actor, "description": a.desc}
     if a.via:
         e["via"] = a.via
-    if a.preventive:
-        e["preventive"] = True
+    if a.preventive is not None:
+        e["preventive"] = a.preventive
     if a.artifact:
         e["artifact_link"] = a.artifact
     if a.boundary:
@@ -208,9 +221,17 @@ def cmd_report(a: argparse.Namespace) -> int:
         print("  [UNAVAILABLE] no AI catch-class entries carry via yet.")
     print()
 
-    print(f"PREVENTIVE CATCHES  (AMENDMENT 3) : {preventive_n} recorded via the field")
-    print("  plus 2 pre-field instances, recorded in ledger/MIGRATIONS.md rather than by editing")
-    print("  the entries — append-only means the prefix is immutable, including for good reasons.")
+    catch_n = sum(1 for s in sessions for e in s["entries"] if e["kind"] in CATCH_KINDS)
+    undeclared = sum(1 for s in sessions for e in s["entries"]
+                     if e["kind"] in CATCH_KINDS and "preventive" not in e)
+    print(f"PREVENTIVE CATCHES  (AMENDMENT 3/4) : {preventive_n} declared true "
+          f"of {catch_n} catch-class entries")
+    if undeclared:
+        print(f"  [PARTIAL] {undeclared} catch entries predate AMENDMENT 4 and declare NOTHING. "
+              f"They are UNDECLARED,")
+        print("  not false. The optional-flag era under-counted preventives 4x (3 flagged vs 13")
+        print("  described); any tally over the pre-amendment span must derive from descriptions,")
+        print("  not from this field. See ledger/MIGRATIONS.md.")
     print()
 
     print("FINDINGS BY CLASS")
@@ -254,8 +275,14 @@ def main() -> int:
                     help="AMENDMENT 2, required for correction/taste. structural = fired inside a "
                          "human-installed structure (specimen, gate, pre-registered bar); "
                          "spontaneous = arose unprompted in open work.")
-    lg.add_argument("--preventive", action="store_true",
-                    help="AMENDMENT 3: the catch stopped an act before it executed.")
+    pv = lg.add_mutually_exclusive_group()
+    pv.add_argument("--preventive", dest="preventive", action="store_true", default=None,
+                    help="AMENDMENT 3/4: the catch stopped an act BEFORE it executed. Required "
+                         "(with its negation) on correction/taste since AMENDMENT 4.")
+    pv.add_argument("--not-preventive", dest="preventive", action="store_false",
+                    help="AMENDMENT 4: explicitly NOT preventive — the act had already executed. "
+                         "Must be stated; absence is refused, because absence and false are "
+                         "different facts and only one of them is a measurement.")
     lg.add_argument("--boundary", action="store_true",
                     help="the `?` flag: the kind was a judgement call. Flag it, never drop it.")
     lg.set_defaults(fn=cmd_log)

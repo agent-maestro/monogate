@@ -53,6 +53,10 @@ ARMS = {"baseline", "E2-ai", "E2-human"}
 # time, not a rounded hour: a guessed cutoff convicted two pre-amendment entries on the first run.
 AMENDMENT_2_TS = "2026-07-30T18:50:23"   # derived from the clock at amendment time, not typed from memory of it
 AMENDMENT_1_TS = "2026-07-30T18:36:38"
+# AMENDMENT 4 — `preventive` becomes a REQUIRED ternary on catch-class entries. Pinned to the clock at
+# amendment time for the same reason as 1 and 2: a rounded cutoff convicted two pre-amendment entries
+# on the first run of AMENDMENT 1, and the lesson is that the constant must be MEASURED, not typed.
+AMENDMENT_4_TS = "2026-07-31T17:18:32"
 
 
 def validate(name: str, d: object) -> list[str]:
@@ -79,6 +83,15 @@ def validate(name: str, d: object) -> list[str]:
                 and e.get("ts", "") > AMENDMENT_2_TS):
             errs.append(f"{name}: entries[{i}] is a catch logged after AMENDMENT 2 with no `via` — "
                         f"cannot distinguish the discipline executing from the outer loop automating")
+        # AMENDMENT 4: catch-class entries must DECLARE preventive true or false. Absence is a
+        # failure only after the pinned instant; earlier entries are `undeclared`, never `false`.
+        if "preventive" in e and not isinstance(e["preventive"], bool):
+            errs.append(f"{name}: entries[{i}].preventive {e.get('preventive')!r} is not a bool")
+        if (e.get("kind") in ("correction", "taste") and "preventive" not in e
+                and e.get("ts", "") > AMENDMENT_4_TS):
+            errs.append(f"{name}: entries[{i}] is a catch logged after AMENDMENT 4 with no "
+                        f"`preventive` declaration — the optional form under-counted 4x, so "
+                        f"absence is refused; `false` is a measurement, silence is not")
         if "actor" in e and e["actor"] not in ("human", "ai", "unclear"):
             errs.append(f"{name}: entries[{i}].actor {e.get('actor')!r} invalid")
         if "actor" not in e and (e.get("ts", "") > AMENDMENT_1_TS):

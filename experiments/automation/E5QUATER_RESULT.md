@@ -132,3 +132,29 @@ now living inside the proofs rather than around them.
 up: not a constant bound on the divisor but an **eventually-linear bound on the negative axis**,
 against the divisor's required exponential growth. That prediction is recorded here so the depth-3
 session can score it rather than discover it.
+
+
+## The method sentence, updated — third instance, now operating on the backlog
+
+The 2026-07-31 premise audit is the third landing, and it changes the sentence rather than lengthening
+the table:
+
+> **Constrain the destination. Check the destination exists. Audit the itineraries before booking them.**
+
+**Why the third clause is the valuable one.** Every falsification this project has produced until now
+cost sessions *already spent* — E5-ter's counterexample arrived after twenty-five sessions built toward
+a conjecture that turned out false, and the write-up had to argue that those twenty-five built the
+falsifier rather than chasing a delusion. Corrections cost what was already owed.
+
+**The audit cost an hour of `grep` and three machine-checked refutations, and retired 230–430 budgeted
+lines plus roughly a session and a half of *future* spend.** No session was wasted, because the sessions
+had not been run.
+
+That moves the falsification frontier from *"catches what happened"* to *"kills what was scheduled"* —
+**the cheapest place a wrong premise can die.** The pattern is the same check-before-walk move applied
+one level out again: first to a proof's destination, then to a session's target, now to the backlog's
+itinerary.
+
+**And it names a trigger, because the move does not fire on its own.** Nothing in a build, a test suite,
+or a gate connects a June document to a July theorem. **When a premise falls, the refutation is one
+finding and the audit is another.** The second happens only because a person or a habit starts it.
