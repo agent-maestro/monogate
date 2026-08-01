@@ -223,6 +223,70 @@ before the measurement. It is not a hedge to be reached for when a prediction fe
 a pre-registration that predicts `MARGINAL` on everything has predicted nothing. The straddle's bounds
 must be stated, and stating them is what makes the hedge falsifiable.
 
+### AMENDMENT 6 to the prediction discipline — an existence prediction is nearly unfalsifiable (2026-08-01)
+
+**The defect, from a prediction that could not lose.** The reproduction dry run pre-registered:
+
+> *at least one breakage will be found.*
+
+It was scored **CORRECT** against **nine** findings. That is not a hit; it is a bar so low that no
+plausible outcome cleared it from below. **A prediction of "at least one X" against a rich outcome
+space is nearly unfalsifiable**, and the record cannot tell it apart from a sharp call.
+
+It was chosen honestly — a *shape* claim after two consecutive misses that were both "category right,
+quantity wrong" — and the reasoning behind that choice was sound. **The error was in the conversion
+from a cautious posture to an unfalsifiable sentence**, which is AMENDMENT 5's miss-of-conversion
+wearing the other face: there, a straddle was forced into a binary; here, a real claim was diluted
+into an existence claim.
+
+**The change. Predict a COUNT or a CLASS, never bare existence.**
+
+| instead of | write |
+|---|---|
+| *at least one breakage* | *between 2 and 5 findings, and at least one in class `missing public artifact`* |
+| *something will fail* | *rung (i) fails; rungs (iii) and (v) survive* |
+
+A count can be wrong in two directions. A class can be wrong by naming the wrong one. **Bare existence
+can only be wrong if literally nothing happens**, which is the one outcome a session that ran at all
+will not produce.
+
+**What this does not license.** Inventing a precise-looking number to satisfy the rule. If the honest
+state of knowledge is a range, state the range — that is a count prediction. If the mechanism genuinely
+straddles, AMENDMENT 5 still applies. The test is not *"is there a number"* but **"name an outcome that
+would falsify this."** If none exists, the prediction is decoration.
+
+**Scored retroactively? No.** The dry run's 4-for-9 stands as recorded. Rescoring a past prediction
+under a rule written after it is exactly the provenance blur this program exists to prevent.
+
+### STANDING PROTOCOL — a fresh session audits the previous deep session's tail before new work (2026-08-01)
+
+**Earned, not theorised.** A deep session's final instruction was *"write the two record items and
+nothing else."* **Neither was written.** The next session's step zero was an audit of exactly those two
+items, and it found both missing inside five minutes — then wrote them as pure transcription, which is
+what the deep session had been asked for and had not delivered.
+
+**What this measures.** Tail-of-session degradation, on the cheapest possible task. The owed work was
+not analysis or judgement; it was **transcription of decisions already made**. If that slips at depth,
+nothing at depth is safe on the strength of "it was simple".
+
+> **A deep session's last act is its least reliable one, and it is the act with the least
+> supervision — everyone has stopped reading by then.**
+
+**The protocol, now standing rather than one-off:**
+
+1. **Any session following a deep one opens with an audit of that session's owed records.** Not a
+   summary of what it did — a check that what it said it would leave behind is actually there.
+2. **The audit is transcription, not judgement.** If a record is missing, write what was decided.
+   Re-opening the decision is a different act and needs its own justification.
+3. **A missing record is logged as a finding**, not quietly fixed, because the rate is the
+   measurement. This one is instance 1.
+4. **Confirm the working trees are clean before new work starts**, since a deep session that failed to
+   write a record may also have failed to commit one.
+
+**Why it is cheap enough to be unconditional.** Five minutes against the cost of the alternative: a
+record that never gets written, and then cannot be written honestly later because nobody remembers
+what was decided. **The un-run session leaves no artifact — only the ledger sees it.**
+
 ### The append-only argument, recorded because the tempting middle path is seductive
 
 A "purely additive mutations are fine" exemption was available and was rejected. The argument, in one

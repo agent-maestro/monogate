@@ -68,6 +68,61 @@
       "via": "structural",
       "preventive": true,
       "artifact_link": "monogate-research reproduction/DRYRUN_WALK.md \u2014 rung iii"
+    },
+    {
+      "ts": "2026-08-01T12:42:23",
+      "kind": "direction",
+      "actor": "human",
+      "description": "OBLIGATION, NOT A JUDGEMENT CALL: push the fixes today. The reasoning given was that the dry run's purpose was to see what a stranger gets, and knowing a stranger gets a broken check_ledger.py and a forge CLI that reports failed emission as success CONVERTS A FOUND DEFECT INTO A KEPT ONE. Also set the sequence: push, publish evidence, wheel + yank + gate, disambiguation, re-walk, then ship.",
+      "artifact_link": "monogate-research reproduction/REPRODUCING.md"
+    },
+    {
+      "ts": "2026-08-01T12:42:23",
+      "kind": "direction",
+      "actor": "human",
+      "description": "REFUSED TO LET THE STAGED WALK COUNT. Pointed out that the re-walk had copied fixed files into the container, so the fixed rungs were not demonstrated from PUBLIC state -- and required one more container run, post-push and post-publication, before REPRODUCING.md ships. The document must not assert what only the staged walk demonstrated: its own founding rule applied to itself. This is the intervention that produced every finding after it.",
+      "artifact_link": "monogate-research reproduction/DRYRUN_WALK.md"
+    },
+    {
+      "ts": "2026-08-01T12:42:23",
+      "kind": "taste",
+      "actor": "human",
+      "description": "SCOPED THE PUBLICATION DECISION RATHER THAN TAKING IT WHOLE: publish four artifacts, and the fifth (opening the forge repo) does not need deciding this week, because the wheel already makes the compiler publicly installable -- the reproduction needs pip install to work, not read-access to source history. Separating what the reproduction actually requires from what feels like the same question.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "machlib reproduction/rb_ekf/README.md"
+    },
+    {
+      "ts": "2026-08-01T12:42:23",
+      "kind": "direction",
+      "actor": "human",
+      "description": "NAMED THE STALE WHEEL AS THE arty-tof-raw.v1 CLASS and set the three-part fix: publish from the pinned tree, yank the old version, and gate wheel-vs-tree correspondence in CI. The framing that made it actionable: a version string on a public package index is the strongest identity claim the ecosystem has, and ours was false. Also ruled the machinery moratorium inapplicable because this is a FOUND defect.",
+      "artifact_link": "forge tools/scripts/check_wheel_correspondence.py"
+    },
+    {
+      "ts": "2026-08-01T12:42:23",
+      "kind": "direction",
+      "actor": "human",
+      "description": "DOCUMENTATION, NOT RENAMING, for the ekf_range_bearing name collision -- disambiguate at both ends and do not rename anything pinned. Correctly identified it as the misformalization class E3 was built around: search finds a file, the file is wrong, nothing errors.",
+      "artifact_link": "eml-stdlib eml_stdlib/control/ekf_range_bearing.eml"
+    },
+    {
+      "ts": "2026-08-01T12:42:23",
+      "kind": "correction",
+      "actor": "human",
+      "description": "GRADUATED STEP 0 FROM INSTRUCTION TO STANDING PROTOCOL, and named what it measured: the deep session's final act -- 'write the two record items and nothing else' -- did not happen, and a fresh head caught it in five minutes. Tail-of-session degradation, measured on TRANSCRIPTION-GRADE work. If that slips at depth, nothing at depth is safe on the strength of being simple.",
+      "via": "spontaneous",
+      "preventive": false,
+      "artifact_link": "monogate experiments/automation/PROTOCOL.md \u2014 STANDING PROTOCOL"
+    },
+    {
+      "ts": "2026-08-01T12:42:23",
+      "kind": "correction",
+      "actor": "human",
+      "description": "SHARPENED MY OWN SELF-GRADING INTO A RULE. I had scored the 'at least one breakage' prediction a weak hit; the orchestrator supplied the generalisation -- existence predictions are nearly unfalsifiable against rich outcomes, so predict COUNTS OR CLASSES. Now AMENDMENT 6. I had the observation and stopped at the instance.",
+      "via": "spontaneous",
+      "preventive": false,
+      "artifact_link": "monogate experiments/automation/PROTOCOL.md \u2014 AMENDMENT 6"
     }
   ],
   "findings": [
@@ -100,6 +155,31 @@
       "description": "UNAVAILABLE MUST ALSO NOT BE A FAIL -- the unstated corollary of house rule 4, found by a clean container. check_ledger.py died with a raw FileNotFoundError traceback and EXIT 1, which is the code it also returns when the axiom trust boundary has genuinely drifted. A reproducer could not tell 'machlib broke' from 'I have not installed elan', and between those a stranger assumes the alarming one. Now exit 2, naming the missing tool, no traceback. The rule was already written as 'UNAVAILABLE is never zero'; nobody had written 'and never a FAIL'.",
       "class": "closure",
       "artifact_link": "machlib 4f239f0f + foundations/tools/axiom_ledger/test_unavailable_specimen.py"
+    },
+    {
+      "description": "THE TRAIL IS NOW 5-OF-5 RECONSTRUCTIBLE FROM PUBLIC ARTIFACTS, measured in a container that never saw a host checkout. Emission re-derives to f47f6c81 byte-identically from the published wheel and the published kernel; normalization suite, atan ENUMERATION certificate and silicon-capture replay all run from the public evidence package; the reciprocal certificate and the 57 headline axiom footprints re-derive from public machlib. What closed it was four publications and four defect fixes, not a re-description of what already existed.",
+      "class": "closure",
+      "artifact_link": "machlib reproduction/rb_ekf/ + monogate-forge 0.14.3 on PyPI"
+    },
+    {
+      "description": "47 STANDING TEST FAILURES WERE AN INSTRUMENT DEFECT, AND HAD BEEN EXPLAINED AWAY TWICE IN ONE DAY -- INCLUDING BY ME. They were dismissed as 'pre-existing Lean failures' while checking whether my own change had broken anything, which is the correct check performed and then mis-concluded. Root cause: Lake moved the olean root from .lake/build/lib to .lake/build/lib/lean, discovery still pointed at the parent (which EXISTS and holds no oleans), and lake_available() tested only for the binary while its own docstring admitted the gap. A missing dependency therefore surfaced as a FAILED PROOF. A STANDING RED THAT EVERYONE HAS LEARNED TO EXPLAIN IS INDISTINGUISHABLE FROM ONE THAT IS TELLING THE TRUTH. Now 1358 passed / 55 skipped / 0 failed -- and that is 47 tests correctly reported as UNMEASURED, not 47 tests fixed.",
+      "class": "falsification",
+      "artifact_link": "forge 0.14.3 CHANGELOG + tools/equivalence/lean_runner.py"
+    },
+    {
+      "description": "MY OWN EVIDENCE PACKAGE COMMITTED THE DEFECT CLASS IT WAS PUBLISHED TO FIX, THREE TIMES. (1) The certificate rung shipped without its dependency closure -- and the same commit's message states the rule that prevents it, applied to the neighbouring directory. (2) A vendored copy forked from forge within the hour, so the re-walk debugged a bug that no longer existed anywhere else. (3) The manifest enumerated the working directory and recorded four .pytest_cache files, so it passed for its author and failed for every reader. All three were invisible until the artifact ran in the state a stranger gets. KNOWING THE RULE IS NOT APPLYING IT, and the only thing that closed the gap was execution from outside.",
+      "class": "surprise",
+      "artifact_link": "machlib reproduction/rb_ekf/check_manifest.py + commits 21c1eb96, c979cc1d"
+    },
+    {
+      "description": "THE WHEEL SHIPPED A C BACKEND WHOSE OUTPUT IT COULD NOT COMPILE. software/runtime/c/libmonogate.h is what the emitted C #includes, and it never entered the wheel: the 'software*' entry in setuptools' find-include discovers PYTHON PACKAGES ONLY, and software/runtime/ had no __init__.py. NOBODY CHOSE THIS -- a discovery rule decided it by omission. Found by pip-installing the wheel and trying to compile what it emitted, which nobody had ever done. My first diagnosis was wrong: I read the config, saw software* in the include list, and concluded the header must ship. Reading the artifact showed zero runtime members. Derive from the artifact, not from what the config says the artifact should be.",
+      "class": "surprise",
+      "artifact_link": "forge 0.14.2 CHANGELOG \u2014 pyproject software.runtime"
+    },
+    {
+      "description": "THE PUBLICATION PIPELINE WAS THE ONLY LINK IN THE ARTIFACT CHAIN WITH NO GATE, AND 0.14.0 HAD BYPASSED IT ENTIRELY -- the release workflow has no run for that version at all; the last gated release was 0.13.0. So the stale wheel was not a gate failing, it was a gate never invoked. Now gated: the release path builds from a git-archive snapshot of the TAG and diffs the wheel both directions before upload, with exit 2 (could-not-run) deliberately blocking here even though UNAVAILABLE is honestly neither pass nor fail everywhere else -- on a release path, 'we could not check' is not a licence to publish. The gate's first real run caught a real mismatch: my own.",
+      "class": "closure",
+      "artifact_link": "forge .github/workflows/release.yml + tools/scripts/check_wheel_correspondence.py"
     }
   ]
 }
