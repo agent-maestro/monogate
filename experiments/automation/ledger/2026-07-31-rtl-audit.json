@@ -1,0 +1,37 @@
+{
+  "session_id": "2026-07-31-rtl-audit",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T19:15:42",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Declined to fix the width ceiling. The one-line repair changes a silicon-anchored module \u2014 bit-exactness anchors and Arty evidence keyed to current behaviour \u2014 for a width nobody requested. Fixing anchored RTL for a hypothetical is how anchors rot. Documented with its exact trigger in the header instead.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "eml_reciprocal.v \u2014 WIDTH CEILING note"
+    },
+    {
+      "ts": "2026-07-31T19:15:42",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Validated the RTL literal scanner against a firing specimen BEFORE believing its '1 suspicious' output. After two instrument failures earlier today, a scan is not evidence until shown able to convict more than it did.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "chip/narrow/rtl_const_scan.py"
+    }
+  ],
+  "findings": [
+    {
+      "description": "LATENT WIDTH CEILING at 32 in the shipped reciprocal: reg [4:0] lb and lb = i[4:0] cap the leading-bit index at five bits. Safe at every format in play (12/16/20/24/32) but at WIDTH>=33 a bit at position 32 records as 0 and the seed scale goes wrong \u2014 silently, it computes rather than errors.",
+      "class": "surprise",
+      "artifact_link": "monogate-research 766a002a \u2014 RTL_PARAMETER_AUDIT.md"
+    },
+    {
+      "description": "The @verify re-binding concern is NOT APPLICABLE to this kernel: kalman_filter.eml has no @verify contracts, and none of electronics_intake's 114 @verify files is on its path. Certification runs through the Lean theorems and silicon anchors. Closed as N/A, not as verified \u2014 it reopens if the chip pulls in a @verify-path kernel.",
+      "class": "closure",
+      "artifact_link": "RTL_PARAMETER_AUDIT.md \u2014 item 2"
+    }
+  ]
+}
