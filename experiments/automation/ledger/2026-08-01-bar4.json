@@ -1,0 +1,45 @@
+{
+  "session_id": "2026-08-01-bar4",
+  "date": "2026-08-01",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-08-01T09:57:12",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "REJECTED my own first golden rather than shipping it. It computed on |b| and negated at the end; the RTL applies sign to the SEED and runs both stages signed, so they differ by an LSB on negatives \u2014 47% of the domain. A golden that disagrees with the artifact on half the domain is not a second opinion, it is a second defect.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "chip/BAR4_INSTRUMENT.md"
+    },
+    {
+      "ts": "2026-08-01T09:57:12",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "THREE OF MY OWN ERRORS, all the same family \u2014 confident output from a mechanism that did not do the job: a reference that built silently to nothing and compared against an EMPTY FILE printing 'MISMATCH: 0 differing'; a git push -f to main that was a NO-OP while I reported 'pushed' and CI ran the stock test; and a calibration consuming different cycles than the loop it calibrated, returning exp*256 on all 300 samples. Two caught only because a number was implausible.",
+      "via": "spontaneous",
+      "preventive": false,
+      "artifact_link": "chip/BAR4_INSTRUMENT.md \u2014 three errors table"
+    },
+    {
+      "ts": "2026-08-01T09:57:12",
+      "kind": "direction",
+      "actor": "human",
+      "description": "Made bar 4 the absolute tapeout contingency \u2014 'run 003 is bar 4 plus nothing'. Building it is what found the wrapper tearing defect. Had the tapeout proceeded on bars 1-3, a die would have been fabricated with an output path whose two bytes could come from different results.",
+      "preventive": true,
+      "artifact_link": "chip/TAPEOUT_PREREGISTRATION.md \u2014 bar 4"
+    }
+  ],
+  "findings": [
+    {
+      "description": "BAR 4 FOUND A REAL WRAPPER DEFECT BEFORE TAPEOUT: frame tearing. held updated every 2 cycles on out_valid, so a two-cycle byte read straddled an update and the two bytes could come from different results. Signature: ~77% agreement at every even frame offset, 0% at every odd one \u2014 a partial match no alignment can repair is tearing, not misalignment.",
+      "class": "surprise",
+      "artifact_link": "monogate-research chip/BAR4_INSTRUMENT.md"
+    },
+    {
+      "description": "The golden model is validated exhaustively against the shipped RTL \u2014 0 mismatches over 8,128 certified-domain inputs, 100% mismatch under +/-1 LSB. It acquits and convicts. First time in this arc the netlist has had a grader with credentials.",
+      "class": "closure",
+      "artifact_link": "tt-monogate-reciprocal test/GOLDEN_VALIDATION.md"
+    }
+  ]
+}
