@@ -1,0 +1,50 @@
+{
+  "session_id": "2026-08-01-sweep-002",
+  "date": "2026-08-01",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-08-01T00:13:59",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Checked WHICH JOB failed before claiming the prediction landed. Both runs reported 'failure' at run level \u2014 but run 001 also reported failure while its gds job SUCCEEDED (gl_test was the failure). Had I read the run-level status, I would have scored a prediction correct on a signal that means something different.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "per-job conclusions, runs 30689084953 / 30689088030"
+    },
+    {
+      "ts": "2026-08-01T00:13:59",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Scored the prediction as outcome-correct/mechanism-wrong rather than as a win. Predicted 3x2 fails at routing and 2x2 by not fitting; both failed at detailed placement. Also predicted 94.5%/142% utilisation against a measured 85.0%/129.9% \u2014 the arithmetic included tile margins the flow excludes.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "SWEEP_002_RESULT.md \u2014 scoring"
+    },
+    {
+      "ts": "2026-08-01T00:13:59",
+      "kind": "direction",
+      "actor": "human",
+      "description": "Ruled the sweep must precede the pipe run on the grounds that it CHANGES WHAT THE PIPE RUN'S BARS ARE \u2014 if 3x2 fails, the area prediction becomes a bar rather than a bonus. Running pipe first would pre-register against an unmeasured requirement: the guessed-threshold defect one level up.",
+      "preventive": false,
+      "artifact_link": "chip/SWEEP_002_PREREGISTRATION.md"
+    }
+  ],
+  "findings": [
+    {
+      "description": "The design REQUIRES 4x2 (8 tiles). 3x2 and 2x2 both fail the harden; RTL byte-identical across all three points, info.yaml the only difference. Prediction correct on outcome.",
+      "class": "closure",
+      "artifact_link": "monogate-research chip/SWEEP_002_RESULT.md"
+    },
+    {
+      "description": "MECHANISM WRONG, and sharper than predicted: both smaller shapes failed at [DPL-0036] DETAILED PLACEMENT inside RepairDesignPostGPL \u2014 neither reached routing. The binding constraint below 4x2 is placement legalisation after repair-buffer insertion, not routing congestion. Repair buffers do not merely cost area; below a certain die they make the design UNPLACEABLE.",
+      "class": "surprise",
+      "artifact_link": "SWEEP_002_RESULT.md \u2014 mechanism section"
+    },
+    {
+      "description": "MY SWEEP DESIGN WAS WRONG: failed runs emit no metrics.csv, only GDS_logs, so a failed point contributes NOTHING to the repair-buffer curve. Got one point, not three. The curve needs sweeping UPWARD (6x2, 8x2) where runs succeed \u2014 downward answers 'what is the minimum', upward answers 'how does repair cost scale'.",
+      "class": "dead_end",
+      "artifact_link": "SWEEP_002_RESULT.md \u2014 the curve cannot be built downward"
+    }
+  ]
+}
