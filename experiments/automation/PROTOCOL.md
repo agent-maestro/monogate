@@ -77,6 +77,48 @@ we call "taste" is mostly mechanical relay (E1).
    > wrong one, and which wrong one they assume is not even stable.**
 5. **Append-only records.** Ledgers and changelogs only grow; a CI gate diffs against git history.
 6. **No claim without an artifact.** Anything a report asserts links to the file that shows it.
+8. **Verdicts are read from the step or artifact that produced them, never from an aggregate — in
+   EITHER direction.** Added 2026-08-01, once the second direction showed up.
+
+   | direction | shape | example |
+   |---|---|---|
+   | **green over nothing** | a job reports success while its steps did not run | the eleven weeks of `steps=0` |
+   | **red over success** | a run reports failure while every bar inside it passed | run 003: `gds`, `precheck` and `gl_test` all green; the **`viewer`** job — a docs-site rendering step with no bar attached — coloured the whole run red |
+
+   **The red direction is the one nobody double-checks.** A false green at least gets used until it
+   breaks; a false red is believed and abandoned, because bad news you half-expected invites no
+   celebration-transcription and no audit either. Run 003's headline — bar 4 passing, the tapeout
+   contingency met — **sat untranscribed for a day behind a run that read `failure` at a glance.**
+
+9. **Derived quantities are the ones memory invents.** Added 2026-08-01, as the mechanism behind
+   house rule 7's arming discipline.
+
+   Of three figures carried in conversation, the two that transferred perfectly were **exact-looking
+   and distinctive** (`112,273 µm²`, `+0.665 ns`); the one that was wrong was **derived**
+   (*"~29% headroom"*, measured **24.74%**). That is a selection effect: distinctive numbers get
+   copied, derived ones get carried as impressions because somebody once did the division and the
+   result felt round.
+
+   > **Remembered figures fail precisely where derivation entered — and derivation enters exactly
+   > at the quantities bars get built on.**
+
+   Two consequences. **Arming from artifacts cannot be a spot-check** — nothing about the two exact
+   matches signalled the third was rotten, so it is all-or-nothing per bar sheet. And **the failure
+   has a long fuse**: a `MARGINAL` bar on 17% phantom headroom surfaces only when a passing addition
+   mysteriously fails placement, which is the guessed-threshold defect with a ten-day delay rather
+   than an immediate contradiction.
+
+10. **Every external review is scored by the correspondence check.** Added 2026-08-01.
+
+    Cross-reference each deduction against the **published** limitations. Matched deductions confirm
+    the self-grading. **Unmatched deductions are the alarm** — a gap someone found that we had not
+    named. **Baseline, 2026-08-01: zero unmatched, on an 8/10 review.**
+
+    Costs nothing and converts a verdict into a calibration event. It is also **the only instrument
+    here that can falsify the self-grading from outside**: an internal audit of our own claims can
+    be generous in ways we cannot see, whereas an unmatched deduction is a stranger pointing at a
+    hole we did not know we had.
+
 7. **A figure inherits the defect history of the instrument that produced it** — and the repair has
    **three tiers, chosen by whether re-measurement is possible.** Added 2026-08-01.
 

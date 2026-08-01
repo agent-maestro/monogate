@@ -65,6 +65,38 @@ def save(d: dict) -> str:
     return p
 
 
+
+# ── PROSE INPUT, WITHOUT A SHELL IN THE PATH ───────────────────────────────────────────────────
+#
+# ADDED 2026-08-01 after FOUR occurrences of one avoidable corruption in a single session. Every
+# time, a backtick inside a --desc argument was command-substituted by the shell before argparse
+# ever saw it, silently blanking a word or splicing command output into the record:
+#
+#     --desc "...matches `uses .sorry.` with wildcards..."   ->   "...matches  with wildcards..."
+#     --desc "...the conclusion is `failure` and..."          ->   "...the conclusion is  and..."
+#
+# Each was diagnosed and each recurred. DIAGNOSE-AND-REPEAT IS WHAT "MORE CARE" LOOKS LIKE FROM
+# INSIDE, AND IT DOES NOT CONVERGE -- so the instrument stops inviting the dangerous path.
+#
+# `--desc-file PATH` reads the text as bytes off disk; `--desc-file -` reads stdin. Neither routes
+# prose through shell argument interpolation. `--desc` is kept, because a one-line entry with no
+# punctuation is not worth a temp file, but the two are mutually exclusive and one is required.
+def _resolve_desc(a) -> str:
+    src = getattr(a, "desc_file", None)
+    if src:
+        text = sys.stdin.read() if src == "-" else open(src, encoding="utf-8").read()
+        return text.strip()
+    return a.desc
+
+
+def _add_desc_args(parser) -> None:
+    g = parser.add_mutually_exclusive_group(required=True)
+    g.add_argument("--desc", help="the entry text. Safe only for prose with no shell metacharacters "
+                                  "-- prefer --desc-file for anything containing backticks or quotes.")
+    g.add_argument("--desc-file", metavar="PATH",
+                   help="read the entry text from a file, or from stdin with '-'. THE SAFE PATH: "
+                        "no shell interpolation touches the text.")
+
 def cmd_log(a: argparse.Namespace) -> int:
     # AMENDMENT 4: `preventive` becomes a REQUIRED ternary on catch-class entries rather than an
     # optional boolean. AMENDMENT 3 made it optional, and a cross-derivation on 2026-07-31 measured
@@ -167,6 +199,7 @@ def dual_agreement() -> tuple[int, int, list[str]]:
 
 def cmd_finding(a: argparse.Namespace) -> int:
     d = load_or_init(a.session, a.arm)
+    a.desc = _resolve_desc(a)
     d["findings"].append({"description": a.desc, "class": getattr(a, "class"),
                           "artifact_link": a.artifact})
     p = save(d)
@@ -386,7 +419,7 @@ def main() -> int:
     lg.add_argument("--session", required=True)
     lg.add_argument("--arm", required=True, choices=ARMS)
     lg.add_argument("--kind", required=True, choices=KINDS)
-    lg.add_argument("--desc", required=True)
+    _add_desc_args(lg)
     lg.add_argument("--artifact")
     lg.add_argument("--actor", required=True, choices=("human", "ai", "unclear"),
                     help="WHO intervened. Required since AMENDMENT 1: the claim under test is about "
@@ -420,7 +453,7 @@ def main() -> int:
     fd.add_argument("--session", required=True)
     fd.add_argument("--arm", required=True, choices=ARMS)
     fd.add_argument("--class", required=True, choices=CLASSES, dest="class")
-    fd.add_argument("--desc", required=True)
+    _add_desc_args(fd)
     fd.add_argument("--artifact", required=True, help="house rule 6: no claim without an artifact")
     fd.set_defaults(fn=cmd_finding)
 
