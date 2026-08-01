@@ -292,16 +292,35 @@ def cmd_report(a: argparse.Namespace) -> int:
     print("  ratio must not be quoted without this block attached.")
     print("!" * 78)
     print()
-    print("BY ACTOR  (AMENDMENT 1 — the claim under test is about the HUMAN outer loop)")
+    # THE UNQUOTABILITY STAMP. Added 2026-08-01, because naming the confound in prose three times
+    # did not stop 16 more entries being logged under the same unresolved labelling function while
+    # the instrument that would resolve it sat at zero. Prose warnings are copy-pasted away from
+    # the number they guard; a suffix ON the number travels with it.
+    _agreed, _n_dual, _ = dual_agreement()
+    _stamp = ("" if _n_dual else
+              "   [n_dual=0, CONFOUND UNRESOLVED — NOT QUOTABLE]")
+    print("BY ACTOR  (AMENDMENT 1 — the claim under test is about the HUMAN outer loop)"
+          + _stamp)
     for k in ("human", "ai", "unclear", "unrecorded"):
         if actors.get(k):
             note = "  <- pre-amendment; NOT folded into any actor" if k == "unrecorded" else ""
-            print(f"  {k:<12} {actors[k]:>4}   {pct(actors[k], n_e)}{note}")
+            print(f"  {k:<12} {actors[k]:>4}   {pct(actors[k], n_e)}{_stamp and '  *'}{note}")
     hk = sum(human_kinds.values())
-    print(f"\n  HUMAN-ONLY intervention mix (the figure the central claim rests on):")
-    if hk:
+    print(f"\n  HUMAN-ONLY intervention mix (the figure the central claim rests on):{_stamp}")
+    if hk and _n_dual == 0:
+        for k in KINDS:
+            print(f"    {k:<12} {human_kinds.get(k, 0):>4}   "
+                  f"{pct(human_kinds.get(k, 0), hk)}  *")
+        print()
+        print("    * MECHANICALLY UNQUOTABLE. n_dual=0: not one entry has been independently")
+        print("      labelled, so every figure above was produced by a classifier that is a party")
+        print("      to the dispute. This is NOT a small-sample caveat — more sessions converge on")
+        print("      the SAME BIASED RATIO WITH TIGHTER ERROR BARS, which is the most dangerous")
+        print("      kind of wrong number. `ledger.py dual` is the instrument; it has never run.")
+    elif hk:
         for k in KINDS:
             print(f"    {k:<12} {human_kinds.get(k, 0):>4}   {pct(human_kinds.get(k, 0), hk)}")
+        print(f"\n    inter-rater: {_agreed}/{_n_dual} agreed — quotable WITH this figure attached.")
     else:
         print("    [UNAVAILABLE] no entries carry actor=human yet. This is not 'humans did nothing' —")
         print("    it is 'the ledger cannot yet say'. Do not read the mix above as the human mix.")

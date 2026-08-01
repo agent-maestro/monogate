@@ -49,8 +49,32 @@ we call "taste" is mostly mechanical relay (E1).
    the same commit. A gate with no firing specimen is UNVALIDATED, not passing.
 3. **Enumerate-then-count.** Summary counts are computed by the tool that enumerated. No hand-written
    totals anywhere in this directory.
-4. **UNAVAILABLE is failure.** A metric that cannot be derived reports as instrument failure, never as
-   zero. A zero and an unmeasurable are different facts.
+4. **UNAVAILABLE is failure, and it gets its OWN EXIT CODE.** A metric that cannot be derived
+   reports as instrument failure — never as zero, and **never sharing a code with a measurement that
+   ran**. A zero, an unmeasurable and a violation are three facts.
+
+   > **THE EXIT-CODE TAXONOMY, project-wide (added 2026-08-01, on the third instance in one day):**
+   >
+   > | code | meaning |
+   > |---|---|
+   > | `0` | **measured — pass** |
+   > | `1` | **measured — fail** |
+   > | `2` | **could not measure** |
+   >
+   > **`2` blocks on any path that publishes.** Everywhere else UNAVAILABLE is honestly neither pass
+   > nor fail; on a path that ships an artifact, *"we could not check"* is not a licence to publish.
+   >
+   > **Why this became a rule rather than a habit — three instances, one day, one shape:**
+   >
+   > * the axiom ledger gave a **missing Lean toolchain** the same exit code as a **drifted trust
+   >   boundary**;
+   > * the Verilog backend gave a **failed emission** the same exit code as **success**, reporting
+   >   the failure only in a comment inside the output file;
+   > * the equivalence runner gave a **missing dependency** the signal of an **unproved theorem**.
+   >
+   > Each conflates *"couldn't look"* with *"looked and found bad"* — or, in the second case, with
+   > *"looked and found good"*, which is worse. **A reader who cannot tell them apart assumes the
+   > wrong one, and which wrong one they assume is not even stable.**
 5. **Append-only records.** Ledgers and changelogs only grow; a CI gate diffs against git history.
 6. **No claim without an artifact.** Anything a report asserts links to the file that shows it.
 
@@ -274,8 +298,23 @@ nothing at depth is safe on the strength of "it was simple".
 
 **The protocol, now standing rather than one-off:**
 
-1. **Any session following a deep one opens with an audit of that session's owed records.** Not a
-   summary of what it did — a check that what it said it would leave behind is actually there.
+1. **Any session following a deep one opens with an audit of that session's RESULTS AND its owed
+   records.** Not a summary of what it did — a check that what happened is written down.
+
+   > **AMENDED 2026-08-01, after instance 2.** The first version scoped this to *owed records* —
+   > things the previous session had promised. That is the smaller half. **Instance 2 was a scored
+   > run whose verdict was never transcribed at all**: run 003 passed bar 4 and met the tapeout
+   > contingency, and the record said nothing, so a state-of-the-work summary reported the arc as
+   > still waiting on it. An owed amendment is something someone remembered to promise. **A result
+   > is something that happened whether anyone promised anything or not**, and it is the more
+   > expensive thing to lose.
+   >
+   > **A scored run whose verdict lives only in conversation is UNRECORDED by this project's own
+   > definition.** It cannot be audited, cited, or replayed, and it vanishes with the session.
+   >
+   > Found by a **summary disagreeing with a memory** — the cheapest detector available and the one
+   > that only works if somebody reads the summary against what they remember. That is not a gate
+   > and cannot be made into one; it is the argument for doing the audit deliberately instead.
 2. **The audit is transcription, not judgement.** If a record is missing, write what was decided.
    Re-opening the decision is a different act and needs its own justification.
 3. **A missing record is logged as a finding**, not quietly fixed, because the rate is the
