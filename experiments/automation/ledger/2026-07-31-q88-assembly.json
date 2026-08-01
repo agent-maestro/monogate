@@ -1,0 +1,46 @@
+{
+  "session_id": "2026-07-31-q88-assembly",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T20:11:14",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Refused to write 256 into the Lean. A numeral would have baked Q8.8 into the file and made it the first of 224 hardware theorem signatures to pin a format \u2014 undoing corpus-wide the property that made this whole step cheap.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "ReciprocalFormatInstantiation.lean"
+    },
+    {
+      "ts": "2026-07-31T20:11:14",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Halted the regime-simplification bridge and stated the obstruction as a lemma-shaped claim: it needs multiplicative cancellation, and le_of_mul_le_mul_left / mul_pos / one_div_pos_of_pos are all unreachable from this import root. Re-deriving three ordered-field lemmas to save callers one arithmetic step is the wrong trade.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "ReciprocalFormatInstantiation.lean \u2014 HALTED section"
+    },
+    {
+      "ts": "2026-07-31T20:11:14",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Wrote into the FILE, not just the commit, that hinv0 is measured rather than proved and that the Q8.8 bound is no stronger than a bench measurement. A caveat that lives only in a commit message is a caveat nobody re-reads.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "ReciprocalFormatInstantiation.lean \u2014 docstring table"
+    }
+  ],
+  "findings": [
+    {
+      "description": "Q8.8 assembly shipped: nr_reciprocal_2stage_at_format + quantum_nonneg, numeral-free so the format stays an input. The chip's proof debt is discharged \u2014 hs proved, hreg is call-site arithmetic, hinv0 carried as a hypothesis with the measured 7.57x seed margin attached. 575/575, sorryAx-free, AxiomLedger unchanged.",
+      "class": "closure",
+      "artifact_link": "machlib 1fc24877 \u2014 MachLib/ReciprocalFormatInstantiation.lean"
+    },
+    {
+      "description": "Two independent instruments agree on which envelope dominates at Q8.8: the PROOF's regime admits |b|<=62.5 while the MEASURED usable domain is |b| in [0.125,16). Representability binds first, not the regime \u2014 the same conclusion the RTL header reaches for Q16.16 by a different route.",
+      "class": "surprise",
+      "artifact_link": "ReciprocalFormatInstantiation.lean \u2014 consistency note"
+    }
+  ]
+}
