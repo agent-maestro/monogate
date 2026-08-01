@@ -1,0 +1,42 @@
+{
+  "session_id": "2026-08-01-harden-001",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T22:40:16",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Reported FAIL rather than 'passes two of three'. The pre-registration said all three or it is not a pass, written before the number existed, and nothing about that sentence was revisited once it cost something.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "HARDEN_VERDICT_001.md \u2014 verdict"
+    },
+    {
+      "ts": "2026-07-31T22:40:16",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "MY DEFECT: gl_test failed because I updated tb.v's module name and the Makefile source list but left the template's stock cocotb assertions testing an adder. The gate-level netlist is therefore UNVERIFIED against the golden model \u2014 reported as a real gap, not as a cosmetic CI failure.",
+      "via": "spontaneous",
+      "preventive": false,
+      "artifact_link": "tt-monogate-reciprocal test/test.py"
+    }
+  ],
+  "findings": [
+    {
+      "description": "HARDEN 001 FAIL against pre-registered bars: fits 8 tiles (70.9% stdcell utilisation) and DRC/LVS clean, but setup timing FAILS at ss_100C_1v60 by -1.56ns. All three bars or it is not a pass.",
+      "class": "falsification",
+      "artifact_link": "monogate-research chip/HARDEN_VERDICT_001.md"
+    },
+    {
+      "description": "CALIBRATION CONSTANT: placed stdcell area is 1.69x Yosys stat -liberty cell area (109,207 vs 64,593 um2), and the gap is mostly timing-repair buffers (1,084 cells, 10,658um2), hold buffers, CTS and taps \u2014 none of which synthesis-level stat can see. The project knew cell area was a lower bound; it did not know the factor.",
+      "class": "surprise",
+      "artifact_link": "HARDEN_VERDICT_001.md \u2014 methodology section"
+    },
+    {
+      "description": "INSTRUMENT GAP IN MY OWN PRE-REGISTRATION: the prediction claimed REQUIRED tiles but the run measured FIT AT A CHOSEN tile count, because info.yaml fixed tiles=4x2. The 5-7 prediction is UNSCORED \u2014 not passed, not failed. Finding the true minimum needs a sweep down through 3x2, 2x2.",
+      "class": "dead_end",
+      "artifact_link": "HARDEN_VERDICT_001.md \u2014 the deeper methodological error"
+    }
+  ]
+}
