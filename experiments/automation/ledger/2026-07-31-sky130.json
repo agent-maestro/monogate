@@ -1,0 +1,54 @@
+{
+  "session_id": "2026-07-31-sky130",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T17:51:09",
+      "kind": "direction",
+      "actor": "human",
+      "description": "Ruled the decision must be made on a measurement, not an estimate, and committed the 1-4 tile bar before any synthesis ran: 'given that every area estimate this project ever made was wrong until synthesized, I wouldn't spend 70 euros on my guess or yours.'",
+      "preventive": false,
+      "artifact_link": "SKY130_MEASUREMENT_PREREGISTRATION.md"
+    },
+    {
+      "ts": "2026-07-31T17:51:09",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Refused to convert um2 to tiles. The pre-registration flagged the tile constant as not present in this repo and committed to sourcing it or not converting; it was still absent, so the verdict was stated as a RANGE the constant cannot move (3.1-3.5x over) instead of a tile count from memory. A remembered constant would have been an input to a 70-euro decision.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "SKY130_MEASUREMENT_RESULT.md \u2014 tile constant section"
+    },
+    {
+      "ts": "2026-07-31T17:51:10",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Ran the width sweep rather than reporting a flat no. It converted 'nothing fits' into 'here is the curve and where it would fit', which is the difference between a dead end and a scoped next question. Not asked for; cost five minutes.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "SKY130_MEASUREMENT_RESULT.md \u2014 width sweep table"
+    },
+    {
+      "ts": "2026-07-31T17:51:10",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Reported timing UNAVAILABLE rather than omitting it or implying it passed. abc emits no delay summary through this flow; two attempts, and the FAILING script is kept in the repo as the artifact behind the claim. House rule 4: a metric that cannot be derived is instrument failure, never zero.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "chip/synth/recip_t.ys"
+    }
+  ],
+  "findings": [
+    {
+      "description": "SKY130 measured: certified reciprocal (W=32 F=16) is 221,963 um2 of cell area vs a 64-72k um2 four-tile budget \u2014 over by 3.1-3.5x. Width sweep shows 4x width costs 11x area, so the kernel-library-to-silicon gap is ~11x and lives entirely in datapath width. Tapeout NOT pre-registered.",
+      "class": "closure",
+      "artifact_link": "monogate-research 643f9fc6 \u2014 SKY130_MEASUREMENT_RESULT.md"
+    },
+    {
+      "description": "A kernel that FITS exists in the parameter space (W=12 at 39k um2), but everything certified is W=32 \u2014 the Lean forward-error bounds and @verify contracts are tied to the format, so a narrow variant is a different kernel certified by nothing currently proved. The blocker is certification work, not silicon area.",
+      "class": "surprise",
+      "artifact_link": "SKY130_MEASUREMENT_RESULT.md \u2014 width sweep"
+    }
+  ]
+}
