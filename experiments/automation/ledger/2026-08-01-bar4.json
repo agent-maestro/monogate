@@ -40,6 +40,11 @@
       "description": "The golden model is validated exhaustively against the shipped RTL \u2014 0 mismatches over 8,128 certified-domain inputs, 100% mismatch under +/-1 LSB. It acquits and convicts. First time in this arc the netlist has had a grader with credentials.",
       "class": "closure",
       "artifact_link": "tt-monogate-reciprocal test/GOLDEN_VALIDATION.md"
+    },
+    {
+      "description": "THE COUNTERFACTUAL, recorded because the scored record does not contain it: A CHECK NOBODY HAD RUN CAUGHT A DEFECT TWO SCORED RUNS MISSED. Bar 4 (gl_test vs the actual golden) was armed for run 001 and re-armed for run 002-pipe; it was not implemented either time and was scored FAIL/not-done both times. The wrapper therefore shipped through TWO scored harden runs with nothing ever having read its output and compared it to anything -- gl_test was still carrying the template's stock adder assertions. The first time the check was actually built it found frame tearing: held updated every 2 cycles on out_valid, so a two-cycle byte read straddled an update and the two bytes could come from different results. WHAT THIS FALSIFIES: that a run passing its implemented bars is evidence about the bars it did not implement. Runs 001 and 002 were scored, cited and reasoned from while the unimplemented bar was the one covering the defect. A not-done bar is not a neutral omission -- it is an unmeasured region that the surrounding PASSes make look measured.",
+      "class": "falsification",
+      "artifact_link": "monogate-research chip/BAR4_INSTRUMENT.md \u2014 'the gate paying for itself before the fab'"
     }
   ]
 }
