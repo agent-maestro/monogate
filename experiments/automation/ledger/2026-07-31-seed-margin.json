@@ -1,0 +1,37 @@
+{
+  "session_id": "2026-07-31-seed-margin",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T19:10:43",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Refused to loosen my own pre-set validation tolerance when the model missed the documented value by 1.3e-5. Loosening after seeing data is the post-hoc flexibility the protocol forbids. Asked the artifact instead \u2014 which agreed with the model and convicted the documentation.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "chip/narrow/seed_margin.py"
+    },
+    {
+      "ts": "2026-07-31T19:10:43",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "FALSE ALARM I RAISED AND THEN RESOLVED: a re-run returned 9.9998e-01 vs 5.885e-02, which I reported as a stop. Cause was my own build-dir naming (objs_16 meant FRAC=16 then WIDTH=16, overwritten). Not preventive \u2014 the wrong result had ALREADY been committed along with an RTL edit; the alarm came after, not before.",
+      "via": "spontaneous",
+      "preventive": false,
+      "artifact_link": "chip/SEED_MARGIN_RESULT.md \u2014 false alarm section"
+    }
+  ],
+  "findings": [
+    {
+      "description": "Seed margin measured from the RTL at five formats: every one clears the proof hypothesis |e_0|<=1/2 with 6.5x-8.5x margin. And the seed 're-derivation' is a NON-EVENT \u2014 LIN_C1/LIN_C2 are elaboration-time computed from FRAC, so nothing is hand-entered at a new width. Cost: ~3 minutes, measured not estimated.",
+      "class": "closure",
+      "artifact_link": "monogate-research cbc984d1 \u2014 SEED_MARGIN_RESULT.md"
+    },
+    {
+      "description": "eml_reciprocal.v's SEED MARGIN LEDGER documents worst |e_0| = 5.8840e-02 and 0.028% excess; the RTL actually produces 5.885312e-02 and 0.050%. Wrong in the 3rd significant digit. The 8.5x margin claim the proof consumes was correct, so no conclusion moves. Found by following that ledger's own instruction to re-measure rather than assume.",
+      "class": "falsification",
+      "artifact_link": "electronics_intake/.../eml_reciprocal.v \u2014 corrected in place"
+    }
+  ]
+}
