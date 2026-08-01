@@ -1,0 +1,49 @@
+{
+  "session_id": "2026-08-01-pipe-002",
+  "date": "2026-08-01",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-08-01T00:56:39",
+      "kind": "direction",
+      "actor": "human",
+      "description": "Required bar 2 to track setup-repair and hold-repair SEPARATELY rather than as one count, before any run. A lumped figure would have read 1,486 -> 1,647 and been narratable as 'hold buffers from the new registers, as predicted'. Separated, both populations rose independently \u2014 which is what turned a muddy result into a clean falsification.",
+      "preventive": true,
+      "artifact_link": "PIPE_002_PREREGISTRATION.md \u2014 bar 2 amendment"
+    },
+    {
+      "ts": "2026-08-01T00:56:39",
+      "kind": "direction",
+      "actor": "human",
+      "description": "Required a CONVICT run for the latency alignment, not just re-established bit-exactness. That forced the situation in which I found three harness defects \u2014 an empty-file comparison reporting 'MISMATCH: 0 differing', a monotonic sweep hiding the shift, and a content-aligned diff reporting 98% disagreement as '2'. Two of the three would have passed as green.",
+      "preventive": true,
+      "artifact_link": "chip/PIPE_002_LOCAL_VERIFICATION.md"
+    },
+    {
+      "ts": "2026-08-01T00:56:39",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Reported the mechanism as FALSIFIED rather than absorbing it into the timing pass. The pre-registration said the mechanism is wrong even if timing happens to close, and timing closing by +2.82ns made that an expensive sentence to honour.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "PIPE_002_RESULT.md \u2014 verdict"
+    }
+  ],
+  "findings": [
+    {
+      "description": "TIMING CLOSES. The N1b/N2b split takes all slow-corner setup slack positive: nom_ss -1.5613 -> +1.2546, a +2.82ns swing, all three ss variants positive. The design now meets 50 MHz at every corner.",
+      "class": "closure",
+      "artifact_link": "monogate-research chip/PIPE_002_RESULT.md"
+    },
+    {
+      "description": "THE MECHANISM IS FALSIFIED. Claim: ~1,084 repair buffers exist to brute-force the path a register removes. Setup-repair ROSE 1,084 -> 1,176 and its area rose 978um2. Timing closed by shortening the path directly, not by relieving repair pressure. The fix works; the reason given for it is wrong.",
+      "class": "falsification",
+      "artifact_link": "PIPE_002_RESULT.md \u2014 bar 2"
+    },
+    {
+      "description": "BAR 2 WAS UNTESTABLE AT THE TILE COUNT BAR 3 TESTED: repair-buffer insertion happens AFTER placement, and placement is what fails at 3x2. A run that dies before buffers are inserted cannot show buffers being removed. Third instrument-design error in this arc, all three about what the instrument can SEE.",
+      "class": "dead_end",
+      "artifact_link": "PIPE_002_RESULT.md \u2014 bar 3"
+    }
+  ]
+}
