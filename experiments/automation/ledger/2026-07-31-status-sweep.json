@@ -35,6 +35,22 @@
       "via": "structural",
       "preventive": true,
       "artifact_link": "machlib tag toolchain-bump/v4.32.2-record"
+    },
+    {
+      "ts": "2026-07-31T17:27:12",
+      "kind": "mechanical",
+      "actor": "ai",
+      "description": "Executed the record-branch follow-through: pushed the annotated tag, added the outcome-vs-process README note, re-pointed 13 accountability links from the moving branch to the frozen tag, landed the destination on master as one squash commit (verified 574/574 + both gates ON THE REBASED TREE, not inherited), and redeployed.",
+      "artifact_link": "machlib ceb9ba32 + monogate.org/accountability"
+    },
+    {
+      "ts": "2026-07-31T17:27:12",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "git checkout master ABORTED PARTWAY on the read-only frozen v4.14.0 baselines, leaving a partial index of staged deletions. Stopped and ran git reset --hard before touching anything else, then redid the operation in an isolated worktree. Proceeding from a partial index would have committed spurious deletions of the migration record's own evidence.",
+      "via": "spontaneous",
+      "preventive": true,
+      "artifact_link": "machlib ceb9ba32 \u2014 commit body quirk note"
     }
   ],
   "findings": [
