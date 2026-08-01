@@ -29,6 +29,23 @@
       "via": "structural",
       "preventive": false,
       "artifact_link": "NARROW_KERNEL_RESULT.md \u2014 verdict section"
+    },
+    {
+      "ts": "2026-07-31T18:08:56",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Caught my own octaves-per-bit slope wrong by 2x BEFORE it was recorded as an interpolation law. 3->7 octaves over +2 FRAC bits is 2 octaves/bit, not 1. The error had already been quoted back to me, so it was propagating. Corrected and then TESTED at two new points rather than asserted \u2014 two points cannot detect curvature.",
+      "via": "spontaneous",
+      "preventive": true,
+      "artifact_link": "NARROW_KERNEL_RESULT.md \u2014 the law table"
+    },
+    {
+      "ts": "2026-07-31T18:08:56",
+      "kind": "direction",
+      "actor": "human",
+      "description": "Dissected the prediction miss into a taxonomy (miss-of-model / halt-point hit / miss-of-conversion / win) and identified that forcing a binary call on a straddle manufactures a coin flip and scores it as judgment. Became AMENDMENT 5: MARGINAL with stated bounds.",
+      "preventive": false,
+      "artifact_link": "PROTOCOL.md \u2014 AMENDMENT 5"
     }
   ],
   "findings": [
@@ -41,6 +58,16 @@
       "description": "W=16 is the chip candidate, not W=12: 1.6x the area buys 2.3x the usable domain (3 to 7 octaves) and 4x the accuracy. Each pair of fractional bits buys about two octaves. The area sweep alone picked the wrong format; it took the accuracy sweep to choose on evidence.",
       "class": "surprise",
       "artifact_link": "NARROW_KERNEL_RESULT.md \u2014 the pattern table"
+    },
+    {
+      "description": "The octaves/fractional-bit slope is a LAW, not a trend: usable octaves = 2*FRAC - 9, exact at FRAC in {6,8,10,12}, window |b| in [2^-(FRAC-5), 2^(FRAC-4)). Mechanism explains it (each bit extends representability one octave at EACH end). Future format questions interpolate on a measured line instead of a fresh sweep.",
+      "class": "surprise",
+      "artifact_link": "monogate-research 69ef5763 \u2014 NARROW_KERNEL_RESULT.md"
+    },
+    {
+      "description": "W=16 certification classified as RE-INSTANTIATION, not re-derivation: nr_reciprocal_4stage takes the truncation quantum s as a free real; all 16 Q16.16 mentions are docstrings, none in a theorem statement. Zero new proofs. Only LIN_C1/LIN_C2 and the measured seed margin re-derive.",
+      "class": "closure",
+      "artifact_link": "chip/PROOF_DEBT_CLASSIFICATION.md"
     }
   ]
 }

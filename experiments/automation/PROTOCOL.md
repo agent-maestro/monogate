@@ -188,6 +188,41 @@ self-reported and unverifiable. This converts a silently-omitted field into a fo
 same grade as `actor`, and it belongs on the same list of limits no gate here can cover. **An act not
 taken remains the cheapest thing in the world to claim credit for.**
 
+### AMENDMENT 5 to the prediction discipline — a straddle is not a binary call (2026-07-31)
+
+**The defect, isolated from four scored predictions.** The record reads 1-for-4, but the record is the
+less useful artefact. **The taxonomy is:**
+
+| session | outcome | defect class |
+|---|---|---|
+| E2 session 1 | predicted `closure`, got `falsification` | **miss-of-model** — the mechanism was wrong |
+| E5-quater target 2 | route hit its halt point | **halt-point hit** — not a prediction failure at all |
+| SKY130 area | predicted over 4 tiles, was | **win** |
+| narrow kernel | predicted W=12 fails, it passed | **miss-of-conversion** |
+
+**The taxonomy matters more than the record, because the repairs differ.** A miss-of-model means the
+reasoning was wrong and the fix is better reasoning. A **miss-of-conversion** means the reasoning was
+*right* and the wrong side of it was reported — the narrow-kernel prediction said the window would
+straddle the bar at "two to three octaves", which is exactly what happened, and then called it a fail.
+**The error lived in the conversion from model to binary call, not in the model.**
+
+**The change.** When the mechanism itself says *straddle*, the honest pre-registered prediction is:
+
+> **MARGINAL — direction uncertain.**
+
+with the straddle's bounds stated. **Forcing a binary call on a straddle manufactures a coin flip and
+then scores it as judgement**, which corrupts the record in both directions: a lucky call reads as
+insight, an unlucky one as a reasoning failure. Neither is true, and the prediction record is supposed
+to measure reasoning.
+
+`MARGINAL` is scored as **correct if the outcome lands inside the stated straddle**, and wrong if it
+lands outside — which is a claim about the model, and is the thing actually worth measuring.
+
+**What this does not license.** `MARGINAL` is available only when the *mechanism* produces a straddle
+before the measurement. It is not a hedge to be reached for when a prediction feels uncomfortable, and
+a pre-registration that predicts `MARGINAL` on everything has predicted nothing. The straddle's bounds
+must be stated, and stating them is what makes the hedge falsifiable.
+
 ### The append-only argument, recorded because the tempting middle path is seductive
 
 A "purely additive mutations are fine" exemption was available and was rejected. The argument, in one
