@@ -77,6 +77,29 @@ we call "taste" is mostly mechanical relay (E1).
    > wrong one, and which wrong one they assume is not even stable.**
 5. **Append-only records.** Ledgers and changelogs only grow; a CI gate diffs against git history.
 6. **No claim without an artifact.** Anything a report asserts links to the file that shows it.
+7. **A figure inherits the defect history of the instrument that produced it** — and the repair has
+   **three tiers, chosen by whether re-measurement is possible.** Added 2026-08-01.
+
+   | tier | when | what to do |
+   |---|---|---|
+   | **re-measure** | the defect is known and the re-run is cheap | run it. Publish the new figure **with its instrument version**, and give the old one the superseded treatment with the delta stated |
+   | **stamp** | re-measurement is impossible — the confound lives in unrepeatable moments | attach the caveat **to the number**, mechanically, so it travels when the number is copied |
+   | **provenance by default** | going forward | every figure carries its instrument version, so a defect landing in an instrument's record mechanically flags the figures citing it |
+
+   **Stamping a figure you could simply re-measure is preserving a caveat instead of doing the
+   measurement** — the inverse of this project's posture. The by-actor ratio gets a stamp because
+   its confound lives in irreproducible human labelling; the close rate got re-measured because the
+   corpus was sitting right there.
+
+   **What this does NOT license: a retrospective audit of every historical number against every
+   instrument defect.** That is machinery sprawl and the moratorium applies. The cheap honest
+   version already exists — the registry's defect entries name their instruments, and anyone
+   quoting an old figure can check.
+
+   > **Run the rule in BOTH directions.** Applied properly on 2026-08-01 it *exonerated* the
+   > close rate: I had flagged it as tainted by the `sorry`-detector defect without checking which
+   > instrument produced it, and the instrument that produced it was never broken. **A rule used
+   > only to convict is not being used, it is being invoked.**
 
 ---
 

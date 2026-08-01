@@ -137,6 +137,13 @@
       "actor": "human",
       "description": "Yanked 0.14.1 as well, and attached reasons to BOTH releases -- taking the recommended inversion rather than the original plan of reasoning 0.14.1 and leaving 0.14.0 bare. Verified stable on two agreeing reads each.",
       "artifact_link": "https://pypi.org/project/monogate-forge/"
+    },
+    {
+      "ts": "2026-08-01T15:00:20",
+      "kind": "direction",
+      "actor": "human",
+      "description": "RULED RE-MEASURE, NOT STAMP, and gave the general rule: a figure inherits the defect history of the instrument that produced it, with three tiers -- re-measure where the defect is known and the re-run is cheap, stamp only where re-measurement is impossible, provenance-by-default going forward. Explicitly REFUSED to authorize a retrospective audit sweep of every historical number (machinery sprawl, moratorium applies). Named the failure mode of my proposal precisely: stamping a stale figure when the instrument that can replace it is already shipped is preserving a caveat instead of doing the measurement.",
+      "artifact_link": "monogate experiments/automation/PROTOCOL.md \u2014 house rule 7"
     }
   ],
   "findings": [
@@ -229,6 +236,16 @@
       "description": "THE REPRODUCTION IS NOW A REGRESSION CHECK RATHER THAN A SNAPSHOT, and it runs on x86-64. Closes the disclosed architecture gap (the reviewer's platform is tested before the reviewer is) and the rot gap, which is the larger one: the job installs the compiler from PyPI so a bad release breaks it, and CLONES FROM THE PUBLIC REMOTE rather than using the workspace, so a file that exists locally but was never committed cannot make the walk pass. That last clause is earned -- three times today an oracle read the working directory instead of the repository, and each version passed for its author and failed for everyone else. actions/checkout would have reproduced exactly that defect in CI. Rung 5 applies the new exit-code taxonomy explicitly: a 2 fails the job, because a reproduction claim cannot rest on a check that did not run.",
       "class": "closure",
       "artifact_link": "machlib .github/workflows/reproduction-walk.yml"
+    },
+    {
+      "description": "I FLAGGED A FIGURE AS DEFECT-TAINTED WITHOUT CHECKING WHICH INSTRUMENT PRODUCED IT. I called the @verify(lean) close rate unquotable because it was 'produced by the detector that was rubber-stamping'. It was not: closerate.sh is machlib-side and matches the pattern 'uses .sorry.' with WILDCARDS, so it matched both quotings and never went blind. Applied properly, the inherits-the-defect-history rule EXONERATES that figure -- I applied it by association, which is the same shortcut as blaming the nearest recent change. A rule used only to convict is not being used, it is being invoked. SECOND NEAR-MISS IN THE SAME SWEEP: against the 93.6% I had in mind, the measured 77.1% reads as a 16.5-point collapse and my pre-registered disconfirmer fired -- but 93.6% is 264/282 mach_linarith SUBSTANTIVE closes, a different corpus. The comparable documented figure is 76%, so 77.1% is marginally ABOVE it on a corpus 4.3x larger. Two confident precise wrong stories avoided in one measurement, both by checking a definition before quoting a delta.",
+      "class": "falsification",
+      "artifact_link": "machlib foundations/docs/CLOSERATE_REMEASURE_2026_08_01.md"
+    },
+    {
+      "description": "THE @verify(lean) CLOSE RATE IS QUOTABLE AGAIN, WITH PROVENANCE AND BOTH DENOMINATORS: 77.1% (553/717) of assessable obligations, or 73.8% (553/749) including 4 stale files that do not compile, measured by closerate.sh at machlib HEAD under Lean v4.32.2. Both denominators ship together because excluding the stale files FLATTERS the number, and 'of everything the corpus claims' is what an outsider means. Residual named rather than dropped: mul_mat4, vec3, autopilot, shadow_pcf -- 32 theorems, 4.3% of the corpus, do not build at all.",
+      "class": "closure",
+      "artifact_link": "machlib foundations/docs/CLOSERATE_REMEASURE_2026_08_01.md \u2014 Quotable form"
     }
   ]
 }
