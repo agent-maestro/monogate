@@ -1,0 +1,105 @@
+{
+  "session_id": "2026-08-01-repro-dryrun",
+  "date": "2026-08-01",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-08-01T11:13:42",
+      "kind": "direction",
+      "actor": "human",
+      "description": "EXTERNAL ENGAGEMENT: the project's FIRST PROSPECTIVE REPRODUCER, an external reviewer, named a reproduction target -- asked whether the rb-EKF trail (symbolic Jacobian -> normalized form -> certified fixed-point lowering -> emitted RTL -> silicon-capture replay) is reconstructible from PUBLIC artifacts. This is the first time the work has been asked that question by somebody outside it. The orchestrator's direction: walk it ourselves from a clean environment FIRST, and ship a REPRODUCING.md where every step carries a committed expected result.",
+      "artifact_link": "monogate-research reproduction/DRYRUN_PREREG.md"
+    },
+    {
+      "ts": "2026-08-01T11:13:42",
+      "kind": "direction",
+      "actor": "human",
+      "description": "Set the hostile-stranger conditions rather than letting me choose them: Docker container, fresh user, no host checkouts, no home-directory config, no globally installed packages, no Blackwell toolchains, public remotes only. And the constraint that makes it a real test -- PIN AND RECORD how the repos must sit RELATIVE TO EACH OTHER, because the trail spans multiple repos and a stranger gets no implicit layout. That constraint is what caught the sibling-directory assumption in regenerate_rtl.py.",
+      "artifact_link": "monogate-research reproduction/DRYRUN_WALK.md"
+    },
+    {
+      "ts": "2026-08-01T11:13:42",
+      "kind": "direction",
+      "actor": "human",
+      "description": "TWO CLOCKS, NO SHARED DIFFS: nothing this session touches the TT fork, the pinned run-003 RTL, or the chip pre-registration -- the reproduction clock and the tapeout clock must not share a diff. Also scoped OUT the version-echo workflow step for gl_test, licensing it for the additions run and not this one. Both are scope fences set before work started, not after.",
+      "artifact_link": "monogate-research reproduction/DRYRUN_PREREG.md \u2014 hard constraint"
+    },
+    {
+      "ts": "2026-08-01T11:13:44",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "DISCLOSED IN THE PRE-REGISTRATION THAT I HAD ALREADY LOOKED. I ran gh repo view on all six candidate repos BEFORE writing the bars, so I knew forge and monogate-research were private when I wrote a divergence class named 'missing public artifact'. Writing a bar around a fact already in hand, without saying so, converts a lookup into a prediction. The prereg therefore states that this class is EXPECTED TO FIRE and that its firing is NOT a successful prediction.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "monogate-research reproduction/DRYRUN_PREREG.md \u2014 DISCLOSURE section"
+    },
+    {
+      "ts": "2026-08-01T11:13:44",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "REFUSED TO LET THE ANALYTIC atan THEOREM STAND IN FOR THE ENUMERATION CERTIFICATE. MachLib.Real.eml_atan_full_fwd_error is public and re-derives sorryAx-free in the container, and grading rung iii green on it would have looked entirely convincing. It is the Taylor-remainder result, NOT the exhaustive fixed-point sweep that produces the 6.16e-02 rad worst case. Caught because the bar named the artifact precisely -- 'the atan ENUMERATION certificate' -- and a vaguer bar would have been satisfied by the substitution.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "monogate-research reproduction/REPRODUCING.md \u2014 step 3b warning"
+    },
+    {
+      "ts": "2026-08-01T11:13:44",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "MY OWN COUNT WAS WRONG BEFORE IT WAS RIGHT. I reported 'the published wheel ships 0 tests' from a predicate matching only tests/-prefixed paths; the enumerated figure is 11 test modules, all under tools/machlib_bind/. Conclusion unchanged (none of them is the normalization suite), number wrong. Corrected in the walk log rather than quietly reused -- and caught by re-enumerating, which is luck rather than method.",
+      "via": "spontaneous",
+      "preventive": false,
+      "artifact_link": "monogate-research reproduction/DRYRUN_WALK.md \u2014 rung ii"
+    },
+    {
+      "ts": "2026-08-01T11:13:44",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "DID NOT ATTRIBUTE 47 PRE-EXISTING TEST FAILURES TO MY OWN CHANGE. The forge suite showed 47 failures after the emission-gate fix. Rather than assuming they were Lean-related and unrelated, I stashed the change and re-ran the same three files: 11 failed / 31 passed both with and without it. Same discipline as the scope-poisoned-failure-report rule -- attribute the first failure, do not narrate around it.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "forge 18c3851 \u2014 commit body, regression evidence"
+    },
+    {
+      "ts": "2026-08-01T11:13:44",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "SPLIT RUNG iii RATHER THAN ROUNDING IT. The bar named two certificates; one re-derives publicly and one does not. Reporting a single grade would have to round in some direction and either direction is false. Recorded as a defect in MY OWN bar sheet -- two questions armed on one bar, discovered by running it, which is the same shape as the chip arc's bars 2 and 3 sharing a run.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "monogate-research reproduction/DRYRUN_WALK.md \u2014 rung iii"
+    }
+  ],
+  "findings": [
+    {
+      "description": "THE rb-EKF TRAIL IS 2-OF-5 RECONSTRUCTIBLE FROM PUBLIC ARTIFACTS, MEASURED. Walked in a clean container as a fresh user with no host state: the reciprocal certificate and the 57 headline axiom footprints re-derive from public machlib; kernel emission, the normalization soundness suite, the atan enumeration certificate and the silicon-capture replay do not, because the artifacts are private. This falsifies the working assumption the trail was described under -- that a reader could follow it from public sources. Nine findings, by class: missing public artifact 5, environment leakage 2, cross-repo assumption 1, defect-surfaced 1.",
+      "class": "falsification",
+      "artifact_link": "monogate-research reproduction/REPRODUCING.md"
+    },
+    {
+      "description": "THE PUBLISHED WHEEL IS A STALE BUILD UNDER A LIVE VERSION NUMBER. forge the repo is private but forge the compiler is on PyPI, which reopened two rungs I had written off. monogate-forge==0.14.0 ships a verilog_backend.py of 46,741 bytes with ZERO occurrences of ekf2d_filter; the tree at the same declared version has 132,243 bytes and 17. A version string that does not identify an artifact is not a pin. Nobody had ever installed the published package and tried to compile the flagship kernel with it.",
+      "class": "surprise",
+      "artifact_link": "monogate-research reproduction/DRYRUN_WALK.md \u2014 rung i"
+    },
+    {
+      "description": "A FAILED EMISSION WROTE A COMMENT AND EXITED 0 -- THIRD INSTANCE OF ONE FAMILY IN THIS BACKEND. Seven sites caught CompileError and returned Verilog comment text; compile() returned a str, the CLI wrote a .v, the process exited 0. A GENERATED ARTIFACT THAT REPORTS ITS OWN FAILURE ONLY IN A COMMENT IS INDISTINGUISHABLE FROM OUTPUT. Same family as assert_normalised_cleanly existing and never being called, and as a missing optional eml_cost silently halving the datapath: all three produced confident output from a mechanism that did not do the job. Fixed with the EXISTING mechanism copied rather than a new one -- accumulator, warn, gate on the shipping path -- specimen asserts the CLI exit code in a subprocess because the precedent is a correct assert that was never invoked.",
+      "class": "surprise",
+      "artifact_link": "forge 18c3851 + tests/test_emission_failure_is_fatal.py"
+    },
+    {
+      "description": "A PLAUSIBLE WRONG ANSWER SITTING IN A PUBLIC REPO. eml-stdlib publicly ships eml_stdlib/control/ekf_range_bearing.eml. It is NOT the trail's kernel: 60 lines, robot pose (x,y,theta) observing a landmark, sha 5c5d21bf -- against the trail's 28-line 2-D radar tracker sqrt(x0^2+x1^2), atan(x1/x0), sha 31c4eedd. A stranger searching public repos for the source FINDS A FILE AND IT IS THE WRONG ONE. Not an error message, which is what makes it worse than absence.",
+      "class": "surprise",
+      "artifact_link": "monogate-research reproduction/REPRODUCING.md \u2014 step 1 warning"
+    },
+    {
+      "description": "THE TRAP THE PAGE WARNED ABOUT CAUGHT THE PAGE. The round-1 provenance table declares itself LF-normalised and warns in bold that forge lands CRLF while monogate-research lands LF -- then carries one CRLF row, precisely the one row whose file lives in forge. A reproducer who FOLLOWS THE INSTRUCTION computes 31c4eedd and sees a mismatch against the committed a189f79b. Verified by construction rather than inferred: re-appending CR to the LF form reproduces a189f79b exactly, and the file has a single commit in forge history so content drift is excluded.",
+      "class": "surprise",
+      "artifact_link": "monogate-research electronics_intake/rb_ekf_arty/evidence/FINDINGS.md \u2014 ADDENDUM 2026-08-01"
+    },
+    {
+      "description": "UNAVAILABLE MUST ALSO NOT BE A FAIL -- the unstated corollary of house rule 4, found by a clean container. check_ledger.py died with a raw FileNotFoundError traceback and EXIT 1, which is the code it also returns when the axiom trust boundary has genuinely drifted. A reproducer could not tell 'machlib broke' from 'I have not installed elan', and between those a stranger assumes the alarming one. Now exit 2, naming the missing tool, no traceback. The rule was already written as 'UNAVAILABLE is never zero'; nobody had written 'and never a FAIL'.",
+      "class": "closure",
+      "artifact_link": "machlib 4f239f0f + foundations/tools/axiom_ledger/test_unavailable_specimen.py"
+    }
+  ]
+}
