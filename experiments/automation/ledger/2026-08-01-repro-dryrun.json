@@ -123,6 +123,13 @@
       "via": "spontaneous",
       "preventive": false,
       "artifact_link": "monogate experiments/automation/PROTOCOL.md \u2014 AMENDMENT 6"
+    },
+    {
+      "ts": "2026-08-01T13:54:09",
+      "kind": "mechanical",
+      "actor": "human",
+      "description": "Performed the 0.14.0 yank in the PyPI web UI and revoked the exposed API token. Logged as mechanical rather than direction: the decision was already made and the act needed a human at a browser only because PyPI has no yank API -- tokens are upload-scoped and yank sits behind CSRF origin validation. Left 0.14.1 unyanked, which was the judgment call flagged and not made for them.",
+      "artifact_link": "https://pypi.org/project/monogate-forge/0.14.0/"
     }
   ],
   "findings": [
@@ -180,6 +187,16 @@
       "description": "THE PUBLICATION PIPELINE WAS THE ONLY LINK IN THE ARTIFACT CHAIN WITH NO GATE, AND 0.14.0 HAD BYPASSED IT ENTIRELY -- the release workflow has no run for that version at all; the last gated release was 0.13.0. So the stale wheel was not a gate failing, it was a gate never invoked. Now gated: the release path builds from a git-archive snapshot of the TAG and diffs the wheel both directions before upload, with exit 2 (could-not-run) deliberately blocking here even though UNAVAILABLE is honestly neither pass nor fail everywhere else -- on a release path, 'we could not check' is not a licence to publish. The gate's first real run caught a real mismatch: my own.",
       "class": "closure",
       "artifact_link": "forge .github/workflows/release.yml + tools/scripts/check_wheel_correspondence.py"
+    },
+    {
+      "description": "MY OWN VERIFICATION COMMAND READ THE ENDPOINT THAT LIES. After the orchestrator yanked 0.14.0 I checked https://pypi.org/pypi/monogate-forge/json and it reported yanked=False for every release. The yank HAD landed: the PEP 592 simple API and the cache-busted per-version endpoint both report True for the wheel AND the sdist. The aggregate JSON endpoint was serving a stale cached response. Had I stopped there I would have told them their action did not work and sent them back to the browser -- attributing a CDN cache to a human error, which is the scope-poisoned-failure-report family pointed at a person instead of a module. Two independent read paths is what separated them, and the command I had HANDED THEM one message earlier was the wrong one. A verifier is only as good as the endpoint it trusts.",
+      "class": "surprise",
+      "artifact_link": "monogate-forge simple API vs /pypi/<pkg>/json"
+    },
+    {
+      "description": "THE PUBLICATION CHAIN IS CLOSED. 0.14.0 -- the stale wheel whose bits did not match its version, published outside the release pipeline that has no CI run for it -- is yanked on PyPI, both wheel and sdist. 0.14.3 is latest, released through the gated path with wheel-vs-tagged-tree correspondence checked before upload. The exposed token is revoked. Residual, recorded rather than closed: the yank carries NO REASON, so a downstream user with 0.14.0 pinned sees a bare warning and cannot judge urgency -- the reason field is what surfaces through installer APIs. And 0.14.1 stays unyanked despite shipping a C backend whose output cannot compile.",
+      "class": "closure",
+      "artifact_link": "https://pypi.org/project/monogate-forge/ \u2014 0.14.0 yanked, 0.14.3 latest"
     }
   ]
 }
