@@ -1,0 +1,32 @@
+{
+  "session_id": "2026-07-31-format-audit",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T18:14:20",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "First scan returned '0 format-pinned of 7,078' and I did not report it. It searched for literals like 65536, which MachLib CANNOT WRITE in a Real signature (no OfNat Real 65536) \u2014 so the scan could barely have convicted. Caught by running a firing specimen against my own scanner before quoting its zero.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "chip/narrow/fmt_literal_scan.py"
+    },
+    {
+      "ts": "2026-07-31T18:14:20",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Second scan reported 0 THEOREMS in files that plainly have them \u2014 the signature extractor used [^:=]*? and every binder contains a colon. THE EXAMINED-SET DENOMINATOR EXPOSED IT; the verdict column alone read as a clean 'no format param everywhere', a confident finding from a broken mechanism. Fixed, then cross-derived against a manual read that agreed.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "chip/narrow/fmt_param_scan.py"
+    }
+  ],
+  "findings": [
+    {
+      "description": "The format-generic property holds corpus-wide: 18 hardware/forward-error files, 223 theorem signatures, ZERO pin a format into a statement. 15 carry a free format parameter (D/s : Real or W : Nat), 3 are format-free abstractions. Four mechanisms, one discipline \u2014 format is an input to the proof, never an assumption inside it.",
+      "class": "closure",
+      "artifact_link": "monogate-research 207bb0f5 \u2014 PROOF_DEBT_CLASSIFICATION.md extension"
+    }
+  ]
+}
