@@ -1,0 +1,46 @@
+{
+  "session_id": "2026-07-31-narrow-kernel",
+  "date": "2026-07-31",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-07-31T17:57:47",
+      "kind": "taste",
+      "actor": "ai",
+      "description": "Ran the domain-existence sweep BEFORE any Lean work on the Q6.6 forward-error bound. The RTL's own header names two envelopes and says which one is format-dependent, so the check was cheap and decisive. Starting the proof first would have been walking to a destination nobody had checked exists \u2014 fourth application of the arm's method.",
+      "via": "structural",
+      "preventive": true,
+      "artifact_link": "NARROW_KERNEL_PREREGISTRATION.md"
+    },
+    {
+      "ts": "2026-07-31T17:57:47",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Both Verilator binaries came out BYTE-IDENTICAL in size, which looks exactly like a -G parameter override that silently failed. Stopped and verified the override in the generated headers (VL_IN16 x_in 11:0 vs 15:0) before trusting a single number. Had it actually failed, the entire sweep would have been one format reported as two.",
+      "via": "spontaneous",
+      "preventive": true,
+      "artifact_link": "chip/narrow/README.md \u2014 the verify-the-override note"
+    },
+    {
+      "ts": "2026-07-31T17:57:47",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "Scored the prediction as WRONG rather than as substantially right. It got the window's shape and cause correct and the pass/fail verdict backwards; a bar is a bar, and three is at least three.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "NARROW_KERNEL_RESULT.md \u2014 verdict section"
+    }
+  ],
+  "findings": [
+    {
+      "description": "PREDICTION FALSIFIED: predicted W=12 fails the 3-octave bar; it has EXACTLY three and passes. Mechanism right (window straddles the bar, six fractional bits, saturation at the low end), verdict wrong. AI session-prediction record now 1-for-4.",
+      "class": "falsification",
+      "artifact_link": "monogate-research 760b8dab \u2014 NARROW_KERNEL_RESULT.md"
+    },
+    {
+      "description": "W=16 is the chip candidate, not W=12: 1.6x the area buys 2.3x the usable domain (3 to 7 octaves) and 4x the accuracy. Each pair of fractional bits buys about two octaves. The area sweep alone picked the wrong format; it took the accuracy sweep to choose on evidence.",
+      "class": "surprise",
+      "artifact_link": "NARROW_KERNEL_RESULT.md \u2014 the pattern table"
+    }
+  ]
+}
