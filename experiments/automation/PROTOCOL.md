@@ -101,6 +101,41 @@ we call "taste" is mostly mechanical relay (E1).
 
     **This is the E3 seal pattern applied to a testbench** — check the seal, then read the contents.
 
+13. **An ABSENCE CLAIM carries the domain it searched, or it is inadmissible as grounding.**
+    Added 2026-08-02, on the third instance.
+
+    *"No artifact found"* is an **aggregate**, and house rule 8 already says aggregates lie in both
+    directions. **"No artifact found in `monogate-research/exploration/`" is a verdict.**
+
+    > **An incomplete search reporting "not found" is worse than one reporting "didn't look there,"
+    > because it licenses invention.**
+
+    That is the mechanism, not a flourish. On 2026-08-02 a search of
+    `monogate-research/exploration/` reported no record of the `1/x` arm's lower-bound
+    reformulation. The records were in `monogate/experiments/automation/`. **The false absence
+    created a vacuum, and the vacuum was filled with the most plausible-shaped thing available** —
+    a derivation whose premises were never checked against the corpus that already held its
+    counterexample, dated the day before.
+
+    **Applies to every absence: *not found*, *no record*, *never happened*, *nobody has done this*.**
+    Enumerate the set searched, or the claim is not grounding.
+
+    **Corollary — a derivation is not grounding.** *"Khovanskii cannot transfer to `1/x`"* was true.
+    *"Therefore the invariant must be asymptotic"* was a **non sequitur wearing an inference's
+    clothes**. A derivation-shaped claim is grounded only when **its premises are artifacts**.
+
+14. **The adversarial pass runs before the grinding — and it is now the cheapest instrument in the
+    program.** Added 2026-08-02, on its second kill.
+
+    | target | killed by | cost |
+    |---|---|---|
+    | the four-class taxonomy | counterexample construction | one session |
+    | the lower-bound invariant (I) | `e/x ∈ EML`, built by hand | **one hour** |
+
+    **Two consecutive frameworks killed by construction rather than by proof**, both by the same
+    move: *try to build the counterexample before trying to prove none exists.* **Frameworks that
+    used to cost twenty-five sessions now cost sixty minutes**, because the pass runs first.
+
 8. **Verdicts are read from the step or artifact that produced them, never from an aggregate — in
    EITHER direction.** Added 2026-08-01, once the second direction showed up.
 
