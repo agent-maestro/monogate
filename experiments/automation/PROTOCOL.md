@@ -120,6 +120,13 @@ we call "taste" is mostly mechanical relay (E1).
     **Applies to every absence: *not found*, *no record*, *never happened*, *nobody has done this*.**
     Enumerate the set searched, or the claim is not grounding.
 
+    **GENERALISED 2026-08-02, after the rule caught an error in a PRESENCE claim.** Auditing the
+    blast radius of a defective harness, a grep for `tb_recip` reported two evidence documents as
+    consumers. **Printing the domain exposed the match as a substring of `tb_reciprocal.sv`** — a
+    different bench. The rule demanded the audit; the rule then caught the audit's own error.
+
+    > **Any claim quantified over a searched set carries the set.** Absence and presence alike.
+
     **Corollary — a derivation is not grounding.** *"Khovanskii cannot transfer to `1/x`"* was true.
     *"Therefore the invariant must be asymptotic"* was a **non sequitur wearing an inference's
     clothes**. A derivation-shaped claim is grounded only when **its premises are artifacts**.
