@@ -136,6 +136,41 @@ we call "taste" is mostly mechanical relay (E1).
     move: *try to build the counterexample before trying to prove none exists.* **Frameworks that
     used to cost twenty-five sessions now cost sixty minutes**, because the pass runs first.
 
+15. **Predictions about fixed-point behaviour reason about IDEAL quantities; the artifact realises
+    ACTUAL ones.** Added 2026-08-02.
+
+    The bar-4 boundary hunt predicted the low-side edge from **representability of `1/b`**.
+    **Saturation decided it** — a constant landing one LSB short of exact, by luck of the format.
+    Both legs of the named straddle missed; the prediction was right and its mechanism was wrong.
+
+    **This is the class of error runtime attestation makes obsolete**, which is why a 9-for-18 record
+    with this failure mode argues *for* the instrument rather than against the predictor. When
+    predicting a fixed-point edge, name the **saturation, rounding, and shift** behaviour explicitly
+    or mark the prediction mechanism-unconfirmed in advance.
+
+16. **A calibrator whose match criterion is satisfiable by ABSENCE OF SIGNAL will latch the absence.**
+    Added 2026-08-02.
+
+    > **A constant is not a settled value.**
+
+    The settling detector searched for the first run of equal outputs and found the **reset plateau**
+    — the zero a 17-deep pipe holds while filling — reporting `settle = 1`. Same genus as
+    `MISMATCH: 0 differing` on empty files.
+
+    **Repair: measure BACKWARD from the final value.** The corrected reading reproduced the
+    independently known latency, which is the known-point validation earning its keep — and it
+    exposed an existing harness (`tb_recip.cpp`) carrying a false constant nothing had ever tested.
+
+17. **A convict specimen must be verified to BE a defect before its detection is verified.**
+    Added 2026-08-02.
+
+    The first bar-4 convict perturbed `y` by `+1 LSB` — which at that operand moved `y` **toward** the
+    exact answer, reducing the residual. **The checker's silence was correct behaviour, and the gate
+    correctly declined to certify itself.**
+
+    A harness that asserted *"perturbation ⇒ fire"* would have shipped a checker validated against a
+    **non-defect**. **Perturbation direction matters when the baseline itself carries error.**
+
 8. **Verdicts are read from the step or artifact that produced them, never from an aggregate — in
    EITHER direction.** Added 2026-08-01, once the second direction showed up.
 
