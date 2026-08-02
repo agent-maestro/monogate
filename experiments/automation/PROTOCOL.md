@@ -178,6 +178,15 @@ we call "taste" is mostly mechanical relay (E1).
     A harness that asserted *"perturbation ⇒ fire"* would have shipped a checker validated against a
     **non-defect**. **Perturbation direction matters when the baseline itself carries error.**
 
+> ### THE QUANTIFIED-CLAIM FAMILY — rules 8, 13
+>
+> **A quantified claim without its domain is an aggregate, and this project reads no aggregates.**
+>
+> Rule 8 refuses verdicts read from aggregates; rule 13 requires absence claims to carry their
+> searched set; rule 13's generalisation puts presence claims under the same law. **Same defect,
+> three surfaces.** Each rule's first real test was against work done in its own name — rule 13
+> caught the substring error in the very audit rule 13 demanded.
+
 8. **Verdicts are read from the step or artifact that produced them, never from an aggregate — in
    EITHER direction.** Added 2026-08-01, once the second direction showed up.
 
