@@ -218,6 +218,31 @@ we call "taste" is mostly mechanical relay (E1).
     2. **the gap that scope leaves** — the fields no functional test can see.
     3. **the reader-facing artifact** — read as the stranger reads it.
 
+20. **DATES ARE COMPARED, NEVER SUMMARISED.** Added 2026-08-02.
+
+    **When a conclusion rests on temporal ordering, the two dates and the subtraction appear in the
+    record.** A summary's verdict about *"already closed" / "still open" / "overdue"* is **discarded
+    in favour of the arithmetic**, even when the summary's underlying dates are correct.
+
+    **Firing specimen — the most dangerous aggregate yet documented, because the DATA WAS RIGHT.** A
+    search summary stated the shuttle close as `2026-09-07`, held today as `2026-08-02`, and
+    concluded **"the deadline has already closed."** *Not stale data. Not missing data. Correct data,
+    one layer of interpretation, wrong sign.*
+
+    > **Cost if believed: stands the project down from a shuttle with 36 days left.**
+    > **Detectability: near zero — "we missed the deadline" is a conclusion nobody re-audits.
+    > You mourn it; you do not verify it.**
+
+    That is the **red-over-success** class (nobody double-checks bad news) fused with the
+    **interpretation-layer** class.
+
+    **Quieter twin, same session:** a homepage countdown rendering `44 DAYS 44 HOURS 44 MINS 44 SECS`
+    — an all-placeholder state showing through. **A rendered widget is an output of code you cannot
+    see.** The true 36 days came from subtracting the two source dates.
+
+    **Two instruments wrong about the same fact in opposite directions, and the record correct
+    because it carried SOURCES INSTEAD OF CONCLUSIONS.**
+
 > ### THE QUANTIFIED-CLAIM FAMILY — rules 8, 13
 >
 > **A quantified claim without its domain is an aggregate, and this project reads no aggregates.**
