@@ -77,6 +77,30 @@ we call "taste" is mostly mechanical relay (E1).
    > wrong one, and which wrong one they assume is not even stable.**
 5. **Append-only records.** Ledgers and changelogs only grow; a CI gate diffs against git history.
 6. **No claim without an artifact.** Anything a report asserts links to the file that shows it.
+11. **An interface's byte order, sampling edge, or phase is CALIBRATED against a known probe —
+    never asserted.** Added 2026-08-01 on the third independent fall into one trap.
+
+    | who | asserted | reality |
+    |---|---|---|
+    | the wrapper's author | header comment: *"phase 0 : uo_out = result[7:0]"* | describes the mux; the coherent frame pairing is the other way |
+    | my Verilator testbench | paired (phase 0 low, phase 1 high) | produced the tearing signature from its own sampling |
+    | **my cocotb suite — written to teach this rule** | hardcoded hi-first | read `0xAA00` where the answer is `0x00AA` |
+
+    **Three independent authors, same trap, and the third fall happened inside the artifact built to
+    prevent it.** The measurement that makes it a law rather than an anecdote: the order is
+    **environment-dependent** — `hi_first=True` under Verilator, `hi_first=False` under cocotb, same
+    RTL. **Any asserted order would have been wrong in some rig.** Calibration was never paranoia.
+
+12. **A test carrying a pre-committed expected value must verify its ORACLE'S IDENTITY before
+    trusting its oracle's answer.** Added 2026-08-01; the house shape for this class.
+
+    The BIST suite loads its expected CRC from `bist_expected.json` and **hashes the golden it can
+    actually see**, refusing to grade if that hash is not the one the constant was derived from. A
+    constant is only meaningful against the model it came from; a golden that drifted would
+    otherwise be graded against a stale number with everything green.
+
+    **This is the E3 seal pattern applied to a testbench** — check the seal, then read the contents.
+
 8. **Verdicts are read from the step or artifact that produced them, never from an aggregate — in
    EITHER direction.** Added 2026-08-01, once the second direction showed up.
 

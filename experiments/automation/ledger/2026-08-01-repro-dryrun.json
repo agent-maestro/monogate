@@ -285,6 +285,16 @@
       "description": "THE REVIEW-TO-GRADE CORRESPONDENCE CHECK, established today as a repeatable reading discipline. Any external review can be scored the same way: cross-reference each deduction against the published limitations, and treat UNMATCHED DEDUCTIONS as the alarm -- a gap someone found that we had not named. Today that count is zero, which is the baseline. The paper's eventual referees will produce the same kind of list, and there is now both a method for reading it and a number to read it against.\n\nCosts nothing to run and turns every review into a calibration event rather than a verdict to absorb. It is also the only instrument in this program that can falsify the self-grading from outside: an internal audit of our own claims can always be generous in a way we cannot see, whereas an unmatched deduction is a stranger pointing at a hole we did not know we had.",
       "class": "closure",
       "artifact_link": "monogate experiments/automation/PROTOCOL.md \u2014 the correspondence check"
+    },
+    {
+      "description": "THE BYTE-ORDER TRAP CAUGHT THREE INDEPENDENT AUTHORS, THE THIRD INSIDE THE ARTIFACT BUILT TO PREVENT IT. The wrapper's header comment asserts one order (it describes the mux, not the coherent frame pairing); my Verilator testbench asserted another and reproduced the tearing signature from its own sampling; and my cocotb suite -- written explicitly to teach that byte order must be calibrated -- HARDCODED hi-first and read 0xAA00 where the answer is 0x00AA. What promotes this from anecdote to law is the measurement: the order is ENVIRONMENT-DEPENDENT. hi_first=True under Verilator, hi_first=False under cocotb, same RTL, same design. ANY ASSERTED ORDER WOULD HAVE BEEN WRONG IN SOME RIG, which means the runtime-calibration posture was never paranoia and the two prior authors were not careless -- they were sampling a property that has no fixed value to be careless about.",
+      "class": "falsification",
+      "artifact_link": "monogate experiments/automation/PROTOCOL.md house rule 11"
+    },
+    {
+      "description": "A RATIONALE I PUBLISHED AND THEN FALSIFIED WITH A 2x2. The BIST suite's docstring claimed \"BIST-from-idle passes forever while the flush is broken; only after-traffic convicts it\" -- a clean-sounding argument for why the historical convict was uniquely necessary. Measured by reverting the flush: from_idle FAIL, after_traffic FAIL; restored: both PASS. The claim was false, and the reason is trivial once run -- ENTERING BIST REQUIRES HOLDING THE MAGIC OPERAND FOR TWO FRAMES, AND THOSE FRAMES ARE THEMSELVES FED TO THE KERNEL, so the pipeline is never empty at sweep start. There is no idle entry through this trigger. The case survives on a smaller true justification (residue from arbitrary prior operands, the realistic scenario) and the uniqueness claim is withdrawn rather than left standing because it read well. The deeper finding -- no-idle-entry is an INTERFACE INVARIANT, not an implementation detail -- went into the bring-up acceptance table, where a 2027 unboxer will read it before spending a morning trying to construct a state the interface cannot reach.",
+      "class": "falsification",
+      "artifact_link": "monogate-research chip/additions/RESULTS.md + TAPEOUT_PREREGISTRATION interface invariant"
     }
   ]
 }
