@@ -178,6 +178,26 @@ we call "taste" is mostly mechanical relay (E1).
     A harness that asserted *"perturbation ⇒ fire"* would have shipped a checker validated against a
     **non-defect**. **Perturbation direction matters when the baseline itself carries error.**
 
+18. **An INVENTORY ships in two grades, or it is an aggregate.** Added 2026-08-02.
+
+    | grade | meaning |
+    |---|---|
+    | **A** | **read this session** — defensible, line-cited |
+    | **B** | **recorded, unverified here** — confirm at consumption |
+
+    **Grade B is not doubt.** It is the refusal to assert. An undifferentiated inventory quantifies
+    over a remembered set, and **remembered sets are aggregates** — rule 8's family, one surface
+    further out.
+
+    **The confirmation becomes step zero of the bar that consumes each item**, which is where the
+    check is cheapest and the stakes are live. Costs nothing at listing time.
+
+    **Firing specimen, both directions:** the `CRC_FULL` phantom (an accumulator recalled into a die
+    that has one CRC register) and the stale-15 echo (*"the precedent"* cited without its line
+    number, real when checked). **One was false, one was true — and neither was grounded when
+    written.** A claim citing *"the precedent"* without the line number is quantified over a
+    remembered set.
+
 > ### THE QUANTIFIED-CLAIM FAMILY — rules 8, 13
 >
 > **A quantified claim without its domain is an aggregate, and this project reads no aggregates.**
