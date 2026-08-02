@@ -198,6 +198,26 @@ we call "taste" is mostly mechanical relay (E1).
     written.** A claim citing *"the precedent"* without the line number is quantified over a
     remembered set.
 
+19. **A COVERAGE CLAIM ABOUT YOUR OWN INSTRUMENTS carries its enumerated scope — whether it GRANTS
+    or DENIES.** Added 2026-08-02, with a matched specimen pair.
+
+    | direction | specimen |
+    |---|---|
+    | **grants coverage that does not exist** | the `CRC_FULL` phantom — a submission argument rested on an accumulator **no die contains** |
+    | **denies coverage that does** | *"never verified from this box"* — would have sent someone to re-derive a check **CI has passed since run 004** |
+
+    **Same root, opposite signs, and both wearing the same disguise: a sentence that sounds like
+    diligence.**
+
+    **The denial is not the cheaper error.** A re-derived check does not merely waste effort — **it
+    forks the definition of what "checked" means**, and two definitions of one check is the
+    two-registries problem in miniature.
+
+    **Decomposition that works for any "is the form satisfied?" question**, in order:
+    1. **scope** — what does the existing check actually validate? *(Grade B until read.)*
+    2. **the gap that scope leaves** — the fields no functional test can see.
+    3. **the reader-facing artifact** — read as the stranger reads it.
+
 > ### THE QUANTIFIED-CLAIM FAMILY — rules 8, 13
 >
 > **A quantified claim without its domain is an aggregate, and this project reads no aggregates.**
