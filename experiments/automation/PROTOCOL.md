@@ -243,6 +243,30 @@ we call "taste" is mostly mechanical relay (E1).
     **Two instruments wrong about the same fact in opposite directions, and the record correct
     because it carried SOURCES INSTEAD OF CONCLUSIONS.**
 
+21. **A RECORD ASSERTING AN ACT THAT DIDN'T HAPPEN.** Added 2026-08-03, **third instance — and the
+    first in the record's own voice.**
+
+    | instance | form |
+    |---|---|
+    | *"Saved to `scratchpad/reviewer-reply.txt`"* | a status line, printed without the write |
+    | `git push -f` logged as an act | a ledger entry for a no-op |
+    | **`af47270d`, titled *"submission re-pinned to 8e2daef5"*** | **a COMMIT MESSAGE. Diff: one file. The re-pin did not land.** |
+
+    **A commit message is the worst of the three**, because it is **the record's own voice** and it
+    **outlives the session that wrote it.**
+
+    **Mechanism — the exit-code taxonomy in new clothing.** The edit script was **newline-separated**
+    from `git` rather than `&&`-chained, so an abort **did not propagate** and git committed a
+    message describing edits never written.
+
+    > **STRUCTURAL FIX: the message must not be able to outrun the edit.**
+    > Chain the **recording** step behind the **acting** step, and **verify every anchor before
+    > writing any file** rather than writing as you go.
+
+    **Detection is rule 8 applied to git itself:**
+
+    > **THE DIFF IS THE STEP. THE MESSAGE IS THE AGGREGATE. Read the diff.**
+
 > ### THE QUANTIFIED-CLAIM FAMILY — rules 8, 13
 >
 > **A quantified claim without its domain is an aggregate, and this project reads no aggregates.**
