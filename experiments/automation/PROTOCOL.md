@@ -292,6 +292,23 @@ we call "taste" is mostly mechanical relay (E1).
     survived to Grade A** on two instances in different designs. **A grounding pass that killed
     everything would indict the grader, not the inventory. The survivor is the calibration.**
 
+23. **A GROUNDING PASS'S SURVIVAL RATE IS ITS OWN SPECIMEN.** Added 2026-08-03.
+
+    **Read the survival rate BEFORE reading the findings.**
+
+    | outcome | what it indicts |
+    |---|---|
+    | **all dead** | **the GRADER.** An inventory in which nothing survives suggests the pass is mis-reading its sources — not that every asset was imaginary |
+    | **all alive** | **the GRADING.** If nothing moves, Grade B was assigned on **confidence** rather than **provenance**, and the split was decorative |
+    | **mixed, survivor holding on MULTIPLE instances in DIFFERENT designs** | **nothing — that is what a discriminating instrument looks like** |
+
+    **Specimen:** the 2026-08-03 chip-2 pass — 3 of 4 moved (phantom, datum-not-law, absent-and-
+    inverted), 1 survived to Grade A on two instances in different designs.
+
+    This is the **modal-fraction logic from the dead-channel tripwire, applied to the audit itself.**
+    **Grounding passes therefore self-report their interpretability — which no other audit mechanism
+    here does.** Report the rate with the pass.
+
 > ### THE QUANTIFIED-CLAIM FAMILY — rules 8, 13
 >
 > **A quantified claim without its domain is an aggregate, and this project reads no aggregates.**
