@@ -267,6 +267,31 @@ we call "taste" is mostly mechanical relay (E1).
 
     > **THE DIFF IS THE STEP. THE MESSAGE IS THE AGGREGATE. Read the diff.**
 
+22. **A CONSTANT SHIPS WITH ITS VALIDITY CONDITIONS — or it ships as a CURVE REQUEST.**
+    Added 2026-08-03. **The caveat-decay subclass, and it is nastier than the phantom.**
+
+    **The phantom is memory inventing in a vacuum. This is memory OVERWRITING A RECORDED CAVEAT** —
+    the artifact *was* consulted, its warning *was* registered, and then **the warning decayed while
+    the number survived.**
+
+    **Specimen.** `WORST_PATH_DIAGNOSIS_001.md:104` recorded `1.69×` **and** wrote that the constant
+    *"is really a curve"* varying with utilisation, prescribing three sweep points.
+    `SWEEP_002_RESULT.md:33-45` then reported the sweep design wrong and **one** point obtained, fix
+    never run. **The inventory promoted that single point to "the calibrated area curve" — over its
+    own source's written objection.**
+
+    > **GROUNDING ALONE WOULD NOT HAVE CAUGHT THIS.** A grep finds the number, and the number is
+    > real. That is why it needs its own rule.
+
+    **Repair — the two-envelope discipline, applied to measured constants instead of error bounds:**
+    the validity conditions are **part of the constant's identity**, not commentary attached to it.
+    **A constant quoted without its conditions is not a constant; it is a request to measure the
+    curve.**
+
+    **What the same pass proved about the GRADER:** three of four inventory items moved; **one
+    survived to Grade A** on two instances in different designs. **A grounding pass that killed
+    everything would indict the grader, not the inventory. The survivor is the calibration.**
+
 > ### THE QUANTIFIED-CLAIM FAMILY — rules 8, 13
 >
 > **A quantified claim without its domain is an aggregate, and this project reads no aggregates.**
