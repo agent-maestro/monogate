@@ -20,6 +20,15 @@
       "via": "spontaneous",
       "preventive": true,
       "artifact_link": "monogate-research/chip2/tb/tb_kalman.cpp"
+    },
+    {
+      "ts": "2026-08-04T12:29:09",
+      "kind": "correction",
+      "actor": "ai",
+      "description": null,
+      "via": "spontaneous",
+      "preventive": true,
+      "artifact_link": "monogate-research/chip2/tb/tb_kalman.cpp"
     }
   ],
   "findings": [
@@ -72,6 +81,11 @@
       "description": "Bar B closed, and checking the \"near-zero\" price found it was an overestimate: the price is ZERO for the theorems themselves. 70 lines of new Lean (mostly docstring), ZERO theorems re-proved - both bodies are single applications - and one new proof of any kind, positivity of the format constant. KalmanUpdateFixedPoint.lean has no numerals in any statement or proof; every Q16.16 in it is a docstring (lines 14, 21, 67, 112, 125, 149), and s and B are free variables throughout. Q16.16 was a comment, not a hypothesis. The stronger finding is that the no-numerals architecture is enforced by the TYPE SYSTEM, not by convention: writing 1/256 fails with \"failed to synthesize OfNat Real 256\", because MachLib.Real has no OfNat instance for literals. A numeral cannot leak into a statement even by accident. That is why re-instantiating at a new format is a substitution rather than a project, and it retroactively justifies an architecture decision made long before chip 2 existed.",
       "class": "closure",
       "artifact_link": "machlib/foundations/MachLib/KalmanFormatInstantiation.lean"
+    },
+    {
+      "description": "Bar C closed. B = 0.073631 (Q16.16 4825), derived from the proof and pinned by committed script sha256 39b5e676..., dual implementations agreeing. Route 2 (chained from the reciprocal's own certificate, no sweep anywhere) binds at 0.073631; route 1 (budget-inverted at eps=0.1, unit innovation) gives 0.092188. They do not disagree - route 2 is tighter, so the achievable threshold already satisfies the budget. Bar 1's pre-registered corollary is confirmed: the proof threshold is 10.9% looser than bar 4's measured worst in-domain residual, so the monitor cannot fire in the certified domain, and the measured figure appears in the script for comparison only, never entering the derivation. The honest grade: hinv0 is MEASURED NOT PROVED (no Lean file can discharge a property of a seed circuit), so chip 2's threshold is conditional on a bench measurement and no stronger than it.",
+      "class": "closure",
+      "artifact_link": "monogate-research/chip/CHIP2_BAR_C_RESULT.md"
     }
   ]
 }
