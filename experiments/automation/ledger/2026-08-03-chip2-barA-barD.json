@@ -67,6 +67,11 @@
       "description": "The area-ratio band I stated from three points was too tight, and five points say so. Ratios by utilisation: 0.601->1.677, 0.612->1.704, 0.615->1.697, 0.709->1.691, 0.811->1.680. Spread 1.6%, non-monotone - the highest ratio sits at the second-lowest utilisation. The 1.68 +/- 0.01 I published after three points is falsified; 1.69 +/- 0.015 holds at five. The instructive part is the sequence: one point was promoted to a curve (phantom), three points were over-tightened into a band, and only the fourth and fifth exposed the noise floor. A constant's validity conditions are not just its regime - they are also how many points established it.",
       "class": "falsification",
       "artifact_link": "monogate-research/chip/CHIP2_BAR_A_RESULT.md"
+    },
+    {
+      "description": "Bar B closed, and checking the \"near-zero\" price found it was an overestimate: the price is ZERO for the theorems themselves. 70 lines of new Lean (mostly docstring), ZERO theorems re-proved - both bodies are single applications - and one new proof of any kind, positivity of the format constant. KalmanUpdateFixedPoint.lean has no numerals in any statement or proof; every Q16.16 in it is a docstring (lines 14, 21, 67, 112, 125, 149), and s and B are free variables throughout. Q16.16 was a comment, not a hypothesis. The stronger finding is that the no-numerals architecture is enforced by the TYPE SYSTEM, not by convention: writing 1/256 fails with \"failed to synthesize OfNat Real 256\", because MachLib.Real has no OfNat instance for literals. A numeral cannot leak into a statement even by accident. That is why re-instantiating at a new format is a substitution rather than a project, and it retroactively justifies an architecture decision made long before chip 2 existed.",
+      "class": "closure",
+      "artifact_link": "machlib/foundations/MachLib/KalmanFormatInstantiation.lean"
     }
   ]
 }
