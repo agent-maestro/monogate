@@ -37,6 +37,16 @@
       "description": "chip/synth/recip.ys sets NO parameters, so it synthesises eml_reciprocal at the module defaults WIDTH=32, FRAC=16 and reports 227,174 um2 - roughly 3.4x the true 16/8 figure. That is the project's own named prior defect (defaulting the kernel's parameters, which previously read a latency of 16 where the truth is 17) sitting unnoticed inside a committed measurement script. Found only because chip 2's whole design measured SMALLER than its own sub-component, which is impossible and forced the check. A baseline that is 3.4x wrong would have made any chip-2 area comparison meaningless in the flattering direction.",
       "class": "surprise",
       "artifact_link": "monogate-research/chip2/synth/recip_w16.ys"
+    },
+    {
+      "description": "Bar A measured. 6x2 fits at 60.1% utilisation with all nine setup corners positive and DRC/antenna/violations zero. Rule 22's triple reported together: Yosys 80,853.80 um2, placed standard-cell 135,595 um2, utilisation 0.600505. 4x2 would require 90.9%, above the 85% at which SWEEP_002 observed this flow fail - stated as an inference from two observations, not a measurement. The stdcell field was identified by matching chip 1's known 121,031 rather than by reading its name; design__instance__area is the CORE area and would have overstated by 67%.",
+      "class": "closure",
+      "artifact_link": "monogate-research/chip/CHIP2_BAR_A_RESULT.md"
+    },
+    {
+      "description": "The area curve finally has three points, five runs after WORST_PATH_DIAGNOSIS_001.md:104 asked for them, and the prediction that produced the request is FALSIFIED. Ratios: 1.677 at 60.1% utilisation, 1.691 at 70.9%, 1.680 at 81.1% - a 0.8% spread. The record expected the constant to vary with utilisation pressure because repair-buffer count grows as packing tightens; repair-buffer share is 11.0% versus 10.2%, so the named mechanism is real but nearly flat over this range. The third point cost one local Yosys run: chip 1's full submitted design had never had its Yosys area recorded, so its 81.1% point had no ratio at all. Validity conditions recorded per rule 22, including the one that limits it most: all three points are dominated by the same reciprocal, so the constant may be design-specific rather than flow-general, and nothing tests above 0.81.",
+      "class": "falsification",
+      "artifact_link": "monogate-research/chip2/synth/chip1_full.ys"
     }
   ]
 }
