@@ -47,6 +47,16 @@
       "description": "The area curve finally has three points, five runs after WORST_PATH_DIAGNOSIS_001.md:104 asked for them, and the prediction that produced the request is FALSIFIED. Ratios: 1.677 at 60.1% utilisation, 1.691 at 70.9%, 1.680 at 81.1% - a 0.8% spread. The record expected the constant to vary with utilisation pressure because repair-buffer count grows as packing tightens; repair-buffer share is 11.0% versus 10.2%, so the named mechanism is real but nearly flat over this range. The third point cost one local Yosys run: chip 1's full submitted design had never had its Yosys area recorded, so its 81.1% point had no ratio at all. Validity conditions recorded per rule 22, including the one that limits it most: all three points are dominated by the same reciprocal, so the constant may be design-specific rather than flow-general, and nothing tests above 0.81.",
       "class": "falsification",
       "artifact_link": "monogate-research/chip2/synth/chip1_full.ys"
+    },
+    {
+      "description": "The bar D disconfirmer FIRED and reversed the recommendation. Species (i) trajectory and species (ii) operand sweep are complementary: F1 (stuck-at on a MAC operand bit) is CAUGHT by (i) and MISSED by (ii); F2 (mis-sequence gated on z=-256, never visited by the trajectory) is MISSED by (i) and CAUGHT by (ii). A control - the same fault gated on a VISITED z - is caught by (i), which is what makes F2's escape interpretable as a blind spot rather than an inert fault. (ii) misses F1 because its fixed canonical prior gives P- = 320, which is EVEN, so clearing bit 0 of the MAC operand changes nothing: a fixed-prior sweep cannot see a fault whose visibility depends on the state VALUE. My rejection of (iii) on cost-for-value was wrong, and my named escape clause was wrong too - I claimed (ii) would also miss F2 because it resets state per operand, forgetting that it sweeps EVERY operand and therefore visits z=-256. Reasoning about one axis of a two-axis object, the same shape as bar A's 1/b-versus-saturation miss.",
+      "class": "falsification",
+      "artifact_link": "monogate-research/chip/CHIP2_BAR_D_DETERMINATION.md"
+    },
+    {
+      "description": "The pre-registered BIST criteria caught a DESIGN defect before arming: the bar A draft was a measurement update only, with no predict step, so P' = (1-K)P is monotonically non-increasing and P can never exceed P0. C1 (K>0.9) and C2 (P in the top decile) were satisfiable by ZERO of 400 trajectories, and the observed K ceiling of 0.8889 is exactly 256/(256+32) - structural, not a search artifact. Adding the predict step P- = P + Q took C1 from 0/400 to 388/400. Consequence: bar A's area and timing result was measured on an incomplete design and must be re-measured. Separately, the criteria contained an internal contradiction I wrote: C2 wanted P >= 29,490 while C5 capped S = P- + R at 4095 with S >= P-, so C2 and C5 had empty intersection on any design at this format. VOIDed as C2 with the original preserved unedited, replaced by C2' scoped to the C5-compatible range.",
+      "class": "surprise",
+      "artifact_link": "monogate-research/chip/CHIP2_TRAJECTORY_CRITERIA.md"
     }
   ]
 }
