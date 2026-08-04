@@ -57,6 +57,16 @@
       "description": "The pre-registered BIST criteria caught a DESIGN defect before arming: the bar A draft was a measurement update only, with no predict step, so P' = (1-K)P is monotonically non-increasing and P can never exceed P0. C1 (K>0.9) and C2 (P in the top decile) were satisfiable by ZERO of 400 trajectories, and the observed K ceiling of 0.8889 is exactly 256/(256+32) - structural, not a search artifact. Adding the predict step P- = P + Q took C1 from 0/400 to 388/400. Consequence: bar A's area and timing result was measured on an incomplete design and must be re-measured. Separately, the criteria contained an internal contradiction I wrote: C2 wanted P >= 29,490 while C5 capped S = P- + R at 4095 with S >= P-, so C2 and C5 had empty intersection on any design at this format. VOIDed as C2 with the original preserved unedited, replaced by C2' scoped to the C5-compatible range.",
       "class": "surprise",
       "artifact_link": "monogate-research/chip/CHIP2_TRAJECTORY_CRITERIA.md"
+    },
+    {
+      "description": "Bar A ANSWERED. The shared-MAC Kalman update fits 6x2 at 61.5% utilisation and meets 50 MHz at every corner, with the certified kernel byte-identical. Getting there took three hardens and the middle one failed timing: the single-cycle 16x16 multiply in the shared MAC measured max_ss -0.744 post-route, startpoint u_kf.mac_b_q[2]. Splitting the multiply (multiply|truncate, the structure eml_reciprocal uses internally) closed it: +1.16 ns for +674 um2 and three cycles. THE PATH MOVED - startpoint is now u_kf.u_recip, wholly inside the certified kernel - which is what makes it a diagnosis rather than luck, and which is precisely the terminal state HARDEN_VERDICT_006 recorded for chip 1. The kernel is byte-frozen by the cross-chip provenance claim, so this is as fast as chip 2 can be without forfeiting the identity chip 2 exists to carry.",
+      "class": "closure",
+      "artifact_link": "monogate-research/chip/CHIP2_BAR_A_RESULT.md"
+    },
+    {
+      "description": "The area-ratio band I stated from three points was too tight, and five points say so. Ratios by utilisation: 0.601->1.677, 0.612->1.704, 0.615->1.697, 0.709->1.691, 0.811->1.680. Spread 1.6%, non-monotone - the highest ratio sits at the second-lowest utilisation. The 1.68 +/- 0.01 I published after three points is falsified; 1.69 +/- 0.015 holds at five. The instructive part is the sequence: one point was promoted to a curve (phantom), three points were over-tightened into a band, and only the fourth and fifth exposed the noise floor. A constant's validity conditions are not just its regime - they are also how many points established it.",
+      "class": "falsification",
+      "artifact_link": "monogate-research/chip/CHIP2_BAR_A_RESULT.md"
     }
   ]
 }
