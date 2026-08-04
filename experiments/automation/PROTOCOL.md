@@ -309,6 +309,35 @@ we call "taste" is mostly mechanical relay (E1).
     **Grounding passes therefore self-report their interpretability — which no other audit mechanism
     here does.** Report the rate with the pass.
 
+24. **A PARAMETER ADDED TO A DESIGN ENTERS THE TESTS THAT GRADE IT, IN THE SAME COMMIT — or the
+    pass measures the OLD design.** Added 2026-08-04. **The vacuous-pass class.**
+
+    **Specimen.** `q_in` (the Kalman predict step) was added to the chip-2 draft; the functional
+    testbench's five vectors **all had `q = 0`.** The reported **5/5 was green on a suite
+    structurally blind to the parameter** — the test *could not fail* on the path it claimed to
+    cover.
+
+    > **A green suite that cannot fail on the feature under test is not weak evidence. It is NO
+    > evidence, wearing evidence's colours.**
+
+    **This is the specimen-in-same-commit rule extended from GATES to PARAMETERS.** A gate ships with
+    its firing specimen; a parameter ships with a vector that varies it. **Repair to standard:** 7
+    vectors, 3 with `q ≠ 0`, and the reference model applying `P⁻ = P + Q`.
+
+25. **ENFORCED RE-READING IS AN AUDIT POSTURE NOTHING ELSE SCHEDULES.** Added 2026-08-04.
+
+    A tooling outage left only read-only operations available. **That window produced two defects
+    that forward motion had already driven past** — a certificate precondition never hypothesised
+    (`|p| ≤ |S|`), and the vacuous-pass above. **Both were in files I had written and already
+    reported passing on.**
+
+    > **The deep-session lesson, inverted: a fresh head auditing the deep tail is scheduled; a
+    > BLOCKED head re-reading its OWN just-reported work is not — and nothing else creates that
+    > posture.**
+
+    **Do not treat an outage as lost time.** Re-read what was most recently reported, starting with
+    whatever was reported as passing.
+
 > ### THE QUANTIFIED-CLAIM FAMILY — rules 8, 13
 >
 > **A quantified claim without its domain is an aggregate, and this project reads no aggregates.**
