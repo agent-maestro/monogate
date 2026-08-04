@@ -1,0 +1,42 @@
+{
+  "session_id": "2026-08-03-chip2-barA-barD",
+  "date": "2026-08-03",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-08-03T21:31:04",
+      "kind": "correction",
+      "actor": "ai",
+      "description": null,
+      "via": "spontaneous",
+      "preventive": true,
+      "artifact_link": "monogate-research/chip2/rtl/kalman_update.v"
+    },
+    {
+      "ts": "2026-08-03T21:31:04",
+      "kind": "correction",
+      "actor": "ai",
+      "description": null,
+      "via": "spontaneous",
+      "preventive": true,
+      "artifact_link": "monogate-research/chip2/tb/tb_kalman.cpp"
+    }
+  ],
+  "findings": [
+    {
+      "description": "Bar A's functional check yielded an unasked-for law. The covariance channel amplifies the reciprocal's relative error by K/(1-K): P' = (1-K)*P, so a relative error d in K becomes d*K/(1-K) in (1-K). Measured at P=10, R=1: amplification 10.00, observed P relative error 0.1167 against resid*amp = 0.1172, ratio 1.00. This is the application-side gain that the iterative composition theorem calls L (MonitorSoundness.lean:118), appearing in RTL rather than in a hypothesis. As K -> 1 - a confident measurement, P >> R - the amplification diverges. The theorem said the contraction constant belongs to the surrounding system; this is the surrounding system handing over its constant.",
+      "class": "surprise",
+      "artifact_link": "monogate-research/chip2/tb/tb_kalman.cpp"
+    },
+    {
+      "description": "Bar D's framing partly dissolved, in the same species as bar 1. The bar asked which BIST replaces the exhaustive sweep, which presupposes the BIST still owns coverage. Under the two-instrument doctrine it does not: the BIST's job is IDENTITY, not coverage. Identity needs a witness that is deterministic, pre-committed and sensitive to datapath change - not an exhaustive one. Coverage belongs to the monitor, and the monitor reaches territory no sweep could, since bar 4's texture finding showed the good set beyond the certified domain has no interval structure. So \"representative, not exhaustive\" is not a concession here; it is the correct specification, and chip 1's exhaustiveness was over-provision forced by having only one instrument. Recommendation: species (i) pre-committed trajectory ROM; species (ii) REJECTED rather than deferred, because it is exhaustive over the step function - already the most trusted part, dominated by the byte-identical reciprocal - and structurally cannot exercise the recursion, which is what chip 2 adds.",
+      "class": "closure",
+      "artifact_link": "monogate-research/chip/CHIP2_BAR_D_DETERMINATION.md"
+    },
+    {
+      "description": "chip/synth/recip.ys sets NO parameters, so it synthesises eml_reciprocal at the module defaults WIDTH=32, FRAC=16 and reports 227,174 um2 - roughly 3.4x the true 16/8 figure. That is the project's own named prior defect (defaulting the kernel's parameters, which previously read a latency of 16 where the truth is 17) sitting unnoticed inside a committed measurement script. Found only because chip 2's whole design measured SMALLER than its own sub-component, which is impossible and forced the check. A baseline that is 3.4x wrong would have made any chip-2 area comparison meaningless in the flattering direction.",
+      "class": "surprise",
+      "artifact_link": "monogate-research/chip2/synth/recip_w16.ys"
+    }
+  ]
+}
