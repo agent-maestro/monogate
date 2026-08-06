@@ -1,0 +1,71 @@
+{
+  "session_id": "2026-08-05-inv-x-arm",
+  "date": "2026-08-05",
+  "arm": "baseline",
+  "entries": [
+    {
+      "ts": "2026-08-05T21:22:35",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "RETROACTIVELY RECONSTRUCTED 2026-08-05 from the commit record, not logged live. The `via` value below is read off commit e8313b01's own account of how the catch fired; it is more reliable than recall but less than a live entry, and any analysis of `via` should be able to exclude the four entries in this session on that ground.\n\nK-search figures withdrawn: the screen had a precision blind spot. Found by the depth-2 THEOREM contradicting the search that had suggested it - the theorem forces log c = 0, the search reported 210 hits with c != 1. Two conflated failure modes; the second (precision floor, resolution K*10^-dps) is NOT fixable by raising precision, because K grows as exp(exp(exp(...))) with depth and a 60-digit re-screen returned MORE false hits than double, not fewer.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "monogate-research/exploration/inv_x_reachable_K_2026_08_04/RESULT.md"
+    },
+    {
+      "ts": "2026-08-05T21:22:35",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "RETROACTIVELY RECONSTRUCTED 2026-08-05 from the commit record, not logged live. See the caveat on the first entry of this session.\n\nA FALSE HALT, and the most consequential of the session's four corrections. I declared var/var blocked on 'one missing lemma: a strict 1+t < exp t' and that 'only the non-strict form exists'. Both claims false: exp_tangent_line_strict exists at EMLAsymptoticClass.lean:528 for all x > 0. My search pattern could not have matched its name, and I reported the empty result as an absence. Rule 13, third violation of the session. This one stopped work on a tractable case.\n\n`via` marked spontaneous and BOUNDARY-flagged: no gate fired and no specimen convicted; I re-examined and found it. But the rule it violated (an absence claim carries the set it searched) is itself a house rule, so whether the eventual catch counts as structural is a genuine judgement call rather than a clear reading.",
+      "via": "spontaneous",
+      "preventive": false,
+      "artifact_link": "monogate-research/exploration/inv_x_reachable_K_2026_08_04/ROOT_CASE_CENSUS.md",
+      "boundary": true
+    },
+    {
+      "ts": "2026-08-05T21:22:35",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "RETROACTIVELY RECONSTRUCTED 2026-08-05 from the commit record, not logged live. See the caveat on the first entry of this session.\n\nEvery empirical claim in the arm silently excluded 79.5% of a legal search space. MachLib.Real.log is CLAMPED (log_nonpos), so a non-positive right child gives a well-defined tree; my guard `if b <= 0: reject`, written for floating-point safety, discarded all of them. Found by the enumerate-then-count rule doing exactly its job: an unexplained pair of numbers in the unblocking-lemma test, 48,832,144 possible against 9,994,880 evaluated. All 21 Lean theorems unaffected (they are proofs, and several carry 0 < w.eval x explicitly); every empirical ABSENCE claim weakened to the positive-child branch. All were re-run; none changed.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "monogate-research/exploration/inv_x_reachable_K_2026_08_04/INSTRUMENT_DOMAIN_DEFECT.md"
+    },
+    {
+      "ts": "2026-08-05T21:22:35",
+      "kind": "correction",
+      "actor": "ai",
+      "description": "RETROACTIVELY RECONSTRUCTED 2026-08-05 from the commit record, not logged live. See the caveat on the first entry of this session.\n\nA whole scoping document voided. TERMINATION_SCOPE.md's central obligation A2 - 'the branch where the left child is not constant-valued has no pinning, and that is the whole problem' - is false; pins_right proves pinning unconditional in ONE LINE from a lemma already in the file when the scope was written. The illusion was reading `hu : u.eval x = a` as a constraint when a hypothesis of the form expr = fresh_variable is never a restriction. Sixth instance that day of a hypothesis being weaker than it looks, and the first whose consequence was a document rather than a theorem statement. Caught by the checklist item established earlier the same day - after a proof closes, read the hypothesis list against what the body actually consumed - hence structural.",
+      "via": "structural",
+      "preventive": false,
+      "artifact_link": "monogate-research/exploration/inv_x_reachable_K_2026_08_04/TERMINATION_SCOPE.md"
+    }
+  ],
+  "findings": [
+    {
+      "description": "35 theorems in MachLib/EMLReciprocalDepth2.lean, sorryAx 0, machine-verified by #print axioms on every one. Exactly two (exp_exp_one_gt, var_var_not_mx) carry MachLib.exp_tangent_line_strict beyond the base Real interface, and they disclose it. Count cross-derived: 35 `theorem` declarations; a naive grep says 36 because a docstring contains the words \"The\\nlemma below turns it into one\".",
+      "class": "closure",
+      "artifact_link": "machlib/foundations/MachLib/EMLReciprocalDepth2.lean"
+    },
+    {
+      "description": "PINNING IS UNCONDITIONAL. node_pins_a_child: every node eml u w = f pins one of its children, with no third case. The clamped branch (w.eval x <= 0) pins u.eval x = log f, parameter-free; the positive branch pins w.eval x = exp(exp(u.eval x) - f) and retains one free parameter. This was the surprise of the session: a whole scoping document had been built around the claim that the non-constant branch has NO pinning.",
+      "class": "surprise",
+      "artifact_link": "monogate-research/exploration/inv_x_reachable_K_2026_08_04/BRANCH_ASYMMETRY.md"
+    },
+    {
+      "description": "DEAD END, named exactly. The positive branch's free parameter u.eval x IS eliminable, but only one-sided: exp(-f) < w.eval x, with no reference to u, at any depth. There is no matching upper bound because exp(u.eval x) is unbounded above. The bound is satisfied by w = const 1, which is precisely what the known solution e/x uses - so it is NECESSARY AND NON-EXCLUDING. Work stopped here rather than accumulating further true-but-non-advancing lemmas. The single open question: can the parameter be eliminated in a way that EXCLUDES rather than merely bounds?",
+      "class": "dead_end",
+      "artifact_link": "monogate-research/exploration/inv_x_reachable_K_2026_08_04/DAY_HANDOFF.md"
+    },
+    {
+      "description": "The barrier is MEASURED rather than felt: pointwise techniques are provably exhausted for this target, because e/x and 1/x have identical growth and every rate-based separation therefore had to fail. Recording the exhaustion of a technique is what makes the halt informative instead of merely a stopping point.",
+      "class": "closure",
+      "artifact_link": "monogate-research/exploration/inv_x_reachable_K_2026_08_04/METHOD_BARRIER.md"
+    },
+    {
+      "description": "A REUSABLE PATTERN, eight instances in one session, several linter-caught: a hypothesis stated on a VALUE, when the proof reads only a FUNCTION of that value, is over-strong by exactly that function's non-injectivity. And a hypothesis of the form `expr = fresh_variable` is NEVER a restriction - instantiate the variable at the expression and it is rfl. It turned three shape-specific theorems into unbounded-depth ones and voided one scoping document.",
+      "class": "surprise",
+      "artifact_link": "monogate-research/exploration/inv_x_reachable_K_2026_08_04/DAY_HANDOFF.md"
+    }
+  ]
+}

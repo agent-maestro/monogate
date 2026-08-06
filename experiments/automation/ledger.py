@@ -117,6 +117,25 @@ def cmd_log(a: argparse.Namespace) -> int:
               f"distinguish the discipline executing from the outer loop automating — and that "
               f"distinction is unrecoverable once the session is over.", file=sys.stderr)
         raise SystemExit(2)
+    # DEFECT FIX 2026-08-05. This read `a.desc` directly, so `--desc-file` -- which this
+    # tool's own help calls THE SAFE PATH, and which exists because shell interpolation had
+    # already eaten backticks out of two entries -- was SILENTLY DISCARDED on the `log`
+    # path, writing "description": null. `cmd_finding` has always resolved it; only `log`
+    # was wrong, which is why findings kept their text while interventions lost it.
+    #
+    # BLAST RADIUS: ledger/2026-08-03-chip2-barA-barD.json, all 3 entries, already at git
+    # HEAD. NOT repaired here. The ledger is append-only and a silent backfill is precisely
+    # what the append-only gate exists to refuse; recorded in MIGRATIONS.md instead.
+    #
+    # The schema marks `description` REQUIRED with minLength 1, so the writer was violating
+    # its own schema and only the separate gate noticed -- days later. It now refuses at
+    # write time, because a check that runs only in CI still lets a corrupt entry be
+    # authored and committed.
+    a.desc = _resolve_desc(a)
+    if not a.desc or not a.desc.strip():
+        print("[REFUSED] empty description. --desc-file may point at a missing or empty "
+              "file; an entry with no text is not a record of anything.", file=sys.stderr)
+        raise SystemExit(2)
     d = load_or_init(a.session, a.arm)
     e = {"ts": dt.datetime.now().isoformat(timespec="seconds"), "kind": a.kind,
          "actor": a.actor, "description": a.desc}
