@@ -11,6 +11,7 @@ const STATIC_PAGES: Array<{ url: string; lastmod?: string; changefreq?: string; 
   { url: "/atlas",       priority: 0.8, changefreq: "monthly" },
   { url: "/theorems",    priority: 0.8, changefreq: "monthly" },
   { url: "/proofs",      priority: 0.9, changefreq: "monthly" },
+  { url: "/proofs/apollonius", priority: 0.9, changefreq: "monthly" },
   { url: "/paper",       priority: 0.8, changefreq: "monthly" },
   { url: "/blog",        priority: 0.9, changefreq: "weekly" },
 ];

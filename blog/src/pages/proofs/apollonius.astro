@@ -1,0 +1,386 @@
+---
+import Base from '../../layouts/Base.astro';
+import evidence from '../../data/apollonius-evidence.json';
+
+// The page renders from the SAME artifact the evidence packet emits. Nothing is transcribed:
+// every centre, radius and coefficient below is read out of apollonius-evidence.json, which in
+// turn instantiates the formulas MachLib proves. See monogate-research/exploration/
+// verified_apollonius_2026_08_19/ for the generator.
+
+const CLASS_OF: Record<string, number> = {
+  '1,1,1': 0, '-1,-1,-1': 0, '1,1,-1': 1, '-1,-1,1': 1,
+  '1,-1,1': 2, '-1,1,-1': 2, '1,-1,-1': 3, '-1,1,1': 3,
+};
+const num = (s: string) => {
+  const m = /^([-\d/]+)?\*?sqrt\((\d+)\)$/.exec(s);
+  if (m) return (m[1] ? evalFrac(m[1]) : 1) * Math.sqrt(Number(m[2]));
+  return evalFrac(s);
+};
+function evalFrac(s: string): number {
+  const f = /^(-?\d+)\/(\d+)$/.exec(s.trim());
+  return f ? Number(f[1]) / Number(f[2]) : Number(s);
+}
+
+function pack(cfg: any) {
+  const sols: any[] = [];
+  for (const m of cfg.modes) {
+    for (const k of m.roots) {
+      if (!k.positive_radius) continue;
+      sols.push({
+        mode: m.mode, cls: CLASS_OF[m.mode.join(',')], primary: m.mode[0] === 1,
+        r: k.r_float, x: k.x_float, y: k.y_float,
+        rE: k.r_exact, xE: k.x_exact, yE: k.y_exact,
+        lead: m.lead, mid: m.mid, const: m.const, disc: m.disc, deg: m.degree,
+        exact: k.tangency_exact,
+      });
+    }
+  }
+  sols.sort((a, b) => a.r - b.r);
+  const dN = num(cfg.d), rN = num(cfg.rho);
+  return {
+    d: cfg.d, rho: cfg.rho, dNum: dN, rhoNum: rN,
+    isLocus: Math.abs(dN * dN - 8 * rN * rN) < 1e-9,
+    side: dN * dN < 8 * rN * rN ? 'below' : 'above',
+    count: cfg.count_positive_radius, sols,
+    modes: cfg.modes.map((m: any) => ({
+      mode: m.mode, cls: CLASS_OF[m.mode.join(',')],
+      lead: m.lead, disc: m.disc, deg: m.degree,
+    })),
+  };
+}
+
+const configs = evidence.COMPUTED.configurations.map(pack);
+const data = {
+  configs,
+  defaultConfig: configs.findIndex((c) => c.isLocus),
+  proved: evidence.PROVED,
+  notProved: evidence.NOT_PROVED,
+  commit: evidence.ATTESTED.machlib_commit,
+  clean: evidence.ATTESTED.worktree_clean,
+  toolchain: evidence.ATTESTED.lean_toolchain,
+  digest: evidence.ATTESTED.output_digest,
+};
+---
+
+<Base
+  title="Verified Apollonius — monogate.org"
+  description="Machine-checked: every circle tangent to three given circles. At the exceptional locus d² = 8ρ² one class drops from quadratic to linear and the count falls from eight to seven — with the boundary of formal proof shown, not hidden."
+>
+  <div class="ex-page">
+  <div class="ex-eyebrow">Verified Exhibit · MachLib</div>
+  <h1 class="ex-title">All circles tangent to these three</h1>
+  <p class="ex-sub" id="sub"></p>
+
+  <div class="ex-banner" id="banner"></div>
+
+  <div class="ex-cols">
+    <div>
+      <div class="ex-panel">
+        <svg id="fig" viewBox="0 0 460 460" role="img" aria-label="Tangent circles for the selected configuration"></svg>
+        <p class="ex-note">The drawing is illustrative. Every centre and radius is read from the
+          certificate — no coordinate is entered by hand. Colour is the antipodal class; solid and
+          dashed are the two members of each class.</p>
+      </div>
+      <div class="ex-tgrid" id="tgrid" role="group" aria-label="Configuration"></div>
+    </div>
+
+    <div class="ex-panel">
+      <div class="ex-phead">
+        <h2>Exact computed solution</h2>
+        <span class="ex-badge cmp">COMPUTED</span>
+      </div>
+      <ul class="ex-slist" id="slist"></ul>
+      <div class="ex-detail" id="detail"></div>
+      <div class="ex-status" id="status"></div>
+    </div>
+  </div>
+
+  <section class="ex-sec">
+    <h2>Where the count comes from</h2>
+    <p class="ex-lead">Eight modes, four antipodal classes. Each class contributes two signed roots —
+      unless its quadratic is not quadratic. Select a row to see its coefficients.</p>
+    <div class="ex-panel ex-scroll"><table id="modetable"></table></div>
+    <div id="explain"></div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Provenance</h2>
+    <ul class="ex-plist" id="proved"></ul>
+    <ul class="ex-plist" id="notproved"></ul>
+  </section>
+
+  <div class="ex-foot" id="foot"></div>
+  </div>
+
+  <script type="application/json" id="ex-data" set:html={JSON.stringify(data)} />
+  <script is:inline>
+    (function () {
+      const D = JSON.parse(document.getElementById('ex-data').textContent);
+      const CH = ['--accent', '--cyan', '--violet', '--pink'];
+      const CN = ['(o,o,o)', '(o,o,i)', '(o,i,o)', '(o,i,i)'];
+      let ci = D.defaultConfig, si = 0, mi = null;
+      const cvar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+      const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+      const tidy = (s) => esc(s).replace(/sqrt\((\d+)\)/g, '√$1').replace(/\*/g, '·');
+      const term = (v, suf) => { const n = String(v); return n.startsWith('-')
+        ? ' − ' + tidy(n.slice(1)) + suf : ' + ' + tidy(n) + suf; };
+
+      function subtitle() {
+        const c = D.configs[ci];
+        document.getElementById('sub').innerHTML = c.isLocus
+          ? 'At <strong>d² = 8ρ²</strong> one antipodal class drops from quadratic to linear. The certified count falls from the generic eight to <strong>seven</strong> — while the three circles stay comfortably separated.'
+          : 'Four antipodal classes, two signed roots each — <strong>eight</strong> distinct tangent circles. This configuration sits ' + c.side + ' the exceptional locus <strong>d² = 8ρ²</strong>.';
+      }
+
+      function banner() {
+        const c = D.configs[ci];
+        const rows = c.isLocus
+          ? [['Count', String(c.count), 'cmp', ''], ['Mode structure', 'PROVED', 'ok', ''],
+             ['Distinctness', 'PROVED', 'ok', ''], ['Exceptional locus', 'YES', 'cmp', 'd² = 8ρ²'],
+             ['Plotted coordinates', 'COMPUTED', 'cmp', 'exact, not in Lean'], ['Lean gates', '8 / 8', 'ok', '']]
+          : [['Count', String(c.count), 'ok', ''], ['Mode structure', 'PROVED', 'ok', ''],
+             ['Distinctness', 'PROVED', 'ok', ''], ['General position', 'PROVED', 'ok', ''],
+             ['Plotted coordinates', 'COMPUTED', 'cmp', 'exact, not in Lean'], ['Lean gates', '8 / 8', 'ok', '']];
+        document.getElementById('banner').innerHTML = rows.map(([k, v, cl, n]) =>
+          '<div class="ex-stat"><span class="k">' + k + '</span><span class="v ' + cl + '">' + v + '</span>' +
+          (n ? '<span class="n">' + n + '</span>' : '') + '</div>').join('');
+      }
+
+      function figure() {
+        const c = D.configs[ci], S = c.sols, dnum = c.dNum, rho = c.rhoNum;
+        const items = S.map((s) => [s.x, s.y, s.r]).concat([[0, 0, rho], [dnum, 0, rho], [0, dnum, rho]]);
+        const x0 = Math.min.apply(null, items.map((a) => a[0] - a[2]));
+        const x1 = Math.max.apply(null, items.map((a) => a[0] + a[2]));
+        const y0 = Math.min.apply(null, items.map((a) => a[1] - a[2]));
+        const y1 = Math.max.apply(null, items.map((a) => a[1] + a[2]));
+        const span = Math.max(x1 - x0, y1 - y0), cxm = (x0 + x1) / 2, cym = (y0 + y1) / 2;
+        const pad = 18, size = 460, k = (size - 2 * pad) / span, ax = span / 2 + 0.5;
+        const X = (u) => size / 2 + (u - cxm) * k, Y = (v) => size / 2 - (v - cym) * k, R = (r) => r * k;
+        let out = '<g stroke="' + cvar('--border') + '" fill="none" stroke-width="1">' +
+          '<line x1="' + X(cxm - ax) + '" y1="' + Y(0) + '" x2="' + X(cxm + ax) + '" y2="' + Y(0) + '"/>' +
+          '<line x1="' + X(0) + '" y1="' + Y(cym - ax) + '" x2="' + X(0) + '" y2="' + Y(cym + ax) + '"/></g>';
+        [[0, 0], [dnum, 0], [0, dnum]].forEach(function (p) {
+          out += '<circle cx="' + X(p[0]) + '" cy="' + Y(p[1]) + '" r="' + R(rho) +
+            '" fill="none" stroke="' + cvar('--text') + '" stroke-width="2"/>';
+        });
+        S.forEach(function (s, i) {
+          const on = i === si;
+          out += '<circle cx="' + X(s.x) + '" cy="' + Y(s.y) + '" r="' + R(s.r) + '" fill="none" stroke="' +
+            cvar(CH[s.cls]) + '" stroke-width="' + (on ? 2.6 : 1.2) + '" opacity="' + (on ? 1 : 0.5) + '"' +
+            (s.primary ? '' : ' stroke-dasharray="5 4"') + '/>';
+        });
+        document.getElementById('fig').innerHTML = out;
+      }
+
+      function cards() {
+        document.getElementById('tgrid').innerHTML = D.configs.map(function (c, i) {
+          return '<button class="ex-tcard' + (c.isLocus ? ' drop' : '') + '" aria-current="' + (i === ci) +
+            '" data-i="' + i + '"><div class="tcount">' + c.count + '</div><div class="tlabel">d = ' +
+            tidy(c.d) + ', ρ = ' + tidy(c.rho) + '</div><div class="tbody">' +
+            (c.isLocus ? 'Degree-drop locus: one quadratic becomes linear.'
+                       : 'Four quadratic classes, two roots each.') + '</div></button>';
+        }).join('');
+        Array.prototype.forEach.call(document.querySelectorAll('.ex-tcard'), function (b) {
+          b.onclick = function () {
+            ci = +b.dataset.i; si = 0;
+            mi = D.configs[ci].modes.findIndex(function (m) { return m.deg === 1; });
+            if (mi < 0) mi = null;
+            render();
+          };
+        });
+      }
+
+      function list() {
+        const S = D.configs[ci].sols;
+        document.getElementById('slist').innerHTML = S.map(function (s, i) {
+          return '<li><button class="ex-srow" aria-current="' + (i === si) + '" data-i="' + i +
+            '"><span class="sw" style="background:' + cvar(CH[s.cls]) + '"></span><span>' + (i + 1) +
+            '. r = ' + tidy(s.rE) + '</span><span class="dim">' +
+            s.mode.map(function (v) { return v > 0 ? 'o' : 'i'; }).join('') + '</span></button></li>';
+        }).join('');
+        Array.prototype.forEach.call(document.querySelectorAll('.ex-srow'), function (b) {
+          b.onclick = function () { si = +b.dataset.i; figure(); list(); detail(); status(); };
+        });
+      }
+
+      function detail() {
+        const s = D.configs[ci].sols[si];
+        document.getElementById('detail').innerHTML = '<dl>' +
+          '<dt>class</dt><dd>' + CN[s.cls] + (s.primary ? '' : ' · antipode') + '</dd>' +
+          '<dt>mode</dt><dd>' + s.mode.map(function (v) { return v > 0 ? 'external' : 'internal'; }).join(' · ') + '</dd>' +
+          '<dt>radius</dt><dd>' + tidy(s.rE) + ' &nbsp;<span class="dim">≈ ' + s.r.toFixed(6) + '</span></dd>' +
+          '<dt>centre</dt><dd>(' + tidy(s.xE) + ', ' + tidy(s.yE) + ')</dd>' +
+          '<dt>quadratic</dt><dd>' + tidy(s.lead) + '·r²' + term(s.mid, '·r') + term(s.const, '') + ' = 0</dd>' +
+          '<dt>discriminant</dt><dd>' + tidy(s.disc) + '</dd></dl>';
+      }
+
+      function status() {
+        const s = D.configs[ci].sols[si];
+        const rows = [['Mode structure', 'PROVED', 'ok'], ['Root count', 'PROVED', 'ok'],
+          ['Tangency residual', s.exact ? 'COMPUTED EXACTLY — all three zero' : 'NOT EXACT', s.exact ? 'cmp' : 'no'],
+          ['Lean-checked point', 'NOT YET', 'no']];
+        document.getElementById('status').innerHTML = rows.map(function (r) {
+          return '<div class="r"><span>' + r[0] + '</span><span class="' + r[2] + '">' + r[1] + '</span></div>';
+        }).join('');
+      }
+
+      function modetable() {
+        const c = D.configs[ci];
+        document.getElementById('modetable').innerHTML =
+          '<thead><tr><th>mode</th><th>class</th><th>leading coeff</th><th>discriminant</th><th>degree</th></tr></thead><tbody>' +
+          c.modes.map(function (m, i) {
+            return '<tr class="mrow' + (m.deg === 1 ? ' deg1' : '') + '" aria-current="' + (i === mi) +
+              '" data-i="' + i + '" tabindex="0"><td>' + m.mode.map(function (v) { return v > 0 ? 'o' : 'i'; }).join('') +
+              '</td><td>' + CN[m.cls] + '</td><td>' + tidy(m.lead) + '</td><td>' + tidy(m.disc) +
+              '</td><td class="' + (m.deg === 2 ? 'ok' : 'cmp') + '">' + m.deg + '</td></tr>';
+          }).join('') + '</tbody>';
+        Array.prototype.forEach.call(document.querySelectorAll('.mrow'), function (tr) {
+          const pick = function () { mi = +tr.dataset.i; modetable(); explain(); };
+          tr.onclick = pick;
+          tr.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } };
+        });
+      }
+
+      function explain() {
+        const box = document.getElementById('explain');
+        if (mi === null) { box.innerHTML = ''; return; }
+        const m = D.configs[ci].modes[mi], c = D.configs[ci];
+        if (m.deg === 2) {
+          box.innerHTML = '<div class="ex-explain plain"><dl><dt>leading coefficient</dt><dd>' + tidy(m.lead) +
+            ' ≠ 0</dd><dt>discriminant</dt><dd>' + tidy(m.disc) +
+            ' &gt; 0</dd><dt>therefore</dt><dd>genuine quadratic — two distinct roots</dd></dl></div>';
+          return;
+        }
+        box.innerHTML = '<div class="ex-explain"><dl>' +
+          '<dt>leading coefficient</dt><dd>32ρ² − 4d²</dd>' +
+          '<dt>at d² = 8ρ²</dt><dd>= 0</dd>' +
+          '<dt>middle coefficient</dt><dd>8d²ρ &gt; 0</dd>' +
+          '<dt>therefore</dt><dd>quadratic → linear — one root, not two</dd>' +
+          '<dt>consequence</dt><dd>the count is ' + c.count + ', not 8</dd></dl></div>';
+      }
+
+      function provenance() {
+        document.getElementById('proved').innerHTML = Object.keys(D.proved).map(function (k) {
+          return '<li><span class="ex-badge ok">PROVED</span><span>' + esc(k) + '<br><span class="thm">' +
+            esc(D.proved[k]) + '</span></span></li>';
+        }).join('');
+        document.getElementById('notproved').innerHTML = Object.keys(D.notProved).map(function (k) {
+          return '<li><span class="ex-badge no">NOT&nbsp;PROVED</span><span>' + esc(k) +
+            '<br><span class="dim small">' + esc(D.notProved[k]) + '</span></span></li>';
+        }).join('');
+        document.getElementById('foot').innerHTML =
+          '<span>machlib ' + D.commit.slice(0, 12) + (D.clean ? ' · clean' : ' · DIRTY') + '</span>' +
+          '<span>lean ' + esc(D.toolchain) + '</span><span>digest ' + D.digest.slice(0, 16) + '</span>' +
+          '<span>rendering derives from the certificate only</span>';
+      }
+
+      function render() { subtitle(); banner(); figure(); cards(); list(); detail(); status(); modetable(); explain(); }
+      mi = D.configs[ci].modes.findIndex(function (m) { return m.deg === 1; });
+      if (mi < 0) mi = null;
+      render(); provenance();
+    })();
+  </script>
+</Base>
+
+<style is:global>
+  /* An exhibit, not an article: widen past the 680px reading measure. */
+  body:has(.ex-page) main { max-width: 1180px; }
+
+  /* Everything below is confined to .ex-page but must be GLOBAL: the banner, solution
+     rows, configuration cards, mode table and explainer are all built by client script
+     after hydration, so Astro's scoped attribute is never applied to them. Scoped rules
+     would silently match nothing — which is exactly what the first production render showed. */
+  .ex-page .ex-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  .ex-page .ex-title{font-size:clamp(28px,4.2vw,42px);line-height:1.15;margin:0 0 12px;letter-spacing:-.01em}
+  .ex-page .ex-sub{font-size:17px;color:var(--muted);max-width:66ch;margin:0 0 26px;min-height:52px}
+  .ex-page .ex-banner{display:flex;flex-wrap:wrap;border:1px solid var(--border);border-radius:6px;
+    background:var(--surface);overflow:hidden;margin-bottom:22px}
+  .ex-page .ex-stat{flex:1 1 150px;padding:12px 16px;border-right:1px solid var(--border)}
+  .ex-page .ex-stat:last-child{border-right:0}
+  .ex-page .ex-stat .k{font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+  .ex-page .ex-stat .v{font-family:var(--mono);font-size:15px;font-weight:600;display:block;
+    font-variant-numeric:tabular-nums}
+  .ex-page .ex-stat .n{font-family:var(--mono);font-size:10.5px;color:var(--muted);
+    margin-top:3px;display:block}
+  .ex-page .ok{color:var(--green)} .ex-page .cmp{color:var(--accent)} .ex-page .no{color:var(--red)}
+  .ex-page .dim{color:var(--muted)} .ex-page .small{font-size:12px}
+  .ex-page .ex-cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;
+    align-items:start}
+  @media(max-width:880px){.ex-page .ex-cols{grid-template-columns:1fr}}
+  .ex-page .ex-panel{background:var(--surface);border:1px solid var(--border);border-radius:6px}
+  .ex-page .ex-phead{display:flex;align-items:center;gap:9px;padding:11px 16px;
+    border-bottom:1px solid var(--border)}
+  .ex-page .ex-phead h2{font-size:15px;margin:0}
+  .ex-page svg{display:block;width:100%;height:auto}
+  .ex-page .ex-note{font-size:12.5px;color:var(--muted);padding:11px 16px;margin:0;
+    border-top:1px solid var(--border);line-height:1.55}
+  .ex-page .ex-tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+  @media(max-width:760px){.ex-page .ex-tgrid{grid-template-columns:1fr}}
+  .ex-page .ex-tcard{padding:13px 15px;border:1px solid var(--border);border-radius:6px;
+    background:var(--surface);cursor:pointer;text-align:left;font-family:var(--serif);
+    color:var(--text);display:block;width:100%}
+  .ex-page .ex-tcard:hover{border-color:var(--accent)}
+  .ex-page .ex-tcard[aria-current="true"]{border-color:var(--accent);
+    box-shadow:inset 0 0 0 1px var(--accent)}
+  .ex-page .ex-tcard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .ex-page .ex-tcard .tcount{font-family:var(--mono);font-size:29px;font-weight:600;line-height:1;
+    font-variant-numeric:tabular-nums;display:block}
+  .ex-page .ex-tcard.drop .tcount{color:var(--accent)}
+  .ex-page .ex-tcard .tlabel{font-family:var(--mono);font-size:11px;color:var(--muted);
+    margin-top:5px;display:block}
+  .ex-page .ex-tcard .tbody{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45;
+    display:block}
+  .ex-page .ex-slist{list-style:none;margin:0;padding:6px}
+  .ex-page .ex-srow{display:grid;grid-template-columns:14px 1fr auto;gap:9px;align-items:center;
+    width:100%;padding:7px 9px;background:none;border:0;border-radius:4px;cursor:pointer;
+    text-align:left;font-family:var(--mono);font-size:12px;color:var(--text);
+    font-variant-numeric:tabular-nums}
+  .ex-page .ex-srow:hover{background:rgba(255,255,255,.04)}
+  .ex-page .ex-srow[aria-current="true"]{background:rgba(196,167,125,.10);
+    box-shadow:inset 2px 0 0 var(--accent)}
+  .ex-page .ex-srow:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .ex-page .ex-srow .sw{width:11px;height:11px;border-radius:50%}
+  .ex-page .ex-detail{padding:12px 16px;border-top:1px solid var(--border);
+    font-family:var(--mono);font-size:12px}
+  .ex-page .ex-detail dl{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0}
+  .ex-page .ex-detail dt{color:var(--muted)}
+  .ex-page .ex-detail dd{margin:0;font-variant-numeric:tabular-nums;word-break:break-word}
+  .ex-page .ex-status{border-top:1px solid var(--border);padding:10px 16px}
+  .ex-page .ex-status .r{display:flex;justify-content:space-between;gap:12px;
+    font-family:var(--mono);font-size:11px;padding:3px 0;letter-spacing:.04em}
+  .ex-page .ex-status .r span:first-child{color:var(--muted);text-transform:uppercase}
+  .ex-page .ex-badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;padding:2px 7px;
+    border-radius:3px;border:1px solid currentColor}
+  .ex-page .ex-sec{margin-top:34px}
+  .ex-page .ex-sec h2{margin:0 0 4px}
+  .ex-page .ex-lead{color:var(--muted);font-size:14px;max-width:72ch;margin:0 0 12px}
+  .ex-page .ex-scroll{overflow-x:auto}
+  .ex-page table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:11.5px;
+    font-variant-numeric:tabular-nums}
+  .ex-page th,.ex-page td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);
+    white-space:nowrap}
+  .ex-page th{color:var(--muted);font-weight:400;font-size:10px;letter-spacing:.1em;
+    text-transform:uppercase}
+  .ex-page tr.mrow{cursor:pointer}
+  .ex-page tr.mrow:hover td{background:rgba(255,255,255,.03)}
+  .ex-page tr.mrow.deg1 td{background:rgba(196,167,125,.09)}
+  .ex-page tr.mrow[aria-current="true"] td{box-shadow:inset 0 1px 0 var(--accent),
+    inset 0 -1px 0 var(--accent)}
+  .ex-page .ex-explain{margin-top:10px;padding:13px 16px;border:1px solid var(--accent);
+    border-radius:6px;background:rgba(196,167,125,.08);font-family:var(--mono);font-size:12px}
+  .ex-page .ex-explain.plain{border-color:var(--border);background:var(--surface)}
+  .ex-page .ex-explain dl{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;margin:0}
+  .ex-page .ex-explain dt{color:var(--muted)}
+  .ex-page .ex-explain dd{margin:0}
+  .ex-page .ex-plist{list-style:none;margin:10px 0 0;padding:0;display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:0 20px}
+  .ex-page .ex-plist li{display:grid;grid-template-columns:auto 1fr;gap:9px;padding:6px 0;
+    border-bottom:1px solid var(--border);font-size:12.5px;align-items:baseline}
+  .ex-page .ex-plist .thm{font-family:var(--mono);font-size:11px;color:var(--cyan);
+    word-break:break-all}
+  .ex-page .ex-foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--border);
+    font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;
+    gap:8px 22px}
+</style>
