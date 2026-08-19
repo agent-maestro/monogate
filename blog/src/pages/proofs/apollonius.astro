@@ -32,6 +32,7 @@ function pack(cfg: any) {
         rE: k.r_exact, xE: k.x_exact, yE: k.y_exact,
         lead: m.lead, mid: m.mid, const: m.const, disc: m.disc, deg: m.degree,
         exact: k.tangency_exact,
+        lean: k.lean ?? null,
       });
     }
   }
@@ -220,7 +221,11 @@ const data = {
         const s = D.configs[ci].sols[si];
         const rows = [['Mode structure', 'PROVED', 'ok'], ['Root count', 'PROVED', 'ok'],
           ['Tangency residual', s.exact ? 'COMPUTED EXACTLY — all three zero' : 'NOT EXACT', s.exact ? 'cmp' : 'no'],
-          ['Lean-checked point', 'NOT YET', 'no']];
+          // Per solution, and DATA-DRIVEN: a point is Lean-checked only if the evidence names the
+          // theorem that checks it. Never a blanket verdict -- two of the flagship's eight are
+          // checked and six are not, and a single row for all of them would be wrong either way.
+          ['Lean-checked point', s.lean ? 'PROVED — ' + s.lean.split('.').pop() : 'NOT YET',
+           s.lean ? 'ok' : 'no']];
         document.getElementById('status').innerHTML = rows.map(function (r) {
           return '<div class="r"><span>' + r[0] + '</span><span class="' + r[2] + '">' + r[1] + '</span></div>';
         }).join('');

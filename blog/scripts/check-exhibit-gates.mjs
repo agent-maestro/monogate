@@ -71,6 +71,25 @@ chk('list-cardinality claim now cites a theorem',
   Object.values(data.proved).some((v) => /eight_solutions$/.test(v)),
   Object.keys(data.corrected ?? {}).join(','));
 
+// A point may claim PROVED only if the evidence names the theorem. This is the same rule as the
+// depth-ladder's two-sided gate, one level down: a status without a citation is a status typed by a
+// human, and those drift.
+{
+  const allSols = data.configs.flatMap((c) => c.sols);
+  const checked = allSols.filter((s) => s.lean);
+  chk('every Lean-checked point cites a theorem',
+    checked.every((s) => /^MachLib\.[A-Za-z0-9_.]+$/.test(s.lean)),
+    `${checked.length} of ${allSols.length} points checked`);
+  chk('the renderer derives the point status from the citation, not a literal',
+    /s\.lean \? 'PROVED/.test(src) && !/'Lean-checked point', 'PROVED'/.test(src));
+  // And the disclaimer must still cover the ones that are NOT checked.
+  chk('unchecked points are still disclaimed',
+    checked.length < allSols.length
+      ? Object.keys(data.notProved).some((k) => /coordinate/i.test(k))
+      : true,
+    `${allSols.length - checked.length} still computed-only`);
+}
+
 chk('exhibit escapes the article measure',
   /body:has\(\.ex-page\) main\{max-width:1180px\}/.test(css));
 
@@ -80,4 +99,4 @@ chk('every generic config really has eight, the locus seven',
 
 console.log();
 if (bad) { console.error(`EXHIBIT GATES FAIL — ${bad} gate(s)`); process.exit(1); }
-console.log('EXHIBIT GATES PASS — 12/12');
+console.log('EXHIBIT GATES PASS — 15/15');
