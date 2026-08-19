@@ -153,6 +153,13 @@ const articleLd = (type === "article" || date) ? {
       }
       a { color: var(--accent); text-decoration: none; }
       a:hover { text-decoration: underline; }
+
+      /* Astro scopes this component's styles, so the rule above reaches the nav and footer
+         but NOT markdown post bodies, which arrive through <slot /> without the scope
+         attribute. Body links were therefore rendering as browser-default blue on every
+         post. Explicitly global inside main. */
+      main :global(a) { color: var(--accent); text-decoration: none; }
+      main :global(a:hover) { text-decoration: underline; }
       nav {
         border-bottom: 1px solid var(--border);
         padding: 14px 24px;
