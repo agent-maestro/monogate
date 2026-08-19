@@ -59,6 +59,12 @@ chk('the coordinates are still declared NOT PROVED',
 chk('retired disclaimers are recorded, not deleted',
   Object.entries(data.corrected ?? {}).every(([, v]) => /WAS listed NOT PROVED/i.test(v)));
 
+// ...and RENDERED. Carrying a correction in the data blob while showing nothing is the same as
+// deleting it, from the only perspective that matters: the reader's.
+chk('retired disclaimers are rendered, not just carried',
+  /id=.corrected./.test(html) && /D\.corrected/.test(html),
+  Object.keys(data.corrected ?? {}).length + ' correction(s)');
+
 // And the upgrade must be backed by a real declaration, not by prose.
 chk('list-cardinality claim now cites a theorem',
   !Object.keys(data.notProved).some((k) => /cardinality/i.test(k)) &&
@@ -74,4 +80,4 @@ chk('every generic config really has eight, the locus seven',
 
 console.log();
 if (bad) { console.error(`EXHIBIT GATES FAIL — ${bad} gate(s)`); process.exit(1); }
-console.log('EXHIBIT GATES PASS — 11/11');
+console.log('EXHIBIT GATES PASS — 12/12');

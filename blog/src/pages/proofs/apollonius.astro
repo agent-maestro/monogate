@@ -108,6 +108,7 @@ const data = {
     <h2>Provenance</h2>
     <ul class="ex-plist" id="proved"></ul>
     <ul class="ex-plist" id="notproved"></ul>
+    <ul class="ex-plist" id="corrected"></ul>
   </section>
 
   <div class="ex-foot" id="foot"></div>
@@ -269,6 +270,13 @@ const data = {
           return '<li><span class="ex-badge no">NOT&nbsp;PROVED</span><span>' + esc(k) +
             '<br><span class="dim small">' + esc(D.notProved[k]) + '</span></span></li>';
         }).join('');
+        // Retired disclaimers are SHOWN, not silently dropped. A reader who comes back looking for
+        // a claim under NOT PROVED must be able to see what became of it; a claim that simply
+        // disappears is indistinguishable from one that was never made.
+        document.getElementById('corrected').innerHTML = Object.keys(D.corrected || {}).map(function (k) {
+          return '<li><span class="ex-badge fix">CORRECTED</span><span>' + esc(k) +
+            '<br><span class="dim small">' + esc(D.corrected[k]) + '</span></span></li>';
+        }).join('');
         document.getElementById('foot').innerHTML =
           '<span>machlib ' + D.commit.slice(0, 12) + (D.clean ? ' · clean' : ' · DIRTY') + '</span>' +
           '<span>lean ' + esc(D.toolchain) + '</span><span>digest ' + D.digest.slice(0, 16) + '</span>' +
@@ -306,6 +314,8 @@ const data = {
   .ex-page .ex-stat .n{font-family:var(--mono);font-size:10.5px;color:var(--muted);
     margin-top:3px;display:block}
   .ex-page .ok{color:var(--green)} .ex-page .cmp{color:var(--accent)} .ex-page .no{color:var(--red)}
+  /* A correction is neither a pass nor a failure: it is a claim that moved. Own colour. */
+  .ex-page .fix{color:#c99a2e}
   .ex-page .dim{color:var(--muted)} .ex-page .small{font-size:12px}
   .ex-page .ex-cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;
     align-items:start}
