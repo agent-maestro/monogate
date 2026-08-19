@@ -52,6 +52,20 @@ const theoremLd = {
     {verifiedOriginal} original theorems verified by computer. {totalStatements} total Lean statements. Zero sorries across {cleanFiles} files.
   </p>
 
+  <section class="exhibits">
+    <div class="exhibits-head">Verified exhibits</div>
+    <a class="exhibit" href="/proofs/apollonius/">
+      <span class="exhibit-title">All circles tangent to these three</span>
+      <span class="exhibit-body">
+        Apollonius' problem: eight solutions in generic position — and <strong>seven</strong> at an
+        exceptional locus where one solution class's quadratic loses its leading term and becomes
+        linear. The input circles stay separated; nothing in the picture degenerates. Interactive,
+        and every centre and radius is read from the certificate rather than drawn.
+      </span>
+      <span class="exhibit-meta">MachLib · interactive · structure proved, coordinates computed</span>
+    </a>
+  </section>
+
   <section class="verify">
     <div class="verify-head">Verify this yourself</div>
     <pre class="shell"><code>git clone https://github.com/agent-maestro/monogate-lean
@@ -205,6 +219,59 @@ lake build
       color: var(--muted);
       font-style: italic;
       margin: 0 0 28px;
+    }
+
+    section.exhibits {
+      margin: 24px 0 28px;
+    }
+    .exhibits-head {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    a.exhibit {
+      display: block;
+      padding: 18px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent);
+      border-radius: 4px;
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    a.exhibit:hover {
+      border-color: var(--accent);
+      border-left-color: var(--accent);
+      text-decoration: none;
+    }
+    a.exhibit:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .exhibit-title {
+      display: block;
+      font-size: 1.05rem;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .exhibit-body {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+    .exhibit-body strong { color: var(--accent); font-weight: 400; }
+    .exhibit-meta {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 12px;
     }
 
     section.verify {
