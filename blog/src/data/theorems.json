@@ -628,6 +628,7 @@
       "statement": "No EML tree of depth ≤ 2 agrees with log x on (0, ∞). Proved via the below-identity-unbounded class: log x is unbounded above yet eventually strictly below the identity, and no expression of depth ≤ 2 lies in that class.",
       "evidence": "Lean 4, MachLib. log_x_not_depth_le_two, from log_belowIdentityUnbounded and belowIdentityUnbounded_not_depth_le_two. sorryAx absent. Non-vacuity checked adversarially: the depth-3 analogue of this statement is provably false, witnessed by logTree var.",
       "lean": {
+        "repo": "machlib",
         "file": "EMLDepthTameness.lean",
         "theorem": "log_x_not_depth_le_two",
         "status": "verified"
@@ -644,6 +645,7 @@
       "statement": "logTree var has depth exactly 3 and evaluates to log x for every real x. The logarithm arrives negated and behind an exponential inside an eml node, so recovering it costs the two-level negation gadget on top of the node that produces it.",
       "evidence": "Lean 4, MachLib. logTree / logTree_eval (unconditional, all reals) with depth 3 by rfl; paired with the lower bound in log_x_depth_exact_three, which carries the domain in its statement. sorryAx absent.",
       "lean": {
+        "repo": "machlib",
         "file": "EMLDepthTameness.lean",
         "theorem": "log_x_depth_exact_three",
         "status": "verified"
@@ -660,6 +662,7 @@
       "statement": "No EML tree of depth ≤ 3 agrees with x + 1 on (0, ∞). Instantiation of the intermediate-growth band exclusion at x + 1, which requires all four band conditions — unbounded, sub-exponential, superlinear and super-logarithmic.",
       "evidence": "Lean 4, MachLib. x_plus_one_not_depth_le_three, from x_plus_one_band_hyps (IntermediateBand (fun x => x + 1)) and intermediateBand_not_depth_le_three. The fourth band condition was missing until 2026-08-19, which is why this bound was open: the exclusion cannot be instantiated on a partial premise. sorryAx absent. Non-vacuity checked: the depth-4 analogue is provably false, witnessed by xPlusOneTree.",
       "lean": {
+        "repo": "machlib",
         "file": "EMLDepthTameness.lean",
         "theorem": "x_plus_one_not_depth_le_three",
         "status": "verified"
@@ -676,6 +679,7 @@
       "statement": "xPlusOneTree = negOffset (log 2) (negOffset 0 var) has depth exactly 4 and evaluates to x + 1 for every real x, with no side condition — so it holds on all of ℝ, a superset of the domain claimed here. The claim is stated on (0, ∞) so that it pairs with the lower bound on exactly the same domain. The grammar has no addition; it has negation, at two levels per use, and negating twice adds.",
       "evidence": "Lean 4, MachLib. xPlusOneTree_eval / xPlusOneTree_depth via x_plus_one_in_eml; x_plus_one_depth_exact_four states both halves in one declaration. The construction holds on all of ℝ, a superset of the exclusion's domain, so the pairing is sound. sorryAx absent.",
       "lean": {
+        "repo": "machlib",
         "file": "EMLAdditionClosureFailure.lean",
         "theorem": "xPlusOneTree_depth",
         "status": "verified"

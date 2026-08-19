@@ -33,6 +33,13 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const LEAN_REPO = process.env.MONOGATE_LEAN_PATH || path.resolve(ROOT, '../../monogate-lean');
+// Some ledger entries cite MachLib rather than monogate-lean. Both are real corpora and both must
+// be checkable; an entry whose repo we cannot resolve is an UNCHECKED citation, not a passing one.
+const MACHLIB_REPO = process.env.MACHLIB_PATH || path.resolve(ROOT, '../../machlib');
+const SOURCE_ROOTS = {
+  'monogate-lean': path.join(LEAN_REPO, 'MonogateEML'),
+  machlib: path.join(MACHLIB_REPO, 'foundations', 'MachLib'),
+};
 
 const errors = [];
 const warnings = [];
@@ -81,9 +88,32 @@ if (!fs.existsSync(LEAN_REPO)) {
 } else {
   for (const r of theorems) {
     if (!r.lean) continue;
-    const filePath = path.join(LEAN_REPO, 'MonogateEML', r.lean.file);
+    // `repo` defaults to monogate-lean so every pre-existing entry keeps its meaning.
+    const repo = r.lean.repo || 'monogate-lean';
+    const rootDir = SOURCE_ROOTS[repo];
+    if (!rootDir) {
+      errors.push(`theorems.json: ${r.id} cites unknown repo "${repo}" — expected one of ${Object.keys(SOURCE_ROOTS).join(', ')}`);
+      continue;
+    }
+    if (!fs.existsSync(rootDir)) {
+      warnings.push(`${repo} not found at ${rootDir} — skipping Lean existence check for ${r.id}`);
+      continue;
+    }
+    // MachLib nests modules (Geometry/Apollonius/…), so search rather than assume a flat layout.
+    let filePath = path.join(rootDir, r.lean.file);
     if (!fs.existsSync(filePath)) {
-      errors.push(`theorems.json: ${r.id} cites Lean file "${r.lean.file}" — not found at ${filePath}`);
+      const hit = (function find(dir) {
+        for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+          const q = path.join(dir, e.name);
+          if (e.isDirectory()) { const r2 = find(q); if (r2) return r2; }
+          else if (e.name === path.basename(r.lean.file)) return q;
+        }
+        return null;
+      })(rootDir);
+      if (hit) filePath = hit;
+    }
+    if (!fs.existsSync(filePath)) {
+      errors.push(`theorems.json: ${r.id} cites Lean file "${r.lean.file}" — not found under ${rootDir}`);
       continue;
     }
     const src = fs.readFileSync(filePath, 'utf8');
