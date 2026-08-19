@@ -21,9 +21,10 @@
     "eight solutions, List.length = 8": "MachLib.Geometry.Apollonius.SymmetricTriple.eight_solutions"
   },
   "NOT_PROVED": {
-    "the eight coordinates below": "COMPUTED here in exact arithmetic and verified to have zero tangency residuals; NOT checked in Lean. MachLib proves the COUNT and its structure, not these particular coordinates."
+    "coordinates OUTSIDE the flagship": "The flagship's eight are now Lean-checked (see CORRECTED). The other two configurations shown here -- d = 5/2 and the exceptional locus d = 2*sqrt(2) -- are still COMPUTED only: exact arithmetic, zero tangency residual, untrusted oracle. Select the flagship to see checked points."
   },
   "CORRECTED": {
+    "the eight flagship coordinates": "WAS listed NOT PROVED: computed in exact arithmetic but not checked in Lean. Now proved. All eight circles of d=4, rho=1 are stated in closed form and discharged against the geometric tangency predicates -- 24 tangencies, zero residual, sorryAx absent. The obstacle was never the geometry: it was Lean.Meta.acLt blowing up on nested (1+1) constant trees under distribution. Compressing the constant into the variable (v = 3h with 2v^2 = 9, kappa = sqrt21/3 with 3kappa^2 = 7) keeps every constant out of the distribution and all twelve identities close at once.",
     "list-cardinality form": "WAS listed NOT PROVED, on the grounds that MachLib is Mathlib-free and has no Finset layer. The premise was true and the inference was wrong: List, List.length and List.Nodup are Lean CORE, not Mathlib, and Finset is not needed for a finite enumeration. Now proved. eight_solutions delivers a List of length 8, Nodup, every entry a positive-radius solution of its mode. The mode half is stronger still: allModes_length and allModes_nodup depend on NO AXIOMS AT ALL, and allModes_complete on propext alone."
   },
   "COMPUTED": {
@@ -848,7 +849,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.solOOI_tangent"
               }
             ]
           },
@@ -894,7 +895,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.solOIO_tangent"
               }
             ]
           },
@@ -940,7 +941,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.solOII_tangent"
               }
             ]
           },
@@ -986,7 +987,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.solIOO_tangent"
               }
             ]
           },
@@ -1032,7 +1033,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.solIOI_tangent"
               }
             ]
           },
@@ -1078,7 +1079,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.solIIO_tangent"
               }
             ]
           },
@@ -1135,10 +1136,10 @@
     ]
   },
   "ATTESTED": {
-    "machlib_commit": "3f12053404eb3f7a910483804bc521dc2450f564",
+    "machlib_commit": "5d80c3d5781452efe163bdb6b45350fdf1509e93",
     "worktree_clean": true,
     "lean_toolchain": "v4.32.2",
-    "output_digest": "a98a1d2d58865aa62c622c06810321092b22be067def13fb347a9a0f2ac2353c"
+    "output_digest": "c3331828c5ac0278caaeff68ebd7c4f4c8193820eb646c22c79d926ca5de3b2b"
   },
   "VISUALIZED": {
     "status": "pending",

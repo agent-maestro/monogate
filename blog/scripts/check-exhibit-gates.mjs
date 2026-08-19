@@ -50,9 +50,9 @@ chk('provenance carries commit and digest',
 
 // The coordinates disclaimer is the one that MUST survive: MachLib proves the count and its
 // structure, not the particular numbers rendered on the page.
-chk('the coordinates are still declared NOT PROVED',
+chk('coordinates outside the flagship are still declared NOT PROVED',
   Object.keys(data.notProved).some((k) => /coordinate/i.test(k)) &&
-  /NOT checked in Lean/i.test(Object.values(data.notProved).join(' ')));
+  /COMPUTED only/i.test(Object.values(data.notProved).join(' ')));
 
 // Nothing may leave NOT PROVED silently. A claim that was once disclaimed and is now proved has
 // to say so, with its reason, where a reader of the old page would look for it.
