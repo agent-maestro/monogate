@@ -40,9 +40,30 @@ chk('degree-drop rows: lead = 0, degree = 1, discriminant > 0',
   deg1.length === 2 && deg1.every((m) => m.lead === '0' && Number(m.disc) > 0),
   `${deg1.length} rows, disc=${deg1[0]?.disc}`);
 
-chk('provenance carries commit, digest and both NOT PROVED boundaries',
-  data.commit.length === 40 && data.digest.length === 64 &&
-  Object.keys(data.notProved).length === 2);
+// Bound to the boundary itself, not to how many boundaries there happen to be. The earlier
+// form asserted `Object.keys(notProved).length === 2`, which is a snapshot: when the
+// list-cardinality claim was proved on 2026-08-19 the correct count became 1, and a literal
+// count would have had to be edited to keep the gate green -- training the next person to edit
+// the guard instead of reading it.
+chk('provenance carries commit and digest',
+  data.commit.length === 40 && data.digest.length === 64);
+
+// The coordinates disclaimer is the one that MUST survive: MachLib proves the count and its
+// structure, not the particular numbers rendered on the page.
+chk('the coordinates are still declared NOT PROVED',
+  Object.keys(data.notProved).some((k) => /coordinate/i.test(k)) &&
+  /NOT checked in Lean/i.test(Object.values(data.notProved).join(' ')));
+
+// Nothing may leave NOT PROVED silently. A claim that was once disclaimed and is now proved has
+// to say so, with its reason, where a reader of the old page would look for it.
+chk('retired disclaimers are recorded, not deleted',
+  Object.entries(data.corrected ?? {}).every(([, v]) => /WAS listed NOT PROVED/i.test(v)));
+
+// And the upgrade must be backed by a real declaration, not by prose.
+chk('list-cardinality claim now cites a theorem',
+  !Object.keys(data.notProved).some((k) => /cardinality/i.test(k)) &&
+  Object.values(data.proved).some((v) => /eight_solutions$/.test(v)),
+  Object.keys(data.corrected ?? {}).join(','));
 
 chk('exhibit escapes the article measure',
   /body:has\(\.ex-page\) main\{max-width:1180px\}/.test(css));
@@ -53,4 +74,4 @@ chk('every generic config really has eight, the locus seven',
 
 console.log();
 if (bad) { console.error(`EXHIBIT GATES FAIL — ${bad} gate(s)`); process.exit(1); }
-console.log('EXHIBIT GATES PASS — 8/8');
+console.log('EXHIBIT GATES PASS — 11/11');

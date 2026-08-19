@@ -13,11 +13,18 @@
     "centres pinned by radius": "MachLib.Geometry.Apollonius.centre_unique",
     "roots are nonzero": "MachLib.Geometry.Apollonius.SymmetricTriple.root_ne_zero",
     "degree drop at d^2 = 8 rho^2": "MachLib.Geometry.Apollonius.SymmetricTriple.oii_at_most_one_radius",
-    "tangency is sqrt-free": "MachLib.Geometry.tangentExt_iff"
+    "tangency is sqrt-free": "MachLib.Geometry.tangentExt_iff",
+    "eight modes, as a list": "MachLib.Geometry.Apollonius.allModes_length",
+    "the eight modes are distinct": "MachLib.Geometry.Apollonius.allModes_nodup",
+    "no mode is missing": "MachLib.Geometry.Apollonius.allModes_complete",
+    "4 + 4 = 8, canonical + antipodal": "MachLib.Geometry.Apollonius.canonical_plus_anti_nodup",
+    "eight solutions, List.length = 8": "MachLib.Geometry.Apollonius.SymmetricTriple.eight_solutions"
   },
   "NOT_PROVED": {
-    "the eight coordinates below": "COMPUTED here in exact arithmetic and verified to have zero tangency residuals; NOT checked in Lean. MachLib proves the COUNT and its structure, not these particular coordinates.",
-    "list-cardinality form": "MachLib is Mathlib-free and has no Finset layer; the count is a derivation from per-mode theorems plus the antipodal pairing, not a List.length = 8 theorem."
+    "the eight coordinates below": "COMPUTED here in exact arithmetic and verified to have zero tangency residuals; NOT checked in Lean. MachLib proves the COUNT and its structure, not these particular coordinates."
+  },
+  "CORRECTED": {
+    "list-cardinality form": "WAS listed NOT PROVED, on the grounds that MachLib is Mathlib-free and has no Finset layer. The premise was true and the inference was wrong: List, List.length and List.Nodup are Lean CORE, not Mathlib, and Finset is not needed for a finite enumeration. Now proved. eight_solutions delivers a List of length 8, Nodup, every entry a positive-radius solution of its mode. The mode half is stronger still: allModes_length and allModes_nodup depend on NO AXIOMS AT ALL, and allModes_complete on propext alone."
   },
   "COMPUTED": {
     "generator": "generate_evidence.py",
@@ -1082,7 +1089,7 @@
     ]
   },
   "ATTESTED": {
-    "machlib_commit": "028a2075ed5291a1fc6a3c0b51f48e17e6ce8466",
+    "machlib_commit": "99579de3384b5b3132e109b562171b4705811ebb",
     "worktree_clean": true,
     "lean_toolchain": "v4.32.2",
     "output_digest": "f982806db14e059b3d937a43278a42c1badb82cdc049e681d9a84f780fbef399"
