@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "results": [
     {
       "id": "T01",
@@ -361,11 +361,17 @@
     {
       "id": "T30",
       "tier": "THEOREM",
-      "name": "Depth Hierarchy: Standard Functions ≤ Depth 3",
-      "session": "Depth Spectrum",
+      "status": "SUPERSEDED / REFUTED IN PART",
+      "name": "Depth Hierarchy: Standard Functions ≤ Depth 3 (superseded in part)",
+      "session": "Depth Spectrum; corrected 2026-08-19",
       "category": "Depth Hierarchy",
-      "statement": "All standard elementary functions (exp, ln, algebraic, trig via ℂ) have EML depth ≤ 3. The hierarchy is strictly infinite (exp^k requires exactly k nodes). Depth-4 exists but no standard function lives there.",
-      "evidence": "S-T30 (2026-04-20): all 4 gaps closed. Hardy field Lemma 4.2 repaired (R17). Self-contained depth census in Depth_Spectrum_Self_Contained.tex — no external citations. GAP-4 (division case) closed via Hardy field total ordering. Correction: sinh/cosh are depth 3 (not 2 as previously claimed). T30(c) holds — all standard functions ≤ depth 3.",
+      "statement": "SUPERSEDED / REFUTED IN PART (2026-08-19). Two clauses of the original entry are false. (1) \"algebraic functions have EML depth ≤ 3\" — refuted by x + 1, which is algebraic and has d_(0,∞)(x + 1) = 4. (2) \"Depth-4 exists but no standard function lives there\" — refuted by the same witness. What is NOT affected: the census placing exp, ln and the trigonometric functions (via ℂ) at depth ≤ 3, and the strict infinitude of the hierarchy (exp^k requires exactly k nodes). Those clauses stand; they were established by different arguments and no counterexample touches them.",
+      "original_statement": "All standard elementary functions (exp, ln, algebraic, trig via ℂ) have EML depth ≤ 3. The hierarchy is strictly infinite (exp^k requires exactly k nodes). Depth-4 exists but no standard function lives there.",
+      "refuted_by": [
+        "X_PLUS_ONE_NOT_DEPTH_LE_THREE",
+        "X_PLUS_ONE_TREE_DEPTH"
+      ],
+      "evidence": "Original evidence retained for the surviving clauses: S-T30 (2026-04-20): all 4 gaps closed. Hardy field Lemma 4.2 repaired (R17). Self-contained depth census in Depth_Spectrum_Self_Contained.tex — no external citations. GAP-4 (division case) closed via Hardy field total ordering. Correction: sinh/cosh are depth 3 (not 2 as previously claimed). T30(c) holds — all standard functions ≤ depth 3. REFUTATION (2026-08-19): MachLib x_plus_one_not_depth_le_three excludes depth ≤ 3 on (0,∞); xPlusOneTree_depth gives the depth-4 construction; x_plus_one_depth_exact_four states both halves in one declaration. sorryAx absent. The defect was one-sided reasoning: an upper-bound census hardened into a universal claim with no matching lower bound, which is precisely what a two-sided rule prevents.",
       "deps": "T14."
     },
     {
@@ -610,6 +616,70 @@
       "category": "Connections to Existing Mathematics",
       "statement": "Claim that Navier-Stokes global regularity is formally ZFC-independent via EML-theoretic analysis. The jump to ZFC-independence is not established.",
       "evidence": "No complete proof. Speculative."
+    },
+    {
+      "id": "LOG_X_NOT_DEPTH_LE_TWO",
+      "tier": "THEOREM",
+      "name": "log x is unreachable at depth ≤ 2",
+      "session": "Finite-depth tameness, 2026-08-19",
+      "category": "Depth Hierarchy",
+      "domain": "(0, ∞)",
+      "bound": "lower",
+      "statement": "No EML tree of depth ≤ 2 agrees with log x on (0, ∞). Proved via the below-identity-unbounded class: log x is unbounded above yet eventually strictly below the identity, and no expression of depth ≤ 2 lies in that class.",
+      "evidence": "Lean 4, MachLib. log_x_not_depth_le_two, from log_belowIdentityUnbounded and belowIdentityUnbounded_not_depth_le_two. sorryAx absent. Non-vacuity checked adversarially: the depth-3 analogue of this statement is provably false, witnessed by logTree var.",
+      "lean": {
+        "file": "EMLDepthTameness.lean",
+        "theorem": "log_x_not_depth_le_two",
+        "status": "verified"
+      }
+    },
+    {
+      "id": "LOG_X_DEPTH_THREE_WITNESS",
+      "tier": "THEOREM",
+      "name": "log x is realised at depth 3",
+      "session": "Finite-depth tameness, 2026-08-19",
+      "category": "Depth Hierarchy",
+      "domain": "(0, ∞)",
+      "bound": "upper",
+      "statement": "logTree var has depth exactly 3 and evaluates to log x for every real x. The logarithm arrives negated and behind an exponential inside an eml node, so recovering it costs the two-level negation gadget on top of the node that produces it.",
+      "evidence": "Lean 4, MachLib. logTree / logTree_eval (unconditional, all reals) with depth 3 by rfl; paired with the lower bound in log_x_depth_exact_three, which carries the domain in its statement. sorryAx absent.",
+      "lean": {
+        "file": "EMLDepthTameness.lean",
+        "theorem": "log_x_depth_exact_three",
+        "status": "verified"
+      }
+    },
+    {
+      "id": "X_PLUS_ONE_NOT_DEPTH_LE_THREE",
+      "tier": "THEOREM",
+      "name": "x + 1 is unreachable at depth ≤ 3",
+      "session": "Finite-depth tameness, 2026-08-19",
+      "category": "Depth Hierarchy",
+      "domain": "(0, ∞)",
+      "bound": "lower",
+      "statement": "No EML tree of depth ≤ 3 agrees with x + 1 on (0, ∞). Instantiation of the intermediate-growth band exclusion at x + 1, which requires all four band conditions — unbounded, sub-exponential, superlinear and super-logarithmic.",
+      "evidence": "Lean 4, MachLib. x_plus_one_not_depth_le_three, from x_plus_one_band_hyps (IntermediateBand (fun x => x + 1)) and intermediateBand_not_depth_le_three. The fourth band condition was missing until 2026-08-19, which is why this bound was open: the exclusion cannot be instantiated on a partial premise. sorryAx absent. Non-vacuity checked: the depth-4 analogue is provably false, witnessed by xPlusOneTree.",
+      "lean": {
+        "file": "EMLDepthTameness.lean",
+        "theorem": "x_plus_one_not_depth_le_three",
+        "status": "verified"
+      }
+    },
+    {
+      "id": "X_PLUS_ONE_TREE_DEPTH",
+      "tier": "THEOREM",
+      "name": "x + 1 is realised at depth 4",
+      "session": "Finite-depth tameness, 2026-08-19",
+      "category": "Depth Hierarchy",
+      "domain": "(0, ∞)",
+      "bound": "upper",
+      "statement": "xPlusOneTree = negOffset (log 2) (negOffset 0 var) has depth exactly 4 and evaluates to x + 1 for every real x, with no side condition — so it holds on all of ℝ, a superset of the domain claimed here. The claim is stated on (0, ∞) so that it pairs with the lower bound on exactly the same domain. The grammar has no addition; it has negation, at two levels per use, and negating twice adds.",
+      "evidence": "Lean 4, MachLib. xPlusOneTree_eval / xPlusOneTree_depth via x_plus_one_in_eml; x_plus_one_depth_exact_four states both halves in one declaration. The construction holds on all of ℝ, a superset of the exclusion's domain, so the pairing is sound. sorryAx absent.",
+      "lean": {
+        "file": "EMLAdditionClosureFailure.lean",
+        "theorem": "xPlusOneTree_depth",
+        "status": "verified"
+      }
     }
   ]
 }
