@@ -21,9 +21,10 @@
     "eight solutions, List.length = 8": "MachLib.Geometry.Apollonius.SymmetricTriple.eight_solutions"
   },
   "NOT_PROVED": {
-    "coordinates OUTSIDE the flagship": "The flagship's eight are now Lean-checked (see CORRECTED). The other two configurations shown here -- d = 5/2 and the exceptional locus d = 2*sqrt(2) -- are still COMPUTED only: exact arithmetic, zero tangency residual, untrusted oracle. Select the flagship to see checked points."
+    "the d = 5/2 coordinates": "The flagship (d = 4) and the exceptional locus (d = 2*sqrt(2)) are both fully Lean-checked -- 15 of the 23 points on this page. The eight points of d = 5/2 are still COMPUTED only: exact arithmetic, zero tangency residual, untrusted oracle. Their coordinates carry denominators of 7, 12 and 28 over sqrt(2) and sqrt(34); the technique is proved out, the constants are larger."
   },
   "CORRECTED": {
+    "the exceptional-locus coordinates": "WAS listed NOT PROVED, computed but not checked. Now proved -- all seven, 21 tangencies. sqrt(6) is handled as sqrt(2)*sqrt(3) rather than as a third atom, so the four sqrt(6) solutions share one residual across all twelve of their tangencies.",
     "the eight flagship coordinates": "WAS listed NOT PROVED: computed in exact arithmetic but not checked in Lean. Now proved. All eight circles of d=4, rho=1 are stated in closed form and discharged against the geometric tangency predicates -- 24 tangencies, zero residual, sorryAx absent. The obstacle was never the geometry: it was Lean.Meta.acLt blowing up on nested (1+1) constant trees under distribution. Compressing the constant into the variable (v = 3h with 2v^2 = 9, kappa = sqrt21/3 with 3kappa^2 = 7) keeps every constant out of the distribution and all twelve identities close at once.",
     "list-cardinality form": "WAS listed NOT PROVED, on the grounds that MachLib is Mathlib-free and has no Finset layer. The premise was true and the inference was wrong: List, List.length and List.Nodup are Lean CORE, not Mathlib, and Finset is not needed for a finite enumeration. Now proved. eight_solutions delivers a List of length 8, Nodup, every entry a positive-radius solution of its mode. The mode half is stronger still: allModes_length and allModes_nodup depend on NO AXIOMS AT ALL, and allModes_complete on propext alone."
   },
@@ -457,7 +458,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.loOOO_tangent"
               }
             ]
           },
@@ -503,7 +504,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.loOOI_tangent"
               }
             ]
           },
@@ -549,7 +550,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.loOIO_tangent"
               }
             ]
           },
@@ -609,7 +610,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.loIOO_tangent"
               }
             ]
           },
@@ -655,7 +656,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.loIOI_tangent"
               }
             ]
           },
@@ -701,7 +702,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.loIIO_tangent"
               }
             ]
           },
@@ -747,7 +748,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.loIII_tangent"
               }
             ]
           }
@@ -1136,10 +1137,10 @@
     ]
   },
   "ATTESTED": {
-    "machlib_commit": "5d80c3d5781452efe163bdb6b45350fdf1509e93",
+    "machlib_commit": "3938f4da4bac1377c1e995720579267a39c1f792",
     "worktree_clean": true,
     "lean_toolchain": "v4.32.2",
-    "output_digest": "c3331828c5ac0278caaeff68ebd7c4f4c8193820eb646c22c79d926ca5de3b2b"
+    "output_digest": "7d7428acf3fd836fc41298e983a86cf79cfe32e191b45a8ae4e46e39e7f509cc"
   },
   "VISUALIZED": {
     "status": "pending",

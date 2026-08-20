@@ -50,7 +50,7 @@ chk('provenance carries commit and digest',
 
 // The coordinates disclaimer is the one that MUST survive: MachLib proves the count and its
 // structure, not the particular numbers rendered on the page.
-chk('coordinates outside the flagship are still declared NOT PROVED',
+chk('the unchecked configuration is still declared NOT PROVED',
   Object.keys(data.notProved).some((k) => /coordinate/i.test(k)) &&
   /COMPUTED only/i.test(Object.values(data.notProved).join(' ')));
 
