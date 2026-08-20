@@ -50,9 +50,18 @@ chk('provenance carries commit and digest',
 
 // The coordinates disclaimer is the one that MUST survive: MachLib proves the count and its
 // structure, not the particular numbers rendered on the page.
-chk('the unchecked configuration is still declared NOT PROVED',
-  Object.keys(data.notProved).some((k) => /coordinate/i.test(k)) &&
-  /COMPUTED only/i.test(Object.values(data.notProved).join(' ')));
+// Retiring the last disclaimer is only legitimate once every point is checked AND the retirement
+// is recorded. An empty NOT PROVED with unchecked points would be the exact overclaim this whole
+// exhibit exists to prevent.
+{
+  const all = data.configs.flatMap((c) => c.sols);
+  const unchecked = all.filter((s) => !s.lean).length;
+  chk('NOT PROVED is empty only when nothing is unchecked',
+    unchecked > 0 ? Object.keys(data.notProved).length > 0 : true,
+    `${unchecked} unchecked, ${Object.keys(data.notProved).length} disclaimer(s)`);
+  chk('a fully-checked exhibit records the retirement',
+    unchecked > 0 || Object.keys(data.corrected ?? {}).some((k) => /all 23/i.test(k)));
+}
 
 // Nothing may leave NOT PROVED silently. A claim that was once disclaimed and is now proved has
 // to say so, with its reason, where a reader of the old page would look for it.
@@ -99,4 +108,4 @@ chk('every generic config really has eight, the locus seven',
 
 console.log();
 if (bad) { console.error(`EXHIBIT GATES FAIL — ${bad} gate(s)`); process.exit(1); }
-console.log('EXHIBIT GATES PASS — 15/15');
+console.log('EXHIBIT GATES PASS — 16/16');

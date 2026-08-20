@@ -20,10 +20,9 @@
     "4 + 4 = 8, canonical + antipodal": "MachLib.Geometry.Apollonius.canonical_plus_anti_nodup",
     "eight solutions, List.length = 8": "MachLib.Geometry.Apollonius.SymmetricTriple.eight_solutions"
   },
-  "NOT_PROVED": {
-    "the last two coordinates: the doubled (inner,outer,outer) pair": "21 of the 23 points on this page are Lean-checked. The two remaining are the doubled (inner,outer,outer) class of d = 5/2, r = 25/7 +- 45*sqrt(2)/28 -- still COMPUTED only: exact arithmetic, zero tangency residual, untrusted oracle. Their two external tangencies carry 115 and 128; the difference-of-squares factorisation that would tame them is derived in Coordinates.lean but not yet carried out."
-  },
+  "NOT_PROVED": {},
   "CORRECTED": {
+    "ALL 23 coordinates": "WAS listed NOT PROVED for every point on this page: computed in exact arithmetic, zero tangency residual, but not checked in Lean. Now proved, all 23, across all three configurations -- 69 tangencies, sorryAx absent. The last two took six attempts. The obstacle was never geometry: it was handing concrete numerals to the normaliser. Abstracting every one of them -- the scale, the divisor, the separation, and 7 itself -- made the bridge compile on the first try.",
     "the exceptional-locus coordinates": "WAS listed NOT PROVED, computed but not checked. Now proved -- all seven, 21 tangencies. sqrt(6) is handled as sqrt(2)*sqrt(3) rather than as a third atom, so the four sqrt(6) solutions share one residual across all twelve of their tangencies.",
     "the eight flagship coordinates": "WAS listed NOT PROVED: computed in exact arithmetic but not checked in Lean. Now proved. All eight circles of d=4, rho=1 are stated in closed form and discharged against the geometric tangency predicates -- 24 tangencies, zero residual, sorryAx absent. The obstacle was never the geometry: it was Lean.Meta.acLt blowing up on nested (1+1) constant trees under distribution. Compressing the constant into the variable (v = 3h with 2v^2 = 9, kappa = sqrt21/3 with 3kappa^2 = 7) keeps every constant out of the distribution and all twelve identities close at once.",
     "list-cardinality form": "WAS listed NOT PROVED, on the grounds that MachLib is Mathlib-free and has no Finset layer. The premise was true and the inference was wrong: List, List.length and List.Nodup are Lean CORE, not Mathlib, and Finset is not needed for a finite enumeration. Now proved. eight_solutions delivers a List of length 8, Nodup, every entry a positive-radius solution of its mode. The mode half is stronger still: allModes_length and allModes_nodup depend on NO AXIOMS AT ALL, and allModes_complete on propext alone."
@@ -248,7 +247,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.be4_tangent"
               },
               {
                 "r_exact": "25/7 - 45*sqrt(2)/28",
@@ -264,7 +263,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.be5_tangent"
               }
             ]
           },
@@ -1137,10 +1136,10 @@
     ]
   },
   "ATTESTED": {
-    "machlib_commit": "a2c28a29b1faa9fe984e659bd155474a4b7b1de1",
+    "machlib_commit": "7679ba647a4fa19eea5f1446f22df0c45594421b",
     "worktree_clean": true,
     "lean_toolchain": "v4.32.2",
-    "output_digest": "b0152a36d5f9ded85ca4444c0c2420417b2012869c95f793409937fd1ad576ee"
+    "output_digest": "3426a9009af41026de63b5781729d48b60d8b7ee35903edbe028dd593957d36a"
   },
   "VISUALIZED": {
     "status": "pending",
