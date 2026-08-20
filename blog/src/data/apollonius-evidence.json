@@ -21,7 +21,7 @@
     "eight solutions, List.length = 8": "MachLib.Geometry.Apollonius.SymmetricTriple.eight_solutions"
   },
   "NOT_PROVED": {
-    "the six remaining d = 5/2 coordinates": "Two of the eight -- the Soddy pair -- are now Lean-checked. The other six are still COMPUTED only: exact arithmetic, zero tangency residual, untrusted oracle. Their denominators (7, 12, 28 over sqrt(2) and sqrt(34)) push the cleared identity past the normaliser. Both factorisations that would fix it are written down in Coordinates.lean; neither is tried yet."
+    "the doubled (inner,outer,outer) pair": "21 of the 23 points on this page are Lean-checked. The two remaining are the doubled (inner,outer,outer) class of d = 5/2, r = 25/7 +- 45*sqrt(2)/28 -- still COMPUTED only: exact arithmetic, zero tangency residual, untrusted oracle. Their two external tangencies carry 115 and 128; the difference-of-squares factorisation that would tame them is derived in Coordinates.lean but not yet carried out."
   },
   "CORRECTED": {
     "the exceptional-locus coordinates": "WAS listed NOT PROVED, computed but not checked. Now proved -- all seven, 21 tangencies. sqrt(6) is handled as sqrt(2)*sqrt(3) rather than as a third atom, so the four sqrt(6) solutions share one residual across all twelve of their tangencies.",
@@ -126,7 +126,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.beOOI_tangent"
               }
             ]
           },
@@ -172,7 +172,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.beOIO_tangent"
               }
             ]
           },
@@ -310,7 +310,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.beIOI_tangent"
               }
             ]
           },
@@ -356,7 +356,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.beIIO_tangent"
               }
             ]
           },
@@ -1137,10 +1137,10 @@
     ]
   },
   "ATTESTED": {
-    "machlib_commit": "53b9be5110d4617c5fe31f2bac1b08e81ec6526f",
+    "machlib_commit": "a2c28a29b1faa9fe984e659bd155474a4b7b1de1",
     "worktree_clean": true,
     "lean_toolchain": "v4.32.2",
-    "output_digest": "0130c011f11bb0d9fab7f8c73f22ce03b4ef1ffdae0baf02dca8b86b3e72fe71"
+    "output_digest": "b0152a36d5f9ded85ca4444c0c2420417b2012869c95f793409937fd1ad576ee"
   },
   "VISUALIZED": {
     "status": "pending",
