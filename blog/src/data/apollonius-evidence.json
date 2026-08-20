@@ -21,7 +21,7 @@
     "eight solutions, List.length = 8": "MachLib.Geometry.Apollonius.SymmetricTriple.eight_solutions"
   },
   "NOT_PROVED": {
-    "the d = 5/2 coordinates": "The flagship (d = 4) and the exceptional locus (d = 2*sqrt(2)) are both fully Lean-checked -- 15 of the 23 points on this page. The eight points of d = 5/2 are still COMPUTED only: exact arithmetic, zero tangency residual, untrusted oracle. Their coordinates carry denominators of 7, 12 and 28 over sqrt(2) and sqrt(34); the technique is proved out, the constants are larger."
+    "the six remaining d = 5/2 coordinates": "Two of the eight -- the Soddy pair -- are now Lean-checked. The other six are still COMPUTED only: exact arithmetic, zero tangency residual, untrusted oracle. Their denominators (7, 12, 28 over sqrt(2) and sqrt(34)) push the cleared identity past the normaliser. Both factorisations that would fix it are written down in Coordinates.lean; neither is tried yet."
   },
   "CORRECTED": {
     "the exceptional-locus coordinates": "WAS listed NOT PROVED, computed but not checked. Now proved -- all seven, 21 tangencies. sqrt(6) is handled as sqrt(2)*sqrt(3) rather than as a third atom, so the four sqrt(6) solutions share one residual across all twelve of their tangencies.",
@@ -80,7 +80,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.beOOO_tangent"
               }
             ]
           },
@@ -402,7 +402,7 @@
                   "0"
                 ],
                 "tangency_exact": true,
-                "lean": null
+                "lean": "MachLib.Geometry.Apollonius.Coordinates.beIII_tangent"
               }
             ]
           }
@@ -1137,10 +1137,10 @@
     ]
   },
   "ATTESTED": {
-    "machlib_commit": "3938f4da4bac1377c1e995720579267a39c1f792",
+    "machlib_commit": "53b9be5110d4617c5fe31f2bac1b08e81ec6526f",
     "worktree_clean": true,
     "lean_toolchain": "v4.32.2",
-    "output_digest": "7d7428acf3fd836fc41298e983a86cf79cfe32e191b45a8ae4e46e39e7f509cc"
+    "output_digest": "0130c011f11bb0d9fab7f8c73f22ce03b4ef1ffdae0baf02dca8b86b3e72fe71"
   },
   "VISUALIZED": {
     "status": "pending",
