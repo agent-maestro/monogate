@@ -208,6 +208,16 @@ chk('epistemic status on the banner is derived from the certificate, not typed',
 chk('a fully checked config says so, instead of understating itself',
   cfgs.every((c) => c.leanChecked !== c.count || /LEAN-CHECKED/.test(html) || /LEAN-CHECKED/.test(src)));
 
+// The status a claim carries must not outrun the toolchain that enforces it. VISUALIZED sat
+// at "pending" while the figure was in fact unchecked -- honest. The failure mode now is the
+// opposite: flipping it to GATED and then quietly dropping the gate from the release path.
+{
+  const vis = ev.VISUALIZED || {};
+  const pd = JSON.parse(readFileSync('package.json', 'utf8')).scripts.predeploy || '';
+  chk('a non-pending VISUALIZED status is actually enforced by the release path',
+    vis.status === 'pending' || /check:figure/.test(pd), `status=${vis.status}`);
+}
+
 console.log();
 if (bad) { console.error(`EXHIBIT GATES FAIL — ${bad} of ${total} gate(s)`); process.exit(1); }
 console.log(`EXHIBIT GATES PASS — ${total}/${total}`);

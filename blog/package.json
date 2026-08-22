@@ -11,11 +11,15 @@
     "preview": "astro preview",
     "astro": "astro",
     "audit": "node scripts/audit-citations.mjs",
-    "predeploy": "npm run audit && npm run build && npm run check:exhibit",
-    "check:exhibit": "node scripts/check-exhibit-gates.mjs"
+    "predeploy": "npm run audit && npm run build && npm run check:exhibit && npm run check:figure",
+    "check:exhibit": "node scripts/check-exhibit-gates.mjs",
+    "check:figure": "node scripts/check-figure-derives.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.0",
     "astro": "^6.1.8"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.62.1"
   }
 }

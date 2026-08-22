@@ -1142,7 +1142,16 @@
     "output_digest": "3426a9009af41026de63b5781729d48b60d8b7ee35903edbe028dd593957d36a"
   },
   "VISUALIZED": {
-    "status": "pending",
-    "rule": "rendering derives from these exact values only"
+    "status": "GATED",
+    "rule": "rendering derives from these exact values only",
+    "enforced_by": "monogate/blog/scripts/check-figure-derives.mjs (npm run check:figure, wired into predeploy)",
+    "checks": [
+      "the affine map is recoverable from the three given circles alone",
+      "every drawn circle sits at its certificate centre and radius, within 0.6px",
+      "every drawn circle is tangent to all three given circles, in screen space",
+      "the drawn tangency type matches the mode the row claims (o external, i internal)",
+      "perturbing a certificate coordinate moves the drawing"
+    ],
+    "note": "The first four pass against a figure hardcoded to today's numbers; the fifth is the one that cannot."
   }
 }
