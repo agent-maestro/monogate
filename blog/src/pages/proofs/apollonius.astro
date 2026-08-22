@@ -24,25 +24,38 @@ function evalFrac(s: string): number {
 function pack(cfg: any) {
   const sols: any[] = [];
   for (const m of cfg.modes) {
-    for (const k of m.roots) {
-      if (!k.positive_radius) continue;
+    m.roots.forEach((k: any, ri: number) => {
+      if (!k.positive_radius) return;
       sols.push({
-        mode: m.mode, cls: CLASS_OF[m.mode.join(',')], primary: m.mode[0] === 1,
+        mode: m.mode, cls: CLASS_OF[m.mode.join(',')], rootIndex: ri,
         r: k.r_float, x: k.x_float, y: k.y_float,
         rE: k.r_exact, xE: k.x_exact, yE: k.y_exact,
         lead: m.lead, mid: m.mid, const: m.const, disc: m.disc, deg: m.degree,
         exact: k.tangency_exact,
         lean: k.lean ?? null,
       });
-    }
+    });
   }
   sols.sort((a, b) => a.r - b.r);
+
+  // WHICH CIRCLE OF THE CLASS THIS IS. A property of the solution -- deliberately not of
+  // the mode. The old code used `primary: m.mode[0] === 1`, which is a property of the
+  // MODE, as though it identified one of the class's two circles. It does not: every
+  // circle appears in the certificate twice, once with positive radius under mode m and
+  // once with negative radius under -m (tangentEq_antipodal), so the displayed label is
+  // whichever of {m, -m} came out positive -- and BOTH circles of a class can land on the
+  // same mode. At d = 5/2 both circles of class (o,i,i) are positive under ioo and neither
+  // under oii, so the mode-derived flag drew two dashed circles and no solid one, which
+  // silently falsified the figure caption. Index within the class is the honest key.
+  const nth: Record<number, number> = {};
+  for (const s of sols) { nth[s.cls] = (nth[s.cls] ?? -1) + 1; s.member = nth[s.cls]; }
   const dN = num(cfg.d), rN = num(cfg.rho);
   return {
     d: cfg.d, rho: cfg.rho, dNum: dN, rhoNum: rN,
     isLocus: Math.abs(dN * dN - 8 * rN * rN) < 1e-9,
     side: dN * dN < 8 * rN * rN ? 'below' : 'above',
     count: cfg.count_positive_radius, sols,
+    leanChecked: sols.filter((s: any) => s.lean).length,
     modes: cfg.modes.map((m: any) => ({
       mode: m.mode, cls: CLASS_OF[m.mode.join(',')],
       lead: m.lead, disc: m.disc, deg: m.degree,
@@ -50,10 +63,18 @@ function pack(cfg: any) {
   };
 }
 
+// The two modes making up each antipodal class, derived from CLASS_OF rather than typed
+// out, so a class can never be shown a representative it does not contain.
+const MODES_OF_CLASS: string[][] = [[], [], [], []];
+for (const [key, c] of Object.entries(CLASS_OF)) {
+  MODES_OF_CLASS[c]!.push(key.split(',').map((v) => (Number(v) > 0 ? 'o' : 'i')).join(''));
+}
+
 const configs = evidence.COMPUTED.configurations.map(pack);
 const data = {
   configs,
   defaultConfig: configs.findIndex((c) => c.isLocus),
+  classModes: MODES_OF_CLASS,
   proved: evidence.PROVED,
   notProved: evidence.NOT_PROVED,
   corrected: evidence.CORRECTED ?? {},
@@ -80,8 +101,10 @@ const data = {
       <div class="ex-panel">
         <svg id="fig" viewBox="0 0 460 460" role="img" aria-label="Tangent circles for the selected configuration"></svg>
         <p class="ex-note">The drawing is illustrative. Every centre and radius is read from the
-          certificate — no coordinate is entered by hand. Colour is the antipodal class; solid and
-          dashed are the two members of each class.</p>
+          certificate — no coordinate is entered by hand. Colour is the antipodal class; solid is the
+          first circle of that class and dashed the second, ordered by radius. A class can hold two
+          circles carrying the <em>same</em> mode label — each circle is labelled by whichever of the
+          two complementary modes gives it a positive radius, and both can fall on one side.</p>
       </div>
       <div class="ex-tgrid" id="tgrid" role="group" aria-label="Configuration"></div>
     </div>
@@ -120,7 +143,13 @@ const data = {
     (function () {
       const D = JSON.parse(document.getElementById('ex-data').textContent);
       const CH = ['--accent', '--cyan', '--violet', '--pink'];
-      const CN = ['(o,o,o)', '(o,o,i)', '(o,i,o)', '(o,i,i)'];
+      // An antipodal class is a PAIR of complementary modes. The old code rendered it as a
+      // single representative triple in the SAME notation a row uses for its own mode, so
+      // "class (o,i,i)" sat beside a row reading "ioo" with nothing saying they are
+      // different objects. Always render the pair; never a bare representative.
+      const MLBL = (m) => m.map(function (v) { return v > 0 ? 'o' : 'i'; }).join('');
+      const COMPL = (m) => m.map(function (v) { return v > 0 ? 'i' : 'o'; }).join('');
+      const CPAIR = (k) => '{' + D.classModes[k].join(' ↔ ') + '}';
       let ci = D.defaultConfig, si = 0, mi = null;
       const cvar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
       const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
@@ -135,15 +164,27 @@ const data = {
           : 'Four antipodal classes, two signed roots each — <strong>eight</strong> distinct tangent circles. This configuration sits ' + c.side + ' the exceptional locus <strong>d² = 8ρ²</strong>.';
       }
 
+      // DERIVED, never typed. This row read 'COMPUTED / exact, not in Lean' as a literal
+      // long after every coordinate had been Lean-checked -- the page understating its own
+      // evidence because a hand-maintained string could not see the certificate change.
+      function PLOTTED(c) {
+        const all = c.leanChecked === c.count;
+        return ['Plotted coordinates', all ? 'LEAN-CHECKED' : 'COMPUTED', all ? 'ok' : 'cmp',
+                c.leanChecked + ' of ' + c.count + ' cite a theorem'];
+      }
+      function PROVEDCOUNT() {
+        return ['Proved statements', String(Object.keys(D.proved).length), 'ok', 'each cites Lean'];
+      }
+
       function banner() {
         const c = D.configs[ci];
         const rows = c.isLocus
           ? [['Count', String(c.count), 'cmp', ''], ['Mode structure', 'PROVED', 'ok', ''],
              ['Distinctness', 'PROVED', 'ok', ''], ['Exceptional locus', 'YES', 'cmp', 'd² = 8ρ²'],
-             ['Plotted coordinates', 'COMPUTED', 'cmp', 'exact, not in Lean'], ['Lean gates', '8 / 8', 'ok', '']]
+             PLOTTED(c), PROVEDCOUNT()]
           : [['Count', String(c.count), 'ok', ''], ['Mode structure', 'PROVED', 'ok', ''],
              ['Distinctness', 'PROVED', 'ok', ''], ['General position', 'PROVED', 'ok', ''],
-             ['Plotted coordinates', 'COMPUTED', 'cmp', 'exact, not in Lean'], ['Lean gates', '8 / 8', 'ok', '']];
+             PLOTTED(c), PROVEDCOUNT()];
         document.getElementById('banner').innerHTML = rows.map(([k, v, cl, n]) =>
           '<div class="ex-stat"><span class="k">' + k + '</span><span class="v ' + cl + '">' + v + '</span>' +
           (n ? '<span class="n">' + n + '</span>' : '') + '</div>').join('');
@@ -170,7 +211,7 @@ const data = {
           const on = i === si;
           out += '<circle cx="' + X(s.x) + '" cy="' + Y(s.y) + '" r="' + R(s.r) + '" fill="none" stroke="' +
             cvar(CH[s.cls]) + '" stroke-width="' + (on ? 2.6 : 1.2) + '" opacity="' + (on ? 1 : 0.5) + '"' +
-            (s.primary ? '' : ' stroke-dasharray="5 4"') + '/>';
+            (s.member === 0 ? '' : ' stroke-dasharray="5 4"') + '/>';
         });
         document.getElementById('fig').innerHTML = out;
       }
@@ -198,8 +239,8 @@ const data = {
         document.getElementById('slist').innerHTML = S.map(function (s, i) {
           return '<li><button class="ex-srow" aria-current="' + (i === si) + '" data-i="' + i +
             '"><span class="sw" style="background:' + cvar(CH[s.cls]) + '"></span><span>' + (i + 1) +
-            '. r = ' + tidy(s.rE) + '</span><span class="dim">' +
-            s.mode.map(function (v) { return v > 0 ? 'o' : 'i'; }).join('') + '</span></button></li>';
+            '. r = ' + tidy(s.rE) + '</span><span class="ctr">c = (' + tidy(s.xE) + ', ' +
+            tidy(s.yE) + ')</span><span class="dim">' + MLBL(s.mode) + '</span></button></li>';
         }).join('');
         Array.prototype.forEach.call(document.querySelectorAll('.ex-srow'), function (b) {
           b.onclick = function () { si = +b.dataset.i; figure(); list(); detail(); status(); };
@@ -209,9 +250,15 @@ const data = {
       function detail() {
         const s = D.configs[ci].sols[si];
         document.getElementById('detail').innerHTML = '<dl>' +
-          '<dt>class</dt><dd>' + CN[s.cls] + (s.primary ? '' : ' · antipode') + '</dd>' +
-          '<dt>mode</dt><dd>' + s.mode.map(function (v) { return v > 0 ? 'external' : 'internal'; }).join(' · ') + '</dd>' +
-          '<dt>radius</dt><dd>' + tidy(s.rE) + ' &nbsp;<span class="dim">≈ ' + s.r.toFixed(6) + '</span></dd>' +
+          '<dt>tangency mode</dt><dd>' + MLBL(s.mode) + ' &nbsp;<span class="dim">' +
+            s.mode.map(function (v) { return v > 0 ? 'external' : 'internal'; }).join(' · ') + '</span></dd>' +
+          '<dt>antipodal class</dt><dd>' + CPAIR(s.cls) + ' &nbsp;<span class="dim">member ' +
+            (s.member + 1) + ' of ' + D.configs[ci].sols.filter(function (t) { return t.cls === s.cls; }).length +
+            ' — this circle realises ' + MLBL(s.mode) + '</span></dd>' +
+          '<dt>geometric radius</dt><dd>' + tidy(s.rE) + ' &nbsp;<span class="dim">≈ ' + s.r.toFixed(6) + '</span></dd>' +
+          '<dt>signed root</dt><dd>' + tidy(s.rE) + ' under ' + MLBL(s.mode) +
+            ' &nbsp;<span class="dim">— the same circle is the negative root under ' + COMPL(s.mode) +
+            '. That is why a mode can appear twice here and its complement not at all.</span></dd>' +
           '<dt>centre</dt><dd>(' + tidy(s.xE) + ', ' + tidy(s.yE) + ')</dd>' +
           '<dt>quadratic</dt><dd>' + tidy(s.lead) + '·r²' + term(s.mid, '·r') + term(s.const, '') + ' = 0</dd>' +
           '<dt>discriminant</dt><dd>' + tidy(s.disc) + '</dd></dl>';
@@ -238,7 +285,7 @@ const data = {
           c.modes.map(function (m, i) {
             return '<tr class="mrow' + (m.deg === 1 ? ' deg1' : '') + '" aria-current="' + (i === mi) +
               '" data-i="' + i + '" tabindex="0"><td>' + m.mode.map(function (v) { return v > 0 ? 'o' : 'i'; }).join('') +
-              '</td><td>' + CN[m.cls] + '</td><td>' + tidy(m.lead) + '</td><td>' + tidy(m.disc) +
+              '</td><td>' + CPAIR(m.cls) + '</td><td>' + tidy(m.lead) + '</td><td>' + tidy(m.disc) +
               '</td><td class="' + (m.deg === 2 ? 'ok' : 'cmp') + '">' + m.deg + '</td></tr>';
           }).join('') + '</tbody>';
         Array.prototype.forEach.call(document.querySelectorAll('.mrow'), function (tr) {
@@ -349,7 +396,7 @@ const data = {
   .ex-page .ex-tcard .tbody{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45;
     display:block}
   .ex-page .ex-slist{list-style:none;margin:0;padding:6px}
-  .ex-page .ex-srow{display:grid;grid-template-columns:14px 1fr auto;gap:9px;align-items:center;
+  .ex-page .ex-srow{display:grid;grid-template-columns:14px minmax(0,auto) minmax(0,1fr) auto;gap:9px;align-items:center;
     width:100%;padding:7px 9px;background:none;border:0;border-radius:4px;cursor:pointer;
     text-align:left;font-family:var(--mono);font-size:12px;color:var(--text);
     font-variant-numeric:tabular-nums}
@@ -358,6 +405,15 @@ const data = {
     box-shadow:inset 2px 0 0 var(--accent)}
   .ex-page .ex-srow:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
   .ex-page .ex-srow .sw{width:11px;height:11px;border-radius:50%}
+  /* Four circles per configuration share a radius (5√34/12 four times at d = 5/2), so a row
+     showing only the radius reads as four identical entries beside a DISTINCTNESS PROVED
+     badge. Circle identity is centre AND radius; show both. */
+  .ex-page .ex-srow .ctr{color:var(--muted);white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis;min-width:0}
+  @media(max-width:560px){
+    .ex-page .ex-srow{grid-template-columns:14px minmax(0,1fr) auto;row-gap:2px}
+    .ex-page .ex-srow .ctr{grid-column:2/4;white-space:normal}
+  }
   .ex-page .ex-detail{padding:12px 16px;border-top:1px solid var(--border);
     font-family:var(--mono);font-size:12px}
   .ex-page .ex-detail dl{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0}

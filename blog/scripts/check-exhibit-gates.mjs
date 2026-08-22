@@ -9,8 +9,9 @@ import { join } from 'node:path';
 
 const DIST = 'dist/proofs/apollonius/index.html';
 const SRC = 'src/pages/proofs/apollonius.astro';
-let bad = 0;
+let bad = 0, total = 0;
 const chk = (name, cond, detail = '') => {
+  total++;
   console.log(`  ${cond ? 'PASS' : 'FAIL'}  ${name}${detail ? '  ' + detail : ''}`);
   if (!cond) bad++;
 };
@@ -106,6 +107,107 @@ chk('every generic config really has eight, the locus seven',
   cfgs.every((c) => (c.isLocus ? c.count === 7 : c.count === 8)),
   cfgs.map((c) => c.count).join(','));
 
+// ── IDENTITY PRESERVATION ────────────────────────────────────────────────────────
+// Provenance correctness is not only "does every row cite a theorem". It is "does the
+// displayed row identify the exact mathematical object that theorem certifies". Every
+// gate above could pass while the UI attached the right citation to the wrong witness.
+//
+// The concrete failure that prompted these: `primary: m.mode[0] === 1` -- a property of
+// the MODE -- was used to say which of a class's two CIRCLES a row was. Every circle
+// appears in the certificate twice, positive under mode m and negative under -m, so its
+// label is whichever of {m, -m} gives a positive radius. Both circles of one class can
+// land on the same mode (d = 5/2: two circles under ioo, none under oii). The figure then
+// drew two dashed circles and no solid one, falsifying its own caption -- with correct
+// data, correct citations, and a clean build.
+// These gates quote the defective code verbatim in their own comments, and the page does
+// too. Match against source with comments stripped, or the documentation trips the gate
+// that documents it -- which is how the first run of this block failed.
+const code = src.replace(/\/\*[\s\S]*?\*\//g, '')
+  .split('\n').filter((l) => !/^\s*(\/\/|\*)/.test(l)).join('\n');
+
+const ev = JSON.parse(readFileSync('src/data/apollonius-evidence.json', 'utf8'));
+const L = (m) => m.map((v) => (v > 0 ? 'o' : 'i')).join('');
+const evCfgs = ev.COMPUTED.configurations;
+
+chk('projection is faithful: displayed rows are exactly the certificate\'s positive roots',
+  cfgs.every((c, i) => {
+    const shown = c.sols.map((s) => [L(s.mode), s.xE, s.yE, s.rE].join('|')).sort();
+    const cert = evCfgs[i].modes.flatMap((m) => m.roots.filter((r) => r.positive_radius)
+      .map((r) => [L(m.mode), r.x_exact, r.y_exact, r.r_exact].join('|'))).sort();
+    return JSON.stringify(shown) === JSON.stringify(cert);
+  }), `${cfgs.reduce((n, c) => n + c.sols.length, 0)} rows`);
+
+chk('antipodal law holds in the certificate: roots(-m) = -roots(m)',
+  evCfgs.every((cfg) => {
+    const by = new Map(cfg.modes.map((m) => [m.mode.join(','), m]));
+    return cfg.modes.every((m) => {
+      const c = by.get(m.mode.map((v) => -v).join(','));
+      if (!c) return false;
+      const a = m.roots.map((r) => r.r_float).sort((x, y) => x - y);
+      const b = c.roots.map((r) => -r.r_float).sort((x, y) => x - y);
+      return a.every((v, i) => Math.abs(v - b[i]) < 1e-9);
+    });
+  }));
+
+chk('each displayed circle is positive under exactly one of {m, -m}, so its label is canonical',
+  evCfgs.every((cfg) => {
+    const by = new Map(cfg.modes.map((m) => [m.mode.join(','), m]));
+    return cfg.modes.every((m) => {
+      const c = by.get(m.mode.map((v) => -v).join(','));
+      return m.roots.filter((r) => r.positive_radius).every((r) =>
+        c.roots.some((q) => Math.abs(q.r_float + r.r_float) < 1e-9 && !q.positive_radius));
+    });
+  }));
+
+chk('circles are distinct by centre AND radius — radius alone does not identify one',
+  cfgs.every((c) => new Set(c.sols.map((s) => `${s.xE}|${s.yE}|${s.rE}`)).size === c.sols.length),
+  cfgs.map((c) => `${new Set(c.sols.map((s) => s.rE)).size} radii for ${c.sols.length} circles`).join(', '));
+
+// Written first as `A && B === false ? C : true`, which precedence made unfailable. A gate
+// that cannot fail is worse than no gate: it reports PASS and buys nothing.
+chk('the row shows the centre, so four equal radii are four visibly different circles',
+  /class="ctr">c = \(/.test(code) && /\.ctr\s*\{/.test(css));
+
+chk('row -> root -> theorem citation is one-to-one',
+  cfgs.every((c) => {
+    const cited = c.sols.filter((s) => s.lean).map((s) => s.lean);
+    return new Set(cited).size === cited.length;
+  }), `${cfgs.reduce((n, c) => n + c.sols.filter((s) => s.lean).length, 0)} citations, all distinct`);
+
+chk('solid/dashed keys off the SOLUTION, not the mode — one first member per class',
+  cfgs.every((c) => [0, 1, 2, 3].every((k) => {
+    const mem = c.sols.filter((s) => s.cls === k).map((s) => s.member).sort();
+    return mem.every((v, i) => v === i);
+  })),
+  cfgs.map((c) => [0, 1, 2, 3].map((k) => c.sols.filter((s) => s.cls === k).length).join('')).join(' '));
+
+chk('the class-of-a-mode flag is never derived from the mode again',
+  !/primary:\s*m\.mode\[0\]/.test(code) && !/s\.primary/.test(code));
+
+chk('a class holding two circles on ONE mode still renders one solid and one dashed',
+  cfgs.some((c) => [0, 1, 2, 3].some((k) => {
+    const mem = c.sols.filter((s) => s.cls === k);
+    return mem.length === 2 && L(mem[0].mode) === L(mem[1].mode);
+  })) && cfgs.every((c) => [0, 1, 2, 3].every((k) => {
+    const mem = c.sols.filter((s) => s.cls === k);
+    return mem.filter((s) => s.member === 0).length === (mem.length ? 1 : 0);
+  })), 'the d = 5/2 case that broke the caption');
+
+chk('an antipodal class is rendered as a PAIR, never a lone representative',
+  Array.isArray(data.classModes) && data.classModes.length === 4 &&
+  data.classModes.every((pair) => pair.length === 2 &&
+    pair[0].split('').every((ch, i) => ch !== pair[1][i])) &&
+  !/const CN = \['\(o,o,o\)'/.test(src),
+  data.classModes.map((p) => p.join('/')).join(' '));
+
+chk('epistemic status on the banner is derived from the certificate, not typed',
+  !/exact, not in Lean/.test(code) && !/'Lean gates', '8 \/ 8'/.test(code) &&
+  cfgs.every((c) => c.leanChecked === c.sols.filter((s) => s.lean).length),
+  cfgs.map((c) => `${c.leanChecked}/${c.count}`).join(' '));
+
+chk('a fully checked config says so, instead of understating itself',
+  cfgs.every((c) => c.leanChecked !== c.count || /LEAN-CHECKED/.test(html) || /LEAN-CHECKED/.test(src)));
+
 console.log();
-if (bad) { console.error(`EXHIBIT GATES FAIL — ${bad} gate(s)`); process.exit(1); }
-console.log('EXHIBIT GATES PASS — 16/16');
+if (bad) { console.error(`EXHIBIT GATES FAIL — ${bad} of ${total} gate(s)`); process.exit(1); }
+console.log(`EXHIBIT GATES PASS — ${total}/${total}`);
