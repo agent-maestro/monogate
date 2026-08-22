@@ -81,6 +81,19 @@ const data = {
   configs,
   defaultConfig: configs.findIndex((c) => c.isLocus),
   classModes: MODES_OF_CLASS,
+  sweep: {
+    status: (evidence as any).SWEPT.status,
+    shows: (evidence as any).SWEPT.shows,
+    frames: (evidence as any).SWEPT.frames.map((f: any) => ({
+      d: f.d_float, dE: f.d_exact,
+      c: f.circles.map((k: any) => [k.x, k.y, k.r, CLASS_OF[k.mode.join(',')],
+                                    k.mode.join(',') === '1,-1,-1' || k.mode.join(',') === '-1,1,1' ? 1 : 0,
+                                    k.mode.map((v: number) => (v > 0 ? 'o' : 'i')).join('')]),
+      line: f.tangent_line ? [f.tangent_line.nx_float, f.tangent_line.ny_float, f.tangent_line.c_float] : null,
+      cls: f.degenerating_class.map((z: any) => [z.mode.map((v: number) => (v > 0 ? 'o' : 'i')).join(''), z.r]),
+      n: f.count, ng: f.count_generalized,
+    })),
+  },
   proved: evidence.PROVED,
   notProved: evidence.NOT_PROVED,
   corrected: evidence.CORRECTED ?? {},
@@ -125,6 +138,29 @@ const data = {
       <div class="ex-status" id="status"></div>
     </div>
   </div>
+
+  <section class="ex-sec">
+    <h2>Watch the eighth circle leave</h2>
+    <p class="ex-lead">Raise <em>d</em> towards the locus and the second circle of the
+      (o,i,i) class grows without bound. At <strong>d = 2√2</strong> it is the line. Past the
+      locus it comes back from infinity — carrying the <em>other</em> mode label of its class.</p>
+    <div class="ex-panel">
+      <div class="ex-phead">
+        <h3>The sweep</h3>
+        <span class="ex-badge cmp">COMPUTED</span>
+      </div>
+      <svg id="sweep" viewBox="0 0 460 460" role="img"
+           aria-label="Tangent circles as the separation d crosses the exceptional locus"></svg>
+      <div class="sw-ctl">
+        <button id="sw-play" class="sw-btn" aria-label="Play the sweep">▶ play</button>
+        <input id="sw-range" type="range" min="0" max="0" value="0" step="1"
+               aria-label="Separation d" />
+        <span class="sw-read machine" id="sw-read"></span>
+      </div>
+      <div class="ex-status" id="sw-status"></div>
+      <p class="ex-note" id="sw-note"></p>
+    </div>
+  </section>
 
   <section class="ex-sec">
     <h2>Where the count comes from</h2>
@@ -348,6 +384,75 @@ const data = {
         }).join('');
       }
 
+      // ── the sweep ──────────────────────────────────────────────────────────────
+      // A FIXED window in problem coordinates, deliberately not fitted per frame: the whole
+      // point is that one circle outgrows the frame, and a view that rescaled to contain it
+      // would show a circle politely staying the same size while the label claimed it was
+      // diverging. Clipping IS the visualisation.
+      const SW = { lo: -3.2, hi: 6.6 };
+      let swI = 0, swTimer = null;
+      const swK = 460 / (SW.hi - SW.lo);
+      const swX = (u) => (u - SW.lo) * swK;
+      const swY = (v) => 460 - (v - SW.lo) * swK;
+
+      function sweepFig() {
+        const F = D.sweep.frames[swI], d = F.d;
+        let out = '<g stroke="' + cvar('--border') + '" fill="none" stroke-width="1">' +
+          '<line x1="' + swX(SW.lo) + '" y1="' + swY(0) + '" x2="' + swX(SW.hi) + '" y2="' + swY(0) +
+          '"/><line x1="' + swX(0) + '" y1="' + swY(SW.lo) + '" x2="' + swX(0) + '" y2="' + swY(SW.hi) +
+          '"/></g>';
+        [[0, 0], [d, 0], [0, d]].forEach(function (p) {
+          out += '<circle cx="' + swX(p[0]) + '" cy="' + swY(p[1]) + '" r="' + (1 * swK) +
+            '" fill="none" stroke="' + cvar('--text') + '" stroke-width="2"/>';
+        });
+        F.c.forEach(function (k) {
+          const isCls = k[4] === 1;
+          out += '<circle cx="' + swX(k[0]) + '" cy="' + swY(k[1]) + '" r="' + (k[2] * swK) +
+            '" fill="none" stroke="' + cvar(CH[k[3]]) + '" stroke-width="' + (isCls ? 2.4 : 1) +
+            '" opacity="' + (isCls ? 1 : 0.28) + '"/>';
+        });
+        if (F.line) {
+          const nx = F.line[0], ny = F.line[1], cc = F.line[2];
+          const p0x = cc * nx, p0y = cc * ny, dx = -ny, dy = nx, T = 40;
+          out += '<line x1="' + swX(p0x - T * dx) + '" y1="' + swY(p0y - T * dy) + '" x2="' +
+            swX(p0x + T * dx) + '" y2="' + swY(p0y + T * dy) + '" stroke="' + cvar(CH[3]) +
+            '" stroke-width="2.8" stroke-dasharray="6 4"/>';
+        }
+        document.getElementById('sweep').innerHTML = out;
+
+        const big = F.cls.length ? F.cls[F.cls.length - 1] : null;
+        document.getElementById('sw-read').textContent =
+          'd = ' + F.d.toFixed(3) + '   ' + F.n + ' circles' + (F.line ? ' + 1 line' : '');
+        document.getElementById('sw-status').innerHTML = [
+          ['(o,i,i) class members', F.cls.map(function (z) { return z[0] + ' r=' + (z[1] > 999 ? '≫' : z[1].toFixed(2)); }).join('  ·  ') + (F.line ? '  ·  line r=∞' : ''), 'cmp'],
+          ['Generalized count', String(F.ng), 'ok'],
+        ].map(function (r) {
+          return '<div class="r"><span>' + r[0] + '</span><span class="' + r[2] + '">' + r[1] + '</span></div>';
+        }).join('');
+        document.getElementById('sw-note').textContent = F.line
+          ? 'The locus. The second member of the class is the dashed line — a circle of infinite radius.'
+          : (big && big[1] > 20
+              ? 'The second member is ' + big[0] + ' with radius ' + big[1].toFixed(1) + ', outgrowing the frame.'
+              : 'Both members of the class are ordinary circles here, labelled ' +
+                F.cls.map(function (z) { return z[0]; }).join(' and ') + '.');
+      }
+
+      function sweepInit() {
+        const R = document.getElementById('sw-range');
+        R.max = String(D.sweep.frames.length - 1);
+        R.oninput = function () { swI = +R.value; sweepFig(); };
+        document.getElementById('sw-play').onclick = function () {
+          const b = document.getElementById('sw-play');
+          if (swTimer) { clearInterval(swTimer); swTimer = null; b.textContent = '▶ play'; return; }
+          b.textContent = '❚❚ pause';
+          swTimer = setInterval(function () {
+            swI = (swI + 1) % D.sweep.frames.length;
+            R.value = String(swI); sweepFig();
+          }, 220);
+        };
+        sweepFig();
+      }
+
       function modetable() {
         const c = D.configs[ci];
         document.getElementById('modetable').innerHTML =
@@ -408,7 +513,7 @@ const data = {
       function render() { subtitle(); banner(); figure(); cards(); list(); detail(); status(); modetable(); explain(); }
       mi = D.configs[ci].modes.findIndex(function (m) { return m.deg === 1; });
       if (mi < 0) mi = null;
-      render(); provenance();
+      render(); provenance(); sweepInit();
     })();
   </script>
 </Base>
@@ -478,6 +583,21 @@ const data = {
   /* Four circles per configuration share a radius (5√34/12 four times at d = 5/2), so a row
      showing only the radius reads as four identical entries beside a DISTINCTNESS PROVED
      badge. Circle identity is centre AND radius; show both. */
+  .ex-page #sweep{width:100%;height:auto;display:block;background:var(--well,rgba(0,0,0,.15))}
+  .ex-page .sw-ctl{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+    padding:10px 14px;border-top:1px solid var(--border)}
+  .ex-page .sw-btn{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+    background:none;border:1px solid var(--border);color:var(--text);border-radius:4px;
+    padding:5px 10px;cursor:pointer;white-space:nowrap}
+  .ex-page .sw-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .ex-page .sw-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .ex-page .sw-read{font-size:11.5px;color:var(--muted);white-space:nowrap;
+    font-variant-numeric:tabular-nums}
+  .ex-page #sw-range{accent-color:var(--accent);min-width:0}
+  @media(max-width:560px){
+    .ex-page .sw-ctl{grid-template-columns:auto 1fr;row-gap:8px}
+    .ex-page .sw-read{grid-column:1/3}
+  }
   .ex-page .ex-tcard .tplus{font-size:12px;color:var(--muted);letter-spacing:0}
   .ex-page .ex-srow .ctr{color:var(--muted);white-space:nowrap;overflow:hidden;
     text-overflow:ellipsis;min-width:0}

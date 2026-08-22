@@ -181,6 +181,50 @@ for (let i = 0; i < CFGS.length; i++) {
   const fig = i === 0 ? first : await readFigure(page, i);
   audit(fig, CFGS[i], CFGS[i].isLocus ? 'locus' : `d=${CFGS[i].d}`);
 }
+// ── the sweep is drawn from its frames, at every frame ──────────────────────────
+// The static figure could be right while the scrubber quietly drew something else, and the
+// sweep is the part a visitor will actually move. Checked at three positions: the frame
+// before the locus, the locus itself, and the frame after -- the three states the section
+// claims (growing / line / returned with the other label).
+{
+  const frames = first.data.sweep.frames;
+  const li = frames.findIndex((f) => f.line);
+  const LO = -3.2, HI = 6.6, K = 460 / (HI - LO);
+  const sx = (u) => (u - LO) * K, sy = (v) => 460 - (v - LO) * K;
+  for (const [tag, idx] of [['before', li - 1], ['locus', li], ['after', li + 1]]) {
+    const drawn = await page.evaluate((i) => {
+      const R = document.getElementById('sw-range');
+      R.value = String(i); R.dispatchEvent(new Event('input'));
+      return {
+        circles: [...document.querySelectorAll('#sweep circle')].map((c) => ({
+          cx: +c.getAttribute('cx'), cy: +c.getAttribute('cy'), r: +c.getAttribute('r') })),
+        lines: [...document.querySelectorAll('#sweep > line')].length,
+      };
+    }, idx);
+    const f = frames[idx];
+    // three given circles are drawn first, then the frame's circles
+    const sols = drawn.circles.slice(3);
+    let ok = sols.length === f.c.length;
+    if (ok) {
+      const want = f.c.map((k) => [sx(k[0]), sy(k[1]), k[2] * K]).sort((a, b) => a[2] - b[2]);
+      const got = sols.map((c) => [c.cx, c.cy, c.r]).sort((a, b) => a[2] - b[2]);
+      ok = want.every((v, i) => v.every((x, j) => Math.abs(x - got[i][j]) < 0.6));
+    }
+    chk(`[sweep:${tag}] every drawn circle derives from the frame (d = ${f.d.toFixed(3)})`, ok,
+      `${sols.length} drawn / ${f.c.length} in frame`);
+    chk(`[sweep:${tag}] the line is drawn only at the locus`,
+      drawn.lines === (f.line ? 1 : 0), `${drawn.lines} line(s)`);
+  }
+  // the frame is deliberately NOT refitted: the growing circle must overflow it
+  const big = await page.evaluate((i) => {
+    const R = document.getElementById('sw-range');
+    R.value = String(i); R.dispatchEvent(new Event('input'));
+    return Math.max(...[...document.querySelectorAll('#sweep circle')].map((c) => +c.getAttribute('r')));
+  }, Math.max(0, li - 1));
+  chk('the near-locus frame really outgrows the viewport, rather than being rescaled to fit',
+    big > 460, `largest drawn radius ${big.toFixed(0)}px in a 460px box`);
+}
+
 chk('the figure renders with no console error', errs.length === 0, errs[0] || 'none');
 await browser.close();
 srv.close();

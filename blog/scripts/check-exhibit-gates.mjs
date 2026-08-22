@@ -240,6 +240,62 @@ chk('the packet attests a commit where every citation resolves',
   ev.ATTESTED.citations_resolve_at_commit === true,
   `${ev.ATTESTED.machlib_commit.slice(0, 12)} pinned=${ev.ATTESTED.commit_pinned}`);
 
+// ── the sweep must not dilute the checked count ───────────────────────────────────
+// 33 frames x 8 circles is 250-odd coordinates that nobody has stated in Lean. Folded into
+// the same pool as the three configurations, "23 of 23 Lean-checked" quietly becomes "23 of
+// 287" -- a hard-won claim destroyed by a feature, with no line of code looking wrong.
+{
+  const SW = ev.SWEPT || {};
+  const frames = SW.frames || [];
+  chk('the sweep exists and every frame is exact', frames.length > 0 &&
+    frames.every((f) => f.all_tangencies_exact), `${frames.length} frames`);
+
+  // The detail said "0 cited" as a typed literal, so the first specimen run printed
+  // "263 frame coordinates, 0 cited" NEXT TO ITS OWN FAILURE. A gate that misreports what
+  // it found is a gate people learn to skim. Derived now, like everything else here.
+  const swCited = frames.reduce((n, f) => n + f.circles.filter((c) => c.lean !== null).length, 0);
+  chk('NO sweep coordinate claims a Lean citation', swCited === 0,
+    `${frames.reduce((n, f) => n + f.circles.length, 0)} frame coordinates, ${swCited} cited`);
+
+  chk('the Lean-checked count still comes only from the three configurations',
+    cfgs.reduce((n, c) => n + c.sols.filter((s) => s.lean).length, 0) === 23,
+    `${cfgs.reduce((n, c) => n + c.sols.filter((s) => s.lean).length, 0)} of 23`);
+
+  chk('the sweep carries its COMPUTED status in words, not just by omission',
+    /COMPUTED/.test(SW.status || '') && /not.*Lean|no coordinate checked/i.test(SW.status || ''),
+    SW.status || 'MISSING');
+
+  chk('exactly one frame is the locus, and only it carries a line',
+    frames.filter((f) => f.tangent_line).length === 1);
+
+  chk('the generalized count is eight in every frame too',
+    frames.every((f) => f.count_generalized === 8),
+    `finite counts ${[...new Set(frames.map((f) => f.count))].sort().join('/')}`);
+
+  // The sweep and the headline data must be the same mathematics, not two computations that
+  // happen to look alike.
+  const locusFrame = frames.find((f) => f.tangent_line);
+  const locusCfg = evCfgs.find((c) => c.modes.some((m) => m.degree === 1));
+  const near = (a, b) => Math.abs(a - b) < 1e-9;
+  chk('the locus frame agrees with the certified locus configuration',
+    !!locusFrame && !!locusCfg && (() => {
+      const A = locusFrame.circles.map((c) => [c.x, c.y, c.r]).sort((p, q) => p[2] - q[2]);
+      const B = locusCfg.modes.flatMap((m) => m.roots.filter((r) => r.positive_radius)
+        .map((r) => [r.x_float, r.y_float, r.r_float])).sort((p, q) => p[2] - q[2]);
+      return A.length === B.length && A.every((v, i) => v.every((x, j) => near(x, B[i][j])));
+    })(), `${locusFrame?.circles.length} vs ${locusCfg ? locusCfg.count_positive_radius : '?'}`);
+
+  chk('the sweep really crosses the locus, with the label flip on the far side',
+    (() => {
+      const li = frames.findIndex((f) => f.tangent_line);
+      const lbl = (f) => f.degenerating_class.map((z) =>
+        z.mode.map((v) => (v > 0 ? 'o' : 'i')).join(''));
+      return li > 0 && li < frames.length - 1
+        && lbl(frames[li - 1]).every((x) => x === 'ioo')
+        && lbl(frames[li + 1]).includes('oii');
+    })(), 'ioo,ioo below -> line -> ioo,oii above');
+}
+
 {
   const vis = ev.VISUALIZED || {};
   const pd = JSON.parse(readFileSync('package.json', 'utf8')).scripts.predeploy || '';
