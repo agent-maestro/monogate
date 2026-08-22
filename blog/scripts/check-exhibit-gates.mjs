@@ -211,6 +211,35 @@ chk('a fully checked config says so, instead of understating itself',
 // The status a claim carries must not outrun the toolchain that enforces it. VISUALIZED sat
 // at "pending" while the figure was in fact unchecked -- honest. The failure mode now is the
 // opposite: flipping it to GATED and then quietly dropping the gate from the release path.
+// ── the count that does not drop ──────────────────────────────────────────────────
+// 8 -> 7 -> 8 is the finite count. The exhibit now also states the compactified one, and a
+// claim of "eight throughout" is only worth making if the eighth object is really there.
+chk('the generalized count is eight in every configuration',
+  cfgs.every((c) => c.countGeneralized === 8),
+  cfgs.map((c) => `${c.count}${c.line ? '+line' : ''}`).join(' -> '));
+
+chk('a tangent line exists exactly where a class degenerates, and nowhere else',
+  evCfgs.every((cfg, i) => {
+    const degenerate = cfg.modes.some((m) => m.degree === 1);
+    return degenerate === !!cfg.tangent_line && degenerate === !!cfgs[i].line;
+  }));
+
+chk('the tangent line satisfies OIITangentLine exactly, all four conditions',
+  evCfgs.every((cfg) => !cfg.tangent_line ||
+    (cfg.tangent_line.exact &&
+     Object.values(cfg.tangent_line.residuals).every((r) => r === '0'))),
+  evCfgs.filter((c) => c.tangent_line).map((c) =>
+    Object.keys(c.tangent_line.residuals).length + ' residuals zero').join('') || 'n/a');
+
+chk('the line carries the degenerate class, not some other one',
+  evCfgs.every((cfg) => !cfg.tangent_line ||
+    cfg.tangent_line.degenerate_modes.every((m) =>
+      cfg.modes.find((x) => x.mode.join() === m.join())?.degree === 1)));
+
+chk('the packet attests a commit where every citation resolves',
+  ev.ATTESTED.citations_resolve_at_commit === true,
+  `${ev.ATTESTED.machlib_commit.slice(0, 12)} pinned=${ev.ATTESTED.commit_pinned}`);
+
 {
   const vis = ev.VISUALIZED || {};
   const pd = JSON.parse(readFileSync('package.json', 'utf8')).scripts.predeploy || '';

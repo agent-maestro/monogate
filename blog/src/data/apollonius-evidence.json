@@ -18,7 +18,11 @@
     "the eight modes are distinct": "MachLib.Geometry.Apollonius.allModes_nodup",
     "no mode is missing": "MachLib.Geometry.Apollonius.allModes_complete",
     "4 + 4 = 8, canonical + antipodal": "MachLib.Geometry.Apollonius.canonical_plus_anti_nodup",
-    "eight solutions, List.length = 8": "MachLib.Geometry.Apollonius.SymmetricTriple.eight_solutions"
+    "eight solutions, List.length = 8": "MachLib.Geometry.Apollonius.SymmetricTriple.eight_solutions",
+    "degree drop IS a common tangent line": "MachLib.Geometry.Apollonius.SymmetricTriple.oii_lead_zero_iff_tangent_line",
+    "the tangent line, witnessed without square roots": "MachLib.Geometry.Apollonius.SymmetricTriple.oii_tangent_line_at_locus",
+    "the degree drop happens exactly at d^2 = 8 rho^2": "MachLib.Geometry.Apollonius.SymmetricTriple.oii_lead_zero_iff",
+    "the locus is class-specific, not universal": "MachLib.Geometry.Apollonius.SymmetricTriple.oio_tangent_line_iff"
   },
   "NOT_PROVED": {},
   "CORRECTED": {
@@ -407,6 +411,8 @@
           }
         ],
         "count_positive_radius": 8,
+        "count_generalized": 8,
+        "tangent_line": null,
         "all_tangencies_exact": true
       },
       {
@@ -753,6 +759,44 @@
           }
         ],
         "count_positive_radius": 7,
+        "count_generalized": 8,
+        "tangent_line": {
+          "mode": [
+            1,
+            -1,
+            -1
+          ],
+          "nx_exact": "-sqrt(2)/2",
+          "nx_float": -0.7071067811865476,
+          "ny_exact": "-sqrt(2)/2",
+          "ny_float": -0.7071067811865476,
+          "c_exact": "-1",
+          "c_float": -1.0,
+          "equation": "nx*x + ny*y - c = 0",
+          "residuals": {
+            "unit normal": "0",
+            "circle A at +rho": "0",
+            "circle B at -rho": "0",
+            "circle C at -rho": "0"
+          },
+          "exact": true,
+          "degenerate_modes": [
+            [
+              1,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1,
+              1
+            ]
+          ],
+          "lean": {
+            "degree drop IS a tangent line": "MachLib.Geometry.Apollonius.SymmetricTriple.oii_lead_zero_iff_tangent_line",
+            "the witness at the locus": "MachLib.Geometry.Apollonius.SymmetricTriple.oii_tangent_line_at_locus"
+          }
+        },
         "all_tangencies_exact": true
       },
       {
@@ -1131,15 +1175,19 @@
           }
         ],
         "count_positive_radius": 8,
+        "count_generalized": 8,
+        "tangent_line": null,
         "all_tangencies_exact": true
       }
     ]
   },
   "ATTESTED": {
-    "machlib_commit": "7679ba647a4fa19eea5f1446f22df0c45594421b",
+    "machlib_commit": "f07cbb27e441600ed6224c1b18a6739bc3913b75",
     "worktree_clean": true,
+    "commit_pinned": true,
+    "citations_resolve_at_commit": true,
     "lean_toolchain": "v4.32.2",
-    "output_digest": "3426a9009af41026de63b5781729d48b60d8b7ee35903edbe028dd593957d36a"
+    "output_digest": "759c882162c534a16c7e1d8f3a7e8434f6ca3c6d87d76d9c972fc378083c9b6b"
   },
   "VISUALIZED": {
     "status": "GATED",

@@ -54,7 +54,13 @@ function pack(cfg: any) {
     d: cfg.d, rho: cfg.rho, dNum: dN, rhoNum: rN,
     isLocus: Math.abs(dN * dN - 8 * rN * rN) < 1e-9,
     side: dN * dN < 8 * rN * rN ? 'below' : 'above',
-    count: cfg.count_positive_radius, sols,
+  count: cfg.count_positive_radius,
+    countGeneralized: cfg.count_generalized,
+    // The eighth object at the locus. Null off it: no degenerate class, no line.
+    line: cfg.tangent_line
+      ? { ...cfg.tangent_line, cls: CLASS_OF[cfg.tangent_line.mode.join(',')] }
+      : null,
+    sols,
     leanChecked: sols.filter((s: any) => s.lean).length,
     modes: cfg.modes.map((m: any) => ({
       mode: m.mode, cls: CLASS_OF[m.mode.join(',')],
@@ -91,7 +97,7 @@ const data = {
 >
   <div class="ex-page">
   <div class="ex-eyebrow">Verified Exhibit · MachLib</div>
-  <h1 class="ex-title">All circles tangent to these three</h1>
+  <h1 class="ex-title">Why are there seven circles here, when Apollonius says eight?</h1>
   <p class="ex-sub" id="sub"></p>
 
   <div class="ex-banner" id="banner"></div>
@@ -160,7 +166,7 @@ const data = {
       function subtitle() {
         const c = D.configs[ci];
         document.getElementById('sub').innerHTML = c.isLocus
-          ? 'At <strong>d² = 8ρ²</strong> one antipodal class drops from quadratic to linear. The certified count falls from the generic eight to <strong>seven</strong> — while the three circles stay comfortably separated.'
+          ? 'At <strong>d² = 8ρ²</strong> the (o,i,i) class quadratic drops to linear and one circle is gone. It did not collide with another and vanish — its radius ran to infinity, and a circle of infinite radius is a <strong>line</strong>. MachLib proves those are the same event. Counted as generalized circles the total never drops: <strong>8 → 8 → 8</strong>.'
           : 'Four antipodal classes, two signed roots each — <strong>eight</strong> distinct tangent circles. This configuration sits ' + c.side + ' the exceptional locus <strong>d² = 8ρ²</strong>.';
       }
 
@@ -172,6 +178,10 @@ const data = {
         return ['Plotted coordinates', all ? 'LEAN-CHECKED' : 'COMPUTED', all ? 'ok' : 'cmp',
                 c.leanChecked + ' of ' + c.count + ' cite a theorem'];
       }
+      function GENERALIZED(c) {
+        return ['Generalized count', String(c.countGeneralized), 'ok',
+                c.line ? '7 circles + 1 line' : 'all eight finite'];
+      }
       function PROVEDCOUNT() {
         return ['Proved statements', String(Object.keys(D.proved).length), 'ok', 'each cites Lean'];
       }
@@ -181,10 +191,10 @@ const data = {
         const rows = c.isLocus
           ? [['Count', String(c.count), 'cmp', ''], ['Mode structure', 'PROVED', 'ok', ''],
              ['Distinctness', 'PROVED', 'ok', ''], ['Exceptional locus', 'YES', 'cmp', 'd² = 8ρ²'],
-             PLOTTED(c), PROVEDCOUNT()]
+             GENERALIZED(c), PLOTTED(c), PROVEDCOUNT()]
           : [['Count', String(c.count), 'ok', ''], ['Mode structure', 'PROVED', 'ok', ''],
              ['Distinctness', 'PROVED', 'ok', ''], ['General position', 'PROVED', 'ok', ''],
-             PLOTTED(c), PROVEDCOUNT()];
+             GENERALIZED(c), PLOTTED(c), PROVEDCOUNT()];
         document.getElementById('banner').innerHTML = rows.map(([k, v, cl, n]) =>
           '<div class="ex-stat"><span class="k">' + k + '</span><span class="v ' + cl + '">' + v + '</span>' +
           (n ? '<span class="n">' + n + '</span>' : '') + '</div>').join('');
@@ -213,16 +223,29 @@ const data = {
             cvar(CH[s.cls]) + '" stroke-width="' + (on ? 2.6 : 1.2) + '" opacity="' + (on ? 1 : 0.5) + '"' +
             (s.member === 0 ? '' : ' stroke-dasharray="5 4"') + '/>';
         });
+        // The eighth object, drawn from the certificate like every other: n and c are the
+        // witness MachLib hands over (oii_tangent_line_at_locus), not a line fitted to look
+        // tangent. p0 = c·n is the foot of the normal, because n is a unit vector.
+        if (c.line) {
+          const nx = c.line.nx_float, ny = c.line.ny_float, cc = c.line.c_float;
+          const p0x = cc * nx, p0y = cc * ny, dx = -ny, dy = nx, T = span * 1.8;
+          const on = si === S.length;
+          out += '<line x1="' + X(p0x - T * dx) + '" y1="' + Y(p0y - T * dy) +
+            '" x2="' + X(p0x + T * dx) + '" y2="' + Y(p0y + T * dy) + '" stroke="' +
+            cvar(CH[c.line.cls]) + '" stroke-width="' + (on ? 2.6 : 1.6) +
+            '" stroke-dasharray="5 4" opacity="' + (on ? 1 : 0.6) + '"/>';
+        }
         document.getElementById('fig').innerHTML = out;
       }
 
       function cards() {
         document.getElementById('tgrid').innerHTML = D.configs.map(function (c, i) {
           return '<button class="ex-tcard' + (c.isLocus ? ' drop' : '') + '" aria-current="' + (i === ci) +
-            '" data-i="' + i + '"><div class="tcount">' + c.count + '</div><div class="tlabel">d = ' +
+            '" data-i="' + i + '"><div class="tcount">' + c.count +
+            (c.line ? '<span class="tplus"> + 1 line</span>' : '') + '</div><div class="tlabel">d = ' +
             tidy(c.d) + ', ρ = ' + tidy(c.rho) + '</div><div class="tbody">' +
-            (c.isLocus ? 'Degree-drop locus: one quadratic becomes linear.'
-                       : 'Four quadratic classes, two roots each.') + '</div></button>';
+            (c.isLocus ? 'Degree-drop locus: one quadratic becomes linear, and its circle becomes a line. Eight generalized circles either way.'
+                       : 'Four quadratic classes, two roots each. Eight finite circles.') + '</div></button>';
         }).join('');
         Array.prototype.forEach.call(document.querySelectorAll('.ex-tcard'), function (b) {
           b.onclick = function () {
@@ -234,6 +257,23 @@ const data = {
         });
       }
 
+      // The line gets a row, because the list is where a reader counts. Seven rows beside a
+      // banner reading eight would just move the contradiction somewhere quieter.
+      function lineRow(L, idx) {
+        return '<li><button class="ex-srow" aria-current="' + (si === idx) + '" data-i="' + idx +
+          '"><span class="sw" style="background:' + cvar(CH[L.cls]) + '"></span><span>' +
+          (idx + 1) + '. r = ∞</span><span class="ctr">' + lineEq(L) +
+          '</span><span class="dim">' + MLBL(L.mode) + '</span></button></li>';
+      }
+      // nx·x + ny·y = c, normalised so a reader sees x + y = √2 rather than two −0.707s.
+      function lineEq(L) {
+        const k = L.nx_float;
+        const rhs = L.c_float / k, sy = L.ny_float / k;
+        const f = (v) => (Math.abs(v - Math.SQRT2) < 1e-9 ? '√2'
+          : Math.abs(v - 1) < 1e-9 ? '' : v.toFixed(3));
+        return 'x ' + (sy < 0 ? '−' : '+') + ' ' + f(Math.abs(sy)) + 'y = ' + f(rhs);
+      }
+
       function list() {
         const S = D.configs[ci].sols;
         document.getElementById('slist').innerHTML = S.map(function (s, i) {
@@ -241,13 +281,15 @@ const data = {
             '"><span class="sw" style="background:' + cvar(CH[s.cls]) + '"></span><span>' + (i + 1) +
             '. r = ' + tidy(s.rE) + '</span><span class="ctr">c = (' + tidy(s.xE) + ', ' +
             tidy(s.yE) + ')</span><span class="dim">' + MLBL(s.mode) + '</span></button></li>';
-        }).join('');
+        }).join('') + (D.configs[ci].line ? lineRow(D.configs[ci].line, S.length) : '');
         Array.prototype.forEach.call(document.querySelectorAll('.ex-srow'), function (b) {
           b.onclick = function () { si = +b.dataset.i; figure(); list(); detail(); status(); };
         });
       }
 
       function detail() {
+        const c0 = D.configs[ci];
+        if (c0.line && si === c0.sols.length) return detailLine(c0.line);
         const s = D.configs[ci].sols[si];
         document.getElementById('detail').innerHTML = '<dl>' +
           '<dt>tangency mode</dt><dd>' + MLBL(s.mode) + ' &nbsp;<span class="dim">' +
@@ -264,7 +306,35 @@ const data = {
           '<dt>discriminant</dt><dd>' + tidy(s.disc) + '</dd></dl>';
       }
 
+      // The line is not a solution row with r = infinity stuffed into it -- it is a different
+      // kind of object, and its evidence is a different pair of theorems. Rendering it through
+      // the circle template would have been the same identity conflation this exhibit already
+      // had once.
+      function detailLine(L) {
+        document.getElementById('detail').innerHTML = '<dl>' +
+          '<dt>object</dt><dd>line &nbsp;<span class="dim">a circle of infinite radius</span></dd>' +
+          '<dt>tangency mode</dt><dd>' + MLBL(L.mode) + ' &nbsp;<span class="dim">' +
+            L.mode.map(function (v) { return v > 0 ? 'external' : 'internal'; }).join(' · ') + '</span></dd>' +
+          '<dt>antipodal class</dt><dd>' + CPAIR(L.cls) +
+            ' &nbsp;<span class="dim">the class whose quadratic went linear</span></dd>' +
+          '<dt>equation</dt><dd>' + lineEq(L) + '</dd>' +
+          '<dt>unit normal</dt><dd>n = (' + tidy(L.nx_exact) + ', ' + tidy(L.ny_exact) +
+            '), c = ' + tidy(L.c_exact) + '</dd>' +
+          '<dt>degenerate modes</dt><dd>' + L.degenerate_modes.map(MLBL).join(' , ') +
+            ' &nbsp;<span class="dim">both members of the class, leading coefficient zero</span></dd>' +
+          '</dl>';
+        document.getElementById('status').innerHTML = [
+          ['Degree drop ⇔ tangent line', 'PROVED — ' + L.lean['degree drop IS a tangent line'].split('.').pop(), 'ok'],
+          ['Witness at the locus', 'PROVED — ' + L.lean['the witness at the locus'].split('.').pop(), 'ok'],
+          ['Tangent to all three', L.exact ? 'COMPUTED EXACTLY — all four residuals zero' : 'NOT EXACT', L.exact ? 'cmp' : 'no'],
+        ].map(function (r) {
+          return '<div class="r"><span>' + r[0] + '</span><span class="' + r[2] + '">' + r[1] + '</span></div>';
+        }).join('');
+      }
+
       function status() {
+        const c0 = D.configs[ci];
+        if (c0.line && si === c0.sols.length) return;   // detailLine already wrote it
         const s = D.configs[ci].sols[si];
         const rows = [['Mode structure', 'PROVED', 'ok'], ['Root count', 'PROVED', 'ok'],
           ['Tangency residual', s.exact ? 'COMPUTED EXACTLY — all three zero' : 'NOT EXACT', s.exact ? 'cmp' : 'no'],
@@ -408,6 +478,7 @@ const data = {
   /* Four circles per configuration share a radius (5√34/12 four times at d = 5/2), so a row
      showing only the radius reads as four identical entries beside a DISTINCTNESS PROVED
      badge. Circle identity is centre AND radius; show both. */
+  .ex-page .ex-tcard .tplus{font-size:12px;color:var(--muted);letter-spacing:0}
   .ex-page .ex-srow .ctr{color:var(--muted);white-space:nowrap;overflow:hidden;
     text-overflow:ellipsis;min-width:0}
   @media(max-width:560px){

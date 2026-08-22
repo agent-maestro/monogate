@@ -82,6 +82,11 @@ async function readFigure(page, ci) {
       cx: +c.getAttribute('cx'), cy: +c.getAttribute('cy'), r: +c.getAttribute('r'),
       dashed: !!c.getAttribute('stroke-dasharray'),
     })),
+    // Direct children only: the two axis rules live inside a <g>, the tangent line does not.
+    lines: [...document.querySelectorAll('#fig > line')].map((l) => ({
+      x1: +l.getAttribute('x1'), y1: +l.getAttribute('y1'),
+      x2: +l.getAttribute('x2'), y2: +l.getAttribute('y2'),
+    })),
     data: JSON.parse(document.getElementById('ex-data').textContent),
   }));
 }
@@ -129,6 +134,36 @@ function audit(fig, cfg, label) {
     tangent === cfg.sols.length, `${tangent}/${cfg.sols.length}`);
   chk(`[${label}] the drawn tangency type matches the mode the row claims`,
     typed === cfg.sols.length, `${typed}/${cfg.sols.length} (o = external, i = internal)`);
+  // ── the eighth object ─────────────────────────────────────────────────────────
+  // A line that merely looks tangent is the decoration this exhibit refuses. Held to the
+  // same standard as the circles: it exists exactly where a class degenerates, it is drawn
+  // from the certificate's own normal and offset, and it realises the (o,i,i) signature --
+  // one given circle on one side, the other two on the other, all at distance rho.
+  chk(`[${label}] a tangent line is drawn exactly where a class degenerates`,
+    fig.lines.length === (cfg.line ? 1 : 0),
+    `${fig.lines.length} drawn, ${cfg.line ? 1 : 0} certified`);
+
+  if (cfg.line && fig.lines.length === 1) {
+    const L = fig.lines[0];
+    // unit normal of the DRAWN line, in screen space
+    const ux = L.x2 - L.x1, uy = L.y2 - L.y1, len = Math.hypot(ux, uy);
+    const Nx = -uy / len, Ny = ux / len;
+    const sd = given.map((g) => (g.cx - L.x1) * Nx + (g.cy - L.y1) * Ny);
+    chk(`[${label}] the drawn line is tangent to all three given circles`,
+      sd.every((v) => Math.abs(Math.abs(v) - given[0].r) < 0.8),
+      sd.map((v) => v.toFixed(2)).join(' / ') + ` vs r=${given[0].r.toFixed(2)}`);
+    const signs = sd.map((v) => (v > 0 ? 1 : -1));
+    chk(`[${label}] the drawn line separates them the way its mode claims`,
+      signs[0] !== signs[1] && signs[1] === signs[2],
+      `one side / other / other — mode ${cfg.line.mode.map((v) => (v > 0 ? 'o' : 'i')).join('')}`);
+    // and it is the certificate's line, not merely a tangent line
+    const want = { nx: cfg.line.nx_float, ny: cfg.line.ny_float, c: cfg.line.c_float };
+    const inv = (sx, sy) => [(sx - ox) / k, (oy - sy) / k];      // screen -> math
+    const [ax, ay] = inv(L.x1, L.y1), [bx, by] = inv(L.x2, L.y2);
+    const off = [[ax, ay], [bx, by]].map(([x, y]) => want.nx * x + want.ny * y - want.c);
+    chk(`[${label}] both endpoints satisfy the certificate's own equation`,
+      off.every((v) => Math.abs(v) < 0.02), off.map((v) => v.toFixed(4)).join(' , '));
+  }
   return { k, ox, oy };
 }
 
