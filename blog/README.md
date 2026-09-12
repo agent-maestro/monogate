@@ -79,7 +79,8 @@ Exit code 0 = clean. This now ALSO runs automatically on every push/PR that touc
 sibling so the cross-repo Lean checks run for real, not just the build-time-only subset).
 It's a check, not a deploy — same pattern as this repo's existing
 `.github/workflows/eml-guard-contract.yml`. Deploys themselves are still manual (`wrangler
-pages deploy dist --project-name monogate-org --branch main`, from a box with `monogate-lean`
+pages deploy dist --project-name monogate-org --branch main`, with `CLOUDFLARE_ACCOUNT_ID` set as
+below, from a box with `monogate-lean`
 and this repo checked out side by side) — deliberately: this repo doesn't auto-deploy on
 push (see the Cloudflare migration notes), and CI here means "block bad state from looking
 green," not "ship automatically." Running `npm run predeploy` by hand before deploying is
@@ -98,5 +99,8 @@ on `master` indefinitely with nothing surfacing it.
 | `npm run preview` | Preview the build locally |
 
 Deploy: `export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh" && nvm use 22` first — this box's
-default shell `node` is too old for `wrangler`. Then `npx wrangler pages deploy dist
---project-name monogate-org --branch main --commit-dirty=true`.
+default shell `node` is too old for `wrangler`. Then `CLOUDFLARE_ACCOUNT_ID=b85f3bd44235280353630a6426c02ba4
+npx wrangler pages deploy dist --project-name monogate-org --branch main --commit-dirty=true`.
+The account is pinned because, since 2026-09-12, the wrangler login sees two Cloudflare accounts
+and a non-interactive deploy refuses to choose ("More than one account available"). The
+`monogate-org` project's deployments live in that one.
