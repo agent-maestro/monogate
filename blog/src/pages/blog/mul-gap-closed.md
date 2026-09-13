@@ -2,11 +2,13 @@
 layout: ../../layouts/Base.astro
 title: "We Found a Faster Multiplication: 3 Nodes"
 date: 2026-04-19
-tag: theorem
-description: "The BEST router's mul entry drops to 3 nodes via exl(ln(x), exp(y)) = x·y. The lower bound is 3n, confirmed tight by exhaustive search. Gap fully closed."
+tag: research
+description: "The BEST router's mul entry drops to 3 nodes via exl(ln(x), exp(y)) = x·y. A search confirms 3 is the minimum over four operators (EML, EXL, EAL, EDL); with more operators multiplication takes 2 nodes, and 1 for x, y > 0."
 ---
 
 # We Found a Faster Multiplication
+
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): the 3-node lower bound holds only over EML, EXL, EAL and EDL with leaves {0, 1, x, y}; the re-run search is printed at the end. With ELAd, x·y = ELAd(EXL(0,x), y) is 2 nodes (T10u), and exp(ln x + ln y) is 1 node for x, y &gt; 0 (F16 on /framework; T_SUPERBEST_UB). EXL is not the only operator whose two arguments cancel: EAL(ln x, eʸ) = x + y and EDL(ln x, eʸ) = x/y do the same, and EML(ln x, eʸ) is x − y, not eˣ/y. The routing table's rows sum to 24 nodes, not the 25 printed.</p>
 
 The BEST router had one obvious weakness: multiplication.
 
@@ -99,7 +101,7 @@ All exact.
 
 ---
 
-## The Lower Bound — 3n Is Tight
+## The Lower Bound — 3n Among Four Operators
 
 Can we do it in 2 nodes?
 
@@ -111,21 +113,21 @@ Can we do it in 2 nodes?
 | 2 | EXL-extended {0,1,x,y} | no exact mul |
 | 3 | EXL-extended | **exact mul found** ← this construction |
 
-**Conclusion:** The minimum mixed-operator multiplication tree has exactly **3 nodes**. The gap is fully closed.
+**Conclusion:** among EML, EXL, EAL and EDL, the minimum multiplication tree has **3 nodes**. With more operators it is smaller (see the correction above).
 
 ---
 
 ## Why EXL and Not the Others?
 
-EXL is the unique operator where both arguments cancel simultaneously:
+EXL is the operator among these four whose double cancellation yields a product:
 
 - `exl(A, B) = exp(A) · ln(B)`
 - Left arg contribution: `exp(A)` — cancels a preceding `ln`
 - Right arg contribution: `ln(B)` — cancels a preceding `exp`
 
-When A = ln(x) and B = exp(y), both cancellations happen at once, yielding x · y in one node. No other operator achieves both cancellations simultaneously.
+When A = ln(x) and B = exp(y), both cancellations happen at once, yielding x · y in one node. The other three cancel the same way but combine differently: EAL gives x + y and EDL gives x/y.
 
-EML (`exp(A) − ln(B)`) cancels left and right too — but the operation is subtraction, not multiplication, so the algebraic result is exp(x)·(1/y), not x·y.
+EML (`exp(A) − ln(B)`) cancels left and right too — but the operation is subtraction, so the result is x − y, not x·y.
 
 ---
 
@@ -155,7 +157,7 @@ Both mul and add are now at 3 nodes. The BEST routing table is symmetric at the 
 | sub | EML | 5n | Best known |
 | neg | EDL | 6n | Best known |
 
-Total: 25 nodes across 9 operations (was 73 naive). **65.8% node reduction.**
+Total as first printed: 25 nodes across 9 operations (was 73 naive), **65.8% node reduction**; the rows above sum to 24. These are April counts; /superbest has the current table.
 
 ---
 
@@ -166,6 +168,41 @@ The old structural argument said mul needs 4 separate roles: extract x, extract 
 The EXL construction shows the argument was wrong: combine and decode can happen **simultaneously**. The `exl` operator multiplies exp(left) by ln(right) — it extracts from both arguments and combines in one step.
 
 This is the BEST router's core principle made explicit: optimal routing isn't about finding a better algorithm. It's about finding the operator whose native computation coincidentally matches the target, with the encoding and decoding folded in.
+
+## Reproduce
+
+Every tree with 1, 2 or 3 nodes over EML, EXL, EAL and EDL, with leaves {1, x, y} and with {0, 1, x, y}, checked against x·y at 12 random points in (0.3, 3)²:
+
+```python
+import itertools, numpy as np                          # pip install numpy
+np.seterr(all='ignore')
+rng = np.random.default_rng(1); X, Y = rng.uniform(0.3, 3.0, size=(2, 12))
+ops = {'EML': lambda a, b: np.exp(a) - np.log(b), 'EXL': lambda a, b: np.exp(a) * np.log(b),
+       'EAL': lambda a, b: np.exp(a) + np.log(b), 'EDL': lambda a, b: np.exp(a) / np.log(b)}
+for leaves in (('1', 'x', 'y'), ('0', '1', 'x', 'y')):
+    L = {'0': np.zeros(12), '1': np.ones(12), 'x': X, 'y': Y}
+    trees = [[(l, L[l]) for l in leaves]]               # trees[n]: every tree with n nodes, no pruning
+    for n in (1, 2, 3):
+        trees.append([(f'{o}({ta},{tb})', f(a, b)) for i in range(n) for ta, a in trees[i]
+                      for tb, b in trees[n - 1 - i] for o, f in ops.items()])
+        exact = [t for t, v in trees[n] if np.all(np.isfinite(v)) and np.max(np.abs(v - X * Y)) < 1e-9]
+        print(f'leaves {leaves}, {n} nodes: {len(trees[n])} trees, exact x*y: {exact}')
+print('eml(ln x, e^y) - (x - y):', np.max(np.abs(np.exp(np.log(X)) - np.log(np.exp(Y)) - (X - Y))),
+      ' eal(ln x, e^y) - (x + y):', np.max(np.abs(np.exp(np.log(X)) + np.log(np.exp(Y)) - (X + Y))),
+      ' edl(ln x, e^y) - x/y:', np.max(np.abs(np.exp(np.log(X)) / np.log(np.exp(Y)) - X / Y)))
+```
+
+Output:
+
+```
+leaves ('1', 'x', 'y'), 1 nodes: 36 trees, exact x*y: []
+leaves ('1', 'x', 'y'), 2 nodes: 864 trees, exact x*y: []
+leaves ('1', 'x', 'y'), 3 nodes: 25920 trees, exact x*y: []
+leaves ('0', '1', 'x', 'y'), 1 nodes: 64 trees, exact x*y: []
+leaves ('0', '1', 'x', 'y'), 2 nodes: 2048 trees, exact x*y: []
+leaves ('0', '1', 'x', 'y'), 3 nodes: 81920 trees, exact x*y: ['EXL(EXL(0,x),EML(y,1))', 'EXL(EXL(0,x),EAL(y,1))', 'EXL(EXL(0,y),EML(x,1))', 'EXL(EXL(0,y),EAL(x,1))']
+eml(ln x, e^y) - (x - y): 0.0  eal(ln x, e^y) - (x + y): 0.0  edl(ln x, e^y) - x/y: 4.440892098500626e-16
+```
 
 ---
 

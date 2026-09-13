@@ -8,6 +8,8 @@ tag: theorem
 
 # recip(x) Is 1 Node — ELSb Closes the Gap
 
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): R16-C1 itself, ELSb(0, x) = 1/x in one node for x &gt; 0, stands. Around it: the table's add row, EAL(EXL(0,x), EXL(0,y)), computes x + ln(ln y), not x + y, and the 3-node route is EAL(EXL(0,x), EML(y,1)). The table omits div and sqrt, so its rows sum to 16 and 15, not the 19 and 18 printed, and this post's "v4 = 18" differs from the site's version history, where v4 is 19 nodes with recip already 1n (/theorems T08) and 18 is v5. Division was never 1 node via EDL, since EDL(x, y) = eˣ/ln y. ELSb is a census operator, not one of the F16 on /framework, where F13(−1, x) = 1/x is also one node.</p>
+
 **Result: R16-C1** · Tag: THEOREM
 
 ---
@@ -71,9 +73,9 @@ The updated table:
 | **recip(x)** | **2** | **1** | **ELSb(0,x)** |
 | mul(x,y) | 2 | 2 | ELAd(EXL(0,x),y) |
 | sub(x,y) | 2 | 2 | LEdiv(x, EML(y,1)) |
-| add(x,y) | 3 | 3 | EAL(EXL(0,x), EXL(0,y)) |
+| add(x,y) | 3 | 3 | EAL(EXL(0,x), EML(y,1)), x > 0 |
 | pow(x,n) | 3 | 3 | EML(EXL(0,x)·n, 1) |
-| **Total** | **19** | **18** | |
+| **Total** (as printed; these rows sum to 16 and 15, without div and sqrt) | **19** | **18** | |
 
 Savings: $1 - 18/73 = 55/73 \approx \mathbf{75.3\%}$ vs naive EML.
 
@@ -91,7 +93,7 @@ an intermediate $e^x$ conversion step.
 
 Most results are unaffected. The reason: in practice, standalone $\recip(x)$
 as an explicit unary operation is rare. Most formulas use **division** ($x/y$),
-which was already 1 node via EDL, not 2.
+which R16-C1 does not change (2 nodes for x, y > 0; this post first said 1 node via EDL, but EDL(x, y) = eˣ/ln y is not a division).
 
 The affected cases are formulas where $1/x$ appears as a true unary reciprocal:
 
@@ -105,7 +107,7 @@ The recip sub-tree was contributing 2n; it now contributes 1n.
 **Unaffected:**
 - Taylor series: coefficients $1/n!$ are constants (folded to 0 nodes). No recip node.
 - Partition function $Z = \mathrm{Tr}[e^{-\beta H}]$: no recip.
-- Density matrix $\rho = e^{-\beta H}/Z$: the $1/Z$ is a division by a scalar matrix — handled by EDL, already 1 node.
+- Density matrix $\rho = e^{-\beta H}/Z$: the $1/Z$ is a division by a scalar, which R16-C1 does not change.
 - Free energy $F = -\ln Z / \beta$: no recip.
 - 295+-equation catalog: the few equations using explicit $1/x$ drop 1 node each; the catalog total decreases by an estimated $\leq 10$ nodes across all 295+ equations.
 
@@ -113,7 +115,7 @@ The recip sub-tree was contributing 2n; it now contributes 1n.
 
 ## Connection to the Structural Audit
 
-R16-C1 sits on the T08 $\to$ THEOREM path of the structural audit.
+R16-C1 came out of the T08 structural audit (T08 is now a proposition: its entries are constructions, not all optimal).
 The audit identified that the SuperBEST table should be verified by
 exhaustive search over $\mathcal{F}_{16}$, not just $\mathcal{F}_6$.
 T10u, T33, and R16-C1 are the three results found during that systematic
@@ -132,7 +134,7 @@ for 1-node trees). R16-C1 fell out of that enumeration.
 
 ## Formal Reference
 
-Theorem paper: `D:/monogate/python/paper/theorems/recip_One_Node.tex`
+Theorem paper: `python/paper/theorems/recip_One_Node.tex`
 
 Result identifier: **R16-C1** (Census item 16, Construction 1)
 

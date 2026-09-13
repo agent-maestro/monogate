@@ -1,11 +1,13 @@
 ---
 layout: ../../layouts/Base.astro
 title: "General Addition in 2 Nodes: The Last Gap Closes"
-description: "The only operation in SuperBEST costing more than 3 nodes was general-domain addition at 11n. It now costs 2 nodes. The table is complete."
+description: "The only operation in SuperBEST costing more than 3 nodes was general-domain addition at 11n. It now costs 2 nodes, and a Lean lower bound shows no single F16 operator does it. (This post also called the table complete; it was not.)"
 pubDate: "2026-04-20"
 date: "2026-04-20"
 tag: theorem
 ---
+
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called SuperBEST v5 the final, complete table, with no domain splits and "the work done". It was not: later constructions cut mul to 1 node for x, y &gt; 0 and pow and sqrt to 1 node for x &gt; 0, the current positive-domain total is 14n, and mul and div still cost 3n on general inputs against 1n and 2n on positive ones (/superbest). The 2-node addition and its Lean lower bound (ADD-T1) stand.</p>
 
 ## The Last Outlier
 
@@ -55,7 +57,7 @@ print([add_2n(a, b) - (a+b) for a, b in
 # → [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 ```
 
-Six zeros. Verified at 30+ test points to error < 1e-10.
+Six zeros. The identity is exact algebra; the snippet only spot-checks it.
 
 ## The Updated Table
 
@@ -81,9 +83,9 @@ Every equation that previously required add_gen = 11n now drops by 9 nodes per a
 - Black-Scholes Theta: improves substantially
 - Quaternion rotation (general): 235n → substantially reduced
 
-## The Complete Table
+## Was the Table Complete?
 
-SuperBEST v5 is the final table. All 10 core operations cost at most 3 nodes. No outliers. No domain splits. The work is done.
+This section called SuperBEST v5 the final table, with no outliers, no domain splits and the work done. It was not final (see the correction above), and domain splits remain: mul and div cost 3n on general inputs, against 1n and 2n for positive ones.
 
 *Proof: `python/paper/theorems/ADD_T1_General_Addition_2n.tex`*
 

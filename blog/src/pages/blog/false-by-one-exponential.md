@@ -13,6 +13,8 @@ tag: theorem
 
 # A Conjecture That Was False by One Exponential
 
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): the illustrative table's excess was said to match exp x − log log x to every digit. It matches exp x − log log x − x, since the excess subtracts x. The theorems are unaffected.</p>
+
 **Tier: THEOREM** (Lean-verified: the refutation, the corrected statement, and the implication
 between them)
 
@@ -78,7 +80,7 @@ x  =    2      3      4       5       6        7        8
        5.8   17.0   50.3   142.9   396.8   1089.0   2972.2
 ```
 
-matching `exp x − log log x` to every digit computed. That is what "false by one exponential" looks
+matching `exp x − log log x − x` to the digits shown (the two agree to 9 or more digits from x = 3 on, and to 3 decimal places at x = 2). That is what "false by one exponential" looks
 like numerically. It is not close.
 
 ## The correction, and why it is not arbitrary

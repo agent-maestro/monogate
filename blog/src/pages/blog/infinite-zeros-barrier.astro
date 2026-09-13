@@ -1,10 +1,37 @@
 ---
 import Base from '../../layouts/Base.astro';
+
+// Re-runs the sin search up to 8 eml nodes (Python 3 + NumPy).
+const script = `import math, numpy as np                               # pip install numpy
+np.seterr(all='ignore')
+pts = np.array([0, math.pi/6, math.pi/4, math.pi/2, math.pi])
+levels = [[np.ones(5), pts]]                            # levels[n]: distinct values of n-node EML trees over {1, x}
+best, trees = math.inf, 0
+for n in range(1, 9):
+    vals, seen = [], set()
+    for i in range(n):
+        for a in levels[i]:
+            for b in levels[n - 1 - i]:
+                v = np.exp(a) - np.log(b)              # undefined where b <= 0: the tree is skipped
+                k = tuple(np.round(v, 12))
+                if np.all(np.isfinite(v)) and k not in seen:
+                    seen.add(k); vals.append(v); best = min(best, float(np.max(np.abs(v - np.sin(pts)))))
+    levels.append(vals)
+    trees += math.comb(2 * n, n) // (n + 1) * 2 ** (n + 1)
+    print(f'<= {n} nodes: {trees:,} trees; best max |T - sin| at the 5 points so far: {best:.3g}')`;
+const output = `<= 1 nodes: 4 trees; best max |T - sin| at the 5 points so far: 2.72
+<= 2 nodes: 20 trees; best max |T - sin| at the 5 points so far: 1.72
+<= 3 nodes: 100 trees; best max |T - sin| at the 5 points so far: 1
+<= 4 nodes: 548 trees; best max |T - sin| at the 5 points so far: 0.891
+<= 5 nodes: 3,236 trees; best max |T - sin| at the 5 points so far: 0.541
+<= 6 nodes: 20,132 trees; best max |T - sin| at the 5 points so far: 0.541
+<= 7 nodes: 129,956 trees; best max |T - sin| at the 5 points so far: 0.528
+<= 8 nodes: 862,116 trees; best max |T - sin| at the 5 points so far: 0.33`;
 ---
 
 <Base
   title="The Infinite Zeros Barrier"
-  description="Why sin(x) cannot be expressed as a finite real EML tree — and why that matters."
+  description="Why sin(x) cannot be expressed as a finite real EML tree. The zero-count proof first given here does not work; the theorem is proved in Lean another way, by periodicity."
   date="2026-04-19"
 >
   <div class="meta">
@@ -16,6 +43,16 @@ import Base from '../../layouts/Base.astro';
   <h1>The Infinite Zeros Barrier</h1>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">Why sin(x) cannot be expressed as a finite real EML tree — and why that matters.</p>
 
+  <p style="color: var(--muted); font-style: italic;">
+    Correction (2026-09-13): the two-step proof below does not work. A finite real EML tree is
+    real-analytic with isolated zeros, but so is sin, and sin has only finitely many zeros on any bounded
+    interval, so there is no contradiction. The zero-count route needs a bound on how many zeros a tree
+    can have, which is open (T14). The theorem holds:
+    it is proved in Lean by periodicity (MachLib, sin_not_in_eml_any_depth_unconditional).
+    The search is re-run below up to 8 nodes; the 11- and 12-node figures are from the original run,
+    which has no public script.
+  </p>
+
   <div class="divider"></div>
 
   <p>
@@ -25,7 +62,7 @@ import Base from '../../layouts/Base.astro';
   </p>
 
   <p>
-    The answer is clean and provable. Here it is.
+    The answer is clean, though the proof this post first gave does not reach it.
   </p>
 
   <h2>The theorem</h2>
@@ -34,7 +71,7 @@ import Base from '../../layouts/Base.astro';
     No finite real-valued EML tree with terminals &#123;1, x&#125; equals sin(x) for all x ∈ ℝ.
   </blockquote>
 
-  <p>The proof is two lines:</p>
+  <p>The proof first given here had two steps:</p>
 
   <p>
     <strong>Step 1.</strong> Every finite EML tree is a composition of <code>exp</code> and <code>ln</code>
@@ -49,19 +86,29 @@ import Base from '../../layouts/Base.astro';
   </p>
 
   <p>
-    The proof works for any function with infinitely many real zeros: cos(x), Bessel J₀, Airy Ai,
-    any function of the form f(x) = 0 on an infinite discrete set.
+    Step 2 does not follow. sin is itself real-analytic with isolated zeros, and any bounded interval
+    holds only finitely many of them, so nothing is contradicted. To finish this route you need a bound,
+    uniform over the trees, on how many zeros a tree can have on an interval, and that bound is open (T14).
+    MachLib's Lean proof avoids zero counting and uses periodicity instead.
+  </p>
+
+  <p>
+    A zero bound, if proved, would also rule out functions with infinitely many real zeros that are not
+    periodic, such as Bessel J₀ and Airy Ai. The periodicity proof covers sin and cos.
   </p>
 
   <h2>Empirical confirmation</h2>
 
   <p>
-    We enumerated all EML trees up to 11 nodes — 281,026,468 trees total — against sin(x)
-    at test points &#123;0, π/6, π/4, π/2, π&#125;. Zero candidates at tolerances 10⁻⁴, 10⁻⁶, 10⁻⁹.
-    A Rust implementation extended this to N=12 (1.704 billion trees). Still zero.
+    The search first reported here enumerated all EML trees up to 11 nodes — 281,026,468 trees total —
+    against sin(x) at test points &#123;0, π/6, π/4, π/2, π&#125;, with zero candidates at tolerances 10⁻⁴,
+    10⁻⁶ and 10⁻⁹, and a Rust implementation extended it to N=12 (1.704 billion trees). The counts are
+    right: there are Catalan(n)·2ⁿ⁺¹ trees with n nodes over &#123;1, x&#125;, which sum to 281,026,468 for
+    n ≤ 11, and n = 12 adds 1,704,034,304. That run has no public script and was not repeated. The script
+    below repeats it up to 8 nodes (862,116 trees), where the best tree misses sin by 0.33 at the five points.
   </p>
 
-  <p>The empirical results are redundant — the proof already settles it — but they make the impossibility visceral.</p>
+  <p>A search is not a proof either; MachLib's theorem is.</p>
 
   <h2>The bypass</h2>
 
@@ -83,16 +130,30 @@ import Base from '../../layouts/Base.astro';
 
   <p>
     The barrier is a structural fact about function spaces. It says something precise about
-    what finite tree computation can and cannot do. The EML depth hierarchy —
-    where sin is "EML-3 over ℂ" and "EML-∞ over ℝ" — is grounded in this structural distinction.
+    what finite tree computation can and cannot do. The EML depth hierarchy — where sin is depth 1
+    over ℂ (the one node above, with ix as the input) and has no finite tree over ℝ — is grounded in
+    this structural distinction.
   </p>
 
   <p>
-    It also connects to open problems. The complex bypass works because i is available as input.
-    Whether i is <em>constructible</em> from &#123;1&#125; alone — whether you can produce the imaginary
-    unit from a grammar that starts with only real constants — is genuinely open.
+    It also connects to open problems. The complex bypass works because ix is available as input.
+    Whether i is <em>constructible</em> from &#123;1&#125; alone depends on the semantics: under strict real
+    semantics it is not (T17), and under the complex principal branch it is open.
     It was posted as the i-constructibility challenge on monogate.dev's challenge board, which was archived on 2026-09-12.
   </p>
+
+  <h2>Reproduce</h2>
+
+  <p>
+    Every EML tree over &#123;1, x&#125; with at most 8 nodes, evaluated at the five test points (a tree
+    undefined at one of them is skipped), keeping each distinct vector of values:
+  </p>
+
+  <pre><code>{script}</code></pre>
+
+  <p>Output:</p>
+
+  <pre><code>{output}</code></pre>
 
   <div class="divider"></div>
 
