@@ -7,7 +7,7 @@ tag: "observation"
 author: "Monogate Research"
 ---
 
-<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): the Reed-Solomon section costed GF(256) syndrome arithmetic as real EML arithmetic, which this post's own boundary section calls a type error, using a scaling law that is false; its 2037n ceiling is withdrawn. The Nash sentence cited a check that nothing records, and the v5 note at the end called the SuperBEST table complete. The other node counts are April hand counts under SuperBEST v4 and have not been re-costed.</p>
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): the Reed-Solomon section costed GF(256) syndrome arithmetic as real EML arithmetic, which this post's own boundary section calls a type error, using a scaling law that is false; its 2037n ceiling is withdrawn. The Nash sentence cited a check that nothing records, and the v5 note at the end called the SuperBEST table complete. The other node counts are April hand counts under SuperBEST v4 and have not been re-costed. Each is now marked as an April count under SuperBEST v4 (add 3n on positive inputs and 11n in general, mul 2n, div 2n, neg 2n, recip 1n, pow 3n, exp and ln 1n); the current table is on /superbest.</p>
 
 ## From Google's PageRank to your GPS to the NFL passer rating
 
@@ -19,7 +19,7 @@ We spent nine sessions measuring equations across technology, sports, and nature
 
 ## The cheapest equation in technology
 
-**ETA = 2 nodes.**
+**ETA = 2 nodes** (April v4 count).
 
 Estimated time of arrival is distance divided by speed: `d / v`. Under v4 routing, division costs 2 nodes. That is the entire computation. Every time a navigation app shows you "14 minutes," it performed a 2-node calculation — the same cost as a batting average (`H / AB`) or a field-goal percentage (`FG / FGA`).
 
@@ -31,15 +31,15 @@ The remarkable thing is where that floor shows up. ETA is arguably the most-used
 
 ## Search engines
 
-**TF-IDF: 7 nodes.**
+**TF-IDF: 7 nodes** (April v4 count).
 
-The formula that made Google's early relevance ranking possible costs 7 nodes. TF-IDF is `(f / total_terms) * ln(N / df)` — one division (2n), one ln (1n), one division (2n), one multiplication (2n). Total: 7n. That is it. The foundation of a trillion-dollar industry.
+The formula that made Google's early relevance ranking possible costs 7 nodes. TF-IDF is `(f / total_terms) * ln(N / df)` — at v4 unit costs, one division (2n), one ln (1n), one division (2n), one multiplication (2n). Total: 7n. That is it. The foundation of a trillion-dollar industry.
 
-**PageRank: 5N + 4 nodes** for a graph of N pages.
+**PageRank: 5N + 4 nodes** for a graph of N pages (April v4 count).
 
 PageRank is more expensive because it sums contributions from N incoming links. Each link contributes a 5-node term (division plus scaling), and the N terms add linearly. The iterative ranking algorithm that shaped the modern web scales as O(N) in the link graph — no transcendentals required.
 
-**BM25 (modern search): 34 nodes per query term.**
+**BM25 (modern search): 34 nodes per query term** (April v4 count).
 
 BM25 is the standard ranking function in production search systems today, including Elasticsearch. It costs 34 nodes per term (37 nodes for the query term frequency component, minus 3 shared nodes). The jump from TF-IDF (7n) to BM25 (34n) is the arithmetic cost of saturation — BM25 includes a term-frequency normalization that prevents very common terms from dominating, but that normalization requires extra divisions and additions that multiply the node count by nearly 5x.
 
@@ -49,7 +49,7 @@ Softmax, which converts raw scores to probabilities in neural ranking, was count
 
 ## Your GPS
 
-**Haversine: 28 nodes.**
+**Haversine: 28 nodes** (April v4 count).
 
 Every time you open Maps and a route appears, the Haversine formula ran. It computes the great-circle distance between two GPS coordinates on a spherical Earth:
 
@@ -58,17 +58,17 @@ a = sin²(Δlat/2) + cos(lat1)·cos(lat2)·sin²(Δlon/2)
 d = 2R·arcsin(√a)
 ```
 
-The node count is 28: four trigonometric terms (each 1n), four multiplications (each 2n), two divisions for the half-angle reductions (each 2n), three additions (each 3n for positive domain), one square root (3n via pow), and the final arcsin and scaling.
+The April v4 count is 28: four trigonometric terms (each 1n), four multiplications (each 2n), two divisions for the half-angle reductions (each 2n), three additions (each 3n for positive domain), one square root (3n via pow), and the final arcsin and scaling.
 
 Haversine is almost certainly the most-evaluated "outdoor" equation in human history. Every mapping application — Google Maps, Apple Maps, Waze, ride-share apps, delivery routing — runs this formula for every distance query. The number of daily Haversine evaluations across all devices worldwide is in the billions. It has been running at this scale since smartphones became common. No equation in the physical sciences comes close to this evaluation frequency.
 
-The Vincenty formula (more accurate, accounts for Earth's elliptical shape) costs approximately 80 nodes per iteration. GPS devices and precision surveying use it. Navigation apps use Haversine — 28 nodes is fast enough and accurate enough for routing at human scales.
+The Vincenty formula (more accurate, accounts for Earth's elliptical shape) was estimated at about 80 nodes per iteration (April v4). GPS devices and precision surveying use it. Navigation apps use Haversine — 28 nodes is fast enough and accurate enough for routing at human scales.
 
 ---
 
 ## Video games and 3D graphics
 
-**Quaternion rotation: 99 nodes** (positive-domain addition), **235 nodes** (general-domain addition).
+**Quaternion rotation: 99 nodes** (positive-domain addition), **235 nodes** (general-domain addition), both April v4 counts.
 
 This is why 3D rendering is the GPU bottleneck.
 
@@ -78,7 +78,7 @@ GPUs exist because of this number. A single rendered frame at 60 fps requires qu
 
 For comparison:
 
-| Operation | Nodes |
+| Operation | Nodes (April v4) |
 |-----------|-------|
 | Perspective projection | 8n |
 | Verlet integration (physics) | 12n |
@@ -93,7 +93,7 @@ Phong lighting at 43 nodes is evaluated per pixel, per light source. A scene wit
 
 ## Sports
 
-**NFL passer rating: 33 nodes. Hodgkin-Huxley neuron: 30 nodes.**
+**NFL passer rating: 33 nodes. Hodgkin-Huxley neuron: 30 nodes.** (April v4 counts)
 
 The NFL passer rating formula is more arithmetically complex than the equation that describes how neurons fire.
 
@@ -105,7 +105,7 @@ This is not a joke about sports versus science. It is a factual observation abou
 
 Other results:
 
-| Formula | Nodes |
+| Formula | Nodes (April v4) |
 |---------|-------|
 | Batting average | 2n |
 | ELO rating update | 26n |
@@ -113,7 +113,7 @@ Other results:
 | Nash equilibrium (2-player) | 19n |
 | Pythagorean expectation | 11n |
 
-ELO (26n) costs more than batting average (2n) because it includes a logistic sigmoid transformation on the rating difference — that sigmoid costs 7n on its own — plus the update arithmetic. Nash equilibrium (19n) was counted with April's general-domain addition, add_gen = 11n, in the denominator, because game payoffs can be negative; addition now takes 2n for all real inputs (ADD-T1), so 19n is out of date. This sentence also said "the counterexample exists and was verified", without saying what the counterexample was or what checked it, and nothing on record does.
+Under v4, ELO (26n) costs more than batting average (2n) because it includes a logistic sigmoid transformation on the rating difference — that sigmoid costs 7n on its own under v4 (neg 2n, exp 1n, add 3n, recip 1n; /superbest's current F16 route for sigmoid is 4n) — plus the update arithmetic. Nash equilibrium (19n) was counted with April's general-domain addition, add_gen = 11n, in the denominator, because game payoffs can be negative; addition now takes 2n for all real inputs (ADD-T1), so 19n is out of date. This sentence also said "the counterexample exists and was verified", without saying what the counterexample was or what checked it, and nothing on record does.
 
 ---
 
@@ -133,7 +133,7 @@ Asking for the SuperBEST node count of a CRC checksum is a type error, the way a
 
 The deepest result of the nine sessions is not any individual equation cost. It is that the universe reuses the same arithmetic templates across completely unrelated physics.
 
-**The 5-node exponential decay template: `A · exp(−B·x)`**
+**The 5-node exponential decay template: `A · exp(−B·x)`** (April v4 count)
 
 Five nodes. This structure appears in:
 
@@ -145,7 +145,7 @@ Five nodes. This structure appears in:
 
 These equations describe different physical phenomena with different variables and different units. They are structurally identical. The operator tree is `mul(A, exp(mul(neg(B), x)))` — 5 nodes every time. The universe has one algorithm for exponential attenuation and applies it everywhere.
 
-**The 5-node exponential growth template: `A · exp(B·t)`**
+**The 5-node exponential growth template: `A · exp(B·t)`** (April v4 count)
 
 Same cost, different sign:
 
@@ -154,7 +154,7 @@ Same cost, different sign:
 - Bacterial colony growth (microbiology)
 - Logarithmic spiral geometry (mathematics)
 
-**The 7-node logarithmic ratio template: `10 · log10(ratio)`**
+**The 7-node logarithmic ratio template: `10 · log10(ratio)`** (April v4 count)
 
 Seven nodes. This template underlies:
 
@@ -166,7 +166,7 @@ Seven nodes. This template underlies:
 
 All five measure ratios on a logarithmic scale. All five cost 7 nodes. The ear, the seismograph, and the radio antenna solve the same 7-node problem.
 
-**The 11-node Hill/Pythagorean template: `x^k / (x^k + y^k)`**
+**The 11-node Hill/Pythagorean template: `x^k / (x^k + y^k)`** (April v4 count)
 
 Eleven nodes. Three disciplines:
 
@@ -198,10 +198,10 @@ The same node-counting that works for chemistry and neuroscience works for sport
 
 What the nine sessions established:
 
-- The floor is 2n (ETA, batting average, FG%) — any ratio.
+- The floor is 2n (ETA, batting average, FG%) — any ratio (April v4 counts).
 - The 2037n Reed-Solomon ceiling is withdrawn: syndrome computation is finite-field arithmetic, outside EML.
-- The most frequently evaluated formula in outdoor navigation is 28n (Haversine).
-- Sports statistics can exceed neuroscience in arithmetic complexity (NFL 33n > HH 30n).
+- The most frequently evaluated formula in outdoor navigation is 28n (Haversine, April v4).
+- Sports statistics can exceed neuroscience in arithmetic complexity (April v4: NFL 33n > HH 30n).
 - The universe uses five or six canonical templates — exponential decay, exponential growth, log ratio, Hill function — across every domain of science and engineering.
 - GF(2) bitwise arithmetic is outside EML. The boundary is real and important.
 
