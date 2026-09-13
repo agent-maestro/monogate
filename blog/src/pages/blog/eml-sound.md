@@ -98,10 +98,10 @@ EML trees as audio primitives:
 
 ## Interactive Synthesizer
 
-→ [EML Synthesizer](/explorer) — drag harmonic amplitude sliders,
-click presets (Sine/Clarinet/Violin/Piano/Bell/Sawtooth/Square),
-hear the result in your browser via Web Audio API.
-Node counter updates live.
+The EML Synthesizer that went with this post let you drag harmonic amplitude sliders,
+click presets (Sine/Clarinet/Violin/Piano/Bell/Sawtooth/Square) and hear the result in your
+browser through the Web Audio API, with a node counter beside it. It lived on monogate.dev and
+was archived on 2026-09-12.
 
 ---
 

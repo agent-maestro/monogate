@@ -98,8 +98,9 @@ This reflects the transcendental vs polynomial nature of the maps.
 
 ## Interactive Explorer
 
-→ [EML Fractal Explorer](/explorer) — click to zoom, switch between all 8 operators,
-choose color schemes. Real-plane escape-time with live viewport.
+The EML Fractal Explorer that went with this post let you click to zoom, switch between all
+8 operators and choose color schemes, rendering real-plane escape time. It lived on monogate.dev
+and was archived on 2026-09-12.
 
 ---
 

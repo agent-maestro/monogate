@@ -95,5 +95,5 @@ source fixture
 ```
 
 The next surface should be an Explorer/dashboard view over this exact manifest.
-That surface is now live; the broader frontier map is at
+That surface was built on monogate.dev and archived on 2026-09-12; the broader frontier map is at
 [`/research/frontier`](/research/frontier).

@@ -11,7 +11,7 @@ featured: false
 # Proof-Carrying Rescue Status
 
 Monogate's high-dimensional optimizer work is organized around named boundary
-events and named rescue operators. This is the current status table.
+events and named rescue operators. This is the status table as of 2026-05-26.
 
 | Boundary event | Rescue operator | Rescue event | Forge evidence | MachLib bridge | Semantic tier |
 | --- | --- | --- | --- | --- | --- |

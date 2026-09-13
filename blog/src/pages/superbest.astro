@@ -36,18 +36,18 @@ const verify = superbest.verify_terminal;
 
 <Base
   title="SuperBEST — Optimal EML Routing Table"
-  description="Minimum node counts for every arithmetic primitive in the EML/F16 operator family. Taxonomy locked at 23 operators. Layer 1 (F16): 14n / 80.8%. Layer 2 (23-op): 40% aggregate."
+  description="Minimum node counts for every arithmetic primitive in the EML/F16 operator family. 23 operators catalogued; that no 24th exists is a conjecture. Layer 1 (F16): 14n / 80.8%. Layer 2 (23-op): 40% aggregate."
 >
   <div class="meta">
     <span>SuperBEST {superbest.version}</span>
     <span>{superbest.date}</span>
     <span>arXiv:2603.21852</span>
-    <span class="lock-badge">Taxonomy Locked — 23 ops · No 24th exists</span>
+    <span class="lock-badge">23 ops catalogued · no 24th found (conjecture)</span>
   </div>
 
   <h1>SuperBEST Routing Table</h1>
   <div class="status-banner">
-    <p class="status-kicker">Current status · July 2026</p>
+    <p class="status-kicker">Status as of July 2026</p>
     <p>
       SuperBEST is a research cost model and routing table. Its strongest use
       is comparing symbolic tree/DAG structure and proof-shaped rewrites. It is
@@ -59,8 +59,9 @@ const verify = superbest.verify_terminal;
   </div>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     Minimum F16-node constructions for every elementary arithmetic primitive.
-    Proved optimal via derivative obstruction lower bounds and explicit constructions.
-    Taxonomy definitively closed: {lock.conj_no_op_24}.
+    Upper bounds are explicit constructions; optimality is argued from derivative-obstruction
+    lower bounds, and the capability card records this table as partially proven.
+    CONJ_NO_OP_24 (no 24th operator) is {lock.conj_no_op_24}.
   </p>
 
   <!-- Hero stats: the five numbers the article hangs on -->
@@ -330,7 +331,7 @@ const verify = superbest.verify_terminal;
     <ul>
       <li><strong>Core table locked:</strong> 14n / 80.8% savings (positive domain) — canonical, unaffected by extended operators</li>
       <li><strong>LSE corrected:</strong> ln(e^x+e^y) = 4n in F16 (corrected from 5n); 2n in 23-op via EEA+ln</li>
-      <li><strong>Taxonomy closed:</strong> exactly 23 operators exist; CONJ_NO_OP_24 is now a proved theorem</li>
+      <li><strong>Taxonomy:</strong> 23 operators catalogued. CONJ_NO_OP_24 (no 24th operator) is a conjecture, argued on paper; no Lean proof exists</li>
       <li><strong>softplus = 2n</strong> in both layers via EML(x,1/e)+ln (Category B: genuine F16)</li>
       <li><strong>Aggregate genuine F16 savings: ~12%</strong> across all catalogs; 40% with 23-op extended primitives</li>
     </ul>
