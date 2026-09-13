@@ -1,7 +1,7 @@
 {
   "version": "v5.3",
-  "date": "2026-05-24",
-  "revision": "Canonical surface reconciliation v5.3 — Python/blog/browser/capability-card surfaces aligned to monogate.superbest library totals; positive headline 14/73 and general 8-op basket 16/62.",
+  "date": "2026-09-13",
+  "revision": "F16 recount (2026-09-13): every core entry counted in the sixteen operators on /framework, each construction evaluated numerically on its domain (python/tests/test_superbest_f16_constructions.py). Positive headline 15/73; general basket of 6 ops 18/54. The census count with ln x = EXL(0, x) as one node, 14/73, is kept as totals.total_positive_with_exl.",
   "breakthrough": "add_gen = 2n discovered via LEdiv+DEML construction: lediv(x, deml(y,1)) = ln(exp(x)/exp(-y)) = x+y for ALL real x,y",
   "X20_finding": "EPL(x,y) = exp(x*ln(y)) = y^x is one of the 16 F16 operators (ELMl in Sixteen_Operator_Census). Therefore pow(x,y) = x^y = EPL(y,x) for x>0 is a single 1-node F16 application — not 3n. The 3n construction was for general domain where x can be negative (ln(x) undefined). This resolves the F17d paradox in X20.",
   "construction_detail": {
@@ -27,37 +27,37 @@
     },
     {
       "op": "ln(x)",
-      "cost_positive": 1,
-      "cost_general": 1,
-      "construction_positive": "EXL(0,x) = ln(x), x > 0",
-      "construction_general": "UNDEFINED — ln(x) undefined for x <= 0 in real F16",
-      "domain_positive": "x > 0 (ln requires positive argument)",
-      "domain_general": "not defined for x <= 0; no real F16 tree computes ln for all reals",
-      "notes": "primitive; domain-restricted to x > 0",
+      "cost_positive": 2,
+      "cost_general": null,
+      "construction_positive": "LEdiv(0, F13(-1,x)) = 0 - ln(x^-1) = ln(x), x > 0",
+      "construction_general": "none: ln(x) has no real value for x <= 0",
+      "domain_positive": "x > 0 (ln requires a positive argument)",
+      "domain_general": "not defined for x <= 0, so there is no all-reals entry; not in the general basket",
+      "notes": "2 nodes in F16: no single F16 node equals ln x (a search over one-node trees finds none). EXL(0,x) = ln(x) is 1 node, but EXL is a census operator outside F16; the 14n count (totals.total_positive_with_exl) uses it.",
       "v4_cost": 1,
       "delta": 0
     },
     {
       "op": "recip(x) = 1/x",
       "cost_positive": 1,
-      "cost_general": 1,
-      "construction_positive": "ELSb(0,x) = exp(0 - ln(x)) = 1/x, x > 0",
-      "construction_general": "ELSb(0,x) in the real-F16 sense requires x > 0. For x < 0: note that 1/x = -1/|x|; no single real-ELC 1-node tree covers all x != 0. However, the implementation (X8 audit) handles x != 0 including negatives — likely via the algebraic identity rather than a strict real-ln route.",
-      "domain_positive": "x > 0 — ELSb(0,x) = exp(-ln(x)) = 1/x directly valid",
-      "domain_general": "x != 0 — ELSb works in practice (X8 verified); strict real-ELC requires x > 0 for the ln step",
-      "notes": "R16-C1; X8 audit confirms negative x also handled in implementation",
+      "cost_general": 7,
+      "construction_positive": "F13(-1,x) = exp(-ln(x)) = 1/x, x > 0",
+      "construction_general": "LEdiv(0, F13(P, DEML(x,1))) with P = F13(-1, LEdiv(0, F13(x, DEML(x,1)))) = 1/x^2: -ln(exp(-x/x^2)) = 1/x for every x != 0 (7 nodes). A search over F16 trees finds none with 6 or fewer nodes.",
+      "domain_positive": "x > 0 — F13(-1,x) = exp(-ln(x)) = 1/x directly valid",
+      "domain_general": "x != 0, both signs, one tree",
+      "notes": "R16-C1's ELSb(0,x) is the same function in one node for x > 0 (ELSb is a census operator). The general entry is row-level; recip is not in the general basket.",
       "v4_cost": 1,
       "delta": 0
     },
     {
       "op": "div(x,y) = x/y",
       "cost_positive": 2,
-      "cost_general": 3,
-      "construction_positive": "EXL(0,x) then ELSb(ln(x), y) = x/y, x > 0, y > 0",
-      "construction_general": "3-node general-domain construction tracked by the Python canonical table; DivLowerBound3Full records the 3-node lower-bound status.",
+      "cost_general": 8,
+      "construction_positive": "F16fn(x, F13(-1,y)) = exp(ln(x) + ln(1/y)) = x/y, x > 0, y > 0",
+      "construction_general": "LEdiv(0, F13(x, F13(P, DEML(y,1)))) with P = F13(-1, LEdiv(0, F13(y, DEML(y,1)))) = 1/y^2: -ln(exp(-x/y)) = x/y for every x and every y != 0 (8 nodes). The earlier 3n entry was a sign-dispatch case split, one circuit per sign quadrant, not a single tree. Lower bounds: the 2-node exp-outer case (F13-F16) IS Lean-proved (DivLowerBound3.lean, no_exp_outer_2node_div, 0 sorries); a numerical search over F16 trees with constant leaves 0, 1, -1, 2, 1/2 finds none with 7 or fewer nodes. DivLowerBound3.lean's own SB_div_ge_three_full is a filed placeholder (proves True, not the stated bound).",
       "domain_positive": "x > 0, y > 0 — full-tree cost is 2n",
-      "domain_general": "general signed-real basket entry tracked at 3n",
-      "notes": "v5.3 canonical sync: div_positive=2n full tree; div_general=3n.",
+      "domain_general": "all x, y != 0: one tree at 8n (an upper bound, evaluated numerically); lower bound partially Lean-proved, partially search-backed — see construction_general",
+      "notes": "v5.3 canonical sync: div_positive=2n full tree (Lean-verified). div_general=8n in the F16 recount of 2026-09-13 (was 3n, a case split).",
       "v4_cost": 2,
       "delta": 0
     },
@@ -65,11 +65,11 @@
       "op": "neg(x) = -x",
       "cost_positive": 2,
       "cost_general": 2,
-      "construction_positive": "EXL(0, DEML(x,1)) = ln(exp(-x)) = -x; or DEML(x,1)=exp(-x) then EXL gives -x",
-      "construction_general": "EXL(0, DEML(x,1)) = ln(exp(-x)) = -x for all x; DEML(x,1)=exp(-x) > 0 always, so EXL is always valid",
-      "domain_positive": "all x (DEML output is always positive, so EXL is always valid)",
-      "domain_general": "all x — same construction works for all reals (neg is domain-universal at 2n)",
-      "notes": "T09; 2n for all reals; positive domain gives no cost improvement",
+      "construction_positive": "LEdiv(0, EML(x,1)) = 0 - ln(exp(x)) = -x; EML(x,1) = exp(x) > 0, so LEdiv is always valid",
+      "construction_general": "LEdiv(0, EML(x,1)) = -x for all x",
+      "domain_positive": "all x (EML(x,1) = exp(x) is always positive)",
+      "domain_general": "all x — the same tree works for all reals (neg is domain-universal at 2n)",
+      "notes": "T09's EXL(0, DEML(x,1)) is the same 2 nodes with the census operator EXL. No single F16 node computes -x (search over one-node trees).",
       "v4_cost": 2,
       "delta": 0
     },
@@ -77,11 +77,11 @@
       "op": "mul(x,y) = x*y",
       "cost_positive": 1,
       "cost_general": 3,
-      "construction_positive": "ELMl(ln(x), y) = exp(ln(x) + ln(y)) = x*y for x,y > 0",
-      "construction_general": "3-node general-domain construction tracked by Python exact table.",
+      "construction_positive": "F16fn(x, y) = exp(ln(x) + ln(y)) = x*y for x, y > 0",
+      "construction_general": "LEdiv(0, F13(y, DEML(x,1))) = -ln(exp(-x*y)) = x*y for all real x, y (3 nodes); DEML(x,1) = exp(-x) > 0, so every log argument is positive. The earlier 3n came from a sign-dispatch case split; this single tree has the same count, and the search finds no 2-node tree.",
       "domain_positive": "x > 0, y > 0 — direct 1-node positive-domain F16 construction",
-      "domain_general": "general signed-real basket entry tracked at 3n",
-      "notes": "v5.3 canonical sync: mul_positive=1n; mul_general=3n.",
+      "domain_general": "all x, y — one tree at 3n",
+      "notes": "mul_positive = 1n; mul_general = 3n as one tree (2026-09-13).",
       "v4_cost": 2,
       "delta": 0
     },
@@ -114,11 +114,11 @@
     {
       "op": "sqrt(x) = x^(1/2)",
       "cost_positive": 1,
-      "cost_general": 2,
-      "construction_positive": "EPL(0.5, x) = ELMl(0.5, x) = exp(0.5·ln(x)) = sqrt(x), x > 0 — single F16 node, same mechanism as pow",
-      "construction_general": "UNDEFINED — sqrt(x) undefined for x < 0 in real arithmetic; no real F16 tree covers all reals",
-      "domain_positive": "x > 0 — natural domain for real sqrt",
-      "domain_general": "not defined for x < 0 in real F16; complex sqrt is outside real ELC",
+      "cost_general": null,
+      "construction_positive": "F13(0.5, x) = exp(0.5·ln(x)) = sqrt(x), x > 0 — single F16 node (EPL(0.5, x) in the census)",
+      "construction_general": "none: sqrt(x) has no real value for x < 0, and no F16 tree equals it on [0, inf) — a tree defined at 0 is real-analytic there, and sqrt is not",
+      "domain_positive": "x > 0 — natural domain for the tree",
+      "domain_general": "x >= 0 only; no all-reals entry",
       "notes": "T_SQRT_1N; EPL(0.5,x) = ELMl(0.5,x) is a single application of the ELMl F16 operator. Same mechanism as pow=1n. Corrected from v5.1 which listed 2n (was using 2-node expanded form EML(0.5·EXL(0,x),1) rather than recognizing EPL as a direct primitive). Verified via PowerShell: EPL(0.5,4)=2.0, EPL(0.5,9)=3.0, EPL(0.5,16)=4.0.",
       "cost_correction": "positive domain corrected from 2n to 1n — EPL/ELMl recognized as direct primitive (same as pow fix in v5.1)",
       "v4_cost": 2,
@@ -128,11 +128,11 @@
     {
       "op": "pow(x,n) = x^n",
       "cost_positive": 1,
-      "cost_general": 3,
-      "construction_positive": "EPL(n,x) = ELMl(n,x) = exp(n * ln(x)) = x^n, x > 0 — single 1-node F16 operator from the 16-operator census",
-      "construction_general": "exp(n * ln(x)): mul(n,ln(x)) = 2n (requires x > 0 for ln), then EML(result,1) = 1n more; total 3n. For general domain with possibly-negative x, ln is undefined — no clean real F16 tree; 3n is for positive-base case using expanded construction.",
-      "domain_positive": "x > 0, n real — EPL(n,x) is a direct 1-node application of the ELMl operator from the F16 census",
-      "domain_general": "x > 0 required in all real constructions (ln(x)); general negative x has no real F16 solution. 3n is the positive-base cost using expanded EXL/ELAd/EML tree rather than direct EPL.",
+      "cost_general": null,
+      "construction_positive": "F13(n, x) = exp(n·ln(x)) = x^n, x > 0 — single F16 node (EPL/ELMl in the census)",
+      "construction_general": "none over all reals: x^n has no real value for x < 0 unless n is an integer; F13(n, x) covers x > 0. The earlier 3n was an expanded EXL route on x > 0, not a general-domain tree.",
+      "domain_positive": "x > 0, n real — F13(n, x) is one F16 node",
+      "domain_general": "x > 0 required for real n; no all-reals entry",
       "notes": "X20 RESOLUTION: EPL/ELMl = exp(x*ln(y)) = y^x IS in F16 census. pow(x,n)=x^n=EPL(n,x) for x>0 costs 1n (direct), not 3n. The 3n construction used EXL+ELAd+EML explicitly rather than recognizing EPL as a primitive. For positive domain: corrected to 1n.",
       "cost_correction": "positive domain corrected from 3n to 1n per X20 finding",
       "v4_cost": 3,
@@ -142,42 +142,66 @@
   ],
   "totals": {
     "total_positive": {
-      "value": 14,
-      "formula": "exp(1) + ln(1) + neg(2) + add(2) + sub(2) + mul(1) + div(2) + recip(1) + pow(1) + sqrt(1) = 14",
-      "note": "Canonical v5.3 full-tree positive-domain 10-op headline from monogate.superbest; no precomputed-ln shortcut accounting.",
+      "value": 15,
+      "formula": "exp(1) + ln(2) + neg(2) + add(2) + sub(2) + mul(1) + div(2) + recip(1) + pow(1) + sqrt(1) = 15",
+      "note": "F16 recount (2026-09-13): the positive-domain 10-op headline, counted in the sixteen operators on /framework. Each construction is evaluated numerically on its domain; the total is an upper bound, and no Lean theorem states it.",
+      "operator_set": "F16 (/framework)",
       "undefined_ops": []
     },
+    "total_positive_with_exl": {
+      "value": 14,
+      "formula": "exp(1) + ln(1) + neg(2) + add(2) + sub(2) + mul(1) + div(2) + recip(1) + pow(1) + sqrt(1) = 14",
+      "note": "The same ten ops with ln x = EXL(0, x) as one node. EXL, exp(x)·ln(y), is a census operator outside F16. ModelAudit.lean states this sum (superbest_v53_positive_total) and its one-node witnesses, with ln taken through EXL.",
+      "operator_set": "F16 plus the census operator EXL"
+    },
     "total_general": {
-      "value": 16,
-      "formula": "exp(1) + ln(1) + mul(3) + div(3) + neg(2) + add(2) + sub(2) + abs(2) = 16",
-      "note": "Canonical v5.3 general-domain headline is the 8-op basket used by monogate.superbest. recip/pow/sqrt remain row-level domain-caveat entries, not headline members.",
+      "value": 18,
+      "formula": "exp(1) + mul(3) + div(8) + neg(2) + add(2) + sub(2) = 18",
+      "note": "General domain, counted in F16: each op in the basket has one tree valid for every real input where the op is defined (div needs y != 0). On 2026-09-13 the basket lost abs and ln, and mul and div became single trees. The previous 8-op basket (16n / 74.2% vs 62n naive) counted abs at 2n and mul and div at 3n from sign-dispatch case splits. Naive costs are the library's pure-EML figures, carried unchanged.",
+      "operator_set": "F16 (/framework)",
       "undefined_ops": [],
       "excluded_from_sum": [
+        "ln",
+        "abs",
         "recip",
         "pow",
         "sqrt"
-      ]
+      ],
+      "excluded_reasons": {
+        "ln": "no real value for x <= 0",
+        "abs": "no real F16 tree computes |x| over all reals: a tree is real-analytic wherever it is defined, and |x| is not analytic at 0",
+        "recip": "row-level entry (7n for x != 0), outside the basket as before",
+        "pow": "no real value for x < 0 unless n is an integer",
+        "sqrt": "no real value for x < 0, and no tree equals sqrt on [0, inf)"
+      }
     },
-    "positive_headline": "14n / 80.8% savings (positive domain, 10-op headline vs 73n naive)",
-    "general_headline": "16n / 74.2% savings (general domain, 8-op basket vs 62n naive)",
+    "positive_headline": "15n / 79.5% savings (positive domain, 10-op headline vs 73n naive, F16)",
+    "general_headline": "18n / 66.7% savings (general domain, 6-op basket vs 54n naive, F16)",
     "savings_positive": {
       "naive_total": 73,
-      "superbest_positive_total": 14,
+      "superbest_positive_total": 15,
+      "savings_n": 58,
+      "savings_pct": "79.5%",
+      "formula": "(73 - 15) / 73 = 58/73 = 0.7945... ≈ 79.5%"
+    },
+    "savings_general": {
+      "naive_total": 54,
+      "superbest_general_total": 18,
+      "savings_n": 36,
+      "savings_pct": "66.7%",
+      "formula": "(54 - 18) / 54 = 36/54 = 0.6667... ≈ 66.7%"
+    },
+    "savings_positive_with_exl": {
+      "naive_total": 73,
+      "superbest_positive_total_with_exl": 14,
       "savings_n": 59,
       "savings_pct": "80.8%",
       "formula": "(73 - 14) / 73 = 59/73 = 0.8082... ≈ 80.8%"
-    },
-    "savings_general": {
-      "naive_total": 62,
-      "superbest_general_total": 16,
-      "savings_n": 46,
-      "savings_pct": "74.2%",
-      "formula": "(62 - 16) / 62 = 46/62 = 0.7419... ≈ 74.2%"
     }
   },
   "sum_v4": 19,
   "sum_v5": 18,
-  "sum_v5_positive": 14,
+  "sum_v5_positive": 15,
   "v4_entry_count": 10,
   "v5_entry_count": 10,
   "add_gen_v4": 11,
@@ -194,7 +218,7 @@
   "savings_v5_1_exact": "(73-16)/73 = 57/73 = 0.7808...",
   "savings_v5_2_positive": "79.5%",
   "savings_v5_2_exact": "(73-15)/73 = 58/73 = 0.7945...",
-  "completeness": "All 10 operations: positive domain <= 1-2 nodes each; general domain varies (mul has no F16 tree). Table is COMPLETE with dual-domain annotations.",
+  "completeness": "All 10 operations have an F16 construction on the positive domain (1–2 nodes each). Over all reals exp, neg, add, sub (1–2n), mul (3n), recip (7n, x != 0) and div (8n, y != 0) each have one tree; ln, sqrt and pow have no all-reals entry, and no real F16 tree computes abs. Entries are upper bounds; Lean lower bounds cover sub, add, mul and div (at least 2 nodes over all reals).",
   "open_problem_resolved": {
     "was": "add_gen = 11n (best known); lower bound was open; conjecture was 11n tight (add_gen_11n_conjecture.json)",
     "now": "add_gen = 2n PROVED by explicit construction. The 11n construction was not optimal.",
@@ -212,11 +236,12 @@
     "new_unified_law": "N-term summation (any domain): (alpha_0 + 2)*N - 2",
     "note": "The positive/general distinction collapses for add/sub/neg. mul and pow retain domain splits."
   },
-  "savings_v5_3_positive": "80.8%",
-  "savings_v5_3_general": "74.2%",
+  "savings_v5_3_positive": "79.5%",
+  "savings_v5_3_general": "66.7%",
   "canonical_sync": {
     "source": "python/monogate/superbest.py",
-    "date": "2026-05-24",
+    "date": "2026-09-13",
+    "operator_set": "F16 (/framework)",
     "positive_ops": [
       "exp",
       "ln",
@@ -231,17 +256,16 @@
     ],
     "general_ops": [
       "exp",
-      "ln",
       "mul",
       "div",
       "neg",
       "add",
-      "sub",
-      "abs"
+      "sub"
     ],
-    "positive_total": 14,
+    "positive_total": 15,
     "positive_naive_total": 73,
-    "general_total": 16,
-    "general_naive_total": 62
+    "general_total": 18,
+    "general_naive_total": 54,
+    "positive_total_with_exl": 14
   }
 }

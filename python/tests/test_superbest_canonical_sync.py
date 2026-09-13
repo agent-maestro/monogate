@@ -1,4 +1,11 @@
-"""Regression tests for SuperBEST canonical surface synchronization."""
+"""Regression tests for SuperBEST canonical surface synchronization.
+
+python/monogate/superbest.py holds the counts. The site table (blog/src/data/superbest.json), its
+copy in python/results/, and the three capability cards must agree with it. The headline is the F16
+recount of 2026-09-13; the census count with ln x = EXL(0, x) as one node (14n) is kept beside it.
+The browser explorer (explorer/src/superbest.js) routes through the census operators EXL and ELSb,
+so its cost table follows the census count.
+"""
 
 from __future__ import annotations
 
@@ -10,6 +17,12 @@ from monogate import superbest
 
 
 ROOT = Path(__file__).resolve().parents[2]
+SITE_TABLES = ["blog/src/data/superbest.json", "python/results/superbest_v5_table.json"]
+CARDS = [
+    "capability_card_public.json",
+    "blog/public/capability_card.json",
+    "blog/public/.well-known/capcard.json",
+]
 
 
 def _load(path: str) -> dict:
@@ -21,61 +34,67 @@ def _rows(data: dict) -> dict[str, dict]:
 
 
 def test_json_tables_match_python_canonical_totals():
-    pos_total = sum(superbest.SUPERBEST_COSTS_POS[op] for op in superbest.SUPERBEST_V52_POS_OPS)
-    gen_total = sum(superbest.SUPERBEST_COSTS_GEN[op] for op in superbest.SUPERBEST_V52_GEN_OPS)
-    pos_naive = sum(superbest.NAIVE_COSTS[op] for op in superbest.SUPERBEST_V52_POS_OPS)
-    gen_naive = sum(superbest.NAIVE_COSTS[op] for op in superbest.SUPERBEST_V52_GEN_OPS)
+    pos_ops, gen_ops = superbest.SUPERBEST_F16_POS_OPS, superbest.SUPERBEST_F16_GEN_OPS
+    pos_total = sum(superbest.SUPERBEST_COSTS_POS[op] for op in pos_ops)
+    gen_total = sum(superbest.SUPERBEST_COSTS_GEN[op] for op in gen_ops)
+    pos_naive = sum(superbest.NAIVE_COSTS[op] for op in pos_ops)
+    gen_naive = sum(superbest.NAIVE_COSTS[op] for op in gen_ops)
+    exl_total = sum(superbest.SUPERBEST_COSTS_POS_WITH_EXL[op] for op in pos_ops)
 
-    for rel in [
-        "blog/src/data/superbest.json",
-        "python/results/superbest_v5_table.json",
-    ]:
+    for rel in SITE_TABLES:
         data = _load(rel)
+        totals = data["totals"]
         assert data["version"] == "v5.3"
-        assert data["totals"]["total_positive"]["value"] == pos_total == 14
-        assert data["totals"]["total_general"]["value"] == gen_total == 16
-        assert data["totals"]["savings_positive"]["naive_total"] == pos_naive == 73
-        assert data["totals"]["savings_general"]["naive_total"] == gen_naive == 62
-        assert "80.8%" in data["totals"]["positive_headline"]
-        assert "74.2%" in data["totals"]["general_headline"]
+        assert totals["total_positive"]["value"] == pos_total == superbest.SUPERBEST_F16_POS_TOTAL == 15
+        assert totals["total_general"]["value"] == gen_total == superbest.SUPERBEST_F16_GEN_TOTAL == 18
+        assert totals["savings_positive"]["naive_total"] == pos_naive == 73
+        assert totals["savings_general"]["naive_total"] == gen_naive == 54
+        assert "79.5%" in totals["positive_headline"]
+        assert "66.7%" in totals["general_headline"]
+        assert totals["total_positive_with_exl"]["value"] == exl_total == superbest.SUPERBEST_V53_POS_TOTAL == 14
+        assert totals["savings_positive_with_exl"]["savings_pct"] == "80.8%"
+
+        sync = data["canonical_sync"]
+        assert sync["positive_ops"] == list(pos_ops)
+        assert sync["general_ops"] == list(gen_ops)
+        assert (sync["positive_total"], sync["positive_naive_total"]) == (pos_total, pos_naive)
+        assert (sync["general_total"], sync["general_naive_total"]) == (gen_total, gen_naive)
+        assert sync["positive_total_with_exl"] == exl_total
 
 
-def test_drifted_mul_and_div_rows_match_canonical():
-    for rel in [
-        "blog/src/data/superbest.json",
-        "python/results/superbest_v5_table.json",
-    ]:
+def test_core_rows_match_canonical_costs():
+    for rel in SITE_TABLES:
         rows = _rows(_load(rel))
-        assert rows["mul"]["cost_positive"] == superbest.SUPERBEST_COSTS_POS["mul"] == 1
-        assert rows["mul"]["cost_general"] == superbest.SUPERBEST_COSTS_GEN["mul"] == 3
-        assert rows["div"]["cost_positive"] == superbest.SUPERBEST_COSTS_POS["div"] == 2
-        assert rows["div"]["cost_general"] == superbest.SUPERBEST_COSTS_GEN["div"] == 3
+        for op in superbest.SUPERBEST_F16_POS_OPS:
+            assert rows[op]["cost_positive"] == superbest.SUPERBEST_COSTS_POS[op], (rel, op)
+            # None (rendered as a dash) where the op has no all-reals entry
+            assert rows[op]["cost_general"] == superbest.SUPERBEST_COSTS_GEN.get(op), (rel, op)
 
 
 def test_capability_cards_match_canonical_headlines():
-    for rel in [
-        "capability_card_public.json",
-        "blog/public/capability_card.json",
-        "blog/public/.well-known/capcard.json",
-    ]:
+    for rel in CARDS:
         data = _load(rel)
         cap = next(c for c in data["capabilities"] if c.get("id") == "routing.superbest_v5")
         assert cap["name"] == "SuperBEST v5.3 routing table"
-        assert cap["constraints"]["positive_total_nodes"] == 14
-        assert cap["constraints"]["positive_naive_total"] == 73
-        assert cap["constraints"]["positive_savings_percent"] == 80.8
-        assert cap["constraints"]["general_total_nodes"] == 16
-        assert cap["constraints"]["general_naive_total"] == 62
-        assert cap["constraints"]["general_savings_percent"] == 74.2
+        c = cap["constraints"]
+        assert (c["total_nodes"], c["naive_total"], c["savings_percent"]) == (15, 73, 79.5)
+        assert c["positive_total_nodes"] == superbest.SUPERBEST_F16_POS_TOTAL
+        assert c["positive_naive_total"] == superbest.SUPERBEST_F16_POS_NAIVE
+        assert c["positive_savings_percent"] == superbest.SUPERBEST_F16_POS_SAVINGS_PCT
+        assert c["general_total_nodes"] == superbest.SUPERBEST_F16_GEN_TOTAL
+        assert c["general_naive_total"] == superbest.SUPERBEST_F16_GEN_NAIVE
+        assert c["general_savings_percent"] == superbest.SUPERBEST_F16_GEN_SAVINGS_PCT
+        assert c["positive_total_nodes_with_exl"] == superbest.SUPERBEST_V53_POS_TOTAL
+        assert c["positive_savings_percent_with_exl"] == superbest.SUPERBEST_V53_POS_SAVINGS_PCT
 
         bench = next(b for b in data["benchmarks"] if b.get("id") == "bench.superbest_table")
         assert bench["name"] == "SuperBEST v5.3 routing table values"
-        assert "14n" in bench["notes"]
-        assert "16n" in bench["notes"]
-        assert "74.2" in bench["notes"]
+        assert bench["value"] == 15
+        for needle in ("15n", "18n", "66.7", "14n"):
+            assert needle in bench["notes"]
 
 
-def test_browser_superbest_cost_tables_match_canonical_values():
+def test_browser_superbest_cost_tables_match_census_values():
     text = (ROOT / "explorer/src/superbest.js").read_text(encoding="utf-8")
     cost_block = re.search(r"export const COSTS = \{(?P<body>.*?)\};", text, re.S)
     eml_block = re.search(r"export const EML_COSTS = \{(?P<body>.*?)\};", text, re.S)
@@ -88,17 +107,8 @@ def test_browser_superbest_cost_tables_match_canonical_values():
 
     costs = cost_block.group("body")
     eml_costs = eml_block.group("body")
-    for op, expected in {
-        "mul": 1,
-        "div": 2,
-        "add": 2,
-        "sub": 2,
-        "pow": 1,
-        "sqrt": 1,
-        "recip": 1,
-        "abs": 2,
-    }.items():
-        assert value(costs, op) == expected
+    for op in superbest.SUPERBEST_F16_POS_OPS:
+        assert value(costs, op) == superbest.SUPERBEST_COSTS_POS_WITH_EXL[op], op
 
-    for op, expected in {"pow": 3, "sqrt": 8, "neg": 9, "abs": 5}.items():
-        assert value(eml_costs, op) == expected
+    for op in ("pow", "sqrt", "neg", "abs"):
+        assert value(eml_costs, op) == superbest.NAIVE_COSTS[op], op

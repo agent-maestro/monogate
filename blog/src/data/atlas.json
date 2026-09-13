@@ -12,65 +12,65 @@
     {
       "op_key": "ln",
       "display": "ln(x)",
-      "family": "EXL",
+      "family": "LEdiv+F13",
       "naive": 3,
-      "note": ""
+      "note": "x>0; 1 node with the census operator EXL"
     },
     {
       "op_key": "neg",
       "display": "neg(x)",
-      "family": "EXL+DEML",
+      "family": "LEdiv+EML",
       "naive": 9,
       "note": "T09"
     },
     {
       "op_key": "recip",
       "display": "recip(x)",
-      "family": "ELSb",
+      "family": "F13",
       "naive": 5,
-      "note": "R16-C1"
+      "note": "x>0, R16-C1; 7n for all x ≠ 0"
     },
     {
       "op_key": "sqrt",
       "display": "sqrt(x)",
-      "family": "EPL (F13)",
+      "family": "F13",
       "naive": 7,
       "note": "x>0, T_SUPERBEST_UB"
     },
     {
       "op_key": "sub",
       "display": "sub(x,y)",
-      "family": "EML",
+      "family": "LEdiv+EML",
       "naive": 5,
       "note": "T33"
     },
     {
       "op_key": "add",
       "display": "add(x,y)",
-      "family": "EAL",
+      "family": "LEdiv+DEML",
       "naive": 11,
       "note": "ADD-T1, all reals"
     },
     {
       "op_key": "mul",
       "display": "mul(x,y)",
-      "family": "EPL/ELMl",
+      "family": "F16fn",
       "naive": 13,
-      "note": "x,y>0, T_SUPERBEST_UB; general domain is 3n"
+      "note": "x,y>0, T_SUPERBEST_UB; general domain is 3n (one tree)"
     },
     {
       "op_key": "pow",
       "display": "pow(x,n)",
-      "family": "EPL/ELMl",
+      "family": "F13",
       "naive": 15,
-      "note": "x>0, T_SUPERBEST_UB; general domain is 3n"
+      "note": "x>0, T_SUPERBEST_UB; no all-reals entry"
     },
     {
       "op_key": "div",
       "display": "div(x,y)",
-      "family": "ELSb",
+      "family": "F16fn+F13",
       "naive": 15,
-      "note": "x,y>0, T08; general domain is 3n, partly Lean-proved -- see /superbest"
+      "note": "x,y>0, T08; general domain is 8n, lower bound partly Lean-proved -- see /superbest"
     },
     {
       "op_key": "sin",
@@ -187,32 +187,32 @@
       "entries": [
         {
           "name": "ln(x)",
-          "cost": "1 node via EXL(0, x), a census operator; 2 in F16 (LEdiv(0, F13(−1, x)))",
+          "cost": "2 nodes (LEdiv(0, F13(−1, x))); 1 with the census operator EXL (EXL(0, x))",
           "proof": "T08"
         },
         {
           "name": "neg(x) = −x",
-          "cost": "2 nodes (EXL∘DEML; in F16, LEdiv(0, EML(x, 1)))",
+          "cost": "2 nodes (LEdiv(0, EML(x, 1)); EXL∘DEML with the census EXL)",
           "proof": "T09"
         },
         {
           "name": "recip(x) = 1/x",
-          "cost": "1 node (ELSb(0, x), a census operator; F13(−1, x) in F16)",
+          "cost": "1 node for x > 0 (F13(−1, x); ELSb(0, x) in the census); 7 for all x ≠ 0",
           "proof": "R16-C1"
         },
         {
           "name": "x^n  (integer power), x>0",
-          "cost": "1 node (EPL/ELMl)",
+          "cost": "1 node (F13; EPL/ELMl in the census)",
           "proof": "T_SUPERBEST_UB"
         },
         {
           "name": "x^r  (real power), x>0",
-          "cost": "1 node (EPL/ELMl)",
+          "cost": "1 node (F13; EPL/ELMl in the census)",
           "proof": "T_SUPERBEST_UB"
         },
         {
           "name": "sqrt(x), x>0",
-          "cost": "1 node (EPL, F13)",
+          "cost": "1 node (F13; EPL in the census)",
           "proof": "T_SUPERBEST_UB"
         },
         {
@@ -232,7 +232,7 @@
         },
         {
           "name": "abs(x)",
-          "cost": "2 nodes",
+          "cost": "no real F16 tree over all reals (|x| is not analytic at 0)",
           "proof": null
         },
         {
@@ -419,13 +419,13 @@
       "fn": "ln(x)",
       "dr": "2",
       "dc": "2",
-      "note": "1 EXL node."
+      "note": "2 F16 nodes (1 with the census operator EXL)."
     },
     {
       "fn": "x^r",
       "dr": "2",
       "dc": "2",
-      "note": "3 nodes via EXL."
+      "note": "1 node for x > 0: F13(r, x)."
     },
     {
       "fn": "neg(x)",
@@ -443,7 +443,7 @@
       "fn": "x · y",
       "dr": "2",
       "dc": "2",
-      "note": "1 node (ELAd) or 3n (EXL)."
+      "note": "1 node for x, y > 0 (F16fn); 3 for all reals (LEdiv(0, F13(y, DEML(x, 1))))."
     },
     {
       "fn": "softplus(x)",
@@ -729,7 +729,7 @@
     {
       "thm": "Domain routing (2026-07-22 correction)",
       "stmt": "Positive routing still saves on mul/sqrt/pow/div, no longer on add",
-      "detail": "add is now 2n for ALL reals (ADD-T1) — no positive/general gap left to route around. mul (1n vs 3n), sqrt (1n vs 2n), and pow (1n vs 3n) still have a real gap; div (2n vs 3n) is Lean-proved for the exp-outer case only (see /superbest). The old \"~1750n saved across 295-eq catalog\" figure was computed from add's pre-ADD-T1 numbers and is retracted — recomputing it needs the underlying equation dataset, not attempted here."
+      "detail": "add is now 2n for ALL reals (ADD-T1) — no positive/general gap left to route around. In F16, mul (1n vs 3n), recip (1n vs 7n) and div (2n vs 8n) still have a real gap, and sqrt, pow and ln have no all-reals entry; the general div lower bound is Lean-proved for the exp-outer case only (see /superbest). The old \"~1750n saved across 295-eq catalog\" figure was computed from add's pre-ADD-T1 numbers and is retracted — recomputing it needs the underlying equation dataset, not attempted here."
     },
     {
       "thm": "O-ISO",

@@ -47,18 +47,21 @@
       "id": "routing.superbest_v5",
       "name": "SuperBEST v5.3 routing table",
       "category": "construction",
-      "description": "Routing table mapping 10 positive-domain arithmetic operations to F16 expressions, achieving 14n / 80.8% savings vs the 73n naive baseline, plus a general-domain 8-op basket at 16n / 74.2% savings vs the 62n naive baseline. Library, blog, browser, and capability-card surfaces are synchronized from monogate.superbest. Lean (ModelAudit.lean) checks the positive-domain one-node witnesses and the 14n total; the general-domain 16n / 74.2% figures are not Lean-checked.",
+      "description": "Routing table mapping 10 positive-domain arithmetic operations to expressions over the sixteen operators on monogate.org/framework (F16): 15n / 79.5% savings vs the 73n naive baseline, plus a general-domain basket of 6 ops (exp, neg, add, sub, mul, div) at 18n / 66.7% vs the 54n naive baseline. Every construction is evaluated numerically (python/tests/test_superbest_f16_constructions.py); the totals are upper bounds. Counting ln x = EXL(0, x), a census operator outside F16, as one node gives the 14n / 80.8% positive count. Lean (ModelAudit.lean) checks that count's arithmetic and its one-node witnesses, with ln taken through EXL; no Lean theorem states the F16 totals.",
       "status": "proven_partial",
       "constraints": {
-        "total_nodes": 14,
+        "total_nodes": 15,
         "naive_total": 73,
-        "savings_percent": 80.8,
-        "positive_total_nodes": 14,
+        "savings_percent": 79.5,
+        "positive_total_nodes": 15,
         "positive_naive_total": 73,
-        "positive_savings_percent": 80.8,
-        "general_total_nodes": 16,
-        "general_naive_total": 62,
-        "general_savings_percent": 74.2,
+        "positive_savings_percent": 79.5,
+        "general_total_nodes": 18,
+        "general_naive_total": 54,
+        "general_savings_percent": 66.7,
+        "positive_total_nodes_with_exl": 14,
+        "positive_savings_percent_with_exl": 80.8,
+        "operator_set": "F16 (monogate.org/framework)",
         "canonical_source": "python/monogate/superbest.py"
       }
     },
@@ -257,14 +260,14 @@
       "name": "SuperBEST v5.3 routing table values",
       "capability_ref": "routing.superbest_v5_3",
       "metric": "node_count_positive_domain",
-      "value": 14,
+      "value": 15,
       "unit": "F16 nodes",
       "direction": "lower_is_better",
       "reproducibility": {
-        "command": "python python/scripts/sync_superbest_canonical.py --strict",
+        "command": "python -m pytest python/tests/test_superbest_f16_constructions.py python/tests/test_superbest_canonical_sync.py",
         "deterministic": true
       },
-      "notes": "Headline: 14n positive-domain 10-op basket (80.8 percent vs 73n naive). General domain: 16n 8-op basket (74.2 percent vs 62n naive). Source: blog/src/data/superbest.json v5.3 synchronized from monogate.superbest."
+      "notes": "Headline: 15n positive-domain 10-op basket (79.5 percent vs 73n naive), counted in /framework's F16. General domain: 18n over 6 ops (66.7 percent vs 54n naive). Counting ln x = EXL(0, x) as one node gives 14n (80.8 percent). Source: blog/src/data/superbest.json v5.3, recounted in F16 on 2026-09-13."
     },
     {
       "id": "bench.lean_zero_sorry_files",
@@ -463,7 +466,7 @@
     {
       "id": "lean.upper_bounds_routing",
       "name": "Positive-domain one-node constructions (SuperBEST)",
-      "statement": "Seven positive-domain identities, each one F16 node: exp, mul (x, y > 0), pow (x > 0), recip (x > 0), sqrt (x > 0), ln via EXL, and exp(x + ln y) = exp(x)·y (y > 0). The 14n positive-domain total is summed in ModelAudit.lean (superbest_v53_positive_total).",
+      "statement": "Seven positive-domain identities, each one node: exp, mul (x, y > 0), pow (x > 0), recip (x > 0), sqrt (x > 0) and exp(x + ln y) = exp(x)·y (y > 0) in F16, and ln via EXL, a census operator outside F16. ModelAudit.lean sums the 14n positive-domain count that takes ln through EXL (superbest_v53_positive_total); counted in F16, where ln takes 2 nodes, the total is 15n.",
       "status": "proven_machine_verified",
       "proof_method": "Mathlib rewrites: Real.exp_add, Real.exp_log, Real.rpow_def_of_pos, Real.sqrt_eq_rpow.",
       "lean_file": "MonogateEML/UpperBounds.lean",

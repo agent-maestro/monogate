@@ -36,7 +36,7 @@ const verify = superbest.verify_terminal;
 
 <Base
   title="SuperBEST — Optimal EML Routing Table"
-  description="Best known node counts for every arithmetic primitive in the EML/F16 operator family. 23 operators catalogued; that no 24th exists is a conjecture. Layer 1 (F16): 14n / 80.8%. Layer 2 (23-op): 40% aggregate."
+  description="Best known node counts for every arithmetic primitive in the EML/F16 operator family. 23 operators catalogued; that no 24th exists is a conjecture. Layer 1 (F16): 15n / 79.5%. Layer 2 (23-op): 40% aggregate."
 >
   <div class="meta">
     <span>SuperBEST {superbest.version}</span>
@@ -59,8 +59,8 @@ const verify = superbest.verify_terminal;
   </div>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     Best known constructions, in F16 nodes, for every elementary arithmetic primitive.
-    Upper bounds are explicit constructions. Lower bounds are Lean-checked for sub, add, mul and div over all reals
-    (each at least 2 nodes); the other entries' lower bounds are argued or open, so the capability card records this table as partially proven.
+    Upper bounds are explicit constructions, each evaluated numerically on its domain. Lower bounds are Lean-checked for sub, add, mul and div over all reals
+    (each at least 2 nodes); the other entries' lower bounds come from a numerical search or are open, so the capability card records this table as partially proven.
     CONJ_NO_OP_24 (no 24th operator) is {lock.conj_no_op_24}.
   </p>
 
@@ -87,11 +87,23 @@ const verify = superbest.verify_terminal;
   </div>
   <p class="section-desc">
     <strong>Which F16.</strong> On this site F16 means the sixteen operators on <a href="/framework">/framework</a>,
-    the list the Lean lower bounds (sub, add, mul and div each need at least 2 nodes) quantify over. The core
-    table below counts nodes in that list plus two census operators where a row names them: EXL, exp(x)·ln y,
-    which gives ln x = EXL(0, x) in one node, and ELSb, exp(x − ln y). Inside F16 alone ln x needs 2 nodes,
-    LEdiv(0, F13(−1, x)), so the positive-domain total would be 15n rather than 14n. The high-impact tables
+    the list the Lean lower bounds (sub, add, mul and div each need at least 2 nodes) quantify over. Since 2026-09-13
+    the core table counts nodes in that list only. ln x takes 2 nodes there, LEdiv(0, F13(−1, x)), so the
+    positive-domain total is 15n / 79.5%. Counting ln x = EXL(0, x) as one node instead, with the census operator
+    EXL, exp(x)·ln y, gives 14n / 80.8%: the sum ModelAudit.lean states, with its ln witness taken through EXL.
+    No Lean theorem states the 15n total. Each construction is evaluated numerically
+    (<code>python/tests/test_superbest_f16_constructions.py</code>), and the totals are upper bounds. The high-impact tables
     follow the taxonomy-lock paper, whose "F16 orbit" is a different sixteen that leaves out LEAd (F11 on /framework).
+  </p>
+  <p class="section-desc">
+    <strong>General domain.</strong> The general basket is exp, neg, add, sub, mul and div, each with one F16 tree
+    valid for every real input where the operation is defined (div needs y ≠ 0). mul takes 3 nodes,
+    LEdiv(0, F13(y, DEML(x, 1))), and div takes 8. A numerical search over F16 trees with constant leaves 0, 1, −1, 2
+    and 1/2 finds no signed division with 7 or fewer nodes (<code>python/benchmarks/superbest_f16/search.py</code>).
+    The 3n that mul and div had before counted sign-dispatch case splits, one circuit per sign quadrant, not trees.
+    Two operations left the basket: abs, because no real F16 tree computes |x| (every tree is real-analytic where it
+    is defined, and |x| is not analytic at 0), and ln, which has no real value for x ≤ 0. The earlier basket read
+    16n / 74.2% over 8 operations. The naive costs are the library's pure-EML figures, not re-derived in the recount.
   </p>
 
   <div class="domain-toggle" id="domain-toggle">
@@ -344,7 +356,7 @@ const verify = superbest.verify_terminal;
   <div class="notes-block">
     <h2>Key results</h2>
     <ul>
-      <li><strong>Core table locked:</strong> 14n / 80.8% savings (positive domain) — canonical, unaffected by extended operators</li>
+      <li><strong>Core table, recounted in F16 (2026-09-13):</strong> 15n / 79.5% on the positive domain and 18n / 66.7% on the 6-op general basket; 14n / 80.8% when ln counts as one EXL node. Extended operators do not change these counts</li>
       <li><strong>LSE corrected:</strong> ln(e^x+e^y) = 4n in the taxonomy lock's F16 orbit (corrected from 5n); 2n in 23-op via EEA+ln, and 2n in the site's F16 via LEAd(x, EML(y, 1))</li>
       <li><strong>Taxonomy:</strong> 23 operators catalogued. CONJ_NO_OP_24 (no 24th operator) is a conjecture, argued on paper; no Lean proof exists</li>
       <li><strong>softplus = 2n</strong> in both layers via EML(x,1/e)+ln (Category B, in the taxonomy lock's orbit); 1n in the site's F16 via LEAd(x, 1)</li>
