@@ -89,11 +89,13 @@ if (brokenDeps.length > 0) {
       Lean theorem is <strong>machine-checked</strong>: it compiles with no <code>sorryAx</code>, re-checked
       before every deploy at a pinned commit. <strong style="color: var(--orange);">LEAN&nbsp;~</strong>
       means Lean checks only part of the card's statement, and the card's evidence says which
-      part. Cards without a badge have no Lean check; a card's tier says what kind of claim it is. The strongest form of that standard — machine-checked <em>and</em>
-      reproducible, with the actual <code>#print axioms</code> footprint re-derived, stamped, and
-      exposed — is the live
-      <a href="https://zoo.monogateforge.com/" style="color: var(--green);">verified zoo</a>,
-      where every green check links to the artifact behind it.
+      part. Cards without a badge have no Lean check; a card's tier says what kind of claim it is.
+      Forge's <a href="https://zoo.monogateforge.com/" style="color: var(--green);">reproduction zoo</a>
+      applies a stronger standard to compiled controllers, machine-checked <em>and</em> reproducible:
+      each card links its emitted code, its simulation and its <code>#print axioms</code> footprint.
+      The zoo is a generated snapshot, not a live check. Its page was generated on 2026-09-11 from
+      forge a616676, its footprints were re-derived between 2026-07-02 and 2026-07-10, and nothing
+      re-runs those checks between deploys.
     </p>
     <p style="margin-top: 10px; font-size: 11px; opacity: 0.8;">
       This page is rendered directly from <code>src/data/theorems.json</code> at build time —
