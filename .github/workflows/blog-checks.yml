@@ -1,40 +1,60 @@
 name: Blog Data Checks
 
-# Automatic, push/PR-triggered validation for monogate.org's data-driven pages
-# (/theorems, /atlas, /superbest — see blog/README.md). This does NOT deploy
-# anything; deploys stay manual (`wrangler pages deploy`, run by hand from a
-# box with monogate-lean checked out as a sibling repo — see blog/README.md).
-# What this closes: before this workflow existed, `npm run predeploy` was the
-# only enforcement of the citation/staleness checks in blog/scripts/
-# audit-citations.mjs, and it only ran if a human remembered to run it before
-# deploying. A bad commit (e.g. a dangling /theorems id, a Lean citation to a
-# file that doesn't exist) could sit on master, live on the site, indefinitely
-# with nothing red anywhere. This makes that a failed check on every push/PR
-# that touches blog/, same pattern as .github/workflows/eml-guard-contract.yml
-# already uses elsewhere in this repo.
+# Push/PR validation for monogate.org (blog/). This does NOT deploy anything. Deploys stay manual and
+# run `npm run predeploy` on the box that deploys (see blog/README.md).
+#
+# WHAT A GREEN RUN HERE DOES NOT MEAN. `npm run predeploy` also re-proves every Lean claim on the site
+# (check:lean-claims) and runs the axiom-witness bridge (check:axiom-bridge). Neither can run on a
+# GitHub-hosted runner: both need a built Lean + Mathlib toolchain, and the claims include files in
+# the private monogate-research repository. So green here means only that these passed:
+#   - the citation audit;
+#   - the /proofs quotation check;
+#   - the build;
+#   - the exhibit gates;
+#   - the accountability gate.
+# It does NOT mean the Lean claims were re-proved. That happens before every deploy, on the deploy box.
+#
+# History: this job ran `npm run predeploy` and failed on every push it ran for. It exited 2 inside
+# predeploy before 2026-09-12. After that, the new Lean steps could not find ../../monogate-lean
+# here. `npm run check:ci` is the part of predeploy that can run on this runner.
 
 on:
   pull_request:
     paths:
       - 'blog/**'
+      - '.github/workflows/blog-checks.yml'
   push:
     branches: [master, main]
     paths:
       - 'blog/**'
+      - '.github/workflows/blog-checks.yml'
   workflow_dispatch:
 
 jobs:
   audit-and-build:
+    name: citation audit, /proofs quotes, build, exhibit gates (Lean claims are re-proved at deploy, not here)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v6
 
-      - name: Checkout monogate-lean (cross-repo Lean citation checks need real source)
+      - name: Checkout monogate-lean (full history, so check_proofs_page.py can read the pinned commit)
         uses: actions/checkout@v6
         with:
           repository: agent-maestro/monogate-lean
           path: monogate-lean
+          fetch-depth: 0
+
+      - name: Checkout machlib (the citation audit resolves MachLib citations against it)
+        uses: actions/checkout@v6
+        with:
+          repository: agent-maestro/machlib
+          path: machlib
+
+      - name: Place the sibling repos where blog/ looks for them (../../<repo>)
+        run: |
+          ln -s "$GITHUB_WORKSPACE/monogate-lean" "$GITHUB_WORKSPACE/../monogate-lean"
+          ln -s "$GITHUB_WORKSPACE/machlib" "$GITHUB_WORKSPACE/../machlib"
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -47,17 +67,22 @@ jobs:
         working-directory: blog
         run: npm ci
 
-      - name: Citation audit + build (npm run predeploy)
+      - name: Install Firefox for the figure gate (check-figure-derives.mjs drives it through playwright-core)
+        working-directory: blog
+        run: npx playwright-core install --with-deps firefox
+
+      - name: Citation audit, /proofs quotes, build, exhibit gates (npm run check:ci)
         working-directory: blog
         env:
           MONOGATE_LEAN_PATH: ${{ github.workspace }}/monogate-lean
-        run: npm run predeploy
+          MACHLIB_PATH: ${{ github.workspace }}/machlib
+        run: npm run check:ci
 
-      # Runs AFTER the build on purpose: this gate resolves /accountability's internal links
-      # against dist/, so a link to an incident page that was never built fails here rather than
-      # 404-ing in public. HTTP-checking the live site could not catch that — the live site still
-      # serves the previous build. External artifact URLs ARE fetched live, because the entire
-      # page is a claim that they resolve.
+      # Runs AFTER the build on purpose. This gate resolves /accountability's internal links against
+      # dist/, so a link to an incident page that was never built fails here instead of 404-ing in
+      # public. HTTP-checking the live site could not catch that, because the live site still serves
+      # the previous build. External artifact URLs ARE fetched live, because the whole page is a claim
+      # that they resolve.
       # Firing specimen (both directions): blog/scripts/ACCOUNTABILITY_GATE_SPECIMEN.md
       - name: Accountability gate (/accountability links, staleness, grade rigour)
         working-directory: blog

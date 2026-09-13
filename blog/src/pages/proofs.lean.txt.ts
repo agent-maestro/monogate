@@ -7,17 +7,18 @@ import { files, aggregates, leanRepo } from '../data/proofs';
 export const GET: APIRoute = () => {
   const header =
     `-- monogate.org/proofs.lean.txt\n` +
-    `-- ${aggregates.verifiedOriginal} original EML theorems · ${aggregates.totalStatements} total Lean statements · ${aggregates.cleanFiles} zero-sorry files (+ ${aggregates.partialFiles} partial, ${aggregates.sorriesTotal} sorries documented)\n` +
+    `-- ${aggregates.totalStatements} Lean statements · ${aggregates.cleanFiles} zero-sorry files (+ ${aggregates.partialFiles} partial, ${aggregates.sorriesTotal} sorries documented)\n` +
     `-- Repo: ${leanRepo}\n` +
     `-- Verify: git clone ${leanRepo} && cd monogate-lean && lake build\n` +
     `-- This file: ${aggregates.flagshipCount} flagship theorems extracted verbatim from the source.\n` +
-    `-- Every block below is a literal copy; the line numbers point at the first line of each theorem in monogate-lean/MonogateEML/<file>.\n\n`;
+    `-- Every block below is a literal copy; the line numbers point at the first line of each theorem in monogate-lean/MonogateEML/<file>.\n` +
+    `-- Sources, line numbers and per-file counts are checked against a pinned monogate-lean commit before every deploy.\n\n`;
 
   const body = files
     .map(f => {
       const fileHeader =
         `-- ========================================================================\n` +
-        `-- ${f.file}  (${f.original} original / ${f.total} total · ${f.sorries === 0 ? '0 sorries' : `${f.sorries} sorries — documented, see below`})\n` +
+        `-- ${f.file}  (${f.total} statements · ${f.sorries === 0 ? '0 sorries' : `${f.sorries} sorries — documented, see below`})\n` +
         `-- ${f.thm}: ${f.what}\n` +
         `-- ========================================================================\n`;
 

@@ -28,11 +28,13 @@ reports/proof_carrying_rescue_suite_v0_2026_05_26.md
 reports/proof_carrying_rescue_explorer_fixture_v0_2026_05_26.json
 ```
 
-The interactive software inspection surface lives at:
+The interactive software inspection surface lived at:
 
 ```text
 https://monogate.dev/explorer/rescue-suite
 ```
+
+It was archived on 2026-09-12 (code at monogate-dev's `attic/research-stack-2026-06` tag; the URL redirects to monogate.dev/archive).
 
 ## The Four Lanes
 

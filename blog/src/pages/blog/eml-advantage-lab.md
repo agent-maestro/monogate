@@ -26,13 +26,13 @@ Where does EML help, where does standard math win, and which claim is still bloc
 
 That is what the EML Advantage Lab tracks.
 
-The developer-facing surface lives at:
+The developer-facing surface lived at:
 
 ```text
 https://monogate.dev/explorer/eml-advantage
 ```
 
-This note is the research record for what that surface currently means.
+It was archived on 2026-09-12 (code at monogate-dev's `attic/research-stack-2026-06` tag; the URL redirects to monogate.dev/archive). This note is the research record for what that surface meant.
 
 ## First Result
 

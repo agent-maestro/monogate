@@ -19,13 +19,13 @@ The Forge manifest lives at:
 reports/proof_carrying_rescue_suite_v0_2026_05_26.json
 ```
 
-The human-facing Explorer lives at:
+The human-facing Explorer lived at:
 
 ```text
 https://monogate.dev/explorer/rescue-suite
 ```
 
-It can be replayed with:
+It was archived on 2026-09-12 (code at monogate-dev's `attic/research-stack-2026-06` tag; the URL redirects to monogate.dev/archive). The suite itself can still be replayed with:
 
 ```text
 forge rescue --suite --strict

@@ -39,7 +39,7 @@ const theoremLd = {
 
 <Base
   title="Machine-Verified Proofs — monogate.org"
-  description={`${totalStatements} Lean statements across ${totalFiles} files, ${verifiedOriginal} of them EML-original, with full source. Zero sorries in ${cleanFiles} of the ${totalFiles} files. Every theorem on this page is checked against a pinned monogate-lean commit before each deploy.`}
+  description={`${totalStatements} Lean statements across ${totalFiles} files, with full source. Zero sorries in ${cleanFiles} of the ${totalFiles} files. Every theorem on this page is checked against a pinned monogate-lean commit before each deploy.`}
 >
   <div class="meta">
     <span>Lean 4 · Mathlib pinned by lake-manifest.json</span>
@@ -49,7 +49,7 @@ const theoremLd = {
 
   <h1>Machine-Verified Proofs</h1>
   <p class="lead">
-    {totalStatements} Lean statements across {totalFiles} files, {verifiedOriginal} of them EML-original. Zero sorries in {cleanFiles} of the {totalFiles} files.
+    {totalStatements} Lean statements across {totalFiles} files. Zero sorries in {cleanFiles} of the {totalFiles} files.
     Before every deploy, each flagship below is checked against a pinned monogate-lean commit: its source
     must appear there verbatim, and its theorem must compile with no <code>sorryAx</code>.
   </p>
@@ -118,8 +118,8 @@ lake build
   <h2 id="breakdown">Honest breakdown</h2>
   <p>The {totalFiles} files below contain {totalStatements} named theorems and lemmas. They are not all equally original. Here is the accounting:</p>
   <dl class="breakdown">
-    <div><dt>{verifiedOriginal}</dt><dd>EML-original theorems, classified by hand — results specific to this framework (SuperBEST lower bounds, F16-shape witnesses, EMLTree depth hierarchy, ELC preservation, self-map conjugacies).</dd></div>
-    <div><dt>{totalStatements - verifiedOriginal}</dt><dd>Everything else: Mathlib identity wrappers (named aliases of lemmas already in Mathlib, re-exported under EML-readable names, e.g. <code>exp_ln_cancel</code> is <code>Real.exp_log</code>), per-operator witnesses, trivial evaluations, definitional unfolds, and proof scaffolding that feed the originals. The split between those kinds is not counted.</dd></div>
+    <div><dt>{verifiedOriginal}</dt><dd>EML-original theorems, per the hand audit of 2026-04-26 — results specific to this framework (SuperBEST lower bounds, F16-shape witnesses, EMLTree depth hierarchy, ELC preservation, self-map conjugacies). This is that audit's count: it was not re-derived when files changed later, and no check verifies it.</dd></div>
+    <div><dt>{totalStatements - verifiedOriginal}</dt><dd>Everything else, by the same audit: Mathlib identity wrappers (named aliases of lemmas already in Mathlib, re-exported under EML-readable names, e.g. <code>exp_ln_cancel</code> is <code>Real.exp_log</code>), per-operator witnesses, trivial evaluations, definitional unfolds, and proof scaffolding that feed the originals. The split between those kinds is not counted.</dd></div>
     <div><dt>{totalStatements}</dt><dd>Total statements, all 0-sorry except as noted below.</dd></div>
     <div><dt>{sorriesTotal}</dt><dd>Sorry statements, all in <code>InfiniteZerosBarrier.lean</code>: <code>sin_not_in_eml</code> and <code>sin_not_in_real_EML_k</code>. Both flag the same open gap — a quantitative zero-count bound on EML-k trees needs o-minimal structure theory (Wilkie 1996, not yet formalized in Mathlib).</dd></div>
   </dl>
@@ -140,7 +140,7 @@ lake build
         <span class="what">{f.what}</span>
         <span class="file">
           <a href={ghFile(f.file)}><code>{f.file}</code></a>
-          <span class="counts">{f.original} original / {f.total} statements</span>
+          <span class="counts">{f.total} statements</span>
         </span>
       </div>
     ))}
@@ -162,7 +162,7 @@ lake build
           <span class={`sorry-badge ${f.ok ? 'zero' : 'some'}`}>
             {f.ok ? '✓ 0 sorries' : `⚠ ${f.sorries} sorries (o-minimal, documented)`}
           </span>
-          <span class="counts-inline">{f.original} original / {f.total} statements</span>
+          <span class="counts-inline">{f.total} statements</span>
           <a href={ghFile(f.file)} class="view-gh">view full file →</a>
         </div>
         <p class="file-what">{f.what}</p>
