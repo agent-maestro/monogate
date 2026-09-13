@@ -31,20 +31,23 @@ import Base from '../layouts/Base.astro';
   <p>
     There are exactly sixteen natural variants of this operator — the
     full family of two-input functions built from signed exp and signed
-    log.  We mapped all sixteen.  Eight of them are complete in the
-    strict sense (they generate every elementary function); one is
-    approximately complete; the other seven hit real structural
-    barriers.
+    log.  We mapped all sixteen.  By that census, which is checked
+    computationally rather than proved, eight of them generate every
+    elementary function and one is approximately complete.  The other
+    seven appear to hit structural barriers, but that count is a
+    conjecture: the arguments are on paper, and the one for DEML has a
+    gap (see <a href="/theorems">/theorems</a>, T12, T13 and T27).
   </p>
   <p>
     Given a list of common operations (add, multiply, square root,
-    power, reciprocal, and six more), we proved the smallest number of
-    our operator blocks needed to compute each of them — the
-    <strong>SuperBEST routing table</strong>.  On the ten standard
-    arithmetic primitives it takes fourteen blocks where the naïve
-    implementation takes seventy-three.  That's an <strong>80.8 %
-    reduction</strong> in the fundamental compute cost, with
-    mathematical proof.
+    power, reciprocal, and six more), we built the
+    <strong>SuperBEST routing table</strong>: the fewest operator blocks
+    we know of for each.  On the ten standard arithmetic primitives
+    (positive domain) it takes fourteen blocks where the naïve
+    implementation takes seventy-three, an <strong>80.8 %
+    reduction</strong>.  Every entry has an explicit construction; only
+    some have a proved lower bound, and
+    <a href="/superbest">/superbest</a> gives each entry's status.
   </p>
 
   <h2>What we proved</h2>
@@ -70,20 +73,20 @@ import Base from '../layouts/Base.astro';
 
   <h2>What it means</h2>
   <p>
-    If the analysis is right — and every claim on this site is either
-    verified by a computer or flagged as an observation — then
-    low-level continuous compute has an obvious structural optimum,
-    and neural-network and scientific-simulation stacks have been
-    leaving eighty percent of that optimum on the table.  We believe
-    the optimum is real on silicon, not just on paper.  That's the
-    next build.
+    If the analysis is right — and <a href="/theorems">/theorems</a>
+    says, claim by claim, whether it has a Lean proof, an argument on
+    paper, or is still a conjecture — then low-level continuous compute
+    has a structural optimum, and neural-network and
+    scientific-simulation stacks have been leaving eighty percent of
+    that optimum on the table.  We believe the optimum is real on
+    silicon, not just on paper.  That's the next build.
   </p>
 
   <h2>What's next</h2>
   <ul style="margin: 8px 0 24px 24px; line-height: 1.9;">
     <li>Hardware: a software model of an on-chip EML cell (16 operations in one cycle).  Error budgets and routing validation are done; an FPGA bring-up is the next chunk.</li>
     <li>AI integration: the CapCard project — agents pick tools by verified cost, not by prose description.</li>
-    <li>Interactive depth: the Zen Garden and the Equation Genome are in beta.  More to come.</li>
+    <li>Interactive depth: the Zen Garden is on <a href="https://1op.io">1op.io</a>.  The Equation Genome, which was on monogate.dev, was archived on 2026-09-12.</li>
   </ul>
 
   <div class="divider"></div>
@@ -91,7 +94,7 @@ import Base from '../layouts/Base.astro';
   <p style="color: var(--muted); font-size: 0.9rem;">
     Monogate Research · <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a> ·
     <a href="https://github.com/agent-maestro/monogate">GitHub</a> ·
-    <a href="/proofs">11 verified proofs</a> ·
+    <a href="/proofs">the Lean proofs</a> ·
     <a href="/capability_card.json">capability_card.json</a>
   </p>
 </Base>
