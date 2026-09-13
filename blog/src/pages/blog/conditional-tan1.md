@@ -1,13 +1,15 @@
 ---
 layout: ../../layouts/Base.astro
 title: "What If tan(1) Were Constructible?"
-description: "A thought experiment: if tan(1) could be built from EML trees, what would follow? The conditional chain connects to Schanuel's conjecture and would collapse the depth hierarchy."
+description: "A thought experiment: if tan(1) could be built from EML trees, what would follow? The conditional chain connects to Schanuel's conjecture. The collapse of the depth hierarchy it once predicted rested on a Depth Stability Theorem that is withdrawn."
 date: "2026-04-20"
 author: "Monogate Research"
 tag: conjecture
 ---
 
 # What If tan(1) Were Constructible?
+
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): Step C leaned on a Depth Stability Theorem that is withdrawn (sin has no real EML tree of any depth, but over ℂ it is one node), Step D treated transcendence as a bar to being an EML value (e is both), and the five-way equivalence near the end is withdrawn. Those sections are corrected in place.</p>
 
 **Tier: CONJECTURE** — everything below the horizontal rule in Section 1 is conditional. The contrapositive at the end, *tan(1) is not constructible* (DOOR-4), does not assume the hypothesis, but it is only as strong as the Steps A and B it reverses: argued on paper, with no Lean proof.
 
@@ -43,17 +45,17 @@ From $\tan(1)$, you can recover $\cos(1)$ via the identity $\cos^2(1) = 1/(1 + \
 
 Once you have $\cos(1)$ and $\sin(1)$, you have $e^i = \cos(1) + i\sin(1)$. Taking the complex logarithm: $\ln(e^i) = i$. Under the complex EML grammar (the Euler gateway), this means $i$ would be reachable from a bounded-depth EML tree.
 
-But that directly contradicts **T17**: $i \notin \mathrm{EML}_1$. This is the wall. (T17 is Lean-verified only under strict real semantics. The complex-semantics form this step needs is argued on paper; see [Why tan(1) Controls Everything](/blog/tan1-obstruction).)
+But that directly contradicts **T17**: $i \notin \mathrm{EML}_1$. This is the wall. (T17 is Lean-verified only under strict real semantics. The complex-semantics form this step needs is argued on paper; see [Does tan(1) Control Everything?](/blog/tan1-obstruction).)
 
 **Step C: The depth hierarchy would collapse.**
 
-By the **Depth Stability Theorem** (DST), $i \notin \mathrm{EML}_1$ is equivalent to the statement that every EML Atlas function has the same depth in the real and complex grammar. If $i$ became constructible, this equivalence would break simultaneously for every Atlas function.
+This step leaned on the **Depth Stability Theorem** (DST): that $i \notin \mathrm{EML}_1$ is equivalent to every EML Atlas function having the same depth in the real and complex grammar. The DST is withdrawn. $\sin$ has no real EML tree at any depth, yet over $\mathbb{C}$ it is the imaginary part of the one-node tree $\mathrm{eml}(ix, 1)$, so its two depths differ whatever happens to $i$. Nothing collapses through the DST.
 
-Concretely: $\arctan(x)$ currently sits at depth 3 in the EML Atlas. Since $\arctan(1) = \pi/4$, and $\pi/4$ would become constructible once $i$ is accessible, $\arctan$ could potentially drop to depth 2. The clean depth-3 ceiling on all standard functions would no longer hold.
+The step also said that $\arctan(x)$ sits at depth 3 in the EML Atlas and could drop to depth 2 once $\pi/4$ became constructible, ending the depth-3 ceiling on standard functions. No tree backs $\arctan$ at depth 3, and that ceiling is false already: $x + 1$ has depth exactly 4.
 
 **Step D: $\pi$ would be EML-constructible.**
 
-$\pi/2 = \arcsin(1)$. If $\arcsin$ (at depth 3 in the Atlas) is applied to the terminal value 1, we get $\pi/2$, and hence $\pi$. The transcendence of $\pi$ would then need to be reconciled with its constructibility — a contradiction under standard transcendence theory.
+$\pi/2 = \arcsin(1)$, so if $\arcsin$ were an EML tree, applying it to 1 would give $\pi/2$, and hence $\pi$. The post called that a contradiction with the transcendence of $\pi$. It is not one: transcendental numbers can be EML values, since $e = \mathrm{eml}(1, 1)$ is transcendental. This step shows nothing.
 
 ---
 
@@ -69,7 +71,7 @@ Theorem T17 says $i \notin \mathrm{EML}_1$. Contrapositive:
 
 **This is DOOR-4: $\tan(1) \notin \mathrm{EML}_1$.** It reverses Steps A and B, so it has their standing: argued on paper, with no Lean proof.
 
-The Lindemann–Weierstrass route gives the same answer (transcendence is already a barrier), but the T17 contrapositive is structurally cleaner: it shows that the obstruction to $\tan(1)$ is the same obstruction that excludes $i$ — a fundamental property of the real-valued EML grammar.
+A direct check gives the same answer: the only depth-1 values over $\{0, 1\}$ are $1$ and $e$. Transcendence alone is no barrier, since $e$ is transcendental. The T17 contrapositive would tie the obstruction to $\tan(1)$ to the one that excludes $i$, but under complex semantics that link is only argued.
 
 ---
 
@@ -87,9 +89,9 @@ Schanuel is not proved. But conditionally, it says the barrier to $\tan(1)$ bein
 
 ---
 
-## Why Five Things Would Break at Once
+## Why Five Things Would Break at Once (withdrawn)
 
-The five-way equivalence at the heart of the monogate capstone paper says these five properties all hold or all fail together:
+The five-way equivalence at the heart of the monogate capstone paper said these five properties all hold or all fail together:
 
 1. The EML grammar is complete (every function is expressible)
 2. The Depth Stability Theorem holds
@@ -97,9 +99,9 @@ The five-way equivalence at the heart of the monogate capstone paper says these 
 4. The depth-3 ceiling on standard functions holds
 5. Lindemann–Weierstrass provides valid transcendence obstructions
 
-If $\tan(1) \in \mathrm{EML}_1$, then item 3 fails (by the chain above), and therefore all five fail simultaneously. The depth hierarchy, the completeness proof, and the transcendence machinery would all need to be rebuilt.
+That equivalence is withdrawn. Item 2 is false ($\sin$, above), item 4 is false ($x + 1$ has depth 4), and item 5 is a theorem, so the five do not hold or fail together. If $\tan(1)$ were in $\mathrm{EML}_1$, the chain above would still make item 3 fail under complex semantics, but nothing else on the list would follow.
 
-This is what makes the question interesting as a thought experiment: $\tan(1)$ is not a marginal case. It is load-bearing.
+The question is still a fair thought experiment. It is not load-bearing for the depth results, which concern real trees.
 
 ---
 
@@ -107,7 +109,7 @@ This is what makes the question interesting as a thought experiment: $\tan(1)$ i
 
 This post is a **conditional analysis**, not a new theorem. The contrapositive at the end (DOOR-4) is no exception: it is argued on paper, and no Lean proof of it exists.
 
-The conditionals — Steps A through D — are informal logical derivations. Step B in particular (recovering $i$ from $\cos(1)$ and $\sin(1)$ via the complex EML grammar) has not been formalised in Lean. Formalising it would require a definition of complex EML depth, an algebraic closure lemma for EML-reachable values, and a depth-transfer argument from complex to real semantics.
+The conditionals — Steps A and B — are informal logical derivations; Steps C and D are withdrawn above. Step B in particular (recovering $i$ from $\cos(1)$ and $\sin(1)$ via the complex EML grammar) has not been formalised in Lean. Formalising it would require a definition of complex EML depth, an algebraic closure lemma for EML-reachable values, and a depth-transfer argument from complex to real semantics.
 
 The Schanuel connection is doubly conditional: it requires both Hypothesis H (which is false) and Schanuel's conjecture (which is open).
 

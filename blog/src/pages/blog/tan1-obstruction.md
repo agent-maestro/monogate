@@ -1,22 +1,23 @@
 ---
 layout: ../../layouts/Base.astro
-title: "Why tan(1) Controls Everything"
-description: "A single transcendence fact about tan(1), offered as the root cause behind three separate EML claims: the multiplication lower bound, a depth-3 ceiling for standard functions (false: x + 1 has depth 4), and complex density (unproved)."
+title: "Does tan(1) Control Everything?"
+description: "A transcendence fact about tan(1) was offered as the root cause of three EML results, through a 'Depth Stability Theorem'. That theorem is withdrawn: sin has no real EML tree of any depth, but over ℂ it is one node. None of the three results uses tan(1)."
 date: "2026-04-20"
 author: "Monogate Research"
 tag: conjecture
 ---
 
-# Why tan(1) Controls Everything
+# Does tan(1) Control Everything?
 
 <p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called its unification a theorem. T30's depth-3 ceiling is false: x + 1 has depth exactly 4, and ln x has depth exactly 3 on (0, ∞), not 1. T31's density argument never builds polynomials, and whether i is an accumulation point is open (C03). T29 rests on an exhaustive search over six operators with leaves x, y, 0, 1 on x, y > 0, and that search does not involve i. The sections below are corrected in place.</p>
 
-**Tier: CONJECTURE** (T17 is a theorem and T29 a proposition; T30 and T31 are conjectures, and their unification via the Lindemann–Weierstrass obstruction has no proof)
+<p style="color: var(--muted); font-style: italic;">Second correction (2026-09-13): this post was titled "Why tan(1) Controls Everything", and its unification ran through a Depth Stability Theorem: i ∉ EML_k exactly when every Atlas function has the same depth over ℂ as over ℝ. That theorem is withdrawn, and with it the five-way equivalence and the claim that the depth theory holds if and only if tan(1) is transcendental. sin has no real EML tree of any depth, but over ℂ it is the imaginary part of the one-node tree eml(ix, 1). T17's proof under strict real semantics does not use tan(1), and the argument from tan(1) under complex semantics does not work. The sections below say what each claim rests on.</p>
+
+**Tier: CONJECTURE** (T17 is a theorem and T29 a proposition; T30 and T31 are conjectures. The unification through tan(1) is withdrawn: its Depth Stability step is false.)
 
 ---
 
-Three EML results that looked independent are traced here to one root cause.
-That cause is a single fact about a single number: $\tan(1)$ is transcendental.
+This post traced three EML results that looked independent to one root cause: a single fact about a single number, $\tan(1)$ is transcendental. The fact is a theorem. The tracing does not hold up.
 
 ---
 
@@ -38,7 +39,7 @@ Apply this to $\alpha = 2i$ (which is algebraic, degree 2 over $\mathbb{Q}$):
 $e^{2i} = \cos(2) + i\sin(2)$ is transcendental.
 From this, via standard identities, $\sin(1)/\cos(1) = \tan(1)$ is transcendental.
 
-That one fact — $\tan(1) \notin \overline{\mathbb{Q}}$ — is offered as the root cause of
+That one fact — $\tan(1) \notin \overline{\mathbb{Q}}$ — was offered as the root cause of
 everything below.
 
 ---
@@ -57,30 +58,32 @@ Starting from the terminal set $\{0, 1\}$, EML trees generate a growing set of v
 Under strict real semantics the proof is three lines: every EML operation
 maps real inputs to real outputs, and $i$ is not real. Done.
 
-The harder question is whether $i$ is reachable under complex semantics —
-where $\ln$ can accept negative inputs and return $\pm i\pi$.
-Here the $\tan(1)$ obstruction becomes essential.
+The harder question is whether $i$ is reachable under complex semantics, where $\ln$ accepts
+negative inputs: $\ln(-r) = \ln r + i\pi$ for $r > 0$. This post argued that the transcendence of
+$\tan(1)$ settles it. To build $i$ you need a tree value with imaginary part exactly 1; the imaginary
+part of $e^{\alpha + i\beta}$ is $e^\alpha \sin\beta$; for $\beta = 1$ that forces $\cot(1)$ to be
+EML-constructible; and $\cot(1)$ is transcendental.
 
-To construct $i$, you need some tree value $z = \alpha + i\beta$ with imaginary
-part exactly $1$. The imaginary part of $e^{\alpha + i\beta}$ is
-$e^\alpha \sin(\beta)$.
-For this to equal $1$ with EML-constructible $\alpha$ and $\beta$, you need
-$\cot(\beta) = e^\alpha \cos(\beta)$ — and for the simplest case $\beta = 1$,
-this forces $\cot(1) = 1/\tan(1)$ to be EML-constructible.
+The argument does not work, for two reasons:
 
-But $\tan(1)$ is transcendental, so $1/\tan(1) = \cot(1)$ is transcendental.
-The only values EML can build from $\{0, 1\}$ lie in a specific field of
-elementary numbers.
-$\cot(1)$ is not in that field at the required position.
-The constraint cannot be satisfied in any finite depth.
+- It tracks only the exponential. The imaginary part of $\mathrm{eml}(z, w) = e^z - \ln w$ is
+  $e^{\mathrm{Re}\,z}\sin(\mathrm{Im}\,z) - \arg w$, so the logarithm moves it too.
+- Being transcendental does not keep a number out of the EML values: $e = \mathrm{eml}(1, 1)$ is
+  transcendental.
 
-**The nearest miss:** at depth 6, the closest EML tree to $\mathrm{Im} = 1$ achieves
-$\mathrm{Im} = 0.99999524$. A gap of $4.76 \times 10^{-6}$.
-Not a rounding error. A transcendental obstruction.
+Under complex semantics, $i \notin \mathrm{EML}_k$ is argued on paper and has no proof.
+
+**The nearest miss.** Among the values of depth 6 over the leaf 1 there is one with imaginary part
+$0.99999524$, a gap of $4.76 \times 10^{-6}$ ([the depth-6 post](/blog/depth-6-phase-transition) prints
+the search). Here $\tan(1)$ does appear. The value is $\mathrm{eml}(1, q)$ for a depth-5 value $q$
+with imaginary part $-\pi$, and its imaginary part is $\operatorname{atan2}(\pi, \mathrm{Re}\,q)$. That
+equals 1 exactly when $\mathrm{Re}\,q = \pi\cot(1) \approx 2.0171934$; the closest depth-5 $q$ has
+$\mathrm{Re}\,q \approx 2.0172146$. A gap at depth 6 says nothing about deeper trees, and nothing shows
+that no EML value equals $\pi\cot(1)$.
 
 ---
 
-## Three results, one root cause
+## Three results, one root cause?
 
 ### Application 1 — Multiplication lower bound (T29)
 
@@ -121,21 +124,24 @@ arcsin, arccos — has EML depth **at most 3**. The ceiling is false: $x + 1$ ha
 | $e^x$ | 1 | 1 EML/EAL node |
 | $\ln x$ | 3 | exactly 3 on $(0, \infty)$; listed at 1, via an EXL node, which is not an EML tree |
 | $x^n$ | ? | $e^{n \ln x}$ passes through $\ln x$ (depth 3); no depth-2 tree is known |
-| $\sin x$ | 3 | Euler: $(e^{ix} - e^{-ix}) / 2i$ |
-| $\arctan x$ | 3 | $\frac{1}{2i}\ln\frac{1+ix}{1-ix}$ |
+| $\sin x$ | ∞ over ℝ | listed at 3, via Euler's formula $(e^{ix} - e^{-ix}) / 2i$, with no tree. Over ℝ no EML tree of any depth equals it, proved in Lean (MachLib, `sin_not_in_eml_any_depth_unconditional`); over ℂ it is the imaginary part of the one-node tree $\mathrm{eml}(ix, 1)$ |
+| $\arctan x$ | ? | listed at 3, via $\frac{1}{2i}\ln\frac{1+ix}{1-ix}$, with no tree and no lower bound |
 
 The hierarchy was also called strictly infinite, with the $k$-fold iterate $\exp^{(k)}$ at depth
 exactly $k$. It has a $k$-node tree for every $k$, but exactly $k$ is settled only for $k \le 4$.
 And a standard function does live above depth 3: $x + 1$.
 
-Why can't $\sin$ be collapsed to depth 2?
-The complex route $\sin(x) = \mathrm{Im}(e^{ix})$ is depth 2 over $\mathbb{C}$,
-but it requires $i$ as a constructed constant. Since $i$ is not constructible
-($\tan(1)$ blocks it), the collapse is prevented.
+The post asked why $\sin$ can't be collapsed to depth 2, and answered that the complex route
+$\sin(x) = \mathrm{Im}(e^{ix})$ needs $i$ as a constructed constant, which $\tan(1)$ blocks. It called
+this the **Depth Stability Theorem**: $i \notin \mathrm{EML}_k$ if and only if every EML-Atlas function
+has the same depth over $\mathbb{C}$ as over $\mathbb{R}$.
 
-This is the **Depth Stability Theorem**: $i \notin \mathrm{EML}_k$ if and only if
-every EML-Atlas function has the same depth over $\mathbb{C}$ as it does over $\mathbb{R}$.
-The complex shortcut is uniformly blocked, for every function, by the single $\tan(1)$ fact.
+That theorem is withdrawn. Its right-hand side is false for $\sin$, which has no real EML tree at any
+depth but, over $\mathbb{C}$, is the imaginary part of the one-node tree $\mathrm{eml}(ix, 1)$ with $ix$
+as the input. So the equivalence would make $i$ an EML value under complex semantics, the opposite of
+what this post argues. Its proof fails at the step that turns a complex tree into an equally deep real
+one, and $\sin$ is the counterexample there too. The complex route needs $ix$ as an input, not $i$ as a
+constructed constant.
 
 ---
 
@@ -146,102 +152,87 @@ functions on any compact simply-connected domain $K \subset \mathbb{C}$:
 every function holomorphic near $K$ could be approximated to any precision by some finite EML tree.
 The argument for it never builds polynomials, so the claim is open.
 
-And yet: $i$ is never exactly reached.
+And yet $i$ is not known to be reached exactly.
 
 Is this a contradiction? No. Density and exact membership are different things.
 
 The rational numbers $\mathbb{Q}$ are dense in $\mathbb{R}$, but $\sqrt{2} \notin \mathbb{Q}$.
 EML values would be dense in holomorphic function space, yet $i \notin \mathrm{EML}_k$.
 
-The $\tan(1)$ obstruction explains both sides:
-
-- **Why sequences could approach $i$:** Transcendence is an exact algebraic constraint.
-  You can get exponentially close to satisfying $e^\alpha \sin(\beta) = 1$ with
-  constructible pairs $(\alpha, \beta)$ — the constraint becomes arbitrarily nearly
-  satisfied without ever being exactly satisfied.
-  Density would hold because the obstruction is a precision-zero set in the limit.
-
-- **Why $i$ is never reached:** Exact membership requires the constraint to be
-  exactly satisfied by EML-constructible values. The $\tan(1)$ transcendence
-  prevents this in every finite depth.
+The post explained both sides by $\tan(1)$: constructible pairs $(\alpha, \beta)$ could satisfy
+$e^\alpha \sin\beta = 1$ ever more nearly, while transcendence would stop them from satisfying it
+exactly at any finite depth. Neither half is shown. The first is the density claim itself, which is
+open. The second is the complex-semantics argument above, which does not work.
 
 Whether $i$ is an accumulation point of $\mathrm{EML}_1$ is open (C03); depth 6 gets within
-$4.76 \times 10^{-6}$. It is not an element of $\mathrm{EML}_k$. The two would coexist without contradiction.
+$4.76 \times 10^{-6}$. Whether it is an element of $\mathrm{EML}_k$ under complex semantics is argued on
+paper, with no proof. The two would coexist without contradiction.
 
 ---
 
-## The five-way equivalence
+## The five-way equivalence (withdrawn)
 
-The connection is not just a chain of implications. It is a logical equivalence.
-All five conditions hold together or fail together:
+The post claimed that these five conditions all hold together or all fail together:
 
 | # | Condition | Status |
 |---|---|---|
 | (1) | $\tan(1) \notin \overline{\mathbb{Q}}$ (Lindemann–Weierstrass) | **Theorem (proven 1882)** |
-| (2) | $i \notin \mathrm{EML}_k$ for all $k$ (T17) | Follows from (1); Lean-verified for real semantics |
-| (3) | $\mathrm{depth}_\mathbb{C}(f) = \mathrm{depth}_\mathbb{R}(f)$ for all Atlas functions | Follows from (2) via Depth Stability Theorem |
-| (4) | $\mathrm{depth}(\arctan) = \mathrm{depth}(\arcsin) = \mathrm{depth}(\arccos) = 3$ | Follows from (3) |
-| (5) | Every EML-Atlas function has a stable, well-defined depth stratum | Follows from (4) |
+| (2) | $i \notin \mathrm{EML}_k$ for all $k$ (T17) | Does not use (1). Lean-verified for real semantics, where every value is real; under complex semantics, argued on paper with no proof |
+| (3) | $\mathrm{depth}_\mathbb{C}(f) = \mathrm{depth}_\mathbb{R}(f)$ for all Atlas functions | False: $\sin$ has no real EML tree, and a one-node complex one |
+| (4) | $\mathrm{depth}(\arctan) = \mathrm{depth}(\arcsin) = \mathrm{depth}(\arccos) = 3$ | No tree and no lower bound is given for any of the three |
+| (5) | Every EML-Atlas function has a stable, well-defined depth stratum | Not a precise statement; read as "no depth drops over ℂ", it is (3) |
 
-And the reverse: **(5) implies (1)**. If depth strata are stable, then the complex routing shortcut is blocked, which (by the contrapositive of the $\tan(1)$ chain) requires $\tan(1)$ to be transcendental.
+(1) is a theorem and (3) is false, so the five are not equivalent. The post also said **(5) implies (1)**. That holds only because (1) is a theorem, and the argument given for it went through the Depth Stability Theorem. The claim that the EML depth theory holds if and only if $\tan(1)$ is transcendental is withdrawn.
 
-The EML depth theory holds **if and only if** $\tan(1)$ is transcendental.
+The depth results that are proved in Lean, that $\ln x$ has depth exactly 3 and $x + 1$ depth exactly 4 on $(0, \infty)$ and that $\sin$ has no real EML tree, concern real trees, and their proofs do not use $\tan(1)$.
 
 ---
 
-## What happens if Lindemann–Weierstrass fails?
+## What if Lindemann–Weierstrass failed?
 
-Suppose hypothetically that $\tan(1) \in \overline{\mathbb{Q}}$ — that there exists
-a polynomial with rational coefficients having $\tan(1)$ as a root.
+The post supposed that $\tan(1)$ were algebraic and listed what would collapse: $i$ constructible from
+$\{0, 1\}$, $\sin(x)$ at depth 2, $\arctan$ below depth 3, multiplication in $\mathcal{F}_6$ in 2 nodes,
+and every lower bound in the EML Atlas depth table at once, "a single house of cards resting on one
+transcendence fact".
 
-Then:
-
-- $i$ becomes constructible from $\{0, 1\}$ in some finite depth $k$.
-- $\sin(x)$ drops to depth 2 (via $\mathrm{Im}(e^{ix})$ with constructible $i$).
-- $\arctan$ drops below depth 3.
-- Multiplication in $\mathcal{F}_6$ drops to 2 nodes via complex routing.
-- **Every lower bound in the EML Atlas depth table collapses simultaneously.**
-
-The entire depth theory is a single house of cards resting on one transcendence fact.
-Remove Lindemann–Weierstrass and nothing is left standing.
+None of that follows. $\tan(1)$ is transcendental, so the supposition is false and settles nothing
+about EML trees. Under strict real semantics $i$ is not an EML value whatever $\tan(1)$ is. The
+$\mathcal{F}_6$ multiplication bound is a finite search that never uses $i$. The real depth lower bounds
+do not mention $\tan(1)$.
 
 ---
 
 ## Summary
 
-The structure of the EML depth theory is:
+What each claim rests on:
 
-```
-tan(1) ∉ Q̄  (Lindemann–Weierstrass)
-    ↓
-i ∉ EML_k  (T17, Lean-verified for real semantics)
-    ↓
-depth_ℂ = depth_ℝ  (Depth Stability Theorem)
-    ↓
-┌─────────────────────────────────────────────────────┐
-│ T29: mul needs ≥ 3 nodes in F6 (search; x, y > 0)   │
-│ T30: standard functions depth ≤ 3: false (x + 1)    │
-│ T31: EML dense in H(K)? open; i a limit pt.? open   │
-└─────────────────────────────────────────────────────┘
-```
+- $\tan(1) \notin \overline{\mathbb{Q}}$: Lindemann–Weierstrass (1882).
+- $i \notin \mathrm{EML}_k$ (T17, Lean-verified for real semantics): every strict real value is real,
+  and $i$ is not. Under complex semantics it is argued on paper.
+- T29, $xy$ needs at least 3 nodes in $\mathcal{F}_6$ (leaves $x, y, 0, 1$, on $x, y > 0$): an
+  exhaustive search.
+- T30, standard functions have depth at most 3: false ($x + 1$).
+- T31, EML trees dense in $H(K)$: open, and so is whether $i$ is a limit point (C03).
+- The Depth Stability Theorem and the five-way equivalence: withdrawn.
 
-One number. One transcendence fact. Three claims: a search result, a refuted ceiling, an open conjecture.
+None of the four results is derived from $\tan(1)$. It enters only the near miss, as the target
+$\pi\cot(1)$.
 
 ---
 
-*Monogate Research (2026). "Why tan(1) Controls Everything."
+*Monogate Research (2026). "Does tan(1) Control Everything?" (first published as "Why tan(1) Controls Everything").
 monogate research blog. https://monogate.org/blog/tan1-obstruction*
 
-*Full paper: D:/monogate/python/paper/Unifying_Obstruction_Tan1.tex · Sessions S93–S99 + Unified synthesis*
+*Paper: `python/paper/Unifying_Obstruction_Tan1.tex`, whose Depth Stability Theorem and Five-Way Equivalence are withdrawn above · Sessions S93–S99 + Unified synthesis*
 
-*Reproduce:*
+*Reproduce the near miss's arithmetic:*
 ```python
-pip install monogate
+pip install mpmath
 python -c "
-from monogate import eml
-# Nearest-miss to Im=1 at depth 6 (transcendental obstruction):
-# Best known: Im = 0.99999524 (gap 4.76e-6)
-print('tan(1) =', __import__('math').tan(1))
-print('Is tan(1) algebraic? No. (Lindemann-Weierstrass)')
+import mpmath as mp
+mp.mp.dps = 30
+q = mp.mpf('2.01721457679406991430741964108')  # Re of the closest depth-5 value with Im = -pi
+print('pi*cot(1)      =', mp.pi / mp.tan(1))
+print('Im eml(1, q-pi*i) =', mp.im(mp.e - mp.log(mp.mpc(q, -mp.pi))))
 "
 ```
