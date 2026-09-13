@@ -211,7 +211,7 @@ theorem rpow_one_node_positive (n x : ℝ) (hx : 0 < x) :
       {
         name: 'ln_one_node_via_exl',
         line: 96,
-        hook: 'ln via EXL: exp(0) · log(x) = log(x). The extended-EXL operator makes ln a single node, closing the SuperBEST 14n positive-domain count.',
+        hook: 'ln via EXL: exp(0) · log(x) = log(x). The extended-EXL operator makes ln a single node, closing the SuperBEST 14n positive-domain count, the count that uses EXL; /superbest counts in F16, where ln takes 2 nodes and the total is 15n.',
         source: `/-- EXL identity: exp(0) * log(x) = log(x) for all real x.
 
     Justifies the SuperBEST 1-node accounting of \`ln(x)\` via the extended
@@ -305,7 +305,7 @@ theorem superbest_positive_one_node_ops :
   {
     file: 'ModelAudit.lean',
     thm: 'v5.1 → v5.3 SuperBEST correction',
-    what: 'sqrt via EPL(0.5, x) and mul via F16fn drop the positive-domain SuperBEST total to 14n (80.8% savings).',
+    what: 'sqrt via EPL(0.5, x) and mul via F16fn drop the positive-domain SuperBEST count to 14n (80.8% savings) with ln counted as one EXL node; in F16 alone the total is 15n (79.5%).',
     original: 6, total: 13, sorries: 0, ok: true,
     flagships: [
       {

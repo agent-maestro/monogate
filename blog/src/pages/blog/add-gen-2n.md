@@ -7,7 +7,7 @@ date: "2026-04-20"
 tag: theorem
 ---
 
-<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called SuperBEST v5 the final, complete table, with no domain splits and "the work done". It was not: later constructions cut mul to 1 node for x, y &gt; 0 and pow and sqrt to 1 node for x &gt; 0, the current positive-domain total is 14n, and mul and div still cost 3n on general inputs against 1n and 2n on positive ones (/superbest). The 2-node addition and its Lean lower bound (ADD-T1) stand.</p>
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called SuperBEST v5 the final, complete table, with no domain splits and "the work done". It was not: later constructions cut mul to 1 node for x, y &gt; 0 and pow and sqrt to 1 node for x &gt; 0, the positive-domain total, counted in F16, is 15n, and on general inputs mul costs 3n and div 8n, against 1n and 2n on positive ones (/superbest). The 2-node addition and its Lean lower bound (ADD-T1) stand.</p>
 
 ## The Last Outlier
 
@@ -85,7 +85,7 @@ Every equation that previously required add_gen = 11n now drops by 9 nodes per a
 
 ## Was the Table Complete?
 
-This section called SuperBEST v5 the final table, with no outliers, no domain splits and the work done. It was not final (see the correction above), and domain splits remain: mul and div cost 3n on general inputs, against 1n and 2n for positive ones.
+This section called SuperBEST v5 the final table, with no outliers, no domain splits and the work done. It was not final (see the correction above), and domain splits remain: on general inputs mul costs 3n and div 8n, against 1n and 2n for positive ones.
 
 *Proof: `python/paper/theorems/ADD_T1_General_Addition_2n.tex`. Its claim that the table is proved complete is withdrawn; see the [errata](https://github.com/agent-maestro/monogate/blob/master/python/paper/ERRATA.md).*
 

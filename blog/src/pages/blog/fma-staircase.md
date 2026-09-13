@@ -51,7 +51,7 @@ It also doesn't say FMA is the unique primitive worth adopting. Bilinear-FMA add
 
 Raw data: 222 per-row parsed costs under each basis state are in the private exploration repo (`exploration/deep10/catalog_parsed_v4.json`). The parse rate reflects sympy's reach on ASCII-math formulas; the remaining 43 rows are mostly summations and matrix-notation expressions outside elementary closure.
 
-Source: 265-equation catalog (`exploration/deep-sessions/data/expanded_genome.json`). Public capcard holds the toy-basket 14n / 80.8% headline; this post is the catalog-aggregate complement.
+Source: 265-equation catalog (`exploration/deep-sessions/data/expanded_genome.json`). Public capcard holds the toy-basket 15n / 79.5% headline (F16); this post is the catalog-aggregate complement.
 
 ---
 

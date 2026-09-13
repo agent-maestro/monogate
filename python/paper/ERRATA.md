@@ -196,7 +196,8 @@ deploy. The current tier and evidence for each catalog entry is on https://monog
 ### `theorems/ADD_T1_General_Addition_2n.tex`
 
 - **§ Completeness of the table.** *Claim:* the table "is proved complete". *Change:* later constructions
-  lowered mul, pow and sqrt; the current positive-domain total is 14n. *Page:* /blog/add-gen-2n.
+  lowered mul, pow and sqrt; the positive-domain total is 15n counted in F16 (14n with ln counted as one EXL
+  node). *Page:* /blog/add-gen-2n.
 
 ### `theorems/recip_One_Node.tex`
 
@@ -239,6 +240,25 @@ deploy. The current tier and evidence for each catalog entry is on https://monog
   site's F16 (/framework), and with it softplus is 1 node (LEAd(x, 1)) and two-term log-sum-exp 2 nodes
   (LEAd(x, EML(y, 1))).
 - *Page:* /superbest.
+
+### `theorems/CONJ_MUL_GEN_TIGHT_Final.tex` and `theorems/CONJ_DIV_GEN_TIGHT_Final.tex`
+
+- **Theorems "CONJ_MUL_GEN_TIGHT resolved" (SB(mul, ℝ²) = 3) and "CONJ_DIV_GEN_TIGHT resolved"
+  (SB(div, ℝ² ∖ {y = 0}) = 3), with each paper's § Upper Bound: 3-Node Construction.**
+  - *Change:* the 3-node witnesses are sign-dispatch case splits, one circuit per sign quadrant, not single trees.
+  - Counted as single trees in the site's F16, x·y still takes 3 nodes, LEdiv(0, F13(y, DEML(x, 1))), but x/y
+    takes 8. A numerical search over trees with constant leaves 0, 1, −1, 2 and 1/2 finds none with 7 or fewer
+    (`python/benchmarks/superbest_f16/search.py`). SB(div) = 3 is withdrawn.
+  - *Page:* /superbest.
+
+### `exploration/Core10_ReCheck.tex` and `exploration/SuperBEST_ReAudit_F16_Only.tex`
+
+- **General-domain total 1+1+3+3+2+2+2+2 = 16n over 8 operations.**
+  - *Change:* no real F16 tree computes |x| over all reals (a tree is real-analytic wherever it is defined, and |x|
+    is not analytic at 0), so abs has no 2n entry. ln has no real value for x ≤ 0, and div takes 8 nodes as one
+    tree.
+  - The site's general basket is exp, neg, add, sub, mul and div: 18n against 54n naive, 66.7%.
+  - *Page:* /superbest.
 
 ## Cost theory
 

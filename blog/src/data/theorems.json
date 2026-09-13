@@ -222,7 +222,7 @@
       "name": "Division, General Domain: No 2-Node exp-Outer Circuit — Lean",
       "session": "Lean, 2026-04-24",
       "category": "Core Algebra",
-      "statement": "No 2-node F16 circuit with an exp-type outer operator (F13–F16) computes x/y for all real x, y — such circuits are always positive, but x/y takes negative values (witness (x,y) = (−1,2)). A further, Lean-proved step toward a general-domain ≥ 3 bound. Honest scope: the remaining F1–F12 outer cases are NOT Lean-proved — see the SuperBEST table's div=3n entry for the precise status of that stronger claim.",
+      "statement": "No 2-node F16 circuit with an exp-type outer operator (F13–F16) computes x/y for all real x, y — such circuits are always positive, but x/y takes negative values (witness (x,y) = (−1,2)). A further, Lean-proved step toward a general-domain ≥ 3 bound. Honest scope: the remaining F1–F12 outer cases are NOT Lean-proved — see the SuperBEST table's general div entry (8n as one F16 tree since 2026-09-13) for the precise status of that stronger claim.",
       "evidence": "Lean 4, 0 sorries. no_F13_outer_2node_div / no_F14_outer_2node_div / no_F15_outer_2node_div / no_F16fn_outer_2node_div, each via the shared lemma always_pos_ne_div (an always-positive function cannot equal x/y, which is negative at (−1,2)).",
       "lean": {
         "file": "DivLowerBound3.lean",
@@ -237,7 +237,7 @@
       "name": "SuperBEST Upper Bounds — 5 Positive-Domain Identities (Lean)",
       "session": "Lean Sprint 2026-04-21",
       "category": "Core Algebra",
-      "statement": "Lean-verified (0 sorries): exp(x)=F1(x,1) (1n); exp(ln x+ln y)=xy for x,y>0 (1n); exp(n·ln x)=xⁿ for x>0 (1n); exp(−ln x)=1/x for x>0 (1n); exp(½·ln x)=√x for x>0 (1n). SuperBEST v5.3 positive total: 14n (savings 80.8%), which also counts ln x = EXL(0, x) as one node; EXL is a census operator outside the sixteen on /framework, inside which ln x needs 2.",
+      "statement": "Lean-verified (0 sorries): exp(x)=F1(x,1) (1n); exp(ln x+ln y)=xy for x,y>0 (1n); exp(n·ln x)=xⁿ for x>0 (1n); exp(−ln x)=1/x for x>0 (1n); exp(½·ln x)=√x for x>0 (1n). Counted with ln x = EXL(0, x) as one node (EXL is a census operator outside the sixteen on /framework), the v5.3 positive total is 14n (savings 80.8%), the sum ModelAudit.lean states. Counted in F16 alone, where ln x = LEdiv(0, F13(−1, x)) takes 2 nodes, it is 15n (79.5%): /superbest's figure since 2026-09-13, checked numerically and not stated by any Lean theorem.",
       "evidence": "Lean 4, 0 sorries. UpperBounds.lean + ModelAudit.lean. Mathlib: Real.exp_add, Real.exp_log, Real.rpow_def_of_pos, Real.sqrt_eq_rpow.",
       "lean": {
         "file": "UpperBounds.lean",
