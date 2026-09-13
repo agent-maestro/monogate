@@ -1,12 +1,12 @@
 ---
 layout: ../../layouts/Base.astro
 title: "214 Equations: The SuperBEST Cost of Science"
-description: "A complete catalog of SuperBEST node counts for standard equations across 12+ domains — from 1-node trivialities to 2037-node error correction. Expanded from 157 (Monster Sprint) to 214 (COMP-ALL) to 295+ (domain-2 sessions: FIN, INFO, QM, THERMO, CHEM, BIO, ECON)."
+description: "A complete catalog of SuperBEST node counts for standard equations across 12+ domains — from 1-node trivialities up (the 2037-node Reed-Solomon ceiling this post once gave is withdrawn). Expanded from 157 (Monster Sprint) to 214 (COMP-ALL) to 295+ (domain-2 sessions: FIN, INFO, QM, THERMO, CHEM, BIO, ECON)."
 date: "2026-04-20"
 tag: "observation"
 ---
 
-> **Update — 2026-04-20 (COMP-ALL):** This catalog has been expanded from 157 to **214 equations** following nine new measurement sessions (TECH-1 through TECH-5, SPORT-1 through SPORT-2, NAT-1 through NAT-2). New domains added: information retrieval, recommendation systems, GPS navigation, 3D graphics, error correction, sports analytics, and applied physics. The new ceiling is **2037n** (Reed-Solomon syndrome for RS(255,223)), far exceeding the previous ceiling of 47n (Black-Scholes). The new floor remains **2n** (ETA, batting average, any ratio). All new results use SuperBEST v4 (div=2n, recip=1n). See also: [The SuperBEST Cost of Everything](/blog/cost-of-everything).
+> **Update — 2026-04-20 (COMP-ALL):** This catalog has been expanded from 157 to **214 equations** following nine new measurement sessions (TECH-1 through TECH-5, SPORT-1 through SPORT-2, NAT-1 through NAT-2). New domains added: information retrieval, recommendation systems, GPS navigation, 3D graphics, error correction, sports analytics, and applied physics. The new ceiling was given as **2037n** (Reed-Solomon syndrome for RS(255,223)), far exceeding the previous ceiling of 47n (Black-Scholes). That count is withdrawn (2026-09-13): syndrome computation is GF(256) arithmetic, which EML does not do, and the count came from a false scaling law (see [The SuperBEST Cost of Everything](/blog/cost-of-everything)). The new floor remains **2n** (ETA, batting average, any ratio). All new results use SuperBEST v4 (div=2n, recip=1n). See also: [The SuperBEST Cost of Everything](/blog/cost-of-everything).
 
 > **Correction — 2026-07-22 (audit of `/atlas` and `/theorems` against the canonical SuperBEST table):** The "SuperBEST v3 Node Costs (Reference)" table below, and every equation cost derived from it in this post, is a **v3-vintage snapshot** — genuinely out of date, not just old. Since publication, the canonical per-op table (`monogate/python/monogate/superbest.py`, mechanically kept in sync with `/superbest` via a regression-guarded test suite) has moved to v5.3: `div`'s "1n" below is the exact figure `/theorems`' own T08 entry calls "erroneous," now 2n (positive) / 3n (general); `mul`, `sqrt`, and `pow` each dropped to a Lean-verified 1-node positive-domain construction (were 2n/2n/3n); `add` unified to 2n for **all** reals (was 3n positive-only / 11n general — the 11n figure this post's own reference table still shows). None of the individual equation costs in Tables 1–3 (or beyond) have been recomputed against v5.3 — doing that needs the underlying equation dataset and a `recost_catalog.py`-style pass, not a hand-check, and wasn't attempted this round. Read every specific node count below as "true under SuperBEST v3/v4, as published," not as a current claim. See `/superbest` and `/theorems` for the current canonical per-op costs.
 
@@ -151,7 +151,7 @@ Three equations from three domains compute the same sum-of-p·ln(p) pattern:
 | Shannon entropy of spike train (K patterns) | Neuroscience | 6K − 1 nodes |
 | Cross-entropy loss (N classes) | Neuroscience / ML | 6N − 1 nodes |
 
-Each term contributes 3n (one `ln` at 1n plus one `mul` at 2n). Each addition step costs 3n. The per-term structure is identical across thermodynamics, information theory, and machine learning loss functions.
+Under SuperBEST v3 each term contributed 3n (one `ln` at 1n plus one `mul` at 2n) and each addition step cost 3n. Both unit costs are out of date: addition takes 2n for all real inputs (ADD-T1), and p·ln p = EXL(EXL(0, p), p) takes 2 nodes for p > 0. The three scaling laws are v3 counts and have not been re-derived; the per-term accounting alone gives 6N − 3 for a bare sum, so each constant also carries terms not shown here. The per-term structure is identical across thermodynamics, information theory, and machine learning loss functions.
 
 ---
 
@@ -201,7 +201,7 @@ Between these extremes, the 293+ other equations of science distribute themselve
 
 ---
 
-*Data sources: sessions Chem-1 through Bio-5 (chemistry and biology), ASTRO-1 through ASTRO-3 (astrophysics), NEURO-1 through NEURO-3 (neuroscience), GEO-E1 through GEO-E3 (geology), ECON-1 through ECON-3 (economics), MAG-1 through MAG-3 (electromagnetism). SuperBEST v3 routing table applied analytically. All results exact and reproducible.*
+*Data sources: sessions Chem-1 through Bio-5 (chemistry and biology), ASTRO-1 through ASTRO-3 (astrophysics), NEURO-1 through NEURO-3 (neuroscience), GEO-E1 through GEO-E3 (geology), ECON-1 through ECON-3 (economics), MAG-1 through MAG-3 (electromagnetism). SuperBEST v3 routing table applied analytically. The counts are hand counts under v3 (see the 2026-07-22 correction above).*
 
 *Full machine-readable catalog: `python/results/master_equation_catalog.json`*
 

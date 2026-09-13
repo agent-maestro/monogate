@@ -1,11 +1,13 @@
 ---
 layout: ../../layouts/Base.astro
 title: "When Olympiad Problems Produce EML Trees"
-description: "Classical functional equations characterise exp and ln, and their solutions turn out to be minimal EML trees — often cheaper than the equations that define them."
+description: "Classical functional equations characterise exp and ln, and their solutions turn out to be small F16 trees — often cheaper than the equations that define them. Whether those trees are the cheapest possible is not shown."
 date: 2026-04-23
 tag: observation
 difficulty: 3
 ---
+
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post said the solutions are the minimal EML trees for their functions, the cheapest possible representations in the F16 census. Nothing shows that. The node counts are constructions from the SuperBEST v5.2 table, counted in F16 nodes, and only a few table entries have lower bounds.</p>
 
 Functional equations are how mathematicians *define* the elementary functions
 without reaching for calculus.  `f(x + y) = f(x) · f(y)` for every real
@@ -13,10 +15,11 @@ without reaching for calculus.  `f(x + y) = f(x) · f(y)` for every real
 symbol and you get the logarithm instead: `f(xy) = f(x) + f(y)` gives
 `f(x) = c · ln x`.
 
-What's rarely noticed is that the *solutions* to these equations are the
-minimal EML trees for those functions.  The Cauchy equations don't just
-produce exp and ln: they produce **1-node** or **3-node** EML trees, the
-cheapest possible representations in the F16 census.
+What's rarely noticed is how small the *solutions* to these equations are
+as trees.  The Cauchy equations don't just produce exp and ln: their
+solutions take **2 or 3** F16 nodes in the SuperBEST table.  Those are
+constructions; whether any is the cheapest possible is not shown, since
+only a few SuperBEST entries have lower bounds (see /superbest).
 
 Ten olympiad-style problems, run through the SuperBEST v5.2 cost table.
 Every number below is a node count, not a marketing figure.
@@ -34,9 +37,8 @@ addition into multiplication.  That's the whole folklore in one number.
 
 **Logarithmic Cauchy.**  `f(xy) = f(x) + f(y)` → `f(x) = c · ln x`.
 One `ln` (1n) via `EXL(0, x)`, then `mul` (2n).  **Total: 3n** — the
-same as exponential Cauchy.  exp and ln are each other's minimal-tree
-conjugates, and that conjugacy shows up in the node count without
-anyone having to prove it separately.
+same as exponential Cauchy.  exp and ln are conjugate, and that
+conjugacy shows up in the node count.
 
 ## Solutions are often cheaper than their equations
 

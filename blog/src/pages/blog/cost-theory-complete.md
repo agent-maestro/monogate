@@ -1,16 +1,18 @@
 ---
 layout: ../../layouts/Base.astro
-title: "The Cost Theory Is Complete"
-description: "One accounting identity for the SuperBEST node cost of a scientific equation. The decomposition (T38) is a definition, not a theorem; the predictions were tested on 187 equations, and the code is open-source."
+title: "Is the Cost Theory Complete?"
+description: "One accounting identity for the SuperBEST node cost of a scientific equation. The decomposition (T38) is a definition, not a theorem; several results hold only as upper bounds, and the Quadratic Ceiling Conjecture and other problems are open. The predictions were checked on 100 validation equations."
 date: "2026-04-20"
-tag: "theorem"
+tag: "research"
 ---
 
-# The Cost Theory Is Complete
+# Is the Cost Theory Complete?
 
 <p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called T38 a theorem that the rest of the theory follows from, and gave an exact O(N) law. T38 is a definition: the identity holds only because PatternBonus is defined as the remainder. The exact law is false (x₁ + x₂ costs 2, not 3), the No Nesting Penalty holds only as an upper bound, and the Lean files are type signatures with sorry. The sections below are corrected in place; the blind-test figures are reported as measured.</p>
 
-**Date:** 2026-04-20 | **Tag:** theorem | **Read time:** ~7 min
+<p style="color: var(--muted); font-style: italic;">Second correction (2026-09-13): this post was titled "The Cost Theory Is Complete". It is not: T38 is a definition, several results hold only as upper bounds, and the open problems below outnumber the two it listed. It also said equations in a cross-domain family cost exactly the same, which rests on minimal DAGs that nothing establishes, and it headed its validation "Blind test: 187 equations", though the blind tests total 50.</p>
+
+**Date:** 2026-04-20 | **Tag:** research | **Read time:** ~7 min
 
 ---
 
@@ -71,13 +73,13 @@ This post stated $\operatorname{Cost}(f_N) = (\alpha_0 + 3)N - 3$ exactly, in th
 
 **O(N²) nested double sums:** Pairwise interaction models such as the Hopfield network energy $E = -\frac{1}{2}\sum_i\sum_j w_{ij}s_is_j$ scale as $\Theta(N^2)$.
 
-**The Quadratic Ceiling Conjecture (T42-QCC):** No standard scientific closed-form formula exceeds O(N²). This is unproved but consistent with all 187 equations tested and with the physical principle that fundamental interactions are at most pairwise.
+**The Quadratic Ceiling Conjecture (T42-QCC):** No standard scientific closed-form formula exceeds O(N²). This is unproved but consistent with the 187 equations the paper counts (its 157-equation corpus plus the 30-equation R12 blind test), checked by hand in April, and with the physical principle that fundamental interactions are at most pairwise.
 
 ---
 
 ## Cross-domain isomorphism
 
-Equations from completely different scientific fields can share identical minimal DAG topologies. Theorem T41-ISO (R10) catalogues eight confirmed cross-domain families:
+Equations from completely different scientific fields can share the same tree shape. The paper's T41-ISO (R10), which it calls a theorem, names eight cross-domain families:
 
 - Arrhenius ≅ Eyring (chemistry, kinetics)
 - Boltzmann weight ≅ Logistic sigmoid (stat. mech., ML)
@@ -88,22 +90,24 @@ Equations from completely different scientific fields can share identical minima
 - Michaelis-Menten ≅ Hill equation (enzyme kinetics)
 - Beer-Lambert ≅ Weber-Fechner ≅ Decibel (optics, psychophysics, acoustics)
 
-Within each family, Cost is exactly equal. Any optimisation or normal form proved for one equation in the family transfers automatically to all others.
+The paper defines a family by isomorphic *minimal* DAGs and concludes that within each family Cost is exactly equal. Nothing establishes that any of these DAGs is minimal: most node counts are constructions, which bound Cost from above, and lower bounds exist only for a few single operations. What a family shares is a construction, so its members cost at most the same number of nodes; equal cost is not shown. A construction found for one equation transfers to the others by relabelling leaves. A lower bound need not, since a leaf that is a constant in one equation can fold. /theorems lists these families as an observation (O-ISO), with a different list of eight.
 
 ---
 
 ## Complex extension
 
-Trigonometric functions have infinite real EML cost: no finite $\mathcal{F}_{16}$ tree over the reals computes $\sin$ or $\cos$ exactly. But in the complex extension (Proposition T43, R13), admitting $i$ as a free terminal and Euler's formula $e^{ix} = \cos x + i\sin x$:
+Trigonometric functions have infinite real cost: no finite real EML tree computes $\sin$ or $\cos$ exactly, proved in Lean by periodicity (MachLib), and the same is argued for mixed $\mathcal{F}_{16}$ trees, with no proof. But in the complex extension (Proposition T43, R13), admitting $i$ as a free terminal and Euler's formula $e^{ix} = \cos x + i\sin x$:
 
-$$\operatorname{ComplexCost}(\sin x) = \operatorname{ComplexCost}(\cos x) = 2$$
-$$\operatorname{ComplexCost}(\sin^2 x + \cos^2 x) = 3$$
+$$\operatorname{ComplexCost}(\sin x) \le 2, \qquad \operatorname{ComplexCost}(\cos x) \le 2$$
+$$\operatorname{ComplexCost}(\sin^2 x + \cos^2 x) \le 3$$
+
+These are upper bounds: the paper printed them as equalities but lists matching lower bounds for trigonometric expressions as open. As a function, $\sin^2 x + \cos^2 x$ is the constant 1, which needs no node; the 3 counts the expression as written.
 
 ComplexCost ≤ RealCost for all expressions representable over the reals.
 
 ---
 
-## Blind test: 187 equations, 90%+ exact
+## Validation: 100 equations in three corpora
 
 The theory was validated on three independent corpora:
 
@@ -113,21 +117,29 @@ The theory was validated on three independent corpora:
 
 The 3 discrepancies in R12 were not theory failures: they arose from condensed operator counting in the study prompt. Under fully-expanded trees, all 30 predictions are exact.
 
+The paper's cumulative figure of 187+ equations adds R12's 30 to its 157-equation corpus. That is the set the ceiling conjectures were checked against by hand, not a blind test.
+
 ---
 
 ## What is still open
 
-Two main open problems remain:
+The paper lists five open problems, and the corrections on this page add more. Among them:
 
 **The Quadratic Ceiling Conjecture.** Prove that no standard scientific closed-form formula ever exceeds O(N²) SuperBEST cost. A proof would require showing that no textbook formula encodes the algebraic equivalent of a nested double sum without explicitly writing one. A counterexample would be a formula with a single summation whose terms have intrinsic algebraic dependencies that force super-linear cost. Neither has been found.
 
 **Lean 4 formalisation.** R1 and R3 give Lean 4 type signatures, with `sorry` in place of every proof, for the four basic properties (P1--P4), T38, the No Nesting Penalty, T40, and T41. None of it is mechanised, and several of those statements are false as written (P2, the equality forms of the No Nesting Penalty and T40, the T41 ordering), so only corrected forms could be.
 
+**Patterns.** Whether the 12-pattern catalogue is complete, and whether greedy pattern selection is optimal; the argument for greedy selection is a sketch that assumes no two patterns share a root node.
+
+**Isomorphism families.** Whether the eight families are all there are, and whether members of a family really cost the same, since no family's minimal DAG is established.
+
+**Lower bounds.** Matching lower bounds for complex cost, which the paper leaves open, and for most real costs: only sub, add, mul and div have lower bounds in Lean.
+
 ---
 
 ## Citation
 
-Monogate Research (2026). "The Cost Theory Is Complete." monogate research. [https://monogate.org/blog/cost-theory-complete](https://monogate.org/blog/cost-theory-complete)
+Monogate Research (2026). "Is the Cost Theory Complete?" (first published as "The Cost Theory Is Complete"). monogate research. [https://monogate.org/blog/cost-theory-complete](https://monogate.org/blog/cost-theory-complete)
 
 The full technical paper (including its proof arguments and the theorem index T34--T43; [/theorems](/theorems) says which of them hold) is available at:
 `python/paper/cost_theory/Cost_Theory_Complete.tex` in the [monogate repository](https://github.com/monogate-dev/monogate).

@@ -2,7 +2,7 @@
 layout: ../../layouts/Base.astro
 title: "Predicting SuperBEST Cost from Equation Structure"
 date: "2026-04-20"
-tag: "theorem"
+tag: "research"
 description: "Four structural classes, the cost decomposition (T38, a definition), complexity classes O(1)/O(N)/O(N²), and the Linear Ceiling Conjecture (T39): an upper-bound model of how many EML nodes a standard scientific equation needs."
 ---
 

@@ -7,6 +7,8 @@ tag: "observation"
 author: "Monogate Research"
 ---
 
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): the Reed-Solomon section costed GF(256) syndrome arithmetic as real EML arithmetic, which this post's own boundary section calls a type error, using a scaling law that is false; its 2037n ceiling is withdrawn. The Nash sentence cited a check that nothing records, and the v5 note at the end called the SuperBEST table complete. The other node counts are April hand counts under SuperBEST v4 and have not been re-costed.</p>
+
 ## From Google's PageRank to your GPS to the NFL passer rating
 
 Every equation has a cost. Not in dollars or milliseconds — in operator nodes. Under the SuperBEST v4 routing table (div=2n, recip=1n), any arithmetic expression reduces to a tree of EML-family primitives, and that tree has an exact node count. The count is structural: it does not depend on hardware, language, or numerical library. It depends only on the shape of the formula.
@@ -111,7 +113,7 @@ Other results:
 | Nash equilibrium (2-player) | 19n |
 | Pythagorean expectation | 11n |
 
-ELO (26n) costs more than batting average (2n) because it includes a logistic sigmoid transformation on the rating difference — that sigmoid costs 7n on its own — plus the update arithmetic. Nash equilibrium (19n) requires add_gen=11n in the denominator because game payoffs can be negative; the counterexample exists and was verified.
+ELO (26n) costs more than batting average (2n) because it includes a logistic sigmoid transformation on the rating difference — that sigmoid costs 7n on its own — plus the update arithmetic. Nash equilibrium (19n) was counted with April's general-domain addition, add_gen = 11n, in the denominator, because game payoffs can be negative; addition now takes 2n for all real inputs (ADD-T1), so 19n is out of date. This sentence also said "the counterexample exists and was verified", without saying what the counterexample was or what checked it, and nothing on record does.
 
 ---
 
@@ -176,15 +178,15 @@ A baseball statistician in 1983, a pharmacologist in 1910, and a biochemist in 1
 
 ---
 
-## The most expensive equation computed
+## The most expensive equation computed (withdrawn)
 
-**Reed-Solomon syndrome computation for RS(255,223): 2037 nodes.**
+This section gave **Reed-Solomon syndrome computation for RS(255,223)** a cost of **2037 nodes**, the most expensive formula in the catalog by a wide margin.
 
-Every QR code, every DVD, every deep-space transmission from the Voyager probes uses Reed-Solomon error correction. The syndrome computation for the standard RS(255,223) code — 255 total symbols, 223 data symbols, capable of correcting up to 16 symbol errors — requires evaluating a degree-254 polynomial at 32 points over GF(256).
+Every QR code, every DVD, every deep-space transmission from the Voyager probes uses Reed-Solomon error correction. The syndrome computation for the standard RS(255,223) code — 255 total symbols, 223 data symbols, capable of correcting up to 16 symbol errors — evaluates a degree-254 polynomial at 32 points over GF(256), the finite field with 256 elements.
 
-The syndrome computation itself (translating from XOR-based GF arithmetic to real-arithmetic EML, evaluating under 8N−3 with N=255) was counted at 2037 nodes. 8N−3 comes from a scaling law, (α₀+3)N − 3, that was stated as exact and is false, so 2037 is an April count, an upper-bound estimate at best. This is the most expensive regularly-computed formula in the catalog, by a wide margin.
+That count is withdrawn. Finite-field arithmetic is outside EML: by this post's own boundary section above, asking for its node count is a type error. The 2037 came from translating the XOR-based GF arithmetic into real arithmetic and evaluating a real polynomial under 8N − 3 with N = 255, and 8N − 3 comes from a scaling law, (α₀+3)N − 3, that was stated as exact and is false. A real polynomial evaluation is not what a Reed-Solomon decoder computes, so 2037 is not a cost of Reed-Solomon at all, and neither this section's comparison with Haversine nor its explanation of dedicated RS hardware stands.
 
-For reference: the next most expensive is Haversine (28n), used billions of times per day. Reed-Solomon syndrome (2037n) is computed millions of times per second in storage and communication hardware. Error correction is expensive. That cost is why dedicated RS hardware exists — no general-purpose processor core can afford to run 2037-node evaluations on every symbol block in real time without hardware acceleration.
+Among the counts that remain in this post, the largest is quaternion rotation with general-domain addition, 235n, itself an April count made before addition dropped to 2n (see the update at the end).
 
 ---
 
@@ -197,15 +199,15 @@ The same node-counting that works for chemistry and neuroscience works for sport
 What the nine sessions established:
 
 - The floor is 2n (ETA, batting average, FG%) — any ratio.
-- The ceiling in daily computation is 2037n (Reed-Solomon) — error correction.
+- The 2037n Reed-Solomon ceiling is withdrawn: syndrome computation is finite-field arithmetic, outside EML.
 - The most frequently evaluated formula in outdoor navigation is 28n (Haversine).
 - Sports statistics can exceed neuroscience in arithmetic complexity (NFL 33n > HH 30n).
 - The universe uses five or six canonical templates — exponential decay, exponential growth, log ratio, Hill function — across every domain of science and engineering.
 - GF(2) bitwise arithmetic is outside EML. The boundary is real and important.
 
-*Domain-2 expansion (FIN, INFO, QM, THERMO, CHEM, BIO, ECON sessions) extended the catalog beyond these nine sessions to 295+ equations across 12+ domains. The floor and ceiling are unchanged; the cross-domain isomorphism count grew from 8 to 12+ families. See [295+ Equations →](/blog/157-equations).*
+*Domain-2 expansion (FIN, INFO, QM, THERMO, CHEM, BIO, ECON sessions) extended the catalog beyond these nine sessions to 295+ equations across 12+ domains. The floor is unchanged, and the ceiling was the withdrawn Reed-Solomon count; the cross-domain isomorphism count grew from 8 to 12+ families. See [295+ Equations →](/blog/157-equations).*
 
-SuperBEST cost theory does not tell you what an equation *means*. It tells you how many irreducible operations it requires. Sometimes that number surprises you. The NFL passer rating surprised us. The Reed-Solomon syndrome count did not — we just had not measured it before.
+SuperBEST cost theory does not tell you what an equation *means*. It tells you how many irreducible operations it requires. Sometimes that number surprises you. The NFL passer rating surprised us. The Reed-Solomon count should have stopped us: it measured arithmetic this post says EML does not do.
 
 The cost of everything is countable. We are counting.
 
@@ -213,6 +215,6 @@ The cost of everything is countable. We are counting.
 
 *Monogate Research (2026). "The SuperBEST Cost of Everything." monogate research blog. https://monogate.org/blog/cost-of-everything*
 
-*Sessions: TECH-1 through TECH-5, SPORT-1 through SPORT-2, NAT-1 through NAT-2. SuperBEST v4 routing table (div=2n, recip=1n). All results exact and reproducible.*
+*Sessions: TECH-1 through TECH-5, SPORT-1 through SPORT-2, NAT-1 through NAT-2. SuperBEST v4 routing table (div=2n, recip=1n). The counts are April hand counts; they have not been re-costed, and no public script reproduces them.*
 
-> **Update — 2026-04-20 (SuperBEST v5):** General-domain addition drops from 11n to 2n via `lediv(x, deml(y,1))`. The two-tier table (add_pos=3n / add_gen=11n) collapses to a single entry: add=2n for all reals. New total: 18n, savings 75.3%. The table is complete. Equations that previously used add_gen=11n (ELO, Nash equilibrium, quaternion rotation, Henderson-Hasselbalch) benefit proportionally — e.g. quaternion rotation (general) drops from 235n substantially. See [General Addition in 2 Nodes →](/blog/add-gen-2n).
+> **Update — 2026-04-20 (SuperBEST v5):** General-domain addition drops from 11n to 2n via `lediv(x, deml(y,1))`. The two-tier table (add_pos=3n / add_gen=11n) collapses to a single entry: add=2n for all reals. New total: 18n, savings 75.3%. This note called the table complete. It was not: later constructions cut mul to 1 node for x, y > 0 and pow and sqrt to 1 node for x > 0, and the current positive-domain total is 14n (80.8%, see /superbest). Equations that previously used add_gen=11n (ELO, Nash equilibrium, quaternion rotation, Henderson-Hasselbalch) benefit proportionally — e.g. quaternion rotation (general) drops from 235n substantially. See [General Addition in 2 Nodes →](/blog/add-gen-2n).
