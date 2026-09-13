@@ -10,7 +10,7 @@ description: "We enumerated EML constant trees to depth 7, tested 20 random comp
 
 Let EML({1}) be the set of all complex numbers that can be computed by finite EML trees using only the constant leaf 1. We know:
 
-- i ∉ EML({1}) (proved — the strict i-unconstructibility barrier)
+- i ∉ EML({1}) under strict real semantics, Lean-checked (T17). Under the complex semantics this page uses, where ln(−e) = 1 + iπ, it is argued on paper, not proved.
 - π ∈ Im(EML({1})) at depth 7 (a tree exists with imaginary part exactly π)
 - EML({1}) ∩ ℝ is not dense in ℝ (the real values grow doubly exponentially)
 
@@ -83,7 +83,7 @@ If the conjecture is true, the picture of i's status becomes sharp:
 
 The EML barrier hierarchy:
 1. **Real:** sin(x) is impossible (infinitely many zeros)
-2. **Complex exact:** i is not constructible (proved)
+2. **Complex exact:** i is not constructible (argued on paper; Lean-checked only under strict real semantics, T17)
 3. **Complex approximate:** i is approachable (conjectured from density)
 4. **Complex limit:** sin(x) = limit of EML trees (expected from density + Weierstrass)
 

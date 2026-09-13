@@ -1,5 +1,5 @@
 {
-  "_comment": "Every public claim on monogate.org that a Lean theorem is proved, pinned to the artifact that proves it. `npm run predeploy` runs ../../monogate-lean/tools/lean_claims/check_claims.py over it: each claimed theorem must be declared in its file at the pinned revision; the file must compile in its environment, with the toolchain, package revisions and local-import sources exactly as pinned; each theorem's own #print axioms must have no sorryAx and nothing outside allowed_axioms (the footprint observed on 2026-09-12); and every label occurrence in src/ and public/ must be a site below or an exemption with its reason. To make a claim, add it here in the same change as the page text. scripts/check_proofs_page.py reads the monogate-lean pin from `sources`. The labels include \"is proved\" and \"are proved\" (with \"now\", \"also\", \"all\", \"both\", \"fully\", \"formally\" or \"already\" between, and markdown emphasis on the word), \"proved theorem\", \"sorryAx-free\" (with or without backticks) and the uppercase tier word PROVED, which alone matches case-sensitively via (?-i:...). /proofs/apollonius renders PROVED badges from src/data/apollonius-evidence.json; scripts/check-exhibit-gates.mjs fails unless every theorem those badges cite is registered here. Capitalized \"Proved\" is a label too, case-sensitively via (?-i:...), so a title like \"All Entries Structurally Proved\" is caught; lowercase \"proved\" alone is not (127 lines).",
+  "_comment": "Every public claim on monogate.org that a Lean theorem is proved, pinned to the artifact that proves it. `npm run predeploy` runs ../../monogate-lean/tools/lean_claims/check_claims.py over it: each claimed theorem must be declared in its file at the pinned revision; the file must compile in its environment, with the toolchain, package revisions and local-import sources exactly as pinned; each theorem's own #print axioms must have no sorryAx and nothing outside allowed_axioms (the footprint observed on the day the claim was added); and every label occurrence in src/ and public/ must be a site below or an exemption with its reason. To make a claim, add it here in the same change as the page text. scripts/check_proofs_page.py reads the monogate-lean pin from `sources`. The labels are the Lean-verified / machine-checked family, \"sorryAx-free\" (with or without backticks), and since 2026-09-13 the bare words \"proved\" and \"proven\" in any case (\\bproved\\b, \\bproven\\b), which subsume the earlier \"is proved\", \"are proved\", \"proved theorem\", PROVED and Proved labels; \"unproved\" and \"improved\" do not match. /proofs/apollonius renders PROVED badges from src/data/apollonius-evidence.json; scripts/check-exhibit-gates.mjs fails unless every theorem those badges cite is registered here. A theorem name containing a prime (e.g. MachLib.Real.quadratic_lyapunov_sublevel_tight') cannot be registered: check_claims.py's report parser reads names between single quotes.",
   "environments": {
     "mathlib": {
       "project": "../../monogate-lean",
@@ -64,12 +64,9 @@
       "LEAN(&nbsp;| )✓",
       "sorryAx absent",
       "files? compile|compiles against mathlib|recompiles every proof",
-      "\\bis(?:\\s|&nbsp;)+(?:(?:now|also|all|both|fully|formally|already)(?:\\s|&nbsp;)+)?[*_]{0,2}proved",
-      "\\bare(?:\\s|&nbsp;)+(?:(?:now|also|all|both|fully|formally|already)(?:\\s|&nbsp;)+)?[*_]{0,2}proved",
-      "proved[*_]{0,2}(?:\\s|&nbsp;)+theorem",
       "sorryAx`?[-‐‑ ]?free",
-      "(?-i:\\bPROVED\\b)",
-      "(?-i:\\bProved\\b)"
+      "\\bproved\\b",
+      "\\bproven\\b"
     ]
   },
   "claims": [
@@ -96,6 +93,10 @@
         {
           "file": "public/.well-known/capcard.json",
           "line": "\"lean_theorem\": \"eml_universality\""
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "Composition closure proved constructively via tree substitution"
         }
       ],
       "repository": "../../monogate-lean",
@@ -107,7 +108,11 @@
         "const_isEMLElementary",
         "id_isEMLElementary",
         "exp_isEMLElementary",
-        "exp_exp_isEMLElementary"
+        "exp_exp_isEMLElementary",
+        "EMLTree.subst_depth",
+        "EMLTree.subst_eval",
+        "IsEMLElementary.comp",
+        "EML_k_closed_comp"
       ],
       "allowed_axioms": [
         "Classical.choice",
@@ -134,6 +139,22 @@
         {
           "file": "public/.well-known/capcard.json",
           "line": "\"lean_theorem\": \"SB_mul_ge_two\""
+        },
+        {
+          "file": "src/pages/atlas.astro",
+          "line": "Only some entries have a proved lower bound;"
+        },
+        {
+          "file": "src/pages/manifesto.astro",
+          "line": "some have a proved lower bound, and"
+        },
+        {
+          "file": "src/pages/superbest.astro",
+          "line": "Lower bounds are Lean-checked for sub, add, mul and div over all reals"
+        },
+        {
+          "file": "src/pages/superbest.astro",
+          "line": "so the capability card records this table as partially proven."
         }
       ],
       "repository": "../../monogate-lean",
@@ -180,6 +201,22 @@
         {
           "file": "src/data/superbest.json",
           "line": "SB_add_ge_two (AddLowerBound.lean, Lean-verified) gives >= 2"
+        },
+        {
+          "file": "src/pages/atlas.astro",
+          "line": "Only some entries have a proved lower bound;"
+        },
+        {
+          "file": "src/pages/manifesto.astro",
+          "line": "some have a proved lower bound, and"
+        },
+        {
+          "file": "src/pages/superbest.astro",
+          "line": "Lower bounds are Lean-checked for sub, add, mul and div over all reals"
+        },
+        {
+          "file": "src/pages/superbest.astro",
+          "line": "so the capability card records this table as partially proven."
         }
       ],
       "repository": "../../monogate-lean",
@@ -219,6 +256,22 @@
         {
           "file": "src/pages/blog/superbest-complete.md",
           "line": "(`SB_sub_ge_two`, Lean-verified)"
+        },
+        {
+          "file": "src/pages/atlas.astro",
+          "line": "Only some entries have a proved lower bound;"
+        },
+        {
+          "file": "src/pages/manifesto.astro",
+          "line": "some have a proved lower bound, and"
+        },
+        {
+          "file": "src/pages/superbest.astro",
+          "line": "Lower bounds are Lean-checked for sub, add, mul and div over all reals"
+        },
+        {
+          "file": "src/pages/superbest.astro",
+          "line": "so the capability card records this table as partially proven."
         }
       ],
       "repository": "../../monogate-lean",
@@ -261,6 +314,22 @@
         {
           "file": "src/pages/blog/superbest-complete.md",
           "line": "(`SB_div_ge_two`, Lean-verified)"
+        },
+        {
+          "file": "src/pages/atlas.astro",
+          "line": "Only some entries have a proved lower bound;"
+        },
+        {
+          "file": "src/pages/manifesto.astro",
+          "line": "some have a proved lower bound, and"
+        },
+        {
+          "file": "src/pages/superbest.astro",
+          "line": "Lower bounds are Lean-checked for sub, add, mul and div over all reals"
+        },
+        {
+          "file": "src/pages/superbest.astro",
+          "line": "so the capability card records this table as partially proven."
         }
       ],
       "repository": "../../monogate-lean",
@@ -506,6 +575,14 @@
         {
           "file": "src/data/theorems.json",
           "line": "EML-0 ⊊ EML-1 is proved in Lean (exp_not_constant, T_EULER_LEAN)"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "The depth-1 tree computing exp cannot be constant, proved by evaluating at 0 and 1"
+        },
+        {
+          "file": "src/pages/blog/euler-formula-is-eml.astro",
+          "line": "It's listed as a theorem — a proved fact — not a conjecture."
         }
       ],
       "repository": "../../monogate-lean",
@@ -542,6 +619,14 @@
         {
           "file": "src/data/proofs.ts",
           "line": "name: 'eml_tree_analytic'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "sin ∉ EML, substrate proved"
+        },
+        {
+          "file": "src/pages/blog/a-model-for-the-axioms.md",
+          "line": "it is already proven sorry-free upstream, and"
         }
       ],
       "repository": "../../monogate-lean",
@@ -621,6 +706,10 @@
         {
           "file": "src/pages/blog/planck-elc-native.md",
           "line": "the Lean-verified part of"
+        },
+        {
+          "file": "src/pages/blog/lambert-log-branch-attractors.md",
+          "line": "**Tier: OBSERVATION** with a proved proposition inside"
         }
       ],
       "repository": "../../monogate-lean",
@@ -689,6 +778,10 @@
         {
           "file": "public/.well-known/capcard.json",
           "line": "\"lean_theorem\": \"MonogateHyp.sinh_as_exp_arithmetic\""
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "identity (OBS 08-C, proved). -/"
         }
       ],
       "repository": "../../monogate-lean",
@@ -824,6 +917,14 @@
         {
           "file": "src/pages/blog/conditional-tan1.md",
           "line": "T17 is Lean-verified only under strict real semantics"
+        },
+        {
+          "file": "src/pages/blog/eml-closure-density.md",
+          "line": "under strict real semantics, Lean-checked (T17)"
+        },
+        {
+          "file": "src/pages/blog/eml-closure-density.md",
+          "line": "Lean-checked only under strict real semantics, T17"
         }
       ],
       "repository": "../../monogate-research",
@@ -1179,6 +1280,26 @@
         {
           "file": "src/pages/blog/false-by-one-exponential.md",
           "line": "is proved on the other — `value_gap_fails_at_depth_three` and `band_exclusion_fails_at_depth_four`"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "This is now a theorem — `depth3DecayExp_holds` — proved by decomposing"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "is that the statement got weakened until the prover stopped complaining. So we proved the"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "| `Depth3DecayExp` | **proved** — `depth3DecayExp_holds` |"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "| Hard ⟹ Exp | **proved** — `depth3DecayExp_of_hard` |"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "conjecture, not the lemmas proved on the way to it."
         }
       ],
       "repository": "../../machlib",
@@ -1269,6 +1390,10 @@
         {
           "file": "src/pages/blog/zeros-any-exponential-chain.md",
           "line": "*A companion to our machine-checked zero-finiteness work"
+        },
+        {
+          "file": "src/pages/blog/zeros-any-exponential-chain.md",
+          "line": "## What is proven"
         }
       ],
       "repository": "../../machlib",
@@ -1339,6 +1464,10 @@
         {
           "file": "src/pages/blog/climbing-the-exponential-tower.md",
           "line": "**It is** a fully machine-checked, unconditional finiteness bound"
+        },
+        {
+          "file": "src/pages/blog/climbing-the-exponential-tower.md",
+          "line": "Proven from Rolle's theorem alone."
         }
       ],
       "repository": "../../machlib",
@@ -1527,6 +1656,10 @@
         {
           "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
           "line": "## What we machine-checked"
+        },
+        {
+          "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
+          "line": "3. **The dichotomy is a clean necessary condition, an iff only where we proved"
         }
       ],
       "repository": "../../machlib",
@@ -1597,6 +1730,10 @@
         {
           "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
           "line": "EML-finite. Proved from Rolle and the Mean Value Theorem"
+        },
+        {
+          "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
+          "line": "positive comparison solution `v = x^α`. We proved that `x^α` solves"
         }
       ],
       "repository": "../../machlib",
@@ -1671,6 +1808,10 @@
         {
           "file": "src/pages/blog/periodicity-is-enough.md",
           "line": "**Trust.** `sorryAx`-free, zero new axioms"
+        },
+        {
+          "file": "src/pages/blog/periodicity-is-enough.md",
+          "line": "A structural fact about every tree built this way, proven by induction over the grammar with no"
         }
       ],
       "repository": "../../machlib",
@@ -1772,6 +1913,10 @@
         {
           "file": "src/pages/blog/periodicity-is-enough.md",
           "line": "**Trust.** `sorryAx`-free, zero new axioms"
+        },
+        {
+          "file": "src/pages/blog/periodicity-is-enough.md",
+          "line": "closed interval, proven from the same completeness axiom the codebase's existing boundedness"
         }
       ],
       "repository": "../../machlib",
@@ -1838,6 +1983,22 @@
         {
           "file": "src/pages/blog/equivalence-on-real-silicon.md",
           "line": "float gexpr_sound ✓   fixed-point fx_sound ✓   (sorryAx-free)"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "## What is actually proved"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "The link from \"what we proved\" to \"what we ship\" is a content hash"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "every line a measured run of the real artifact against the proved bound `Ebound`"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "one proved source whose error bound we *measured* holding"
         }
       ],
       "repository": "../../machlib",
@@ -1946,6 +2107,34 @@
         {
           "file": "src/pages/blog/equivalence-on-real-silicon.md",
           "line": "float gexpr_sound ✓   fixed-point fx_sound ✓   (sorryAx-free)"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "## What is actually proved"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "The link from \"what we proved\" to \"what we ship\" is a content hash"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "every line a measured run of the real artifact against the proved bound `Ebound`"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "one proved source whose error bound we *measured* holding"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "max|out−exact| = 4.05 LSB ≤ 5.0 LSB proven"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "We proved the joint-Lipschitz fix (`clampO3`) and re-validated."
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "~5 LSB proven bound"
         }
       ],
       "repository": "../../machlib",
@@ -2013,6 +2202,18 @@
         {
           "file": "src/pages/khovanskii.astro",
           "line": "Machine‑checked source (Lean 4) →"
+        },
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "The statement proved here, in a proof assistant, is:"
+        },
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "supplies the leaf. The base case is a single nested exponential, proved by the very"
+        },
+        {
+          "file": "src/pages/blog/zeros-any-exponential-chain.md",
+          "line": "An earlier result of ours proved, in Lean 4 with `rolle` as the sole analytic axiom"
         }
       ],
       "repository": "../../machlib",
@@ -2177,6 +2378,10 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "`LEAN-CHECKED POINT` row now names the theorem that checks it"
+        },
+        {
+          "file": "src/pages/proofs.astro",
+          "line": "structure proved; coordinates proved for three configurations, computed for the rest"
         }
       ],
       "repository": "../../machlib",
@@ -2332,6 +2537,10 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "(Lean-verified structure and coordinates; the post says which statements are"
+        },
+        {
+          "file": "src/pages/proofs.astro",
+          "line": "structure proved; coordinates proved for three configurations, computed for the rest"
         }
       ],
       "repository": "../../machlib",
@@ -2410,6 +2619,14 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "**Proved, in Lean, gated:** the linearisation for arbitrary circles; the antipodal law; that the"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "The formulas are the proved ones (solvesModeM_iff, QM_expand)"
+        },
+        {
+          "file": "src/pages/proofs.astro",
+          "line": "structure proved; coordinates proved for three configurations, computed for the rest"
         }
       ],
       "repository": "../../machlib",
@@ -2426,7 +2643,8 @@
         "MachLib.Geometry.Apollonius.SymmetricTriple.QMdisc_oii_pos",
         "MachLib.Geometry.Apollonius.SymmetricTriple.QMdisc_pos_of_lead_neg",
         "MachLib.Geometry.Apollonius.SymmetricTriple.exactly_two_signed_solutions_per_mode",
-        "MachLib.Geometry.Apollonius.SymmetricTriple.mode_unique_of_gp"
+        "MachLib.Geometry.Apollonius.SymmetricTriple.mode_unique_of_gp",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.QM_expand"
       ],
       "allowed_axioms": [
         "Classical.choice",
@@ -2491,6 +2709,10 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "**Proved, in Lean, gated:** the linearisation for arbitrary circles; the antipodal law; that the"
+        },
+        {
+          "file": "src/pages/proofs.astro",
+          "line": "structure proved; coordinates proved for three configurations, computed for the rest"
         }
       ],
       "repository": "../../machlib",
@@ -2547,6 +2769,10 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "**Proved, in Lean, gated:** the linearisation for arbitrary circles; the antipodal law; that the"
+        },
+        {
+          "file": "src/pages/proofs.astro",
+          "line": "structure proved; coordinates proved for three configurations, computed for the rest"
         }
       ],
       "repository": "../../machlib",
@@ -2618,6 +2844,10 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "**The count as a list, Lean-checked since then too:** `eight_solutions`"
+        },
+        {
+          "file": "src/pages/proofs.astro",
+          "line": "structure proved; coordinates proved for three configurations, computed for the rest"
         }
       ],
       "repository": "../../machlib",
@@ -2686,6 +2916,10 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "(Lean-verified structure and coordinates; the post says which statements are"
+        },
+        {
+          "file": "src/pages/proofs.astro",
+          "line": "structure proved; coordinates proved for three configurations, computed for the rest"
         }
       ],
       "repository": "../../machlib",
@@ -2862,6 +3096,10 @@
         {
           "file": "src/pages/blog/equivalence-on-real-silicon.md",
           "line": "meet in one place, `sorryAx`-free."
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "now proved at every arity."
         }
       ],
       "repository": "../../machlib",
@@ -3032,6 +3270,14 @@
         {
           "file": "src/pages/blog/tight-zeros-bound.md",
           "line": "the conclusion is proved in Lean in MachLib by a periodicity argument (`sin_not_in_eml_any_depth_unconditional`)"
+        },
+        {
+          "file": "src/pages/blog/euler-formula-is-eml.astro",
+          "line": "That is proved in Lean by MachLib's periodic"
+        },
+        {
+          "file": "src/data/superbest.json",
+          "line": "T01: Lean-checked for single-operator EML trees (MachLib periodic barrier)"
         }
       ],
       "repository": "../../machlib",
@@ -3126,6 +3372,1222 @@
         "MachLib.analytic_sub",
         "Quot.sound",
         "propext"
+      ]
+    },
+    {
+      "id": "spring-critical-signpreserving",
+      "statement": "the critically damped spring kernel (1 + w t) exp(-w t) is sign-preserving for t >= 0 (about page; dashboard post)",
+      "sites": [
+        {
+          "file": "src/pages/about.astro",
+          "line": "rendered with the spring kernel we proved."
+        },
+        {
+          "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+          "line": "spring kernel we proved, `(1 + ω·t)·exp(−ω·t)`."
+        },
+        {
+          "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+          "line": "placeholder (or a sorry) to a real proof in Lean. Proven modulo"
+        },
+        {
+          "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+          "line": "only the ζ = 1 line is a proved theorem"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "environment": "machlib",
+      "file": "foundations/MachLib/Applications/SpringCriticallyDamped.lean",
+      "theorems": [
+        "MachLib.Gaming.SpringCriticallyDamped.envelope_pos",
+        "MachLib.Gaming.SpringCriticallyDamped.spring_critical_signpreserving",
+        "MachLib.Gaming.SpringCriticallyDamped.spring_critical_positive"
+      ],
+      "allowed_axioms": [
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax"
+      ]
+    },
+    {
+      "id": "butler-volmer-zero-iff",
+      "statement": "Butler-Volmer current is zero iff overpotential is zero, on top of the SingleExp Khovanskii bound (constructive-khovanskii; dashboard post)",
+      "sites": [
+        {
+          "file": "src/pages/blog/constructive-khovanskii.md",
+          "line": "A Forge-emitted Butler-Volmer kernel obligation closes on top of it."
+        },
+        {
+          "file": "src/pages/blog/constructive-khovanskii.md",
+          "line": "because the contradiction direction is proven, not assumed."
+        },
+        {
+          "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+          "line": "placeholder (or a sorry) to a real proof in Lean. Proven modulo"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "environment": "machlib",
+      "file": "foundations/MachLib/Applications/ButlerVolmerKhovanskii.lean",
+      "theorems": [
+        "MachLib.Forge.ButlerVolmer.current_zero_when_overpotential_zero",
+        "MachLib.Forge.ButlerVolmer.overpotential_zero_when_current_zero",
+        "MachLib.Forge.ButlerVolmer.butler_volmer_zero_iff_overpotential_zero"
+      ],
+      "allowed_axioms": [
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.div_def",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.realOfScientific",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_ne_one_ax"
+      ]
+    },
+    {
+      "id": "plasma-concentration-nonneg",
+      "statement": "two-compartment plasma concentration is nonnegative (dashboard post's four applications)",
+      "sites": [
+        {
+          "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+          "line": "placeholder (or a sorry) to a real proof in Lean. Proven modulo"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "environment": "machlib",
+      "file": "foundations/MachLib/Applications/PlasmaConcentrationNonneg.lean",
+      "theorems": [
+        "MachLib.Forge.PkTwoCompartment.plasma_concentration_nonneg"
+      ],
+      "allowed_axioms": [
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.zeroR"
+      ]
+    },
+    {
+      "id": "discharge-voltage-signpreserving",
+      "statement": "defibrillator discharge voltage is sign-preserving (dashboard post's four applications)",
+      "sites": [
+        {
+          "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+          "line": "placeholder (or a sorry) to a real proof in Lean. Proven modulo"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "environment": "machlib",
+      "file": "foundations/MachLib/Applications/DischargeVoltageSafety.lean",
+      "theorems": [
+        "MachLib.Forge.DefibrillatorEnergy.discharge_voltage_signpreserving"
+      ],
+      "allowed_axioms": [
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.zeroR"
+      ]
+    },
+    {
+      "id": "singleexp-khovanskii-bound",
+      "statement": "finite zero-count bound for polynomials in (x, e^x), modulo MachLib's axiomatized analytic base (constructive-khovanskii; climbing-the-exponential-tower)",
+      "sites": [
+        {
+          "file": "src/pages/blog/constructive-khovanskii.md",
+          "line": "MachLib now ships a finite zero-count bound for polynomial-in-(x, eˣ), proven modulo an axiomatized analytic base."
+        },
+        {
+          "file": "src/pages/blog/climbing-the-exponential-tower.md",
+          "line": "caveat: the finite zero-count was proven *modulo an axiomatized analytic base*."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "environment": "machlib",
+      "file": "foundations/MachLib/SingleExpKhovanskii.lean",
+      "theorems": [
+        "MachLib.SingleExpKhovanskii.ExpPoly.expPoly_khovanskii_bound"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_ne_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "polynomial-identity-theorem",
+      "statement": "PIT without Mathlib: a coefficient list whose evaluation vanishes everywhere is all zeros (two-routes post, Phase E)",
+      "sites": [
+        {
+          "file": "src/pages/blog/two-routes-to-the-khovanskii-bound.md",
+          "line": "to contradict infinite roots in finite degree. The result is PIT proved from"
+        },
+        {
+          "file": "src/pages/blog/two-routes-to-the-khovanskii-bound.md",
+          "line": "theorem, proved without Mathlib, is the kind of foundational piece we"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "environment": "machlib",
+      "file": "foundations/MachLib/PolynomialCanonical.lean",
+      "theorems": [
+        "MachLib.PolynomialCanonical.evalCoeffs_zero_iff_all_zero"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "MachLib.Real.zero_ne_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "multipoly-leading-coeff-bridge",
+      "statement": "the bridge that was an axiom for two commits is a theorem (two-routes post)",
+      "sites": [
+        {
+          "file": "src/pages/blog/two-routes-to-the-khovanskii-bound.md",
+          "line": "while we got the rest of the chain wired up. It is now a proven theorem by"
+        },
+        {
+          "file": "src/pages/blog/two-routes-to-the-khovanskii-bound.md",
+          "line": "- The bridge that was an axiom for two commits is now a proven theorem."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "environment": "machlib",
+      "file": "foundations/MachLib/MultiPolyReconstruct.lean",
+      "theorems": [
+        "MachLib.MultiPolyReconstruct.eval_leadingCoeffY_eq_eval_yCoeffsAt_getLast"
+      ],
+      "allowed_axioms": [
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.mulR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.zeroR",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "closed-loop-coupled-and-oscillator",
+      "statement": "richer plants: two decoupled modes, a coupled 2x2 plant, and the coupled oscillator for any rho < 1 (via the tight sublevel theorem plus the V-norm Minkowski inequality; the primed corollary itself cannot be registered, see QUIRKS in the commit)",
+      "sites": [
+        {
+          "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+          "line": "vector, a genuine oscillator) are separate theorems we've proven — the last one unconditional, for"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "environment": "machlib",
+      "file": "foundations/MachLib/LyapunovSafety.lean",
+      "theorems": [
+        "MachLib.Real.two_mode_clamp_envelope",
+        "MachLib.Real.coupled_two_state_clamp_envelope",
+        "MachLib.Real.quadratic_lyapunov_sublevel_tight",
+        "MachLib.Real.vq_minkowski"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.le_sqrt_of_sq_le",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.sqrt",
+        "MachLib.Real.sqrt_le_of_le_sq",
+        "MachLib.Real.sqrt_nonneg",
+        "MachLib.Real.sqrt_sq_nonneg",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-compound-continuous-pos",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel compound_continuous_pos closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/compound_continuous_pos.lean",
+      "theorems": [
+        "compound_continuous_positive"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "exp",
+        "exp_pos",
+        "leR",
+        "ltR",
+        "mulR",
+        "mul_pos",
+        "zeroR"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-cosh-at-zero",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel cosh_at_zero closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/cosh_at_zero.lean",
+      "theorems": [
+        "cosh_one_at_zero"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "addR",
+        "add_comm",
+        "add_lt_add_left",
+        "add_neg",
+        "add_zero",
+        "divR",
+        "div_def",
+        "exp",
+        "exp_zero",
+        "ltR",
+        "lt_irrefl_ax",
+        "lt_trans_ax",
+        "mulR",
+        "mul_inv",
+        "negR",
+        "oneR",
+        "realOfScientific",
+        "realOfScientific_two_dot_zero",
+        "zeroR",
+        "zero_lt_one_ax"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-discount-factor-bounded",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel discount_factor_bounded closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/discount_factor_bounded.lean",
+      "theorems": [
+        "discount_factor_in_unit_interval"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "exp",
+        "exp_pos",
+        "leR",
+        "ltR",
+        "mulR",
+        "negR",
+        "zeroR"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-expm1-lower-bound",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel expm1_lower_bound closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/expm1_lower_bound.lean",
+      "theorems": [
+        "expm1_greater_than_neg_one"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "addR",
+        "add_comm",
+        "add_lt_add_left",
+        "add_zero",
+        "exp",
+        "exp_pos",
+        "ltR",
+        "negR",
+        "oneR",
+        "subR",
+        "sub_def",
+        "zeroR"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-gaussian-pos",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel gaussian_pos closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/gaussian_pos.lean",
+      "theorems": [
+        "gaussian_positive"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "divR",
+        "exp",
+        "exp_pos",
+        "ltR",
+        "mulR",
+        "negR",
+        "realOfScientific",
+        "zeroR"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-hill-n2-nonneg",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel hill_n2_nonneg closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/hill_n2_nonneg.lean",
+      "theorems": [
+        "hill_n2_nonneg_input_nonneg_output"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "Real",
+        "addR",
+        "add_assoc",
+        "add_comm",
+        "add_lt_add_left",
+        "add_neg",
+        "add_zero",
+        "divR",
+        "div_def",
+        "leR",
+        "le_iff_lt_or_eq",
+        "ltR",
+        "lt_irrefl_ax",
+        "lt_total",
+        "lt_trans_ax",
+        "mulR",
+        "mul_comm",
+        "mul_distrib",
+        "mul_pos",
+        "negR",
+        "oneR",
+        "one_div_nonneg_of_pos",
+        "propext",
+        "zeroR",
+        "zero_lt_one_ax"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-horner5-eq",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel horner5_eq closes under MachLib (rfl)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/horner5_eq.lean",
+      "theorems": [
+        "horner5_eq_definition"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "addR",
+        "mulR",
+        "oneR",
+        "realOfScientific"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-lerp-endpoint-one",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel lerp_endpoint_one closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/lerp_endpoint_one.lean",
+      "theorems": [
+        "lerp_at_t_one_equals_b"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "addR",
+        "add_assoc",
+        "add_comm",
+        "add_neg",
+        "add_zero",
+        "negR",
+        "subR",
+        "sub_def",
+        "zeroR"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-lerp-endpoint-zero",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel lerp_endpoint_zero closes under MachLib (rfl)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/lerp_endpoint_zero.lean",
+      "theorems": [
+        "lerp_at_t_zero_equals_a"
+      ],
+      "allowed_axioms": [
+        "Real"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-linear-interp-eq",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel linear_interp_eq closes under MachLib (rfl)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/linear_interp_eq.lean",
+      "theorems": [
+        "linear_interp_eq_definition"
+      ],
+      "allowed_axioms": [
+        "Real"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-michaelis-menten-bounded",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel michaelis_menten_bounded closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/michaelis_menten_bounded.lean",
+      "theorems": [
+        "michaelis_menten_in_unit_interval"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "addR",
+        "add_lt_add_left",
+        "add_zero",
+        "divR",
+        "div_def",
+        "ltR",
+        "lt_irrefl_ax",
+        "lt_trans_ax",
+        "mulR",
+        "mul_pos",
+        "oneR",
+        "one_div_pos_of_pos",
+        "zeroR",
+        "zero_lt_one_ax"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-neg-exp-pos",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel neg_exp_pos closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/neg_exp_pos.lean",
+      "theorems": [
+        "neg_exp_positive"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "exp",
+        "exp_pos",
+        "ltR",
+        "negR",
+        "zeroR"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-quadratic-eq",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel quadratic_eq closes under MachLib (rfl)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/quadratic_eq.lean",
+      "theorems": [
+        "quadratic_eq_definition"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "addR",
+        "mulR",
+        "oneR",
+        "realOfScientific"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-rc-decay-pos",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel rc_decay_pos closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/rc_decay_pos.lean",
+      "theorems": [
+        "rc_decay_positive"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "divR",
+        "exp",
+        "exp_pos",
+        "leR",
+        "ltR",
+        "negR",
+        "realOfScientific",
+        "zeroR"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-sigmoid-in-unit",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel sigmoid_in_unit closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/sigmoid_in_unit.lean",
+      "theorems": [
+        "sigmoid_in_unit_interval"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "addR",
+        "add_lt_add_left",
+        "add_zero",
+        "divR",
+        "div_def",
+        "exp",
+        "exp_pos",
+        "ltR",
+        "lt_irrefl_ax",
+        "lt_trans_ax",
+        "mulR",
+        "mul_pos",
+        "negR",
+        "oneR",
+        "one_div_pos_of_pos",
+        "zeroR",
+        "zero_lt_one_ax"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-sinh-sign-matches",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel sinh_sign_matches closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/sinh_sign_matches.lean",
+      "theorems": [
+        "sinh_zero_at_zero"
+      ],
+      "allowed_axioms": [
+        "Real",
+        "addR",
+        "add_assoc",
+        "add_comm",
+        "add_neg",
+        "add_zero",
+        "divR",
+        "div_def",
+        "exp",
+        "ltR",
+        "lt_irrefl_ax",
+        "mulR",
+        "mul_comm",
+        "mul_distrib",
+        "negR",
+        "oneR",
+        "realOfScientific",
+        "realOfScientific_pos",
+        "subR",
+        "sub_def",
+        "zeroR"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-smoothstep-bounded",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel smoothstep_bounded closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "plus `2.0 ≤ 3.0` proven via the literal-bridge axioms +"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/smoothstep_bounded.lean",
+      "theorems": [
+        "smoothstep_unit_input_bounded"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "Real",
+        "addR",
+        "add_assoc",
+        "add_comm",
+        "add_lt_add_left",
+        "add_neg",
+        "add_zero",
+        "leR",
+        "le_iff_lt_or_eq",
+        "ltR",
+        "lt_total",
+        "lt_trans_ax",
+        "mulR",
+        "mul_comm",
+        "mul_distrib",
+        "mul_lt_mul_of_pos_right",
+        "mul_one_ax",
+        "mul_pos",
+        "negR",
+        "oneR",
+        "propext",
+        "realOfScientific",
+        "realOfScientific_pos",
+        "realOfScientific_three_dot_zero",
+        "realOfScientific_two_dot_zero",
+        "subR",
+        "sub_def",
+        "zeroR",
+        "zero_lt_one_ax"
+      ]
+    },
+    {
+      "id": "lean-proofs-v1-softplus-pos",
+      "statement": "stress-testing-the-pipeline: the lean_proofs_v1.2 kernel softplus_pos closes under MachLib (hand-proven tactic)",
+      "sites": [
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "18 of 18 close — 4 with `rfl`, 14 with hand-proven tactics."
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Lean v1.2 closes 18 of 18 with hand-proven tactics after the"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "`trivial`, then a per-kernel hand-proven tactic dictionary using"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "| Hand-proven via MachLib primitives | 14 |"
+        },
+        {
+          "file": "src/pages/blog/stress-testing-the-pipeline.md",
+          "line": "Most hand-proven closures are 1-3 lines. The longest is"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "environment": "machlib",
+      "file": "electronics_intake/kernels/lean_proofs_v1/emitted/softplus_pos.lean",
+      "theorems": [
+        "softplus_positive"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "Real",
+        "addR",
+        "add_lt_add_left",
+        "add_zero",
+        "exp",
+        "exp_lt",
+        "exp_pos",
+        "exp_surj",
+        "exp_zero",
+        "ltR",
+        "lt_irrefl_ax",
+        "lt_total",
+        "lt_trans_ax",
+        "oneR",
+        "propext",
+        "zeroR",
+        "zero_lt_one_ax"
       ]
     }
   ],
@@ -3404,6 +4866,256 @@
       "file": "src/data/theorems.json",
       "line": "No zero bound is proved; see T14.",
       "reason": "negative statement"
+    },
+    {
+      "file": "src/data/accountability.json",
+      "line": "the byte-identical check that proved the weakening changed nothing else",
+      "reason": "colloquial ('showed'): a byte-identical comparison recorded in machlib's amendment trail; no theorem is claimed"
+    },
+    {
+      "file": "src/data/theorems.json",
+      "line": "whose DEML case (T13) is not proved.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/data/theorems.json",
+      "line": "so the statement as a whole is not proved.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/data/theorems.json",
+      "line": "this card said every entry was structurally proved optimal. That was wrong.",
+      "reason": "a dated correction on T08 reporting a withdrawn claim"
+    },
+    {
+      "file": "src/pages/about.astro",
+      "line": "axiomatized today — proven <em>modulo</em> the named axioms.",
+      "reason": "listed under 'Non-claims': MachLib's analytic base is axiomatized, not grounded"
+    },
+    {
+      "file": "src/pages/manifesto.astro",
+      "line": "computationally rather than proved, eight of them generate every",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/manifesto.astro",
+      "line": "<h2>What we proved</h2>",
+      "reason": "section heading; the paragraph under it names no theorem, and every Lean claim on the site is registered individually (see the manifesto exemption above)"
+    },
+    {
+      "file": "src/pages/one-operator.astro",
+      "line": "this line said \"30 theorems proved\" long after the count moved.",
+      "reason": "code comment quoting retired copy"
+    },
+    {
+      "file": "src/pages/superbest.astro",
+      "line": ".tier-proved {",
+      "reason": "CSS class name; the tier text it styles comes from superbest.json, which is scanned"
+    },
+    {
+      "file": "src/pages/blog/a-model-for-the-axioms.md",
+      "line": "**The floats are still measured, not proved.**",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/auditing-1200-sessions.astro",
+      "line": "The Navier-Stokes regularity problem \"proved\" independent of ZFC",
+      "reason": "quoted as an example of a rejected session claim"
+    },
+    {
+      "file": "src/pages/blog/auditing-1200-sessions.astro",
+      "line": "because they're not proved — but they should be honest about what they are.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/auditing-1200-sessions.astro",
+      "line": "all 9 entries structurally proved optimal.",
+      "reason": "the April 2026 list, introduced by the post's dated update note, which says T08's optimality claim did not hold"
+    },
+    {
+      "file": "src/pages/blog/climbing-the-exponential-tower.md",
+      "line": "inputs, not proven from an ε-δ construction of the reals.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/complexity-census.astro",
+      "line": "# Flags proved vs. computational vs. open",
+      "reason": "comment in a reproduce block naming the script's output categories; no result claimed"
+    },
+    {
+      "file": "src/pages/blog/conditional-tan1.md",
+      "line": "Schanuel is not proved.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/eight-circles-except-when-seven.md",
+      "line": "**Not proved:** that the seven circles",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/eml-closure-density.md",
+      "line": "### Why it's not yet proved",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/eml-closure-density.md",
+      "line": "it is argued on paper, not proved.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/equivalence-on-real-silicon.md",
+      "line": "**Timing closure is board-confirmed, not proved here.**",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/one-operator.md",
+      "line": "that census is checked computationally and argued on paper, not proved",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/pumping-lemma.astro",
+      "line": "A proved O(k) bound would let us say something more precise",
+      "reason": "hypothetical: what a proof, if found, would allow"
+    },
+    {
+      "file": "src/pages/blog/proof-carrying-rescue-status.md",
+      "line": "The registry says which obligations are routed, witnessed, concretely proven,",
+      "reason": "names the obligation registry's status categories; claims no obligation"
+    },
+    {
+      "file": "src/pages/blog/relu-softplus-exact-error.md",
+      "line": "**Tier: THEOREM** (proved)",
+      "reason": "the post's own section 'The bound' gives the complete two-case proof; a paper proof, not a Lean claim"
+    },
+    {
+      "file": "src/pages/blog/second-proof-carrying-rescue.md",
+      "line": "The first rescue proved this was not just hand-wavy theory.",
+      "reason": "colloquial ('showed'); no theorem is claimed"
+    },
+    {
+      "file": "src/pages/blog/tan1-obstruction.md",
+      "line": "**Theorem (proven 1882)**",
+      "reason": "Lindemann–Weierstrass, an external classical theorem (1882)"
+    },
+    {
+      "file": "src/pages/blog/two-boundaries.md",
+      "line": "Abel (1824) and Galois (1832) proved this",
+      "reason": "external classical theorem (Abel–Ruffini, Galois)"
+    },
+    {
+      "file": "src/pages/blog/two-routes-to-the-khovanskii-bound.md",
+      "line": "analytic base remains axiomatized rather than proven from a smaller core.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+      "line": "proven, what's measured, and what's pending",
+      "reason": "describes how the post is organized; the Lean claims above it are registered individually"
+    },
+    {
+      "file": "src/pages/proofs/apollonius.astro",
+      "line": "<ul class=\"ex-plist\" id=\"proved\"></ul>",
+      "reason": "element id for the list rendered from evidence.PROVED; check-exhibit-gates.mjs fails unless every theorem that map names is registered"
+    },
+    {
+      "file": "src/pages/proofs/apollonius.astro",
+      "line": "// So those rows say proved only where a theorem covers the configuration on screen.",
+      "reason": "code comment describing the gp gate"
+    },
+    {
+      "file": "src/pages/proofs/apollonius.astro",
+      "line": "document.getElementById('proved').innerHTML = Object.keys(D.proved).map(function (k) {",
+      "reason": "renderer for evidence.PROVED; see the check-exhibit-gates exemptions above"
+    },
+    {
+      "file": "src/pages/proofs/apollonius.astro",
+      "line": "esc(D.proved[k]) + '</span></span></li>';",
+      "reason": "renderer for evidence.PROVED; see above"
+    },
+    {
+      "file": "public/capability_card.json",
+      "line": "so a green build does not make those theorems proved.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "public/.well-known/capcard.json",
+      "line": "so a green build does not make those theorems proved.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+      "line": "A research program that wants to be honest about what it has proven",
+      "reason": "a general remark; names no result"
+    },
+    {
+      "file": "src/pages/blog/superbest-complete.md",
+      "line": "This post claimed every entry was either proved optimal by exhaustive search",
+      "reason": "the post's dated correction, reporting what it used to claim"
+    },
+    {
+      "file": "src/pages/blog/superbest-complete.md",
+      "line": "**Not proved:** the best EML-only construction found, with no lower bound",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/superbest-complete.md",
+      "line": "11n the minimum for single-operator EML trees; neither was proved.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/superbest-complete.md",
+      "line": "- A positive-domain completeness theorem (all entries proved)",
+      "reason": "quotes the addendum's claim; the next line says it did not hold"
+    },
+    {
+      "file": "src/pages/blog/superbest-complete.md",
+      "line": "- A general-domain optimality theorem (all proved except add general)",
+      "reason": "quotes the addendum's claim; the next line says it did not hold"
+    },
+    {
+      "file": "src/pages/blog/cost-theory-complete.md",
+      "line": "Any optimisation or normal form proved for one equation in the family transfers automatically",
+      "reason": "conditional: what would transfer if such a result were proved; names no result"
+    },
+    {
+      "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+      "line": "**210 proven-in-place.**",
+      "reason": "the audit tool's count on its first local run, 2026-06-14, which the post goes on to show over-counted; dated narrative, not re-checked"
+    },
+    {
+      "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+      "line": "`proven` into `proven_from_mathlib` (structurally 0 for MachLib,",
+      "reason": "names status fields of the audit tool"
+    },
+    {
+      "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+      "line": "so a renderer cannot mis-report a single \"proven\" total.",
+      "reason": "names a status field of the audit tool"
+    },
+    {
+      "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+      "line": "proofs that the audit was counting as \"proven-in-place\" — *for me,",
+      "reason": "narrative of the over-count the post corrects"
+    },
+    {
+      "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+      "line": "The 202 proven-in-place was real that day",
+      "reason": "the audit tool's count on 2026-06-14, dated; the four applications the post names are registered claims"
+    },
+    {
+      "file": "src/pages/blog/the-dashboard-the-verification-needed.md",
+      "line": "(open, placeholder, strengthened, proven-mod-axioms). The",
+      "reason": "names the audit buckets"
+    },
+    {
+      "file": "src/pages/blog/depth-spectrum.md",
+      "line": "this post called T30 and T31 fully proved.",
+      "reason": "the post's dated correction, reporting what it used to claim"
+    },
+    {
+      "file": "src/pages/blog/tight-zeros-bound.md",
+      "line": "this post said it proved a tight bound of 2",
+      "reason": "the post's dated correction, reporting what it used to claim"
     }
   ]
 }

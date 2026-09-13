@@ -200,10 +200,10 @@ By end of day:
 - CHANGELOG.md carries a calibration paragraph naming the
   over-count and the corrected public-verifiable figures.
 
-The public dashboard now reads, post-cleanup: `gap_pct 81.1% /
+That evening the public dashboard read, post-cleanup: `gap_pct 81.1% /
 discharged_pct 18.9% / 221 sorries / 4 strengthened / 202
 proven_mod_axioms`. The 4 strengthened contracts are real and
-publicly tracked. The 202 proven-in-place is now real (was 36 on the
+publicly tracked. The 202 proven-in-place was real that day (was 36 on the
 first CI run, because the gitignored stubs really did carry concrete
 proofs; pushing them moved that figure honestly). The remaining ~0.5
 percentage-point difference from my old local view is the forge
@@ -241,13 +241,13 @@ work:
 - **[Verified Basin](https://1op.io/visual/verified-basin)** — The
   (ω, ζ) parameter plane of the damped harmonic oscillator,
   coloured by sign-preservation. The white line at ζ = 1 *is* the
-  theorem. Above it: green (proven). Below it: red (the cos factor
+  theorem. Above it: green (overdamped; only the ζ = 1 line is a proved theorem). Below it: red (the cos factor
   of the underdamped solution dips the response negative, and we
   explicitly left that branch open).
 
 Each exhibit grounds itself in 1op's in-tree EML parser
 (`src/lib/eml/parser.ts`) by surfacing the kernel's positive /
-general / naive cost alongside the proven theorem name. The math is
+general / naive cost alongside the theorem it rests on (Reverb Tail names its queued obligation instead). The math is
 the experience.
 
 ## Why this matters more than the figures

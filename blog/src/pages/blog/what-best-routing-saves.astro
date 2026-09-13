@@ -81,9 +81,9 @@ import Base from '../../layouts/Base.astro';
     The big wins are div (93% via EDL), mul (77% via EXL), pow (80% via EXL), and
     add/neg (67–73% via EAL/EXL). The SuperBEST FINAL table (2026-04-20) achieves
     <strong>71.2% total savings</strong> across 9 standard arithmetic operations — 21 nodes
-    vs 73 naive. All entries proved optimal by exhaustive search.
-    Addition for general x,y∈ℝ still costs 11n (EML is the only capable operator);
-    the 3n entry applies when x&gt;0.
+    vs 73 naive. Its entries were constructions, and not all were optimal: later work lowered
+    several (see <a href="/superbest">/superbest</a>), and addition takes 2n for all real x, y
+    (LEdiv(x, DEML(y,1)), ADD-T1), not 11n.
   </p>
 
   <h2>Wall-clock speedups</h2>

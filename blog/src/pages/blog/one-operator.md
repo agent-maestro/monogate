@@ -22,7 +22,7 @@ Then `exp(x) = eml(x, 1)`. Addition is `eml`-derived. `sin` falls out via Euler.
 
 ## The 23-operator census
 
-We tested every binary combination of `exp(±x)` with `ln(y)` through arithmetic — every shape `op₁(op₂(x), op₃(y))` you could write down. Sixteen turn out to be **complete** in the formal sense: each one alone generates the elementary closure. Seven are structurally impossible (the wrong sign combination forces undefined branches). Layer-2 extensions like `LEAd(x, y) = ln(exp(x) + y)` round the working set to 23 operators — every entry classified, the closure proved by exhaustion.
+We tested every binary combination of `exp(±x)` with `ln(y)` through arithmetic — every shape `op₁(op₂(x), op₃(y))` you could write down. Sixteen standard operators come out of that. Eight appear to be **complete** in the formal sense (each one alone generates the elementary closure), one is approximately complete, and seven appear incomplete; that census is checked computationally and argued on paper, not proved (T12 on [/theorems](/theorems)). Layer-2 extensions like `LEAd(x, y) = ln(exp(x) + y)` round the working set to 23 operators; that no 24th exists is a conjecture (CONJ_NO_OP_24).
 
 The interesting part isn't that the operator works. It's what falls out of measuring real expressions through it.
 
