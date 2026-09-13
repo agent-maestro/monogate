@@ -205,4 +205,4 @@ Between these extremes, the 293+ other equations of science distribute themselve
 
 *Full machine-readable catalog: `python/results/master_equation_catalog.json`*
 
-*Related paper: [Master Equation Catalog (LaTeX)](https://monogate.org)*
+*Related paper: `python/paper/observations/Master_Equation_Catalog.tex` (corrections to the papers: [python/paper/ERRATA.md](https://github.com/agent-maestro/monogate/blob/master/python/paper/ERRATA.md))*

@@ -117,4 +117,4 @@ The one statement here that does not assume Hypothesis H is DOOR-4, $\tan(1) \no
 
 ---
 
-*Technical reference: `python/paper/theorems/DOOR4_Conditional_Tan1.tex`*
+*Technical reference: `python/paper/theorems/DOOR4_Conditional_Tan1.tex`. Its Depth Stability Theorem and its π and depth-stability steps are corrected in the [errata](https://github.com/agent-maestro/monogate/blob/master/python/paper/ERRATA.md).*

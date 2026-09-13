@@ -283,5 +283,5 @@ Structure is the invariant. Domain is a label.
 
 > Monogate Research (2026). "SuperBEST Node Costs: Chemistry and Biology."
 > monogate research blog. Sessions Chem-1 through Bio-5, 2026-04-20.
-> Full LaTeX catalog: `python/paper/observations/SuperBEST_ChemBio_Catalog.tex`
+> Full LaTeX catalog: `python/paper/observations/SuperBEST_ChemBio_Catalog.tex` (corrections to the papers: [python/paper/ERRATA.md](https://github.com/agent-maestro/monogate/blob/master/python/paper/ERRATA.md))
 > https://monogate.org/blog/chembio-costs

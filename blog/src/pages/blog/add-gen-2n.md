@@ -87,7 +87,7 @@ Every equation that previously required add_gen = 11n now drops by 9 nodes per a
 
 This section called SuperBEST v5 the final table, with no outliers, no domain splits and the work done. It was not final (see the correction above), and domain splits remain: mul and div cost 3n on general inputs, against 1n and 2n for positive ones.
 
-*Proof: `python/paper/theorems/ADD_T1_General_Addition_2n.tex`*
+*Proof: `python/paper/theorems/ADD_T1_General_Addition_2n.tex`. Its claim that the table is proved complete is withdrawn; see the [errata](https://github.com/agent-maestro/monogate/blob/master/python/paper/ERRATA.md).*
 
 ---
 

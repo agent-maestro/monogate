@@ -163,6 +163,8 @@ The F16 figure is from April. In the current F16, x·y is 1 node for x, y > 0: e
 
 ## Documents
 
+Several of these papers state claims this post withdraws; [python/paper/ERRATA.md](https://github.com/agent-maestro/monogate/blob/master/python/paper/ERRATA.md) lists them.
+
 - `python/paper/theorems/Depth_Spectrum_Self_Contained.tex` — self-contained T30 argument; it reports GAP-3 + GAP-4 closed, but x + 1 refutes its depth-3 claim and its general lower bound has a gap
 - `python/paper/cost_theory/R17_T30_Hardy_Field_Verification.tex` — gap analysis; Lemma 4.2 repair
 - `python/paper/theorems/Mul_Lower_Bound_Tightened.tex` — exhaustive search + structural argument

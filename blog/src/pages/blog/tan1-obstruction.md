@@ -223,7 +223,7 @@ $\pi\cot(1)$.
 *Monogate Research (2026). "Does tan(1) Control Everything?" (first published as "Why tan(1) Controls Everything").
 monogate research blog. https://monogate.org/blog/tan1-obstruction*
 
-*Paper: `python/paper/Unifying_Obstruction_Tan1.tex`, whose Depth Stability Theorem and Five-Way Equivalence are withdrawn above · Sessions S93–S99 + Unified synthesis*
+*Paper: `python/paper/Unifying_Obstruction_Tan1.tex`, whose Depth Stability Theorem and Five-Way Equivalence are withdrawn above ([errata](https://github.com/agent-maestro/monogate/blob/master/python/paper/ERRATA.md)) · Sessions S93–S99 + Unified synthesis*
 
 *Reproduce the near miss's arithmetic:*
 ```python

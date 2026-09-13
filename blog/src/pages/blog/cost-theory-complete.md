@@ -142,4 +142,4 @@ The paper lists five open problems, and the corrections on this page add more. A
 Monogate Research (2026). "Is the Cost Theory Complete?" (first published as "The Cost Theory Is Complete"). monogate research. [https://monogate.org/blog/cost-theory-complete](https://monogate.org/blog/cost-theory-complete)
 
 The full technical paper (including its proof arguments and the theorem index T34--T43; [/theorems](/theorems) says which of them hold) is available at:
-`python/paper/cost_theory/Cost_Theory_Complete.tex` in the [monogate repository](https://github.com/monogate-dev/monogate).
+`python/paper/cost_theory/Cost_Theory_Complete.tex` in the [monogate repository](https://github.com/agent-maestro/monogate). The paper still states the claims corrected on this page; [python/paper/ERRATA.md](https://github.com/agent-maestro/monogate/blob/master/python/paper/ERRATA.md) lists them.

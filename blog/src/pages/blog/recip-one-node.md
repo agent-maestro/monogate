@@ -134,7 +134,7 @@ for 1-node trees). R16-C1 fell out of that enumeration.
 
 ## Formal Reference
 
-Theorem paper: `python/paper/theorems/recip_One_Node.tex`
+Theorem paper: `python/paper/theorems/recip_One_Node.tex` (its division corollary and version count are corrected in the [errata](https://github.com/agent-maestro/monogate/blob/master/python/paper/ERRATA.md))
 
 Result identifier: **R16-C1** (Census item 16, Construction 1)
 
