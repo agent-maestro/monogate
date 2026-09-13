@@ -2,13 +2,15 @@
 layout: ../../layouts/Base.astro
 title: "The Operator Zoo: Which exp-ln Gates Are Complete?"
 date: 2026-04-19
-tag: theorem
-description: "We applied the DEML incompleteness template to seven exp-ln operators. Six are incomplete. One is open. One surprise: a gate with the identity function built in."
+tag: conjecture
+description: "We applied the DEML incompleteness template to seven exp-ln operators. It suggests six are incomplete and leaves one open, but the template has a gap. One surprise: a gate with the identity function built in."
 ---
 
 # The Operator Zoo: Which exp-ln Gates Are Complete?
 
-The DEML incompleteness proof gave us a template. Apply it to every operator of the form f(exp(±x), ±ln(y)) and catalog the results. Seven operators. Five sessions. One surprise.
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post said the EMN question below has a definitive answer. It does not: that EMN is approximately but not exactly complete is a conjecture (T24), and the sketches for both halves stop short. The DEML template has a gap too (T13), so the Incomplete entries are conjectures, except that over ℝ no EAL tree approximates −x.</p>
+
+The DEML incompleteness argument gave us a template. Apply it to every operator of the form f(exp(±x), ±ln(y)) and catalog the results. Seven operators. Five sessions. One surprise.
 
 ## The Operators
 
@@ -19,7 +21,7 @@ The DEML incompleteness proof gave us a template. Apply it to every operator of 
 | EMN | ln(y) − exp(x) | **Approximately complete** | Nonzero exp(·) residual — exact ln(x) unreachable |
 | EAL | exp(x) + ln(y) | **Incomplete** | All slopes positive, no cancellation |
 | EXL | exp(x) · ln(y) | **Incomplete** | e not constructible from {1}, blocks exp(x) |
-| EDL | exp(x) / ln(y) | **Incomplete** | Cannot build addition (proved separately) |
+| EDL | exp(x) / ln(y) | **Incomplete** | Cannot build addition (claimed separately) |
 | POW | y^x | **Incomplete** | e not constructible; but see below |
 
 Two new operators we explored:
@@ -29,9 +31,9 @@ Two new operators we explored:
 
 ## The DEML Template
 
-The DEML proof established: find all "linear mechanisms" — compositions that produce linear functions of x. If all of them have the same sign on their slope, the operator cannot build neg(x) = −x, which blocks all arithmetic.
+The DEML argument proposed: find all "linear mechanisms" — compositions that produce linear functions of x. If all of them have the same sign on their slope, the operator cannot build neg(x) = −x, which blocks all arithmetic.
 
-**DEML:** emn(1, emn(x,1)) → x + 1/e (slope +1). All paths give slope +1. Incomplete.
+**DEML:** deml(1, deml(x,1)) → x + 1/e (slope +1). The argument says all paths give slope +1, but that step has a gap (T13). Conjectured incomplete.
 
 **EAL:** eal(1, eal(x,1)) = e + x (slope +1). eal(eal(1,x), 1) = e^e · x (slope e^e). All positive. Incomplete.
 
@@ -62,15 +64,15 @@ The census reveals two distinct reasons a gate can be incomplete:
 
 **EMN escapes both:** It has negative slopes (Type A doesn't apply) and it CAN build nonzero constants — emn(1,1) = −e in one node.
 
-## The EMN Question — Answered
+## The EMN Question — A Conjectured Answer
 
-Is EMN complete? We now have a definitive answer: **approximately complete, not exactly complete.**
+Is EMN complete? The conjectured answer: **approximately complete, not exactly complete.** Neither half has a proof (T24).
 
-**EMN is not exactly complete:** No finite EMN tree can compute ln(x) exactly for all x. The obstruction is structural — every EMN output ln(R) − exp(L) has a nonzero exp(L) residual, and driving it to zero requires infinite depth (L → −∞). The growth-rate argument for this (sessions EMN-1 through EMN-3) is on paper; there is no Lean proof.
+**EMN is not exactly complete (conjectured):** No finite EMN tree should compute ln(x) exactly for all x. The suggested obstruction is structural — every EMN output ln(R) − exp(L) has a nonzero exp(L) residual, and driving it to zero requires infinite depth (L → −∞). The growth-rate argument for this (sessions EMN-1 through EMN-3) is on paper, stops at an "infinite regress", and has no Lean proof.
 
-**EMN is approximately complete:** For any elementary function f and ε > 0, there exists a finite EMN tree T such that |Re(T(x)) − f(x)| < ε on any compact interval. The mechanism: complex intermediate values (via ln(−e) = 1 + iπ) route around the sign barrier. Convergence is doubly-exponential in tree depth.
+**EMN is approximately complete (conjectured):** For any elementary function f and ε > 0, there exists a finite EMN tree T such that |Re(T(x)) − f(x)| < ε on any compact interval. The mechanism: complex intermediate values (via ln(−e) = 1 + iπ) route around the sign barrier. In the searches up to 8 nodes, the error falls doubly-exponentially with tree size.
 
-The three completeness classes form a clean trichotomy: **EML** (exactly complete), **EMN** (approximately complete), **all others** (incomplete). See the [Completeness Trichotomy](/blog/completeness-trichotomy) post for the full proof.
+The three completeness classes would form a clean trichotomy: **EML** (exactly complete), **EMN** (approximately complete), **all others** (incomplete). See the [Completeness Trichotomy](/blog/completeness-trichotomy) post for the sketches.
 
 ---
 

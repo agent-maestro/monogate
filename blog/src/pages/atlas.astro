@@ -86,7 +86,7 @@ const incompleteCount = (operators as Array<{ complete: string }>).filter(o => o
   <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 32px;">
     SuperBEST {superbestData.version} headline: {superbestData.totals.total_positive.value}n positive /
     {superbestData.totals.total_general.value}n general (joined from <a href="/superbest" style="color: var(--cyan);">/superbest</a>, not typed here) ·
-    {operators.length} elementary operators (THEOREM) + {pfaffianTowers.length} Pfaffian towers (OBSERVATION)
+    {operators.length} elementary operators (completeness classes: CONJECTURE) + {pfaffianTowers.length} Pfaffian towers (OBSERVATION)
     = {operators.length + pfaffianTowers.length} total · 35/36 calculator coverage
   </p>
 
@@ -199,7 +199,7 @@ const incompleteCount = (operators as Array<{ complete: string }>).filter(o => o
   <h2>16-Operator Census</h2>
   <p style="color: var(--muted); margin-bottom: 6px; font-size: 0.9rem;">
     Every binary combination of exp(±x) with ln(y) via arithmetic.
-    Completeness class determined by the position of negation relative to exp (T26–T28).
+    Completeness class conjectured from the position of negation relative to exp (T26–T28, all conjectures; over ℝ the rule fails for EAL, whose real trees are all nondecreasing).
   </p>
   <p style="color: var(--muted); font-size: 0.8rem; margin-bottom: 20px;">
     <span style="color: var(--green);">■</span> Exactly complete ({completeCount}) ·
@@ -233,8 +233,8 @@ const incompleteCount = (operators as Array<{ complete: string }>).filter(o => o
   </table>
 
   <p style="color: var(--muted); font-size: 0.82rem; margin-bottom: 32px;">
-    Structural rule: <em style="color: var(--text);">exp(+x) with no domain restriction ↔ exactly complete</em> (T26, T27, T28).
-    See <a href="/blog/completeness-characterization">Why exp(+x) Means Complete →</a>
+    Conjectured structural rule: <em style="color: var(--text);">exp(+x) with no domain restriction ↔ exactly complete</em> (T26, T27, T28; none has a proof).
+    See <a href="/blog/completeness-characterization">Does exp(+x) Mean Complete? →</a>
   </p>
 
   <div class="divider"></div>
@@ -255,7 +255,7 @@ const incompleteCount = (operators as Array<{ complete: string }>).filter(o => o
     depth ≤ {towersData.max_depth} from <code>{'{EML, T_X}'}</code>. Source: {towersData.source}
   </p>
   <p style="color: var(--pink); font-size: 0.78rem; margin-bottom: 20px;">
-    Tier note: the elementary {operators.length} are <strong>THEOREM</strong>-tier (proved on paper and verified computationally; not formalized in Lean).
+    Tier note: the completeness classes of the elementary {operators.length} are <strong>CONJECTURE</strong>-tier (argued on paper, with gaps, and searched computationally; not formalized in Lean).
     The {pfaffianTowers.length} towers are <strong>{towersData.tier}</strong>-tier ({towersData.tier_note})
   </p>
 

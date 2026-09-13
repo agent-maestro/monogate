@@ -2,23 +2,26 @@
 layout: ../../layouts/Base.astro
 title: "The Completeness Trichotomy: EML, EMN, and Everyone Else"
 date: 2026-04-19
-tag: theorem
-description: "Three completeness classes for exp-ln operators: exactly complete (EML), approximately complete (EMN), and incomplete (all others). Two new theorems prove EMN's exact limits and approximate power."
+tag: conjecture
+description: "Three completeness classes for exp-ln operators: exactly complete (EML), approximately complete (EMN), and incomplete (all others). Two conjectures about EMN's exact limits and approximate power, with sketches that stop short of proofs."
 ---
 
 # The Completeness Trichotomy
 
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post presented two theorems about EMN with proofs. Both are conjectures (T24): the sketch for the first stops at "infinite regress", and the second mirrors EML trees through EML = −EMN, which negates only the root node. The reasons given for the other operators being incomplete are unproved too, except that over ℝ no EAL tree approximates −x.</p>
+
 > **Updated:** The full 16-operator census (T25) extends this result. The trichotomy
 > (1 complete / 1 approximate / 6 incomplete) is superseded by the
-> **Exponential Position Theorem** (T12, T26–T28): **8 complete / 1 approximate / 7 incomplete**.
-> EML was never the only complete operator — 7 others share the same structural property.
-> See [Why exp(+x) Means Complete](/blog/completeness-characterization) for the full proof.
+> **Exponential Position Theorem** (T12, T26–T28), a conjecture: **8 complete / 1 approximate / 7 incomplete** over ℂ.
+> It proposes that EML is not the only complete operator — that 7 others share the same structural property.
+> Over ℝ that fails for EAL, whose real trees are all nondecreasing.
+> See [Does exp(+x) Mean Complete?](/blog/completeness-characterization) for the argument, which has gaps.
 
 After classifying eight exp-ln operators in the Operator Zoo, one question remained open: **Is EMN complete?**
 
 EMN(x,y) = ln(y) − exp(x)
 
-We now have the answer — and it is neither yes nor no. EMN belongs to a third class.
+We now have a conjectured answer — and it is neither yes nor no. EMN would belong to a third class.
 
 ## The Three Classes
 
@@ -30,11 +33,11 @@ We now have the answer — and it is neither yes nor no. EMN belongs to a third 
 
 ---
 
-## Theorem 1: EMN Is Not Exactly Complete
+## Conjecture 1: EMN Is Not Exactly Complete
 
-**Theorem:** No finite EMN tree T over {1, x} satisfies T(x) = ln(x) exactly for all x in any open interval.
+**Conjecture:** No finite EMN tree T over {1, x} satisfies T(x) = ln(x) exactly for all x in any open interval.
 
-**Proof sketch:**
+**Sketch (incomplete):**
 
 Any n ≥ 1 EMN tree has the form T(x) = ln(R(x)) − exp(L(x)).
 
@@ -44,13 +47,13 @@ For T(x) = ln(x), we need:
 exp(L(x)) = ln(R(x)) − ln(x) = ln(R(x)/x)
 ```
 
-Since exp: ℝ → (0,∞), exp(L(x)) > 0 always. This forces R(x) = x · exp(exp(L(x))). For any EMN subtree L, exp(L(x)) ≥ c > 0 for some constant c, so R(x) grows faster than x. But R must itself be an EMN subtree — and EMN subtrees alternate ln and exp applications that cannot grow arbitrarily fast over bounded intervals. This leads to infinite regress: each level needs a faster-growing subtree than the last, but the tree has finite depth.
+Since exp: ℝ → (0,∞), exp(L(x)) > 0 always. This forces R(x) = x · exp(exp(L(x))). For any EMN subtree L, exp(L(x)) ≥ c > 0 for some constant c, so R(x) grows faster than x. But R must itself be an EMN subtree — and EMN subtrees alternate ln and exp applications that cannot grow arbitrarily fast over bounded intervals. This leads to infinite regress: each level needs a faster-growing subtree than the last, but the tree has finite depth. The sketch stops there: it does not show that no finite tree escapes the regress.
 
 The complex case is identical: exp(z) = 0 has no solution in ℂ, so the same regress applies.
 
-**The same argument shows exp(x) is not exactly EMN-constructible.** For T(x) = exp(x), the equation ln(R) − exp(L) = exp(x) forces R = exp(exp(x) + exp(L)), which again requires faster-than-EMN growth at every level.
+**The same argument would show exp(x) is not exactly EMN-constructible.** For T(x) = exp(x), the equation ln(R) − exp(L) = exp(x) forces R = exp(exp(x) + exp(L)), which again requires faster-than-EMN growth at every level.
 
-**Computational confirmation (N ≤ 8):** Exhaustive search over all EMN trees with up to 8 internal nodes:
+**Computational evidence (N ≤ 8):** Exhaustive search over all EMN trees with up to 8 internal nodes:
 
 | N | Best MSE for ln(x) |
 |---|-------------------|
@@ -61,15 +64,15 @@ The complex case is identical: exp(z) = 0 has no solution in ℂ, so the same re
 | 7 | 5.03e-24 |
 | 8 | 0 (⚠ artifact) |
 
-The N=8 zero is a **floating-point artifact**: the tree drives L(x) to approximately −1.6×10²⁵, causing exp(L) to underflow to 0.0 in IEEE 754 double precision. In exact arithmetic, exp(−1.6×10²⁵) ≈ 10^{−6.9×10²⁴} — nonzero, consistent with the proof. This is a beautiful confirmation: the only way to "fake" ln(x) in EMN is to push the residual below floating-point resolution, exactly as the growth-rate argument predicts.
+The N=8 zero is a **floating-point artifact**: the tree drives L(x) to approximately −1.6×10²⁵, causing exp(L) to underflow to 0.0 in IEEE 754 double precision. In exact arithmetic, exp(−1.6×10²⁵) ≈ 10^{−6.9×10²⁴} — nonzero, consistent with the conjecture. It fits the growth-rate argument: this tree "fakes" ln(x) by pushing the residual below floating-point resolution.
 
 ---
 
-## Theorem 2: EMN Is Approximately Complete
+## Conjecture 2: EMN Is Approximately Complete
 
-**Theorem:** For any elementary function f and any ε > 0, there exists a finite EMN tree T (using complex intermediate values) such that |Re(T(x)) − f(x)| < ε on any compact interval.
+**Conjecture:** For any elementary function f and any ε > 0, there exists a finite EMN tree T (using complex intermediate values) such that |Re(T(x)) − f(x)| < ε on any compact interval.
 
-**Proof sketch:**
+**Sketch (incomplete):**
 
 The mechanism: EMN uses complex intermediates to route around the exp(·) > 0 barrier.
 
@@ -84,7 +87,7 @@ achieves error ~10⁻⁷ at x = 1.5 by:
 4. Extracting an approximation to ln(x) (error ~ e^{−depth})
 5. Applying emn(·, 1) = −(·) to negate it
 
-Since EML is exactly complete (by the Weierstrass theorem) and EML = −EMN, any EML tree can be mirrored in the complex plane using EMN trees. The error decreases doubly-exponentially with depth: each additional level halves the approximation error in the logarithmic sense.
+The sketch then argued: since EML is exactly complete (T01) and EML = −EMN, any EML tree can be mirrored in the complex plane using EMN trees. That step fails: emn(x, y) = −eml(x, y) negates only the root node, so it does not turn an EML tree into an EMN tree. In the searches, the error decreases doubly-exponentially with tree size.
 
 **For neg(x) specifically** — the error sequence (best MSE vs. tree size):
 
@@ -105,17 +108,17 @@ The error drops by roughly 10⁶–10⁹ every two additional nodes — consiste
 ## What Separates the Three Classes
 
 **Why EML is exactly complete:**
-- The ln mechanism is native: any 3-node tree gives ln(x).
-- The Weierstrass theorem applies directly.
+- The ln mechanism is native: a 3-node tree gives ln(x).
+- Exactness is the published universality result (T01), not a consequence of the Weierstrass argument, which has a gap.
 
-**Why EMN is only approximately complete:**
+**Why EMN would be only approximately complete:**
 - exp(L) > 0 always, creating a residual in every exact target.
 - But complex intermediates let EMN route around this residual with exponentially decreasing error.
 - EMN is "complete in the limit" — a countably infinite set of trees converges to each target, but no finite tree achieves zero error.
 
-**Why the others are incomplete (not even approximately):**
-- **DEML/EAL:** All reachable slopes have the same sign. neg(x) is not even approachable as a limit.
-- **EXL/POW:** The constant e is not constructible from {1}. The set of reachable real values is discrete (countable), not dense — no target outside this set can be approached.
+**Why the others were counted incomplete (not even approximately):**
+- **DEML/EAL:** All reachable slopes were said to have the same sign, so neg(x) is not even approachable as a limit. Over ℝ that holds for EAL: every real EAL tree T = exp(A) + ln(B) has T′ = A′e^A + B′/B ≥ 0. For DEML the slope argument has a gap (deml(x, 1) = exp(−x) decreases), and the claim is a conjecture (T13).
+- **EXL/POW:** The constant e is not constructible from {1}, and the constants reachable from {1} alone form a discrete set. That does not settle which functions trees over {1, x} can approach, so these cases are unproved too.
 
 ---
 
@@ -138,9 +141,9 @@ The error drops by roughly 10⁶–10⁹ every two additional nodes — consiste
 
 The trichotomy is structurally clean:
 
-1. **EML** — the only operator where complex intermediates are unnecessary (real trees suffice).
-2. **EMN** — complex intermediates are *required*, but always available and converge to any target.
-3. **All others** — complex intermediates cannot rescue them because the barrier is not a sign issue but a missing constant or locked slope.
+1. **EML** — the only operator here with a proof of exact completeness (T01); it still needs complex intermediates for some targets, since sin(x) is not a real EML tree.
+2. **EMN** — complex intermediates are *required*, and conjectured to converge to any target.
+3. **All others** — the claim is that complex intermediates cannot rescue them, because the barrier is not a sign issue but a missing constant or locked slope; that is unproved.
 
 The picture mirrors classical completeness theory in computability and logic: some systems are complete, some are incomplete, and the exact boundary matters.
 

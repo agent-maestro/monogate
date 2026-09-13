@@ -1,19 +1,21 @@
 ---
 layout: ../../layouts/Base.astro
 title: "Why tan(1) Controls Everything"
-description: "A single transcendence fact about tan(1) is the root cause behind three separate EML results: the multiplication lower bound, the depth-3 ceiling for standard functions, and the complex density behavior."
+description: "A single transcendence fact about tan(1), offered as the root cause behind three separate EML claims: the multiplication lower bound, a depth-3 ceiling for standard functions (false: x + 1 has depth 4), and complex density (unproved)."
 date: "2026-04-20"
 author: "Monogate Research"
-tag: theorem
+tag: conjecture
 ---
 
 # Why tan(1) Controls Everything
 
-**Tier: THEOREM** (T17, T29, T30, T31 unified via the Lindemann–Weierstrass obstruction)
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called its unification a theorem. T30's depth-3 ceiling is false: x + 1 has depth exactly 4, and ln x has depth exactly 3 on (0, ∞), not 1. T31's density argument never builds polynomials, and whether i is an accumulation point is open (C03). T29 rests on an exhaustive search over six operators with leaves x, y, 0, 1 on x, y > 0, and that search does not involve i. The sections below are corrected in place.</p>
+
+**Tier: CONJECTURE** (T17 is a theorem and T29 a proposition; T30 and T31 are conjectures, and their unification via the Lindemann–Weierstrass obstruction has no proof)
 
 ---
 
-Three EML results that looked independent turn out to have one root cause.
+Three EML results that looked independent are traced here to one root cause.
 That cause is a single fact about a single number: $\tan(1)$ is transcendental.
 
 ---
@@ -36,7 +38,7 @@ Apply this to $\alpha = 2i$ (which is algebraic, degree 2 over $\mathbb{Q}$):
 $e^{2i} = \cos(2) + i\sin(2)$ is transcendental.
 From this, via standard identities, $\sin(1)/\cos(1) = \tan(1)$ is transcendental.
 
-That one fact — $\tan(1) \notin \overline{\mathbb{Q}}$ — is the root cause of
+That one fact — $\tan(1) \notin \overline{\mathbb{Q}}$ — is offered as the root cause of
 everything below.
 
 ---
@@ -82,20 +84,20 @@ Not a rounding error. A transcendental obstruction.
 
 ### Application 1 — Multiplication lower bound (T29)
 
-Computing $xy$ in the six-operator library $\mathcal{F}_6$
+Computing $xy$ for $x, y > 0$ in the six-operator library $\mathcal{F}_6$, with leaves $x, y, 0, 1$,
 requires **at least 3 nodes**.
 
-Why? If $i$ were constructible, you could route through complex exponentials to
+Why? The story told here: if $i$ were constructible, you could route through complex exponentials to
 implement multiplication in 2 nodes — the identity $xy = e^{\ln x + \ln y}$
 combined with a complex-phase intermediate that sidesteps the restrictions of
-real exp-ln arithmetic.
+real exp-ln arithmetic. No such 2-node route is written down.
 
-Because $i$ is not constructible ($\tan(1)$ blocks it), that routing is unavailable.
-Exhaustive search over all 2-node mixed trees in $\mathcal{F}_6$ confirms no 2-node
-implementation exists.
+What settles the bound is an exhaustive search, and it does not involve $i$: none of the
+96 one-node and 4,608 two-node trees over $\mathcal{F}_6$ computes $xy$ (trees with other
+constants were not searched).
 
 In the extended 16-operator family $\mathcal{F}_{16}$, which includes the operator
-$\mathrm{ELAd}(a, b) = e^a \cdot b$, multiplication achieves **2 nodes**:
+$\mathrm{ELAd}(a, b) = e^a \cdot b$, multiplication achieves **2 nodes** for $x > 0$:
 
 ```
 mul(x, y) = ELAd(EXL(0, x), y)
@@ -104,26 +106,27 @@ mul(x, y) = ELAd(EXL(0, x), y)
           = x · y
 ```
 
-This is the T29 + T10-update result: 3 nodes in $\mathcal{F}_6$, 2 nodes in $\mathcal{F}_{16}$.
+This is the T29 + T10-update result: 3 nodes in $\mathcal{F}_6$, 2 nodes in the April $\mathcal{F}_{16}$.
+The current $\mathcal{F}_{16}$ needs only 1 node for $x, y > 0$: $e^{\ln x + \ln y}$.
 
 ---
 
-### Application 2 — Depth-3 ceiling for standard functions (T30)
+### Application 2 — Depth-3 ceiling for standard functions (T30, refuted)
 
-Every classical elementary function — exp, ln, power $x^n$, sine, cosine, arctan,
-arcsin, arccos — has EML depth **at most 3**.
+This section claimed every classical elementary function — exp, ln, power $x^n$, sine, cosine, arctan,
+arcsin, arccos — has EML depth **at most 3**. The ceiling is false: $x + 1$ has depth exactly 4 on $(0, \infty)$.
 
 | Function | Depth | Route |
 |---|---|---|
 | $e^x$ | 1 | 1 EML/EAL node |
-| $\ln x$ | 1 | 1 EXL node |
-| $x^n$ | 2 | $e^{n \ln x}$ |
+| $\ln x$ | 3 | exactly 3 on $(0, \infty)$; listed at 1, via an EXL node, which is not an EML tree |
+| $x^n$ | ? | $e^{n \ln x}$ passes through $\ln x$ (depth 3); no depth-2 tree is known |
 | $\sin x$ | 3 | Euler: $(e^{ix} - e^{-ix}) / 2i$ |
 | $\arctan x$ | 3 | $\frac{1}{2i}\ln\frac{1+ix}{1-ix}$ |
 
-The hierarchy is strictly infinite — depth-$k$ functions exist for every $k \geq 1$
-(the $k$-fold iterate $\exp^{(k)}$ lives at depth exactly $k$). But no standard
-function lives above depth 3.
+The hierarchy was also called strictly infinite, with the $k$-fold iterate $\exp^{(k)}$ at depth
+exactly $k$. It has a $k$-node tree for every $k$, but exactly $k$ is settled only for $k \le 4$.
+And a standard function does live above depth 3: $x + 1$.
 
 Why can't $\sin$ be collapsed to depth 2?
 The complex route $\sin(x) = \mathrm{Im}(e^{ix})$ is depth 2 over $\mathbb{C}$,
@@ -136,33 +139,34 @@ The complex shortcut is uniformly blocked, for every function, by the single $\t
 
 ---
 
-### Application 3 — Density paradox (T31)
+### Application 3 — Density paradox (T31, conjectured)
 
-**T31:** The set of all EML tree values is **dense** in the space of holomorphic
-functions on any compact simply-connected domain $K \subset \mathbb{C}$.
-Every smooth function can be approximated to any precision by some finite EML tree.
+**T31** (a conjecture): The set of all EML tree values is **dense** in the space of holomorphic
+functions on any compact simply-connected domain $K \subset \mathbb{C}$:
+every function holomorphic near $K$ could be approximated to any precision by some finite EML tree.
+The argument for it never builds polynomials, so the claim is open.
 
 And yet: $i$ is never exactly reached.
 
 Is this a contradiction? No. Density and exact membership are different things.
 
 The rational numbers $\mathbb{Q}$ are dense in $\mathbb{R}$, but $\sqrt{2} \notin \mathbb{Q}$.
-EML values are dense in holomorphic function space, but $i \notin \mathrm{EML}_k$.
+EML values would be dense in holomorphic function space, yet $i \notin \mathrm{EML}_k$.
 
 The $\tan(1)$ obstruction explains both sides:
 
-- **Why sequences can approach $i$:** Transcendence is an exact algebraic constraint.
+- **Why sequences could approach $i$:** Transcendence is an exact algebraic constraint.
   You can get exponentially close to satisfying $e^\alpha \sin(\beta) = 1$ with
   constructible pairs $(\alpha, \beta)$ — the constraint becomes arbitrarily nearly
   satisfied without ever being exactly satisfied.
-  Density holds because the obstruction is a precision-zero set in the limit.
+  Density would hold because the obstruction is a precision-zero set in the limit.
 
 - **Why $i$ is never reached:** Exact membership requires the constraint to be
   exactly satisfied by EML-constructible values. The $\tan(1)$ transcendence
   prevents this in every finite depth.
 
-$i$ is an accumulation point of $\mathrm{EML}_1$. It is not an element of $\mathrm{EML}_k$.
-These two facts coexist without contradiction.
+Whether $i$ is an accumulation point of $\mathrm{EML}_1$ is open (C03); depth 6 gets within
+$4.76 \times 10^{-6}$. It is not an element of $\mathrm{EML}_k$. The two would coexist without contradiction.
 
 ---
 
@@ -215,13 +219,13 @@ i ∉ EML_k  (T17, Lean-verified for real semantics)
 depth_ℂ = depth_ℝ  (Depth Stability Theorem)
     ↓
 ┌─────────────────────────────────────────────────────┐
-│ T29: mul needs ≥ 3 nodes in F6                      │
-│ T30: standard functions have depth ≤ 3; strict ∞   │
-│ T31: EML dense in H(K); i unreachable but limit pt. │
+│ T29: mul needs ≥ 3 nodes in F6 (search; x, y > 0)   │
+│ T30: standard functions depth ≤ 3: false (x + 1)    │
+│ T31: EML dense in H(K)? open; i a limit pt.? open   │
 └─────────────────────────────────────────────────────┘
 ```
 
-One number. One transcendence fact. Three theorems.
+One number. One transcendence fact. Three claims: a search result, a refuted ceiling, an open conjecture.
 
 ---
 

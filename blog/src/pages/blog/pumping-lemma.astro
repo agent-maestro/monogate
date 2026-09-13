@@ -3,8 +3,8 @@ import Base from '../../layouts/Base.astro';
 ---
 
 <Base
-  title="The Pumping Lemma for EML Trees"
-  description="A depth-k EML tree has at most 2^k zeros. But in practice, trees have O(1) zeros. The gap between the theoretical bound and observation suggests a tighter conjecture."
+  title="A Pumping Lemma for EML Trees?"
+  description="How many zeros can a depth-k EML tree have? A 2^k bound was claimed here without a working proof. Among all 862,118 trees with at most 8 internal nodes, the most sign changes found was 3, too few sizes to show a growth rate."
   date="2026-04-19"
 >
   <div class="meta">
@@ -13,70 +13,85 @@ import Base from '../../layouts/Base.astro';
     <span>5 min read</span>
   </div>
 
-  <h1>The Pumping Lemma for EML Trees</h1>
+  <h1>A Pumping Lemma for EML Trees?</h1>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
-    How many zeros can a depth-k EML tree have? The theoretical bound is 2<sup>k</sup>.
-    The observed bound is roughly O(k). The gap is enormous, and closing it would
-    strengthen the Infinite Zeros Barrier.
+    How many zeros can a depth-k EML tree have? The bound claimed here is 2<sup>k</sup>, and it is
+    unproved. The counts on record stop at 8 internal nodes, where the most found is 3. Closing
+    the gap would strengthen the Infinite Zeros Barrier.
+  </p>
+
+  <p style="color: var(--muted); font-style: italic;">
+    Correction (2026-09-13): this post called the 2<sup>k</sup> bound a theorem and gave a proof.
+    The proof used the wrong operator (eml(f, g) is exp(f) − ln(g), not exp(f) − g) and asserted
+    zeros(k) ≤ 2 · zeros(k−1) without an argument. As first stated the bound is false:
+    eml(x, eml(eml(x,1),1)) = e<sup>x</sup> − ln(e<sup>e<sup>x</sup></sup>) is zero for every real x,
+    at depth 3. The post also said O(1) in its summary and O(k) in its body, and credited the N=12
+    search with zero counts it never recorded. The counts below come from a separate search.
   </p>
 
   <div class="divider"></div>
 
-  <h2>The theoretical bound</h2>
+  <h2>The claimed bound</h2>
 
   <p>
-    <strong>Theorem (EML Pumping Lemma):</strong> Every depth-k real EML tree has at most
-    2<sup>k</sup> real zeros on any bounded interval.
+    <strong>Conjecture (EML Pumping Lemma):</strong> Every depth-k real EML tree that is not
+    identically zero has at most 2<sup>k</sup> real zeros on any bounded interval where every ln
+    argument in it is positive.
   </p>
 
-  <p>The proof is by induction on depth:</p>
+  <p>The argument offered was an induction on depth. It does not go through:</p>
 
   <p>
     <strong>Base case (k = 1).</strong>
-    A depth-1 tree is <code>eml(x, c) = exp(x) − c</code> for some constant c.
-    <code>exp</code> is strictly monotone, so this has at most 1 zero. 1 ≤ 2<sup>1</sup>. ✓
+    A depth-1 tree over &#123;1, x&#125; is <code>eml(1, 1) = e</code>, <code>eml(x, 1) = exp(x)</code>,
+    <code>eml(1, x) = e − ln x</code> or <code>eml(x, x) = exp(x) − ln x</code>.
+    Each has at most 1 zero. 1 ≤ 2<sup>1</sup>. ✓
   </p>
 
   <p>
     <strong>Inductive step.</strong>
     Suppose every depth-(k−1) tree has at most 2<sup>k−1</sup> zeros.
-    A depth-k tree is <code>T = eml(f, g) = exp(f) − g</code>, where f and g are
+    A depth-k tree is <code>T = eml(f, g) = exp(f) − ln(g)</code>, where f and g are
     depth-(k−1) trees.
-    <code>T(x) = 0</code> iff <code>exp(f(x)) = g(x)</code>.
-    Both <code>exp(f)</code> and <code>g</code> are real-analytic.
-    By a Rolle's theorem argument on the difference, the zero count of
-    <code>exp(f) − g</code> is bounded by the sum of zero counts of their derivatives,
-    which satisfies the recurrence zeros(k) ≤ 2 · zeros(k−1), giving zeros(k) ≤ 2<sup>k</sup>. ∎
+    <code>T(x) = 0</code> iff <code>exp(f(x)) = ln(g(x))</code>.
+    Both <code>exp(f)</code> and <code>ln(g)</code> are real-analytic where defined.
+    The step then asserted that a Rolle's theorem argument on the difference gives the
+    recurrence zeros(k) ≤ 2 · zeros(k−1), and so zeros(k) ≤ 2<sup>k</sup>. No such argument is
+    given, and the zeros of <code>T</code> are not determined by those of f and g:
+    <code>eml(1, x) = e − ln x</code> vanishes at x = e<sup>e</sup>, where neither leaf does.
   </p>
 
-  <h2>The observed bound</h2>
+  <h2>The observed counts</h2>
 
   <p>
-    In the exhaustive N=12 search (1,704,034,304 trees), zero counts were recorded
-    for every tree evaluated. The observed distribution:
+    The exhaustive N=12 search (1,704,034,304 trees) measured each tree's error against sin; it
+    recorded no zero counts. The zero counts on record come from a separate exhaustive search of
+    all 862,118 real EML trees over &#123;1, x&#125; with at most 8 internal nodes, counting sign
+    changes on [−2, 2] on a 0.01 grid. The most found:
   </p>
 
   <ul>
-    <li>~95% of trees: 0 zeros on [−π, π]</li>
-    <li>~4.9% of trees: 1 zero</li>
-    <li>&lt; 0.1% of trees: 2 or more zeros</li>
-    <li>Maximum observed: O(k) zeros for depth-k trees</li>
+    <li>0–2 internal nodes: at most 1 sign change</li>
+    <li>3–6 internal nodes: at most 2</li>
+    <li>7–8 internal nodes: at most 3</li>
   </ul>
 
   <p>
-    The theoretical bound of 2<sup>k</sup> = 4096 for k = 12 is never approached.
-    The actual maximum across 1.7 billion trees is in single digits.
+    These stay far below 2<sup>k</sup>, but they stop at 8 internal nodes and miss zeros outside
+    [−2, 2], so they do not show how the maximum grows.
   </p>
 
   <h2>The conjecture</h2>
 
   <blockquote>
-    <strong>Conjectured tight bound:</strong> Every depth-k real EML tree has at most O(k)
-    zeros on any bounded interval — linear in depth, not exponential.
+    <strong>Conjectured linear bound:</strong> Every depth-k real EML tree that is not identically
+    zero has at most O(k) zeros on any bounded interval where it is defined — linear in depth,
+    not exponential.
   </blockquote>
 
   <p>
-    This is currently unproved. It has strong computational support from the N=12 search.
+    This is currently unproved, and so is the 2<sup>k</sup> bound above. The counts up to 8
+    internal nodes are consistent with it, but too few sizes to support any growth rate.
     If true, it would be a significantly stronger version of the Infinite Zeros Barrier:
     not just "finitely many zeros" but "at most linearly many."
   </p>
@@ -90,15 +105,15 @@ import Base from '../../layouts/Base.astro';
 
   <p>
     A natural approach: trace zero-counting through EML composition more carefully.
-    The Rolle's theorem bound in the inductive step counts zeros of the derivative,
+    A Rolle's theorem bound would count zeros of the derivative,
     which is itself a ratio of EML trees (log-differentation). If derivative trees
-    have O(k−1) zeros rather than 2<sup>k−1</sup>, the bound tightens to O(k).
+    have O(k−1) zeros, the bound would be O(k).
   </p>
 
   <p>
     The challenge: the derivative of an EML tree is not itself a simple EML tree.
     It involves quotients and sums that require careful treatment. The conjecture
-    is stated with strong evidence but the proof remains open.
+    rests on counts up to 8 internal nodes, and the proof remains open.
   </p>
 
   <h2>Why it matters</h2>
@@ -115,7 +130,7 @@ import Base from '../../layouts/Base.astro';
   <h3>Cite this work</h3>
 
   <blockquote>
-    Monogate Research (2026). "The Pumping Lemma for EML Trees."
+    Monogate Research (2026). "A Pumping Lemma for EML Trees?"
     <em>monogate research blog.</em>
     https://monogate.org/blog/pumping-lemma
   </blockquote>

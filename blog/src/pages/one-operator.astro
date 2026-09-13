@@ -44,7 +44,9 @@ const theoremCount = theoremsData.results.filter((r) => r.tier === 'THEOREM').le
   <p>
     Now try sin(x) over the reals. You can't build it. A finite EML tree is real-analytic, and a
     non-zero real-analytic function has isolated zeros. But sin(x) zeros at every multiple of π.
-    Contradiction. This is the <strong>Infinite Zeros Barrier</strong> — provable in two lines.
+    That is not yet a contradiction, since sin is real-analytic with isolated zeros too: the
+    <strong>Infinite Zeros Barrier</strong> needs a bound on how many zeros a finite tree can have, and that
+    bound is still open. MachLib rules sin out another way, by periodicity.
     <a href="/blog/infinite-zeros-barrier">Read it →</a>
   </p>
 
@@ -66,16 +68,17 @@ const theoremCount = theoremsData.results.filter((r) => r.tier === 'THEOREM').le
     <li><strong style="color: var(--red);">Depth ∞</strong> — non-constructible over ℝ</li>
   </ul>
 
-  <p>There is no depth 4. The jump is direct. <a href="/atlas">Full depth atlas →</a> · <a href="/theorems">Theorem catalog →</a></p>
+  <p>Depth 4 is not empty, though: in EML tree depth, x + 1 needs exactly 4 on (0, ∞). <a href="/atlas">Full depth atlas →</a> · <a href="/theorems">Theorem catalog →</a></p>
 
-  <h2>The completeness theorem</h2>
+  <h2>The completeness conjecture</h2>
 
   <p>
-    Among all 16 exp-ln operators, exactly <strong>8 are completely expressive</strong>:
-    EML, EAL, EXL, EDL, EPL, LEAd, ELAd, ELSb. The structural rule is simple —
+    Among all 16 exp-ln operators, <strong>8 are conjectured to be completely expressive</strong> over ℂ:
+    EML, EAL, EXL, EDL, EPL, LEAd, ELAd, ELSb. For EML it is the published result; over ℝ, EAL
+    is not, since every real EAL tree is nondecreasing. The proposed structural rule is simple —
     if the operator has exp(+x) with no domain restriction, it is exactly complete.
-    If it has exp(−x), it is incomplete. One rule explains all 16 cases (T26–T28).
-    <a href="/blog/completeness-characterization">Why exp(+x) means complete →</a>
+    If it has exp(−x), it is incomplete. One rule would explain all 16 cases, but T26–T28 have no proofs.
+    <a href="/blog/completeness-characterization">Does exp(+x) mean complete? →</a>
   </p>
 
   <h2>The open problem</h2>
@@ -91,7 +94,7 @@ const theoremCount = theoremsData.results.filter((r) => r.tier === 'THEOREM').le
   <h2>Research blog</h2>
 
   <ul style="margin: 16px 0 20px 24px; line-height: 2.4;">
-    <li><a href="/blog/completeness-characterization">Why exp(+x) Means Complete: The Structural Theorem</a> <span style="color: var(--muted); font-size: 0.85em;">new</span></li>
+    <li><a href="/blog/completeness-characterization">Does exp(+x) Mean Complete? A Structural Conjecture</a> <span style="color: var(--muted); font-size: 0.85em;">new</span></li>
     <li><a href="/blog/superbest-complete">The SuperBEST Table, v1 (corrected)</a></li>
     <li><a href="/blog/infinite-zeros-barrier">The Infinite Zeros Barrier</a></li>
     <li><a href="/blog/near-miss">0.99999524: The Near-Miss</a></li>

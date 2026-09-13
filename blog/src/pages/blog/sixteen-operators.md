@@ -7,7 +7,9 @@ date: 2026-04-20
 
 # 16 Operators: The Complete exp-ln Census
 
-**Tier: OBSERVATION** (computed) + **THEOREM** (completeness classification, partial)
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post marked its completeness classification partly THEOREM-tier. Apart from EML's YES, the published universality result, no entry in the Complete? columns below has a proof, and over ℝ EAL's YES is false: every real EAL tree is nondecreasing, so none approximates −x. The rest is the conjectured 8/1/7 split (T12).</p>
+
+**Tier: OBSERVATION** (computed) + **CONJECTURE** (completeness classification)
 
 The EML family starts with one idea: combine exp(x) and ln(y) using arithmetic. There are exactly 16 natural binary combinations. This post classifies all of them.
 
@@ -22,7 +24,7 @@ Every binary exp-ln operator has the form: combine exp(±x) with ln(y) using one
 | Operator | Formula | f(1,2) | Complete? |
 |---------|---------|--------|-----------|
 | EML | exp(x) − ln(y) | 2.025 | **YES** — T02 foundation |
-| EMN | ln(y) − exp(x) | −2.025 | APPROXIMATE — T24 |
+| EMN | ln(y) − exp(x) | −2.025 | APPROXIMATE (conjectured) — T24 |
 | DEML | exp(−x) − ln(y) | −0.325 | NO — T13 |
 | DEMN | ln(y) − exp(−x) | 0.325 | NO |
 
@@ -30,14 +32,14 @@ Every binary exp-ln operator has the form: combine exp(±x) with ln(y) using one
 
 | Operator | Formula | f(1,2) | Complete? |
 |---------|---------|--------|-----------|
-| EAL | exp(x) + ln(y) | 3.411 | **YES** — add(x,y)=3n |
+| EAL | exp(x) + ln(y) | 3.411 | NO over ℝ (every real tree is nondecreasing); YES over ℂ conjectured — add(x,y)=3n |
 | DEAL | exp(−x) + ln(y) | 1.061 | NO |
 
 **Multiplication family (EXL, DEXL):**
 
 | Operator | Formula | f(1,2) | Complete? |
 |---------|---------|--------|-----------|
-| EXL | exp(x) · ln(y) | 1.884 | **YES** — optimal: ln=1n, pow=3n |
+| EXL | exp(x) · ln(y) | 1.884 | **YES** (conjectured; the argument uses the constant e) — ln=1n, pow=3n |
 | DEXL | exp(−x) · ln(y) | 0.255 | NO |
 
 **Division family (EDL, DEDL):**
@@ -67,13 +69,13 @@ Every binary exp-ln operator has the form: combine exp(±x) with ln(y) using one
 
 ## The Structural Insight
 
-**8 complete, 1 approximate, 7 incomplete.**
+**8 complete, 1 approximate, 7 incomplete** — conjectured, over ℂ.
 
-The pattern is clear: **negating the exponent breaks completeness**.
+The conjectured pattern: **negating the exponent breaks completeness**.
 
-All 5 operators with exp(−x) — DEML, DEMN, DEAL, DEXL, DEDL, DEPL — are incomplete. The only incomplete operator without exp(−x) is LEX, which fails because it is undefined on a non-negligible domain.
+All 6 operators with exp(−x) — DEML, DEMN, DEAL, DEXL, DEDL, DEPL — are classed incomplete. The only other operator classed incomplete is LEX. The reason given was that it is undefined on a non-negligible domain, but lex(x, lex(lex(1,1),1)) = ln(exp(x) − ln(e − 2)) is defined on all of ℝ (T28).
 
-Why does exp(−x) break completeness? The range of exp(−x) is (0,∞) — identical to exp(x). But when negated, DEML(x,y) = exp(−x) − ln(y) is bounded above by exp(−x) which *decreases* as x grows. This prevents DEML trees from growing large, limiting their ability to represent functions with unbounded output (like ln(x) itself).
+Why would exp(−x) break completeness? The range of exp(−x) is (0,∞) — identical to exp(x). But when negated, DEML(x,y) = exp(−x) − ln(y) is bounded above by exp(−x) for y ≥ 1, and exp(−x) *decreases* as x grows. This prevents DEML trees from growing large, limiting their ability to represent functions with unbounded output (like ln(x) itself).
 
 ---
 

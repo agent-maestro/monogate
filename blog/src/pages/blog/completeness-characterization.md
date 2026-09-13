@@ -1,14 +1,16 @@
 ---
 layout: ../../layouts/Base.astro
-title: "Why exp(+x) Means Complete: The Structural Theorem for exp-ln Operators"
+title: "Does exp(+x) Mean Complete? A Structural Conjecture for exp-ln Operators"
 date: 2026-04-20
-tag: theorem
-description: "16 operators, one structural rule: exp(+x) with no domain restriction implies exactly complete. exp(-x) implies incomplete. -exp(x) implies approximately complete. The Exponential Position Theorem explains all 16 classifications at once."
+tag: conjecture
+description: "16 operators, one proposed structural rule: exp(+x) with no domain restriction implies exactly complete, exp(-x) incomplete, -exp(x) approximately complete. The Exponential Position Theorem would explain all 16 classifications at once, but none of its directions has a proof, and over ℝ it fails for EAL."
 ---
 
-# Why exp(+x) Means Complete
+# Does exp(+x) Mean Complete?
 
-**Tier: THEOREM** (T26–T28, structural proofs; T12 updated from Trichotomy to full characterization)
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called the rule below a theorem with structural proofs. None of its directions has a proof. The forward argument (T26) borrows other operators and constants, the LEX argument (T28) is refuted by explicit trees, and the EMN (T24) and exp(−x) (T27) cases are sketches. Over ℝ the rule is false for EAL: every real EAL tree is nondecreasing, so none approximates −x. Over ℂ it is an open conjecture.</p>
+
+**Tier: CONJECTURE** (T26–T28, structural arguments with gaps; T12 updated from Trichotomy to full characterization)
 
 ---
 
@@ -20,14 +22,14 @@ as a finite tree — reveals a single structural rule that explains every case.
 
 ## The Rule
 
-> **An exp-ln operator is exactly complete if and only if its exponential term
+> **Conjecture: an exp-ln operator is exactly complete if and only if its exponential term
 > is exp(+x) and the combining operation does not introduce a domain restriction.**
 
-That's it. One sentence. All 16 operators follow.
+That's it. One sentence. If it holds, all 16 operators follow.
 
 ---
 
-## The Full Classification
+## The Conjectured Classification
 
 | Completeness | Operators | Structural feature |
 |---|---|---|
@@ -36,15 +38,17 @@ That's it. One sentence. All 16 operators follow.
 | **Incomplete (7)** | DEML, DEMN, DEAL, DEXL, DEDL, DEPL, LEX | exp(−x) or domain-restricted |
 
 The old "Completeness Trichotomy" (T12) described this as "1 complete / 1 approximate / 6 incomplete"
-because only EML was known to be complete at the time. The full census (T25) reveals **8 complete**
+because only EML was known to be complete at the time. The full census (T25) proposes **8 complete**
 operators — all of them structurally equivalent in the dimension that matters.
 
 ---
 
-## Why exp(+x) Works: The Forward Direction (T26)
+## Why exp(+x) Should Work: The Forward Direction (T26)
 
-Every complete operator can construct exp(x) in 1 node and a slope-−1 linear function
+The argument: every complete operator can construct exp(x) in 1 node and a slope-−1 linear function
 in 2 nodes. The slope-−1 construction is the key: it gives negation up to a constant offset.
+That works for EML (below), but for EXL, EDL and EPL the census used the constant e, which is
+not a leaf, and for LEAd it reached the identity only as a limit.
 
 For EML specifically: `eml(c, exp(x)) = exp(c) − x`. At `c = 0`: `eml(0, exp(x)) = 1 − x`.
 That's slope −1 with offset 1.
@@ -53,18 +57,20 @@ To get exact neg(x) = −x, we use the SuperBEST cross-family bridge (T09):
 ```
 neg(x) = exl(0, deml(x,1)) = exp(0) · ln(exp(−x) − ln(1)) = 1 · (−x) = −x
 ```
-Two nodes. Exact.
+Two nodes. Exact. But it uses EXL, DEML and the constant 0, not the operator being classified,
+so it shows nothing about what any one operator can build.
 
-The common mechanism: **exp(+x) grows without bound as x → +∞**. This unbounded upward growth,
+The intended mechanism: **exp(+x) grows without bound as x → +∞**. This unbounded upward growth,
 combined with ln (which maps ℝ⁺ → ℝ), gives the operator the full real line as output range.
-From full range comes identity; from identity comes negation; from negation comes completeness
-(Ritt's theorem).
+The hoped-for chain: from full range comes identity; from identity comes negation; from negation comes completeness
+(Ritt's theorem). Over ℝ it breaks at EAL: every real EAL tree T = exp(A) + ln(B) has
+T′ = A′e^A + B′/B ≥ 0, so no EAL tree builds negation.
 
 ---
 
-## Why exp(−x) Fails: The Reverse Direction (T27)
+## Why exp(−x) Should Fail: The Reverse Direction (T27)
 
-The exp(−x) operators each fail by a different mechanism:
+The exp(−x) operators each appear to fail by a different mechanism:
 
 | Operator | Mechanism | Core barrier |
 |---|---|---|
@@ -89,21 +95,22 @@ The domain collapses at the second level of nesting.
 
 ## The Exception: LEX (T28)
 
-LEX(x, y) = ln(exp(x) − y) has **exp(+x)**, yet it is incomplete.
+LEX(x, y) = ln(exp(x) − y) has **exp(+x)**, yet it is conjectured to be incomplete.
 
-The reason is a domain restriction in the combining operation: ln(exp(x) − y) requires
-exp(x) > y. With y = 1, this means x > 0. With self-composition at depth 2, the domain
-shrinks to x < 2.81. At depth 3, it shrinks to x < 1.8. The pattern continues: the domain
-approaches the empty set under iteration.
+The reason given was a domain restriction in the combining operation: ln(exp(x) − y) requires
+exp(x) > y. With y = 1, this means x > 0. Nesting on the right, lex(1, lex(x, 1)) also needs
+x < ln(e^e + 1) ≈ 2.782, and deeper right-nested trees settle on about (3.97×10⁻⁶, 2.782):
+the domain does not approach the empty set under iteration.
 
-No LEX tree with depth ≥ 2 is defined on all of ℝ, so LEX cannot represent any globally
-defined function. The incompleteness theorem for LEX (T28) is:
+Other LEX trees are defined on all of ℝ: lex(x, lex(lex(1,1),1)) = ln(e^x − ln(e − 2)) is defined
+for every x, at depth 3. So the domain argument does not show incompleteness. The statement
+this post gave for LEX (T28) was:
 
 > *LEX is incomplete because its domain under self-composition collapses to a set of
 > measure approaching 0 as depth increases.*
 
-This is a different mechanism from exp(−x) incompleteness. LEX fails at the domain level,
-not the growth level.
+Its reason is false, and whether LEX is incomplete is an open conjecture. It was meant as a
+different mechanism from exp(−x) incompleteness: failure at the domain level, not the growth level.
 
 ---
 
@@ -115,20 +122,20 @@ The difference from exp(−x) is crucial:
 - exp(−x) decays: bounded above, approaches 0
 - −exp(x) grows without bound (negatively): → −∞ as x → +∞
 
-This unbounded negative growth lets EMN approximate any target to arbitrary precision.
-For approximate negation: `emn(0, e^(e^k)) = k − e^0 → k` for large k, and variations
-get arbitrarily close to −x. The error is always of order exp(−e^k), which converges
-doubly-exponentially to 0 but never reaches 0 in finite depth.
+This unbounded negative growth was meant to let EMN approximate any target to arbitrary precision (T24, a conjecture).
+For approximate negation, the sketch used `emn(0, e^(e^k))`, which is e^k − 1 (not k − e^0 as first
+written), and said variations get arbitrarily close to −x with error of order exp(−e^k). No such
+family is written down; exhaustive search to 8 nodes finds neg(x) errors consistent with doubly-exponential decay.
 
-The obstruction to exact completeness: every EMN tree has an exp(·) residual in the
-subtracted term that cannot be made exactly zero. Approximate completeness is the
-ceiling for EMN.
+The suggested obstruction to exact completeness: every EMN tree has an exp(·) residual in the
+subtracted term that cannot be made exactly zero. Neither that nor approximate completeness
+has a proof (T24).
 
 ---
 
 ## The Exponential Position Theorem
 
-**Statement:**
+**Statement (a conjecture; T12 has no proof):**
 An exp-ln operator's completeness class is determined entirely by the position
 of negation relative to exp:
 
@@ -148,12 +155,12 @@ now: 8/1/7 split with structural explanation).
 
 The [Completeness Trichotomy post](/blog/completeness-trichotomy) identified three classes
 with 1 exactly complete operator (EML), 1 approximately complete (EMN), and 6 incomplete.
-The full census reveals:
-- **8 complete** operators, not 1 — EML was never special in the dimension that matters
-- **7 incomplete** operators, not 6 — LEX adds a new incompleteness mechanism
+The full census proposes:
+- **8 complete** operators, not 1 — EML would not be special in the dimension that matters
+- **7 incomplete** operators, not 6 — LEX was added, though its domain mechanism is refuted (above)
 
-The theorem count goes from T07 to T28 with this sprint. T12 is now the Completeness
-Characterization Theorem (Exponential Position Theorem), citing T26 (forward), T27 (reverse),
+The catalog count goes from T07 to T28 with this sprint. T12 became the Completeness
+Characterization (Exponential Position Theorem), a conjecture citing T26 (forward), T27 (reverse),
 and T28 (LEX domain).
 
 ---
@@ -174,8 +181,8 @@ softmax over N logits: N−1 nodes.
 
 ---
 
-*Monogate Research (2026). "Why exp(+x) Means Complete: The Structural Theorem for
+*Monogate Research (2026). "Does exp(+x) Mean Complete? A Structural Conjecture for
 Exponential-Logarithmic Operators." monogate research blog.
 https://monogate.org/blog/completeness-characterization*
 
-*Session COMP-1 through COMP-5 · T12 updated, T26–T28 added · Theorem count: 28*
+*Session COMP-1 through COMP-5 · T12 updated, T26–T28 added · Catalog count: 28*
