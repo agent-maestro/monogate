@@ -107,7 +107,7 @@ mul to 1 node for x, y > 0, and add to 2 nodes for all real x, y (ADD-T1). The c
 
 For each entry at N nodes, optimality means:
 - Exhaustive search at N−1 nodes found **zero** constructions
-- The N-node construction exists and is verified
+- The N-node construction exists, as an explicit tree checked by evaluating it. For neg that tree is exl(0, deml(x,1)) = ln(e⁻ˣ) = −x, which holds for every real x by algebra.
 
 For neg: the N=1 check (54 cases: 6 operators × 9 terminal combinations
 from {0,1,x}) reported no 1-node neg, but the search on record rounds each value to

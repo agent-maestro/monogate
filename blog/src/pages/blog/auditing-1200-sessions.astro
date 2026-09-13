@@ -162,26 +162,26 @@ import Base from '../../layouts/Base.astro';
 
   <ol style="margin: 16px 0 20px 24px; color: var(--text); line-height: 2.2; font-size: 0.9rem;">
     <li><strong>T01 — EML Universality</strong>: eml generates every elementary function. (Odrzywołek, arXiv:2603.21852)</li>
-    <li><strong>T09 — Negation in 2 Nodes — Optimal</strong>: neg(x) = −x in exactly 2 EML-family nodes. 1 node is impossible.</li>
-    <li><strong>T10u — Multiplication in 2 Nodes — F16 Optimal</strong>: mul(x,y) in exactly 2 nodes in F16.</li>
+    <li><strong>T09 — Negation in 2 Nodes — Optimal</strong>: neg(x) = −x in exactly 2 EML-family nodes. 1 node is impossible. <em style="color: var(--muted);">Does not hold as written.</em></li>
+    <li><strong>T10u — Multiplication in 2 Nodes — F16 Optimal</strong>: mul(x,y) in exactly 2 nodes in F16. <em style="color: var(--muted);">Does not hold as written.</em></li>
     <li><strong>T11 — EML Self-Map Has No Fixed Points</strong>: eml(x,x) &gt; x for all x &gt; 0.</li>
     <li><strong>T12 — Exponential Position Theorem</strong>: 8 exactly complete operators, 1 approximate, 7 incomplete — determined by exp sign.</li>
     <li><strong>T13 — DEML Incompleteness</strong>: deml is not exactly complete; slope locked to +1.</li>
-    <li><strong>T14 — Tight Zeros Bound</strong>: depth-k EML tree has at most 2^k real zeros (tight).</li>
+    <li><strong>T14 — Tight Zeros Bound</strong>: depth-k EML tree has at most 2^k real zeros (tight). <em style="color: var(--muted);">Does not hold as written: the identically zero depth-3 tree eml(x, eml(eml(x,1),1)) has infinitely many zeros, the four depth-1 trees have at most one, and the corrected bound is a conjecture.</em></li>
     <li><strong>T17 — Strict i-Unconstructibility (Lean-verified)</strong>: i = √−1 not constructible in finite ceml depth.</li>
     <li><strong>T24 — EMN Approximate Completeness</strong>: emn is approximately but not exactly complete.</li>
     <li><strong>T26 — Forward Completeness</strong>: exp(+x) without domain restriction → exactly complete.</li>
     <li><strong>T27 — Reverse Incompleteness</strong>: exp(−x) → incomplete by 5 distinct barrier types.</li>
-    <li><strong>T28 — LEX Domain Incompleteness</strong>: LEX domain shrinks to ∅ at self-composition depth n.</li>
+    <li><strong>T28 — LEX Domain Incompleteness</strong>: LEX domain shrinks to ∅ at self-composition depth n. <em style="color: var(--muted);">Does not hold as written.</em></li>
     <li><strong>T29 — Mul ≥ 3 Nodes in F6</strong>: no 1- or 2-node F6 tree computes multiplication.</li>
-    <li><strong>T30 — Depth Hierarchy</strong>: all standard elementary functions have EML depth ≤ 3.</li>
-    <li><strong>T31 — Complex EML Closure Density</strong>: EML trees dense in H(K); i is an accumulation point of EML₁.</li>
-    <li><strong>T32 — Mul ≥ 2 Nodes in Any exp-ln Family</strong>: a single operator node cannot compute multiplication.</li>
+    <li><strong>T30 — Depth Hierarchy</strong>: all standard elementary functions have EML depth ≤ 3. <em style="color: var(--muted);">Does not hold as written.</em></li>
+    <li><strong>T31 — Complex EML Closure Density</strong>: EML trees dense in H(K); i is an accumulation point of EML₁. <em style="color: var(--muted);">Does not hold as written.</em></li>
+    <li><strong>T32 — Mul ≥ 2 Nodes in Any exp-ln Family</strong>: a single operator node cannot compute multiplication. <em style="color: var(--muted);">Does not hold as written.</em></li>
     <li><strong>T34 — Naive Upper Bound</strong>: Cost(E) ≤ NaiveCost(E).</li>
-    <li><strong>T35 — Lower Bound Theorems (Structural)</strong>: three structural lower bounds on node cost.</li>
+    <li><strong>T35 — Lower Bound Theorems (Structural)</strong>: three structural lower bounds on node cost. <em style="color: var(--muted);">Does not hold as written.</em></li>
     <li><strong>T38 — Cost Decomposition Theorem</strong>: Cost = NaiveCost − SharingDiscount − PatternBonus.</li>
-    <li><strong>T40 — Linear Cost Law</strong>: N-term positive-domain sums cost (α₀+3)N−3 exactly.</li>
-    <li><strong>T08 — SuperBEST Table v4</strong>: 18 total nodes, all 9 entries structurally proved optimal. (v5 update: add=2n for all reals via ADD-T1.)</li>
+    <li><strong>T40 — Linear Cost Law</strong>: N-term positive-domain sums cost (α₀+3)N−3 exactly. <em style="color: var(--muted);">Does not hold as written.</em></li>
+    <li><strong>T08 — SuperBEST Table v4</strong>: 18 total nodes, all 9 entries structurally proved optimal. (v5 update: add=2n for all reals via ADD-T1.) <em style="color: var(--muted);">Does not hold as written.</em></li>
   </ol>
 
   <h2>What we changed</h2>
