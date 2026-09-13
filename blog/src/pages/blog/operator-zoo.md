@@ -23,7 +23,7 @@ The DEML incompleteness argument gave us a template. Apply it to every operator 
 | EMN | ln(y) − exp(x) | **Approximately complete** | Nonzero exp(·) residual — exact ln(x) unreachable |
 | EAL | exp(x) + ln(y) | **Incomplete** over ℝ | All slopes positive, no cancellation (over ℝ; T26 conjectures EAL complete over ℂ) |
 | EXL | exp(x) · ln(y) | **Incomplete** (April; T26 conjectures it complete over ℂ) | e not constructible from {1}, blocks exp(x) |
-| EDL | exp(x) / ln(y) | **Incomplete** (April; T26 conjectures it complete over ℂ) | Cannot build addition: the preprint's conjecture C1, which it supports with a search to N ≤ 6 (not re-run) |
+| EDL | exp(x) / ln(y) | **Incomplete** (April; T26 conjectures it complete over ℂ) | Cannot build addition: the preprint's conjecture C1, which it supports with a search to N ≤ 6, re-run below: no EDL tree with at most 6 nodes over {1, x, y} comes within 3.7 of x + y |
 | POW | y^x | **Incomplete** (April; POW is EPL, which T26 conjectures complete over ℂ) | e not constructible; but see below |
 
 Two new operators we explored:
@@ -75,6 +75,44 @@ Is EMN complete? The conjectured answer: **approximately complete, not exactly c
 **EMN is approximately complete (conjectured):** For any elementary function f and ε > 0, there exists a finite EMN tree T such that |Re(T(x)) − f(x)| < ε on any compact interval. The mechanism: complex intermediate values (via ln(−e) = 1 + iπ) route around the sign barrier. In the searches up to 8 nodes, the error falls doubly-exponentially with tree size.
 
 The three completeness classes would form a clean trichotomy: **EML** (exactly complete), **EMN** (approximately complete), **all others** (incomplete). See the [Completeness Trichotomy](/blog/completeness-trichotomy) post for the sketches.
+
+## Reproduce: the EDL addition search
+
+Conjecture C1 in the preprint says no finite EDL tree represents addition or subtraction, supported by a search to N ≤ 6. This re-runs it: every EDL tree with at most 6 nodes over {1, x, y}, and with at most 5 over {1, e, x, y}, evaluated at 10 random points in (0.3, 3)². A tree with an undefined part (ln of a non-positive value, or division by ln 1 = 0) is skipped.
+
+```python
+import math, numpy as np                                # pip install numpy
+np.seterr(all='ignore')
+rng = np.random.default_rng(7); X, Y = rng.uniform(0.3, 3.0, size=(2, 10))
+for leaves, nmax in (({'1': 1.0, 'x': X, 'y': Y}, 6), ({'1': 1.0, 'e': math.e, 'x': X, 'y': Y}, 5)):
+    level = [[(t, np.broadcast_to(np.float64(v), (10,)) * 1.0) for t, v in leaves.items()]]
+    seen = {tuple(np.round(v, 9)) for _, v in level[0]}
+    best = {'x+y': (math.inf, ''), 'x-y': (math.inf, '')}
+    for n in range(1, nmax + 1):                        # edl(a, b) = e^a / ln b; a tree with an undefined part is undefined
+        new = []
+        for i in range(n):
+            for ta, a in level[i]:
+                for tb, b in level[n - 1 - i]:
+                    v = np.exp(a) / np.log(b)
+                    k = tuple(np.round(v, 9))
+                    if np.all(np.isfinite(v)) and k not in seen:
+                        seen.add(k); new.append((f'edl({ta},{tb})', v))
+                        for name, target in (('x+y', X + Y), ('x-y', X - Y)):
+                            best[name] = min(best[name], (float(np.max(np.abs(v - target))), f'edl({ta},{tb})'))
+        level.append(new)
+    total = sum(math.comb(2 * n, n) // (n + 1) * len(leaves) ** (n + 1) for n in range(nmax + 1))
+    print(f"leaves {sorted(leaves)}, <= {nmax} nodes: {total:,} trees, {sum(map(len, level)):,} distinct defined at all 10 points; "
+          f"best max error to x+y {best['x+y'][0]:.3g}, to x-y {best['x-y'][0]:.3g}")
+```
+
+Output:
+
+```
+leaves ['1', 'x', 'y'], <= 6 nodes: 323,175 trees, 247 distinct defined at all 10 points; best max error to x+y 3.72, to x-y 1.64
+leaves ['1', 'e', 'x', 'y'], <= 5 nodes: 187,796 trees, 5,773 distinct defined at all 10 points; best max error to x+y 1.29, to x-y 1.64
+```
+
+A search to a fixed size is evidence, not a proof; C1 stays a conjecture.
 
 ---
 

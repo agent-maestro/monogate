@@ -133,7 +133,7 @@ The error drops by roughly 10⁶–10⁹ every two additional nodes — consiste
 | DEML | exp(−x)−ln(y) | Incomplete | No | No | Slope +1 locked |
 | EAL | exp(x)+ln(y) | Incomplete over ℝ; conjectured complete over ℂ (T26) | No | N/A | All slopes positive (over ℝ) |
 | EXL | exp(x)·ln(y) | Incomplete (April); conjectured complete over ℂ (T26) | No | Yes (2n): exl(exl(1,1), x) | e not constructible |
-| EDL | exp(x)/ln(y) | Incomplete (April); conjectured complete over ℂ (T26) | Yes (6n) | No | add not constructible: conjecture C1 of the preprint |
+| EDL | exp(x)/ln(y) | Incomplete (April); conjectured complete over ℂ (T26) | Yes (6n) | No | add not constructible: conjecture C1 of the preprint (its search is re-run on /blog/operator-zoo) |
 | POW | y^x | Incomplete (April); POW = EPL, conjectured complete over ℂ (T26) | No | No | e not constructible |
 | LEX | ln(exp(x)−y) | Incomplete | No | No | 0 not constructible |
 
