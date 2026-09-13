@@ -61,7 +61,7 @@
       "session": "Sprint2",
       "category": "Operator Family",
       "statement": "deml(x,y) = exp(−x) − ln(y) is not exactly complete: neg(x) = −x is not constructible from DEML and constant 1.",
-      "evidence": "An exhaustive search over all 861,952 DEML trees up to N = 17 nodes found no neg construction (python/results/s_r1_deml_incompleteness.json: max_N_searched 17, closest error 0.84). The structural argument, that every DEML tree's linear component has slope 0 or +1, has a gap: its first case assumes each subtree f(x) grows with x or is bounded, and f(x) = deml(x,1) = exp(−x) does neither. No Lean proof. CORRECTION (2026-09-12): this card was a THEOREM citing that argument as its proof, and gave the search as N ≤ 13; the search record says N ≤ 17.",
+      "evidence": "An exhaustive search over all 862,118 DEML trees up to N = 17 nodes found no neg construction; the closest has max error 0.84 on [0.5, 3.14]. The search record, python/results/s_r1_deml_incompleteness.json, gives max_N_searched 17 and closest error 0.84 but misstates the total as 861,952; /blog/deml-is-incomplete prints a script that reproduces the search. The structural argument, that every DEML tree's linear component has slope 0 or +1, has a gap: its first case assumes each subtree f(x) grows with x or is bounded, and f(x) = deml(x,1) = exp(−x) does neither. No Lean proof. CORRECTION (2026-09-12): this card was a THEOREM citing that argument as its proof, and gave the search as N ≤ 13; the search record says N ≤ 17.",
       "deps": "T12."
     },
     {

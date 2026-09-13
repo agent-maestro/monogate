@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 
 <Base
   title="DEML Is Incomplete — A Structural Argument"
-  description="Why deml(x,y) = exp(−x) − ln(y) should not construct exp(+x) or neg(x): an argument on paper whose case analysis has a gap, no Lean proof, and an exhaustive search over 861,952 trees that found no construction."
+  description="Why deml(x,y) = exp(−x) − ln(y) should not construct exp(+x) or neg(x): an argument on paper whose case analysis has a gap, no Lean proof, and an exhaustive search over 862,118 trees that found no construction."
   date="2026-04-19"
 >
   <div class="meta">
@@ -121,8 +121,18 @@ import Base from '../../layouts/Base.astro';
   <h2>Exhaustive search confirmation</h2>
 
   <p>
-    An exhaustive search over all DEML trees up to N = 17 nodes (861,952 trees)
-    found no tree computing neg(x) = −x:
+    An exhaustive search over all DEML trees up to N = 17 nodes, 862,118 trees in all, found no
+    tree computing neg(x) = −x. A tree with k internal nodes has N = 2k + 1 nodes, and there are
+    Catalan(k)·2<sup>k+1</sup> of them over the leaves &#123;1, x&#125;, so each row's count is
+    exact. The error column is the smallest max |T(x) + x| over x in [0.5, 3.14] among all trees
+    with at most N nodes; a tree undefined anywhere on that interval is skipped.
+  </p>
+
+  <p style="color: var(--muted); font-style: italic;">
+    Correction (2026-09-13): this page, its search record and the /theorems card gave the total as
+    861,952, which is not the sum of the rows below. The rows are right. Re-running the search (the
+    script under Reproduce) gives every count and every error in the table, and a total of 862,118.
+    No script or run in either research repository produces 861,952.
   </p>
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.85rem; margin: 16px 0;">
@@ -210,9 +220,32 @@ import Base from '../../layouts/Base.astro';
 
   <h3>Reproduce</h3>
 
-  <pre><code>python python/results/s_r1_deml_incompleteness.json  # results
-# Search script:
-# python -c "import math; d=lambda x,y:math.exp(-x)-math.log(y); print(d(1,d(2,1)), 1/math.e+2)"</code></pre>
+  <p>Every count and error in the search table, from scratch (Python 3 with NumPy). It prints N, the
+  number of N-node trees, and the best error over all trees with at most N nodes:</p>
+
+  <pre><code>import math
+import numpy as np
+np.seterr(all="ignore")
+X = np.linspace(0.5, 3.14, 50)                   # probe grid
+trees = [None, np.stack([np.ones_like(X), X])]   # trees[n]: values of every n-node tree
+total, best = 0, math.inf
+for n in range(1, 18, 2):
+    if n &gt; 1:
+        trees += [None, np.concatenate([
+            (np.exp(-trees[a])[:, None, :]
+             - np.log(np.where(trees[n - 1 - a] &gt; 0, trees[n - 1 - a], np.nan))[None, :, :]
+            ).reshape(-1, X.size)
+            for a in range(1, n - 1, 2)])]
+    err = np.nan_to_num(np.abs(trees[n] + X).max(axis=1), nan=math.inf)
+    total += len(trees[n])
+    best = min(best, err.min())
+    print(n, len(trees[n]), round(best, 2))
+print("total", total)                            # 862118</code></pre>
+
+  <p style="font-size: 0.85rem; color: var(--muted);">
+    The original session summary is <code>python/results/s_r1_deml_incompleteness.json</code>. Its
+    <code>trees_checked</code> is the misstated 861,952, and no search script was kept with it.
+  </p>
 
   <h3>Cite this work</h3>
 
