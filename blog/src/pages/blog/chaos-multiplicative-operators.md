@@ -1,16 +1,18 @@
 ---
 layout: ../../layouts/Base.astro
-title: "Only the Multiplicative F16 Operators Are Chaotic"
-description: "A 600-point parameter sweep across all 16 F16 operators shows that 12 of them collapse to period-2 dynamics, while the four multiplicative operators (EXL, DEXL, EXN, DEXN) exhibit long cycles, chaos, and a period-3 Sharkovskii signature."
+title: "Only the Multiplicative exp–ln Operators Are Chaotic"
+description: "A 600-point parameter sweep across 16 operators, exp(±z) combined with ln(c) or ln(−c) by −, +, · or /, shows that 12 of them collapse to period-2 dynamics, while the four multiplicative ones (EXL and DEXL, at c and at −c) exhibit long cycles, chaos, and a period-3 Sharkovskii signature."
 date: 2026-04-23
 ---
 
-# Only the Multiplicative F16 Operators Are Chaotic
+# Only the Multiplicative exp–ln Operators Are Chaotic
+
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called the sixteen operators it swept "the 16 F16 operators" and named the ones with ln(−c) EXN, DEXN, EMN, EAN, EDN, DEMN, DEAN and DEDN. The sixteen swept here are not the F16 of <a href="/framework">/framework</a>, and two of those names mean something else on this site: EMN is ln(y) − exp(x) and DEMN is ln(y) − exp(−x). The ln(−c) operators are now written as the base operator at −c. The sweep and its numbers are unchanged.</p>
 
 **Tier: OBSERVATION** (numerical experiment; no analytic proof yet)
 
-We swept 600 parameter values $c \in [-3, 3]$ for each of the 16 F16
-operators, iterated $z_{n+1} = \mathrm{op}(z_n, c)$ from $z_0 = 0$ with a
+We swept 600 parameter values $c \in [-3, 3]$ for each of 16 operators, exp(±z) combined with ln(c) or ln(−c) by −, +, ·
+or / (a different sixteen from the F16 on /framework), iterated $z_{n+1} = \mathrm{op}(z_n, c)$ from $z_0 = 0$ with a
 500-step transient, and classified the tail by period-detection and a
 finite-difference Lyapunov exponent. The outcome is cleaner than we
 expected: **only the four operators whose arithmetic glue is multiplication
@@ -25,10 +27,10 @@ period-2 cycles.
 |----------|---------|-----------:|----------:|:-----------------|
 | **EXL**  | $\exp(z)\cdot\ln(c)$ | **16** | 0.7% | 1,2,5,6,7,8,9,10,11,14,16 |
 | **DEXL** | $\exp(-z)\cdot\ln(c)$ | **15** | 0.7% | **1,3**,5,6,7,8,9,10,11,12,13,14,15 |
-| **EXN**  | $\exp(z)\cdot\ln(-c)$ | **16** | 0.7% | 1,2,5,6,7,8,9,10,11,14,16 |
-| **DEXN** | $\exp(-z)\cdot\ln(-c)$ | **15** | 0.5% | **1,3**,5,6,7,8,9,10,11,12,13,14,15 |
+| **EXL at −c**  | $\exp(z)\cdot\ln(-c)$ | **16** | 0.7% | 1,2,5,6,7,8,9,10,11,14,16 |
+| **DEXL at −c** | $\exp(-z)\cdot\ln(-c)$ | **15** | 0.5% | **1,3**,5,6,7,8,9,10,11,12,13,14,15 |
 | EML, EAL, EDL, DEML, DEAL, DEDL | ± self-map with $\pm,\div$ | 2 | 0 | 1,2 |
-| EMN, EAN, EDN, DEMN, DEAN, DEDN | same with $\ln(-c)$ | 2 | 0 | 1,2 |
+| EML, EAL, EDL, DEML, DEAL, DEDL at −c | same with $\ln(-c)$ | 2 | 0 | 1,2 |
 
 The 12 non-multiplicative operators saturate at period 2. The 4
 multiplicative operators reach up to period 16 and visit a rich spectrum
@@ -38,7 +40,7 @@ of distinct cycle lengths.
 
 ## The Sharkovskii fingerprint
 
-Two of the multiplicative operators — DEXL and DEXN — contain
+Two of the multiplicative operators — DEXL at c and at −c — contain
 **period 3** cycles. By Sharkovskii's theorem on the reals, the presence of
 period 3 forces the presence of cycles of every other period (in
 Sharkovskii's ordering, 3 is the "largest" element, and its appearance
@@ -53,7 +55,7 @@ uncountable scrambled sets and positive topological entropy — not just
 positive Lyapunov on a measure-zero set, but *genuinely chaotic* behavior
 on an interval.
 
-EXL and EXN have period 16 but apparently lack period 3 in our sweep.
+EXL at c and at −c has period 16 but apparently lack period 3 in our sweep.
 Whether period 3 exists at finer resolution is open (this sweep is 600
 points over a 6-unit interval; a denser sweep might surface it).
 
@@ -93,7 +95,7 @@ Takes ~3 minutes on a laptop. Output goes to
 
 ## What's open
 
-- Is period 3 present in EXL/EXN at finer resolution?
+- Is period 3 present in EXL (at c or −c) at finer resolution?
 - Is the max-period-16 ceiling genuine or an artifact of the tail length?
 - Topological entropy of DEXL: lower bound from period 3 is
   $h \geq \log(1+\varphi)/\log\varphi$ ≈ 1.04, where $\varphi$ is the
@@ -103,5 +105,5 @@ Takes ~3 minutes on a laptop. Output goes to
 
 ---
 
-**Cite:** Monogate Research (2026). "Only the Multiplicative F16 Operators Are Chaotic."
+**Cite:** Monogate Research (2026). "Only the Multiplicative exp–ln Operators Are Chaotic." (First published as "Only the Multiplicative F16 Operators Are Chaotic.")
 monogate research blog. https://monogate.org/blog/chaos-multiplicative-operators

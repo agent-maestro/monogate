@@ -1,5 +1,35 @@
 ---
 import Base from '../../layouts/Base.astro';
+
+// Re-checks the operator table and the depth-3 claim (Python 3 + NumPy).
+const script = `import itertools, numpy as np                         # pip install numpy
+np.seterr(all='ignore')
+x = np.linspace(0.5, 3.0, 26); target = np.exp(-x)
+ops = {'EML  exp(x) - ln(y)': lambda a, b: np.exp(a) - np.log(b), 'EDL  exp(x) / ln(y)': lambda a, b: np.exp(a) / np.log(b),
+       'EXL  exp(x) * ln(y)': lambda a, b: np.exp(a) * np.log(b), 'EAL  exp(x) + ln(y)': lambda a, b: np.exp(a) + np.log(b),
+       'EMN  ln(y) - exp(x)': lambda a, b: np.log(b) - np.exp(a), 'EMLn exp(x) - ln(-y)': lambda a, b: np.exp(a) - np.log(-b),
+       'DEML exp(-x) - ln(y)': lambda a, b: np.exp(-a) - np.log(b)}
+leaves = {'1': np.ones_like(x), 'x': x}
+for name, f in ops.items():                            # every 1-node tree over the leaves 1 and x
+    errs = [np.max(np.abs(f(a, b) - target)) for a in leaves.values() for b in leaves.values()]
+    errs = [e for e in errs if np.isfinite(e)]
+    print(f'{name}: best 1-node max error', f'{min(errs):.3g}' if errs else 'undefined')
+pool = dict(leaves); seen = {tuple(np.round(v, 9)) for v in pool.values()}
+for depth in range(3):                                 # EML trees of depth <= 3 over {1, x}
+    for (ta, a), (tb, b) in itertools.product(list(pool.items()), repeat=2):
+        v = np.exp(a) - np.log(b); k = tuple(np.round(v, 9))
+        if np.all(np.isfinite(v)) and k not in seen:
+            seen.add(k); pool[f'eml({ta},{tb})'] = v
+err, tree = min((float(np.max(np.abs(v - target))), t) for t, v in pool.items())
+print(f'EML trees of depth <= 3: {len(pool)} distinct; best max error {err:.3g}, by {tree}')`;
+const output = `EML  exp(x) - ln(y): best 1-node max error 2.67
+EDL  exp(x) / ln(y): best 1-node max error undefined
+EXL  exp(x) * ln(y): best 1-node max error 0.607
+EAL  exp(x) + ln(y): best 1-node max error 2.67
+EMN  ln(y) - exp(x): best 1-node max error 3.32
+EMLn exp(x) - ln(-y): best 1-node max error undefined
+DEML exp(-x) - ln(y): best 1-node max error 0
+EML trees of depth <= 3: 936 distinct; best max error 0.339, by eml(x,eml(eml(x,1),eml(1,x)))`;
 ---
 
 <Base
@@ -17,6 +47,14 @@ import Base from '../../layouts/Base.astro';
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     The negative exponential appears in almost every physics law. It is blocked for 1-node
     construction in EML and four related operators. DEML is the operator that breaks through.
+  </p>
+
+  <p style="color: var(--muted); font-style: italic;">
+    Correction (2026-09-13): the table defined EMN as exp(x) − ln(−y). On this site EMN is
+    ln(y) − exp(x), the negation of EML (the census, /theorems T24 and the glossary); exp(x) − ln(−y) is
+    EMLn, operator F2 on <a href="/framework">/framework</a>. Neither gives exp(−x) in one node, so the verdict
+    stands, and the table now checks both. The post also said EML alone contains exp(−x) at depth 3. No EML
+    tree of depth at most 3 over &#123;1, x&#125; comes within 0.33 of it. The check is printed below.
   </p>
 
   <div class="divider"></div>
@@ -43,7 +81,7 @@ import Base from '../../layouts/Base.astro';
 
   <h2>The five-operator check</h2>
 
-  <p>We checked all five operators in the EML family for 1-node exp(−x) construction:</p>
+  <p>We checked the five operators in the EML family, plus EMLn, for 1-node exp(−x) construction:</p>
 
   <table style="width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.9rem; margin: 16px 0;">
     <thead>
@@ -76,6 +114,11 @@ import Base from '../../layouts/Base.astro';
       </tr>
       <tr style="border-bottom: 1px solid var(--border);">
         <td style="padding: 8px 12px; color: var(--text);">EMN</td>
+        <td style="padding: 8px 12px; color: var(--muted);">ln(y) − exp(x)</td>
+        <td style="padding: 8px 12px; color: #f87171;">blocked</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+        <td style="padding: 8px 12px; color: var(--text);">EMLn (F2)</td>
         <td style="padding: 8px 12px; color: var(--muted);">exp(x) − ln(−y)</td>
         <td style="padding: 8px 12px; color: #f87171;">blocked</td>
       </tr>
@@ -110,11 +153,25 @@ import Base from '../../layouts/Base.astro';
   <h2>Expressiveness vs. efficiency</h2>
 
   <p>
-    DEML adds efficiency, not expressiveness. At depth ≥ 3, the closure of EML alone
-    already contains exp(−x) as a composition. DEML just gives it to you in one node
-    instead of three. This is the motivation for the BEST routing system — choosing the
-    cheapest operator for each primitive, rather than forcing everything through EML.
+    DEML adds efficiency, not expressiveness. By the published universality result (T01) some finite
+    EML tree equals exp(−x), but none is small: no EML tree of depth at most 3 over &#123;1, x&#125; comes
+    within 0.33 of it on [0.5, 3], and no smaller tree is written down. DEML gives it in one node. This is
+    the motivation for the BEST routing system — choosing the cheapest operator for each primitive,
+    rather than forcing everything through EML.
   </p>
+
+  <h2>Reproduce</h2>
+
+  <p>
+    Every 1-node tree over the leaves 1 and x for each operator in the table, and every EML tree of depth
+    at most 3, compared with exp(−x) on 26 points of [0.5, 3]:
+  </p>
+
+  <pre><code>{script}</code></pre>
+
+  <p>Output:</p>
+
+  <pre><code>{output}</code></pre>
 
   <div class="divider"></div>
 
