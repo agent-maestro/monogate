@@ -1,10 +1,58 @@
 ---
 import Base from '../../layouts/Base.astro';
+
+// Re-runs the depth-6 and depth-7 searches behind this post (Python 3 + mpmath + numpy).
+const script = `import itertools, numpy as np, mpmath as mp          # pip install mpmath numpy
+mp.mp.dps = 50
+REL = mp.mpf(10) ** -30
+def eml(a, b):                                        # principal log; None where ln 0 or e^a is out of reach
+    if b == 0 or mp.re(a) > 1e5: return None
+    ea, lb = mp.e**a, mp.log(b)
+    if abs(mp.im(ea)) <= REL * abs(ea): ea = mp.re(ea)
+    z = ea - lb
+    return mp.mpf(0) if abs(z) <= REL * max(abs(ea), abs(lb)) else z
+S = {'1': (mp.mpf(1), '1')}                           # every value of depth <= 5, with one tree for it
+for d in range(1, 6):
+    for (a, ta), (b, tb) in itertools.product(list(S.values()), repeat=2):
+        z = eml(a, b)
+        if z is not None: S.setdefault(mp.nstr(z, 30), (z, f'eml({ta},{tb})'))
+V = list(S.values())
+E = sorted((float(mp.e**mp.re(a) * (-1 if mp.im(a) else 1)), a, t) for a, t in V if mp.re(a) <= 700)
+Ef = np.array([e for e, _, _ in E])                   # e^a is real for every a here: Im a is 0 or -pi
+# depth 6: |eml(a,b) - i|^2 = (e^a - ln|b|)^2 + (arg b + 1)^2, nearest e^a for each b
+best = min(((Ef[k] - float(mp.log(abs(b))))**2 + (float(mp.arg(b)) + 1)**2, k, b, tb)
+           for b, tb in V if b != 0
+           for j in [int(np.searchsorted(Ef, float(mp.log(abs(b)))))] for k in (j - 1, j) if 0 <= k < len(Ef))
+_, k, b, tb = best; w = eml(E[k][1], b)
+print("depth 6, closest to i:", mp.nstr(w, 12), " |w - i| =", mp.nstr(abs(w - 1j), 8))
+print("   tree:", f"eml({E[k][2]},{tb})")
+print("   its b has Re b - pi/tan(1) =", mp.nstr(mp.re(b) - mp.pi / mp.tan(1), 6))
+# depth 7: w = eml(eml(a, q), B) with q complex, so Im w = pi*e^(e^a)/|q|^2 - arg B
+Q = [(q, t) for q, t in V if mp.im(q)]
+lnq2 = np.array([float(2 * mp.log(abs(q))) for q, _ in Q])
+bestg = (np.inf,)
+for B, tB in {round(float(mp.arg(B)), 15): (B, tB) for B, tB in V if B != 0 and 1 + float(mp.arg(B)) > 0}.values():
+    ab = float(mp.arg(B))
+    j = np.searchsorted(Ef, np.log((1 + ab) / np.pi) + lnq2)
+    for kk in (np.clip(j - 1, 0, len(Ef) - 1), np.clip(j, 0, len(Ef) - 1)):
+        ea = np.minimum(Ef[kk], 700.0)
+        gap = np.abs(np.pi * np.exp(ea - lnq2) - ab - 1)
+        m = int(np.argmin(gap))
+        if gap[m] < bestg[0]: bestg = (gap[m], int(kk[m]), m, B, tB)
+_, k, m, B, tB = bestg
+A = eml(E[k][1], Q[m][0]); w = eml(A, B)
+print("depth 7, Im closest to 1:", mp.nstr(mp.im(w), 16), " gap", mp.nstr(abs(mp.im(w) - 1), 4), " w =", mp.nstr(w, 8))
+print("   tree:", f"eml(eml({E[k][2]},{Q[m][1]}),{tB})")`;
+const output = `depth 6, closest to i: (8.06915650831e-8 + 0.99999523722j)  |w - i| = 4.7634634e-6
+   tree: eml(eml(eml(eml(1,1),eml(eml(eml(1,1),eml(1,1)),eml(eml(1,1),eml(1,1)))),eml(eml(1,eml(1,eml(1,1))),eml(1,eml(eml(1,1),eml(1,1))))),eml(eml(1,eml(eml(1,1),eml(eml(1,1),1))),eml(eml(1,eml(eml(1,1),eml(1,1))),eml(eml(1,eml(1,1)),eml(1,1)))))
+   its b has Re b - pi/tan(1) = 2.11317e-5
+depth 7, Im closest to 1: 1.000000000007852  gap 7.852e-12  w = (-1.3173319 + 1.0j)
+   tree: eml(eml(eml(eml(eml(1,1),eml(eml(eml(1,1),eml(1,1)),eml(eml(1,1),1))),eml(eml(1,eml(eml(1,1),eml(1,1))),eml(eml(1,1),eml(eml(1,1),eml(1,1))))),eml(eml(1,eml(eml(1,eml(1,1)),eml(eml(1,1),1))),eml(eml(1,eml(1,1)),eml(eml(eml(1,1),eml(1,1)),eml(eml(1,1),1))))),eml(eml(1,eml(eml(1,1),eml(eml(1,1),1))),eml(eml(1,eml(eml(1,1),eml(1,1))),eml(eml(1,eml(1,1)),eml(1,1)))))`;
 ---
 
 <Base
   title="0.99999524: The Near-Miss"
-  description="How close can an EML tree get to i? The 4.76e-6 gap and the transcendental obstruction behind it."
+  description="How close can an EML tree built from 1 get to i? The closest depth-6 value is 4.76e-6 away. The tan(1) obstruction this post gave is not a proof, and a depth-7 tree gets its imaginary part within 7.9e-12 of 1."
   date="2026-04-19"
 >
   <div class="meta">
@@ -15,24 +63,33 @@ import Base from '../../layouts/Base.astro';
 
   <h1>0.99999524: The Near-Miss</h1>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
-    How close can an EML tree get to i? A gap of 4.76×10⁻⁶ and the transcendental obstruction behind it.
+    How close can an EML tree get to i? A gap of 4.76×10⁻⁶ at depth 6, and what that does and does not show.
+  </p>
+
+  <p style="color: var(--muted); font-style: italic;">
+    Correction (2026-09-13): this post said it had found "a proof of why the gap can't close", from the
+    transcendence of π/tan(1) and a structural reason that depth 7 cannot help. Neither holds. Membership
+    in the field of exp–log numbers is no obstruction, since π/tan(1) lies in that field; π/tan(1) is
+    2.0172, not 2.0270; and a depth-7 tree has imaginary part within 7.9×10⁻¹² of 1. The post also called
+    the depth-1 and depth-2 value sets a curve and an arc; both are finite. The searches were re-run and are
+    printed below. Whether i is an EML value under the complex principal branch, or a limit of EML values
+    (C03), is open.
   </p>
 
   <div class="divider"></div>
 
   <p>
-    One of the open problems on <a href="https://monogate.dev">monogate.dev</a> is constructing
-    the imaginary unit i from the EML grammar with terminal &#123;1&#125;. We haven't solved it. But in
-    exploring how close you can get, we found something more interesting than a near-miss — we
-    found a proof of why the gap can't close.
+    One of the open problems once posted on <a href="https://monogate.dev">monogate.dev</a> is constructing
+    the imaginary unit i from the EML grammar with terminal &#123;1&#125;. We haven't solved it. Exploring
+    how close you can get turned up a near-miss.
   </p>
 
   <h2>The setup</h2>
 
   <p>
     The EML grammar over ℂ starts with 1 and applies <code>eml(x, y) = exp(x) − Log(y)</code>
-    (principal branch complex log). At depth 1, the reachable set is a curve in ℂ. At depth 2,
-    it's an arc. At depth 6, it's a dense-looking cloud of isolated points.
+    (principal branch complex log). Each depth has finitely many values: 2 through depth 1, 5 through
+    depth 2, 397 through depth 4 (all real), and 77,528 through depth 5.
   </p>
 
   <p>
@@ -42,79 +99,87 @@ import Base from '../../layouts/Base.astro';
   <h2>The near-miss</h2>
 
   <p>
-    Enumerating depth-6 complex EML values near Im = 1, we found a point with Im = 0.99999524.
-    The gap to Im = 1 is 4.76×10⁻⁶. For reference: depth-5 values have Im ≤ 0 (all negative imaginary
-    part), so the jump to Im ≈ 1 at depth 6 is a structural phase transition, not a gradual
-    convergence.
+    Among the depth-6 values, the closest to i is 8.07×10⁻⁸ + 0.99999523722i, at distance
+    4.7634634×10⁻⁶. For reference: every depth-5 value has imaginary part 0 or −π, so the jump to
+    Im ≈ 1 at depth 6 is a structural phase transition, not a gradual convergence.
   </p>
 
   <p>
-    The near-miss requires Re(y) = π/tan(1) ≈ 2.0270 as the second argument in the outermost EML
-    call. This is where the obstruction lives.
+    That value is eml(a, b) with b = 2.0172146 − πi, a depth-5 value. Because e<sup>a</sup> is real, its
+    imaginary part is −arg b = atan2(π, Re b), which equals 1 exactly when Re b = π/tan(1) ≈ 2.0171934
+    (this post first gave 2.0270). The closest depth-5 b misses that by 2.1×10⁻⁵, and a nearly matching
+    e<sup>a</sup> cancels the real part.
   </p>
 
-  <h2>The obstruction: tan(1)</h2>
+  <h2>The obstruction that isn't</h2>
 
   <p>
-    To reach Im = 1 exactly, you need Re(y) = π/tan(1) exactly. But π/tan(1) is transcendental —
-    it's a ratio of π (transcendental by Hermite-Lindemann) and tan(1), which is transcendental
-    by the Lindemann-Weierstrass theorem applied to e^&#123;2i&#125; ≠ 1.
+    This post argued that reaching Im = 1 exactly needs Re(y) = π/tan(1), that π/tan(1) is transcendental,
+    and that the grammar "can only generate numbers in the EL field", which π/tan(1) is not in. None of
+    that is a proof:
   </p>
 
+  <ul>
+    <li>
+      The field of exp–log numbers (the smallest subfield of ℂ closed under exp and log) contains
+      π/tan(1): π = −i·log(−1) and tan(1) = −i(e<sup>2i</sup> − 1)/(e<sup>2i</sup> + 1), with
+      i = exp(log(−1)/2). So membership in that field is no obstruction.
+    </li>
+    <li>
+      Transcendence is no obstruction either: e = eml(1, 1) is transcendental. (Nor does this page show
+      that π/tan(1) is transcendental: a ratio of transcendental numbers can be algebraic.)
+    </li>
+    <li>
+      The real question, whether π/tan(1) is exactly the real part of a depth-5 value, or of the right
+      value at some greater depth, is not a field question, and nothing here settles it.
+    </li>
+  </ul>
+
   <p>
-    The EML grammar with terminal &#123;1&#125; can only generate numbers in the EL field — the field of
-    exponential-logarithmic numbers built from 1. π/tan(1) does not belong to this field at any
-    finite depth.
+    The draft paper <code>python/paper/near_miss_obstruction.tex</code> states this obstruction as a
+    theorem conditional on Schanuel's conjecture. For the reasons above it does not establish that the
+    gap cannot close.
   </p>
 
-  <div class="math-block">
-    gap(depth) → 0 only if π/tan(1) ∈ EL_k for some finite k
-  </div>
+  <h2>Depth 7</h2>
 
   <p>
-    This is the content of the real constructibility barrier. The gap at depth-6 (targeted search)
-    is 6.67×10⁻⁷ for the real part. As depth increases, the gap decreases — but it can never
-    reach zero by a constructibility argument, unless tan(1) has some unexpected algebraic
-    relationship to EML-expressible constants.
-  </p>
-
-  <h2>Why depth-7 doesn't help</h2>
-
-  <p>
-    We found a structural reason the near-miss gap doesn't improve at depth 7:
-  </p>
-
-  <p>
-    All depth-5 complex EML values have Im = −π (exactly). That's because at depth 5, the
-    values all pass through eml applied to negative real inputs, and sin(−π) = 0 makes the
-    imaginary part of the resulting Log call collapse to −π regardless of the real part.
-  </p>
-
-  <p>
-    This means depth-6 inputs that come from depth-5 nodes contribute zero to Im(eml), and
-    all depth-6 values arising from that route have positive imaginary part — positive arg.
-    But reaching Im = 1, Re = 0 requires arg = π/2, while arg = −1 (pointing toward −i)
-    is structurally inaccessible from positive-imaginary depth-6 values.
+    This post gave "a structural reason the near-miss gap doesn't improve at depth 7": depth-5 values
+    have Im = −π, so the depth-6 values built from them carry no imaginary contribution from exp. That
+    stops at depth 6. At depth 7 the left argument A can be a depth-6 value with a nontrivial imaginary
+    part, and Im eml(A, B) = e<sup>Re A</sup>·sin(Im A) − arg B.
   </p>
 
   <p>
-    The 4.76×10⁻⁶ gap is not a computational limitation. It's structural.
+    A targeted search shows the gap does shrink. Take A = eml(a, q) with a and q of depth 5 and q
+    non-real (so Im q = −π), and B of depth 5. Then Im eml(A, B) = π·e<sup>e<sup>a</sup></sup>/|q|² − arg B,
+    and matching that to 1 is a sorted search over the depth-5 values. The best tree found has
+    imaginary part 1.000000000007852, within 7.9×10⁻¹² of 1. Its value is −1.3173 + 1.0000i, so it is
+    1.32 from i. The search covers one family of depth-7 trees, not all of them, and does not look for
+    depth-7 values close to i itself.
   </p>
 
   <h2>What we have</h2>
 
   <p>
-    We have: a near-miss, a transcendental obstruction, and a structural explanation for why
-    depth-7 doesn't close the gap. What we don't have: a proof that i is unreachable at any
-    finite depth. That remains the open problem.
+    A depth-6 value 4.76×10⁻⁶ from i, a depth-7 value whose imaginary part is within 7.9×10⁻¹² of 1,
+    and no proof either way. Under strict real semantics i is not an EML value (T17). Under the complex
+    principal branch, whether i is an EML value, or a limit of EML values (C03), is open.
   </p>
 
+  <h2>Reproduce</h2>
+
   <p>
-    The near-miss is written up as a draft paper:
-    <code>python/paper/near_miss_obstruction.tex</code>. The main theorem there is the
-    transcendental obstruction — that the exact gap is π/tan(1), which is provably outside the
-    EL field at any finite depth under Schanuel's conjecture.
+    The script rebuilds every value of depth at most 5 over the leaf 1, as the
+    <a href="/blog/depth-6-phase-transition">depth-6 post</a> does (skipping pairs with Re a &gt; 10⁵),
+    keeps one tree for each value, and runs both searches. It takes a few seconds.
   </p>
+
+  <pre><code>{script}</code></pre>
+
+  <p>Output:</p>
+
+  <pre><code>{output}</code></pre>
 
   <div class="divider"></div>
 

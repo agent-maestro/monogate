@@ -79,8 +79,8 @@
       "name": "Strict i-Unconstructibility (Lean-verified)",
       "session": "Sprint2",
       "category": "Complex EML",
-      "statement": "Under strict principal-branch semantics, i = √−1 is not constructible from {1} using the ceml grammar in finite depth. At depth 6, the closest approach is |T − i| ≥ 4.76×10⁻⁶.",
-      "evidence": "Lean 4: T19_i_unconstructible_strict in StrictBarrier.lean (the private monogate-research repo) compiles against Mathlib with no sorryAx, re-checked before every deploy at a pinned monogate-research commit (scripts/lean_claims.json). The proof is short, not inductive: the strict evaluator returns real numbers by construction, and i is not real. The file is not in the public monogate-lean library, so the card carries no lean link. Depth-6 exhaustive search: minimum distance 4.76×10⁻⁶ (not re-run)."
+      "statement": "Under strict principal-branch semantics, i = √−1 is not constructible from {1} using the ceml grammar in finite depth. Under the complex principal branch, where the question is open (C01, C03), the depth-6 value closest to i is 4.76×10⁻⁶ away.",
+      "evidence": "Lean 4: T19_i_unconstructible_strict in StrictBarrier.lean (the private monogate-research repo) compiles against Mathlib with no sorryAx, re-checked before every deploy at a pinned monogate-research commit (scripts/lean_claims.json). The proof is short, not inductive: the strict evaluator returns real numbers by construction, and i is not real. The file is not in the public monogate-lean library, so the card carries no lean link. Depth-6 exhaustive search under the complex principal branch, re-run on 2026-09-13 (/blog/near-miss prints the script): the closest value to i is 8.07×10⁻⁸ + 0.99999523722i, at distance 4.7634634×10⁻⁶."
     },
     {
       "id": "T24",
@@ -471,7 +471,7 @@
       "session": "S35",
       "category": "Complex EML",
       "statement": "Is i an accumulation point of EML₁: do EML trees of growing depth get arbitrarily close to i? Open.",
-      "evidence": "Depth-6 exhaustive search: closest value |w − i| = 4.76×10⁻⁶. That bounds the approach at depth 6 (T17 records the same bound); it does not show the distance goes to 0. CORRECTION (2026-09-12): this card was marked RESOLVED by T31 and said depth-6 trees get arbitrarily close to i, but T31 recorded only this data."
+      "evidence": "Depth-6 exhaustive search, re-run on 2026-09-13 (/blog/near-miss prints the script): the closest value is 8.07×10⁻⁸ + 0.99999523722i, with |w − i| = 4.7634634×10⁻⁶. A targeted depth-7 search finds a value whose imaginary part is within 7.9×10⁻¹² of 1, but it lies 1.32 from i. That bounds the approach at depth 6 (T17 records the same bound); it does not show the distance goes to 0. CORRECTION (2026-09-12): this card was marked RESOLVED by T31 and said depth-6 trees get arbitrarily close to i, but T31 recorded only this data."
     },
     {
       "id": "O-FOURIER",

@@ -125,7 +125,7 @@ accumulation point of EML₁:
 lim (depth → ∞) [closest EML₁ value to i] = 0
 ```
 
-Empirical data from depth-6 search: 700 values with Im > 0, closest approach
+Empirical data from the depth-6 search (printed on the depth-6 post): 13,598 distinct positive imaginary parts, not 700, closest approach
 Im = 0.999995 (gap 4.76×10⁻⁶). That bounds the approach at depth 6; it does not show the
 gap goes to 0. Over leaves {1, z} the density claim above would imply it, but that claim is open too.
 

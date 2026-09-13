@@ -1,10 +1,30 @@
 ---
 import Base from '../../layouts/Base.astro';
+
+// The strict real grammar through depth 4, in plain Python floats.
+const script = `import itertools, math
+def eml(x, y):                           # strict real semantics: ln only of positive reals
+    return math.exp(x) - math.log(y)     # raises ValueError for y <= 0, OverflowError past 1e308
+S = {1.0}
+for depth in range(1, 5):
+    new = set()
+    for x, y in itertools.product(S, repeat=2):
+        try:
+            new.add(eml(x, y))
+        except (ValueError, OverflowError):
+            pass                         # undefined (or too large to hold): no value
+    S |= new
+    print(f"depth <= {depth}: {len(S)} defined values, all of type float: {all(isinstance(v, float) for v in S)}, "
+          f"min {min(S):.4g}, nonpositive: {sum(v <= 0 for v in S)}")`;
+const output = `depth <= 1: 2 defined values, all of type float: True, min 1, nonpositive: 0
+depth <= 2: 5 defined values, all of type float: True, min 1, nonpositive: 0
+depth <= 3: 26 defined values, all of type float: True, min 0, nonpositive: 1
+depth <= 4: 396 defined values, all of type float: True, min -14.15, nonpositive: 70`;
 ---
 
 <Base
-  title="T19: Why You Can't Build i from 1"
-  description="The strict i-unconstructibility theorem: starting from 1 and the EML operator, the imaginary unit cannot be constructed under principal-branch semantics."
+  title="T17: Why You Can't Build i from 1"
+  description="The strict i-unconstructibility theorem (T17): starting from 1 and the EML operator, the imaginary unit cannot be constructed when ln accepts only positive reals. Under the complex principal branch the question is open."
   date="2026-04-19"
 >
   <div class="meta">
@@ -13,10 +33,19 @@ import Base from '../../layouts/Base.astro';
     <span>4 min read</span>
   </div>
 
-  <h1>T19: Why You Can't Build i from 1</h1>
+  <h1>T17: Why You Can't Build i from 1</h1>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     The imaginary unit is not reachable from the grammar &#123;eml, 1&#125; under strict real semantics.
-    Here is the proof and the limit of how close you can get.
+    Here is the proof, and how close the complex grammar gets.
+  </p>
+
+  <p style="color: var(--muted); font-style: italic;">
+    Correction (2026-09-13): this post was titled "T19: Why You Can't Build i from 1". The catalog entry
+    is T17; T19 is only part of the Lean theorem's name. Its proof said every value in the grammar is a
+    positive real, which is false: e − ln(e<sup>e</sup>) = 0 at depth 3, and 1 − e is a depth-4 value. What
+    holds, and what the proof needs, is that every defined value is real. The post also called the depth-6
+    gap "a transcendental obstruction", which nothing shows, and its reproduce command imported a function
+    that this repository's package does not export.
   </p>
 
   <div class="divider"></div>
@@ -41,14 +70,12 @@ import Base from '../../layouts/Base.astro';
 
   <ol>
     <li>
-      <code>eml(x, y) = exp(x) − ln(y)</code> takes two inputs.
-      Starting from <code>&#123;1&#125;</code>, every input to every node is
-      a positive real number (since 1 &gt; 0, exp maps reals to positive reals, and
-      we only pass positive inputs to ln).
+      <code>eml(x, y) = exp(x) − ln(y)</code> takes two inputs. The leaf 1 is real, exp of a real is
+      real, and strict ln is defined only on positive reals, where its value is real. Values can be 0 or
+      negative, and a tree that then takes ln of one is undefined, not complex.
     </li>
     <li>
-      Under principal-branch ln, every intermediate value is a real number.
-      <code>exp</code> of a real is real. Subtraction of reals is real.
+      A difference of reals is real, so by induction every defined tree value is a real number.
     </li>
     <li>
       <code>i</code> is not real. ∎
@@ -56,8 +83,8 @@ import Base from '../../layouts/Base.astro';
   </ol>
 
   <p>
-    There is no way around this under strict semantics: the grammar is closed over the
-    positive reals when initialized with <code>&#123;1&#125;</code>.
+    There is no way around this under strict semantics: every defined value of the grammar initialized
+    with <code>&#123;1&#125;</code> is real.
   </p>
 
   <h2>Lean verification</h2>
@@ -84,27 +111,34 @@ import Base from '../../layouts/Base.astro';
   </p>
 
   <p>
-    At depth 6, the imaginary parts diversify. The closest known approach to Im = 1
-    is <code>0.99999524</code> — a gap of 4.76 × 10⁻⁶. This is not a rounding error;
-    it is a transcendental obstruction. See the
-    <a href="/blog/near-miss">near-miss post</a> for the full analysis
-    and the <a href="/blog/depth-6-phase-transition">depth-6 phase transition post</a>
+    At depth 6, the imaginary parts diversify. The depth-6 value closest to i is
+    <code>8.07×10⁻⁸ + 0.99999523722i</code>, at distance 4.76 × 10⁻⁶. Nothing shows that the gap cannot
+    close at greater depth, and a depth-7 tree already brings its imaginary part within 7.9 × 10⁻¹² of 1
+    (though that value is 1.32 from i). See the <a href="/blog/near-miss">near-miss post</a>, which prints
+    both searches, and the <a href="/blog/depth-6-phase-transition">depth-6 phase transition post</a>
     for the structural picture.
   </p>
 
   <h2>Reproduce</h2>
 
-  <p>The Python package always returns a float from real inputs:</p>
+  <p>
+    The strict grammar in plain Python floats, through depth 4. <code>math.log</code> raises on a
+    non-positive input and <code>math.exp</code> on overflow, so those trees are skipped as undefined; every
+    value that survives is a float, and some are 0 or negative.
+  </p>
 
-  <pre><code>python -c "from monogate import eml; print(type(eml(1, 1)))"
-# &lt;class 'float'&gt; — always real under strict semantics</code></pre>
+  <pre><code>{script}</code></pre>
+
+  <p>Output:</p>
+
+  <pre><code>{output}</code></pre>
 
   <div class="divider"></div>
 
   <h3>Cite this work</h3>
 
   <blockquote>
-    Monogate Research (2026). "T19: Why You Can't Build i from 1."
+    Monogate Research (2026). "T17: Why You Can't Build i from 1." (First published as "T19: Why You Can't Build i from 1.")
     <em>monogate research blog.</em>
     https://monogate.org/blog/i-unconstructibility
   </blockquote>

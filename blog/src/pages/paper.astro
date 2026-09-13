@@ -25,8 +25,8 @@ import Base from '../layouts/Base.astro';
     <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">
       Proves that the single operator eml(x, y) = exp(x) − ln(y) generates every elementary
       function as a finite binary tree, with explicit constructions for all standard functions.
-      Introduces the EML depth hierarchy: five strata from arithmetic (depth 0) through
-      oscillatory (depth 3), with a gap — there is no depth 4.
+      (An earlier version of this card also said there is no depth 4. There is: x + 1 needs EML tree
+      depth exactly 4 on (0, ∞).)
     </p>
     <a href="https://arxiv.org/abs/2603.21852" target="_blank" rel="noopener noreferrer"
       style="font-size: 13px; font-weight: 700; color: var(--cyan);">
@@ -46,10 +46,10 @@ import Base from '../layouts/Base.astro';
     </div>
     <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">
       Studies the EML operator eml(x,y) = exp(x) − ln(y) and the smallest set EML₁ containing 1
-      and closed under eml. Central question: whether i ∈ EML₁. Proves depth-5 values have
-      Im(z) ≤ 0, and that depth-6 values can reach Im ≈ 0.99999524 (gap 4.76×10⁻⁶). The
-      obstruction: exact Im = 1 requires Re(y) = π/tan(1), which is transcendental
-      (Hermite–Lindemann).
+      and closed under eml. Central question: whether i ∈ EML₁. It shows that depth-5 values have
+      Im(z) ≤ 0 and that a depth-6 value comes within 4.76×10⁻⁶ of i. Its "transcendental
+      obstruction" (exact Im = 1 needs Re(y) = π/tan(1)) is not a proof, and a depth-7 tree gets its
+      imaginary part within 7.9×10⁻¹² of 1; the blog post below is corrected.
     </p>
     <a href="/blog/near-miss" style="font-size: 13px; font-weight: 700; color: var(--violet);">
       Read the blog post →
