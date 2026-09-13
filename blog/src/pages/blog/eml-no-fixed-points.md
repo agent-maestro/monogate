@@ -2,11 +2,13 @@
 layout: ../../layouts/Base.astro
 title: "The EML Self-Map Has No Fixed Points"
 date: 2026-04-19
-tag: theorem
-description: "f(x) = exp(x) − ln(x) satisfies f(x) > x for all real x > 0. The gap is minimized at x ≈ 0.806, where f(x) − x ≈ 1.6486. This is a theorem about the operator's self-interaction; of the eight operators compared below, EMN and EDL have no real fixed points either."
+tag: research
+description: "f(x) = exp(x) − ln(x) satisfies f(x) > x for all real x > 0. The gap is minimized at x ≈ 0.806, where f(x) − x ≈ 1.6486. This is a proposition (T11) about the operator's self-interaction; of the eight operators compared below, EMN and EDL have no real fixed points either."
 ---
 
 # The EML Self-Map Has No Fixed Points
+
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called its result a theorem; /theorems lists it as a proposition (T11), and its complete proof is below. It said a 1000-point grid confirmed the minimum at x* ≈ 0.80647, but that grid's spacing is 0.01 and its smallest value, 1.648629, is at x = 0.81. The operator table gave EML a Lyapunov exponent of 4.31 with no source; the iteration has no finite one. The catalog table at the end listed the Weierstrass and EMN results without their status: one argument has a gap, and the other is a conjecture.</p>
 
 Define the EML self-map:
 
@@ -18,9 +20,9 @@ A fixed point would be a value x* where f(x*) = x*, i.e., exp(x*) − ln(x*) = x
 
 ---
 
-## The Theorem
+## The Proposition
 
-**Theorem (EML No Fixed Points):** For all x > 0,
+**Proposition (EML No Fixed Points, T11):** For all x > 0,
 
 $$\exp(x) - \ln(x) > x$$
 
@@ -50,7 +52,7 @@ g(0.80647) = exp(0.80647) − ln(0.80647) − 0.80647
            = 1.6486
 ```
 
-**The minimum gap is g_min = 1.6486054...** Computational verification on 1000 points in [0.01, 10] confirms: min(g(x)) = **1.6486** at x* ≈ 0.80647.
+**The minimum gap is g_min = 1.6486054...** A 1000-point grid on [0.01, 10] has spacing 0.01; its smallest value is 1.648629, at x = 0.81, and a grid that coarse cannot place the minimum more finely. Solving eˣ = 1 + 1/x directly gives x* = 0.8064659942 and g(x*) = 1.6486054403.
 
 Since g(x) ≥ 1.648 > 0 for all x > 0, the equation g(x) = 0 has no positive real solutions. (Positivity needs no numerics: for x > 0, exp(x) ≥ 1 + x + x²/2 and ln(x) ≤ x − 1 give g(x) ≥ (x − 1)²/2 + 3/2 ≥ 3/2.) QED.
 
@@ -80,7 +82,7 @@ Each operator in the family defines a self-map op(x, x). Which ones have real fi
 
 | Operator | Self-map | Fixed points | Lyapunov | Dynamics |
 |----------|---------|--------------|---------|----------|
-| EML | exp(x)−ln(x) | **None** | 4.31 | Diverges |
+| EML | exp(x)−ln(x) | **None** | none (see below) | Diverges |
 | EMN | ln(x)−exp(x) | **None** (f(x) < 0 < x) | — | Leaves the domain in one step |
 | DEML | exp(−x)−ln(x) | x* ≈ 0.7536 | 0.587 | Unstable |
 | EAL | exp(x)+ln(x) | x* ≈ 0.344 | 1.462 | Unstable |
@@ -108,10 +110,10 @@ For EML: exp(x) grows **too fast** and ln(x) **doesn't slow it down enough**. Bo
 EML(x,x) iteration: x_{n+1} = exp(x_n) − ln(x_n).
 
 Starting from any x > 0:
-- x_1 ≥ x_0 + 1.648 (by the no-fixed-points theorem)
+- x_1 ≥ x_0 + 1.648 (by the proposition above)
 - x_2 = exp(x_1) − ln(x_1) > exp(x_1) − x_1, and exp(x_1) > exp(x_0 + 1.648)
 
-The iteration diverges **at least doubly exponentially** in the number of steps. This is not just divergence — it is catastrophic divergence. The Lyapunov exponent (4.31) is among the highest in the family.
+The iteration diverges **at least doubly exponentially** in the number of steps. This is not just divergence — it is catastrophic divergence. It has no finite Lyapunov exponent: along an orbit, ln|f′(xₙ)| grows without bound (from x₀ = 1 it is 0.54, 2.69, 14.2, then about 1.4 × 10⁶), and so does its running average. The 4.31 this post's table gave has no source.
 
 ---
 
@@ -141,10 +143,10 @@ This result belongs alongside these other EML structural claims (their status is
 
 | # | Result | Domain |
 |---|---------|--------|
-| ... | EML Weierstrass: EML is exactly complete | Approximation |
-| ... | EMN exact incompleteness | Completeness |
-| ... | Infinite zeros barrier | Analysis |
-| **New** | **EML(x,x) has no real fixed points; min gap ≈ 1.648605** | **Dynamics** |
+| ... | EML Weierstrass: EML trees are dense in C([a,b]) (its argument has a gap) | Approximation |
+| ... | EMN exact incompleteness (a conjecture, T24) | Completeness |
+| ... | Infinite zeros barrier (its zero bound is open, T14) | Analysis |
+| **New** | **EML(x,x) has no real fixed points; min gap ≈ 1.648605 (a proposition, T11)** | **Dynamics** |
 
 The minimum gap 1.6486054... — is this a known constant? PSLQ against {e, π, ln(2), γ, √2} finds no relation at 15 digits. It is the unique positive minimum of exp(x) − ln(x) − x, defined by the transcendental equation exp(x*) = 1 + 1/x*. Numerically x* = 0.80646599... and g(x*) = 1.64860544...
 
