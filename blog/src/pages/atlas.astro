@@ -122,7 +122,7 @@ const incompleteCount = (operators as Array<{ complete: string }>).filter(o => o
     Atlas depth measures how many nested exponentiations a function requires, with arithmetic free.
     Depth 0 = no exp/ln. Depth 1 = one application. Depth ∞ = impossible as a finite real tree.
     It is not EML tree depth, which counts every eml node on the longest root-to-leaf path: there
-    ln x needs exactly 3 and x + 1 exactly 4 on (0, ∞). Node costs below are F16 nodes.
+    ln x needs exactly 3 and x + 1 exactly 4 on (0, ∞). Node costs below are F16 nodes (the sixteen operators on /framework), except where a row names EXL or ELSb, census operators outside F16.
   </p>
 
   {strata.map((s: any) => (
@@ -162,7 +162,7 @@ const incompleteCount = (operators as Array<{ complete: string }>).filter(o => o
   <!-- ── SUPERBEST TABLE ───────────────────────────────────────────────── -->
   <h2>SuperBEST Routing Table</h2>
   <p style="color: var(--muted); margin-bottom: 6px; font-size: 0.9rem;">
-    Node counts across the 16-operator family, from the canonical SuperBEST table. Only some entries have a proved lower bound; <a href="/superbest">/superbest</a> gives each entry's status.
+    Node counts from the canonical SuperBEST table, in F16 nodes plus the census operators EXL and ELSb where a construction uses them. Only some entries have a proved lower bound; <a href="/superbest">/superbest</a> gives each entry's status.
     Total: <strong style="color: var(--green);">{totalSuperbest} nodes</strong> vs {totalNaive} naive = <strong style="color: var(--green);">{savings}% savings</strong>.
   </p>
   <p style="color: var(--muted); font-size: 0.8rem; margin-bottom: 20px;">
@@ -200,7 +200,7 @@ const incompleteCount = (operators as Array<{ complete: string }>).filter(o => o
   <!-- ── OPERATOR CENSUS ───────────────────────────────────────────────── -->
   <h2>16-Operator Census</h2>
   <p style="color: var(--muted); margin-bottom: 6px; font-size: 0.9rem;">
-    Every binary combination of exp(±x) with ln(y) via arithmetic.
+    The census list of Sixteen_Operator_Census.tex: exp(±x) combined with ln(y) by arithmetic, with LEAd, ELAd, ELSb and LEX. It is a different sixteen from the F16 on /framework.
     Completeness class conjectured from the position of negation relative to exp (T26–T28, all conjectures; over ℝ the rule fails for EAL, whose real trees are all nondecreasing).
   </p>
   <p style="color: var(--muted); font-size: 0.8rem; margin-bottom: 20px;">

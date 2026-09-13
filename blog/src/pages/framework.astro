@@ -82,15 +82,15 @@ import Base from '../layouts/Base.astro';
   <h2>What is NOT in ELC(ℝ) over ℝ</h2>
 
   <ul class="in-out-list blocked">
-    <li>✗ sin(x) and cos(x) over ℝ — T01: every real F16 tree has finitely many zeros; sin/cos have infinitely many</li>
-    <li>✗ erf(x), Γ(x) — same zero-count obstruction</li>
+    <li>✗ sin(x) and cos(x) over ℝ — no real EML tree of any depth equals them, proved in Lean by periodicity (MachLib); for trees mixing F16 operators it is argued, not proved, and the zero-count route (T01) has open steps</li>
+    <li>✗ erf(x), Γ(x) — not elementary (erf by Liouville's theorem, Γ by Hölder's), so no finite composition of exp and ln equals them; a zero count would not show it, since erf has one real zero and Γ none</li>
     <li>✗ |x| — no real F16 tree computes abs(x) (sign barrier)</li>
   </ul>
 
   <h2>SuperBEST: minimum depth within ELC(ℝ)</h2>
 
   <p>
-    For each operation in ELC(ℝ), the SuperBEST table records the minimum number of
+    For each operation in ELC(ℝ), the SuperBEST table records the best known number of
     F16 nodes needed. Every arithmetic primitive costs ≤ 2 nodes on the positive domain.
   </p>
 

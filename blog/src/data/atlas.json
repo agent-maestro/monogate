@@ -159,12 +159,12 @@
         },
         {
           "name": "x · y  (multiplication)",
-          "cost": "1 node (ELAd)",
+          "cost": "1 node for x, y > 0 (F16: exp(ln x + ln y))",
           "proof": "T_SUPERBEST_UB"
         },
         {
           "name": "x / y  (division)",
-          "cost": "2 nodes (EDL)",
+          "cost": "2 nodes for x, y > 0 (F16(x, F13(−1, y)))",
           "proof": "T08"
         },
         {
@@ -187,17 +187,17 @@
       "entries": [
         {
           "name": "ln(x)",
-          "cost": "1 node (EXL)",
+          "cost": "1 node via EXL(0, x), a census operator; 2 in F16 (LEdiv(0, F13(−1, x)))",
           "proof": "T08"
         },
         {
           "name": "neg(x) = −x",
-          "cost": "2 nodes (EXL∘DEML)",
+          "cost": "2 nodes (EXL∘DEML; in F16, LEdiv(0, EML(x, 1)))",
           "proof": "T09"
         },
         {
           "name": "recip(x) = 1/x",
-          "cost": "1 node (ELSb)",
+          "cost": "1 node (ELSb(0, x), a census operator; F13(−1, x) in F16)",
           "proof": "R16-C1"
         },
         {
@@ -222,12 +222,12 @@
         },
         {
           "name": "sub(x,y)",
-          "cost": "2 nodes (EML)",
+          "cost": "2 nodes (LEdiv∘EML)",
           "proof": "T33"
         },
         {
           "name": "mul(x,y), x,y>0",
-          "cost": "1 node (EPL/ELMl) — duplicate of the depth-1 entry above",
+          "cost": "1 node (F16: exp(ln x + ln y)) — duplicate of the depth-1 entry above",
           "proof": "T_SUPERBEST_UB"
         },
         {

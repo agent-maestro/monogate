@@ -36,7 +36,7 @@ const verify = superbest.verify_terminal;
 
 <Base
   title="SuperBEST — Optimal EML Routing Table"
-  description="Minimum node counts for every arithmetic primitive in the EML/F16 operator family. 23 operators catalogued; that no 24th exists is a conjecture. Layer 1 (F16): 14n / 80.8%. Layer 2 (23-op): 40% aggregate."
+  description="Best known node counts for every arithmetic primitive in the EML/F16 operator family. 23 operators catalogued; that no 24th exists is a conjecture. Layer 1 (F16): 14n / 80.8%. Layer 2 (23-op): 40% aggregate."
 >
   <div class="meta">
     <span>SuperBEST {superbest.version}</span>
@@ -58,7 +58,7 @@ const verify = superbest.verify_terminal;
     </p>
   </div>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
-    Minimum F16-node constructions for every elementary arithmetic primitive.
+    Best known constructions, in F16 nodes, for every elementary arithmetic primitive.
     Upper bounds are explicit constructions. Lower bounds are Lean-checked for sub, add, mul and div over all reals
     (each at least 2 nodes); the other entries' lower bounds are argued or open, so the capability card records this table as partially proven.
     CONJ_NO_OP_24 (no 24th operator) is {lock.conj_no_op_24}.
@@ -82,9 +82,17 @@ const verify = superbest.verify_terminal;
   <!-- Two-layer policy notice -->
   <div class="policy-box">
     <strong>Two-layer accounting policy:</strong>
-    <span class="layer layer1">Layer 1 (F16)</span> — formal theorems, arXiv paper; counts only F16 orbit nodes.
+    <span class="layer layer1">Layer 1 (F16)</span> — formal theorems, arXiv paper; which sixteen operators each table counts is said below.
     <span class="layer layer2">Layer 2 (23-op)</span> — library/ML/physics use; extended operators count as 1n each. Must be labeled.
   </div>
+  <p class="section-desc">
+    <strong>Which F16.</strong> On this site F16 means the sixteen operators on <a href="/framework">/framework</a>,
+    the list the Lean lower bounds (sub, add, mul and div each need at least 2 nodes) quantify over. The core
+    table below counts nodes in that list plus two census operators where a row names them: EXL, exp(x)·ln y,
+    which gives ln x = EXL(0, x) in one node, and ELSb, exp(x − ln y). Inside F16 alone ln x needs 2 nodes,
+    LEdiv(0, F13(−1, x)), so the positive-domain total would be 15n rather than 14n. The high-impact tables
+    follow the taxonomy-lock paper, whose "F16 orbit" is a different sixteen that leaves out LEAd (F11 on /framework).
+  </p>
 
   <div class="domain-toggle" id="domain-toggle">
     <button class="toggle-btn active" id="btn-pos" onclick="setDomain('positive')">
@@ -190,6 +198,12 @@ const verify = superbest.verify_terminal;
     </table>
   </div>
 
+  <p class="section-desc">
+    These F16 counts use the taxonomy lock's orbit, which leaves out LEAd. With LEAd, F11 in the site's F16,
+    softplus is 1 node (LEAd(x, 1)) and LSE(x, y) is 2 (LEAd(x, EML(y, 1))), against the 2 and 4 above; the
+    table keeps the paper's figures.
+  </p>
+
   <h3 class="sub-head">Quantum / Information</h3>
   <div class="table-wrap">
     <table>
@@ -226,7 +240,7 @@ const verify = superbest.verify_terminal;
     </table>
   </div>
 
-  <h3 class="sub-head">Special Functions (all require infinite F16 depth)</h3>
+  <h3 class="sub-head">Special Functions (argued infinite in F16; see each reason)</h3>
   <div class="table-wrap">
     <table>
       <thead><tr><th>Function</th><th>F16 cost</th><th>Reason</th></tr></thead>
@@ -331,9 +345,9 @@ const verify = superbest.verify_terminal;
     <h2>Key results</h2>
     <ul>
       <li><strong>Core table locked:</strong> 14n / 80.8% savings (positive domain) — canonical, unaffected by extended operators</li>
-      <li><strong>LSE corrected:</strong> ln(e^x+e^y) = 4n in F16 (corrected from 5n); 2n in 23-op via EEA+ln</li>
+      <li><strong>LSE corrected:</strong> ln(e^x+e^y) = 4n in the taxonomy lock's F16 orbit (corrected from 5n); 2n in 23-op via EEA+ln, and 2n in the site's F16 via LEAd(x, EML(y, 1))</li>
       <li><strong>Taxonomy:</strong> 23 operators catalogued. CONJ_NO_OP_24 (no 24th operator) is a conjecture, argued on paper; no Lean proof exists</li>
-      <li><strong>softplus = 2n</strong> in both layers via EML(x,1/e)+ln (Category B: genuine F16)</li>
+      <li><strong>softplus = 2n</strong> in both layers via EML(x,1/e)+ln (Category B, in the taxonomy lock's orbit); 1n in the site's F16 via LEAd(x, 1)</li>
       <li><strong>Aggregate savings:</strong> the taxonomy-lock paper estimates ~12% genuine F16 and ~40% with 23-op extended primitives, for a system it does not specify; pooling its 18 high-impact expressions gives 26% and 48%</li>
     </ul>
     <p style="margin-top:20px">

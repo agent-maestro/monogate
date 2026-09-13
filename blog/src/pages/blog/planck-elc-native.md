@@ -24,7 +24,7 @@ is an entirely ELC-native formula.
 
 Using v5.2 positive-domain F16 costs ($\mathrm{mul}=1n$, $\mathrm{exp}=1n$,
 $\mathrm{ln}=1n$, $\mathrm{div}=2n$, $\mathrm{sqrt}=1n$ via
-$\mathrm{EPL}(0.5,x)$, $\mathrm{sub}=2n$):
+$\mathrm{EPL}(0.5,x)$, $\mathrm{sub}=2n$; $\mathrm{ln}=1n$ uses EXL, a census operator outside the F16 of /framework, where ln takes 2 nodes):
 
 | Formula | Nodes | Class |
 |---------|------:|:------|

@@ -147,7 +147,7 @@
       "name": "Mul ≥ 2 Nodes: the 16 Lean F16 Operators, All Reals",
       "session": "DOOR-1",
       "category": "Core Algebra",
-      "statement": "No single node of the 16 operators defined in MonogateEML/MulLowerBound.lean computes x·y for all real x, y.",
+      "statement": "No single node of the 16 operators defined in MonogateEML/MulLowerBound.lean, the F16 on /framework, computes x·y for all real x, y.",
       "evidence": "Lean 4, 0 sorries: SB_mul_ge_two, with an explicit witness pair for each operator (Mathlib's log). CORRECTION (2026-09-13): this card claimed the bound for every operator of the form h(exp(±x), ln y), by a derivative obstruction. That is false: h(u, v) = ln(u)·exp(v) gives x·y in one node for every x and every y > 0, and LEpow(x, y) = ln((eˣ)ʸ) = x·y is one node in T32_Mul_Absolute_Optimality.tex's own operator list. The Lean list is not that paper's F16 either: it has no EXL, EDL, EAL or EMN.",
       "lean": {
         "file": "MulLowerBound.lean",
@@ -180,7 +180,7 @@
       "name": "Addition ≥ 2 Nodes — Lean Lower Bound",
       "session": "Lean Sprint 2026-04-21",
       "category": "Core Algebra",
-      "statement": "No single F16 operator computes x+y for all real x, y. Combined with LEDIV(x, DEML(y,1)) = x+y (2-node explicit construction), SB(add) = 2.",
+      "statement": "No single F16 operator (the sixteen on /framework, defined in AddLowerBound.lean) computes x+y for all real x, y. Combined with LEDIV(x, DEML(y,1)) = x+y (2-node explicit construction), SB(add) = 2.",
       "evidence": "Lean 4, 0 sorries. Witness-based proof for each of 16 F16 operators.",
       "lean": {
         "file": "AddLowerBound.lean",
@@ -194,7 +194,7 @@
       "name": "Subtraction ≥ 2 Nodes — Lean Lower Bound",
       "session": "Lean Sprint 2026-04-21",
       "category": "Core Algebra",
-      "statement": "No single F16 operator computes x−y for all real x, y. Combined with explicit 2-node construction, SB(sub) = 2.",
+      "statement": "No single F16 operator (the sixteen on /framework) computes x−y for all real x, y. Combined with explicit 2-node construction, SB(sub) = 2.",
       "evidence": "Lean 4, 0 sorries. Exhaustive witness proof over all 16 F16 operators.",
       "lean": {
         "file": "SubLowerBound.lean",
@@ -208,7 +208,7 @@
       "name": "Division ≥ 2 Nodes (General Domain) — Lean",
       "session": "Lean Sprint 2026-04-21",
       "category": "Core Algebra",
-      "statement": "No single F16 operator computes x/y for all real x, y. General domain: ≥ 2 nodes (Lean-verified). For x, y > 0 two nodes suffice: D_F16(x, D_F13(−1, y)) = x/y (div_two_node_pos_domain, Lean-verified). CORRECTION (2026-09-13): this card said exp(ln x − ln y) is 1 node on the positive domain; that operator is not one of the 16, and /superbest lists div for x, y > 0 as 2n.",
+      "statement": "No single F16 operator (the sixteen on /framework) computes x/y for all real x, y. General domain: ≥ 2 nodes (Lean-verified). For x, y > 0 two nodes suffice: D_F16(x, D_F13(−1, y)) = x/y (div_two_node_pos_domain, Lean-verified). CORRECTION (2026-09-13): this card said exp(ln x − ln y) is 1 node on the positive domain; that operator is not one of the 16, and /superbest lists div for x, y > 0 as 2n.",
       "evidence": "Lean 4, 0 sorries. Witness (0,1) for each of 16 F16 operators.",
       "lean": {
         "file": "DivLowerBound.lean",
@@ -237,7 +237,7 @@
       "name": "SuperBEST Upper Bounds — 5 Positive-Domain Identities (Lean)",
       "session": "Lean Sprint 2026-04-21",
       "category": "Core Algebra",
-      "statement": "Lean-verified (0 sorries): exp(x)=F1(x,1) (1n); exp(ln x+ln y)=xy for x,y>0 (1n); exp(n·ln x)=xⁿ for x>0 (1n); exp(−ln x)=1/x for x>0 (1n); exp(½·ln x)=√x for x>0 (1n). SuperBEST v5.3 positive total: 14n (savings 80.8%).",
+      "statement": "Lean-verified (0 sorries): exp(x)=F1(x,1) (1n); exp(ln x+ln y)=xy for x,y>0 (1n); exp(n·ln x)=xⁿ for x>0 (1n); exp(−ln x)=1/x for x>0 (1n); exp(½·ln x)=√x for x>0 (1n). SuperBEST v5.3 positive total: 14n (savings 80.8%), which also counts ln x = EXL(0, x) as one node; EXL is a census operator outside the sixteen on /framework, inside which ln x needs 2.",
       "evidence": "Lean 4, 0 sorries. UpperBounds.lean + ModelAudit.lean. Mathlib: Real.exp_add, Real.exp_log, Real.rpow_def_of_pos, Real.sqrt_eq_rpow.",
       "lean": {
         "file": "UpperBounds.lean",
@@ -343,7 +343,7 @@
       "name": "EXL Log-Structure Advantage",
       "session": "Sprint2",
       "category": "Operator Family",
-      "statement": "EXL(x,y) = exp(x)·ln(y) achieves ln(x) in 1 node: EXL(0,x) = ln(x). Still the cheapest logarithm route in F16. The \"fastest multiplication route\" half of the original claim is superseded — see T10u's correction — by a separate 1-node positive-domain identity, not this EXL route.",
+      "statement": "EXL(x,y) = exp(x)·ln(y) achieves ln(x) in 1 node: EXL(0,x) = ln(x). EXL is a census operator, not one of the sixteen on /framework; inside that F16, ln x needs 2 nodes, since no single F16 node equals it and LEdiv(0, F13(−1, x)) does. The \"fastest multiplication route\" half of the original claim is superseded — see T10u's correction — by a separate 1-node positive-domain identity, not this EXL route.",
       "evidence": "Direct computation: EXL(0,x) = 1·ln(x) = ln(x). The ELAd(EXL(0,x), y) = x·y route is a valid 2-node construction (T10u), not the current minimum."
     },
     {
