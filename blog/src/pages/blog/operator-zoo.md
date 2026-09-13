@@ -10,6 +10,8 @@ description: "We applied the DEML incompleteness template to seven exp-ln operat
 
 <p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post said the EMN question below has a definitive answer. It does not: that EMN is approximately but not exactly complete is a conjecture (T24), and the sketches for both halves stop short. The DEML template has a gap too (T13), so the Incomplete entries are conjectures, except that over ℝ no EAL tree approximates −x.</p>
 
+<p style="color: var(--muted); font-style: italic;">Second correction (2026-09-13): the Type A paragraph said DEML fails the way EAL does, by slope sign. For DEML that argument has a gap: deml(x, 1) = exp(−x) has negative slope. EDL's "cannot build addition" is conjecture C1 of the preprint, not a result. And the later 16-operator census conjectures the opposite of this table for EXL, EDL and POW (which is EPL), and for EAL over ℂ: exactly complete (T26). Neither classification is proved.</p>
+
 The DEML incompleteness argument gave us a template. Apply it to every operator of the form f(exp(±x), ±ln(y)) and catalog the results. Seven operators. Five sessions. One surprise.
 
 ## The Operators
@@ -17,12 +19,12 @@ The DEML incompleteness argument gave us a template. Apply it to every operator 
 | Operator | Definition | Completeness class | Key Barrier |
 |----------|-----------|-------------------|-------------|
 | EML | exp(x) − ln(y) | **Exactly complete** | None |
-| DEML | exp(−x) − ln(y) | **Incomplete** | All linear slopes +1, neg(x) impossible |
+| DEML | exp(−x) − ln(y) | **Incomplete** (conjectured, T13) | Said: all linear slopes +1, so neg(x) is impossible; that argument has a gap |
 | EMN | ln(y) − exp(x) | **Approximately complete** | Nonzero exp(·) residual — exact ln(x) unreachable |
-| EAL | exp(x) + ln(y) | **Incomplete** | All slopes positive, no cancellation |
-| EXL | exp(x) · ln(y) | **Incomplete** | e not constructible from {1}, blocks exp(x) |
-| EDL | exp(x) / ln(y) | **Incomplete** | Cannot build addition (claimed separately) |
-| POW | y^x | **Incomplete** | e not constructible; but see below |
+| EAL | exp(x) + ln(y) | **Incomplete** over ℝ | All slopes positive, no cancellation (over ℝ; T26 conjectures EAL complete over ℂ) |
+| EXL | exp(x) · ln(y) | **Incomplete** (April; T26 conjectures it complete over ℂ) | e not constructible from {1}, blocks exp(x) |
+| EDL | exp(x) / ln(y) | **Incomplete** (April; T26 conjectures it complete over ℂ) | Cannot build addition: the preprint's conjecture C1, which it supports with a search to N ≤ 6 (not re-run) |
+| POW | y^x | **Incomplete** (April; POW is EPL, which T26 conjectures complete over ℂ) | e not constructible; but see below |
 
 Two new operators we explored:
 
@@ -58,9 +60,9 @@ Is this an exact neg(x)? No — the "approximate ln" introduces exponentially sm
 
 The census reveals two distinct reasons a gate can be incomplete:
 
-**Type A — Wrong slope sign:** All linear mechanisms have the same slope sign. DEML and EAL both fail this way. No finite composition can produce the opposite sign.
+**Type A — Wrong slope sign:** All linear mechanisms have the same slope sign, so no finite composition can produce the opposite sign. EAL fails this way over ℝ: every real EAL tree T = exp(A) + ln(B) has T′ = A′e^A + B′/B ≥ 0. DEML was counted here too, but deml(x, 1) = exp(−x) has negative slope, so for DEML the argument has a gap (T13).
 
-**Type B — Missing constant:** The constant e is not constructible from the gate applied to {1}. EXL and POW both fail here. Without e, you can't build exp(+x), and without that the operator cannot generate arbitrary elementary functions.
+**Type B — Missing constant:** The constant e is not constructible from the gate applied to {1}. EXL and POW both fail here. Without e, you can't build exp(+x), and without that the operator cannot generate arbitrary elementary functions. (The later census conjectures both complete over ℂ, with e as a constant: T26.)
 
 **EMN escapes both:** It has negative slopes (Type A doesn't apply) and it CAN build nonzero constants — emn(1,1) = −e in one node.
 

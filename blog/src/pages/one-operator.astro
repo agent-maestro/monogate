@@ -54,21 +54,28 @@ const theoremCount = theoremsData.results.filter((r) => r.tier === 'THEOREM').le
 
   <p>
     Over ℂ, <code>eml(ix, 1) = exp(ix) = cos(x) + i·sin(x)</code>. One node.
-    Depth ∞ over ℝ vs. depth 1 over ℂ. Same function, different domain, different complexity.
+    In EML tree depth: ∞ over ℝ vs. 1 over ℂ. Same function, different domain, different complexity.
     <a href="/blog/euler-formula-is-eml">Why →</a>
   </p>
 
   <h2>Complexity strata</h2>
 
+  <p>
+    Two different counts get called depth. <strong>Atlas depth</strong>, used in the list below and on
+    <a href="/atlas">/atlas</a>, counts nested exp/ln applications and treats arithmetic as free.
+    <strong>EML tree depth</strong> counts eml nodes along the longest path from the root to a leaf, with
+    nothing free. The node counts in the list are a third measure: F16 nodes in the SuperBEST table.
+  </p>
+
   <ul style="margin: 16px 0 20px 24px; color: var(--text); line-height: 2.2;">
-    <li><strong style="color: var(--muted);">Depth 0</strong> — arithmetic (polynomials, rationals)</li>
-    <li><strong style="color: var(--cyan);">Depth 1</strong> — exponential · softplus(x) = 1 node via LEAd</li>
-    <li><strong style="color: var(--violet);">Depth 2</strong> — logarithmic · negation = 2 nodes · ln(x) = 1 node</li>
-    <li><strong style="color: var(--pink);">Depth 3</strong> — oscillatory (sin, cos via complex bypass) · mul/sub/add = 3 nodes</li>
-    <li><strong style="color: var(--red);">Depth ∞</strong> — non-constructible over ℝ</li>
+    <li><strong style="color: var(--muted);">Atlas depth 0</strong> — arithmetic (polynomials, rationals)</li>
+    <li><strong style="color: var(--cyan);">Atlas depth 1</strong> — exponential · softplus(x) = 1 F16 node via LEAd</li>
+    <li><strong style="color: var(--violet);">Atlas depth 2</strong> — logarithmic · negation = 2 F16 nodes · ln(x) = 1 F16 node (EXL)</li>
+    <li><strong style="color: var(--pink);">Atlas depth 3</strong> — oscillatory (sin, cos via complex bypass) · add = 2, sub = 2, mul = 1 (x, y &gt; 0) or 3 F16 nodes</li>
+    <li><strong style="color: var(--red);">Atlas depth ∞</strong> — non-constructible over ℝ</li>
   </ul>
 
-  <p>Depth 4 is not empty, though: in EML tree depth, x + 1 needs exactly 4 on (0, ∞). <a href="/atlas">Full depth atlas →</a> · <a href="/theorems">Theorem catalog →</a></p>
+  <p>In EML tree depth the counts are larger, since arithmetic is not free: ln x needs exactly 3 and x + 1 exactly 4 on (0, ∞). <a href="/atlas">Full depth atlas →</a> · <a href="/theorems">Theorem catalog →</a></p>
 
   <h2>The completeness conjecture</h2>
 

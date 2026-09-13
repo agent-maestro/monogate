@@ -119,8 +119,10 @@ const incompleteCount = (operators as Array<{ complete: string }>).filter(o => o
   <!-- ── DEPTH STRATA ──────────────────────────────────────────────────── -->
   <h2>Depth Strata</h2>
   <p style="color: var(--muted); margin-bottom: 24px; font-size: 0.9rem;">
-    EML depth measures how many nested exponentiations a function requires.
+    Atlas depth measures how many nested exponentiations a function requires, with arithmetic free.
     Depth 0 = no exp/ln. Depth 1 = one application. Depth ∞ = impossible as a finite real tree.
+    It is not EML tree depth, which counts every eml node on the longest root-to-leaf path: there
+    ln x needs exactly 3 and x + 1 exactly 4 on (0, ∞). Node costs below are F16 nodes.
   </p>
 
   {strata.map((s: any) => (

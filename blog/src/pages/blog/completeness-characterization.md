@@ -10,6 +10,8 @@ description: "16 operators, one proposed structural rule: exp(+x) with no domain
 
 <p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called the rule below a theorem with structural proofs. None of its directions has a proof. The forward argument (T26) borrows other operators and constants, the LEX argument (T28) is refuted by explicit trees, and the EMN (T24) and exp(−x) (T27) cases are sketches. Over ℝ the rule is false for EAL: every real EAL tree is nondecreasing, so none approximates −x. Over ℂ it is an open conjecture.</p>
 
+<p style="color: var(--muted); font-style: italic;">Second correction (2026-09-13): this post cited the census as T25 and the softplus result as T19. In the catalog T25 is the Depth-6 Phase Transition and there is no T19, so both numbers are removed. The DEML row of the exp(−x) table gave "slope always +1" as DEML's barrier; that is T13's argument, which has a gap, since deml(x, 1) = exp(−x) decreases. The DEMN row wrote deml(x, 1) < 0 for demn(x, 1) = −exp(−x) < 0. The softplus corollary undercounted log-sum-exp and the softmax denominator.</p>
+
 **Tier: CONJECTURE** (T26–T28, structural arguments with gaps; T12 updated from Trichotomy to full characterization)
 
 ---
@@ -38,7 +40,7 @@ That's it. One sentence. If it holds, all 16 operators follow.
 | **Incomplete (7)** | DEML, DEMN, DEAL, DEXL, DEDL, DEPL, LEX | exp(−x) or domain-restricted |
 
 The old "Completeness Trichotomy" (T12) described this as "1 complete / 1 approximate / 6 incomplete"
-because only EML was known to be complete at the time. The full census (T25) proposes **8 complete**
+because only EML was known to be complete at the time. The full census (sessions COMP-1 through COMP-5) proposes **8 complete**
 operators — all of them structurally equivalent in the dimension that matters.
 
 ---
@@ -74,8 +76,8 @@ The exp(−x) operators each appear to fail by a different mechanism:
 
 | Operator | Mechanism | Core barrier |
 |---|---|---|
-| **DEML** | Slope barrier | Self-composition always has slope +1; neg requires −1 |
-| **DEMN** | Domain failure | deml(x,1) < 0 for all x; can't feed into ln |
+| **DEML** | Slope barrier (argument has a gap) | Said: self-composition always has slope +1, and neg requires −1. But deml(x, 1) = exp(−x) decreases, so the slope argument has a gap (T13) |
+| **DEMN** | Domain failure | demn(x,1) = −exp(−x) < 0 for all x; can't feed into ln |
 | **DEAL** | Domain collapse | Achieves slope −1 but offset e⁻¹ is irremovable; deeper compositions lose domain |
 | **DEXL** | Dead constant | dexl(x,1) = exp(−x)·ln(1) = 0 for all x |
 | **DEDL** | Decay barrier | Self-composition gives −e⁻¹/x → 0; no linear growth |
@@ -165,7 +167,7 @@ and T28 (LEX domain).
 
 ---
 
-## New Result: Softplus = 1 LEAd Node (T19)
+## New Result: Softplus = 1 LEAd Node
 
 The softplus activation function ln(1 + exp(x)) is exactly LEAd(x, 1):
 ```
@@ -176,8 +178,10 @@ LEAd(x, 1) = ln(exp(x) + 1) = softplus(x)
 One node. The entire softplus function — ubiquitous in neural networks and smooth
 approximations of ReLU — is a single LEAd application with constant 1.
 
-Corollary: log-sum-exp of N terms costs N−1 LEAd nodes. The denominator of a
-softmax over N logits: N−1 nodes.
+Corollary: log-sum-exp of N terms takes at most 2N − 2 nodes: L₂ = LEAd(x₂, EML(x₁, 1)) and
+L_{k+1} = LEAd(x_{k+1}, EML(L_k, 1)). The denominator of a softmax over N logits, Σ exp(xᵢ), takes at most
+2N − 1: one more EML node. This post said N − 1 for both, which fails already at N = 1, where the
+denominator exp(x₁) takes a node.
 
 ---
 

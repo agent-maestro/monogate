@@ -23,7 +23,7 @@ Every binary exp-ln operator has the form: combine exp(±x) with ln(y) using one
 
 | Operator | Formula | f(1,2) | Complete? |
 |---------|---------|--------|-----------|
-| EML | exp(x) − ln(y) | 2.025 | **YES** — T02 foundation |
+| EML | exp(x) − ln(y) | 2.025 | **YES** — T01 foundation |
 | EMN | ln(y) − exp(x) | −2.025 | APPROXIMATE (conjectured) — T24 |
 | DEML | exp(−x) − ln(y) | −0.325 | NO — T13 |
 | DEMN | ln(y) − exp(−x) | 0.325 | NO |
