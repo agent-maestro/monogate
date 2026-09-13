@@ -117,7 +117,7 @@
     },
     {
       "id": "T32-mul-lower-bound",
-      "statement": "/theorems T32 'Mul ≥ 2 Nodes in Any exp-ln Family' (LEAN ✓); /proofs flagship; capability card lean.mul_lower_bound",
+      "statement": "/theorems T32 'Mul ≥ 2 Nodes: the 16 Lean F16 Operators, All Reals' (LEAN ✓); /proofs flagship; capability card lean.mul_lower_bound",
       "sites": [
         {
           "file": "src/data/theorems.json",
@@ -315,6 +315,10 @@
         {
           "file": "src/data/proofs.ts",
           "line": "name: 'div_two_node_pos_domain'"
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "(div_two_node_pos_domain, Lean-verified)"
         }
       ],
       "repository": "../../monogate-lean",
@@ -498,6 +502,10 @@
         {
           "file": "src/data/proofs.ts",
           "line": "name: 'exp_not_constant'"
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "EML-0 ⊊ EML-1 is proved in Lean (exp_not_constant, T_EULER_LEAN)"
         }
       ],
       "repository": "../../monogate-lean",
@@ -2942,6 +2950,74 @@
       ]
     },
     {
+      "id": "exp-tower-exact-depth-upto-four",
+      "statement": "/theorems T30 and D01: exp^k needs exactly k nodes, and the first four EML depth levels are distinct, for k <= 4 (MachLib's certified tower lower bound); the general case is open",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "that exp^k needs exactly k nodes is proved in MachLib only for k ≤ 4"
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "MachLib proves the first four levels distinct (tower_certified_upto_four)"
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "MachLib proves exp^k needs exactly k nodes for k ≤ 4 (tower_certified_upto_four)"
+        },
+        {
+          "file": "src/pages/blog/olympiad-meets-eml.md",
+          "line": "nodes is a conjecture (T30), and MachLib proves it for `k ≤ 4`."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/EMLCertifiedSynthesis.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.EMLTree.tower_certified_upto_four",
+        "MachLib.EMLTree.tower_lower_bound_upto_four"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_add",
+        "MachLib.Real.exp_gt_one_plus_self",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_add_le_exp",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
       "id": "eml-any-depth-sin-cos",
       "statement": "complexity-census rows 'sin(x) over ℝ: ∞' and 'cos(x) over ℝ: ∞': no EML tree of any depth equals sin, or cos, on ℝ",
       "sites": [
@@ -3103,7 +3179,7 @@
     {
       "file": "src/pages/atlas.astro",
       "line": "not formalized in Lean).",
-      "reason": "negative statement: these completeness results are proved on paper and verified computationally, not in Lean"
+      "reason": "negative statement: the elementary operators' completeness classification (T12, T26–T28) is a conjecture, argued on paper, and not formalized in Lean"
     },
     {
       "file": "src/pages/blog/a-model-for-the-axioms.md",
@@ -3271,26 +3347,6 @@
       "reason": "names the four epistemic grades of a disclosure scheme; it claims no result is proved"
     },
     {
-      "file": "src/data/theorems.json",
-      "line": "Proved in R2_Decomposition_Theorem.tex.",
-      "reason": "catalog card T38 cites its paper proof, python/paper/cost_theory/R2_Decomposition_Theorem.tex, which is in this repository; a paper proof, not a Lean claim, and no gate re-checks it"
-    },
-    {
-      "file": "src/data/theorems.json",
-      "line": "Proved in R5_Linear_Cost_Law.tex.",
-      "reason": "catalog card T40 cites its paper proof, python/paper/cost_theory/R5_Linear_Cost_Law.tex, which is in this repository; a paper proof, not a Lean claim, and no gate re-checks it"
-    },
-    {
-      "file": "src/data/theorems.json",
-      "line": "Proved in R6_Additive_Cost_Law.tex.",
-      "reason": "catalog card P-ACL cites its paper proof, python/paper/cost_theory/R6_Additive_Cost_Law.tex, which is in this repository; a paper proof, not a Lean claim, and no gate re-checks it"
-    },
-    {
-      "file": "src/data/theorems.json",
-      "line": "Proved in R4_Sharing_Discount.tex.",
-      "reason": "catalog card P-SD cites its paper proof, python/paper/cost_theory/R4_Sharing_Discount.tex, which is in this repository; a paper proof, not a Lean claim, and no gate re-checks it"
-    },
-    {
       "file": "src/pages/blog/auditing-1200-sessions.astro",
       "line": "['PROPOSITION', 6, 'Proved, routine', 'var(--cyan)'],",
       "reason": "the April 2026 audit's tier table: 'Proved, routine' is the PROPOSITION tier's definition and the counts are that audit's; the post now says /theorems has the live counts"
@@ -3324,6 +3380,26 @@
       "file": "src/pages/theorems.astro",
       "line": "Proved facts are theorems. Everything else is clearly marked.",
       "reason": "states the catalog's tier policy; it names no result"
+    },
+    {
+      "file": "src/data/theorems.json",
+      "line": "saying the formula is proved and that 47 of 50 equations have SD = 0",
+      "reason": "card P-SD's dated correction reporting what the card used to claim; it says the formula is false under R4's own definition, and names no Lean result"
+    },
+    {
+      "file": "public/capability_card.json",
+      "line": "and none of this is formalized in Lean.",
+      "reason": "negative statement (cost.decomposition: the T38 split is a definition and nothing in it is in Lean)"
+    },
+    {
+      "file": "public/.well-known/capcard.json",
+      "line": "and none of this is formalized in Lean.",
+      "reason": "negative statement (cost.decomposition: the T38 split is a definition and nothing in it is in Lean)"
+    },
+    {
+      "file": "src/data/theorems.json",
+      "line": "No zero bound is proved; see T14.",
+      "reason": "negative statement"
     }
   ]
 }

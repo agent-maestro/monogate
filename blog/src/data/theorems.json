@@ -17,32 +17,32 @@
     },
     {
       "id": "T09",
-      "tier": "THEOREM",
-      "name": "Negation in 2 Nodes — Optimal",
+      "tier": "PROPOSITION",
+      "name": "Negation in 2 Nodes",
       "session": "Sprint2",
       "category": "Core Algebra",
-      "statement": "neg(x) = −x is computable in exactly 2 EML-family nodes: exl(0, deml(x,1)) = −x. Optimal; 1 node is impossible by exhaustive search.",
-      "evidence": "Exhaustive search over all 1-node candidates finds no neg construction. Upper bound: explicit 2-node construction verified (see the reproducer below). CORRECTION (2026-07-23 audit): this entry previously carried a LEAN badge citing NegLowerBound.lean/SB_neg_ge_two -- that file was added 2026-04-22 then reverted the same day (\"pending verification\", per its own commit message) and was never re-added. The badge was false; removed rather than left pointing at a file that does not exist in the tracked repo. The Python exhaustive-search evidence below is unaffected and still supports the claim.",
+      "statement": "neg(x) = −x for all real x in 2 nodes: exl(0, deml(x,1)) = e⁰·ln(e⁻ˣ) = −x, and deml(x,1) = e⁻ˣ > 0, so the tree is defined everywhere.",
+      "evidence": "Direct computation; the reproducer below checks it. CORRECTION (2026-09-13): this card was a THEOREM calling 2 nodes optimal, with 1 node ruled out by exhaustive search. No search on record supports that. The only 1-node neg search (python/scripts/research_neg_add.py at 3e447127, deleted in bec74da7) rounds each value to 6 decimals and then compares it with −x at tolerance 1e−7, so at x = π it rejects every tree, exact ones included; its own 2-node enumeration finds no neg either. research_neg_optimality.py, which SuperBEST_v3.tex cites for this card, runs no 1-node search. Whether one node can suffice depends on the operator family and the constants allowed: LEpow(x, −1) = ln((eˣ)⁻¹) = −x is one node in T32_Mul_Absolute_Optimality.tex's operator list. (An earlier correction, 2026-07-23, removed a Lean badge citing a NegLowerBound.lean that was reverted the day it was added.)",
       "verify": "python -c \"import math; exl=lambda x,y: math.exp(x)*math.log(y); deml=lambda x,y: math.exp(-x)-math.log(y); print(round(exl(0,deml(1.5,1)),10))\""
     },
     {
       "id": "T10u",
-      "tier": "THEOREM",
-      "name": "Multiplication in 2 Nodes (F16, superseded as the optimum — kept for the construction + F6 result)",
+      "tier": "PROPOSITION",
+      "name": "Multiplication in 2 Nodes for x > 0 (a construction, superseded as the optimum)",
       "session": "Depth Spectrum",
       "category": "Core Algebra",
-      "statement": "mul(x,y) = ELAd(EXL(0,x), y) = x·y in exactly 2 nodes — a valid F16 construction, found via exhaustive 2-node-tree search. CORRECTION (2026-07-22 audit): \"optimal in F16\" no longer holds — a later identity, exp(ln x + ln y) = xy for x,y>0, achieves 1 node (see T_SUPERBEST_UB, Lean-verified), and the current canonical general-domain figure is 3n, not 2n (see /superbest). This entry is kept because the 2-node construction is still correct and T29's F6 comparison (3 nodes required there) still stands — just not as the current mul_positive or mul_general headline.",
-      "evidence": "Exhaustive search found exactly 4 matching 2-node trees in F16. Source: python/scripts/mul_lower_bound_search.py.",
+      "statement": "ELAd(EXL(0,x), y) = x·y for x > 0 and all real y, with ELAd(a,b) = eᵃ·b: a 2-node construction. In the 16-operator set of Mul_Tightening_and_SuperBEST_v2.tex §1 with leaves {x, y, 0, 1}, no 1-node tree computes x·y on x, y > 0, so 2 is the minimum in that set. It is not the minimum in the current F16: exp(ln x + ln y) = x·y is 1 node for x, y > 0 (see T_SUPERBEST_UB, Lean-verified), and the general-domain figure is 3n (see /superbest). T29's F6 comparison (3 nodes there) still stands.",
+      "evidence": "Exhaustive search over the 256 one-node and 32,768 two-node trees of that set, at points with x, y > 0: no 1-node tree and exactly 4 two-node trees compute x·y (python/scripts/mul_lower_bound_search.py at b7ffdb0a, deleted in bec74da7; a re-run on 2026-09-13 reproduces the result). CORRECTION (2026-09-13): this card was a THEOREM saying mul takes exactly 2 nodes. That holds only in the April operator set on the positive quadrant: exp(ln x + ln y) is 1 node for x, y > 0, and the construction fails for x ≤ 0. (The 2026-07-22 audit had already withdrawn 'optimal in F16'.)",
       "deps": "T29."
     },
     {
       "id": "T11",
-      "tier": "THEOREM",
+      "tier": "PROPOSITION",
       "name": "EML Self-Map Has No Fixed Points",
       "session": "Sprint2",
       "category": "Analytic Properties",
-      "statement": "For all x > 0: eml(x,x) = exp(x) − ln(x) > x. The map x ↦ eml(x,x) has no fixed points. Minimum gap: eml(x,x) − x ≥ 1.648629... at x ≈ 1.7632.",
-      "evidence": "Calculus: d/dx[exp(x)−ln(x)−x]=0 at x≈1.7632. Numerical minimum confirmed to 6 decimal places."
+      "statement": "For all x > 0: eml(x,x) = exp(x) − ln(x) > x, so the map x ↦ eml(x,x) has no fixed point in (0, ∞). The gap exp(x) − ln(x) − x has its unique minimum at x* ≈ 0.8064659942, the root of eˣ = 1 + 1/x, where it equals ≈ 1.648605440.",
+      "evidence": "The gap g(x) = eˣ − ln x − x has g″(x) = eˣ + 1/x² > 0, so it is convex with a single critical point (python/paper/preprint_addendum_emn_mul_math.tex §B3). Independently, eˣ ≥ 1 + x + x²/2 and ln x ≤ x − 1 give g(x) ≥ (x − 1)²/2 + 3/2 > 0. CORRECTION (2026-09-13): this card was a THEOREM putting the minimum at x ≈ 1.7632 with gap ≥ 1.648629…. The derivative there is about 4.26, not 0, and the true minimum, 1.648605…, is below 1.648629, so the stated bound was false. The no-fixed-point claim is unaffected."
     },
     {
       "id": "T12",
@@ -50,8 +50,8 @@
       "name": "Exponential Position Theorem",
       "session": "COMP-1 through COMP-5",
       "category": "Operator Family",
-      "statement": "Among the 16 standard exp-ln binary operators: 8 are exactly complete (all with exp(+x), no domain restriction), 1 approximately complete (EMN), 7 incomplete. The completeness class is determined entirely by the position of negation relative to exp.",
-      "evidence": "Forward direction (T26): exp(+x) → complete. Reverse (T27): exp(−x) → incomplete by 5 distinct barrier types. LEX (T28): domain collapse. CORRECTION (2026-09-12): this card was a THEOREM; its count of 7 incomplete operators rests on T27, whose DEML case (T13) is not proved.",
+      "statement": "Over ℂ with the principal logarithm, among the 16 standard exp-ln binary operators: 8 are exactly complete (all with exp(+x), no domain restriction), 1 approximately complete (EMN), 7 incomplete. The completeness class is determined entirely by the position of negation relative to exp.",
+      "evidence": "Forward direction (T26): exp(+x) → complete. Reverse (T27): exp(−x) → incomplete by 5 distinct barrier types. LEX (T28): domain collapse. CORRECTION (2026-09-12): this card was a THEOREM; its count of 7 incomplete operators rests on T27, whose DEML case (T13) is not proved. CORRECTION (2026-09-13): the other cases are unproved too. The forward direction (T26), the EMN case (T24) and the LEX case (T28) are conjectures; T28's domain-collapse argument is refuted by explicit trees; and over ℝ the count of 8 is false, since every real EAL tree is nondecreasing.",
       "deps": "T09, T26, T27, T28, T24."
     },
     {
@@ -66,12 +66,12 @@
     },
     {
       "id": "T14",
-      "tier": "THEOREM",
-      "name": "Tight Zeros Bound",
+      "tier": "CONJECTURE",
+      "name": "Zeros Bound for Depth-k Trees",
       "session": "Sprint2",
       "category": "Analytic Properties",
-      "statement": "A depth-k EML tree has at most 2^k real zeros. This bound is tight: explicit constructions achieve it.",
-      "evidence": "Structural induction: each EML node combines two sub-trees, at most doubling the zero count. Tightness: explicit constructions at each depth."
+      "statement": "Let T be a real EML tree over leaves {1, x} of depth k (leaves have depth 0), and I an open interval on which every ln argument in T is positive and T is not identically zero. Then T has at most 2^k zeros in I.",
+      "evidence": "No proof. The cited induction, that each node at most doubles the zero count, is not valid: the zeros of exp(A) − ln(B) are not determined by the zeros of A and B (eml(1, x) = e − ln x vanishes at x = e^e, where neither leaf does). The 2k+2 version on /blog/tight-zeros-bound has no complete proof either. No Lean proof; a depth-k zero-count bound is the open sorry in InfiniteZerosBarrier.lean. CORRECTION (2026-09-13): this card was a THEOREM stating that every depth-k tree has at most 2^k real zeros and that the bound is tight. Without the hypothesis that T is not identically zero the statement is false: eml(x, eml(eml(x,1),1)) = e^x − ln(e^(e^x)) is zero for every real x, at depth 3. The tightness clause was also false: the four depth-1 trees have at most one zero."
     },
     {
       "id": "T17",
@@ -84,22 +84,22 @@
     },
     {
       "id": "T24",
-      "tier": "THEOREM",
+      "tier": "CONJECTURE",
       "name": "EMN Approximate Completeness",
       "session": "Sprint2",
       "category": "Operator Family",
-      "statement": "emn(x,y) = ln(y) − exp(x) is approximately complete: for every elementary function f and ε > 0, there exists a finite EMN tree with sup-norm error < ε on any compact set. EMN is not exactly complete: the residual exp(·) error converges doubly-exponentially but never reaches 0.",
-      "evidence": "Approximate completeness: −exp(x) unbounded gives full range access. Not exact: irremovable exp(·) residual.",
+      "statement": "emn(x,y) = ln(y) − exp(x), evaluated with the principal complex logarithm over leaves {1, x}: (a) for every elementary f, every compact interval K in its domain and every ε > 0, some finite EMN tree T has |T(x) − f(x)| < ε on K; (b) no finite EMN tree equals ln(x) on an open interval.",
+      "evidence": "No proof of either part. The census sketch for (a) says that iterating a pointwise argument \"gives the approximation property\"; the addendum's sketch mirrors EML trees through EML = −EMN, which negates only the root node. The sketch for (b) reduces ln(x) to R(x) = x·exp(exp(L(x))) and stops at \"infinite regress\". Exhaustive search to 8 nodes: the best mean squared error for ln(x) fell to 5.0×10⁻²⁴ at 7 nodes (the 0 at 8 nodes is float underflow), consistent with doubly-exponential decay. CORRECTION (2026-09-13): this card was a THEOREM; neither half has a complete proof, and part (b) is the EMN case of T12, which is a conjecture.",
       "deps": "T12."
     },
     {
       "id": "T26",
-      "tier": "THEOREM",
-      "name": "Forward Completeness: exp(+x) → Exactly Complete",
+      "tier": "CONJECTURE",
+      "name": "Forward Completeness (per operator, over ℂ)",
       "session": "COMP-2",
       "category": "Operator Family",
-      "statement": "Let O(x,y) = h(exp(x), ln y) where h does not impose a domain restriction preventing O from taking all real values. Then O is exactly complete.",
-      "evidence": "(1) O(x,1) = exp(x). (2) O(c, exp(x)) achieves slope −1. (3) Cross-family bridge gives exact neg in ≤ 2 nodes. (4) With neg, exp, ln: all elementary functions by Ritt's theorem. Verified for all 8 complete operators.",
+      "statement": "Over ℂ with the principal logarithm and leaves {1, x}, each of EAL, EXL, EDL, EPL, LEAd, ELAd and ELSb is exactly complete, as EML is (T01).",
+      "evidence": "No proof. The census argument builds exp(x) and e^c − x for EML only, uses the constant e (not a leaf) for EXL, EDL and EPL, reaches LEAd's identity only as a limit, and obtains neg(x) from exl(0, deml(x,1)) (T09), which uses two different operators and the constant 0. Its lemma that exp, ln and neg suffice builds no two-argument operation. Over ℝ the EAL case is false: every real EAL tree T = exp(A) + ln(B) has T′ = A′·exp(A) + B′/B ≥ 0, so none comes within 1/2 of −x on [0, 1]. CORRECTION (2026-09-13): this card was a THEOREM stating that every O(x,y) = h(exp(x), ln y) without a domain restriction is exactly complete. As written that is false: h(a,b) = b gives O = ln y, whose trees never produce exp(x), and h(a,b) = b − a gives EMN, which the catalog does not list as exactly complete (T24). Its proof used operators other than O.",
       "deps": "T09, T12."
     },
     {
@@ -114,42 +114,41 @@
     },
     {
       "id": "T28",
-      "tier": "THEOREM",
-      "name": "LEX Domain Incompleteness",
+      "tier": "CONJECTURE",
+      "name": "LEX Incompleteness",
       "session": "COMP-3",
       "category": "Operator Family",
-      "statement": "LEX(x,y) = ln(exp(x) − y) is incomplete despite having exp(+x). At self-composition depth n, the valid input domain shrinks to ∅.",
-      "evidence": "Domain calculation: lex(1, lex(x,1)) requires x < ln(eᵉ+1) ≈ 2.81. Domain strictly shrinks at each level. Verified computationally.",
+      "statement": "LEX(x,y) = ln(exp(x) − y) is incomplete over leaves {1, x}: for some elementary function f and compact interval K, LEX trees cannot approximate f uniformly on K.",
+      "evidence": "No proof. The domain calculation does not reach the conclusion. The right-nested self-composition lex(1, lex(1, … lex(x,1))) is defined on an interval that decreases to about (3.97×10⁻⁶, 2.782) and stays there, not to ∅; left-nested ln(e^x − n) is defined for x > ln n at every n; and lex(x, lex(lex(1,1),1)) = ln(e^x − ln(e − 2)) is defined on all of ℝ at depth 3. Restricted domains for some trees would not bound all trees in any case, and lex(x, c) = LEAd(x, −c) for any negative constant tree c. CORRECTION (2026-09-13): this card was a THEOREM stating that the valid domain shrinks to ∅ under self-composition, with lex(1, lex(x,1)) requiring x < ln(e^e+1) ≈ 2.81. That value is 2.782, and the domain does not shrink to ∅.",
       "deps": "T12."
     },
     {
       "id": "T29",
-      "tier": "THEOREM",
+      "tier": "PROPOSITION",
       "name": "Mul ≥ 3 Nodes in F6",
       "session": "Depth Spectrum",
       "category": "Core Algebra",
-      "statement": "No 1-node or 2-node tree over the 6-operator library F6 = {EML, EDL, EXL, EAL, EMN, DEML} computes mul(x,y) = x·y exactly. Minimum in F6 is 3 nodes.",
-      "evidence": "Exhaustive search over all 96 candidate 1-node trees and all 12,288 candidate 2-node mixed trees at 8 test points: no match found."
+      "statement": "No 1-node or 2-node tree over F6 = {EML, EDL, EXL, EAL, EMN, DEML} with leaves {x, y, 0, 1} computes mul(x,y) = x·y on x, y > 0. EXL(EXL(0,x), EML(y,1)) = x·y for x > 0 is a 3-node construction, so 3 is the minimum over that set.",
+      "evidence": "Exhaustive search over all 96 one-node and 4,608 two-node trees of that set, at 8 points in (0, ∞)²: no match, and the closest miss is off by 0.625 (python/scripts/mul_lower_bound_search.py at b7ffdb0a, deleted in bec74da7; a re-run on 2026-09-13 reproduces the April result). Trees with other real constants as leaves were not searched. CORRECTION (2026-09-13): this card was a THEOREM and gave 12,288 two-node trees. The search enumerates 4,608; Mul_Tightening_and_SuperBEST_v2.tex Lemma 2.2 computes 4,608 and then asserts 12,288 without a derivation. The card also did not name the leaf set or the domain."
     },
     {
       "id": "T31",
-      "tier": "THEOREM",
+      "tier": "CONJECTURE",
       "name": "Complex EML Closure Density",
       "session": "Depth Spectrum",
       "category": "Complex EML",
-      "statement": "EML trees (with complex inputs) are dense in H(K), the space of holomorphic functions on any compact simply-connected K ⊂ ℂ.",
-      "evidence": "Density: Runge's theorem + T01. Resolves C02. CORRECTION (2026-09-12): this card also stated that i is an accumulation point of EML₁, citing depth-6 exhaustive data (closest value |w − i| = 4.76×10⁻⁶). Data at one depth does not show the distance goes to 0; that question is back in C03, open.",
-      "deps": "T01, T17."
+      "statement": "Let K ⊂ ℂ be compact with connected complement. For every f holomorphic on a neighbourhood of K and every ε > 0, some finite EML tree T over leaves {1, z}, evaluated with the principal logarithm, is holomorphic on a neighbourhood of K and satisfies |f(z) − T(z)| < ε on K.",
+      "evidence": "No proof. Runge's theorem reduces the claim to representing polynomials on K by EML trees, and that step is not done. The explicit monomial tree EML(EML(EML(0,z), 1/n), 1) in Complex_Closure_Density.tex evaluates to n·exp(e/z), not z^n. The general case is left to T01 to \"handle branch choices internally\", but T01 says nothing about a tree agreeing with a polynomial at every point of K, and the principal logarithm is discontinuous on (−∞, 0]. Over leaves {1, z} the claim would put a constant tree within ε of every complex number (take K containing 1 and set z = 1), including i, which is C03, open. CORRECTION (2026-09-13): this card was a THEOREM whose evidence was \"Runge's theorem + T01\", and it marked C02 resolved. The polynomial step that argument needs has not been carried out. (An earlier correction, 2026-09-12, withdrew its claim that i is an accumulation point of EML₁.)",
+      "deps": "T01."
     },
     {
       "id": "T32",
       "tier": "THEOREM",
-      "name": "Mul ≥ 2 Nodes in Any exp-ln Family",
+      "name": "Mul ≥ 2 Nodes: the 16 Lean F16 Operators, All Reals",
       "session": "DOOR-1",
       "category": "Core Algebra",
-      "statement": "In any 1-operator family F where the operator has the form h(exp(±x), ln(y)), multiplication x·y requires at least 2 nodes. A single operator node cannot compute mul.",
-      "evidence": "Derivative obstruction: ∂op/∂x always contains an exp(x) factor, which cannot equal y for all (x,y). Verified for all 16 operators in F16 with 0 sorries in Lean.",
-      "deps": "T29, T10u.",
+      "statement": "No single node of the 16 operators defined in MonogateEML/MulLowerBound.lean computes x·y for all real x, y.",
+      "evidence": "Lean 4, 0 sorries: SB_mul_ge_two, with an explicit witness pair for each operator (Mathlib's log). CORRECTION (2026-09-13): this card claimed the bound for every operator of the form h(exp(±x), ln y), by a derivative obstruction. That is false: h(u, v) = ln(u)·exp(v) gives x·y in one node for every x and every y > 0, and LEpow(x, y) = ln((eˣ)ʸ) = x·y is one node in T32_Mul_Absolute_Optimality.tex's own operator list. The Lean list is not that paper's F16 either: it has no EXL, EDL, EAL or EMN.",
       "lean": {
         "file": "MulLowerBound.lean",
         "theorem": "SB_mul_ge_two",
@@ -158,22 +157,21 @@
     },
     {
       "id": "T34",
-      "tier": "THEOREM",
+      "tier": "PROPOSITION",
       "name": "Naive Upper Bound",
       "session": "COST-2",
       "category": "Cost Theory",
-      "statement": "For any expression E: Cost(E) ≤ NaiveCost(E) = Σ cᵢ · nᵢ where cᵢ is the SuperBEST v3 per-operation cost and nᵢ is the count of operation i in E. The bound is tight iff there are no shared subtrees, no compound patterns, and no constant folding.",
-      "evidence": "Proof by construction: the naive expansion is a valid DAG. Minimality reduces it. Tightness conditions enumerated in R1_Cost_Definition.tex.",
-      "deps": "T38."
+      "statement": "If each primitive operation op is realised by an F16 gadget of c_op nodes that is valid on the domain where E uses it, then Cost(E) ≤ Σ c_op·n_op(E): the gadgets compose with no extra nodes.",
+      "evidence": "COST2_Naive_Upper_Bound.tex §3, Theorem T34. CORRECTION (2026-09-13): this card was a THEOREM stating the bound with the SuperBEST v3 unit costs as printed, and a tightness \"iff\" credited to R1_Cost_Definition.tex, which states no tightness conditions. The printed div = 1 has no valid gadget over all reals (no single F16 operator computes x/y, T_DIV_GEN_LB), so the bound as printed fails for x/y, and the 2-node mul gadget needs x > 0. The \"iff\" (COST2 §4) is false: e^{x₁} + e^{x₂} has no shared subtree, no catalogued pattern and no constant, yet EML(LEAd(x₂, EML(x₁,1)), 1) computes it in 3 nodes, below its naive cost of 4."
     },
     {
       "id": "T38",
-      "tier": "THEOREM",
-      "name": "Cost Decomposition Theorem",
+      "tier": "DEFINITION",
+      "name": "Cost Decomposition (a definition, not a theorem)",
       "session": "COST-6 / R2",
       "category": "Cost Theory",
-      "statement": "For any expression E: Cost(E) = NaiveCost(E) − SharingDiscount(E) − PatternBonus(E). All three terms are non-negative. The decomposition is unique for a fixed pattern set and canonical sharing strategy.",
-      "evidence": "Proved in R2_Decomposition_Theorem.tex. SharingDiscount ≥ 0: merging shared nodes cannot increase cost. PatternBonus ≥ 0: each compound pattern replaces more-expensive naive subtrees. Uniqueness: canonical sharing + greedy pattern matching.",
+      "statement": "NaiveCost(E) − Cost(E) is split into SharingDiscount(E), the saving from constant folding and repeated subexpressions, and PatternBonus(E), the rest. Cost(E) = NaiveCost(E) − SharingDiscount(E) − PatternBonus(E) then holds because PatternBonus is defined as that remainder; it is not a formula for Cost.",
+      "evidence": "R2_Decomposition_Theorem.tex §2 and COST6_Decomposition_Theorem.tex §4 claim the identity with PatternBonus computed from a fixed pattern catalogue. Their minimality step asserts, without proof, that no other kind of reduction exists, and Cost_Theory_Complete.tex lists completeness of the pattern set as an open problem. CORRECTION (2026-09-13): this card was a THEOREM. With a catalogue PatternBonus the identity is false: e^{x₁} + e^{x₂} has SharingDiscount 0, matches no catalogued pattern and has naive cost 4, but costs at most 3 (EML(LEAd(x₂, EML(x₁,1)), 1)). The uniqueness claim rested on the same step and is dropped.",
       "deps": "T34."
     },
     {
@@ -210,7 +208,7 @@
       "name": "Division ≥ 2 Nodes (General Domain) — Lean",
       "session": "Lean Sprint 2026-04-21",
       "category": "Core Algebra",
-      "statement": "No single F16 operator computes x/y for all real x, y. Positive domain: exp(ln x − ln y) is 1 node. General domain: ≥ 2 nodes (Lean-verified).",
+      "statement": "No single F16 operator computes x/y for all real x, y. General domain: ≥ 2 nodes (Lean-verified). For x, y > 0 two nodes suffice: D_F16(x, D_F13(−1, y)) = x/y (div_two_node_pos_domain, Lean-verified). CORRECTION (2026-09-13): this card said exp(ln x − ln y) is 1 node on the positive domain; that operator is not one of the 16, and /superbest lists div for x, y > 0 as 2n.",
       "evidence": "Lean 4, 0 sorries. Witness (0,1) for each of 16 F16 operators.",
       "lean": {
         "file": "DivLowerBound.lean",
@@ -267,7 +265,7 @@
       "name": "sin Has Infinitely Many Zeros — Lean (Part A of T01)",
       "session": "Lean Sprint 2026-04-21",
       "category": "Analytic Properties",
-      "statement": "The set {x∈ℝ | sin(x)=0} is infinite. Explicit: sin(nπ)=0 for all n∈ℤ, map n↦nπ is injective. Part A of the Infinite Zeros Barrier. Parts B (analytic non-zero functions have finitely many zeros) and C (well-formed EML trees are analytic on (0,∞)) are now also closed in Lean, 0 sorries each — only Part D, the uniform-in-depth barrier (sin_not_in_eml / sin_not_in_real_EML_k), remains open, gated on Khovanskii zero-count / o-minimal machinery not yet in Mathlib. See T01b for what is provable at small fixed depths without that machinery.",
+      "statement": "The set {x∈ℝ | sin(x)=0} is infinite. Explicit: sin(nπ)=0 for all n∈ℤ, map n↦nπ is injective. Part A of the Infinite Zeros Barrier. Parts B (analytic non-zero functions have finitely many zeros) and C (well-formed EML trees are analytic on (0,∞)) are now also closed in Lean, 0 sorries each — only Part D, the uniform-in-depth barrier (sin_not_in_eml / sin_not_in_real_EML_k), remains open, gated on Khovanskii zero-count / o-minimal machinery not yet in Mathlib. See T01b for what is provable at small fixed depths without that machinery. The conclusion itself, that sin is not a real EML tree at any depth, is established another way in MachLib, by periodicity rather than zero counting (see /blog/periodicity-is-enough).",
       "evidence": "Lean 4, 0 sorries. sin_int_pi_zero: Real.sin_int_mul_pi. sin_has_infinitely_many_zeros: Set.infinite_range_of_injective.",
       "lean": {
         "file": "InfiniteZerosBarrier.lean",
@@ -298,7 +296,7 @@
       "session": "Blind Session Follow-up 2026-04-22",
       "category": "Complex EML",
       "statement": "At any z ∈ slit plane with Complex.exp(z) = z, the multiplier product (exp)′(z)·(log)′(z) = 1. Corollary: every fixed point of exp is repelling under exp (|mult| = |z| > 1 for Lambert z_k*) and attracting under log on its branch (|mult| = 1/|z| < 1).",
-      "evidence": "Lean 4, 0 sorries. Chain rule + Complex.hasDerivAt_exp + Complex.hasDerivAt_log in Mathlib (the revision monogate-lean's lake-manifest.json pins). Numerical evidence: all 7 tested Lambert fixed points z_k* (|k|≤3) satisfy |exp-mult|·|log-mult| = 1 to 10⁻¹⁵. Reproduce: python exploration/blind-sessions/scripts/s02_sin_vs_exp_tower.py.",
+      "evidence": "Lean 4, 0 sorries. Chain rule + Complex.hasDerivAt_exp + Complex.hasDerivAt_log in Mathlib (the revision monogate-lean's lake-manifest.json pins). Numerical evidence: all 7 tested Lambert fixed points z_k* (|k|≤3) satisfy |exp-mult|·|log-mult| = 1 to 10⁻¹⁵. Reproduce: python exploration/blind-sessions/scripts/s02_sin_vs_exp_tower.py. The corollary's |z| > 1 is not a Lean statement. On paper: if z = a + ib is a fixed point with a ≤ 0, then |z| = eᵃ ≤ 1, so |b| ≤ 1; b = 0 is impossible because eᵃ > a for every real a, and for 0 < |b| ≤ 1 the imaginary part gives |b| = eᵃ|sin b| < |b|. So a > 0 and |z| = eᵃ > 1.",
       "lean": {
         "file": "EMLDuality.lean",
         "theorem": "exp_log_multiplier_product_at_fixed_point",
@@ -311,7 +309,7 @@
       "name": "Hyperbolic Functions Preserve ELC (Lean)",
       "session": "Blind Session Follow-up 2026-04-22",
       "category": "Operator Family",
-      "statement": "sinh(x) = (exp(x)−exp(−x))/2, cosh(x) = (exp(x)+exp(−x))/2, tanh(x) = sinh(x)/cosh(x). Hence sinh, cosh, tanh map ELC(ℝ) → ELC(ℝ). Contrast with sin/cos/tan, which do NOT preserve ELC (T01). Includes 3-4-5 Pythagorean triple witness: sinh(ln 2)=3/4, cosh(ln 2)=5/4, 5²−3²=4².",
+      "statement": "sinh(x) = (exp(x)−exp(−x))/2, cosh(x) = (exp(x)+exp(−x))/2, tanh(x) = sinh(x)/cosh(x). Hence sinh, cosh, tanh map ELC(ℝ) → ELC(ℝ). Contrast with sin and cos, which do not preserve ELC: sin(x) and cos(x) are not real EML trees at any depth (MachLib's periodic barrier; the T01 Infinite Zeros Barrier argument for the same fact still has open steps). Includes 3-4-5 Pythagorean triple witness: sinh(ln 2)=3/4, cosh(ln 2)=5/4, 5²−3²=4².",
       "evidence": "Lean 4, 0 sorries. Real.sinh_eq, Real.cosh_eq, Real.tanh_eq_sinh_div_cosh in Mathlib (the revision monogate-lean's lake-manifest.json pins); numerical 3-4-5 witnesses via norm_num at ln 2. Lean checks the three identities and the 3-4-5 witnesses; the ELC-closure consequence is not stated in Lean.",
       "lean": {
         "file": "HyperbolicPreservation.lean",
@@ -331,12 +329,12 @@
     },
     {
       "id": "T15",
-      "tier": "PROPOSITION",
-      "name": "Pumping Lemma for EML Trees",
+      "tier": "OBSERVATION",
+      "name": "Zero Counts of Small EML Trees",
       "session": "Sprint2",
       "category": "Analytic Properties",
-      "statement": "Depth-k EML trees have at most 2^k real zeros (proved). Observed computational maximum is O(k), suggesting the bound is far from tight.",
-      "evidence": "Upper bound: T14. Gap between 2^k and observed O(k) is unproved.",
+      "statement": "Among all 862,118 real EML trees over {1, x} with at most 8 internal nodes, the most sign changes found on [−2, 2] was 1, 0, 1, 2, 2, 2, 2, 3, 3 for 0 through 8 nodes.",
+      "evidence": "python/results/d2_tight_zeros.json, entry TZ5 (removed from the public repo in bec74da7; recoverable from its parent). The count uses a 0.01 grid on [−2, 2] with a ±0.05 dead band, so it misses zeros outside [−2, 2] and zeros where a tree only touches 0. No zero bound is proved; see T14. CORRECTION (2026-09-13): this card was a PROPOSITION, \"Pumping Lemma for EML Trees\", stating that depth-k trees have at most 2^k real zeros \"(proved)\" and that the observed maximum is O(k). The bound is not proved, and counts up to 8 nodes do not establish a growth rate.",
       "deps": "T14."
     },
     {
@@ -354,45 +352,42 @@
       "name": "Depth-6 Phase Transition",
       "session": "Sprint2",
       "category": "Complex EML",
-      "statement": "At depth 5, all complex EML values computed from input 1 have imaginary part Im = −π exactly. At depth 6, imaginary parts escape this constraint and become dense.",
-      "evidence": "Exhaustive computation of all depth-5 and depth-6 trees rooted at 1. At depth 5: Im ∈ {−π} (verified). At depth 6: Im values spread across ℝ.",
-      "deps": "T31."
+      "statement": "At depth 5, every non-real EML value computed from input 1 has imaginary part −π exactly. At depth 6, other imaginary parts appear (three distinct imaginary parts in all).",
+      "evidence": "Exhaustive computation of all depth-5 and depth-6 trees rooted at 1. At depth 5: Im ∈ {−π} (verified). At depth 6: three distinct Im values, in [−π, 1.508]. CORRECTION (2026-09-13): this card said the depth-6 imaginary parts become dense and spread across ℝ; the depth-6 value set is finite. It also listed T31 as a dependency, which its computation does not use."
     },
     {
       "id": "T30",
-      "tier": "THEOREM",
+      "tier": "CONJECTURE",
       "status": "SUPERSEDED / REFUTED IN PART",
       "name": "Depth Hierarchy: Standard Functions ≤ Depth 3 (superseded in part)",
       "session": "Depth Spectrum; corrected 2026-08-19",
       "category": "Depth Hierarchy",
-      "statement": "SUPERSEDED / REFUTED IN PART (2026-08-19). Two clauses of the original entry are false. (1) \"algebraic functions have EML depth ≤ 3\" — refuted by x + 1, which is algebraic and has d_(0,∞)(x + 1) = 4. (2) \"Depth-4 exists but no standard function lives there\" — refuted by the same witness. What is NOT affected: the census placing exp, ln and the trigonometric functions (via ℂ) at depth ≤ 3, and the strict infinitude of the hierarchy (exp^k requires exactly k nodes). Those clauses stand; they were established by different arguments and no counterexample touches them.",
+      "statement": "SUPERSEDED / REFUTED IN PART (2026-08-19). Two clauses of the original entry are false. (1) \"algebraic functions have EML depth ≤ 3\" — refuted by x + 1, which is algebraic and has d_(0,∞)(x + 1) = 4. (2) \"Depth-4 exists but no standard function lives there\" — refuted by the same witness. The other clauses are not proved (2026-09-13). exp, ln, and sin and cos over ℂ (with constant rescaling free) have explicit trees of at most 3 nodes, and exp^k has a k-node tree for every k, but that exp^k needs exactly k nodes is proved in MachLib only for k ≤ 4.",
       "original_statement": "All standard elementary functions (exp, ln, algebraic, trig via ℂ) have EML depth ≤ 3. The hierarchy is strictly infinite (exp^k requires exactly k nodes). Depth-4 exists but no standard function lives there.",
       "refuted_by": [
         "X_PLUS_ONE_NOT_DEPTH_LE_THREE",
         "X_PLUS_ONE_TREE_DEPTH"
       ],
-      "evidence": "Original evidence retained for the surviving clauses: S-T30 (2026-04-20): all 4 gaps closed. Hardy field Lemma 4.2 repaired (R17). Self-contained depth census in Depth_Spectrum_Self_Contained.tex — no external citations. GAP-4 (division case) closed via Hardy field total ordering. Correction: sinh/cosh are depth 3 (not 2 as previously claimed). T30(c) holds — all standard functions ≤ depth 3. REFUTATION (2026-08-19): MachLib x_plus_one_not_depth_le_three excludes depth ≤ 3 on (0,∞); xPlusOneTree_depth gives the depth-4 construction; x_plus_one_depth_exact_four states both halves in one declaration. sorryAx absent. The defect was one-sided reasoning: an upper-bound census hardened into a universal claim with no matching lower bound, which is precisely what a two-sided rule prevents.",
-      "deps": "T14."
+      "evidence": "Original evidence (2026-04-20), no longer accepted: S-T30 reported all 4 gaps closed, Lemma 4.2 repaired (R17), and a self-contained census in Depth_Spectrum_Self_Contained.tex. REFUTATION (2026-08-19): MachLib x_plus_one_not_depth_le_three excludes depth ≤ 3 on (0,∞); xPlusOneTree_depth gives the depth-4 construction; x_plus_one_depth_exact_four states both halves in one declaration. sorryAx absent. The defect was one-sided reasoning: an upper-bound census hardened into a universal claim with no matching lower bound, which is precisely what a two-sided rule prevents. CORRECTION (2026-09-13): the surviving clauses kept this card a THEOREM; it is a CONJECTURE. The lower-bound proof in Depth_Spectrum_Self_Contained.tex (growth-ceiling lemma, division case) bounds 1/g by applying the inductive hypothesis to 1/g itself and carries no lower bound as g → 0, and R17_T30_Hardy_Field_Verification.tex, the audit cited above, rated the argument a PROPOSITION with a false intermediate step. MachLib proves exp^k needs exactly k nodes for k ≤ 4 (tower_certified_upto_four) and records the general case as open. The census gives tan over ℂ as 1 node with no tree. No clause uses T14, which is no longer a dependency."
     },
     {
       "id": "T35",
-      "tier": "THEOREM",
-      "name": "Lower Bound Theorems (Structural)",
+      "tier": "PROPOSITION",
+      "name": "Intermediate-Value Lower Bound (T36; T35 and T37 withdrawn)",
       "session": "COST-3",
       "category": "Cost Theory",
-      "statement": "Three structural lower bounds on Cost(E): (T35) Cost(E) ≥ |O(E)| — each non-mergeable operator requires a distinct node, by F16 structure. (T36) Cost(E) ≥ d where d = distinct necessary intermediates — binary-tree counting identity. (T37) Cost(E) ≥ n_exp + n_ln — exp-nodes and ln-nodes are disjoint, each requiring a dedicated node.",
-      "evidence": "R18 audit confirmed all three are structural arguments appealing to F16 operator structure, not just definitional unwrapping. Each proof is 2-4 lines. Weak theorems are still theorems.",
-      "deps": "T38."
+      "statement": "If every F16 DAG computing f must produce at least d distinct non-terminal intermediate values, then Cost(f) ≥ d, since each internal node outputs exactly one value.",
+      "evidence": "COST3_Lower_Bound.tex §3, Theorem T36 and its corollary: one value per node. CORRECTION (2026-09-13): this card was a THEOREM bundling three bounds. T37, Cost(E) ≥ n_exp + n_ln, is false: EML(x, y) = eˣ − ln y is one node holding one exp and one ln, and the proof's claim that exp-nodes and ln-nodes are distinct (COST3 §4) is wrong. T35, Cost(E) ≥ |O(E)|, is withdrawn: \"cannot be merged\" is never defined, and its other printed form, Cost(E) ≥ 1, fails for LEdiv(x, 1) = x, which costs 0. The R18 audit's approval of all three is superseded."
     },
     {
       "id": "T40",
-      "tier": "THEOREM",
-      "name": "Linear Cost Law",
+      "tier": "PROPOSITION",
+      "name": "Linear Cost Law (naive count and upper bound)",
       "session": "COST-9 / R5",
       "category": "Cost Theory",
-      "statement": "For N-term positive-domain summations: Cost(E_N) = (α₀ + 3)·N − 3 exactly, where α₀ is the per-term cost. Softmax: 4N−3. Shannon entropy: 6N−3. Taylor: 8N−3. The positive-domain assumption is genuine: licenses c_add=3 instead of 11, saving 8n per node.",
-      "evidence": "R18 audit confirmed induction proof is gap-free. Base N=1: Cost=α₀ (T38 with SD=PB=0). Step: new term costs α₀ (independent, T38) + 1 EAL node (cost 3, T40-DF) = α₀+3. Exact equality by T38. Proved in R5_Linear_Cost_Law.tex.",
-      "deps": "T38, T34."
+      "statement": "For an N-term sum E_N joined by N − 1 additions, with per-term naive cost α₀: NaiveCost(E_N) = (α₀ + c_add)·N − c_add. With the 2-node addition LEdiv(x, DEML(y,1)) = x + y (all real x, y; ADD-T1), Cost(E_N) ≤ (α₀ + 2)·N − 2 whenever each term's naive cost is a valid upper bound (T34).",
+      "evidence": "R5_Linear_Cost_Law.tex §3.1, by counting term and join nodes. CORRECTION (2026-09-13): this card was a THEOREM stating Cost(E_N) = (α₀ + 3)·N − 3 exactly (softmax 4N − 3, Shannon entropy 6N − 3, Taylor 8N − 3). Exactness came from T38, which is a definition, and it is false: x₁ + x₂ costs 2, not 3 (LEdiv(x₁, DEML(x₂,1))), and Σ e^{xᵢ} costs at most 2N − 1 (S₁ = EML(x₁,1), S_{k+1} = EML(LEAd(x_{k+1}, S_k), 1)). Addition takes 2 nodes for all real inputs, so the positive domain saves nothing, and an EAL node is not an addition. The R18 audit's approval is superseded.",
+      "deps": "T34, ADD-T1."
     },
     {
       "id": "P-NNP",
@@ -400,9 +395,8 @@
       "name": "No Nesting Penalty Lemma",
       "session": "COST-6 / R3",
       "category": "Cost Theory",
-      "statement": "For any operators O₁, O₂ and expressions A, B, C: Cost(O₁(O₂(A,B), C)) = c(O₁) + c(O₂) + Cost(A) + Cost(B) + Cost(C). Nested operators pay exactly the sum of individual costs.",
-      "evidence": "Upper bound: explicit DAG construction. Lower bound: O₂ sub-DAG, O₁ node, and C sub-DAG are pairwise disjoint in any minimal DAG.",
-      "deps": "T38."
+      "statement": "For any operators O₁, O₂ and expressions A, B, C: Cost(O₁(O₂(A,B), C)) ≤ c(O₁) + c(O₂) + Cost(A) + Cost(B) + Cost(C). Nesting adds no interface nodes.",
+      "evidence": "Upper bound: explicit DAG construction (python/paper/cost_theory/R3_No_Nesting_Penalty.tex). CORRECTION (2026-09-13): this card stated equality. The lower bound is false: LEdiv(LEdiv(x,1),1) = x costs 0, not 2, and LEdiv(EML(x,2),1) = EML(x,2) costs 1, not 2. A minimal DAG need not contain the sub-DAGs the argument assumes."
     },
     {
       "id": "P-ACL",
@@ -410,18 +404,17 @@
       "name": "Additive Cost Law",
       "session": "R6",
       "category": "Cost Theory",
-      "statement": "For independent expressions E₁, E₂: Cost(op(E₁,E₂)) = Cost(E₁) + Cost(E₂) + 1. Explains Lorentz force (57n) and Black-Scholes (47n).",
-      "evidence": "Upper bound: disjoint optimal DAGs + one root node. Lower bound: root op and independent sub-DAGs are disjoint. Proved in R6_Additive_Cost_Law.tex.",
-      "deps": "T38."
+      "statement": "For independent expressions E₁, E₂ and a single-node operator op: Cost(op(E₁,E₂)) ≤ Cost(E₁) + Cost(E₂) + 1. The node counts quoted for the Lorentz force (57n) and Black–Scholes (47n) use it, so they are upper bounds.",
+      "evidence": "Upper bound: disjoint optimal DAGs plus one root node (python/paper/cost_theory/R6_Additive_Cost_Law.tex). CORRECTION (2026-09-13): this card stated equality. The lower bound is false: with E₁ = EML(x, 2) and E₂ = 1, which share no leaves, LEdiv(E₁, 1) = E₁ costs 1, not 2."
     },
     {
       "id": "P-SD",
-      "tier": "PROPOSITION",
-      "name": "Sharing Discount Formula",
+      "tier": "DEFINITION",
+      "name": "Sharing Discount (a count, not a theorem)",
       "session": "COST-5 / R4",
       "category": "Cost Theory",
-      "statement": "SharingDiscount(E) = Σᵢ NC(Fᵢ) + Σⱼ Cost(Sⱼ)(mⱼ − 1). For single-formula expressions over distinct variables: SharingDiscount = 0. 47/50 chembio equations have SD = 0.",
-      "evidence": "47/50 chembio equations verified. The 3 exceptions have constant-folding only. Proved in R4_Sharing_Discount.tex.",
+      "statement": "SharingDiscount(E), the part of NaiveCost(E) − Cost(E) credited to constant folding and repeated subexpressions, is counted as Σᵢ NC(Fᵢ) + Σⱼ Cost(Sⱼ)(mⱼ − 1), over the maximal pure-constant subexpressions Fᵢ and the maximal repeated live subexpressions Sⱼ with multiplicities mⱼ. An expression with neither has SharingDiscount 0.",
+      "evidence": "R4_Sharing_Discount.tex §2. Its catalog check applies the count to the 50 ChemBio equations: 30 have no folding or repeats (count 0) and 20 have a positive count, 3 of them from repeated live subexpressions. CORRECTION (2026-09-13): this card was a PROPOSITION saying the formula is proved and that 47 of 50 equations have SD = 0, the other 3 by constant folding only. R4 defines SD as NaiveCost − Cost, and under that definition the formula is false: e^{x₁} + e^{x₂} has no folding and no repeats, so the formula gives 0, yet its naive cost is 4 and it costs at most 3. As the folding-and-sharing part of the T38 split it is a definition. The 47/50 figure contradicted R4, which reports 30 and 20.",
       "deps": "T38."
     },
     {
@@ -431,7 +424,7 @@
       "session": "S11+",
       "category": "Complex EML",
       "statement": "If the grammar is extended beyond strict principal-branch ceml (e.g., by allowing multi-valued log, or adding i as an explicit terminal), then i = √−1 becomes exactly constructible.",
-      "evidence": "T17 shows i is not constructible under strict semantics. T31 shows i is an accumulation point. Open: does any natural extension make i exactly reachable?"
+      "evidence": "T17 shows i is not constructible under strict semantics. Whether i is even an accumulation point of EML values is open (C03). Open: does any natural extension make i exactly reachable?"
     },
     {
       "id": "T39",
@@ -468,9 +461,8 @@
       "name": "Complex EML Closure Density",
       "session": "S35",
       "category": "Complex EML",
-      "statement": "RESOLVED — The set of functions representable by finite ceml trees over ℂ is dense in H(K) for any compact K. Stated as a conjecture; proved as T31.",
-      "evidence": "Resolved by T31. Runge's theorem + T01 give density in H(K).",
-      "resolvedBy": "T31"
+      "statement": "The functions computed by finite EML trees over leaves {1, z}, evaluated with the principal logarithm, are dense in H(K) for every compact K ⊂ ℂ with connected complement. Open.",
+      "evidence": "Stated in S35. The argument recorded as T31 is incomplete: its polynomial step is missing. CORRECTION (2026-09-13): this card was marked RESOLVED by T31."
     },
     {
       "id": "C03",
@@ -569,7 +561,7 @@
       "session": "S19",
       "category": "Depth Hierarchy",
       "statement": "EML-k = {f : ℂ → ℂ | f = eval(t) for some EML tree t with depth ≤ k}. EML-0 = constants. EML-∞ = functions not in any EML-k for finite k. Hierarchy: EML-0 ⊆ EML-1 ⊆ EML-2 ⊆ EML-3 ⊆ EML-∞.",
-      "evidence": "Definitional. Strict inclusions EML-0 ⊊ EML-1 proved. T30 establishes the strict infinite hierarchy."
+      "evidence": "Definitional. EML-0 ⊊ EML-1 is proved in Lean (exp_not_constant, T_EULER_LEAN). That every inclusion is strict is T30, a conjecture; MachLib proves the first four levels distinct (tower_certified_upto_four)."
     },
     {
       "id": "D02",
@@ -577,8 +569,8 @@
       "name": "SuperBEST Cost Function",
       "session": "R1",
       "category": "Cost Theory",
-      "statement": "Cost_F(E) = minimum number of internal nodes in any DAG over operator family F computing E. NaiveCost(E) = Σ cᵢ·nᵢ using SuperBEST v3 unit costs: exp=1, ln=1, neg=2, recip=2, mul=2, sub=2, div=1, pow=3, add=3 (pos) / 11 (gen).",
-      "evidence": "Formally defined in R1_Cost_Definition.tex with 4 proved properties: non-negativity, terminal characterization, subadditivity, algebraic invariance."
+      "statement": "Cost_F(E) = minimum number of internal nodes in any DAG over operator family F computing E. NaiveCost(E) = Σ cᵢ·nᵢ using SuperBEST v3 unit costs: exp=1, ln=1, neg=2, recip=2, mul=2, sub=2, div=1, pow=3, add=3 (pos) / 11 (gen). These are the April v3 unit costs: several are not minimal (see /superbest), and add is 2 for all real inputs (ADD-T1).",
+      "evidence": "Defined in R1_Cost_Definition.tex §1. R1 §2 proves non-negativity (P1), subadditivity Cost(op(A,B)) ≤ Cost(A) + Cost(B) + 1 (P3), and invariance under equality of functions (P4). CORRECTION (2026-09-13): this card said R1 proves four properties. The fourth, P2 (Cost(E) = 0 iff E is a terminal), is false as stated: LEdiv(x, 1) = x is not a terminal but costs 0; the true form is \"Cost(E) = 0 iff E computes the same function as a terminal\". R1's Lean section is type signatures with sorry, not proofs."
     },
     {
       "id": "D03",

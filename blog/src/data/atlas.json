@@ -703,28 +703,28 @@
   "keyCostFacts": [
     {
       "thm": "T34 (Naive UB)",
-      "stmt": "Cost(E) ≤ NaiveCost(E)",
-      "detail": "Always achievable; no sharing or pattern required."
+      "stmt": "Cost(E) ≤ Σ c_op·n_op(E)",
+      "detail": "Holds when every unit cost is a gadget valid on the domain used; the old table's div = 1 has no such gadget over all reals."
     },
     {
       "thm": "T38 (Decomp)",
-      "stmt": "Three-term formula",
-      "detail": "Cost = NC − SD − PB. Unique decomposition for each expression."
+      "stmt": "Cost = NC − SD − PB (a definition)",
+      "detail": "PatternBonus is the remainder after sharing, so this is not a formula for Cost; with a fixed pattern catalogue it fails (e^{x₁} + e^{x₂})."
     },
     {
       "thm": "T38-NNP",
-      "stmt": "No Nesting Penalty",
-      "detail": "Cost(O₁(O₂(A,B),C)) = c(O₁)+c(O₂)+Cost(A)+Cost(B)+Cost(C)."
+      "stmt": "No Nesting Penalty (upper bound)",
+      "detail": "Cost(O₁(O₂(A,B),C)) ≤ c(O₁)+c(O₂)+Cost(A)+Cost(B)+Cost(C). Equality fails: LEdiv(LEdiv(x,1),1) = x costs 0."
     },
     {
       "thm": "T40 (Add Law)",
-      "stmt": "Cost(op(E₁,E₂)) = Cost(E₁)+Cost(E₂)+1",
-      "detail": "For independent sub-expressions. Explains Lorentz (57n)."
+      "stmt": "Cost(op(E₁,E₂)) ≤ Cost(E₁)+Cost(E₂)+1",
+      "detail": "For independent sub-expressions. Equality fails: LEdiv(EML(x,2),1) costs 1. The Lorentz 57n is an upper bound."
     },
     {
       "thm": "T40 (Linear)",
-      "stmt": "N-term sum: (α₀+3)N − 3",
-      "detail": "Exact formula. Softmax: 4N−3. Shannon: 6N−3. Taylor: 8N−3."
+      "stmt": "N-term sum: naive (α₀+c_add)N − c_add",
+      "detail": "Cost ≤ (α₀+2)N − 2 with the 2-node add (ADD-T1). The old exact (α₀+3)N − 3 is false: Σ e^{xᵢ} costs at most 2N − 1, not 4N − 3."
     },
     {
       "thm": "Domain routing (2026-07-22 correction)",

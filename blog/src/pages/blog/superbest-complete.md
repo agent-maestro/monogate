@@ -31,7 +31,7 @@ optimal; the Optimality column says what holds.
 | ln(x) | 1 | exl(0,x) | x>0 | **PROVED** (one node is the minimum) |
 | div(x,y) | 1 | edl(x,y) | y≠0 | **Wrong.** edl(x,y) = eˣ/ln y is not x/y, and no single F16 node computes x/y for all real x, y (`SB_div_ge_two`, Lean-verified) |
 | recip(x) | 2 | edl(0,eml(x,1)) | x≠0 | **Not optimal** for x>0: ELSb gives 1 node (R16-C1). The N=1 search covered six operators |
-| neg(x) | 2 | exl(0,deml(x,1)) | all x | **Searched** (N=1 exhaustive, six operators): no 1-node construction |
+| neg(x) | 2 | exl(0,deml(x,1)) | all x | **Not shown optimal:** the N=1 search on record rounds values and rejects exact trees, so its "none found" shows nothing; LEpow(x, −1) = ln((eˣ)⁻¹) = −x is 1 node in a wider operator list |
 | mul(x,y) | 3 | exl(exl(0,x),eml(y,1)) | x>0 | **Not optimal:** ELAd(EXL(0,x), y) is 2 nodes (T10u), and exp(ln x + ln y) is 1 node for x, y > 0 (`mul_one_node_positive`, Lean-verified) |
 | sub(x,y) | 3 | eml(exl(0,x),eml(y,1)) | x>0 | **Not optimal:** LEdiv(x, EML(y,1)) is 2 nodes for all real x, y (T33), and 2 is the minimum (`SB_sub_ge_two`, Lean-verified) |
 | pow(x,n) | 3 | eml(exl(ln(n),x),1) | x>0 | **Not optimal:** EPL(n,x) = exp(n·ln x) is 1 node (`rpow_one_node_positive`, Lean-verified) |
@@ -51,9 +51,12 @@ The "two-tier" table has collapsed to a single tier for all operations except ad
 operation requires at least one operator gate. exp, exp(−x) and ln are achievable in one;
 div is not, because edl(x,y) = eˣ/ln y is not x/y.
 
-**2-node entries** (recip, neg): checked by N=1 exhaustive search. 6 operators ×
+**2-node entries** (recip, neg): searched at N=1 over 6 operators ×
 9 terminal combinations from {0, 1, x} = 54 cases per operation. Zero 1-node
-constructions found. 2-node constructions exist → 2n exact minimum.
+constructions were reported, and 2n was called the exact minimum. Neither stands: recip
+is 1 node for x > 0 (ELSb, R16-C1), and for neg the search on record rounds each value
+to 6 decimals and compares it at tolerance 1e−7, so at x = π it rejects every tree, exact
+ones included, and its zero shows nothing.
 
 **3-node entries** (mul, sub, pow, add): checked by N=2 exhaustive search. All
 two-node trees over {EML, DEML, EMN, EAL, EXL, EDL} and terminals {0, 1, x, y}

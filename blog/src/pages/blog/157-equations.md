@@ -121,15 +121,15 @@ When a formula sums N independent terms, cost scales as O(N). Three distinct sci
 | Formula | Domain | Scaling law |
 |---------|--------|-------------|
 | NPV (N cash flows) | Economics | 7N nodes |
-| N-compartment pharmacokinetics | Biology | 10N − 3 nodes |
-| Seismic travel time (N layers) | Geology | 4N − 3 nodes |
-| Softmax denominator (N classes) | Neuroscience | 4N − 3 nodes |
+| N-compartment pharmacokinetics | Biology | 10N − 3 nodes (April count) |
+| Seismic travel time (N layers) | Geology | 4N − 3 nodes (April count) |
+| Softmax denominator (N classes) | Neuroscience | at most 2N − 1 nodes |
 
-The N-compartment PK and the seismic travel time are exact matches at 4N−3 in their add-dominated structure. The difference between them (PK costs 10N−3, seismic 4N−3) is exactly one extra `exp` plus two extra `mul` nodes per compartment — the exponential decay term each PK compartment requires but each seismic layer does not.
+The two April counts come from a scaling law, Cost = (α₀+3)N − 3, that was stated as exact and is false: addition takes 2 nodes for all real inputs, so x₁ + x₂ costs 2, not 3. Read them as upper-bound estimates at best. The softmax denominator Σ e^{xᵢ}, counted at 4N − 3 in April, takes at most 2N − 1 nodes: S₁ = EML(x₁, 1), S_{k+1} = EML(LEAd(x_{k+1}, S_k), 1). The N-compartment PK and the seismic travel time share an add-dominated structure; PK's April count is 6N higher (10N−3 against 4N−3), from the exponential decay term each PK compartment requires but each seismic layer does not.
 
 ### Softmax = Logit Choice
 
-Neural network softmax (NEURO-2, cost 4N−1 per component with shared denominator) and economic logit choice probability (ECON-3, cost 5N total for N options) share the same tree:
+Neural network softmax (NEURO-2, counted in April at 4N−1 per component with a shared 4N − 3 denominator; that denominator takes at most 2N − 1) and economic logit choice probability (ECON-3, cost 5N total for N options) share the same tree:
 
 ```
 exp(x_i) / sum_j(exp(x_j))

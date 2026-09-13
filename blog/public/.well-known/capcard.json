@@ -136,7 +136,7 @@
       "id": "taxonomy.sixteen_operators",
       "name": "F16 Operator Taxonomy",
       "category": "scientific_claim",
-      "description": "Complete census of all binary operators formed from exp(±x) and ln(y) with arithmetic. 16 total: 8 complete, 1 approximate, 7 impossible. Argued on paper and checked computationally (catalog T12, T26–T28); the DEML case's argument has a gap (T13), so the incomplete count is not proved; not formalized in Lean.",
+      "description": "Census of all binary operators formed from exp(±x) and ln(y) with arithmetic. 16 total: 8 complete, 1 approximate, 7 impossible. A conjecture (catalog T12, T24, T26–T28): the arguments on paper have gaps, the DEML case (T13) and the LEX case (T28) among them, and over the reals the count of 8 complete is false (every real EAL tree is nondecreasing); not formalized in Lean.",
       "status": "empirically_confirmed",
       "constraints": {
         "operators_count": 16,
@@ -171,10 +171,10 @@
     },
     {
       "id": "cost.decomposition",
-      "name": "Cost Decomposition Theorem",
+      "name": "Cost decomposition (Pfaffian profile)",
       "category": "scientific_claim",
-      "description": "Every EML tree decomposes into a Pfaffian profile (r, mr, d, so) that predicts computational cost and structural complexity. T38 in Lean.",
-      "status": "proven_machine_verified"
+      "description": "The eml-cost analyzer assigns every EML tree a Pfaffian profile (r, mr, d, so) used to predict computational cost and structural complexity; the predictions are validated empirically. Catalog T38, Cost = NaiveCost − SharingDiscount − PatternBonus, is a definition, not a theorem, and none of this is formalized in Lean.",
+      "status": "empirically_confirmed"
     },
     {
       "id": "activation.softplus",

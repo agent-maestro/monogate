@@ -1,28 +1,30 @@
 ---
 layout: ../../layouts/Base.astro
 title: "The Cost Theory Is Complete"
-description: "One formula for the SuperBEST node cost of a scientific equation. The decomposition has a paper proof (T38); the predictions are validated on 187 equations, and the code is open-source."
+description: "One accounting identity for the SuperBEST node cost of a scientific equation. The decomposition (T38) is a definition, not a theorem; the predictions were tested on 187 equations, and the code is open-source."
 date: "2026-04-20"
 tag: "theorem"
 ---
 
 # The Cost Theory Is Complete
 
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called T38 a theorem that the rest of the theory follows from, and gave an exact O(N) law. T38 is a definition: the identity holds only because PatternBonus is defined as the remainder. The exact law is false (x₁ + x₂ costs 2, not 3), the No Nesting Penalty holds only as an upper bound, and the Lean files are type signatures with sorry. The sections below are corrected in place; the blind-test figures are reported as measured.</p>
+
 **Date:** 2026-04-20 | **Tag:** theorem | **Read time:** ~7 min
 
 ---
 
-After fourteen research sessions (R1--R14), the monogate SuperBEST cost theory is closed. One formula predicts the exact node cost of any scientific expression:
+After fourteen research sessions (R1--R14), the monogate SuperBEST cost theory is written up. One identity splits the node cost of any scientific expression into three terms:
 
 $$\operatorname{Cost}(E) = \operatorname{NaiveCost}(E) - \operatorname{SharingDiscount}(E) - \operatorname{PatternBonus}(E)$$
 
-That is Theorem T38 (R2), and everything else in the theory is a consequence, refinement, or validation of it.
+That is T38 (R2). It holds only because PatternBonus is defined as the remainder, so it is a definition, not a theorem, and nothing else in the theory follows from it. With PatternBonus read off a fixed pattern catalogue it fails: $e^{x_1} + e^{x_2}$ has no shared sub-expression, matches no catalogued pattern and folds no constant, yet $\mathrm{EML}(\mathrm{LEAd}(x_2, \mathrm{EML}(x_1, 1)), 1)$ computes it in 3 nodes, below its NaiveCost.
 
 ---
 
 ## What the three terms mean
 
-**NaiveCost(E)** is the baseline: sum the SuperBEST v3 unit costs for every primitive operation in the expression, one independent sub-tree per operation, no sharing, no compression. For example, exp costs 1 node, mul costs 2, pow costs 3, and general addition costs 11 (it requires an absolute value internally). NaiveCost is always computable by inspection of the expression text.
+**NaiveCost(E)** is the baseline: sum the SuperBEST v3 unit costs for every primitive operation in the expression, one independent sub-tree per operation, no sharing, no compression. For example, exp costs 1 node, mul costs 2, pow costs 3, and general addition was priced at 11 (an April figure: $\mathrm{LEdiv}(x, \mathrm{DEML}(y, 1)) = x + y$ takes 2 nodes for all real $x, y$). NaiveCost is always computable by inspection of the expression text.
 
 **SharingDiscount(E)** is the saving from reuse. Two mechanisms contribute: (1) *constant folding* — any sub-expression whose inputs are all compile-time constants can be precomputed and replaced by a single leaf, saving its full NaiveCost; (2) *shared sub-expression elimination* — if a live sub-expression appears at $k \geq 2$ sites, computing it once and wiring the result saves $(k-1) \cdot \operatorname{Cost}(v)$ nodes. Empirically, 94% of textbook equations are trees over their live variables, so SharingDiscount is zero or comes only from constant folding.
 
@@ -51,21 +53,21 @@ The classification is a two-bit signature — presence of exp and presence of ln
 
 One result that might be surprising: nesting operators costs nothing extra. If you compose $O_1$ on top of $O_2$ on top of inputs $A$, $B$, $C$:
 
-$$\operatorname{Cost}(O_1(O_2(A,B),\,C)) = c_{O_1} + c_{O_2} + \operatorname{Cost}(A) + \operatorname{Cost}(B) + \operatorname{Cost}(C)$$
+$$\operatorname{Cost}(O_1(O_2(A,B),\,C)) \le c_{O_1} + c_{O_2} + \operatorname{Cost}(A) + \operatorname{Cost}(B) + \operatorname{Cost}(C)$$
 
-No interface overhead, no adapter nodes, no depth penalty (Proposition T38-NNP, R3). This holds because every operator in $\mathcal{F}_{16}$ has a uniform interface: real inputs, real output. It would fail in hardware models (pipeline stalls), fixed-precision models (overflow checks), or typed operator models (domain coercions).
+No interface overhead, no adapter nodes, no depth penalty (Proposition T38-NNP, R3). The bound holds because every operator in $\mathcal{F}_{16}$ has a uniform interface: real inputs, real output. Equality does not: a minimal DAG need not contain the sub-DAGs, and $\mathrm{LEdiv}(\mathrm{LEdiv}(x, 1), 1) = x$ costs 0, not 2. The bound would fail in hardware models (pipeline stalls), fixed-precision models (overflow checks), or typed operator models (domain coercions).
 
 ---
 
 ## Scaling laws
 
-For formulas parameterised by a structural size $N$ (number of summands, states, compartments, etc.), the theory gives an exact formula:
+For formulas parameterised by a structural size $N$ (number of summands, states, compartments, etc.), the theory gives a count and an upper bound:
 
-**O(N) single sums (Theorem T42, R14):** For any flat sum of $N$ equal-cost terms (each costing $\alpha_0$ nodes), evaluated in the positive domain:
+**O(N) single sums (R14's T42; T40 on /theorems):** Take a flat sum of $N$ terms, each of naive cost $\alpha_0$ (a valid upper bound, T34), joined by $N - 1$ additions. With the 2-node addition $\mathrm{LEdiv}(x, \mathrm{DEML}(y, 1)) = x + y$, valid for all real inputs:
 
-$$\operatorname{Cost}(f_N) = (\alpha_0 + 3)N - 3$$
+$$\operatorname{Cost}(f_N) \le (\alpha_0 + 2)N - 2$$
 
-The coefficient $\alpha_0 + 3$ ranges from 7 (Shannon entropy, Fourier) to 11 (pharmacokinetic multi-compartment sums). Every standard single-sum scientific formula is exactly O(N).
+This post stated $\operatorname{Cost}(f_N) = (\alpha_0 + 3)N - 3$ exactly, in the positive domain. That is false: $x_1 + x_2$ costs 2, not 3, and the softmax denominator $\sum_i e^{x_i}$ costs at most $2N - 1$ ($S_1 = \mathrm{EML}(x_1, 1)$, $S_{k+1} = \mathrm{EML}(\mathrm{LEAd}(x_{k+1}, S_k), 1)$). The coefficients it gave for $\alpha_0 + 3$, from 7 (Shannon entropy, Fourier) to 11 (pharmacokinetic multi-compartment sums), are April counts from that formula, upper-bound estimates at best. Every standard single-sum scientific formula with bounded per-term cost is O(N).
 
 **O(N²) nested double sums:** Pairwise interaction models such as the Hopfield network energy $E = -\frac{1}{2}\sum_i\sum_j w_{ij}s_is_j$ scale as $\Theta(N^2)$.
 
@@ -106,7 +108,7 @@ ComplexCost ≤ RealCost for all expressions representable over the reals.
 The theory was validated on three independent corpora:
 
 - **COST-1 regression** (50 equations, 10 domains): $R^2 = 0.92$
-- **COST-8 blind test** (20 equations, 4 new domains): 0 prediction errors — all equations had SharingDiscount = PatternBonus = 0, making NaiveCost exact
+- **COST-8 blind test** (20 equations, 4 new domains): 0 prediction errors — no equation had catalogued sharing or patterns, so each prediction was its NaiveCost
 - **R12 blind test** (30 equations, 5 new domains — fluid dynamics, optics, acoustics, materials science, epidemiology): 27/30 exact (90%), MAE = 0.20
 
 The 3 discrepancies in R12 were not theory failures: they arose from condensed operator counting in the study prompt. Under fully-expanded trees, all 30 predictions are exact.
@@ -119,7 +121,7 @@ Two main open problems remain:
 
 **The Quadratic Ceiling Conjecture.** Prove that no standard scientific closed-form formula ever exceeds O(N²) SuperBEST cost. A proof would require showing that no textbook formula encodes the algebraic equivalent of a nested double sum without explicitly writing one. A counterexample would be a formula with a single summation whose terms have intrinsic algebraic dependencies that force super-linear cost. Neither has been found.
 
-**Lean 4 formalisation.** Type signatures for all four basic properties (P1--P4), T38, the No Nesting Penalty, T40, and T41 have been sketched in Lean 4 (R1, R3). A complete mechanised proof in Lean 4 or Mathlib is future work.
+**Lean 4 formalisation.** R1 and R3 give Lean 4 type signatures, with `sorry` in place of every proof, for the four basic properties (P1--P4), T38, the No Nesting Penalty, T40, and T41. None of it is mechanised, and several of those statements are false as written (P2, the equality forms of the No Nesting Penalty and T40, the T41 ordering), so only corrected forms could be.
 
 ---
 
@@ -127,5 +129,5 @@ Two main open problems remain:
 
 Monogate Research (2026). "The Cost Theory Is Complete." monogate research. [https://monogate.org/blog/cost-theory-complete](https://monogate.org/blog/cost-theory-complete)
 
-The full technical paper (including all proofs and the complete theorem index T34--T43) is available at:
+The full technical paper (including its proof arguments and the theorem index T34--T43; [/theorems](/theorems) says which of them hold) is available at:
 `python/paper/cost_theory/Cost_Theory_Complete.tex` in the [monogate repository](https://github.com/monogate-dev/monogate).

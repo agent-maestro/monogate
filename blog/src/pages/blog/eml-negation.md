@@ -1,13 +1,15 @@
 ---
 layout: ../../layouts/Base.astro
 title: "Negation in Two Nodes — For All Real x"
-description: "The neg gap is closed: exl(0, deml(x,1)) computes −x in exactly 2 nodes for all x ∈ ℝ, with no domain restriction. The SuperBEST table is complete."
+description: "The neg gap is closed: exl(0, deml(x,1)) computes −x in 2 nodes for all x ∈ ℝ, with no domain restriction. Whether one node can do it depends on the operator family; no search on record settles it."
 date: "2026-04-20"
 author: "Monogate Research"
 tags: ["EML", "SuperBEST", "negation", "optimality"]
 ---
 
 # Negation in Two Nodes — For All Real x
+
+<p style="color: var(--muted); font-style: italic;">Correction (2026-09-13): this post called 2 nodes the minimum, citing an exhaustive 1-node search. The only 1-node neg search on record rounds each value to 6 decimals and then compares it with −x at tolerance 1e−7, so at x = π it rejects every tree, exact ones included, and its "none found" shows nothing. The 2-node construction holds for all real x. Whether 1 node can compute neg depends on the operators and constants allowed: LEpow(x, −1) = ln((eˣ)⁻¹) = −x is 1 node in a wider operator list.</p>
 
 The negation entry in the SuperBEST routing table was the last open question.
 Prior best: 4 nodes for general domain, 2 nodes for x > 0 only.
@@ -63,13 +65,14 @@ EXL then uses that quantity as the argument to its logarithm — no domain issue
 
 | Domain | Nodes | Construction | Status |
 |--------|-------|-------------|--------|
-| all x ∈ ℝ | **2n** | `exl(0, deml(x,1))` | Minimum over 6 operators, by exhaustive N=1 search |
+| all x ∈ ℝ | **2n** | `exl(0, deml(x,1))` | Holds for all real x; minimality unsettled (the N=1 search on record rejects exact trees) |
 | x > 0 (alt) | 2n | `emn(exl(0,x), 1)` | Also 2n, domain-restricted |
 | all x ∈ ℝ (old) | ~~4n~~ | `emn(1,eml(eml(1,eml(x,1)),1))` | Superseded |
 
-Both domains require 2 nodes minimum (no 1-node neg exists — exhaustive N=1 check
-over 54 cases confirms). The new general construction makes the domain-restricted
-version obsolete.
+Both domains take 2 nodes with these constructions. That no 1-node neg exists was
+never established: the N=1 check over 54 cases rounds values and rejects exact trees,
+and with a wider operator list LEpow(x, −1) = ln((eˣ)⁻¹) = −x is 1 node. The new
+general construction makes the domain-restricted version obsolete.
 
 ---
 
@@ -106,9 +109,11 @@ For each entry at N nodes, optimality means:
 - Exhaustive search at N−1 nodes found **zero** constructions
 - The N-node construction exists and is verified
 
-For neg: N=1 exhaustive check (54 cases: 6 operators × 9 terminal combinations
-from {0,1,x}) found no 1-node neg. The 2-node construction exists. Therefore 2n
-is the minimum over those six operators.
+For neg: the N=1 check (54 cases: 6 operators × 9 terminal combinations
+from {0,1,x}) reported no 1-node neg, but the search on record rounds each value to
+6 decimals and compares it with −x at tolerance 1e−7, so at x = π it rejects every
+tree, exact ones included. The 2-node construction exists; that 2n is the minimum
+over those six operators rests on no working search.
 
 ---
 

@@ -41,7 +41,7 @@ PageRank is more expensive because it sums contributions from N incoming links. 
 
 BM25 is the standard ranking function in production search systems today, including Elasticsearch. It costs 34 nodes per term (37 nodes for the query term frequency component, minus 3 shared nodes). The jump from TF-IDF (7n) to BM25 (34n) is the arithmetic cost of saturation — BM25 includes a term-frequency normalization that prevents very common terms from dominating, but that normalization requires extra divisions and additions that multiply the node count by nearly 5x.
 
-Softmax, which converts raw scores to probabilities in neural ranking, costs 4N−3 nodes for N classes. It is cheaper per class than BM25 per term, but it accumulates over every candidate in the retrieval set.
+Softmax, which converts raw scores to probabilities in neural ranking, was counted at 4N−3 nodes for N classes, from a scaling law that has since been retracted; the sum of exponentials in its denominator, Σ e^{xᵢ}, takes at most 2N − 1 nodes (S₁ = EML(x₁, 1), S_{k+1} = EML(LEAd(x_{k+1}, S_k), 1)). It is cheaper per class than BM25 per term, but it accumulates over every candidate in the retrieval set.
 
 ---
 
@@ -182,7 +182,7 @@ A baseball statistician in 1983, a pharmacologist in 1910, and a biochemist in 1
 
 Every QR code, every DVD, every deep-space transmission from the Voyager probes uses Reed-Solomon error correction. The syndrome computation for the standard RS(255,223) code — 255 total symbols, 223 data symbols, capable of correcting up to 16 symbol errors — requires evaluating a degree-254 polynomial at 32 points over GF(256).
 
-The syndrome computation itself (translating from XOR-based GF arithmetic to real-arithmetic EML, evaluating under 8N−3 with N=255) costs 2037 nodes. This is the most expensive regularly-computed formula in the catalog, by a wide margin.
+The syndrome computation itself (translating from XOR-based GF arithmetic to real-arithmetic EML, evaluating under 8N−3 with N=255) was counted at 2037 nodes. 8N−3 comes from a scaling law, (α₀+3)N − 3, that was stated as exact and is false, so 2037 is an April count, an upper-bound estimate at best. This is the most expensive regularly-computed formula in the catalog, by a wide margin.
 
 For reference: the next most expensive is Haversine (28n), used billions of times per day. Reed-Solomon syndrome (2037n) is computed millions of times per second in storage and communication hardware. Error correction is expensive. That cost is why dedicated RS hardware exists — no general-purpose processor core can afford to run 2037-node evaluations on every symbol block in real time without hardware acceleration.
 

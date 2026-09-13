@@ -98,10 +98,11 @@ lands at 6n.  EML accounting makes the rewrite quantitative: it's a
 ## The recurrence that climbs an EML tower
 
 **`f(x) = exp(f(x − 1)) + ln|x|`** is a one-shot `EAL` per step.
-`f(n)` from `f(0)` requires `n` applications of the EAL operator, stacked.
-That's a *linear* growth of EML depth with `x`.  The recurrence is an
-explicit witness of the EML depth hierarchy (T30) — one new node per
-step, no shortcut, no collapse.
+`f(n)` from `f(0)` takes `n` applications of the EAL operator, stacked.
+That's a *linear* growth of the tree's depth with `x`, one new node per
+step, the same shape as the `exp^k` tower of T30.  Whether a tower like
+this can be shortcut is open in general: that `exp^k` needs exactly `k`
+nodes is a conjecture (T30), and MachLib proves it for `k ≤ 4`.
 
 The `ln|x|` term puts the equation on the ELC boundary for `x < 0`:
 absolute value is piecewise, so the negative-axis branch formally sits
