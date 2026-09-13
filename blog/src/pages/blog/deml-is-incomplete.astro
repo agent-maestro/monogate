@@ -3,8 +3,8 @@ import Base from '../../layouts/Base.astro';
 ---
 
 <Base
-  title="DEML Is Incomplete — A Structural Proof"
-  description="deml(x,y) = exp(−x) − ln(y) cannot construct exp(+x) or neg(x). A proved theorem with an exhaustive search over 861,952 trees and a clean algebraic argument."
+  title="DEML Is Incomplete — A Structural Argument"
+  description="Why deml(x,y) = exp(−x) − ln(y) should not construct exp(+x) or neg(x): an argument on paper whose case analysis has a gap, no Lean proof, and an exhaustive search over 861,952 trees that found no construction."
   date="2026-04-19"
 >
   <div class="meta">
@@ -17,7 +17,7 @@ import Base from '../../layouts/Base.astro';
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     DEML: deml(x,y) = exp(−x) − ln(y). It gives exp(−x) in one node — an
     improvement over EML for decay functions. But it cannot build exp(+x)
-    or neg(x). Here is the proof.
+    or neg(x). Here is the argument, and where it falls short.
   </p>
 
   <div class="divider"></div>
@@ -64,6 +64,13 @@ import Base from '../../layouts/Base.astro';
   </blockquote>
 
   <h2>Proof</h2>
+
+  <p style="color: var(--muted); font-style: italic;">
+    Correction (2026-09-12): this argument has a gap. Case 1 assumes every subtree f(x) either
+    grows with x or is bounded, but f(x) = deml(x, 1) = exp(−x) does neither, and then
+    exp(−f(x)) rises toward 1 instead of decaying. The theorem has no Lean proof, and the search
+    further down is evidence, not proof.
+  </p>
 
   <p>
     Every DEML tree T over &#123;1, x&#125; falls into one of two structural cases:

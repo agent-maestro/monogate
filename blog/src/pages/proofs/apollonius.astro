@@ -222,14 +222,24 @@ const data = {
         return ['Proved statements', String(Object.keys(D.proved).length), 'ok', 'each cites Lean'];
       }
 
+      // Mode structure (eightModes_reduce_to_four, solvesModeM_iff) holds for every d and rho.
+      // Distinctness, general position and the root count rest on SymmetricGeneralPosition, which
+      // Lean states for one configuration only: the flagship d = 4, rho = 1 (flagship_gp). At
+      // d = 5/2 it is three exact inequalities no theorem states, and at the locus it is false.
+      // So those rows say proved only where a theorem covers the configuration on screen.
+      function GP_LEAN(c) { return c.d === '4' && c.rho === '1'; }
+      function BY_GP(c, k, note) {
+        return GP_LEAN(c) ? [k, 'PROVED', 'ok', ''] : [k, 'COMPUTED EXACTLY', 'cmp', note];
+      }
+
       function banner() {
         const c = D.configs[ci];
         const rows = c.isLocus
           ? [['Count', String(c.count), 'cmp', ''], ['Mode structure', 'PROVED', 'ok', ''],
-             ['Distinctness', 'PROVED', 'ok', ''], ['Exceptional locus', 'YES', 'cmp', 'd² = 8ρ²'],
+             ['Distinctness', 'COMPUTED EXACTLY', 'cmp', 'no theorem at d² = 8ρ²'], ['Exceptional locus', 'YES', 'cmp', 'd² = 8ρ²'],
              GENERALIZED(c), PLOTTED(c), PROVEDCOUNT()]
-          : [['Count', String(c.count), 'ok', ''], ['Mode structure', 'PROVED', 'ok', ''],
-             ['Distinctness', 'PROVED', 'ok', ''], ['General position', 'PROVED', 'ok', ''],
+          : [['Count', String(c.count), GP_LEAN(c) ? 'ok' : 'cmp', ''], ['Mode structure', 'PROVED', 'ok', ''],
+             BY_GP(c, 'Distinctness', 'exact coordinates'), BY_GP(c, 'General position', '2ρ < d, d² ≠ 8ρ², exact'),
              GENERALIZED(c), PLOTTED(c), PROVEDCOUNT()];
         document.getElementById('banner').innerHTML = rows.map(([k, v, cl, n]) =>
           '<div class="ex-stat"><span class="k">' + k + '</span><span class="v ' + cl + '">' + v + '</span>' +
@@ -372,7 +382,7 @@ const data = {
         const c0 = D.configs[ci];
         if (c0.line && si === c0.sols.length) return;   // detailLine already wrote it
         const s = D.configs[ci].sols[si];
-        const rows = [['Mode structure', 'PROVED', 'ok'], ['Root count', 'PROVED', 'ok'],
+        const rows = [['Mode structure', 'PROVED', 'ok'], BY_GP(c0, 'Root count', '').slice(0, 3),
           ['Tangency residual', s.exact ? 'COMPUTED EXACTLY — all three zero' : 'NOT EXACT', s.exact ? 'cmp' : 'no'],
           // Per solution, and DATA-DRIVEN: a point is Lean-checked only if the evidence names the
           // theorem that checks it. Never a blanket verdict -- two of the flagship's eight are
@@ -581,7 +591,7 @@ const data = {
   .ex-page .ex-srow:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
   .ex-page .ex-srow .sw{width:11px;height:11px;border-radius:50%}
   /* Four circles per configuration share a radius (5√34/12 four times at d = 5/2), so a row
-     showing only the radius reads as four identical entries beside a DISTINCTNESS PROVED
+     showing only the radius reads as four identical entries beside a DISTINCTNESS
      badge. Circle identity is centre AND radius; show both. */
   .ex-page #sweep{width:100%;height:auto;display:block;background:var(--well,rgba(0,0,0,.15))}
   .ex-page .sw-ctl{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;

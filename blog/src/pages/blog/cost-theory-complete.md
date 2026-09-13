@@ -26,7 +26,7 @@ That is Theorem T38 (R2), and everything else in the theory is a consequence, re
 
 **SharingDiscount(E)** is the saving from reuse. Two mechanisms contribute: (1) *constant folding* — any sub-expression whose inputs are all compile-time constants can be precomputed and replaced by a single leaf, saving its full NaiveCost; (2) *shared sub-expression elimination* — if a live sub-expression appears at $k \geq 2$ sites, computing it once and wiring the result saves $(k-1) \cdot \operatorname{Cost}(v)$ nodes. Empirically, 94% of textbook equations are trees over their live variables, so SharingDiscount is zero or comes only from constant folding.
 
-**PatternBonus(E)** is the saving from compound operators. Each of the 16 operators in $\mathcal{F}_{16}$ realises a multi-primitive sub-expression as a single node at cost 1. For example, EML$(x,y) = e^x - \ln y$ replaces three primitive nodes (exp + ln + sub, naive cost 4) with one node, saving 3. The full 12-pattern catalog is proved, and greedy selection in decreasing-bonus order is globally optimal because no two patterns can share a root node.
+**PatternBonus(E)** is the saving from compound operators. Each of the 16 operators in $\mathcal{F}_{16}$ realises a multi-primitive sub-expression as a single node at cost 1. For example, EML$(x,y) = e^x - \ln y$ replaces three primitive nodes (exp + ln + sub, naive cost 4) with one node, saving 3. The catalog lists 12 such patterns; whether that list is complete is an open problem in the paper. Greedy selection in decreasing-bonus order is argued to be globally optimal, in a proof sketch that rests on no two patterns sharing a root node.
 
 ---
 
@@ -41,7 +41,7 @@ Every arithmetic expression falls into exactly one of four classes, determined b
 | **A** Pure Exponential | exp only | ~10.4n | Arrhenius $k = Ae^{-E_a/RT}$ |
 | **D** Mixed | exp + ln | ~20.1n | Boltzmann $p_i = e^{-E_i/kT}/Z$ |
 
-The strict ordering $\overline{\operatorname{Cost}}_C < \overline{\operatorname{Cost}}_B < \overline{\operatorname{Cost}}_A < \overline{\operatorname{Cost}}_D$ (Theorem T41, R9) is proved structurally: Class C is cheapest because ln costs only 1 node and no exp inflates the count; Class D is most expensive because it carries both transcendental families plus their interaction arithmetic.
+Theorem T41 (R9) stated a strict ordering $\overline{\operatorname{Cost}}_C < \overline{\operatorname{Cost}}_B < \overline{\operatorname{Cost}}_A < \overline{\operatorname{Cost}}_D$ and argued for it structurally. The table's own means contradict it: they order as C < A < B < D (9.5n, 10.4n, 12.2n, 20.1n, from the paper's 50-equation COST-4 subset), so the ordering is not a theorem. The means do put Class C cheapest and Class D most expensive, which fits the structural reading: ln costs only 1 node, and Class D carries both transcendental families plus their interaction arithmetic.
 
 The classification is a two-bit signature — presence of exp and presence of ln — so every expression has an unambiguous class assignment.
 

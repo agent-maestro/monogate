@@ -92,9 +92,11 @@ With neg closed at 2n, the full routing table is:
 
 **Total: 18 nodes** vs 73 naive = **75.3% savings** (SuperBEST v4).
 
-Both general domain and positive domain now converge to 21 nodes.
-Every entry except add (general, 11n) is proved optimal by exhaustive
-search at the level below.
+Both domains were said to converge to 21 nodes, which is the SuperBEST v1 total; this v4 table
+totals 18. This post also said every entry except add (general, 11n) was optimal by exhaustive
+search at the level below. That did not hold: later constructions cut pow to 1 node for x > 0,
+mul to 1 node for x, y > 0, and add to 2 nodes for all real x, y (ADD-T1). The current table is on
+[/superbest](/superbest).
 
 ---
 

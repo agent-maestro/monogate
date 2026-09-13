@@ -125,6 +125,18 @@ chk('every generic config really has eight, the locus seven',
 const code = src.replace(/\/\*[\s\S]*?\*\//g, '')
   .split('\n').filter((l) => !/^\s*(\/\/|\*)/.test(l)).join('\n');
 
+// A proved pill on the banner or a solution row must rest on a theorem that covers the
+// configuration on screen. Distinctness, general position and the root count need
+// SymmetricGeneralPosition, which Lean states only for the flagship (flagship_gp: d = 4, rho = 1).
+// Typed 'PROVED' literals for those rows showed at d = 5/2, where no theorem states it, and at the
+// locus -- the default view -- where it is false.
+chk('gp-dependent rows say PROVED only for the configuration flagship_gp covers',
+  /function GP_LEAN\(c\) \{ return c\.d === '4' && c\.rho === '1'; \}/.test(code) &&
+  !/\['(Distinctness|General position|Root count)', 'PROVED'/.test(code) &&
+  cfgs.some((c) => c.d === '4' && c.rho === '1' && !c.isLocus) &&
+  Object.values(data.proved).some((v) => /\.Examples\.flagship_gp$/.test(v)),
+  cfgs.map((c) => `d=${c.d}: ${c.d === '4' && c.rho === '1' ? 'PROVED' : 'COMPUTED EXACTLY'}`).join(', '));
+
 const ev = JSON.parse(readFileSync('src/data/apollonius-evidence.json', 'utf8'));
 const L = (m) => m.map((v) => (v > 0 ? 'o' : 'i')).join('');
 const evCfgs = ev.COMPUTED.configurations;

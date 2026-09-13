@@ -9,7 +9,7 @@ tag: conjecture
 
 # What If tan(1) Were Constructible?
 
-**Tier: CONJECTURE** — everything below the horizontal rule in Section 1 is conditional. The only unconditional result is at the end: *tan(1) is not constructible*, proved by contrapositive from T17.
+**Tier: CONJECTURE** — everything below the horizontal rule in Section 1 is conditional. The contrapositive at the end, *tan(1) is not constructible* (DOOR-4), does not assume the hypothesis, but it is only as strong as the Steps A and B it reverses: argued on paper, with no Lean proof.
 
 ---
 
@@ -67,7 +67,7 @@ Theorem T17 says $i \notin \mathrm{EML}_1$. Contrapositive:
 
 > $i \notin \mathrm{EML}_1 \;\Rightarrow\; \tan(1) \notin \mathrm{EML}_1$
 
-**This is DOOR-4: $\tan(1) \notin \mathrm{EML}_1$.** A real theorem, not a conjecture.
+**This is DOOR-4: $\tan(1) \notin \mathrm{EML}_1$.** It reverses Steps A and B, so it has their standing: argued on paper, with no Lean proof.
 
 The Lindemann–Weierstrass route gives the same answer (transcendence is already a barrier), but the T17 contrapositive is structurally cleaner: it shows that the obstruction to $\tan(1)$ is the same obstruction that excludes $i$ — a fundamental property of the real-valued EML grammar.
 
@@ -105,13 +105,13 @@ This is what makes the question interesting as a thought experiment: $\tan(1)$ i
 
 ## What This Is and Is Not
 
-This post is a **conditional analysis**, not a new theorem (except for the contrapositive at the end, which is DOOR-4 and is proved).
+This post is a **conditional analysis**, not a new theorem. The contrapositive at the end (DOOR-4) is no exception: it is argued on paper, and no Lean proof of it exists.
 
 The conditionals — Steps A through D — are informal logical derivations. Step B in particular (recovering $i$ from $\cos(1)$ and $\sin(1)$ via the complex EML grammar) has not been formalised in Lean. Formalising it would require a definition of complex EML depth, an algebraic closure lemma for EML-reachable values, and a depth-transfer argument from complex to real semantics.
 
 The Schanuel connection is doubly conditional: it requires both Hypothesis H (which is false) and Schanuel's conjecture (which is open).
 
-The one thing that is not conditional: $\tan(1) \notin \mathrm{EML}_1$. That is DOOR-4, and it holds.
+The one statement here that does not assume Hypothesis H is DOOR-4, $\tan(1) \notin \mathrm{EML}_1$. It still rests on Steps A and B, so it stands where they do: argued on paper, with no Lean proof.
 
 ---
 
