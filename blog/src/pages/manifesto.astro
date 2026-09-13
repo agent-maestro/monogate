@@ -58,9 +58,10 @@ import Base from '../layouts/Base.astro';
     every logical step from the axioms of mathematics.  Every Lean
     claim on this site is re-checked before each deploy: its file is
     compiled at a pinned commit and its <code>#print axioms</code> is
-    read.  Two files in the library still carry documented
-    <code>sorry</code>s, and the pages that cite them say so.  See
-    <a href="/proofs">/proofs</a>.
+    read.  A few files in the library still carry documented
+    <code>sorry</code>s; <a href="/proofs">/proofs</a> gives the
+    <code>sorry</code> count of every file it shows, checked against the
+    pinned commit.
   </p>
 
   <h2>What we built</h2>
@@ -78,15 +79,15 @@ import Base from '../layouts/Base.astro';
     says, claim by claim, whether it has a Lean proof, an argument on
     paper, or is still a conjecture — then low-level continuous compute
     has a structural optimum, and neural-network and
-    scientific-simulation stacks have been leaving eighty percent of
-    that optimum on the table.  We believe the optimum is real on
+    scientific-simulation stacks have been leaving roughly eighty percent
+    of that optimum on the table.  We believe the optimum is real on
     silicon, not just on paper.  That's the next build.
   </p>
 
   <h2>What's next</h2>
   <ul style="margin: 8px 0 24px 24px; line-height: 1.9;">
-    <li>Hardware: a software model of an on-chip EML cell (16 operations in one cycle).  Error budgets and routing validation are done; an FPGA bring-up is the next chunk.</li>
-    <li>AI integration: the CapCard project — agents pick tools by verified cost, not by prose description.</li>
+    <li>Hardware: an on-chip EML cell (16 operations in one cycle), so far a software model; an FPGA bring-up of that cell is next.</li>
+    <li>AI integration: the CapCard project — agents pick tools by a stated cost, not by prose description.</li>
     <li>Interactive depth: the Zen Garden is on <a href="https://1op.io">1op.io</a>.  The Equation Genome, which was on monogate.dev, was archived on 2026-09-12.</li>
   </ul>
 
