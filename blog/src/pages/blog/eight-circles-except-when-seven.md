@@ -13,8 +13,8 @@ tag: theorem
 
 # Eight Circles, Except When There Are Seven
 
-**Tier: THEOREM** (Lean-verified structure; the plotted coordinates are exact-but-computed — the
-post says which is which, and so does the exhibit)
+**Tier: THEOREM** (Lean-verified structure and coordinates; the post says which statements are
+checked, and so does the exhibit)
 
 Apollonius' problem asks for the circles tangent to three given circles. In generic position the
 familiar answer is eight. While formalizing the problem in MachLib we made what looked like a
@@ -153,19 +153,22 @@ discriminant is positive; that each class attains exactly two distinct signed ro
 that a solution's mode is determined and equal radii in one mode force equal centres; and that at
 `d² = 8ρ²` the exceptional class has at most one radius.
 
-**Computed, not proved:** the eight specific coordinate triples in the drawing. They are produced in
-exact arithmetic with all tangency residuals exactly zero, and verified — but they are not checked
-in Lean. MachLib proves the count and its *structure*, not those particular coordinates.
+**The coordinates, proved in Lean since this post first appeared:** all eight circles in the
+drawing are stated in closed form and checked tangent to the three given circles, and so are the 15
+circles of the exhibit's other two configurations: 23 circles, 69 tangencies.
 
-**Not claimed:** a `List.length = 8` theorem. MachLib is Mathlib-free and has no `Finset` or
-cardinality layer, so the count is a derivation from per-mode theorems plus the antipodal pairing.
-Every mathematical ingredient is a theorem; what is missing is a container, and we would rather say
-so than imply otherwise.
+**The count as a list, Lean-checked since then too:** `eight_solutions` gives a `List` of length 8,
+with no duplicates, every entry a positive-radius solution of its mode. It needs general position,
+so it does not cover the seven-circle locus.
 
-The exhibit shows that boundary rather than describing it: the solutions panel is titled *Exact
-computed solution* with a `COMPUTED` badge, and each solution carries `LEAN-CHECKED POINT — NOT
-YET`. When those coordinates do pass through MachLib, the page upgrades itself and the deployment
-gate that currently *forbids* the word "certified" becomes the gate that *requires* it.
+**Not proved:** that the seven circles at `d² = 8ρ²` are distinct, and that `d = 5/2` is in general
+position. Both are exact arithmetic the exhibit does on the certificate, and it marks them COMPUTED
+EXACTLY.
+
+The exhibit shows that boundary rather than describing it. Each plotted solution's
+`LEAN-CHECKED POINT` row now names the theorem that checks it. The solutions panel is still titled
+*Exact computed solution* with a `COMPUTED` badge: the numbers on screen are computed, and the
+theorem is what vouches for them.
 
 ---
 

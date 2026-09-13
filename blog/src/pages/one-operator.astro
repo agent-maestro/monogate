@@ -1,5 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
+import theoremsData from '../data/theorems.json';
+
+// Counted from the catalog, not typed: this line said "30 theorems proved" long after the count moved.
+const theoremCount = theoremsData.results.filter((r) => r.tier === 'THEOREM').length;
 ---
 
 <Base
@@ -88,7 +92,7 @@ import Base from '../layouts/Base.astro';
 
   <ul style="margin: 16px 0 20px 24px; line-height: 2.4;">
     <li><a href="/blog/completeness-characterization">Why exp(+x) Means Complete: The Structural Theorem</a> <span style="color: var(--muted); font-size: 0.85em;">new</span></li>
-    <li><a href="/blog/superbest-complete">SuperBEST: All Operations Proved Optimal</a></li>
+    <li><a href="/blog/superbest-complete">The SuperBEST Table, v1 (corrected)</a></li>
     <li><a href="/blog/infinite-zeros-barrier">The Infinite Zeros Barrier</a></li>
     <li><a href="/blog/near-miss">0.99999524: The Near-Miss</a></li>
     <li><a href="/blog/euler-formula-is-eml">Euler's Formula Is the EML Operator</a></li>
@@ -96,7 +100,7 @@ import Base from '../layouts/Base.astro';
   </ul>
 
   <p style="color: var(--muted); font-size: 0.9rem; margin-top: 40px;">
-    30 theorems proved · <a href="/atlas">depth atlas</a> · <a href="https://monogate.dev">monogate.dev</a> ·
+    {theoremCount} THEOREM-tier results in <a href="/theorems">the catalog</a> · <a href="/atlas">depth atlas</a> · <a href="https://monogate.dev">monogate.dev</a> ·
     Paper: <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a> ·
     <a href="https://pypi.org/project/monogate/"><code>pip install monogate</code></a>
   </p>

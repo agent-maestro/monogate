@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 
 <Base
   title="The EML Weierstrass Theorem: Density of EML Trees in C([a,b])"
-  description="For any continuous function on a closed interval and any ε > 0, a finite EML tree approximates it to within ε. Proved constructively in four steps."
+  description="The claim: for any continuous function on a closed interval and any ε > 0, a finite EML tree approximates it to within ε. The four-step argument below has a gap, and there is no Lean proof."
   date="2026-04-19"
 >
   <div class="meta">
@@ -15,7 +15,7 @@ import Base from '../../layouts/Base.astro';
 
   <h1>The EML Weierstrass Theorem</h1>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
-    EML trees are dense in the continuous functions. Any continuous function can be approximated
+    The claim: EML trees are dense in the continuous functions. Any continuous function can be approximated
     to arbitrary precision by a finite EML tree — but not always represented exactly.
   </p>
 
@@ -32,7 +32,14 @@ import Base from '../../layouts/Base.astro';
     This is a density result, not an exact representation result. The distinction matters.
   </p>
 
-  <h2>The four-step proof</h2>
+  <h2>The four-step argument</h2>
+
+  <p style="color: var(--muted); font-style: italic;">
+    Correction (2026-09-12): this argument does not reach the claim. Step 2 builds monomials only
+    for x &gt; 0, and Step 3 shows polynomials lie in the linear span of EML trees (sums of trees
+    with real coefficients), not that a single EML tree approximates f. Closing it needs a tree
+    for a + b and for c·a across the whole interval. There is no Lean proof.
+  </p>
 
   <p><strong>Step 1 — Classical Weierstrass.</strong>
     Every continuous function on [a, b] can be uniformly approximated by polynomials

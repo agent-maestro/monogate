@@ -148,12 +148,29 @@ const code = src.replace(/\/\*[\s\S]*?\*\//g, '')
 // SymmetricGeneralPosition, which Lean states only for the flagship (flagship_gp: d = 4, rho = 1).
 // Typed 'PROVED' literals for those rows showed at d = 5/2, where no theorem states it, and at the
 // locus -- the default view -- where it is false.
-chk('gp-dependent rows say PROVED only for the configuration flagship_gp covers',
-  /function GP_LEAN\(c\) \{ return c\.d === '4' && c\.rho === '1'; \}/.test(code) &&
-  !/\['(Distinctness|General position|Root count)', 'PROVED'/.test(code) &&
-  cfgs.some((c) => c.d === '4' && c.rho === '1' && !c.isLocus) &&
-  Object.values(data.proved).some((v) => /\.Examples\.flagship_gp$/.test(v)),
-  cfgs.map((c) => `d=${c.d}: ${c.d === '4' && c.rho === '1' ? 'PROVED' : 'COMPUTED EXACTLY'}`).join(', '));
+{
+  // Every use of the three row keys, in any quote style, must be an argument to BY_GP or the locus
+  // row that reads COMPUTED EXACTLY; BY_GP and GP_LEAN must be the flagship-only forms. A literal
+  // ['Distinctness', 'PROVED', ...] anywhere else fails, however it is quoted.
+  const uses = [...code.matchAll(/(['"`])(Distinctness|General position|Root count)\1/g)];
+  const stray = uses.filter((m) => {
+    const before = code.slice(Math.max(0, m.index - 16), m.index);
+    const after = code.slice(m.index + m[0].length, m.index + m[0].length + 32);
+    return !(/BY_GP\(c0?,\s*$/.test(before) || /^\s*,\s*(['"`])COMPUTED EXACTLY\1/.test(after));
+  });
+  const routed = ['Distinctness', 'General position', 'Root count']
+    .every((k) => new RegExp('BY_GP\\(c0?,\\s*([\'"`])' + k + '\\1').test(code));
+  chk('gp-dependent rows say PROVED only for the configuration flagship_gp covers',
+    stray.length === 0 && routed &&
+    /function GP_LEAN\(c\) \{ return c\.d === '4' && c\.rho === '1'; \}/.test(code) &&
+    /return GP_LEAN\(c\) \? \[k, 'PROVED', 'ok', ''\] : \[k, 'COMPUTED EXACTLY', 'cmp', note\];/.test(code) &&
+    cfgs.some((c) => c.d === '4' && c.rho === '1' && !c.isLocus) &&
+    Object.values(data.proved).some((v) => /\.Examples\.flagship_gp$/.test(v)),
+    stray.length
+      ? `typed outside BY_GP: ${stray.map((m) => code.slice(m.index, m.index + m[0].length + 20)).join(' | ')}`
+      : `${uses.length} uses of the three keys, all through BY_GP or the locus COMPUTED EXACTLY row; ` +
+        cfgs.map((c) => `d=${c.d}: ${c.d === '4' && c.rho === '1' ? 'PROVED' : 'COMPUTED EXACTLY'}`).join(', '));
+}
 
 const ev = JSON.parse(readFileSync('src/data/apollonius-evidence.json', 'utf8'));
 const L = (m) => m.map((v) => (v > 0 ? 'o' : 'i')).join('');

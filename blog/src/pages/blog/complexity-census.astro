@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 
 <Base
   title="The EML Complexity Census: 23 Functions Classified by Depth"
-  description="A census of 23 elementary functions classified by minimum EML approximation depth. What is proved, what is computational, and what is still open."
+  description="A census of 23 elementary functions classified by EML depth. Each row says what its depth rests on: a Lean theorem, a construction, a short argument, a computation, or nothing yet."
   date="2026-04-19"
 >
   <div class="meta">
@@ -15,8 +15,8 @@ import Base from '../../layouts/Base.astro';
 
   <h1>The EML Complexity Census</h1>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
-    23 functions classified by their minimum EML approximation depth. Three categories:
-    proved, computational observation, and still open.
+    23 functions classified by EML depth. Each row says what its depth rests on: a Lean theorem,
+    a construction, a short argument, a computation, or nothing yet.
   </p>
 
   <div class="divider"></div>
@@ -24,17 +24,14 @@ import Base from '../../layouts/Base.astro';
   <h2>What "EML depth" means</h2>
 
   <p>
-    The EML depth of a function f is the minimum number of EML nodes in any tree that
-    computes f exactly (or, for transcendental functions with no exact representation,
-    the minimum depth of trees that approximate f to arbitrary precision in
-    the sense of the <a href="/blog/weierstrass-theorem">EML Weierstrass theorem</a>).
+    The EML depth of a function f is the depth of the shallowest EML tree that computes f
+    exactly. For erf, lgamma and Gamma, which have no known exact tree, the table records
+    instead the depth at which a search found a close approximation.
   </p>
 
   <p>
-    A depth of ∞ means no finite EML tree can equal the function even in the limit —
-    equivalently, the function requires an infinite sequence of increasingly deep trees.
-    This is the case for non-analytic functions like |sin(x)| and for functions with
-    non-analytic kinks.
+    A depth of ∞ means no finite EML tree equals the function exactly. It says nothing about
+    how well finite trees can approximate it.
   </p>
 
   <h2>The census table</h2>
@@ -49,56 +46,61 @@ import Base from '../../layouts/Base.astro';
     </thead>
     <tbody>
       {[
-        ["integers, rationals", "0", "proved", "Constants. No EML nodes needed."],
-        ["exp(x)", "1", "proved", "eml(x, 1) = exp(x). One node."],
-        ["eˣ (constant e)", "1", "proved", "eml(1, 1) = e. One node."],
-        ["ln(x)", "2", "proved", "4-node construction proved (§12)."],
-        ["√x", "2", "proved", "x^(1/2) = exp(ln(x)/2). EML-2."],
-        ["xⁿ (integer n)", "2", "proved", "exp(n·ln(x)). EML-2."],
-        ["sinh(x)", "3", "proved", "(exp(x) − exp(−x))/2. EML-3."],
-        ["cosh(x)", "3", "proved", "(exp(x) + exp(−x))/2. EML-3."],
-        ["tanh(x)", "3", "proved", "(e^2x − 1)/(e^2x + 1). EML-3."],
-        ["sin(x) over ℂ", "1", "proved", "Im(eml(ix, 1)) = sin(x). T03."],
-        ["sin(x) over ℝ", "∞", "proved", "T01: infinite zeros barrier."],
-        ["cos(x) over ℝ", "∞", "proved", "Same barrier as sin(x)."],
+        ["integers, rationals", "0", "definition", "A constant leaf. No EML node."],
+        ["exp(x)", "1", "Lean-checked", "eml(x, 1) = exp(x), in superbest_positive_one_node_ops. Depth 0 is impossible: exp is neither constant nor x."],
+        ["eˣ (constant e)", "1", "construction", "eml(1, 1) = e, with rational constant leaves. (MachLib allows any real constant, and there e is depth 0.)"],
+        ["ln(x)", "3", "Lean-checked", "Exactly 3 on (0, ∞): log_x_depth_exact_three, and no tree of depth ≤ 2 agrees (log_x_not_depth_le_two). This row said 2 before 2026-09-12."],
+        ["√x", "?", "unverified", "Said 2 before 2026-09-12. x^(1/2) = exp(ln(x)/2) passes through ln x, which needs depth 3, and no depth-2 tree is known."],
+        ["xⁿ (integer n)", "?", "unverified", "Said 2 before 2026-09-12. exp(n·ln(x)) passes through ln x, which needs depth 3, and no depth-2 tree is known."],
+        ["sinh(x)", "3", "unverified", "(exp(x) − exp(−x))/2. No tree is given."],
+        ["cosh(x)", "3", "unverified", "(exp(x) + exp(−x))/2. No tree is given."],
+        ["tanh(x)", "3", "unverified", "(e^2x − 1)/(e^2x + 1). No tree is given."],
+        ["sin(x) over ℂ", "1", "construction", "Im(eml(ix, 1)) = sin(x): one node, then an imaginary part. T03."],
+        ["sin(x) over ℝ", "∞", "Lean-checked", "sin_not_in_eml_any_depth_unconditional: no tree of any depth equals sin on ℝ."],
+        ["cos(x) over ℝ", "∞", "Lean-checked", "cos_not_in_eml_any_depth_unconditional: no tree of any depth equals cos on ℝ."],
         ["erf(x)", "3", "computational", "Depth-3 approximation reaches ε < 10⁻⁶."],
-        ["lgamma(x)", "3", "computational", "Stirling-based. Depth-3 sufficient."],
-        ["Gamma(x)", "3", "computational", "Via lgamma. Depth-3."],
-        ["Fourier series (finite)", "3", "proved", "Finite sum of sin/cos. EML-3."],
-        ["wave equation ψ = Ae^(ikx)", "3", "proved", "eml(ikx, 1) = exp(ikx). EML-1 over ℂ."],
-        ["|sin(x)|", "∞", "proved", "Non-analytic kinks survive over ℂ too."],
-        ["|x|", "∞", "proved", "Non-analytic at 0 in all domains."],
-        ["sawtooth wave", "∞", "proved", "Non-smooth, Gibbs phenomenon."],
-        ["Heaviside H(x)", "∞", "proved", "Discontinuous at 0."],
-        ["floor ⌊x⌋", "∞", "proved", "Countably infinite discontinuities."],
-        ["sin(sin(x))", "?", "open", "Convergence is slow. Current search: depth ≤ 4."],
+        ["lgamma(x)", "3", "computational", "Stirling-based. Depth-3 approximation."],
+        ["Gamma(x)", "3", "computational", "Via lgamma. Depth-3 approximation."],
+        ["finite Fourier series over ℝ", "∞", "argued", "A non-constant one is continuous and periodic, so no_tree_eq_periodic_target applies. This row said 3 before 2026-09-12."],
+        ["plane wave e^(ikx) over ℂ", "1", "construction", "eml(ikx, 1) = exp(ikx). This row said 3 before 2026-09-12."],
+        ["|sin(x)|", "∞", "argued", "Kinks at multiples of π. EML trees are analytic where defined (eml_tree_analytic), so none equals it across a kink."],
+        ["|x|", "∞", "argued", "Not analytic at 0, so no tree defined across 0 equals it. (On (0, ∞) it is just x.)"],
+        ["sawtooth wave", "∞", "argued", "Discontinuous; EML trees are continuous where defined."],
+        ["Heaviside H(x)", "∞", "argued", "Discontinuous at 0."],
+        ["floor ⌊x⌋", "∞", "argued", "Discontinuous at every integer."],
+        ["sin(sin(x)) over ℝ", "∞", "argued", "Continuous, periodic, not constant, so no_tree_eq_periodic_target applies. This row said open before 2026-09-12; the open question below is about approximation."],
       ].map(([fn, depth, status, note], i) => (
         <tr style={`border-bottom: 1px solid var(--border); ${i % 2 ? 'background: rgba(255,255,255,0.01);' : ''}`}>
           <td style="padding: 8px 10px; color: var(--text);">{fn}</td>
           <td style={`padding: 8px 10px; text-align: center; font-weight: 700; color: ${depth === '∞' ? 'var(--orange)' : depth === '?' ? '#6b7280' : depth === '0' ? '#6b7280' : depth === '1' ? 'var(--cyan)' : depth === '2' ? 'var(--violet)' : 'var(--pink)'};`}>{depth}</td>
-          <td style={`padding: 8px 10px; color: ${status === 'proved' ? 'var(--green)' : status === 'computational' ? 'var(--orange)' : status === 'open' ? '#f87171' : '#6b7280'}; font-size: 0.8rem;`}>{status}</td>
+          <td style={`padding: 8px 10px; color: ${status === 'Lean-checked' ? 'var(--green)' : status === 'construction' || status === 'definition' ? 'var(--cyan)' : status === 'argued' ? 'var(--violet)' : status === 'computational' ? 'var(--orange)' : status === 'open' ? '#f87171' : '#6b7280'}; font-size: 0.8rem;`}>{status}</td>
         </tr>
       ))}
     </tbody>
   </table>
 
   <p style="font-size: 0.85rem; color: var(--muted);">
-    <em>Proved</em>: formal proof exists. <em>Computational</em>: exhaustive or deep search confirms depth, no formal proof.
-    <em>Open</em>: depth unknown, active question.
+    <em>Lean-checked</em>: the row names a Lean theorem registered with this site's claims gate, re-proved before every deploy.
+    <em>Construction</em>: an explicit tree reaches that depth, and no shallower tree is possible for an elementary reason.
+    <em>Definition</em>: true by the definition of depth. <em>Argued</em>: a short argument on paper, not checked in Lean.
+    <em>Computational</em>: a search found an approximation at that depth; no proof.
+    <em>Unverified</em>: a value recorded in April 2026 with no tree, proof or search behind it. <em>Open</em>: unknown.
   </p>
 
   <h2>The open question: EML-4</h2>
 
   <p>
-    The EML depth hierarchy so far has strata at 0, 1, 2, 3, and ∞. Whether there exist
-    functions requiring exactly depth 4 — that is, functions approximable to arbitrary
-    precision at depth 4 but not depth 3 — is currently unknown.
+    Whether there are functions that can be approximated to arbitrary precision at depth 4
+    but not at depth 3 is unknown. In the exact sense the table uses, depth 4 is inhabited:
+    x + 1 has depth exactly 4 on (0, ∞), Lean-checked as x_plus_one_depth_exact_four.
   </p>
 
   <p>
     Candidates include <code>sin(sin(x))</code>, <code>exp(sin(x))</code>, and related
     compositions of EML-3 functions. Current dictionary search (depth ≤ 4) has not confirmed
     whether these require depth 4 or whether depth 3 is sufficient with the right tree structure.
+    (That is about approximation. Exactly, no finite tree equals either one: both are continuous,
+    periodic and not constant.)
   </p>
 
   <h2>Grammar comparison: G1, G2, G3</h2>

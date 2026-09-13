@@ -1,5 +1,5 @@
 {
-  "_comment": "Every public claim on monogate.org that a Lean theorem is proved, pinned to the artifact that proves it. `npm run predeploy` runs ../../monogate-lean/tools/lean_claims/check_claims.py over it: each claimed theorem must be declared in its file at the pinned revision; the file must compile in its environment, with the toolchain, package revisions and local-import sources exactly as pinned; each theorem's own #print axioms must have no sorryAx and nothing outside allowed_axioms (the footprint observed on 2026-09-12); and every label occurrence in src/ and public/ must be a site below or an exemption with its reason. To make a claim, add it here in the same change as the page text. scripts/check_proofs_page.py reads the monogate-lean pin from `sources`. The labels include \"is proved\" and \"are proved\" (with \"now\", \"also\", \"all\", \"both\", \"fully\", \"formally\" or \"already\" between, and markdown emphasis on the word), \"proved theorem\", \"sorryAx-free\" (with or without backticks) and the uppercase tier word PROVED, which alone matches case-sensitively via (?-i:...). /proofs/apollonius renders PROVED badges from src/data/apollonius-evidence.json; scripts/check-exhibit-gates.mjs fails unless every theorem those badges cite is registered here.",
+  "_comment": "Every public claim on monogate.org that a Lean theorem is proved, pinned to the artifact that proves it. `npm run predeploy` runs ../../monogate-lean/tools/lean_claims/check_claims.py over it: each claimed theorem must be declared in its file at the pinned revision; the file must compile in its environment, with the toolchain, package revisions and local-import sources exactly as pinned; each theorem's own #print axioms must have no sorryAx and nothing outside allowed_axioms (the footprint observed on 2026-09-12); and every label occurrence in src/ and public/ must be a site below or an exemption with its reason. To make a claim, add it here in the same change as the page text. scripts/check_proofs_page.py reads the monogate-lean pin from `sources`. The labels include \"is proved\" and \"are proved\" (with \"now\", \"also\", \"all\", \"both\", \"fully\", \"formally\" or \"already\" between, and markdown emphasis on the word), \"proved theorem\", \"sorryAx-free\" (with or without backticks) and the uppercase tier word PROVED, which alone matches case-sensitively via (?-i:...). /proofs/apollonius renders PROVED badges from src/data/apollonius-evidence.json; scripts/check-exhibit-gates.mjs fails unless every theorem those badges cite is registered here. Capitalized \"Proved\" is a label too, case-sensitively via (?-i:...), so a title like \"All Entries Structurally Proved\" is caught; lowercase \"proved\" alone is not (127 lines).",
   "environments": {
     "mathlib": {
       "project": "../../monogate-lean",
@@ -68,7 +68,8 @@
       "\\bare(?:\\s|&nbsp;)+(?:(?:now|also|all|both|fully|formally|already)(?:\\s|&nbsp;)+)?[*_]{0,2}proved",
       "proved[*_]{0,2}(?:\\s|&nbsp;)+theorem",
       "sorryAx`?[-‐‑ ]?free",
-      "(?-i:\\bPROVED\\b)"
+      "(?-i:\\bPROVED\\b)",
+      "(?-i:\\bProved\\b)"
     ]
   },
   "claims": [
@@ -336,7 +337,7 @@
     },
     {
       "id": "T_SUPERBEST_UB-upper-bounds",
-      "statement": "/theorems T_SUPERBEST_UB 'Lean-verified (0 sorries)' (LEAN ✓) and T10u's '(see T_SUPERBEST_UB, Lean-verified)'; /proofs lists UpperBounds.lean as '✓ 0 sorries' with 8 flagships; superbest-complete's corrected mul and pow rows cite mul_one_node_positive and rpow_one_node_positive",
+      "statement": "/theorems T_SUPERBEST_UB 'Lean-verified (0 sorries)' (LEAN ✓) and T10u's '(see T_SUPERBEST_UB, Lean-verified)'; /proofs lists UpperBounds.lean as '✓ 0 sorries' with 8 flagships; superbest-complete's corrected mul and pow rows cite mul_one_node_positive and rpow_one_node_positive; complexity-census's exp(x) row (eml(x, 1) = exp(x))",
       "sites": [
         {
           "file": "src/data/theorems.json",
@@ -397,6 +398,10 @@
         {
           "file": "src/pages/blog/superbest-complete.md",
           "line": "(`rpow_one_node_positive`, Lean-verified)"
+        },
+        {
+          "file": "src/pages/blog/complexity-census.astro",
+          "line": "\"Lean-checked\", \"eml(x, 1) = exp(x), in superbest_positive_one_node_ops"
         }
       ],
       "repository": "../../monogate-lean",
@@ -553,6 +558,10 @@
         {
           "file": "src/data/theorems.json",
           "line": "\"theorem\": \"sin_not_in_eml_depth_le_0 / sin_not_in_eml_depth_le_1\""
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "Proved by direct two-point evaluation (at x=0 and x=π/2)"
         }
       ],
       "repository": "../../monogate-lean",
@@ -881,7 +890,7 @@
     },
     {
       "id": "LOG_X_NOT_DEPTH_LE_TWO",
-      "statement": "/theorems LOG_X_NOT_DEPTH_LE_TWO (LEAN ✓, 'sorryAx absent')",
+      "statement": "/theorems LOG_X_NOT_DEPTH_LE_TWO (LEAN ✓, 'sorryAx absent'); complexity-census's ln(x) row (depth exactly 3)",
       "sites": [
         {
           "file": "src/data/theorems.json",
@@ -890,6 +899,14 @@
         {
           "file": "src/data/theorems.json",
           "line": "belowIdentityUnbounded_not_depth_le_two. sorryAx absent."
+        },
+        {
+          "file": "src/pages/blog/complexity-census.astro",
+          "line": "\"Lean-checked\", \"Exactly 3 on (0, ∞): log_x_depth_exact_three"
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "Proved via the below-identity-unbounded class"
         }
       ],
       "repository": "../../machlib",
@@ -940,7 +957,7 @@
     },
     {
       "id": "LOG_X_DEPTH_THREE_WITNESS",
-      "statement": "/theorems LOG_X_DEPTH_THREE_WITNESS (LEAN ✓)",
+      "statement": "/theorems LOG_X_DEPTH_THREE_WITNESS (LEAN ✓); complexity-census's ln(x) row (depth exactly 3)",
       "sites": [
         {
           "file": "src/data/theorems.json",
@@ -949,6 +966,10 @@
         {
           "file": "src/data/theorems.json",
           "line": "carries the domain in its statement. sorryAx absent."
+        },
+        {
+          "file": "src/pages/blog/complexity-census.astro",
+          "line": "\"Lean-checked\", \"Exactly 3 on (0, ∞): log_x_depth_exact_three"
         }
       ],
       "repository": "../../machlib",
@@ -999,7 +1020,7 @@
     },
     {
       "id": "X_PLUS_ONE_NOT_DEPTH_LE_THREE",
-      "statement": "/theorems X_PLUS_ONE_NOT_DEPTH_LE_THREE (LEAN ✓) and T30's refutation evidence ('sorryAx absent')",
+      "statement": "/theorems X_PLUS_ONE_NOT_DEPTH_LE_THREE (LEAN ✓) and T30's refutation evidence ('sorryAx absent'); complexity-census: 'x + 1 has depth exactly 4 on (0, ∞), Lean-checked as x_plus_one_depth_exact_four'",
       "sites": [
         {
           "file": "src/data/theorems.json",
@@ -1012,6 +1033,10 @@
         {
           "file": "src/data/theorems.json",
           "line": "states both halves in one declaration. sorryAx absent."
+        },
+        {
+          "file": "src/pages/blog/complexity-census.astro",
+          "line": "Lean-checked as x_plus_one_depth_exact_four"
         }
       ],
       "repository": "../../machlib",
@@ -1555,11 +1580,15 @@
     },
     {
       "id": "sturm-euler-nonoscillation",
-      "statement": "oscillation-is-a-compact-torus: Sturm r ≥ 0, the x^α keystone and the Abel–Wronskian core",
+      "statement": "oscillation-is-a-compact-torus: Sturm r ≥ 0, the x^α keystone and the Abel–Wronskian core; 'Proved from Rolle and the Mean Value Theorem' (the no-arch lemmas)",
       "sites": [
         {
           "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
           "line": "are machine-checked; what remains is the Mean-Value-Theorem sign-glue"
+        },
+        {
+          "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
+          "line": "EML-finite. Proved from Rolle and the Mean Value Theorem"
         }
       ],
       "repository": "../../machlib",
@@ -2099,7 +2128,7 @@
     },
     {
       "id": "apollonius-coordinates",
-      "statement": "/proofs/apollonius: all 23 plotted coordinates Lean-checked",
+      "statement": "/proofs/apollonius: all 23 plotted coordinates Lean-checked; eight-circles' coordinates paragraph and LEAN-CHECKED POINT sentence (all 23 circles, 69 tangencies)",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
@@ -2126,12 +2155,20 @@
           "line": "24 tangencies, zero residual, sorryAx absent"
         },
         {
-          "file": "src/pages/blog/eight-circles-except-when-seven.md",
-          "line": "each solution carries `LEAN-CHECKED POINT — NOT"
-        },
-        {
           "file": "src/data/apollonius-evidence.json",
           "line": "Now proved -- all seven, 21 tangencies"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure and coordinates; the post says which statements are"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "**The coordinates, proved in Lean since this post first appeared:**"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "`LEAN-CHECKED POINT` row now names the theorem that checks it"
         }
       ],
       "repository": "../../machlib",
@@ -2274,10 +2311,6 @@
         },
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
-          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
-        },
-        {
-          "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
         },
         {
@@ -2287,6 +2320,10 @@
         {
           "file": "src/data/apollonius-evidence.json",
           "line": "\"PROVED\": {"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure and coordinates; the post says which statements are"
         }
       ],
       "repository": "../../machlib",
@@ -2336,15 +2373,11 @@
     },
     {
       "id": "apollonius-structure-SymmetricTriple",
-      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges; the banner's 'Mode structure: PROVED' (solvesModeM_iff); eight-circles 'all of it is proved' (QMconst_pos, QMdisc_oii_pos, QMdisc_pos_of_lead_neg, root_ne_zero under separation)",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges; the banner's 'Mode structure: PROVED' (solvesModeM_iff); eight-circles 'all of it is proved' (QMconst_pos, QMdisc_oii_pos, QMdisc_pos_of_lead_neg, root_ne_zero under separation); eight-circles' 'Proved, in Lean, gated' list (exactly_two_signed_solutions_per_mode, mode_unique_of_gp)",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
           "line": "Machine-checked: every circle tangent to three given circles."
-        },
-        {
-          "file": "src/pages/blog/eight-circles-except-when-seven.md",
-          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
         },
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
@@ -2361,6 +2394,14 @@
         {
           "file": "src/data/apollonius-evidence.json",
           "line": "\"PROVED\": {"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure and coordinates; the post says which statements are"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "**Proved, in Lean, gated:** the linearisation for arbitrary circles; the antipodal law; that the"
         }
       ],
       "repository": "../../machlib",
@@ -2375,7 +2416,9 @@
         "MachLib.Geometry.Apollonius.SymmetricTriple.oii_at_most_one_radius",
         "MachLib.Geometry.Apollonius.SymmetricTriple.QMconst_pos",
         "MachLib.Geometry.Apollonius.SymmetricTriple.QMdisc_oii_pos",
-        "MachLib.Geometry.Apollonius.SymmetricTriple.QMdisc_pos_of_lead_neg"
+        "MachLib.Geometry.Apollonius.SymmetricTriple.QMdisc_pos_of_lead_neg",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.exactly_two_signed_solutions_per_mode",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.mode_unique_of_gp"
       ],
       "allowed_axioms": [
         "Classical.choice",
@@ -2403,6 +2446,8 @@
         "MachLib.Real.mul_pos",
         "MachLib.Real.negR",
         "MachLib.Real.oneR",
+        "MachLib.Real.sqrt",
+        "MachLib.Real.sqrt_sq_nonneg",
         "MachLib.Real.subR",
         "MachLib.Real.sub_def",
         "MachLib.Real.zeroR",
@@ -2421,10 +2466,6 @@
         },
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
-          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
-        },
-        {
-          "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
         },
         {
@@ -2434,6 +2475,14 @@
         {
           "file": "src/data/apollonius-evidence.json",
           "line": "\"PROVED\": {"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure and coordinates; the post says which statements are"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "**Proved, in Lean, gated:** the linearisation for arbitrary circles; the antipodal law; that the"
         }
       ],
       "repository": "../../machlib",
@@ -2469,15 +2518,11 @@
     },
     {
       "id": "apollonius-structure-Elimination",
-      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges; eight-circles' 'the linearisation for arbitrary circles' (solvesMode_iff_linear) and 'equal radii in one mode force equal centres' (centre_unique)",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
           "line": "Machine-checked: every circle tangent to three given circles."
-        },
-        {
-          "file": "src/pages/blog/eight-circles-except-when-seven.md",
-          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
         },
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
@@ -2486,6 +2531,14 @@
         {
           "file": "src/data/apollonius-evidence.json",
           "line": "\"PROVED\": {"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure and coordinates; the post says which statements are"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "**Proved, in Lean, gated:** the linearisation for arbitrary circles; the antipodal law; that the"
         }
       ],
       "repository": "../../machlib",
@@ -2493,7 +2546,8 @@
       "file": "foundations/MachLib/Geometry/Apollonius/Elimination.lean",
       "environment": "machlib",
       "theorems": [
-        "MachLib.Geometry.Apollonius.centre_unique"
+        "MachLib.Geometry.Apollonius.centre_unique",
+        "MachLib.Geometry.Apollonius.solvesMode_iff_linear"
       ],
       "allowed_axioms": [
         "Classical.choice",
@@ -2535,10 +2589,6 @@
         },
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
-          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
-        },
-        {
-          "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
         },
         {
@@ -2552,6 +2602,14 @@
         {
           "file": "src/data/apollonius-evidence.json",
           "line": "eight_solutions delivers a List of length 8, Nodup"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure and coordinates; the post says which statements are"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "**The count as a list, Lean-checked since then too:** `eight_solutions`"
         }
       ],
       "repository": "../../machlib",
@@ -2611,15 +2669,15 @@
         },
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
-          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
-        },
-        {
-          "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
         },
         {
           "file": "src/data/apollonius-evidence.json",
           "line": "\"PROVED\": {"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure and coordinates; the post says which statements are"
         }
       ],
       "repository": "../../machlib",
@@ -2882,6 +2940,113 @@
         "Quot.sound",
         "propext"
       ]
+    },
+    {
+      "id": "eml-any-depth-sin-cos",
+      "statement": "complexity-census rows 'sin(x) over ℝ: ∞' and 'cos(x) over ℝ: ∞': no EML tree of any depth equals sin, or cos, on ℝ",
+      "sites": [
+        {
+          "file": "src/pages/blog/complexity-census.astro",
+          "line": "\"Lean-checked\", \"sin_not_in_eml_any_depth_unconditional"
+        },
+        {
+          "file": "src/pages/blog/complexity-census.astro",
+          "line": "\"Lean-checked\", \"cos_not_in_eml_any_depth_unconditional"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/EMLAnyDepthBarrierUnconditional.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.sin_not_in_eml_any_depth_unconditional",
+        "MachLib.cos_not_in_eml_any_depth_unconditional"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.IsAnalyticOnReals",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_congr",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_inv",
+        "MachLib.Real.HasDerivAt_log_pos",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.archimedean",
+        "MachLib.Real.cos",
+        "MachLib.Real.cos_add",
+        "MachLib.Real.cos_pi",
+        "MachLib.Real.cos_pi_div_two",
+        "MachLib.Real.cos_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.div_def",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.hasDerivAt_continuousAt",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_div_pos_of_pos",
+        "MachLib.Real.pi",
+        "MachLib.Real.pi_gt_one",
+        "MachLib.Real.pi_pos",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.sin",
+        "MachLib.Real.sin_add",
+        "MachLib.Real.sin_pi",
+        "MachLib.Real.sin_pi_div_two",
+        "MachLib.Real.sin_zero",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.sup_exists",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "MachLib.Real.zero_ne_one_ax",
+        "MachLib.analytic_add",
+        "MachLib.analytic_comp",
+        "MachLib.analytic_const",
+        "MachLib.analytic_exp",
+        "MachLib.analytic_finite_zeros_compact",
+        "MachLib.analytic_id",
+        "MachLib.analytic_log_pos",
+        "MachLib.analytic_mul",
+        "MachLib.analytic_ne_zero_nbhd",
+        "MachLib.analytic_one_div_pos",
+        "MachLib.analytic_sub",
+        "Quot.sound",
+        "propext"
+      ]
     }
   ],
   "exempt": [
@@ -3053,7 +3218,7 @@
     {
       "file": "src/pages/blog/eight-circles-except-when-seven.md",
       "line": "## What is proved, and what isn't",
-      "reason": "section heading; it names no theorem. The Lean-proved list under it is registered under the apollonius-structure-* claims. Its 'computed, not proved' and 'not claimed' items predate the coordinate and List.length proofs and understate them"
+      "reason": "section heading; it names no theorem. The paragraphs under it are registered sites of the apollonius-structure-* and apollonius-coordinates claims, or say plainly what is not proved"
     },
     {
       "file": "src/pages/proofs/apollonius.astro",
@@ -3076,16 +3241,6 @@
       "reason": "code comment about showing retired disclaimers; no claim"
     },
     {
-      "file": "src/lib/posts.ts",
-      "line": "What is proved, what is computational, what is open.",
-      "reason": "the complexity-census listing description, naming the post's three status categories (proved, computational, open); it names no theorem and claims no Lean or machine proof. The post's per-row statuses are paper and computational claims no gate re-checks"
-    },
-    {
-      "file": "src/pages/blog/complexity-census.astro",
-      "line": "What is proved, what is computational, and what is still open.",
-      "reason": "page description naming the census's three status categories; it names no theorem and claims no Lean or machine proof. The per-row statuses are paper and computational claims no gate re-checks"
-    },
-    {
       "file": "src/pages/blog/superbest-complete.md",
       "line": "| exp(x) | 1 | eml(x,1) | all x | **PROVED** (one node is the minimum) |",
       "reason": "an optimality tag, not a Lean claim: one node is the trivial lower bound for any operation (stated under 'How Each Entry Was Argued'), and the construction is the exact identity eml(x,1) = eˣ − ln 1 = eˣ"
@@ -3099,6 +3254,76 @@
       "file": "src/pages/blog/superbest-complete.md",
       "line": "| ln(x) | 1 | exl(0,x) | x>0 | **PROVED** (one node is the minimum) |",
       "reason": "an optimality tag, not a Lean claim: one node is the trivial lower bound for any operation (stated under 'How Each Entry Was Argued'), and the construction is the exact identity exl(0,x) = e⁰ · ln x = ln x for x > 0"
+    },
+    {
+      "file": "src/pages/blog/complexity-census.astro",
+      "line": "status === 'Lean-checked' ? 'var(--green)'",
+      "reason": "the status column's colour map; it renders whatever status a row carries, and each Lean-checked row is a registered site"
+    },
+    {
+      "file": "src/pages/blog/complexity-census.astro",
+      "line": "<em>Lean-checked</em>: the row names a Lean theorem registered",
+      "reason": "the table legend defining the Lean-checked status; it names no theorem, and every row that uses the status is a registered site"
+    },
+    {
+      "file": "src/data/accountability.json",
+      "line": "(Proved / Measured / Model / Play)",
+      "reason": "names the four epistemic grades of a disclosure scheme; it claims no result is proved"
+    },
+    {
+      "file": "src/data/theorems.json",
+      "line": "Proved in R2_Decomposition_Theorem.tex.",
+      "reason": "catalog card T38 cites its paper proof, python/paper/cost_theory/R2_Decomposition_Theorem.tex, which is in this repository; a paper proof, not a Lean claim, and no gate re-checks it"
+    },
+    {
+      "file": "src/data/theorems.json",
+      "line": "Proved in R5_Linear_Cost_Law.tex.",
+      "reason": "catalog card T40 cites its paper proof, python/paper/cost_theory/R5_Linear_Cost_Law.tex, which is in this repository; a paper proof, not a Lean claim, and no gate re-checks it"
+    },
+    {
+      "file": "src/data/theorems.json",
+      "line": "Proved in R6_Additive_Cost_Law.tex.",
+      "reason": "catalog card P-ACL cites its paper proof, python/paper/cost_theory/R6_Additive_Cost_Law.tex, which is in this repository; a paper proof, not a Lean claim, and no gate re-checks it"
+    },
+    {
+      "file": "src/data/theorems.json",
+      "line": "Proved in R4_Sharing_Discount.tex.",
+      "reason": "catalog card P-SD cites its paper proof, python/paper/cost_theory/R4_Sharing_Discount.tex, which is in this repository; a paper proof, not a Lean claim, and no gate re-checks it"
+    },
+    {
+      "file": "src/pages/blog/auditing-1200-sessions.astro",
+      "line": "['PROPOSITION', 6, 'Proved, routine', 'var(--cyan)'],",
+      "reason": "the April 2026 audit's tier table: 'Proved, routine' is the PROPOSITION tier's definition and the counts are that audit's; the post now says /theorems has the live counts"
+    },
+    {
+      "file": "src/pages/blog/mul-gap-closed.md",
+      "line": "| exp | EML | 1n | Proved optimal (one node is the minimum) |",
+      "reason": "a routing-table optimality tag, not a Lean claim: one node is the trivial lower bound for any operation, and eml(x,1) = exp(x) is exact"
+    },
+    {
+      "file": "src/pages/blog/mul-gap-closed.md",
+      "line": "| ln | EXL | 1n | Proved optimal (one node is the minimum) |",
+      "reason": "a routing-table optimality tag, not a Lean claim: one node is the trivial lower bound for any operation, and exl(0,x) = ln x for x > 0 is exact"
+    },
+    {
+      "file": "src/pages/blog/mul-gap-closed.md",
+      "line": "| recip | ELSb | **1n** | **Proved optimal** (R16-C1; one node is the minimum, for x > 0) |",
+      "reason": "a routing-table optimality tag, not a Lean claim: one node is the trivial lower bound for any operation, and ELSb(0,x) = 1/x for x > 0 is exact"
+    },
+    {
+      "file": "src/pages/proofs/apollonius.astro",
+      "line": "['Proved statements', String(Object.keys(D.proved).length)",
+      "reason": "a count of the PROVED map's entries; scripts/check-exhibit-gates.mjs fails unless every theorem the map names is registered here"
+    },
+    {
+      "file": "src/pages/theorems.astro",
+      "line": "PROPOSITION: { color: 'var(--cyan)', desc: 'Proved, short or routine.' },",
+      "reason": "the PROPOSITION tier's definition in the tier legend; it names no result"
+    },
+    {
+      "file": "src/pages/theorems.astro",
+      "line": "Proved facts are theorems. Everything else is clearly marked.",
+      "reason": "states the catalog's tier policy; it names no result"
     }
   ]
 }

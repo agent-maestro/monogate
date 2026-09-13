@@ -46,22 +46,22 @@
     },
     {
       "id": "T12",
-      "tier": "THEOREM",
+      "tier": "CONJECTURE",
       "name": "Exponential Position Theorem",
       "session": "COMP-1 through COMP-5",
       "category": "Operator Family",
       "statement": "Among the 16 standard exp-ln binary operators: 8 are exactly complete (all with exp(+x), no domain restriction), 1 approximately complete (EMN), 7 incomplete. The completeness class is determined entirely by the position of negation relative to exp.",
-      "evidence": "Forward direction (T26): exp(+x) → complete. Reverse (T27): exp(−x) → incomplete by 5 distinct barrier types. LEX (T28): domain collapse.",
+      "evidence": "Forward direction (T26): exp(+x) → complete. Reverse (T27): exp(−x) → incomplete by 5 distinct barrier types. LEX (T28): domain collapse. CORRECTION (2026-09-12): this card was a THEOREM; its count of 7 incomplete operators rests on T27, whose DEML case (T13) is not proved.",
       "deps": "T09, T26, T27, T28, T24."
     },
     {
       "id": "T13",
-      "tier": "THEOREM",
+      "tier": "CONJECTURE",
       "name": "DEML Incompleteness",
       "session": "Sprint2",
       "category": "Operator Family",
-      "statement": "deml(x,y) = exp(−x) − ln(y) is not exactly complete. neg(x) = −x is not constructible from DEML and constant 1. The self-composition slope is locked to +1; no DEML tree achieves slope −1.",
-      "evidence": "Exhaustive search over 861,952 trees at N ≤ 13 finds no neg construction. Structural proof: slope locked to +1.",
+      "statement": "deml(x,y) = exp(−x) − ln(y) is not exactly complete: neg(x) = −x is not constructible from DEML and constant 1.",
+      "evidence": "An exhaustive search over all 861,952 DEML trees up to N = 17 nodes found no neg construction (python/results/s_r1_deml_incompleteness.json: max_N_searched 17, closest error 0.84). The structural argument, that every DEML tree's linear component has slope 0 or +1, has a gap: its first case assumes each subtree f(x) grows with x or is bounded, and f(x) = deml(x,1) = exp(−x) does neither. No Lean proof. CORRECTION (2026-09-12): this card was a THEOREM citing that argument as its proof, and gave the search as N ≤ 13; the search record says N ≤ 17.",
       "deps": "T12."
     },
     {
@@ -104,12 +104,12 @@
     },
     {
       "id": "T27",
-      "tier": "THEOREM",
+      "tier": "CONJECTURE",
       "name": "Reverse Incompleteness: exp(−x) → Incomplete",
       "session": "COMP-3",
       "category": "Operator Family",
       "statement": "Let O(x,y) = h(exp(−x), ln y), h ∈ {−, +, ×, /, ^}. Then O is incomplete. The 6 operators DEML, DEMN, DEAL, DEXL, DEDL, DEPL each fail by a distinct mechanism.",
-      "evidence": "DEML: slope barrier (+1). DEMN: domain failure (outputs always negative). DEAL: irremovable e⁻¹ offset. DEXL: dead constant at c=1. DEDL/DEPL: exponential decay. All verified computationally.",
+      "evidence": "DEML: slope barrier (+1), which is T13's argument, and that has a gap. DEMN: domain failure (outputs always negative). DEAL: irremovable e⁻¹ offset. DEXL: dead constant at c=1. DEDL/DEPL: exponential decay. All verified computationally. No Lean proof. CORRECTION (2026-09-12): this card was a THEOREM; its DEML case rests on T13, which is not proved, so the statement as a whole is not proved.",
       "deps": "T12, T13."
     },
     {
@@ -137,8 +137,8 @@
       "name": "Complex EML Closure Density",
       "session": "Depth Spectrum",
       "category": "Complex EML",
-      "statement": "EML trees (with complex inputs) are dense in H(K), the space of holomorphic functions on any compact simply-connected K ⊂ ℂ. Additionally, i is an accumulation point of EML₁.",
-      "evidence": "Density: Runge's theorem + T01. Accumulation: depth-6 exhaustive data — closest depth-6 value to i has |w − i| = 4.76×10⁻⁶. Resolves C02 and C03.",
+      "statement": "EML trees (with complex inputs) are dense in H(K), the space of holomorphic functions on any compact simply-connected K ⊂ ℂ.",
+      "evidence": "Density: Runge's theorem + T01. Resolves C02. CORRECTION (2026-09-12): this card also stated that i is an accumulation point of EML₁, citing depth-6 exhaustive data (closest value |w − i| = 4.76×10⁻⁶). Data at one depth does not show the distance goes to 0; that question is back in C03, open.",
       "deps": "T01, T17."
     },
     {
@@ -321,13 +321,13 @@
     },
     {
       "id": "T08",
-      "tier": "THEOREM",
-      "name": "SuperBEST Table v4 — 19 Nodes, All Entries Structurally Proved",
+      "tier": "PROPOSITION",
+      "name": "SuperBEST Table v4 — 19 Nodes by Construction, Not All Optimal",
       "session": "Sprint2 / Sprint3 / S-T08",
       "category": "Core Algebra",
-      "statement": "SuperBEST v4: 19 nodes total, all 9 entries structurally proved optimal. recip=1n (ELSb(0,x)=1/x), div=2n (ELSb(ln(x),y) — corrected from erroneous 1n entry), sub=2n (T33), mul=2n (T10u/F16), neg=2n (T09), add=3n (cross-derivative lower bound), pow=3n (3-intermediate lower bound), sqrt=2n (derivative obstruction), exp=1n, ln=1n.",
-      "evidence": "S-T08 full structural audit (2026-04-20): every entry has a structural proof — no entry relies solely on exhaustive search. SuperBEST_v4_Structural_Audit.tex.",
-      "deps": "T09, T10u, T12, T32, T33, R16-C1."
+      "statement": "SuperBEST v4 (2026-04-20): 19 nodes over 10 entries, each an explicit construction. recip=1n (ELSb(0,x)=1/x, x>0), div=2n (ELSb(ln(x),y)), sub=2n (LEdiv(x, EML(y,1)), T33), mul=2n (ELAd(EXL(0,x), y), x>0, T10u), neg=2n (EXL(0, DEML(x,1)), T09), add=3n, pow=3n, sqrt=2n, exp=1n, ln=1n. CORRECTION (2026-09-12): this card said every entry was structurally proved optimal. That was wrong. add is 2n for all real x, y (LEdiv(x, DEML(y,1)), ADD-T1). pow and sqrt are 1n for x > 0 (EPL(n,x) = exp(n·ln x), EPL(0.5,x)), and mul is 1n for x, y > 0 (exp(ln x + ln y)); see T_SUPERBEST_UB. The current table is on /superbest.",
+      "evidence": "Each entry is an explicit identity, checkable by hand. The S-T08 structural audit (2026-04-20; python/paper/theorems/SuperBEST_v4_Structural_Audit.tex) also argued a lower bound for every entry, and three of those arguments were wrong: add ≥ 3 (cross-derivative), pow ≥ 3 (3-intermediate) and sqrt ≥ 2 (derivative obstruction) are each beaten by a construction inside the same 16-operator family. mul ≥ 2 over all reals holds (T32), but the 2-node construction needs x > 0. Lower bounds that hold over all reals: sub ≥ 2 (T33), add ≥ 2 (ADD-T1), mul ≥ 2 (T32), div ≥ 2 (T_DIV_GEN_LB). exp, ln and recip are one node, trivially minimal.",
+      "deps": "T09, T10u, T12, T32, T33, R16-C1, ADD-T1, T_SUPERBEST_UB, T_DIV_GEN_LB."
     },
     {
       "id": "T15",
@@ -478,9 +478,8 @@
       "name": "i as Accumulation Point",
       "session": "S35",
       "category": "Complex EML",
-      "statement": "RESOLVED — i is an accumulation point of EML₁: depth-6 EML trees get arbitrarily close to i. Proved as part of T31.",
-      "evidence": "Resolved by T31. Depth-6 exhaustive search: closest value |w − i| = 4.76×10⁻⁶.",
-      "resolvedBy": "T31"
+      "statement": "Is i an accumulation point of EML₁: do EML trees of growing depth get arbitrarily close to i? Open.",
+      "evidence": "Depth-6 exhaustive search: closest value |w − i| = 4.76×10⁻⁶. That bounds the approach at depth 6 (T17 records the same bound); it does not show the distance goes to 0. CORRECTION (2026-09-12): this card was marked RESOLVED by T31 and said depth-6 trees get arbitrarily close to i, but T31 recorded only this data."
     },
     {
       "id": "O-FOURIER",

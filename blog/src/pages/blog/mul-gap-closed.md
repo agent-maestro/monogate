@@ -145,10 +145,10 @@ Both mul and add are now at 3 nodes. The BEST routing table is symmetric at the 
 
 | Operation | Operator | Nodes | Status |
 |-----------|---------|-------|--------|
-| exp | EML | 1n | Proved optimal |
-| ln | EXL | 1n | Proved optimal |
-| div | EDL | 1n | Proved optimal |
-| recip | ELSb | **1n** | **Proved optimal** (R16-C1) |
+| exp | EML | 1n | Proved optimal (one node is the minimum) |
+| ln | EXL | 1n | Proved optimal (one node is the minimum) |
+| div | EDL | 1n | **Wrong:** EDL(x,y) = eˣ/ln y is not x/y, and no single F16 node computes x/y for all real x, y (T_DIV_GEN_LB) |
+| recip | ELSb | **1n** | **Proved optimal** (R16-C1; one node is the minimum, for x > 0) |
 | pow | EXL | 3n | Best known |
 | **add** | **Mixed(EXL/EML/EAL)** | **3n** (a>0) | **Improved from 11n** |
 | **mul** | **Mixed(EXL/EML)** | **3n** | **Improved from 7n; lower bound TIGHT** |

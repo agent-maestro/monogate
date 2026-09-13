@@ -120,7 +120,7 @@ The cost model was validated in two stages:
 
 ## Theorem Summary (T34–T39)
 
-| Label | Statement | Proved in |
+| Label | Statement | Session |
 |-------|-----------|-----------|
 | T34 | Cost(E) ≤ NaiveCost(E) for all EML-computable E | COST-2 |
 | T35 | Cost(E) ≥ 1 (trivial lower bound) | COST-3 |

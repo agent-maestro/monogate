@@ -66,7 +66,7 @@ The census reveals two distinct reasons a gate can be incomplete:
 
 Is EMN complete? We now have a definitive answer: **approximately complete, not exactly complete.**
 
-**EMN is not exactly complete:** No finite EMN tree can compute ln(x) exactly for all x. The obstruction is structural — every EMN output ln(R) − exp(L) has a nonzero exp(L) residual, and driving it to zero requires infinite depth (L → −∞). Proved by the growth rate argument (sessions EMN-1 through EMN-3).
+**EMN is not exactly complete:** No finite EMN tree can compute ln(x) exactly for all x. The obstruction is structural — every EMN output ln(R) − exp(L) has a nonzero exp(L) residual, and driving it to zero requires infinite depth (L → −∞). The growth-rate argument for this (sessions EMN-1 through EMN-3) is on paper; there is no Lean proof.
 
 **EMN is approximately complete:** For any elementary function f and ε > 0, there exists a finite EMN tree T such that |Re(T(x)) − f(x)| < ε on any compact interval. The mechanism: complex intermediate values (via ln(−e) = 1 + iπ) route around the sign barrier. Convergence is doubly-exponential in tree depth.
 

@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/Base.astro
 title: "The Cost Theory Is Complete"
-description: "One formula predicts the SuperBEST node cost of any scientific equation. Proved, validated on 187 equations, and open-sourced."
+description: "One formula for the SuperBEST node cost of a scientific equation. The decomposition has a paper proof (T38); the predictions are validated on 187 equations, and the code is open-source."
 date: "2026-04-20"
 tag: "theorem"
 ---

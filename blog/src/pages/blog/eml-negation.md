@@ -63,7 +63,7 @@ EXL then uses that quantity as the argument to its logarithm — no domain issue
 
 | Domain | Nodes | Construction | Status |
 |--------|-------|-------------|--------|
-| all x ∈ ℝ | **2n** | `exl(0, deml(x,1))` | Proved optimal |
+| all x ∈ ℝ | **2n** | `exl(0, deml(x,1))` | Minimum over 6 operators, by exhaustive N=1 search |
 | x > 0 (alt) | 2n | `emn(exl(0,x), 1)` | Also 2n, domain-restricted |
 | all x ∈ ℝ (old) | ~~4n~~ | `emn(1,eml(eml(1,eml(x,1)),1))` | Superseded |
 
@@ -100,7 +100,7 @@ mul to 1 node for x, y > 0, and add to 2 nodes for all real x, y (ADD-T1). The c
 
 ---
 
-## What "Proved Optimal" Means Here
+## What "Optimal" Meant Here
 
 For each entry at N nodes, optimality means:
 - Exhaustive search at N−1 nodes found **zero** constructions
@@ -108,7 +108,7 @@ For each entry at N nodes, optimality means:
 
 For neg: N=1 exhaustive check (54 cases: 6 operators × 9 terminal combinations
 from {0,1,x}) found no 1-node neg. The 2-node construction exists. Therefore 2n
-is the exact minimum.
+is the minimum over those six operators.
 
 ---
 
