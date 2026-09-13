@@ -50,10 +50,21 @@ files — they're pure templates now and have no facts to edit.
 ## Before every deploy
 
 ```sh
-npm run audit    # cross-repo citation check (needs monogate-lean checked out as a sibling repo)
-npm run build    # also re-checks referential integrity for theorems.json/atlas.json at build time
-npm run predeploy  # both, in order — exits non-zero if either fails
+npm run predeploy  # every step below, in order; exits non-zero if any fails
 ```
+
+| Step | What it holds |
+|---|---|
+| `npm run audit` | Cross-repo citation check (needs monogate-lean checked out as a sibling repo); details below. |
+| `npm run check:lean-claims` | Every Lean claim on the site, registered in `scripts/lean_claims.json`, is re-proved. Each theorem must be declared in its file at a pinned commit, compile in the pinned environment, and have its own `#print axioms` free of `sorryAx` and inside its recorded footprint. Every "Lean-verified"-style label in `src/` and `public/` must be a registered site or a reasoned exemption. Needs `../../monogate-lean`, `../../machlib` and `../../monogate-research` checked out, with their Lean builds current. |
+| `npm run check:proofs-page` | `scripts/check_proofs_page.py`: `/proofs` quotes monogate-lean verbatim at the pinned commit (flagship sources, line links, per-file theorem and sorry counts). |
+| `npm run check:axiom-bridge` | monogate-lean's `tools/axiom_witness/check_bridge.py --self-test`: the MachLib.Real ⊨ ℝ witness layer that the axiom posts describe. |
+| `npm run build` | Also re-checks referential integrity for theorems.json/atlas.json at build time. |
+| `npm run check:exhibit`, `npm run check:figure` | The /proofs/apollonius exhibit gates. |
+
+To make a new Lean claim, add it to `scripts/lean_claims.json` in the same change as the page text.
+After a `lake update` in monogate-lean, re-pin the registry's `packages`. After changing a cited
+file, move its pin.
 
 `npm run audit` (`scripts/audit-citations.mjs`) checks what the Astro build alone can't,
 because it reads files outside this repo:
@@ -95,7 +106,7 @@ on `master` indefinitely with nothing surfacing it.
 | `npm run dev` | Local dev server at `localhost:4321` |
 | `npm run build` | Build to `./dist/` (also runs the in-page referential-integrity checks) |
 | `npm run audit` | Cross-repo citation check (`scripts/audit-citations.mjs`) |
-| `npm run predeploy` | Both of the above, in order |
+| `npm run predeploy` | Every step in *Before every deploy* (citation audit, Lean claims, /proofs quotations, axiom bridge, build, exhibit gates), in order |
 | `npm run preview` | Preview the build locally |
 
 Deploy: `export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh" && nvm use 22` first — this box's

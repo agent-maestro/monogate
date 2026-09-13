@@ -76,7 +76,7 @@ if (brokenDeps.length > 0) {
 
   <h1>Theorem Catalog</h1>
   <div class="status-banner">
-    <p class="status-kicker">Current status · July 2026</p>
+    <p class="status-kicker">Current status · Lean badges re-checked on every deploy</p>
     <p>
       This catalog mixes external theorems, local Lean witnesses,
       propositions, conjectures, and observations. A theorem label means the
@@ -85,9 +85,11 @@ if (brokenDeps.length > 0) {
       safety, hardware validation, or broad EML superiority.
     </p>
     <p style="margin-top: 10px;">
-      A <strong style="color: var(--green);">LEAN&nbsp;✓</strong> badge on a card means that
-      statement is <strong>machine-checked in Lean</strong> (0 sorries); cards without it are
-      proved on paper. The strongest form of that standard — machine-checked <em>and</em>
+      A <strong style="color: var(--green);">LEAN&nbsp;✓</strong> badge on a card means the cited
+      Lean theorem is <strong>machine-checked</strong>: it compiles with no <code>sorryAx</code>, re-checked
+      before every deploy at a pinned commit. <strong style="color: var(--orange);">LEAN&nbsp;~</strong>
+      means Lean checks only part of the card's statement, and the card's evidence says which
+      part. Cards without a badge are proved on paper. The strongest form of that standard — machine-checked <em>and</em>
       reproducible, with the actual <code>#print axioms</code> footprint re-derived, stamped, and
       exposed — is the live
       <a href="https://zoo.monogateforge.com/" style="color: var(--green);">verified zoo</a>,

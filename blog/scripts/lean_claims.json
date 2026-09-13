@@ -1,0 +1,2750 @@
+{
+  "_comment": "Every public claim on monogate.org that a Lean theorem is proved, pinned to the artifact that proves it. `npm run predeploy` runs ../../monogate-lean/tools/lean_claims/check_claims.py over it: each claimed theorem must be declared in its file at the pinned revision; the file must compile in its environment, with the toolchain, package revisions and local-import sources exactly as pinned; each theorem's own #print axioms must have no sorryAx and nothing outside allowed_axioms (the footprint observed on 2026-09-12); and every label occurrence in src/ and public/ must be a site below or an exemption with its reason. To make a claim, add it here in the same change as the page text. scripts/check_proofs_page.py reads the monogate-lean pin from `sources`.",
+  "environments": {
+    "mathlib": {
+      "project": "../../monogate-lean",
+      "toolchain": "leanprover/lean4:v4.32.2",
+      "packages": {
+        "mathlib": "905b95818eb32af7874a58b427f50c1711a5e96c",
+        "plausible": "e12c1910fe855cbfc38803cd4e55543906d5fa62",
+        "LeanSearchClient": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+        "importGraph": "7e9612bf0b9ee66db3cb5b9988a35afc706f5a12",
+        "proofwidgets": "6e311e2a844da9b2cc3971187df2fe0066947b93",
+        "aesop": "a7dbf0c63b694e47f425f3dcddbc0e178bb432d3",
+        "Qq": "38d591e778f100aec9762bb582f9c7f55f50e9dc",
+        "batteries": "023ce7d62a0531e22a5331e20b587817a80d49ff",
+        "Cli": "88679d088c9720c27ebdf2ba4dafe17341747f94"
+      },
+      "sources": {
+        "../../monogate-lean": {
+          "repository": "../../monogate-lean",
+          "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0"
+        },
+        "../../machlib/foundations": {
+          "repository": "../../machlib",
+          "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1"
+        }
+      }
+    },
+    "machlib": {
+      "project": "../../machlib/foundations",
+      "toolchain": "leanprover/lean4:v4.32.2",
+      "packages": {},
+      "sources": {
+        "../../machlib/foundations": {
+          "repository": "../../machlib",
+          "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1"
+        }
+      }
+    }
+  },
+  "scan": {
+    "paths": [
+      "src",
+      "public"
+    ],
+    "extensions": [
+      ".astro",
+      ".md",
+      ".ts",
+      ".json"
+    ],
+    "labels": [
+      "lean[-‐‑ ]?verified",
+      "verified in lean",
+      "lean[-‐‑ ]prove[dn]",
+      "prove[dn] in lean",
+      "machine[-‐‑ ]checked",
+      "machine[-‐‑ ]verified",
+      "formally verified",
+      "formali[sz]ed in lean",
+      "lean 4 proofs?",
+      "lean[-‐‑ ]checked",
+      "lean[-‐‑ ]certified",
+      "LEAN(&nbsp;| )✓",
+      "sorryAx absent",
+      "files? compile|compiles against mathlib|recompiles every proof"
+    ]
+  },
+  "claims": [
+    {
+      "id": "T01-eml-universality",
+      "statement": "/theorems T01 'EML Universality' carries LEAN ✓; /proofs lists Universality.lean flagships; the capability card marks lean.eml_universality proven_machine_verified",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"eml_universality\""
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'eml_universality'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'exp_exp_isEMLElementary'"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "\"lean_theorem\": \"eml_universality\""
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "\"lean_theorem\": \"eml_universality\""
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/Universality.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "eml_universality",
+        "const_isEMLElementary",
+        "id_isEMLElementary",
+        "exp_isEMLElementary",
+        "exp_exp_isEMLElementary"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T32-mul-lower-bound",
+      "statement": "/theorems T32 'Mul ≥ 2 Nodes in Any exp-ln Family' (LEAN ✓); /proofs flagship; capability card lean.mul_lower_bound",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"SB_mul_ge_two\""
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'SB_mul_ge_two'"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "\"lean_theorem\": \"SB_mul_ge_two\""
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "\"lean_theorem\": \"SB_mul_ge_two\""
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/MulLowerBound.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "SB_mul_ge_two"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "ADD-T1-add-lower-bound",
+      "statement": "/theorems ADD-T1 (LEAN ✓); /proofs flagships; capability card lean.add_lower_bound",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"SB_add_ge_two\""
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'SB_add_ge_two'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'no_f16_computes_add'"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "\"lean_theorem\": \"SB_add_ge_two\""
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "\"lean_theorem\": \"SB_add_ge_two\""
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/AddLowerBound.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "SB_add_ge_two",
+        "no_f16_computes_add"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T33-sub-lower-bound",
+      "statement": "/theorems T33 (LEAN ✓); /proofs flagship; capability card lean.sub_lower_bound",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"SB_sub_ge_two\""
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'SB_sub_ge_two'"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "\"lean_theorem\": \"SB_sub_ge_two\""
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "\"lean_theorem\": \"SB_sub_ge_two\""
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/SubLowerBound.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "SB_sub_ge_two"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T_DIV_GEN_LB-div-lower-bound",
+      "statement": "/theorems T_DIV_GEN_LB 'General domain: ≥ 2 nodes (Lean-verified)' (LEAN ✓); /proofs flagship; capability card lean.div_lower_bound",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"SB_div_ge_two\""
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "General domain: ≥ 2 nodes (Lean-verified)."
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'SB_div_ge_two'"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "\"lean_theorem\": \"SB_div_ge_two\""
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "\"lean_theorem\": \"SB_div_ge_two\""
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/DivLowerBound.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "SB_div_ge_two"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T_DIV_EXP_OUTER-div-exp-outer",
+      "statement": "/theorems T_DIV_EXP_OUTER (LEAN ✓, 'Lean-proved step'); /superbest and /atlas div notes ('IS Lean-proved', 'div_positive=2n full tree (Lean-verified)'); /proofs flagships",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"no_F13_outer_2node_div (+ F14/F15/F16fn)\""
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "A further, Lean-proved step toward a general-domain ≥ 3 bound"
+        },
+        {
+          "file": "src/data/superbest.json",
+          "line": "IS Lean-proved (DivLowerBound3.lean, no_exp_outer_2node_div, 0 sorries)"
+        },
+        {
+          "file": "src/data/superbest.json",
+          "line": "lower bound partially Lean-proved"
+        },
+        {
+          "file": "src/data/superbest.json",
+          "line": "div_positive=2n full tree (Lean-verified)"
+        },
+        {
+          "file": "src/data/atlas.json",
+          "line": "general domain is 3n, partly Lean-proved"
+        },
+        {
+          "file": "src/data/atlas.json",
+          "line": "is Lean-proved for the exp-outer case only"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'no_exp_outer_2node_div'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'div_two_node_pos_domain'"
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/DivLowerBound3.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "DivLowerBound3.no_F13_outer_2node_div",
+        "DivLowerBound3.no_F14_outer_2node_div",
+        "DivLowerBound3.no_F15_outer_2node_div",
+        "DivLowerBound3.no_F16fn_outer_2node_div",
+        "DivLowerBound3.no_exp_outer_2node_div",
+        "DivLowerBound3.div_two_node_pos_domain"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T_SUPERBEST_UB-upper-bounds",
+      "statement": "/theorems T_SUPERBEST_UB 'Lean-verified (0 sorries)' (LEAN ✓) and T10u's '(see T_SUPERBEST_UB, Lean-verified)'; /proofs lists UpperBounds.lean as '✓ 0 sorries' with 8 flagships",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"superbest_positive_one_node_ops\""
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "Lean-verified (0 sorries): exp(x)=F1(x,1) (1n)"
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "(see T_SUPERBEST_UB, Lean-verified)"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'superbest_positive_one_node_ops'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'mul_one_node_positive'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'rpow_one_node_positive'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'ln_one_node_via_exl'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'f14_identity'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'f15_identity'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'f16_identity'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'mul_of_negatives_one_node'"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "\"lean_theorem\": \"superbest_positive_one_node_ops\""
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "\"lean_theorem\": \"superbest_positive_one_node_ops\""
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/UpperBounds.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "superbest_positive_one_node_ops",
+        "mul_one_node_positive",
+        "rpow_one_node_positive",
+        "ln_one_node_via_exl",
+        "f14_identity",
+        "f15_identity",
+        "f16_identity",
+        "mul_of_negatives_one_node"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "ModelAudit-one-node-positive",
+      "statement": "/proofs ModelAudit.lean flagships; 157-equations: 'mul, sqrt, and pow each dropped to a Lean-verified 1-node positive-domain construction'",
+      "sites": [
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'sqrt_is_one_node_positive'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'mul_is_one_node_positive'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'pow_is_one_node_positive'"
+        },
+        {
+          "file": "src/pages/blog/157-equations.md",
+          "line": "each dropped to a Lean-verified 1-node positive-domain construction"
+        },
+        {
+          "file": "src/pages/blog/what-we-got-wrong.md",
+          "line": "are Lean-verified in `ModelAudit.lean`"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "Lean (ModelAudit.lean) checks the positive-domain one-node witnesses and the 14n total"
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "Lean (ModelAudit.lean) checks the positive-domain one-node witnesses and the 14n total"
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/ModelAudit.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "sqrt_is_one_node_positive",
+        "mul_is_one_node_positive",
+        "pow_is_one_node_positive",
+        "superbest_v53_positive_total",
+        "superbest_v53_savings_fraction",
+        "superbest_v53_positive_witnesses"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T_EULER_LEAN-emldepth",
+      "statement": "/theorems T_EULER_LEAN 'Three Lean-verified results' (LEAN ✓); /proofs flagships; glossary 'Lean-verified at k = 1 (EMLDepth.lean)'",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"euler_gateway / euler_identity / exp_not_constant\""
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "Three Lean-verified results"
+        },
+        {
+          "file": "src/pages/glossary.astro",
+          "line": "Lean-verified: EML-0 ⊊ EML-1 (exp_not_constant, EMLDepth.lean)"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'euler_identity'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'exp_not_constant'"
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/EMLDepth.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "euler_gateway",
+        "euler_identity",
+        "exp_not_constant"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T01a-infinite-zeros-partial",
+      "statement": "/theorems T01a (LEAN ✓, 'Parts B and C … closed in Lean, 0 sorries each'); glossary T01 'Partially Lean-verified'; /proofs flagships",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"sin_has_infinitely_many_zeros\""
+        },
+        {
+          "file": "src/pages/glossary.astro",
+          "line": "Partially Lean-verified (analyticity lemmas all at 0 sorries"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'analytic_finite_zeros_compact'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'eml_tree_analytic'"
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/InfiniteZerosBarrier.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "sin_has_infinitely_many_zeros",
+        "analytic_finite_zeros_compact",
+        "eml_tree_analytic"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T01b-sin-depth-0-1",
+      "statement": "/theorems T01b (LEAN ✓)",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"sin_not_in_eml_depth_le_0 / sin_not_in_eml_depth_le_1\""
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/SinNotInEMLDepthBounds.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "MonogateEML.sin_not_in_eml_depth_le_0",
+        "MonogateEML.sin_not_in_eml_depth_le_1"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T_EXP_LOG_DUALITY-emlduality",
+      "statement": "/theorems T_EXP_LOG_DUALITY (LEAN ✓); exp-log-duality post 'Machine-verified in Lean 4', 'Lean-verified, 0 sorries'; /proofs flagship",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"exp_log_multiplier_product_at_fixed_point\""
+        },
+        {
+          "file": "src/pages/blog/exp-log-duality-at-fixed-points.md",
+          "line": "with reciprocal multipliers. Machine-verified in Lean 4."
+        },
+        {
+          "file": "src/pages/blog/exp-log-duality-at-fixed-points.md",
+          "line": "**Tier: THEOREM** (Lean-verified, 0 sorries)"
+        },
+        {
+          "file": "src/pages/blog/exp-log-duality-at-fixed-points.md",
+          "line": "The theorem is machine-verified in Lean 4, 0 sorries:"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'exp_log_multiplier_product_at_fixed_point'"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "\"lean_theorem\": \"exp_log_multiplier_product_at_fixed_point\""
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "\"lean_theorem\": \"exp_log_multiplier_product_at_fixed_point\""
+        },
+        {
+          "file": "src/pages/blog/planck-elc-native.md",
+          "line": "the Lean-verified part of"
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/EMLDuality.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "exp_log_multiplier_product_at_fixed_point",
+        "exp_fixed_point_multiplier_equals_z",
+        "log_multiplier_at_exp_fixed_point"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T_HYP_ELC_PRESERVE-hyperbolic",
+      "statement": "/theorems T_HYP_ELC_PRESERVE (LEAN ✓); glossary 'Lean-verified in HyperbolicPreservation.lean'; hyperbolic-preserves-elc post; /proofs flagships",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"sinh_as_exp_arithmetic / cosh_as_exp_arithmetic / pythagorean_triple_at_log_two\""
+        },
+        {
+          "file": "src/pages/glossary.astro",
+          "line": "The three identities are Lean-verified in HyperbolicPreservation.lean"
+        },
+        {
+          "file": "src/pages/blog/hyperbolic-preserves-elc.md",
+          "line": "The identities behind it are machine-verified in Lean 4"
+        },
+        {
+          "file": "src/pages/blog/hyperbolic-preserves-elc.md",
+          "line": "(the three identities are Lean-verified, 0 sorries"
+        },
+        {
+          "file": "src/pages/blog/hyperbolic-preserves-elc.md",
+          "line": "Bonus observation from the Lean-verified identities."
+        },
+        {
+          "file": "src/pages/blog/hyperbolic-preserves-elc.md",
+          "line": "All three are Lean-verified:"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'sinh_log_two'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'pythagorean_triple_at_log_two'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'sinh_as_exp_arithmetic'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'cosh_as_exp_arithmetic'"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "\"lean_theorem\": \"MonogateHyp.sinh_as_exp_arithmetic\""
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "\"lean_theorem\": \"MonogateHyp.sinh_as_exp_arithmetic\""
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/HyperbolicPreservation.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "MonogateHyp.sinh_as_exp_arithmetic",
+        "MonogateHyp.cosh_as_exp_arithmetic",
+        "MonogateHyp.tanh_as_sinh_div_cosh",
+        "MonogateHyp.pythagorean_triple_at_log_two",
+        "MonogateHyp.sinh_log_two",
+        "MonogateHyp.cosh_log_two"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "SelfMapConjugacy",
+      "statement": "conjugacy-explained 'Tier: PROPOSITION (formalized in Lean 4; user VS Code verification pending)'; /proofs flagships",
+      "sites": [
+        {
+          "file": "src/pages/blog/conjugacy-explained.md",
+          "line": "(formalized in Lean 4; user VS Code verification pending)"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'eal_exl_conjugacy'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'eml_edl_conjugacy'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'exp_log_round_trip'"
+        },
+        {
+          "file": "public/capability_card.json",
+          "line": "\"lean_theorem\": \"MonogateSelfMapConjugacy.eal_exl_conjugacy\""
+        },
+        {
+          "file": "public/.well-known/capcard.json",
+          "line": "\"lean_theorem\": \"MonogateSelfMapConjugacy.eal_exl_conjugacy\""
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/SelfMapConjugacy.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "MonogateSelfMapConjugacy.eal_exl_conjugacy",
+        "MonogateSelfMapConjugacy.eml_edl_conjugacy",
+        "MonogateSelfMapConjugacy.exp_log_round_trip"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "Gamma-wrappers",
+      "statement": "/proofs Gamma.lean flagships (under 'Machine-Verified Proofs')",
+      "sites": [
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'gamma_functional_equation'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'gamma_nat_eq_factorial'"
+        },
+        {
+          "file": "src/data/proofs.ts",
+          "line": "name: 'deriv_gamma_at_nat'"
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/Gamma.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "MonogateGamma.gamma_functional_equation",
+        "MonogateGamma.gamma_nat_eq_factorial",
+        "MonogateGamma.deriv_gamma_at_nat"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "T17-strict-i-unconstructible",
+      "statement": "/theorems T17 'Strict i-Unconstructibility (Lean-verified)'; auditing-1200-sessions T17 item; /blog card 'Lean-verified.'; i-unconstructibility 'Lean verification' section",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "Strict i-Unconstructibility (Lean-verified)"
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "compiles against Mathlib with no sorryAx, re-checked before every deploy"
+        },
+        {
+          "file": "src/pages/blog/auditing-1200-sessions.astro",
+          "line": "T17 — Strict i-Unconstructibility (Lean-verified)"
+        },
+        {
+          "file": "src/lib/posts.ts",
+          "line": "is unreachable from {eml, 1}. Lean-verified."
+        },
+        {
+          "file": "src/pages/blog/i-unconstructibility.astro",
+          "line": "This theorem is formalized as <code>T19_i_unconstructible_strict</code>"
+        },
+        {
+          "file": "src/pages/blog/tan1-obstruction.md",
+          "line": "(Lean-verified under strict real semantics)"
+        },
+        {
+          "file": "src/pages/blog/tan1-obstruction.md",
+          "line": "(T17) | Follows from (1); Lean-verified for real semantics"
+        },
+        {
+          "file": "src/pages/blog/tan1-obstruction.md",
+          "line": "(T17, Lean-verified for real semantics)"
+        },
+        {
+          "file": "src/pages/blog/conditional-tan1.md",
+          "line": "T17 is Lean-verified only under strict real semantics"
+        }
+      ],
+      "repository": "../../monogate-research",
+      "revision": "ad0fab03ceed8a0f48c1b7995b26d74e28aa213b",
+      "file": "lean/EML/StrictBarrier.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "T19_i_unconstructible_strict",
+        "strict_barrier_T19"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "realmodel-analytic-finite-zeros",
+      "statement": "a-model-for-the-axioms (description): 'The analytic finite-zeros theorem, once postulated, is now proved.'",
+      "sites": [
+        {
+          "file": "src/pages/blog/a-model-for-the-axioms.md",
+          "line": "The analytic finite-zeros theorem, once postulated, is now proved."
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/MachLibRealModelFiniteZeros.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "MonogateEML.RealModel.analytic_finite_zeros_compact"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "realmodel-not-old-open-rolle",
+      "statement": "the-axiom-you-cannot-see: 'A Machine-Checked Trust Boundary, and the False One It Caught' and the tombstone 'a machine-checked proof that the open-interval form is false'",
+      "sites": [
+        {
+          "file": "src/pages/blog/the-axiom-you-cannot-see.md",
+          "line": "A Machine-Checked Trust Boundary, and the False One It Caught"
+        },
+        {
+          "file": "src/pages/blog/the-axiom-you-cannot-see.md",
+          "line": "a machine-checked proof that the open-interval form is"
+        }
+      ],
+      "repository": "../../monogate-lean",
+      "revision": "9c6164bd0c94db0be3a4b8af8187e18cbf516dd0",
+      "file": "MonogateEML/MachLibRealModelRolle.lean",
+      "environment": "mathlib",
+      "theorems": [
+        "MonogateEML.RealModel.not_oldOpenRolle"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "LOG_X_NOT_DEPTH_LE_TWO",
+      "statement": "/theorems LOG_X_NOT_DEPTH_LE_TWO (LEAN ✓, 'sorryAx absent')",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"log_x_not_depth_le_two\""
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "belowIdentityUnbounded_not_depth_le_two. sorryAx absent."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/EMLDepthTameness.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.log_x_not_depth_le_two"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_add",
+        "MachLib.Real.exp_gt_one_plus_self",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_add_le_exp",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "LOG_X_DEPTH_THREE_WITNESS",
+      "statement": "/theorems LOG_X_DEPTH_THREE_WITNESS (LEAN ✓)",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"log_x_depth_exact_three\""
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "carries the domain in its statement. sorryAx absent."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/EMLDepthTameness.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.log_x_depth_exact_three"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_add",
+        "MachLib.Real.exp_gt_one_plus_self",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_add_le_exp",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "X_PLUS_ONE_NOT_DEPTH_LE_THREE",
+      "statement": "/theorems X_PLUS_ONE_NOT_DEPTH_LE_THREE (LEAN ✓) and T30's refutation evidence ('sorryAx absent')",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"x_plus_one_not_depth_le_three\""
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "instantiated on a partial premise. sorryAx absent."
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "states both halves in one declaration. sorryAx absent."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/EMLDepthTameness.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.x_plus_one_not_depth_le_three",
+        "MachLib.x_plus_one_depth_exact_four"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_add",
+        "MachLib.Real.exp_gt_one_plus_self",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_add_le_exp",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "X_PLUS_ONE_TREE_DEPTH",
+      "statement": "/theorems X_PLUS_ONE_TREE_DEPTH (LEAN ✓)",
+      "sites": [
+        {
+          "file": "src/data/theorems.json",
+          "line": "\"theorem\": \"xPlusOneTree_depth\""
+        },
+        {
+          "file": "src/data/theorems.json",
+          "line": "so the pairing is sound. sorryAx absent."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/EMLAdditionClosureFailure.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.xPlusOneTree_depth",
+        "MachLib.xPlusOneTree_eval",
+        "MachLib.x_plus_one_in_eml"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "false-by-one-exponential",
+      "statement": "false-by-one-exponential: the refutation, the corrected rung, the implication, and the two two-sided thresholds",
+      "sites": [
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "yields a statement that is machine-checked, and the implication between the two is machine-checked"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "**Tier: THEOREM** (Lean-verified: the refutation, the corrected statement, and the implication"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "**It is machine-checked, including the asymptotics.**"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "Two of them are now machine-checked in *both* directions:"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "located and machine-checked, with the failures proved rather than conjectured."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/EMLDepthTameness.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.not_depth3DecayHard",
+        "MachLib.depth3DecayExp_holds",
+        "MachLib.depth3DecayExp_of_hard",
+        "MachLib.dep3CounterRight_depth",
+        "MachLib.dep3CounterRight_eval",
+        "MachLib.value_gap_fails_at_depth_three",
+        "MachLib.band_exclusion_fails_at_depth_four"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_add",
+        "MachLib.Real.exp_gt_one_plus_self",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_add_le_exp",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "zeros-any-exponential-chain",
+      "statement": "zeros-any-exponential-chain: finiteness for any positive-coherent exponential-type Pfaffian chain",
+      "sites": [
+        {
+          "file": "src/pages/blog/zeros-any-exponential-chain.md",
+          "line": "Exponential-Type Chain, Machine-Checked"
+        },
+        {
+          "file": "src/pages/blog/zeros-any-exponential-chain.md",
+          "line": "rolle-only, machine-checked finiteness proof"
+        },
+        {
+          "file": "src/pages/blog/zeros-any-exponential-chain.md",
+          "line": "a self-contained, machine-checked reduction of a classical Khovanskii/Pfaffian fact"
+        },
+        {
+          "file": "src/pages/blog/zeros-any-exponential-chain.md",
+          "line": "Here is a machine-checked reduction of that, for *any* such chain."
+        },
+        {
+          "file": "src/pages/blog/zeros-any-exponential-chain.md",
+          "line": "restatement, both machine-checked:"
+        },
+        {
+          "file": "src/pages/blog/zeros-any-exponential-chain.md",
+          "line": "A machine-checked, self-contained reduction proving finiteness"
+        },
+        {
+          "file": "src/pages/blog/zeros-any-exponential-chain.md",
+          "line": "*A companion to our machine-checked zero-finiteness work"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/PfaffianGeneralBoundUncond.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.PfaffianGeneralReduce.pfaffian_khovanskii_bound_gen_uncond"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_log_pos",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "MachLib.Real.zero_ne_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "climbing-the-exponential-tower",
+      "statement": "climbing-the-exponential-tower: depth-3 Khovanskii bound, no citation axiom",
+      "sites": [
+        {
+          "file": "src/pages/blog/climbing-the-exponential-tower.md",
+          "line": "a Machine-Checked Depth-3 Khovanskii Bound"
+        },
+        {
+          "file": "src/pages/blog/climbing-the-exponential-tower.md",
+          "line": "**It is** a fully machine-checked, unconditional finiteness bound"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/IterExpDepth3Bound.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.IterExpDepth3Bound.chain3_khovanskii_bound_unconditional"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "MachLib.Real.zero_ne_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "closed-loop-clamp-safety",
+      "statement": "we-injected-a-fault: the clamp-guarded safety theorem (named in the post)",
+      "sites": [
+        {
+          "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+          "line": "a machine-checked safety proof, a measurement of that"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/ClosedLoopSafety.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Real.clamp_guarded_safe"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "decimal-envelope-numbers",
+      "statement": "we-injected-a-fault: `(1 − 0.99)·1 = 0.01` and `(1 − 0.996)·2.0 = 0.008` are theorems",
+      "sites": [
+        {
+          "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+          "line": "made that number a machine-checked theorem too"
+        },
+        {
+          "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+          "line": "whose exact arithmetic is now machine-checked.)"
+        },
+        {
+          "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+          "line": "the envelope number itself now a machine-checked theorem"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Decimal.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Real.pid_envelope_relation",
+        "MachLib.Real.motor_envelope_relation"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.realOfScientific",
+        "MachLib.Real.realOfScientific_clears",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "oscillation-barrier-classes",
+      "statement": "oscillation-is-a-compact-torus: sin escapes every eventually-signed class; exp does not",
+      "sites": [
+        {
+          "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
+          "line": "## What we machine-checked"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/EMLOscillationBarrier.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.sin_escapes_signed_classes",
+        "MachLib.sin_not_eventually_negative",
+        "MachLib.sin_not_eventually_above_one",
+        "MachLib.sin_not_eventually_dominates_any",
+        "MachLib.exp_eml_not_arbitrarily_large_zeros"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.archimedean",
+        "MachLib.Real.cos",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_gt_one_plus_self",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.pi",
+        "MachLib.Real.pi_gt_one",
+        "MachLib.Real.sin",
+        "MachLib.Real.sin_add",
+        "MachLib.Real.sin_pi",
+        "MachLib.Real.sin_zero",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "sturm-euler-nonoscillation",
+      "statement": "oscillation-is-a-compact-torus: Sturm r ≥ 0, the x^α keystone and the Abel–Wronskian core",
+      "sites": [
+        {
+          "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
+          "line": "are machine-checked; what remains is the Mean-Value-Theorem sign-glue"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/SturmNonOscillation.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.sturm_no_positive_bump",
+        "MachLib.sturm_no_negative_bump",
+        "MachLib.vpow_deriv2",
+        "MachLib.abel_euler_wronskian_deriv_zero",
+        "MachLib.phi_euler_identity",
+        "MachLib.sturm_euler_no_positive_bump"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_inv",
+        "MachLib.Real.HasDerivAt_log_pos",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_neg",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.div_def",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_div_pos_of_pos",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "periodic-target-barrier",
+      "statement": "periodicity-is-enough: no_tree_eq_periodic_target (named)",
+      "sites": [
+        {
+          "file": "src/pages/blog/periodicity-is-enough.md",
+          "line": "pinned as machine-checked headlines"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/GeneralPeriodicTargetBarrier.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Real.no_tree_eq_periodic_target"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.IsAnalyticOnReals",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_congr",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_inv",
+        "MachLib.Real.HasDerivAt_log_pos",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.archimedean",
+        "MachLib.Real.divR",
+        "MachLib.Real.div_def",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.hasDerivAt_continuousAt",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_div_pos_of_pos",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.sup_exists",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "MachLib.Real.zero_ne_one_ax",
+        "MachLib.analytic_add",
+        "MachLib.analytic_comp",
+        "MachLib.analytic_const",
+        "MachLib.analytic_exp",
+        "MachLib.analytic_finite_zeros_compact",
+        "MachLib.analytic_id",
+        "MachLib.analytic_log_pos",
+        "MachLib.analytic_mul",
+        "MachLib.analytic_ne_zero_nbhd",
+        "MachLib.analytic_one_div_pos",
+        "MachLib.analytic_sub",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "extreme-value-attainment",
+      "statement": "periodicity-is-enough: 'genuine Extreme Value Theorem attainment (max and min) on a closed interval'",
+      "sites": [
+        {
+          "file": "src/pages/blog/periodicity-is-enough.md",
+          "line": "pinned as machine-checked headlines"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/ExtremeValueAttainment.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Real.continuousAt_attains_max_Icc",
+        "MachLib.Real.continuousAt_attains_min_Icc"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.div_def",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_div_pos_of_pos",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.sup_exists",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "forward-error-gexpr",
+      "statement": "equivalence-on-real-silicon: gexpr_sound (named)",
+      "sites": [
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "a forward-error bound proved in Lean"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "against a Lean-proved error bound"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/OperatorBasisComplete.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Real.gexpr_sound"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_atan",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_cos",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_inv",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_neg",
+        "MachLib.Real.HasDerivAt_of_eq",
+        "MachLib.Real.HasDerivAt_sin",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.atan",
+        "MachLib.Real.atan_zero",
+        "MachLib.Real.cos",
+        "MachLib.Real.cosh",
+        "MachLib.Real.cosh_eq",
+        "MachLib.Real.cosh_ge_one",
+        "MachLib.Real.cosh_pos",
+        "MachLib.Real.divR",
+        "MachLib.Real.div_def",
+        "MachLib.Real.div_zero",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_add",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.neg_one_lt_tanh",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_add_le_exp",
+        "MachLib.Real.one_div_nonneg_of_pos",
+        "MachLib.Real.one_div_pos_of_pos",
+        "MachLib.Real.pythagorean",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.sin",
+        "MachLib.Real.sinh",
+        "MachLib.Real.sinh_eq",
+        "MachLib.Real.sqrt",
+        "MachLib.Real.sqrt_le_of_le_sq",
+        "MachLib.Real.sqrt_nonneg",
+        "MachLib.Real.sqrt_sq_nonneg",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.tanh",
+        "MachLib.Real.tanh_eq_sinh_div_cosh",
+        "MachLib.Real.tanh_lt_one",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "forward-error-fx",
+      "statement": "equivalence-on-real-silicon: fx_sound (named)",
+      "sites": [
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "a forward-error bound proved in Lean"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "against a Lean-proved error bound"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/FixedPointCertifier.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Real.fx_sound"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "khovanskii-chainN-explicit",
+      "statement": "/khovanskii: the constructive Khovanskii bound at every depth",
+      "sites": [
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "Re-derived from `#print axioms` on the machine-checked theorem."
+        },
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "on the zero count — machine‑checked, from Rolle alone."
+        },
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "A machine-checked, explicit bound on the real zeros of a function along an iterated-exponential tower"
+        },
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "machine‑checked proof at <em>every</em> depth"
+        },
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "<em>explicit, finite, and machine‑checked</em>, from Rolle alone."
+        },
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "Machine‑checked source (Lean 4) →"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/IterExpDepthNExplicit.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.IterExpDepthN.chainN_khovanskii_bound_explicit"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "MachLib.Real.zero_ne_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "khovanskii-47",
+      "statement": "/khovanskii: e^(eˣ) − x·eˣ crosses zero at most 47 times",
+      "sites": [
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "machine-checked theorem: <em>e^(eˣ) − x·eˣ</em> crosses zero at most"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/KhovanskiiConcrete.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.KhovanskiiConcrete.eexp_barrier_zero_count_le_47"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "MachLib.Real.zero_ne_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "apollonius-coordinates",
+      "statement": "/proofs/apollonius: all 23 plotted coordinates Lean-checked",
+      "sites": [
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "long after every coordinate had been Lean-checked"
+        },
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "all ? 'LEAN-CHECKED' : 'COMPUTED'"
+        },
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "a point is Lean-checked only if the evidence names the"
+        },
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "['Lean-checked point', s.lean ? 'PROVED — '"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "69 tangencies, sorryAx absent"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "24 tangencies, zero residual, sorryAx absent"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "each solution carries `LEAN-CHECKED POINT — NOT"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Apollonius/Coordinates.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.Apollonius.Coordinates.be4_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.be5_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.beIII_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.beIIO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.beIOI_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.beOIO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.beOOI_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.beOOO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.loIII_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.loIIO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.loIOI_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.loIOO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.loOIO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.loOOI_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.loOOO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.solIII_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.solIIO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.solIOI_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.solIOO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.solOII_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.solOIO_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.solOOI_tangent",
+        "MachLib.Geometry.Apollonius.Coordinates.solOOO_tangent"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.div_def",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.sqrt",
+        "MachLib.Real.sqrt_nonneg",
+        "MachLib.Real.sqrt_sq_nonneg",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "apollonius-locus-line",
+      "statement": "/proofs/apollonius: at d² = 8ρ² the lost circle is a line (evidence 'lean' block and PROVED entries)",
+      "sites": [
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "Machine-checked: every circle tangent to three given circles."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Apollonius/TangentLine.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.Apollonius.SymmetricTriple.oii_lead_zero_iff_tangent_line",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.oii_tangent_line_at_locus",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.oii_lead_zero_iff",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.oio_tangent_line_iff"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.div_def",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "apollonius-structure-Examples",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "sites": [
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "Machine-checked: every circle tangent to three given circles."
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "The tangencies and the count are machine-checked"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Apollonius/Examples.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.Apollonius.Examples.flagship_gp",
+        "MachLib.Geometry.Apollonius.Examples.flagship_exactly_two_per_mode",
+        "MachLib.Geometry.Apollonius.Examples.flagship_mode_unique"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.sqrt",
+        "MachLib.Real.sqrt_sq_nonneg",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "apollonius-structure-SymmetricTriple",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "sites": [
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "Machine-checked: every circle tangent to three given circles."
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "The tangencies and the count are machine-checked"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Apollonius/SymmetricTriple.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.Apollonius.SymmetricTriple.solvesModeM_iff",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.QMdisc_pos_all",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.QMlead_ne_zero",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.root_ne_zero",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.oii_at_most_one_radius"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "apollonius-structure-Mode",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "sites": [
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "Machine-checked: every circle tangent to three given circles."
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "The tangencies and the count are machine-checked"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Apollonius/Mode.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.Apollonius.eightModes_reduce_to_four",
+        "MachLib.Geometry.Apollonius.tangentEq_antipodal"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.ltR",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "apollonius-structure-Elimination",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "sites": [
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "Machine-checked: every circle tangent to three given circles."
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "The tangencies and the count are machine-checked"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Apollonius/Elimination.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.Apollonius.centre_unique"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "apollonius-structure-Enumeration",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "sites": [
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "Machine-checked: every circle tangent to three given circles."
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "The tangencies and the count are machine-checked"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Apollonius/Enumeration.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.Apollonius.allModes_length",
+        "MachLib.Geometry.Apollonius.allModes_nodup",
+        "MachLib.Geometry.Apollonius.allModes_complete",
+        "MachLib.Geometry.Apollonius.canonical_plus_anti_nodup",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.eight_solutions"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.sqrt",
+        "MachLib.Real.sqrt_sq_nonneg",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "apollonius-structure-Circle",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "sites": [
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "Machine-checked: every circle tangent to three given circles."
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "(Lean-verified structure; the plotted coordinates are exact-but-computed"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "The tangencies and the count are machine-checked"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Circle.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.tangentExt_iff"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.sqrt",
+        "MachLib.Real.sqrt_nonneg",
+        "MachLib.Real.sqrt_sq_nonneg",
+        "MachLib.Real.subR",
+        "MachLib.Real.zeroR",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "khovanskii-eml-tree-zero-bound",
+      "statement": "/khovanskii section 06: an EML tree (exp, log and reciprocals expressible) with every log argument positive on [a,b] has finitely many zeros there unless identically zero",
+      "sites": [
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "<code>MachLib.eml_eval_boundedZeros_unconditional</code>"
+        },
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "logarithm's argument stays positive. Machine‑checked:"
+        },
+        {
+          "file": "src/pages/khovanskii.astro",
+          "line": "Extended to every EML tree whose logarithm arguments stay positive"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/PfaffianExpHard.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.eml_eval_boundedZeros_unconditional"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.IsAnalyticOnReals",
+        "MachLib.Real",
+        "MachLib.Real.HasDerivAt",
+        "MachLib.Real.HasDerivAt_add",
+        "MachLib.Real.HasDerivAt_comp",
+        "MachLib.Real.HasDerivAt_const",
+        "MachLib.Real.HasDerivAt_exp",
+        "MachLib.Real.HasDerivAt_id",
+        "MachLib.Real.HasDerivAt_inv",
+        "MachLib.Real.HasDerivAt_log_pos",
+        "MachLib.Real.HasDerivAt_mul",
+        "MachLib.Real.HasDerivAt_sub",
+        "MachLib.Real.HasDerivAt_unique",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.divR",
+        "MachLib.Real.div_def",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_inv",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.natCast",
+        "MachLib.Real.natCast_succ",
+        "MachLib.Real.natCast_zero",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.one_div_pos_of_pos",
+        "MachLib.Real.rolle_ct",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "MachLib.Real.zero_ne_one_ax",
+        "MachLib.analytic_add",
+        "MachLib.analytic_comp",
+        "MachLib.analytic_const",
+        "MachLib.analytic_exp",
+        "MachLib.analytic_finite_zeros_compact",
+        "MachLib.analytic_id",
+        "MachLib.analytic_log_pos",
+        "MachLib.analytic_mul",
+        "MachLib.analytic_ne_zero_nbhd",
+        "MachLib.analytic_one_div_pos",
+        "MachLib.analytic_sub",
+        "Quot.sound",
+        "propext"
+      ]
+    }
+  ],
+  "exempt": [
+    {
+      "file": "src/pages/glossary.astro",
+      "line": "A placeholder in a Lean 4 proof that stands in for an unfinished step.",
+      "reason": "definition of `sorry`; asserts nothing is proved"
+    },
+    {
+      "file": "src/pages/blog/chaos-multiplicative-operators.md",
+      "line": "None of these results are formalized in Lean.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/conditional-tan1.md",
+      "line": "has not been formalised in Lean",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
+      "line": "*not yet* Lean-certified",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/oscillation-is-a-compact-torus.md",
+      "line": "The table is now machine-checked where the",
+      "reason": "refers to the classify_ode tool re-deriving the special-function table, not to a Lean proof"
+    },
+    {
+      "file": "src/pages/superbest.astro",
+      "line": "(empirical, not Lean-proved)",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/data/superbest.json",
+      "line": "Empirically verified at sample points, not Lean-proved.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/data/pfaffian-towers.json",
+      "line": "Empirically verified at sample points, not Lean-proved.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/a-model-for-the-axioms.md",
+      "line": "A machine-checked `sorryAx`-free proof over an unsound axiom set is still worthless",
+      "reason": "a general remark about soundness; no theorem claimed"
+    },
+    {
+      "file": "src/pages/proofs.astro",
+      "line": "What \"machine-verified\" means",
+      "reason": "section heading that defines the term; the page's claims are registered under proofs-page-aggregates"
+    },
+    {
+      "file": "src/pages/atlas.astro",
+      "line": "not formalized in Lean).",
+      "reason": "negative statement: these completeness results are proved on paper and verified computationally, not in Lean"
+    },
+    {
+      "file": "src/pages/blog/a-model-for-the-axioms.md",
+      "line": "It is** a machine-checked *consistency* witness",
+      "reason": "the MachLib.Real ⊨ ℝ witness layer, gated in predeploy by check:axiom-bridge (monogate-lean tools/axiom_witness/check_bridge.py); a model-theoretic witness, not one registrable theorem"
+    },
+    {
+      "file": "src/pages/blog/the-axiom-you-cannot-see.md",
+      "line": "> bridge file compiles and reports 149 trusted axioms",
+      "reason": "figures printed by the axiom-witness bridge, gated in predeploy by check:axiom-bridge"
+    },
+    {
+      "file": "src/pages/index.astro",
+      "line": "Machine-checked and candidate proof artifacts, with explicit limits and non-claims.",
+      "reason": "a link card to /proofs; see the proofs.astro exemptions"
+    },
+    {
+      "file": "src/pages/manifesto.astro",
+      "line": "We wrote the core results as machine-checked Lean&nbsp;4",
+      "reason": "blanket statement; every Lean claim on the site is registered individually in this file"
+    },
+    {
+      "file": "src/pages/paper.astro",
+      "line": "Formal Lean 4 Proofs",
+      "reason": "the /paper Lean card summarizes /proofs, whose theorems are registered here and whose quotations check_proofs_page.py checks"
+    },
+    {
+      "file": "src/pages/paper.astro",
+      "line": "EML theorems formalized in Lean 4: the SuperBEST routing table lower bounds",
+      "reason": "the /paper Lean card summarizes /proofs, whose theorems are registered here"
+    },
+    {
+      "file": "src/pages/paper.astro",
+      "line": "Machine-verified proofs (Lean 4) →",
+      "reason": "link label to the monogate-lean repository"
+    },
+    {
+      "file": "src/pages/proofs.astro",
+      "line": "name: \"Machine-verified Lean theorems — Monogate\",",
+      "reason": "page-level wording on /proofs; every flagship without a documented sorry is a registered claim here (sin_not_in_eml is shown with its sorry warning), and check_proofs_page.py holds sources, lines and counts to the pinned commit"
+    },
+    {
+      "file": "src/pages/proofs.astro",
+      "line": "title=\"Machine-Verified Proofs — monogate.org\"",
+      "reason": "page title of /proofs; see the proofs.astro JSON-LD exemption"
+    },
+    {
+      "file": "src/pages/proofs.astro",
+      "line": "<h1>Machine-Verified Proofs</h1>",
+      "reason": "page heading of /proofs; see the proofs.astro JSON-LD exemption"
+    },
+    {
+      "file": "src/pages/proofs.astro",
+      "line": "<code>lake build</code> recompiles every proof from source against its declared Mathlib",
+      "reason": "describes what `lake build` does; no theorem is claimed"
+    },
+    {
+      "file": "src/pages/proofs.astro",
+      "line": "aria-label=\"Lean-verified files\"",
+      "reason": "accessibility label of the per-file table; the files' theorems are registered here"
+    },
+    {
+      "file": "src/pages/rss.xml.ts",
+      "line": "Lean-verified theorems, and the EML framework",
+      "reason": "RSS channel description; each post's Lean claims are registered individually"
+    },
+    {
+      "file": "src/pages/superbest.astro",
+      "line": "rel=\"noopener\">Machine-verified proofs (Lean 4)",
+      "reason": "link label to the monogate-lean repository"
+    },
+    {
+      "file": "src/pages/theorems.astro",
+      "line": "Machine-verified proofs (Lean 4) →",
+      "reason": "link label to the monogate-lean repository"
+    },
+    {
+      "file": "src/pages/theorems.astro",
+      "line": "badge on a card means the cited",
+      "reason": "badge legend; every theorems.json entry with a lean object is a registered claim (checked when this registry was built)"
+    },
+    {
+      "file": "src/pages/theorems.astro",
+      "line": "Lean theorem is <strong>machine-checked</strong>: it compiles with no",
+      "reason": "badge legend; see above"
+    },
+    {
+      "file": "src/pages/theorems.astro",
+      "line": "The strongest form of that standard — machine-checked <em>and</em>",
+      "reason": "badge legend pointing at the verified zoo; no theorem claimed on this line"
+    },
+    {
+      "file": "src/pages/theorems.astro",
+      "line": "{r.lean.status === 'verified' ? 'LEAN ✓' : 'LEAN ~'}",
+      "reason": "badge renderer; every theorems.json lean object is a registered claim"
+    },
+    {
+      "file": "public/capability_card.json",
+      "line": "not formalized in Lean.",
+      "reason": "negative statement"
+    },
+    {
+      "file": "public/.well-known/capcard.json",
+      "line": "not formalized in Lean.",
+      "reason": "negative statement"
+    }
+  ]
+}

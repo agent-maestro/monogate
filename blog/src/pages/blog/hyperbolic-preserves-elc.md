@@ -1,13 +1,13 @@
 ---
 layout: ../../layouts/Base.astro
 title: "Hyperbolic Functions Preserve ELC (And Why Trig Doesn't)"
-description: "sinh, cosh, and tanh map ELC inputs to ELC outputs. sin, cos, and tan don't. Machine-verified in Lean 4. With a 3-4-5 triple bonus."
+description: "sinh, cosh, and tanh map ELC inputs to ELC outputs; sin, cos, and tan don't. The identities behind it are machine-verified in Lean 4. With a 3-4-5 triple bonus."
 date: 2026-04-22
 ---
 
 # Hyperbolic Functions Preserve ELC (And Why Trig Doesn't)
 
-**Tier: THEOREM** (Lean-verified, 0 sorries)
+**Tier: THEOREM** (the three identities are Lean-verified, 0 sorries; the ELC-closure step is the one-line observation under *Lean proof* below, not a Lean statement)
 
 The ELC field — the set of real numbers expressible as finite trees of
 `exp`, `ln`, and arithmetic — has a strange asymmetry with respect to the
@@ -149,7 +149,7 @@ expressions use only `exp` and arithmetic, composing with an ELC input
 keeps the result in ELC.
 
 Source: [HyperbolicPreservation.lean](https://github.com/agent-maestro/monogate-lean/blob/master/MonogateEML/HyperbolicPreservation.lean)
-(7 theorems total, including the numerical 3-4-5 witnesses).
+(34 theorems and lemmas in the file at monogate-lean 9c6164b, including the numerical 3-4-5 witnesses).
 
 ---
 

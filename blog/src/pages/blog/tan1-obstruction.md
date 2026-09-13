@@ -9,7 +9,7 @@ tag: theorem
 
 # Why tan(1) Controls Everything
 
-**Tier: THEOREM** (T18, T29, T30, T31 unified via the Lindemann–Weierstrass obstruction)
+**Tier: THEOREM** (T17, T29, T30, T31 unified via the Lindemann–Weierstrass obstruction)
 
 ---
 
@@ -50,7 +50,7 @@ Starting from the terminal set $\{0, 1\}$, EML trees generate a growing set of v
 - Depth 1: $\{1, e, \ldots\}$ — a handful of real numbers.
 - Depth $k$: a countably infinite but structured set $\mathrm{EML}_k$.
 
-**T18** (Lean-verified): $i \notin \mathrm{EML}_k$ for any $k$.
+**T17**: $i \notin \mathrm{EML}_k$ for any $k$ (Lean-verified under strict real semantics).
 
 Under strict real semantics the proof is three lines: every EML operation
 maps real inputs to real outputs, and $i$ is not real. Done.
@@ -174,7 +174,7 @@ All five conditions hold together or fail together:
 | # | Condition | Status |
 |---|---|---|
 | (1) | $\tan(1) \notin \overline{\mathbb{Q}}$ (Lindemann–Weierstrass) | **Theorem (proven 1882)** |
-| (2) | $i \notin \mathrm{EML}_k$ for all $k$ (T18) | Follows from (1); Lean-verified for real semantics |
+| (2) | $i \notin \mathrm{EML}_k$ for all $k$ (T17) | Follows from (1); Lean-verified for real semantics |
 | (3) | $\mathrm{depth}_\mathbb{C}(f) = \mathrm{depth}_\mathbb{R}(f)$ for all Atlas functions | Follows from (2) via Depth Stability Theorem |
 | (4) | $\mathrm{depth}(\arctan) = \mathrm{depth}(\arcsin) = \mathrm{depth}(\arccos) = 3$ | Follows from (3) |
 | (5) | Every EML-Atlas function has a stable, well-defined depth stratum | Follows from (4) |
@@ -210,7 +210,7 @@ The structure of the EML depth theory is:
 ```
 tan(1) ∉ Q̄  (Lindemann–Weierstrass)
     ↓
-i ∉ EML_k  (T18, Lean-verified for real semantics)
+i ∉ EML_k  (T17, Lean-verified for real semantics)
     ↓
 depth_ℂ = depth_ℝ  (Depth Stability Theorem)
     ↓

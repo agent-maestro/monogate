@@ -112,6 +112,12 @@ red — so we know the teeth are attached, not just drawn on.
 
 ## Honest scope
 
+> **Update, 2026-09-12.** The figures below are from this post's date. At monogate-lean 9c6164b the
+> bridge file compiles and reports 149 trusted axioms: 121 verbatim-witnessed, 3 standard, 12 mapped,
+> 22 float-bridge and **0 tracked gaps**. The log-analyticity gap described below is closed: it is
+> now witnessed by `MonogateEML.RealModel.analyticOnNhd_real_log_Ioi`. The bridge's runner is a script
+> in monogate-lean's `tools/axiom_witness`, run by hand; monogate-lean has no CI.
+
 The boundary is enforced, not asserted, and the honest shape of it is:
 
 - All **61** trusted axioms are accounted for. **56** are verbatim-witnessed against `ℝ` by

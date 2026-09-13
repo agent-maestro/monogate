@@ -44,9 +44,11 @@ over 3 formulas. Data: `sE_em_costs.json`.)
 ## Planck is the surprise
 
 Planck's law calls $\exp(h\nu/kT)$ on positive arguments and then does
-algebra. No trig, no branch cuts, no complex bypass. By the Lean-verified
+algebra. No trig, no branch cuts, no complex bypass. By the
 T_EXP_LOG_DUALITY catalogue rule, any F16 tree with $\exp$ of a
-positive-real argument stays in the real component of $\mathrm{ELC}$. The
+positive-real argument stays in the real component of $\mathrm{ELC}$. (That
+rule is not itself a Lean theorem: the Lean-verified part of
+T_EXP_LOG_DUALITY is the fixed-point multiplier identity.) The
 14-node tree computes $B(\nu,T)$ exactly at every physically meaningful
 $(\nu, T)$ — no approximation, no truncation.
 

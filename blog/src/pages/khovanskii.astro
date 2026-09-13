@@ -37,7 +37,7 @@ const axiomGroups: { label: string; note: string; color: string; items: string[]
   {
     label: 'The analytic engine', color: 'var(--accent)',
     note: 'Rolle’s theorem — between two zeros of a differentiable function lies a zero of its derivative. The single nontrivial analytic input; the only place completeness of the reals does any work.',
-    items: ['rolle'],
+    items: ['rolle_ct'],
   },
 ];
 const axiomTotal = axiomGroups.reduce((n, g) => n + g.items.length, 0);
@@ -75,7 +75,7 @@ const kindColor: Record<string, string> = {
 
 <Base
   title="Constructive Khovanskii in Lean — monogate.org"
-  description="A machine-checked, explicit bound on the real zeros of a function along an iterated-exponential tower — reduced to Rolle's theorem, with an exact axiom footprint and nothing swept under the rug. Now extended to the full exp/log/reciprocal barrier class."
+  description="A machine-checked, explicit bound on the real zeros of a function along an iterated-exponential tower — reduced to Rolle's theorem, with an exact axiom footprint and nothing swept under the rug. Extended to every EML tree whose logarithm arguments stay positive, which covers exponentials, logarithms and reciprocals."
 >
   <p class="eyebrow">Formalization · iterated exponentials · Lean 4</p>
   <h1>Constructive Khovanskii in Lean</h1>
@@ -377,8 +377,10 @@ descentBound(n+1, B) = ℓ(descentBound(n), B, B)</code></pre>
     </p>
     <blockquote>
       Any function assembled from <em>x</em>, exponentials, logarithms, and reciprocals —
-      the whole class an expression language produces — has finitely many real zeros on
-      any interval where it is not identically zero. Machine‑checked.
+      the whole class an expression language produces, written as an EML tree — has finitely
+      many real zeros on any interval where it is not identically zero and where every
+      logarithm's argument stays positive. Machine‑checked:
+      <code>MachLib.eml_eval_boundedZeros_unconditional</code>.
     </blockquote>
     <p>
       Two things make the mixed chain harder than the pure tower, and both are now

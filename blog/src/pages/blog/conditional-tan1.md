@@ -9,7 +9,7 @@ tag: conjecture
 
 # What If tan(1) Were Constructible?
 
-**Tier: CONJECTURE** — everything below the horizontal rule in Section 1 is conditional. The only unconditional result is at the end: *tan(1) is not constructible*, proved by contrapositive from T18.
+**Tier: CONJECTURE** — everything below the horizontal rule in Section 1 is conditional. The only unconditional result is at the end: *tan(1) is not constructible*, proved by contrapositive from T17.
 
 ---
 
@@ -43,7 +43,7 @@ From $\tan(1)$, you can recover $\cos(1)$ via the identity $\cos^2(1) = 1/(1 + \
 
 Once you have $\cos(1)$ and $\sin(1)$, you have $e^i = \cos(1) + i\sin(1)$. Taking the complex logarithm: $\ln(e^i) = i$. Under the complex EML grammar (the Euler gateway), this means $i$ would be reachable from a bounded-depth EML tree.
 
-But that directly contradicts **T18** — the proved, Lean-verified theorem that $i \notin \mathrm{EML}_1$. This is the wall.
+But that directly contradicts **T17**: $i \notin \mathrm{EML}_1$. This is the wall. (T17 is Lean-verified only under strict real semantics. The complex-semantics form this step needs is argued on paper; see [Why tan(1) Controls Everything](/blog/tan1-obstruction).)
 
 **Step C: The depth hierarchy would collapse.**
 
@@ -63,13 +63,13 @@ The conditional chain has the form:
 
 > $\tan(1) \in \mathrm{EML}_1 \;\Rightarrow\; i \in \mathrm{EML}_1$
 
-Theorem T18 says $i \notin \mathrm{EML}_1$. Contrapositive:
+Theorem T17 says $i \notin \mathrm{EML}_1$. Contrapositive:
 
 > $i \notin \mathrm{EML}_1 \;\Rightarrow\; \tan(1) \notin \mathrm{EML}_1$
 
 **This is DOOR-4: $\tan(1) \notin \mathrm{EML}_1$.** A real theorem, not a conjecture.
 
-The Lindemann–Weierstrass route gives the same answer (transcendence is already a barrier), but the T18 contrapositive is structurally cleaner: it shows that the obstruction to $\tan(1)$ is the same obstruction that excludes $i$ — a fundamental property of the real-valued EML grammar.
+The Lindemann–Weierstrass route gives the same answer (transcendence is already a barrier), but the T17 contrapositive is structurally cleaner: it shows that the obstruction to $\tan(1)$ is the same obstruction that excludes $i$ — a fundamental property of the real-valued EML grammar.
 
 ---
 
@@ -93,7 +93,7 @@ The five-way equivalence at the heart of the monogate capstone paper says these 
 
 1. The EML grammar is complete (every function is expressible)
 2. The Depth Stability Theorem holds
-3. $i \notin \mathrm{EML}_1$ (T18)
+3. $i \notin \mathrm{EML}_1$ (T17)
 4. The depth-3 ceiling on standard functions holds
 5. Lindemann–Weierstrass provides valid transcendence obstructions
 

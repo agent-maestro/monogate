@@ -117,7 +117,11 @@ zero set is therefore closed and discrete, hence bounded-and-closed in a proper 
   real-number axioms, so those axioms cannot be jointly contradictory unless Lean-plus-Mathlib
   itself is. Every piece is `#print axioms`-clean at Lean's three core axioms, no `sorryAx`.
 - **It is** one axiom lighter in the deepest place: the analytic finite-zeros theorem — the load
-  bearer under the Khovanskii bounds — is now proved rather than assumed.
+  bearer under the Khovanskii bounds — is now proved rather than assumed. (From 2026-09-02 to
+  2026-09-12 that file did not compile against an updated Mathlib, whose
+  `Metric.finite_isBounded_inter_isClosed` changed its arguments, and the theorem's axioms
+  briefly included `sorryAx`. It was repaired in monogate-lean 9c6164b and is now re-checked before
+  every deploy.)
 - **It is not** a change to MachLib. The library stays Mathlib-free and fast; the witness lives
   beside it and runs once. We did **not** "ground MachLib in Mathlib" in the sense of making it
   depend on Mathlib — the whole point of exhibiting a model is that you *don't* have to.

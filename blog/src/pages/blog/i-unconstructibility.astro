@@ -63,9 +63,10 @@ import Base from '../../layouts/Base.astro';
   <h2>Lean verification</h2>
 
   <p>
-    This theorem is formalized in <code>StrictBarrier.lean</code> with 0 sorries.
-    The key lemma: given initial values in ℝ<sub>+</sub>, every EML tree value stays in ℝ<sub>+</sub>.
-    The proof proceeds by structural induction on the tree.
+    This theorem is formalized as <code>T19_i_unconstructible_strict</code> in <code>StrictBarrier.lean</code>
+    (in the private monogate-research repository). Its <code>#print axioms</code> has no <code>sorryAx</code>, and it is
+    re-checked before every deploy. The proof is short and not inductive: the strict evaluator is
+    typed to return real numbers, and <code>i</code> is not real.
   </p>
 
   <h2>The extended grammar question</h2>

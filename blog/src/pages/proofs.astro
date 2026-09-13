@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import { files, aggregates, leanRepo, ghFile } from '../data/proofs';
 
 const {
-  verifiedOriginal, totalStatements, mathlibWrappers, supportingLemmas,
+  verifiedOriginal, totalStatements,
   cleanFiles, partialFiles, sorriesTotal, flagshipCount, totalFiles,
 } = aggregates;
 
@@ -39,17 +39,19 @@ const theoremLd = {
 
 <Base
   title="Machine-Verified Proofs — monogate.org"
-  description={`${verifiedOriginal} original EML theorems verified in Lean 4 with full source. ${totalStatements} total statements. Zero sorries across ${cleanFiles} files. Clone the repo, run lake build — no trust required.`}
+  description={`${totalStatements} Lean statements across ${totalFiles} files, ${verifiedOriginal} of them EML-original, with full source. Zero sorries in ${cleanFiles} of the ${totalFiles} files. Every theorem on this page is checked against a pinned monogate-lean commit before each deploy.`}
 >
   <div class="meta">
-    <span>Lean 4 · Mathlib v4.14.0</span>
-    <span>0 sorries across {cleanFiles} files</span>
+    <span>Lean 4 · Mathlib pinned by lake-manifest.json</span>
+    <span>0 sorries in {cleanFiles} of {totalFiles} files</span>
     <span><a href={leanRepo}>monogate-lean</a></span>
   </div>
 
   <h1>Machine-Verified Proofs</h1>
   <p class="lead">
-    {verifiedOriginal} original theorems verified by computer. {totalStatements} total Lean statements. Zero sorries across {cleanFiles} files.
+    {totalStatements} Lean statements across {totalFiles} files, {verifiedOriginal} of them EML-original. Zero sorries in {cleanFiles} of the {totalFiles} files.
+    Before every deploy, each flagship below is checked against a pinned monogate-lean commit: its source
+    must appear there verbatim, and its theorem must compile with no <code>sorryAx</code>.
   </p>
 
   <section class="exhibits">
@@ -71,11 +73,14 @@ const theoremLd = {
     <pre class="shell"><code>git clone https://github.com/agent-maestro/monogate-lean
 cd monogate-lean
 lake build
-# Build completed successfully. 0 errors. 0 sorries across 13 of 14 files; 2 documented sorries in InfiniteZerosBarrier.lean.</code></pre>
+# expect: Build completed successfully.
+# a sorry compiles too, with a "declaration uses 'sorry'" warning</code></pre>
     <p class="verify-note">
       First run takes 2–5 minutes (Mathlib oleans download from the GitHub cache). Runs locally.
       No network verifier, no remote kernel. If <code>lake build</code> exits 0, every theorem on
-      this page has been checked from the axioms of type theory up.
+      this page compiled, and the ones without a documented <code>sorry</code> are checked from the
+      axioms of type theory up. <code>#print axioms &lt;name&gt;</code> tells the two apart: a checked
+      theorem never lists <code>sorryAx</code>.
     </p>
   </section>
 
@@ -111,12 +116,11 @@ lake build
   <div class="divider"></div>
 
   <h2 id="breakdown">Honest breakdown</h2>
-  <p>The repository contains {totalStatements} named statements. They are not all equally original. Here is the accounting:</p>
+  <p>The {totalFiles} files below contain {totalStatements} named theorems and lemmas. They are not all equally original. Here is the accounting:</p>
   <dl class="breakdown">
-    <div><dt>{verifiedOriginal}</dt><dd>EML-original theorems — results specific to this framework (SuperBEST lower bounds, F16-shape witnesses, EMLTree depth hierarchy, ELC preservation, self-map conjugacies).</dd></div>
-    <div><dt>{mathlibWrappers}</dt><dd>Mathlib identity wrappers — named aliases of lemmas already in Mathlib, re-exported under EML-readable names (e.g. <code>exp_ln_cancel</code> is <code>Real.exp_log</code>).</dd></div>
-    <div><dt>{supportingLemmas}</dt><dd>Supporting lemmas — per-operator witnesses, trivial evaluations, definitional unfolds, and proof scaffolding that feed the originals.</dd></div>
-    <div><dt>{totalStatements}</dt><dd>Total verified statements, all 0-sorry except as noted below.</dd></div>
+    <div><dt>{verifiedOriginal}</dt><dd>EML-original theorems, classified by hand — results specific to this framework (SuperBEST lower bounds, F16-shape witnesses, EMLTree depth hierarchy, ELC preservation, self-map conjugacies).</dd></div>
+    <div><dt>{totalStatements - verifiedOriginal}</dt><dd>Everything else: Mathlib identity wrappers (named aliases of lemmas already in Mathlib, re-exported under EML-readable names, e.g. <code>exp_ln_cancel</code> is <code>Real.exp_log</code>), per-operator witnesses, trivial evaluations, definitional unfolds, and proof scaffolding that feed the originals. The split between those kinds is not counted.</dd></div>
+    <div><dt>{totalStatements}</dt><dd>Total statements, all 0-sorry except as noted below.</dd></div>
     <div><dt>{sorriesTotal}</dt><dd>Sorry statements, all in <code>InfiniteZerosBarrier.lean</code>: <code>sin_not_in_eml</code> and <code>sin_not_in_real_EML_k</code>. Both flag the same open gap — a quantitative zero-count bound on EML-k trees needs o-minimal structure theory (Wilkie 1996, not yet formalized in Mathlib).</dd></div>
   </dl>
 

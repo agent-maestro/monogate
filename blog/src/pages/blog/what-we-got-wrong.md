@@ -38,7 +38,7 @@ Earlier claim: softplus beats tanh on physics-informed neural networks by ~17× 
 Six findings held up across the audit and can be cited:
 
 - **FMA staircase**: 15.5% aggregate savings on 222 parseable of 265 equations; AIC-preferred staircase. See `/blog/fma-staircase`.
-- **SuperBEST 14n / 80.8%** on the 10-op positive-domain basket. Lean-verified via `UpperBounds.lean`.
+- **SuperBEST 14n / 80.8%** on the 10-op positive-domain basket. The one-node witnesses and the 14n total are Lean-verified in `ModelAudit.lean` (`superbest_v53_positive_witnesses`, `superbest_v53_positive_total`); 80.8% is 1 − 14/73.
 - **Oscillation boundary φ = 1.0** across 314 of 315 equations. See `/blog/oscillation-boundary`.
 - **Zipf α ≈ 1.978** on catalog cost distribution.
 - **Log-normal asymptotic T ≈ 5.69**.

@@ -8,11 +8,11 @@
       "session": "External (Odrzywołek 2026) + Lean, 2026-04-25",
       "category": "Core Algebra",
       "statement": "eml(x, y) = exp(x) − ln(y) generates every elementary function as a finite binary tree. Published arXiv:2603.21852. Independently re-derived as a local Lean formalization: an EML-elementary predicate closed under composition, with the universality statement as its capstone.",
-      "evidence": "Published, peer-reviewable proof, plus an independent local Lean 4 formalization (0 sorries): eml_universality, built from EML_k_closed_comp / IsEMLElementary.comp over the complex EML grammar.",
+      "evidence": "Published, peer-reviewable proof, plus an independent local Lean 4 formalization (0 sorries): eml_universality, built from EML_k_closed_comp / IsEMLElementary.comp over the complex EML grammar. The Lean theorem is the definitional form: every function satisfying the IsEMLElementary predicate is realized by an EML tree. That every elementary function satisfies the predicate is the published result, not a Lean statement.",
       "lean": {
         "file": "Universality.lean",
         "theorem": "eml_universality",
-        "status": "verified"
+        "status": "partial"
       }
     },
     {
@@ -80,7 +80,7 @@
       "session": "Sprint2",
       "category": "Complex EML",
       "statement": "Under strict principal-branch semantics, i = √−1 is not constructible from {1} using the ceml grammar in finite depth. At depth 6, the closest approach is |T − i| ≥ 4.76×10⁻⁶.",
-      "evidence": "Lean 4: T19_i_unconstructible_strict in StrictBarrier.lean (the private monogate-research repo) compiles against Mathlib with no sorryAx, re-checked 2026-09-12. The proof is short, not inductive: the strict evaluator returns real numbers by construction, and i is not real. The file is not in the public monogate-lean library yet, so this entry carries no audited lean citation. Depth-6 exhaustive search: minimum distance 4.76×10⁻⁶ (not re-run)."
+      "evidence": "Lean 4: T19_i_unconstructible_strict in StrictBarrier.lean (the private monogate-research repo) compiles against Mathlib with no sorryAx, re-checked before every deploy at a pinned monogate-research commit (scripts/lean_claims.json). The proof is short, not inductive: the strict evaluator returns real numbers by construction, and i is not real. The file is not in the public monogate-lean library, so the card carries no lean link. Depth-6 exhaustive search: minimum distance 4.76×10⁻⁶ (not re-run)."
     },
     {
       "id": "T24",
@@ -298,7 +298,7 @@
       "session": "Blind Session Follow-up 2026-04-22",
       "category": "Complex EML",
       "statement": "At any z ∈ slit plane with Complex.exp(z) = z, the multiplier product (exp)′(z)·(log)′(z) = 1. Corollary: every fixed point of exp is repelling under exp (|mult| = |z| > 1 for Lambert z_k*) and attracting under log on its branch (|mult| = 1/|z| < 1).",
-      "evidence": "Lean 4, 0 sorries. Chain rule + Complex.hasDerivAt_exp + Complex.hasDerivAt_log in Mathlib v4.14.0. Numerical evidence: all 7 tested Lambert fixed points z_k* (|k|≤3) satisfy |exp-mult|·|log-mult| = 1 to 10⁻¹⁵. Reproduce: python exploration/blind-sessions/scripts/s02_sin_vs_exp_tower.py.",
+      "evidence": "Lean 4, 0 sorries. Chain rule + Complex.hasDerivAt_exp + Complex.hasDerivAt_log in Mathlib (the revision monogate-lean's lake-manifest.json pins). Numerical evidence: all 7 tested Lambert fixed points z_k* (|k|≤3) satisfy |exp-mult|·|log-mult| = 1 to 10⁻¹⁵. Reproduce: python exploration/blind-sessions/scripts/s02_sin_vs_exp_tower.py.",
       "lean": {
         "file": "EMLDuality.lean",
         "theorem": "exp_log_multiplier_product_at_fixed_point",
@@ -312,11 +312,11 @@
       "session": "Blind Session Follow-up 2026-04-22",
       "category": "Operator Family",
       "statement": "sinh(x) = (exp(x)−exp(−x))/2, cosh(x) = (exp(x)+exp(−x))/2, tanh(x) = sinh(x)/cosh(x). Hence sinh, cosh, tanh map ELC(ℝ) → ELC(ℝ). Contrast with sin/cos/tan, which do NOT preserve ELC (T01). Includes 3-4-5 Pythagorean triple witness: sinh(ln 2)=3/4, cosh(ln 2)=5/4, 5²−3²=4².",
-      "evidence": "Lean 4, 0 sorries. Real.sinh_eq, Real.cosh_eq, Real.tanh_eq_sinh_div_cosh in Mathlib v4.14.0; numerical 3-4-5 witnesses via norm_num at ln 2.",
+      "evidence": "Lean 4, 0 sorries. Real.sinh_eq, Real.cosh_eq, Real.tanh_eq_sinh_div_cosh in Mathlib (the revision monogate-lean's lake-manifest.json pins); numerical 3-4-5 witnesses via norm_num at ln 2. Lean checks the three identities and the 3-4-5 witnesses; the ELC-closure consequence is not stated in Lean.",
       "lean": {
         "file": "HyperbolicPreservation.lean",
         "theorem": "sinh_as_exp_arithmetic / cosh_as_exp_arithmetic / pythagorean_triple_at_log_two",
-        "status": "verified"
+        "status": "partial"
       }
     },
     {

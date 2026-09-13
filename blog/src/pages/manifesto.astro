@@ -49,12 +49,13 @@ import Base from '../layouts/Base.astro';
 
   <h2>What we proved</h2>
   <p>
-    We wrote eleven of the core results as machine-checked Lean&nbsp;4
+    We wrote the core results as machine-checked Lean&nbsp;4
     proofs.  A program — not a reviewer, not a reputation — verifies
-    every logical step from the axioms of mathematics.  All eleven
-    files compile with zero gaps.  One additional file is honestly
-    partial: two small steps wait on a chapter of real-analysis
-    infrastructure that doesn't exist in the Lean library yet.  See
+    every logical step from the axioms of mathematics.  Every Lean
+    claim on this site is re-checked before each deploy: its file is
+    compiled at a pinned commit and its <code>#print axioms</code> is
+    read.  Two files in the library still carry documented
+    <code>sorry</code>s, and the pages that cite them say so.  See
     <a href="/proofs">/proofs</a>.
   </p>
 

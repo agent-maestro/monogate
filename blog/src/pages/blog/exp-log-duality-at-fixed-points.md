@@ -105,8 +105,8 @@ The chain rule gives `exp'(z) = exp(z) = z` (since z is a fixed point) and
 `exp z ≠ 0` forces `z ≠ 0`.
 
 Source: [EMLDuality.lean](https://github.com/agent-maestro/monogate-lean/blob/master/MonogateEML/EMLDuality.lean)
-(4 theorems total, including `exp_fixed_point_multiplier_equals_z` and
-`log_multiplier_at_exp_fixed_point` as corollaries).
+(18 theorems and lemmas in the file at monogate-lean 9c6164b, including
+`exp_fixed_point_multiplier_equals_z` and `log_multiplier_at_exp_fixed_point` as corollaries).
 
 ---
 

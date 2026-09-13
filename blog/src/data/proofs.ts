@@ -1,6 +1,11 @@
 // Source of truth for the /proofs page and /proofs.lean.txt dump.
 // Every `source` is a verbatim copy from monogate-lean/MonogateEML/*.lean.
 // Line numbers point at the first line of the theorem in that file.
+//
+// scripts/check_proofs_page.py holds all three to the monogate-lean commit pinned in scripts/lean_claims.json
+// before every deploy: each `source` must occur verbatim in its file, each `line` must be that theorem's
+// line, and each file's `total` (theorem + lemma declarations) and `sorries` must match the file.
+// `original` is a hand classification and is not checked.
 
 export interface Flagship {
   name: string;
@@ -38,10 +43,13 @@ export const files: ProofFile[] = [
         name: 'no_f16_computes_add',
         line: 269,
         hook: 'Direct enumeration: every one of the 16 F-operators is refuted by a concrete witness pair. The proof is a 16-branch case split.',
-        source: `theorem no_f16_computes_add :
+        source: `/-- No F16 operator computes addition. -/
+theorem no_f16_computes_add :
     ∀ op ∈ f16_ops, ¬ (∀ x y : ℝ, op x y = x + y) := by
   intro op hmem
+  -- Use \`simp\` to unfold list membership into a disjunction of equalities
   simp only [f16_ops, List.mem_cons, List.mem_nil_iff, or_false] at hmem
+  -- hmem : op = F1 ∨ (op = F2 ∨ (... ∨ op = F16fn)...)
   rcases hmem with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl |
                    rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
   · exact F1_ne_add
@@ -207,7 +215,14 @@ theorem rpow_one_node_positive (n x : ℝ) (hx : 0 < x) :
         source: `/-- EXL identity: exp(0) * log(x) = log(x) for all real x.
 
     Justifies the SuperBEST 1-node accounting of \`ln(x)\` via the extended
-    operator EXL(a, b) := exp(a) * log(b), with EXL(0, x) = log(x). -/
+    operator EXL(a, b) := exp(a) * log(b), with EXL(0, x) = log(x).
+
+    Note on scope: EXL is in the extended 23-operator catalogue (it has
+    the form h(exp(±x), log(±y)) with h(u, v) = u * v) but is not one of
+    the F1..F16 operators defined in AddLowerBound.lean / DivLowerBound.lean
+    (which use h ∈ {subtraction, identity, log-of-arithmetic, exp-of-arithmetic}).
+    The 14n SuperBEST headline that counts ln = 1n therefore relies on this
+    extended-op accounting. -/
 theorem ln_one_node_via_exl (x : ℝ) :
     Real.exp 0 * Real.log x = Real.log x := by
   rw [Real.exp_zero, one_mul]`
@@ -321,8 +336,8 @@ theorem mul_is_one_node_positive (x y : ℝ) (hx : 0 < x) (hy : 0 < y) :
         hook: 'EPL(n, x) = exp(n · log x) = x^n for x > 0. Closes pow as a single F13 node — the construction that subsumes recip (n = −1), sqrt (n = 1/2), and general powers in the v5.3 audit.',
         source: `/-- EPL(n, x) = exp(n · log x) = x^n for x > 0 (pow = 1n). -/
 theorem pow_is_one_node_positive (n x : ℝ) (hx : 0 < x) :
-    Real.exp (n * Real.log x) = x ^ n :=
-  rpow_one_node_positive n x hx`
+    Real.exp (n * Real.log x) = x ^ n := by
+  rw [Real.rpow_def_of_pos hx]; ring_nf`
       }
     ]
   },
@@ -449,7 +464,7 @@ theorem cosh_as_exp_arithmetic (x : ℝ) :
     flagships: [
       {
         name: 'eal_exl_conjugacy',
-        line: 31,
+        line: 48,
         hook: 'g ∘ exp = exp ∘ f on (0,∞), where f(x) = exp(x) + ln(x) is the EAL self-map and g(y) = exp(y) · ln(y) is the EXL self-map.',
         source: `/-- **EAL↔EXL conjugacy via exp.** Let \`f(x) = exp(x) + ln(x)\` be the EAL
 self-map (the value of the F16 operator \`EAL\` evaluated on the diagonal)
@@ -465,7 +480,7 @@ theorem eal_exl_conjugacy (x : ℝ) (hx : 0 < x) :
       },
       {
         name: 'eml_edl_conjugacy',
-        line: 42,
+        line: 59,
         hook: 'The subtractive / divisive partner: exp(y) / ln(y) and exp(x) − ln(x) conjugate via exp on (0,∞) \\ {1}.',
         source: `/-- **EML↔EDL conjugacy via exp.** Let \`f(x) = exp(x) − ln(x)\` be the EML
 self-map and \`g(y) = exp(y) / ln(y)\` the EDL self-map. Then on the
@@ -481,12 +496,13 @@ theorem eml_edl_conjugacy (x : ℝ) (hx : 0 < x) (hx1 : x ≠ 1) :
       },
       {
         name: 'exp_log_round_trip',
-        line: 92,
+        line: 109,
         hook: 'The key rewrite used in both EAL↔EXL and EML↔EDL conjugacies — for x > 0, exp(log x) = x. Lifted into the conjugacy namespace as a citable lemma.',
         source: `/-- The key rewrite used in both conjugacies: for x > 0,
-    exp(log x) = x. -/
+    \`ln(exp x) = x\` AND \`exp(ln x) = x\`. Packaged as a named step. -/
 theorem exp_log_round_trip (x : ℝ) (hx : 0 < x) :
-    Real.exp (Real.log x) = x := Real.exp_log hx`
+    Real.log (Real.exp x) = x ∧ Real.exp (Real.log x) = x :=
+  ⟨Real.log_exp x, Real.exp_log hx⟩`
       }
     ]
   },
@@ -498,7 +514,7 @@ theorem exp_log_round_trip (x : ℝ) (hx : 0 < x) :
     flagships: [
       {
         name: 'analytic_finite_zeros_compact',
-        line: 92,
+        line: 94,
         hook: 'Part B of T01 — a non-zero real-analytic function on [a,b] has finitely many zeros there. Bolzano-Weierstrass + Mathlib\'s analytic identity theorem.',
         source: `/-- A non-zero real-analytic function on [a,b] has finitely many zeros.
 
@@ -510,6 +526,8 @@ lemma analytic_finite_zeros_compact (f : ℝ → ℝ) (a b : ℝ) (hab : a < b)
     (hf_nonzero : ∃ x ∈ Set.Ioo a b, f x ≠ 0) :
     Set.Finite {x ∈ Set.Icc a b | f x = 0} := by
   by_contra h_not_fin
+  -- \`Set.Infinite\` is defeq to \`¬ Set.Finite\`, but dot notation needs the
+  -- explicit \`Set.Infinite\` type for field resolution.
   have h_inf : Set.Infinite {x ∈ Set.Icc a b | f x = 0} := h_not_fin
   obtain ⟨x₀, hx₀_mem, hx₀_acc⟩ :=
     h_inf.exists_accPt_of_subset_isCompact isCompact_Icc (Set.sep_subset _ _)
@@ -525,7 +543,7 @@ lemma analytic_finite_zeros_compact (f : ℝ → ℝ) (a b : ℝ) (hab : a < b)
       },
       {
         name: 'eml_tree_analytic',
-        line: 195,
+        line: 197,
         hook: 'Part C of T01 — every well-formed real EML tree is real-analytic on (0, ∞). Lifted from ℝ→ℂ analyticity via Complex.reCLM.',
         source: `/-- Every well-formed real EML tree function is real-analytic on (0, ∞).
 
@@ -545,17 +563,46 @@ lemma eml_tree_analytic (t : EMLTree)
       },
       {
         name: 'sin_not_in_eml',
-        line: 323,
+        line: 353,
         hasSorry: true,
         hook: 'The honest partial. T01 at depth k. The final step — "EML-k trees have at most B(k) real zeros" — needs o-minimal structure theory (Wilkie 1996). Documented as a single sorry, not hidden.',
-        source: `/-- T01 (Infinite Zeros Barrier): sin is not representable by any finite EML tree.
+        source: `/-- T01 (Infinite Zeros Barrier) — open.
 
-Sorry: quantitative zero-count bound needed — EML-k trees have ≤ B(k) zeros on ℝ.
-This requires o-minimal structure theory (ℝ_exp is o-minimal). -/
+\`sin\` is not representable by any finite EML tree.
+
+### Mathematical content
+
+Every depth-\`k\` EML tree (in the F16 grammar) is real-analytic on
+\`(0, ∞)\` and has only finitely many zeros on every bounded
+sub-interval — let \`B(k)\` be that bound. \`sin\` has a zero at
+every \`nπ\`, hence infinitely many on every unbounded interval.
+For sufficiently large intervals the zero count exceeds \`B(k)\`,
+contradiction.
+
+### Why it matters
+
+This is **T01**, the headline barrier theorem of the EML/Pfaffian
+hierarchy: it shows the entire EML grammar (under any depth) is
+strictly weaker than \`ℝ_an,exp\`. Forge's runtime treats \`sin\` as
+an external transcendental for exactly this reason.
+
+### Mathlib infrastructure needed
+
+* Khovanskii's zero-count theorem on Pfaffian chains: every
+  Pfaffian function of order \`r\` and degree \`d\` has at most a
+  polynomial-in-\`(r, d)\` number of zeros on a bounded interval.
+* Equivalently, the o-minimality of \`ℝ_exp\` (Wilkie 1996), which
+  gives a uniform finite-zero bound for every definable function.
+* \`Real.exp\` and \`Real.log\` are already in Mathlib; what's
+  missing is the meta-theorem that the structure they generate
+  is o-minimal, plus the constructive zero bound that drops out
+  of o-minimality. Tracking issue: see
+  \`MATHLIB_KHOVANSKII_NEEDS.md\` for a survey of the gap. -/
 theorem sin_not_in_eml (k : ℕ) :
     ∀ t : EMLTree, t.depth ≤ k →
       ¬ (∀ x : ℝ, t.evalReal x = Real.sin x) := by
-  sorry`
+  sorry  -- Open: needs Khovanskii zero-count or o-minimal ℝ_exp.
+         -- See docstring for the missing Mathlib infrastructure.`
       }
     ]
   },
@@ -563,11 +610,11 @@ theorem sin_not_in_eml (k : ℕ) :
     file: 'Universality.lean',
     thm: 'EML universality — every EML-elementary function admits an EMLTree witness',
     what: 'Every function in the EML class (∃k, f ∈ EML_k) admits an explicit EMLTree witness. Composition closure proved constructively via tree substitution: (subst_depth: depth ≤ sum) + (subst_eval: eval composes). Supporting infrastructure includes the EMLTree.subst recursion, IsEMLElementary predicate, and concrete witnesses for const / id / exp / nested exp / exp-of-constant. Verified by user in VS Code lean4 extension 2026-04-25.',
-    original: 1, total: 11, sorries: 0, ok: true,
+    original: 1, total: 10, sorries: 0, ok: true,
     flagships: [
       {
         name: 'eml_universality',
-        line: 81,
+        line: 91,
         hook: 'The headline theorem — every EML-elementary function admits an EMLTree witness whose evaluation matches the function pointwise. Proof is one-line by definition unfolding; the mathematical content is what FUNCTIONS are EML-elementary, captured by the closure theorem + concrete witnesses.',
         source: `/-- **EML universality (statement form).** Every EML-elementary function
     admits an EML routing tree witness whose evaluation matches the
@@ -654,7 +701,7 @@ theorem gamma_nat_eq_factorial (n : ℕ) : Gamma (n + 1) = n.factorial :=
         name: 'deriv_gamma_at_nat',
         line: 86,
         hook: "Mathlib analogue of the textbook chain identity Γ'(s) = Γ(s)·ψ(s); at integer points ψ(n+1) = -γ + harmonic n. Closest available Lean-4 expression of the digamma relation pending a named digamma function.",
-        source: `/-- **Derivative at positive integers** (Mathlib's deriv_Gamma_nat):
+        source: `/-- **Derivative at positive integers** (Mathlib's \`deriv_Gamma_nat\`):
     Γ'(n+1) = n! · (-γ + harmonic n), where γ is the Euler-Mascheroni
     constant and harmonic n = 1 + 1/2 + ... + 1/n.
 
@@ -673,8 +720,6 @@ theorem deriv_gamma_at_nat (n : ℕ) :
 export const aggregates = {
   verifiedOriginal: files.reduce((n, f) => n + f.original, 0),
   totalStatements: files.reduce((n, f) => n + f.total, 0),
-  mathlibWrappers: 179,
-  supportingLemmas: 237,
   cleanFiles: files.filter(f => f.sorries === 0).length,
   partialFiles: files.filter(f => f.sorries > 0).length,
   sorriesTotal: files.reduce((n, f) => n + f.sorries, 0),
