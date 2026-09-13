@@ -100,6 +100,24 @@ chk('list-cardinality claim now cites a theorem',
     `${allSols.length - checked.length} still computed-only`);
 }
 
+// A PROVED badge is only as good as the theorem it names. The provenance list, each Lean-checked
+// point and the tangent line all cite theorems by name. Every name must be one that
+// scripts/lean_claims.json registers, because check:lean-claims re-proves exactly those on every
+// deploy. Otherwise a new evidence entry would render a PROVED badge that nothing re-checks.
+{
+  const registered = new Set(JSON.parse(readFileSync('scripts/lean_claims.json', 'utf8'))
+    .claims.flatMap((c) => c.theorems));
+  const cited = [
+    ...Object.values(data.proved),
+    ...data.configs.flatMap((c) => c.sols).filter((s) => s.lean).map((s) => s.lean),
+    ...data.configs.filter((c) => c.line && c.line.lean).flatMap((c) => Object.values(c.line.lean)),
+  ];
+  const missing = cited.filter((t) => !registered.has(t));
+  chk('every theorem a PROVED badge cites is registered with the Lean-claims gate',
+    cited.length > 0 && missing.length === 0,
+    missing.length ? `unregistered: ${missing.join(', ')}` : `${cited.length} citations, all registered`);
+}
+
 chk('exhibit escapes the article measure',
   /body:has\(\.ex-page\) main\{max-width:1180px\}/.test(css));
 

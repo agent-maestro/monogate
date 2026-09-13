@@ -1,5 +1,5 @@
 {
-  "_comment": "Every public claim on monogate.org that a Lean theorem is proved, pinned to the artifact that proves it. `npm run predeploy` runs ../../monogate-lean/tools/lean_claims/check_claims.py over it: each claimed theorem must be declared in its file at the pinned revision; the file must compile in its environment, with the toolchain, package revisions and local-import sources exactly as pinned; each theorem's own #print axioms must have no sorryAx and nothing outside allowed_axioms (the footprint observed on 2026-09-12); and every label occurrence in src/ and public/ must be a site below or an exemption with its reason. To make a claim, add it here in the same change as the page text. scripts/check_proofs_page.py reads the monogate-lean pin from `sources`.",
+  "_comment": "Every public claim on monogate.org that a Lean theorem is proved, pinned to the artifact that proves it. `npm run predeploy` runs ../../monogate-lean/tools/lean_claims/check_claims.py over it: each claimed theorem must be declared in its file at the pinned revision; the file must compile in its environment, with the toolchain, package revisions and local-import sources exactly as pinned; each theorem's own #print axioms must have no sorryAx and nothing outside allowed_axioms (the footprint observed on 2026-09-12); and every label occurrence in src/ and public/ must be a site below or an exemption with its reason. To make a claim, add it here in the same change as the page text. scripts/check_proofs_page.py reads the monogate-lean pin from `sources`. The labels include \"is proved\" and \"are proved\" (with \"now\", \"also\", \"all\", \"both\", \"fully\", \"formally\" or \"already\" between, and markdown emphasis on the word), \"proved theorem\", \"sorryAx-free\" (with or without backticks) and the uppercase tier word PROVED, which alone matches case-sensitively via (?-i:...). /proofs/apollonius renders PROVED badges from src/data/apollonius-evidence.json; scripts/check-exhibit-gates.mjs fails unless every theorem those badges cite is registered here.",
   "environments": {
     "mathlib": {
       "project": "../../monogate-lean",
@@ -63,7 +63,12 @@
       "lean[-‐‑ ]certified",
       "LEAN(&nbsp;| )✓",
       "sorryAx absent",
-      "files? compile|compiles against mathlib|recompiles every proof"
+      "files? compile|compiles against mathlib|recompiles every proof",
+      "\\bis(?:\\s|&nbsp;)+(?:(?:now|also|all|both|fully|formally|already)(?:\\s|&nbsp;)+)?[*_]{0,2}proved",
+      "\\bare(?:\\s|&nbsp;)+(?:(?:now|also|all|both|fully|formally|already)(?:\\s|&nbsp;)+)?[*_]{0,2}proved",
+      "proved[*_]{0,2}(?:\\s|&nbsp;)+theorem",
+      "sorryAx`?[-‐‑ ]?free",
+      "(?-i:\\bPROVED\\b)"
     ]
   },
   "claims": [
@@ -820,11 +825,19 @@
     },
     {
       "id": "realmodel-analytic-finite-zeros",
-      "statement": "a-model-for-the-axioms (description): 'The analytic finite-zeros theorem, once postulated, is now proved.'",
+      "statement": "a-model-for-the-axioms (description): 'The analytic finite-zeros theorem, once postulated, is now proved.'; the body's 'It is **proved**, against Mathlib's ℝ' and 'is now proved rather than assumed'",
       "sites": [
         {
           "file": "src/pages/blog/a-model-for-the-axioms.md",
           "line": "The analytic finite-zeros theorem, once postulated, is now proved."
+        },
+        {
+          "file": "src/pages/blog/a-model-for-the-axioms.md",
+          "line": "It is **proved**, against Mathlib"
+        },
+        {
+          "file": "src/pages/blog/a-model-for-the-axioms.md",
+          "line": "is now proved rather than assumed"
         }
       ],
       "repository": "../../monogate-lean",
@@ -1100,7 +1113,7 @@
     },
     {
       "id": "false-by-one-exponential",
-      "statement": "false-by-one-exponential: the refutation, the corrected rung, the implication, and the two two-sided thresholds",
+      "statement": "false-by-one-exponential: the refutation, the corrected rung, the implication, and both thresholds in both directions (exclusion: depth_two_eml_value_gap at depth <= 2, intermediateBand_not_depth_le_three at depth <= 3; failure: value_gap_fails_at_depth_three, band_exclusion_fails_at_depth_four)",
       "sites": [
         {
           "file": "src/pages/blog/false-by-one-exponential.md",
@@ -1121,6 +1134,18 @@
         {
           "file": "src/pages/blog/false-by-one-exponential.md",
           "line": "located and machine-checked, with the failures proved rather than conjectured."
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "not merely plausible — it is proved"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "The exclusion is proved on one side and the failure"
+        },
+        {
+          "file": "src/pages/blog/false-by-one-exponential.md",
+          "line": "is proved on the other — `value_gap_fails_at_depth_three` and `band_exclusion_fails_at_depth_four`"
         }
       ],
       "repository": "../../machlib",
@@ -1134,7 +1159,9 @@
         "MachLib.dep3CounterRight_depth",
         "MachLib.dep3CounterRight_eval",
         "MachLib.value_gap_fails_at_depth_three",
-        "MachLib.band_exclusion_fails_at_depth_four"
+        "MachLib.band_exclusion_fails_at_depth_four",
+        "MachLib.depth_two_eml_value_gap",
+        "MachLib.intermediateBand_not_depth_le_three"
       ],
       "allowed_axioms": [
         "Classical.choice",
@@ -1338,11 +1365,23 @@
     },
     {
       "id": "closed-loop-clamp-safety",
-      "statement": "we-injected-a-fault: the clamp-guarded safety theorem (named in the post)",
+      "statement": "we-injected-a-fault: the clamp-guarded safety theorem (named in the post); the description's 'We proved it in Lean (sorryAx-free)', 'It is sorryAx-free', and the envelope tool 'backed by the same sorryAx-free theorem'",
       "sites": [
         {
           "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
           "line": "a machine-checked safety proof, a measurement of that"
+        },
+        {
+          "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+          "line": "We proved it in Lean (sorryAx-free)"
+        },
+        {
+          "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+          "line": "The proof already covers it. It is `sorryAx`-free"
+        },
+        {
+          "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+          "line": "by the same `sorryAx`-free theorem"
         }
       ],
       "repository": "../../machlib",
@@ -1385,7 +1424,7 @@
     },
     {
       "id": "decimal-envelope-numbers",
-      "statement": "we-injected-a-fault: `(1 − 0.99)·1 = 0.01` and `(1 − 0.996)·2.0 = 0.008` are theorems",
+      "statement": "we-injected-a-fault: `(1 − 0.99)·1 = 0.01` and `(1 − 0.996)·2.0 = 0.008` are theorems; the two envelope numbers called sorryAx-free theorems",
       "sites": [
         {
           "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
@@ -1398,6 +1437,10 @@
         {
           "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
           "line": "the envelope number itself now a machine-checked theorem"
+        },
+        {
+          "file": "src/pages/blog/we-injected-a-fault-and-the-proof-held.md",
+          "line": "`sorryAx`-free. The proof was already a number; now the *number* is a proof too."
         }
       ],
       "repository": "../../machlib",
@@ -1582,11 +1625,15 @@
     },
     {
       "id": "periodic-target-barrier",
-      "statement": "periodicity-is-enough: no_tree_eq_periodic_target (named)",
+      "statement": "periodicity-is-enough: no_tree_eq_periodic_target (named); the Trust bullet 'sorryAx-free, zero new axioms'",
       "sites": [
         {
           "file": "src/pages/blog/periodicity-is-enough.md",
           "line": "pinned as machine-checked headlines"
+        },
+        {
+          "file": "src/pages/blog/periodicity-is-enough.md",
+          "line": "**Trust.** `sorryAx`-free, zero new axioms"
         }
       ],
       "repository": "../../machlib",
@@ -1671,11 +1718,23 @@
     },
     {
       "id": "extreme-value-attainment",
-      "statement": "periodicity-is-enough: 'genuine Extreme Value Theorem attainment (max and min) on a closed interval'",
+      "statement": "periodicity-is-enough: 'genuine Extreme Value Theorem attainment (max and min) on a closed interval'; the attainment theorem called 'a real theorem, sorryAx-free' and 'real, sorryAx-free machinery', and the Trust bullet",
       "sites": [
         {
           "file": "src/pages/blog/periodicity-is-enough.md",
           "line": "pinned as machine-checked headlines"
+        },
+        {
+          "file": "src/pages/blog/periodicity-is-enough.md",
+          "line": "a real theorem, `sorryAx`-free, built from nothing but"
+        },
+        {
+          "file": "src/pages/blog/periodicity-is-enough.md",
+          "line": "real, `sorryAx`-free machinery this codebase"
+        },
+        {
+          "file": "src/pages/blog/periodicity-is-enough.md",
+          "line": "**Trust.** `sorryAx`-free, zero new axioms"
         }
       ],
       "repository": "../../machlib",
@@ -1725,7 +1784,7 @@
     },
     {
       "id": "forward-error-gexpr",
-      "statement": "equivalence-on-real-silicon: gexpr_sound (named)",
+      "statement": "equivalence-on-real-silicon: gexpr_sound (named); 'Both are sorryAx-free' and the certificate's 'proof : float gexpr_sound ✓ fixed-point fx_sound ✓ (sorryAx-free)'",
       "sites": [
         {
           "file": "src/pages/blog/equivalence-on-real-silicon.md",
@@ -1734,6 +1793,14 @@
         {
           "file": "src/pages/blog/equivalence-on-real-silicon.md",
           "line": "against a Lean-proved error bound"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "Both are `sorryAx`-free — `#print axioms` shows only the model"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "float gexpr_sound ✓   fixed-point fx_sound ✓   (sorryAx-free)"
         }
       ],
       "repository": "../../machlib",
@@ -1825,7 +1892,7 @@
     },
     {
       "id": "forward-error-fx",
-      "statement": "equivalence-on-real-silicon: fx_sound (named)",
+      "statement": "equivalence-on-real-silicon: fx_sound (named); 'Both are sorryAx-free' and the certificate's 'proof : float gexpr_sound ✓ fixed-point fx_sound ✓ (sorryAx-free)'",
       "sites": [
         {
           "file": "src/pages/blog/equivalence-on-real-silicon.md",
@@ -1834,6 +1901,14 @@
         {
           "file": "src/pages/blog/equivalence-on-real-silicon.md",
           "line": "against a Lean-proved error bound"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "Both are `sorryAx`-free — `#print axioms` shows only the model"
+        },
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "float gexpr_sound ✓   fixed-point fx_sound ✓   (sorryAx-free)"
         }
       ],
       "repository": "../../machlib",
@@ -2053,6 +2128,10 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "each solution carries `LEAN-CHECKED POINT — NOT"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "Now proved -- all seven, 21 tangencies"
         }
       ],
       "repository": "../../machlib",
@@ -2124,11 +2203,23 @@
     },
     {
       "id": "apollonius-locus-line",
-      "statement": "/proofs/apollonius: at d² = 8ρ² the lost circle is a line (evidence 'lean' block and PROVED entries)",
+      "statement": "/proofs/apollonius: at d² = 8ρ² the lost circle is a line (evidence 'lean' block and PROVED entries); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges; the tangent-line status rows 'PROVED — oii_lead_zero_iff_tangent_line' and 'PROVED — oii_tangent_line_at_locus'",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
           "line": "Machine-checked: every circle tangent to three given circles."
+        },
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "['Degree drop ⇔ tangent line', 'PROVED — '"
+        },
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "['Witness at the locus', 'PROVED — '"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "\"PROVED\": {"
         }
       ],
       "repository": "../../machlib",
@@ -2175,7 +2266,7 @@
     },
     {
       "id": "apollonius-structure-Examples",
-      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges; the banner's Distinctness / General position / Root count PROVED, shown only for the flagship d = 4, rho = 1 (flagship_gp)",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
@@ -2188,6 +2279,14 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
+        },
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "return GP_LEAN(c) ? [k, 'PROVED', 'ok', '']"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "\"PROVED\": {"
         }
       ],
       "repository": "../../machlib",
@@ -2237,7 +2336,7 @@
     },
     {
       "id": "apollonius-structure-SymmetricTriple",
-      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges; the banner's 'Mode structure: PROVED' (solvesModeM_iff); eight-circles 'all of it is proved' (QMconst_pos, QMdisc_oii_pos, QMdisc_pos_of_lead_neg, root_ne_zero under separation)",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
@@ -2250,6 +2349,18 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
+        },
+        {
+          "file": "src/pages/blog/eight-circles-except-when-seven.md",
+          "line": "all of that is true and all of it is proved."
+        },
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "['Mode structure', 'PROVED', 'ok'"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "\"PROVED\": {"
         }
       ],
       "repository": "../../machlib",
@@ -2261,7 +2372,10 @@
         "MachLib.Geometry.Apollonius.SymmetricTriple.QMdisc_pos_all",
         "MachLib.Geometry.Apollonius.SymmetricTriple.QMlead_ne_zero",
         "MachLib.Geometry.Apollonius.SymmetricTriple.root_ne_zero",
-        "MachLib.Geometry.Apollonius.SymmetricTriple.oii_at_most_one_radius"
+        "MachLib.Geometry.Apollonius.SymmetricTriple.oii_at_most_one_radius",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.QMconst_pos",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.QMdisc_oii_pos",
+        "MachLib.Geometry.Apollonius.SymmetricTriple.QMdisc_pos_of_lead_neg"
       ],
       "allowed_axioms": [
         "Classical.choice",
@@ -2299,7 +2413,7 @@
     },
     {
       "id": "apollonius-structure-Mode",
-      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges; the banner's and solution panel's 'Mode structure: PROVED' (holds for every d, rho)",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
@@ -2312,6 +2426,14 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
+        },
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "['Mode structure', 'PROVED', 'ok'"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "\"PROVED\": {"
         }
       ],
       "repository": "../../machlib",
@@ -2347,7 +2469,7 @@
     },
     {
       "id": "apollonius-structure-Elimination",
-      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
@@ -2360,6 +2482,10 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "\"PROVED\": {"
         }
       ],
       "repository": "../../machlib",
@@ -2401,7 +2527,7 @@
     },
     {
       "id": "apollonius-structure-Enumeration",
-      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges; the flagship banner's Distinctness (eight_solutions under flagship_gp)",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
@@ -2414,6 +2540,18 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
+        },
+        {
+          "file": "src/pages/proofs/apollonius.astro",
+          "line": "return GP_LEAN(c) ? [k, 'PROVED', 'ok', '']"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "\"PROVED\": {"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "eight_solutions delivers a List of length 8, Nodup"
         }
       ],
       "repository": "../../machlib",
@@ -2465,7 +2603,7 @@
     },
     {
       "id": "apollonius-structure-Circle",
-      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block)",
+      "statement": "/proofs/apollonius and eight-circles: the mode structure and the count (apollonius-evidence.json PROVED block); apollonius-evidence.json's PROVED map, whose entries the exhibit renders as PROVED badges",
       "sites": [
         {
           "file": "src/pages/proofs/apollonius.astro",
@@ -2478,6 +2616,10 @@
         {
           "file": "src/pages/blog/eight-circles-except-when-seven.md",
           "line": "The tangencies and the count are machine-checked"
+        },
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "\"PROVED\": {"
         }
       ],
       "repository": "../../machlib",
@@ -2604,6 +2746,139 @@
         "MachLib.analytic_ne_zero_nbhd",
         "MachLib.analytic_one_div_pos",
         "MachLib.analytic_sub",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "apollonius-modes-axiom-free",
+      "statement": "apollonius-evidence CORRECTED 'list-cardinality form': allModes_length and allModes_nodup depend on no axioms at all (allowed_axioms is empty, so any axiom fails the claim)",
+      "sites": [
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "allModes_length and allModes_nodup depend on NO AXIOMS AT ALL"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Apollonius/Enumeration.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.Apollonius.allModes_length",
+        "MachLib.Geometry.Apollonius.allModes_nodup"
+      ],
+      "allowed_axioms": []
+    },
+    {
+      "id": "apollonius-modes-complete-propext",
+      "statement": "apollonius-evidence CORRECTED 'list-cardinality form': allModes_complete depends on propext alone",
+      "sites": [
+        {
+          "file": "src/data/apollonius-evidence.json",
+          "line": "and allModes_complete on propext alone"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/Geometry/Apollonius/Enumeration.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Geometry.Apollonius.allModes_complete"
+      ],
+      "allowed_axioms": [
+        "propext"
+      ]
+    },
+    {
+      "id": "forward-backward-kappa",
+      "statement": "equivalence-on-real-silicon: 'Forward error, backward error, and conditioning — three views of the same rounding — meet in one place, sorryAx-free.' ForwardBackwardKappa.lean joins backward stability with the condition number for the 2- and 3-term inner products (dot2_fwd_wellcond, dot3_backward, dot3_fwd_wellcond) and for sums and inner products of any length (RSum_wellcond, RDot_fwd)",
+      "sites": [
+        {
+          "file": "src/pages/blog/equivalence-on-real-silicon.md",
+          "line": "meet in one place, `sorryAx`-free."
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/ForwardBackwardKappa.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.Real.dot2_fwd_wellcond",
+        "MachLib.Real.dot3_backward",
+        "MachLib.Real.dot3_fwd_wellcond",
+        "MachLib.Real.RSum_wellcond",
+        "MachLib.Real.RDot_fwd"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_assoc",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_lt_add_left",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.leR",
+        "MachLib.Real.le_iff_lt_or_eq",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.lt_trans_ax",
+        "MachLib.Real.mulR",
+        "MachLib.Real.mul_assoc",
+        "MachLib.Real.mul_comm",
+        "MachLib.Real.mul_distrib",
+        "MachLib.Real.mul_lt_mul_of_pos_right",
+        "MachLib.Real.mul_one_ax",
+        "MachLib.Real.mul_pos",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
+        "MachLib.Real.zero_lt_one_ax",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "id": "eml-tower-every-depth",
+      "statement": "two-open-questions-pinned-down: 'One new, checked, sorryAx-free theorem: EML reaches every depth of the iterated-exponential tower, exactly, unconditionally' — exists_emlTree_eq_iterExp (a depth n + 1 tree equal to iterExp n on all of ℝ)",
+      "sites": [
+        {
+          "file": "src/pages/blog/two-open-questions-pinned-down.md",
+          "line": "One new, checked, `sorryAx`-free theorem: EML reaches every depth of the iterated-exponential"
+        }
+      ],
+      "repository": "../../machlib",
+      "revision": "013ee5c03cef874b2aec33f7556dfbeee5890db1",
+      "file": "foundations/MachLib/EMLTowerSubsumesIterExp.lean",
+      "environment": "machlib",
+      "theorems": [
+        "MachLib.exists_emlTree_eq_iterExp",
+        "MachLib.emlTower_eval",
+        "MachLib.emlTower_depth"
+      ],
+      "allowed_axioms": [
+        "Classical.choice",
+        "MachLib.Real",
+        "MachLib.Real.addR",
+        "MachLib.Real.add_comm",
+        "MachLib.Real.add_neg",
+        "MachLib.Real.add_zero",
+        "MachLib.Real.exp",
+        "MachLib.Real.exp_lt",
+        "MachLib.Real.exp_pos",
+        "MachLib.Real.exp_surj",
+        "MachLib.Real.exp_zero",
+        "MachLib.Real.ltR",
+        "MachLib.Real.lt_irrefl_ax",
+        "MachLib.Real.lt_total",
+        "MachLib.Real.negR",
+        "MachLib.Real.oneR",
+        "MachLib.Real.subR",
+        "MachLib.Real.sub_def",
+        "MachLib.Real.zeroR",
         "Quot.sound",
         "propext"
       ]
@@ -2769,6 +3044,61 @@
       "file": "public/.well-known/capcard.json",
       "line": "not formalized in Lean.",
       "reason": "negative statement"
+    },
+    {
+      "file": "src/pages/blog/false-by-one-exponential.md",
+      "line": "build on something before it is proved,",
+      "reason": "a general remark about named proof obligations (building on a statement before it is proved); it names no theorem and claims none is proved"
+    },
+    {
+      "file": "src/pages/blog/eight-circles-except-when-seven.md",
+      "line": "## What is proved, and what isn't",
+      "reason": "section heading; it names no theorem. The Lean-proved list under it is registered under the apollonius-structure-* claims. Its 'computed, not proved' and 'not claimed' items predate the coordinate and List.length proofs and understate them"
+    },
+    {
+      "file": "src/pages/proofs/apollonius.astro",
+      "line": "proved: evidence.PROVED,",
+      "reason": "passes apollonius-evidence.json's PROVED map to the provenance list; scripts/check-exhibit-gates.mjs fails unless every theorem the map names is registered in this file (all 21 are, under the apollonius-structure-* and apollonius-locus-line claims)"
+    },
+    {
+      "file": "src/pages/proofs/apollonius.astro",
+      "line": "<span class=\"ex-badge ok\">PROVED</span>",
+      "reason": "renders one badge per entry of the PROVED map beside the theorem it names; scripts/check-exhibit-gates.mjs fails unless each named theorem is registered here"
+    },
+    {
+      "file": "src/pages/proofs/apollonius.astro",
+      "line": "<span class=\"ex-badge no\">NOT&nbsp;PROVED</span>",
+      "reason": "renders the NOT_PROVED disclaimer list, empty since every coordinate was Lean-checked; a negative label"
+    },
+    {
+      "file": "src/pages/proofs/apollonius.astro",
+      "line": "a claim under NOT PROVED must be able to see what became of it",
+      "reason": "code comment about showing retired disclaimers; no claim"
+    },
+    {
+      "file": "src/lib/posts.ts",
+      "line": "What is proved, what is computational, what is open.",
+      "reason": "the complexity-census listing description, naming the post's three status categories (proved, computational, open); it names no theorem and claims no Lean or machine proof. The post's per-row statuses are paper and computational claims no gate re-checks"
+    },
+    {
+      "file": "src/pages/blog/complexity-census.astro",
+      "line": "What is proved, what is computational, and what is still open.",
+      "reason": "page description naming the census's three status categories; it names no theorem and claims no Lean or machine proof. The per-row statuses are paper and computational claims no gate re-checks"
+    },
+    {
+      "file": "src/pages/blog/superbest-complete.md",
+      "line": "| exp(x) | 1 | eml(x,1) | all x | **PROVED** (one node is the minimum) |",
+      "reason": "an optimality tag, not a Lean claim: one node is the trivial lower bound for any operation (stated under 'How Each Entry Was Argued'), and the construction is the exact identity eml(x,1) = eˣ − ln 1 = eˣ"
+    },
+    {
+      "file": "src/pages/blog/superbest-complete.md",
+      "line": "| exp(−x) | 1 | deml(x,1) | all x | **PROVED** (one node is the minimum) |",
+      "reason": "an optimality tag, not a Lean claim: one node is the trivial lower bound for any operation (stated under 'How Each Entry Was Argued'), and the construction is the exact identity deml(x,1) = e⁻ˣ − ln 1 = e⁻ˣ"
+    },
+    {
+      "file": "src/pages/blog/superbest-complete.md",
+      "line": "| ln(x) | 1 | exl(0,x) | x>0 | **PROVED** (one node is the minimum) |",
+      "reason": "an optimality tag, not a Lean claim: one node is the trivial lower bound for any operation (stated under 'How Each Entry Was Argued'), and the construction is the exact identity exl(0,x) = e⁰ · ln x = ln x for x > 0"
     }
   ]
 }
