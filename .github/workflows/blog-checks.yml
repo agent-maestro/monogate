@@ -8,6 +8,8 @@ name: Blog Data Checks
 # GitHub-hosted runner: both need a built Lean + Mathlib toolchain, and the claims include files in
 # the private monogate-research repository. So green here means only that these passed:
 #   - the citation audit;
+#   - the SuperBEST sync tests, which hold the site's table, its copy in python/results/, the capability
+#     cards and the explorer's cost table to python/monogate/superbest.py;
 #   - the /proofs quotation check;
 #   - the build;
 #   - the exhibit gates;
@@ -17,17 +19,33 @@ name: Blog Data Checks
 # History: this job ran `npm run predeploy` and failed on every push it ran for. It exited 2 inside
 # predeploy before 2026-09-12. After that, the new Lean steps could not find ../../monogate-lean
 # here. `npm run check:ci` is the part of predeploy that can run on this runner.
+#
+# The SuperBEST sync tests ran only by hand until 2026-09-13: pytest.yml and superbest.yml are
+# workflow_dispatch-only, and both last ran on 2026-05-25. The python/ and explorer/ paths below are
+# the files those tests read, so a change to any of them runs this job.
 
 on:
   pull_request:
     paths:
       - 'blog/**'
       - '.github/workflows/blog-checks.yml'
+      - 'python/monogate/superbest.py'
+      - 'python/results/superbest_v5_table.json'
+      - 'python/tests/test_superbest_canonical_sync.py'
+      - 'python/tests/test_superbest_f16_constructions.py'
+      - 'capability_card_public.json'
+      - 'explorer/src/superbest.js'
   push:
     branches: [master, main]
     paths:
       - 'blog/**'
       - '.github/workflows/blog-checks.yml'
+      - 'python/monogate/superbest.py'
+      - 'python/results/superbest_v5_table.json'
+      - 'python/tests/test_superbest_canonical_sync.py'
+      - 'python/tests/test_superbest_f16_constructions.py'
+      - 'capability_card_public.json'
+      - 'explorer/src/superbest.js'
   workflow_dispatch:
 
 jobs:
@@ -71,7 +89,15 @@ jobs:
         working-directory: blog
         run: npx playwright-core install --with-deps firefox
 
-      - name: Citation audit, /proofs quotes, build, exhibit gates (npm run check:ci)
+      - name: Set up Python (the SuperBEST sync tests, the /proofs check and the accountability gate)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the SuperBEST sync tests' Python dependencies
+        run: python -m pip install numpy mpmath pytest
+
+      - name: Citation audit, SuperBEST sync, /proofs quotes, build, exhibit gates (npm run check:ci)
         working-directory: blog
         env:
           MONOGATE_LEAN_PATH: ${{ github.workspace }}/monogate-lean
