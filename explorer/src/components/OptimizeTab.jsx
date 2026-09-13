@@ -388,8 +388,9 @@ export default function OptimizeTab() {
         </div>
         <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.7 }}>
           Paste a Python / NumPy / PyTorch snippet or class definition. Each math op
-          is routed to the canonical v5.3 table — 14n / 80.8% on the positive
-          10-op headline and 16n / 74.2% on the general 8-op basket.{" "}
+          is routed through the census table (EXL and ELSb count as one node) — 14n / 80.8%
+          on the positive 10-op headline; monogate.org's F16 count is 15n / 79.5%, and 18n / 66.7%
+          on its 6-op general basket.{" "}
           {apiStatus === "available"
             ? <span style={{ color: C.green }}>Using real Python best_optimize() via local API.</span>
             : <span>Start <code style={{ color: C.text }}>python api/main.py</code> for Python backend.</span>

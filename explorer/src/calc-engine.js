@@ -30,7 +30,8 @@ function cos_eml_taylor(x) {
 }
 
 // ── Node costs and operator labels per mode ────────────────────────────────────
-// SuperBEST v5.3 canonical sync: positive headline 14n / 80.8%; general basket 16n / 74.2%.
+// SuperBEST v5.3 census count (EXL and ELSb as one node each): positive headline 14n / 80.8%.
+// monogate.org counts in /framework's F16: 15n / 79.5% positive; general basket 18n / 66.7% over 6 ops.
 export const NODE_COSTS = {
   best: { sin:63, cos:63, exp:1, ln:1, pow:1, mul:1, div:2, add:2, sub:2, neg:2, sqrt:1, abs:2 },
   eml:  { sin:245, cos:245, exp:1, ln:3, pow:3, mul:13, div:15, add:11, sub:5, neg:9, sqrt:8, abs:5 },

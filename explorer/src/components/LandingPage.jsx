@@ -172,7 +172,7 @@ export default function LandingPage({ onEnter }) {
           {[
             {
               label: "BEST hybrid routing",
-              body: "Routes each primitive to its cheapest canonical construction. Current v5.3 sync is 14n / 80.8% on the positive 10-op headline, with a 16n / 74.2% general-domain 8-op basket.",
+              body: "Routes each primitive to its cheapest known construction. Counting the census operators EXL and ELSb as one node each, the positive 10-op headline is 14n / 80.8%; in /framework's F16 alone it is 15n / 79.5%, and the general-domain basket is 18n / 66.7% over 6 ops.",
             },
             {
               label: "Inspectable IR prototype",
@@ -324,8 +324,8 @@ export default function LandingPage({ onEnter }) {
               display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8,
             }}>
               <span>
-                SuperBEST v5.3: <strong style={{ color: C.green }}>14n / 80.8% savings</strong> across the positive 10-op headline.
-                General-domain basket: <strong style={{ color: C.green }}>16n / 74.2%</strong>.
+                SuperBEST v5.3: <strong style={{ color: C.green }}>14n / 80.8% savings</strong> across the positive 10-op headline, counting EXL and ELSb as one node each (15n / 79.5% in F16).
+                General-domain basket, in F16: <strong style={{ color: C.green }}>18n / 66.7%</strong>.
               </span>
               <button
                 onClick={() => onEnter("benchmarks")}

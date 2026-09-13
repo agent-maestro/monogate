@@ -418,7 +418,8 @@ export default function BenchmarkTab() {
             <span style={{ color: C.accent, fontWeight: 700 }}>Methodology:</span>{" "}
             Node counts are operator-graph sizes — the number of EML-family gate evaluations.
             EML baseline uses the single best operator per operation (pure EML, no routing).
-            SuperBEST routes each operation to its canonical v5.3 construction: exp/ln stay 1n,
+            SuperBEST routes each operation to its v5.3 census construction (EXL and ELSb count as one node each;
+            monogate.org counts ln as 2n in F16): exp/ln stay 1n,
             add/sub/neg are 2n guarded mixed routes, mul/pow/sqrt/recip are 1n positive-domain routes,
             and div is 2n in the full positive-domain tree. All displayed costs are integer node counts,
             not timing estimates. DAG mode is expression-level sharing only: it does not change canonical

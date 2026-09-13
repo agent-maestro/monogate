@@ -1,8 +1,9 @@
 /**
  * superbest.js — SuperBEST routing engine for browser
- * Canonical v5.3 routing table synced from python/monogate/superbest.py.
- * Positive headline: 14n / 80.8% vs 73n naive.
- * General headline: 16n / 74.2% vs 62n naive over the 8-op basket.
+ * Census routing table: F16 plus the census operators EXL and ELSb, each counted as one node.
+ * Positive headline in that count: 14n / 80.8% vs 73n naive (python/monogate/superbest.py keeps it
+ * as SUPERBEST_V53_POS_TOTAL). monogate.org/superbest counts in /framework's F16 alone: 15n / 79.5%
+ * on the positive domain, and 18n / 66.7% vs 54n naive over its 6-op general basket.
  * <5KB, zero dependencies.
  */
 
@@ -12,11 +13,11 @@ export const TABLE = {
   expNeg: { op:"DEML", nodes:1,  domain:"all x",   construction:"deml(x,1)",              emlNodes:1  },
   ln:     { op:"EXL",  nodes:1,  domain:"x>0",     construction:"exl(0,x)",               emlNodes:3  },
   div:    { op:"EXL/ELSb", nodes:2, domain:"x,y>0", construction:"elsb(exl(0,x),y)",      emlNodes:15,
-            note:"div_positive = 2n full tree; general-domain route is 3n. Do not count as 1n unless ln(x) is already shared." },
+            note:"div_positive = 2n full tree; over all x and y != 0 the best known single F16 tree takes 8n. Do not count as 1n unless ln(x) is already shared." },
   recip:  { op:"ELSb", nodes:1,    domain:"x>0",     construction:"elsb(0,x)",             emlNodes:5  },
   neg:    { op:"EXL/DEML", nodes:2, domain:"all x",  construction:"exl(0,deml(x,1))",      emlNodes:9  },
   mul:    { op:"EPL/ELMl", nodes:1, domain:"x,y>0",  construction:"elml(ln(x),y)",         emlNodes:13,
-            note:"mul_positive = 1n positive-domain only; general-domain route is 3n." },
+            note:"mul_positive = 1n positive-domain only; over all reals one F16 tree takes 3n." },
   sub:    { op:"LEdiv/EML", nodes:2, domain:"all x,y", construction:"lediv(x,eml(y,1))",   emlNodes:5  },
   pow:    { op:"EPL/ELMl", nodes:1, domain:"x>0",    construction:"epl(n,x)",              emlNodes:3  },
   add:    { op:"LEdiv/DEML", nodes:2, domain:"all x,y", construction:"lediv(x,deml(y,1))", emlNodes:11 },
@@ -24,10 +25,10 @@ export const TABLE = {
   sqrt:   { op:"EPL",  nodes:1,  domain:"x>0",     construction:"epl(0.5,x)",             emlNodes:8  },
   sin:    { op:"EXL",  nodes:63, domain:"all x",   construction:"8-term Taylor (EXL pow)", emlNodes:245},
   cos:    { op:"EXL",  nodes:63, domain:"all x",   construction:"8-term Taylor (EXL pow)", emlNodes:245},
-  abs:    { op:"EPL",  nodes:2,  domain:"all x",   construction:"2-node EPL construction", emlNodes:5  },
+  abs:    { op:"EPL",  nodes:2,  domain:"x>0",     construction:"epl(0.5,epl(2,x)) = x; no real tree computes abs over all x", emlNodes:5  },
 };
 
-// ── Node costs (SuperBEST v5.3 canonical sync) ────────────────────────────────
+// ── Node costs (census count: EXL and ELSb as one node each) ──────────────────
 export const COSTS = {
   exp:1, ln:1, div:2, pow:1, mul:1, sub:2, neg:2, add:2, sqrt:1,
   sin:63, cos:63, recip:1, abs:2,

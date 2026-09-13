@@ -58,7 +58,7 @@ const MODES = [
 ];
 
 const MODE_DESC = {
-  best: "Routes each op to the canonical v5.3 table — 14n / 80.8% positive headline, 16n / 74.2% general basket",
+  best: "Routes each op through the census table (EXL and ELSb count as one node) — 14n / 80.8% positive headline; monogate.org's F16 count is 15n / 79.5%",
   eml:  "Pure EML — exp(x)−ln(y) for every node",
   exl:  "EXL only — exp(x)·ln(y) — excels at ln and pow, incomplete for add/sub",
   edl:  "EDL only — exp(x)/ln(y) — excels at div and mul, requires e as constant",
@@ -68,7 +68,7 @@ const COUNTING_NOTES = [
   "Tree SuperBEST is the public calculator mode: every occurrence in the expression tree is counted.",
   "DAG SuperBEST is an internal lowering prototype for shared subexpressions; it can reduce repeated denominators, exp terms, or powers, but it is not used for public headline savings yet.",
   "div_positive is 2n as a full tree route; mul_positive is 1n only on the positive-domain route.",
-  "General-domain caveats stay visible: div_general is 3n and mul_general is 3n unless a stronger route is explicitly selected.",
+  "General-domain caveats stay visible: over all reals mul takes 3n and div 8n as single F16 trees (the earlier 3n for div was a sign-dispatch case split).",
 ];
 
 // ── Python export helper ──────────────────────────────────────────────────────

@@ -87,22 +87,29 @@ make paper            # compile preprint.tex (requires TeX Live)
 
 ---
 
-## SuperBEST v5 routing table (all 10 entries proved optimal)
+## SuperBEST routing table (v5.3, counted in F16)
 
-| Operation | Construction | SB nodes | Naive EML | Saving |
-|-----------|-------------|---------|-----------|--------|
+Node counts over the sixteen operators on [monogate.org/framework](https://monogate.org/framework) (F16), positive
+domain. `python/tests/test_superbest_f16_constructions.py` evaluates each construction numerically; the counts are
+upper bounds, not proved minima.
+
+| Operation | Construction (F16) | SB nodes | Naive EML | Saving |
+|-----------|-------------------|---------|-----------|--------|
 | exp | EML(x,1) | 1 | 1 | — |
-| ln  | EXL(0,x) | 1 | 3 | −2 |
-| e^−x | DEML(0,x) | 1 | 5 | −4 |
-| recip | ELSb(0,x) | 1 | 5 | −4 |
-| div | ELSb(ln x, y) | 2 | 15 | −13 |
-| neg | EXL(0,DEML(0,x)) | 2 | 9 | −7 |
-| mul | ELAd(EXL(0,x),y) | 2 | 13 | −11 |
-| sub | LEdiv(x,EML(y,1)) | 2 | 5 | −3 |
-| add | LEdiv(x,DEML(y,1)) | **2** | 8 | −6 |
-| pow | EML(EXL(0,x)·n,1) | 3 | 15 | −12 |
+| ln (x > 0) | LEdiv(0, F13(−1,x)) | 2 | 3 | −1 |
+| neg | LEdiv(0, EML(x,1)) | 2 | 9 | −7 |
+| add | LEdiv(x, DEML(y,1)) | 2 | 11 | −9 |
+| sub | LEdiv(x, EML(y,1)) | 2 | 5 | −3 |
+| mul (x, y > 0) | F16fn(x, y) | 1 | 13 | −12 |
+| div (x, y > 0) | F16fn(x, F13(−1,y)) | 2 | 15 | −13 |
+| recip (x > 0) | F13(−1, x) | 1 | 5 | −4 |
+| pow (x > 0) | F13(n, x) | 1 | 3 | −2 |
+| sqrt (x > 0) | F13(1/2, x) | 1 | 8 | −7 |
 
-Total: **18 nodes** (SuperBEST v5) vs 73 (naive EML) — **75.3% fewer.** (ADD-T1)
+Total: **15 nodes** vs 73 (naive EML) — **79.5% fewer.** Counting ln x = EXL(0, x), a census operator outside F16,
+as one node gives 14 (80.8%). Over all reals the 6-op basket (exp, neg, add, sub, mul, div) takes 18 nodes vs 54
+(66.7%); no real F16 tree computes abs. Lean lower bounds exist for add, sub, mul and div (at least 2 nodes each).
+Details and each entry's status: [monogate.org/superbest](https://monogate.org/superbest).
 
 16 exp-ln operators classified: **8 exactly complete, 1 approximately complete (EMN), 7 incomplete.** (T24–T28)
 
