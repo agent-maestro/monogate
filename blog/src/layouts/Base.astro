@@ -1,5 +1,4 @@
 ---
-import Reactions from '../components/Reactions.astro';
 import PostSignoff from '../components/PostSignoff.astro';
 
 interface Props {
@@ -28,12 +27,11 @@ const description = props.description ?? props.frontmatter?.description;
 const date = props.date ?? props.frontmatter?.date;
 const type = props.type ?? (date ? "article" : "website");
 
-// Reactions widget shows only on individual blog posts (under /blog/<slug>),
+// The post sign-off shows only on individual blog posts (under /blog/<slug>),
 // not on the index, tag pages, or other site routes.
 const pathname = Astro.url.pathname.replace(/\/$/, '');
 const blogSlugMatch = pathname.match(/^\/blog\/([^/]+)$/);
 const isBlogPost = type === 'article' && blogSlugMatch !== null;
-const postSlug = blogSlugMatch?.[1] ?? '';
 const canonical = Astro.url.pathname.replace(/\/$/, "") || "/";
 const pageUrl = `https://monogate.org${canonical}`;
 
@@ -326,7 +324,6 @@ const articleLd = (type === "article" || date) ? {
     <main>
       <slot />
       {isBlogPost && <PostSignoff frontmatter={props.frontmatter} />}
-      {isBlogPost && <Reactions slug={postSlug} />}
     </main>
     <footer>
       Monogate Research · <a href="https://arxiv.org/abs/2603.21852">arXiv:2603.21852</a> · EML Cost Conjecture (in development) · <a href="https://monogate.org">monogate.org</a> · <a href="https://monogate.net">monogate.net</a> · <a href="https://monogate.dev">monogate.dev</a> · <a href="https://1op.io">1op.io</a> · <a href="https://github.com/agent-maestro/monogate">GitHub</a> · <a href="https://pypi.org/project/monogate/">PyPI</a> · <a href="/glossary">Glossary</a> · <a href="/manifesto">Manifesto</a> · <a href="/about">About</a> · <a href="/accountability">Accountability</a>
