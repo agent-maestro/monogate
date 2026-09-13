@@ -1,10 +1,55 @@
 ---
 import Base from '../../layouts/Base.astro';
+
+// The enumeration behind T25, printed in full so the counts can be re-run (Python 3 + mpmath).
+const script = `import itertools, mpmath as mp                     # pip install mpmath
+mp.mp.dps = 50
+REL = mp.mpf(10) ** -30                            # a cancellation this small next to its operands is an exact 0
+def eml(a, b):                                     # principal log; None where ln 0 or e^a is out of reach
+    if b == 0 or mp.re(a) > 1e5:
+        return None
+    ea, lb = mp.e**a, mp.log(b)
+    if abs(mp.im(ea)) <= REL * abs(ea):            # e^(r - i*pi) is real: drop the rounding in sin(pi)
+        ea = mp.re(ea)
+    z = ea - lb
+    return mp.mpf(0) if abs(z) <= REL * max(abs(ea), abs(lb)) else z
+S = {'1': mp.mpf(1)}                               # by tree depth: every value of depth <= d, deduplicated
+for d in range(1, 6):
+    for a, b in itertools.product(list(S.values()), repeat=2):
+        z = eml(a, b)
+        if z is not None:
+            S.setdefault(mp.nstr(z, 30), z)
+    nonreal = [z for z in S.values() if mp.im(z) != 0]
+    print(f"depth <= {d}: {len(S)} values, {len(nonreal)} non-real, Im in {sorted({mp.nstr(mp.im(z), 12) for z in nonreal})}")
+assert all(mp.im(z) in (0, -mp.pi) for z in S.values())   # so e^a is real and Im eml(a, b) = -arg(b)
+ims = {mp.nstr(-mp.arg(b), 20) for b in S.values() if b != 0}
+print("depth 6:", len(ims), "distinct imaginary parts")
+for t, name in ((1, "1"), (mp.pi / 2, "pi/2")):
+    im = min((mp.mpf(s) for s in ims), key=lambda v: abs(v - t))
+    print(f"  closest to {name}: {mp.nstr(im, 10)} (gap {mp.nstr(abs(im - t), 3)})")
+N = {0: [mp.mpf(1)]}                               # by number of eml nodes
+for n in range(1, 7):
+    N[n] = [z for i in range(n) for a in N[i] for b in N[n - 1 - i] for z in [eml(a, b)] if z is not None]
+    print(f"{n} nodes: Im in", sorted({mp.nstr(mp.im(z), 12) for z in N[n]}))`;
+const output = `depth <= 1: 2 values, 0 non-real, Im in []
+depth <= 2: 5 values, 0 non-real, Im in []
+depth <= 3: 26 values, 0 non-real, Im in []
+depth <= 4: 397 values, 0 non-real, Im in []
+depth <= 5: 77528 values, 13598 non-real, Im in ['-3.14159265359']
+depth 6: 13600 distinct imaginary parts
+  closest to 1: 0.9999952372 (gap 4.76e-6)
+  closest to pi/2: 1.571209895 (gap 0.000414)
+1 nodes: Im in ['0.0']
+2 nodes: Im in ['0.0']
+3 nodes: Im in ['0.0']
+4 nodes: Im in ['0.0']
+5 nodes: Im in ['-3.14159265359', '0.0']
+6 nodes: Im in ['-3.14159265359', '0.0', '1.50795316919']`;
 ---
 
 <Base
   title="The Depth-6 Phase Transition"
-  description="At depth 5, all complex EML values have Im = −π exactly. At depth 6, imaginary parts explode and 0.99999524 appears. A structural phase transition in the EML closure."
+  description="Built from 1, EML values stay real through depth 4. At depth 5 every non-real value has imaginary part exactly −π. At depth 6 there are 13,600 distinct imaginary parts, and 0.99999524 appears."
   date="2026-04-19"
 >
   <div class="meta">
@@ -19,6 +64,15 @@ import Base from '../../layouts/Base.astro';
     all with Im = −π. At depth 6, everything changes.
   </p>
 
+  <p style="color: var(--muted); font-style: italic;">
+    Correction (2026-09-13): the script this post named, experiments/complex_closure_depth6.py, was never in
+    this repository, and no other was kept. The enumeration was rebuilt and is printed below. It confirms
+    depths 1–5 and the 0.99999524 near miss. It does not confirm three things this post said: that depths
+    1–4 give only positive reals (0 and negative values appear), that "dozens" of imaginary parts appear
+    at depth 6 (there are 13,600), or a second near miss approaching π/2 with a gap of 9.75 × 10⁻⁶ (the
+    closest is 4.1 × 10⁻⁴ away).
+  </p>
+
   <div class="divider"></div>
 
   <h2>The experiment</h2>
@@ -26,48 +80,59 @@ import Base from '../../layouts/Base.astro';
   <p>
     Starting from the terminal set &#123;1&#125; and the EML operator under extended complex semantics
     (where <code>ln</code> of a negative real returns a complex value via the principal branch),
-    we enumerated all EML tree values at each depth level.
+    we enumerated all EML tree values at each depth level. Depth is tree depth: eml(a, b) is one level
+    deeper than the deeper of a and b.
   </p>
 
   <h2>Depths 1–4: all real</h2>
 
   <p>
-    At depths 1 through 4, every value produced by the EML closure of &#123;1&#125; is real.
-    The grammar generates <em>e</em>, <em>e<sup>e</sup></em>, various compositions of
-    exp and ln — all positive reals. No imaginary parts.
+    At depths 1 through 4, every value produced by the EML closure of &#123;1&#125; is real: 397 distinct
+    values in all. The grammar generates <em>e</em>, <em>e<sup>e</sup></em> and various compositions of
+    exp and ln. Not all of them are positive: <code>eml(1, eml(eml(1,1),1)) = e − ln(e<sup>e</sup>) = 0</code>
+    at depth 3, and eml(0, e<sup>e</sup>) = 1 − e at depth 4, with 0 that depth-3 value.
   </p>
 
   <h2>Depth 5: first complex values</h2>
 
   <p>
-    At depth 5, complex values appear for the first time. But they are remarkably constrained:
-    <strong>every complex value at depth 5 has Im = −π exactly.</strong>
+    At depth 5, complex values appear for the first time: 13,598 of the 77,528 distinct values. But they
+    are remarkably constrained: <strong>every complex value at depth 5 has Im = −π exactly.</strong>
   </p>
 
   <p>
-    This is not a coincidence. The principal-branch logarithm gives
-    <code>ln(−r) = ln(r) + iπ</code> for r &gt; 0. The first time a depth-5 subtraction
-    produces a negative real argument to ln, the imaginary part locks at −π.
-    All other depth-5 paths through the grammar land on the same structural value.
+    This is not a coincidence. A depth-5 value is e<sup>a</sup> − ln b with a and b of depth at most 4,
+    so both are real. The principal-branch logarithm gives <code>ln(−r) = ln(r) + iπ</code> for r &gt; 0,
+    so whenever b is negative the imaginary part is exactly −π, and otherwise the value is real.
   </p>
 
   <h2>Depth 6: the phase transition</h2>
 
   <p>
-    At depth 6, the imaginary parts diversify dramatically. Dozens of distinct imaginary
-    values appear. The structural bound Im = −π that held for depth ≤ 5 breaks.
+    At depth 6, the imaginary parts diversify dramatically: 13,600 distinct values. Every depth-5 value a
+    has imaginary part 0 or −π, so e<sup>a</sup> is real, and the imaginary part of eml(a, b) is −arg b:
+    one value for each complex b, plus 0 and −π. The structural bound Im = −π that held for depth ≤ 5 breaks.
   </p>
 
   <p>
     The most notable new value: <strong>Im = 0.99999524</strong> —
     within 4.76 × 10⁻⁶ of 1. This is the nearest approach to Im = 1 (i.e., to constructing
-    <em>i</em>) found in the depth-6 closure. The gap does not close at depth 7 or 8;
-    see the <a href="/blog/near-miss">near-miss post</a> for the structural obstruction.
+    <em>i</em>) found in the depth-6 closure. The <a href="/blog/near-miss">near-miss post</a> reports
+    searches at depths 7 and 8, which were not re-run for this correction.
   </p>
 
   <p>
-    A second obstruction route approaches π/2 from below, with a gap of 9.75 × 10⁻⁶.
-    Two independent transcendental obstructions are active simultaneously.
+    This post also reported a second route approaching π/2 from below with a gap of 9.75 × 10⁻⁶, and
+    called the two routes independent transcendental obstructions. The enumeration does not reproduce it:
+    the depth-6 imaginary part closest to π/2 is 1.5712099, above π/2 by 4.1 × 10⁻⁴.
+  </p>
+
+  <h2>Counting nodes instead</h2>
+
+  <p>
+    Counting eml nodes rather than depth gives a smaller picture, which <a href="/theorems">/theorems</a>
+    (T25) also records: trees with at most 4 nodes are real, trees with 5 nodes have imaginary parts 0
+    and −π, and trees with 6 nodes add one more, 1.50795.
   </p>
 
   <h2>Why this matters</h2>
@@ -87,9 +152,19 @@ import Base from '../../layouts/Base.astro';
 
   <h2>Reproduce</h2>
 
-  <pre><code>python experiments/complex_closure_depth6.py
-# Enumerates EML closure from {1} through depth 6
-# Prints depth-by-depth summary of imaginary values</code></pre>
+  <p>
+    The script enumerates every value by depth with the principal complex logarithm, in mpmath at 50
+    digits (80 digits gives the same counts). A cancellation smaller than 10⁻³⁰ of its operands is taken
+    as an exact 0. Pairs whose exponential e<sup>a</sup> has Re a &gt; 10⁵ are skipped; they give real
+    values, or complex values with imaginary part −π, so the depth-5 statements hold for them too and the
+    depth-6 count is a lower bound. It runs in a few seconds.
+  </p>
+
+  <pre><code>{script}</code></pre>
+
+  <p>Output:</p>
+
+  <pre><code>{output}</code></pre>
 
   <div class="divider"></div>
 

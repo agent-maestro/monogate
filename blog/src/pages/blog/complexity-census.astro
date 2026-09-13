@@ -1,10 +1,35 @@
 ---
 import Base from '../../layouts/Base.astro';
+
+// Checks the single-tree reading of the erf, lgamma and Gamma rows (Python 3 + NumPy).
+const script = `import math, numpy as np                                     # pip install numpy
+def best_tree(f, a, b, depth=3, n=41):
+    x = np.linspace(a, b, n)
+    pool = {'1': np.ones(n), 'x': x}                         # expression -> values on the grid
+    seen = {tuple(np.round(v, 9)) for v in pool.values()}
+    for _ in range(depth):                                   # one more level of eml per pass
+        items = list(pool.items())
+        for (ea, va), (eb, vb) in ((p, q) for p in items for q in items):
+            with np.errstate(all='ignore'):
+                v = np.exp(va) - np.log(vb)                  # real eml: undefined where vb <= 0
+            k = tuple(np.round(v, 9))
+            if np.all(np.isfinite(v)) and k not in seen:
+                seen.add(k)
+                pool[f'eml({ea},{eb})'] = v
+    target = np.array([f(t) for t in x])
+    err, expr = min((float(np.max(np.abs(v - target))), e) for e, v in pool.items())
+    print(f'{f.__name__} on [{a}, {b}]: {len(pool)} trees of depth <= {depth}; best max error {err:.3g}, by {expr}')
+best_tree(math.erf, 0.5, 2.5)
+best_tree(math.lgamma, 1.5, 4)
+best_tree(math.gamma, 1.5, 4)`;
+const output = `erf on [0.5, 2.5]: 988 trees of depth <= 3; best max error 0.48, by 1
+lgamma on [1.5, 4]: 884 trees of depth <= 3; best max error 0.696, by eml(1,eml(eml(1,x),1))
+gamma on [1.5, 4]: 884 trees of depth <= 3; best max error 2, by x`;
 ---
 
 <Base
   title="The EML Complexity Census: 23 Functions Classified by Depth"
-  description="A census of 23 elementary functions classified by EML depth. Each row says what its depth rests on: a Lean theorem, a construction, a short argument, a computation, or nothing yet."
+  description="A census of 23 elementary functions classified by EML depth. Each row says what its depth rests on: a Lean theorem, a construction, a short argument, or nothing yet."
   date="2026-04-19"
 >
   <div class="meta">
@@ -16,7 +41,7 @@ import Base from '../../layouts/Base.astro';
   <h1>The EML Complexity Census</h1>
   <p style="color: var(--muted); font-style: italic; margin-bottom: 32px;">
     23 functions classified by EML depth. Each row says what its depth rests on: a Lean theorem,
-    a construction, a short argument, a computation, or nothing yet.
+    a construction, a short argument, or nothing yet.
   </p>
 
   <div class="divider"></div>
@@ -25,8 +50,9 @@ import Base from '../../layouts/Base.astro';
 
   <p>
     The EML depth of a function f is the depth of the shallowest EML tree that computes f
-    exactly. For erf, lgamma and Gamma, which have no known exact tree, the table records
-    instead the depth at which a search found a close approximation.
+    exactly. For erf, lgamma and Gamma, which have no known exact tree, this table used to record
+    a depth at which an April search found a close approximation. Nothing records that search, and
+    no single tree of that depth comes close (see Reproduce), so those rows are now unverified.
   </p>
 
   <p>
@@ -58,9 +84,9 @@ import Base from '../../layouts/Base.astro';
         ["sin(x) over ℂ", "1", "construction", "Im(eml(ix, 1)) = sin(x): one node, then an imaginary part. T03."],
         ["sin(x) over ℝ", "∞", "Lean-checked", "sin_not_in_eml_any_depth_unconditional: no tree of any depth equals sin on ℝ."],
         ["cos(x) over ℝ", "∞", "Lean-checked", "cos_not_in_eml_any_depth_unconditional: no tree of any depth equals cos on ℝ."],
-        ["erf(x)", "3", "computational", "Depth-3 approximation reaches ε < 10⁻⁶."],
-        ["lgamma(x)", "3", "computational", "Stirling-based. Depth-3 approximation."],
-        ["Gamma(x)", "3", "computational", "Via lgamma. Depth-3 approximation."],
+        ["erf(x)", "?", "unverified", "Listed at 3, as an approximation with ε < 10⁻⁶. No single EML tree of depth ≤ 3 over {1, x} comes within 0.47 of erf on [0.5, 2.5]."],
+        ["lgamma(x)", "?", "unverified", "Listed at 3, as a Stirling-based approximation. The best single EML tree of depth ≤ 3 over {1, x} is off by 0.70 on [1.5, 4]."],
+        ["Gamma(x)", "?", "unverified", "Listed at 3, via lgamma. The best single EML tree of depth ≤ 3 over {1, x} is off by 2 on [1.5, 4]."],
         ["finite Fourier series over ℝ", "∞", "argued", "A non-constant one is continuous and periodic, so no_tree_eq_periodic_target applies. This row said 3 before 2026-09-12."],
         ["plane wave e^(ikx) over ℂ", "1", "construction", "eml(ikx, 1) = exp(ikx). This row said 3 before 2026-09-12."],
         ["|sin(x)|", "∞", "argued", "Kinks at multiples of π. EML trees are analytic where defined (eml_tree_analytic), so none equals it across a kink."],
@@ -83,8 +109,7 @@ import Base from '../../layouts/Base.astro';
     <em>Lean-checked</em>: the row names a Lean theorem registered with this site's claims gate, re-proved before every deploy.
     <em>Construction</em>: an explicit tree reaches that depth, and no shallower tree is possible for an elementary reason.
     <em>Definition</em>: true by the definition of depth. <em>Argued</em>: a short argument on paper, not checked in Lean.
-    <em>Computational</em>: a search found an approximation at that depth; no proof.
-    <em>Unverified</em>: a value recorded in April 2026 with no tree, proof or search behind it. <em>Open</em>: unknown.
+    <em>Unverified</em>: a value recorded in April 2026 with no tree, proof or surviving search behind it. <em>Open</em>: unknown.
   </p>
 
   <h2>The open question: EML-4</h2>
@@ -112,16 +137,30 @@ import Base from '../../layouts/Base.astro';
   </p>
 
   <p>
-    <strong>Key result:</strong> G3 = G1 in closure at depth ≥ 3. DEML and EXL add efficiency
-    (fewer nodes for specific primitives) but not expressiveness. The depth classification of
-    every function is the same across G1, G2, and G3.
+    This post said G3 = G1 in closure at depth ≥ 3: that DEML and EXL add efficiency (fewer nodes
+    for specific primitives) but not expressiveness, so the depth classification of every function is
+    the same across G1, G2, and G3. The last part is false. deml(x, 1) = exp(−x) has depth 1 in G2,
+    and no depth-1 EML tree equals exp(−x): each is a constant, eᶜ − ln x, eˣ − ln c or eˣ − ln x.
+    Nothing on record backs the first part.
   </p>
 
   <h2>Reproduce</h2>
 
-  <pre><code>python experiments/complexity_census.py
-# Prints depth classifications for all 23 functions
-# Flags proved vs. computational vs. open</code></pre>
+  <p>
+    No public script reproduces the April census. This page pointed to
+    <code>experiments/complexity_census.py</code>, which was never in this repository. The census script
+    on record, <code>eml_complexity_census.py</code> in the private monogate-research repository
+    (2026-04-17), measures something else: how closely a least-squares combination of all trees up to
+    N nodes fits a function. The script below checks the single-tree reading of the erf, lgamma and
+    Gamma rows. It builds every real EML tree of depth at most 3 over &#123;1, x&#125; that is defined on
+    the whole interval, removes duplicates on a 41-point grid, and reports the best maximum error.
+  </p>
+
+  <pre><code>{script}</code></pre>
+
+  <p>Output:</p>
+
+  <pre><code>{output}</code></pre>
 
   <div class="divider"></div>
 
