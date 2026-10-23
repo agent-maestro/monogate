@@ -290,6 +290,32 @@
       "deps": "T01a."
     },
     {
+      "id": "T_PERIODIC_BARRIER",
+      "tier": "THEOREM",
+      "name": "Periodic Barrier: No Real EML Tree Equals sin — Lean (MachLib)",
+      "session": "MachLib 2026-07-22",
+      "category": "Analytic Properties",
+      "statement": "Let TARGET : ℝ → ℝ be continuous everywhere, periodic with some positive period, and not constant. Then no finite EML tree — with any real constants as leaves, at any depth — equals TARGET at every real x. In particular no real EML tree equals sin or cos on ℝ. The mechanism: every EML tree eventually keeps one sign (always positive, always negative, or always zero past some point), while such a target returns to each of its values arbitrarily far out. MachLib's log is clamped; a tree that equals the target on ℝ has every ln argument positive there, so the clamp never fires and the statement holds for the real operator. It does not use a zero-count bound (T14).",
+      "evidence": "Lean 4 (MachLib), sorryAx absent: no_tree_eq_periodic_target and its sin instance no_tree_eq_sin_via_periodic_barrier (GeneralPeriodicTargetBarrier.lean); the eventual-sign lemma is eml_tailSign_unconditional. Its axioms are MachLib's axiomatised reals and analysis; the claims gate pins the exact list and re-checks it with #print axioms at every deploy. The same conclusion follows classically from Hardy, Orders of Infinity (1910): logarithmico-exponential functions are eventually of constant sign. Stated for equality on all of ℝ; nothing here is claimed about rays.",
+      "lean": {
+        "repo": "machlib",
+        "file": "GeneralPeriodicTargetBarrier.lean",
+        "theorem": "no_tree_eq_periodic_target / no_tree_eq_sin_via_periodic_barrier",
+        "status": "verified"
+      },
+      "deps": "T01a."
+    },
+    {
+      "id": "COST_SIN",
+      "tier": "DEFINITION",
+      "name": "The Cost of sin(x): Four Accountings",
+      "session": "1op.io review 2026-10-23",
+      "category": "Cost Theory",
+      "statement": "\"The cost of sin(x)\" depends on the model, so each figure carries its convention. (1) Real EML, leaves {1, x}, every intermediate real: impossible at any depth. That is a theorem (T_PERIODIC_BARRIER), not a large number; ∞ is only a placeholder. (2) EML plus a projection: Im(eml(i·x, 1)) = sin(x) for real x is one eml node, but the leaf i·x is given — i and the product are not built from the operator — and Im is a readout outside the operator, not a node. It is a different model, not a one-node sine. (3) Fully EML over ℂ, leaves {1, x}, real output: sin(x) = (e^{ix} − e^{−ix})/(2i) with i, the products and the quotient all built from eml. Not yet measured. (4) The expression optimizer on 1op.io reports 3 for sin. Its convention is not defined, so it is an optimizer metric, not a ledger cost.",
+      "evidence": "(1) T_PERIODIC_BARRIER. (2) T_EULER_LEAN gives ceml(ix, 1) = exp(ix) for real x; the one-node count is a convention about leaves and readouts, not part of that theorem. (3) No construction from {1, x} has been counted. (4) Recorded here so the figure is not read as a ledger cost; research notes describe it as \"3 EML levels per oscillation\", a depth, which is not a node count.",
+      "deps": "T_PERIODIC_BARRIER, T_EULER_LEAN."
+    },
+    {
       "id": "T_EXP_LOG_DUALITY",
       "tier": "THEOREM",
       "name": "Exp–Log Multiplier Duality at Fixed Points (Lean)",
