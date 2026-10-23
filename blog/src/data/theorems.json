@@ -313,7 +313,37 @@
       "category": "Cost Theory",
       "statement": "\"The cost of sin(x)\" depends on the model, so each figure carries its convention. (1) Real EML, leaves {1, x}, every intermediate real: impossible at any depth. That is a theorem (T_PERIODIC_BARRIER), not a large number; ∞ is only a placeholder. (2) EML plus a projection: Im(eml(i·x, 1)) = sin(x) for real x is one eml node, but the leaf i·x is given — i and the product are not built from the operator — and Im is a readout outside the operator, not a node. It is a different model, not a one-node sine. (3) Fully EML over ℂ, leaves {1, x}, real output: sin(x) = (e^{ix} − e^{−ix})/(2i) with i, the products and the quotient all built from eml. Not yet measured. (4) The expression optimizer on 1op.io reports 3 for sin. Its convention is not defined, so it is an optimizer metric, not a ledger cost.",
       "evidence": "(1) T_PERIODIC_BARRIER. (2) T_EULER_LEAN gives ceml(ix, 1) = exp(ix) for real x; the one-node count is a convention about leaves and readouts, not part of that theorem. (3) No construction from {1, x} has been counted. (4) Recorded here so the figure is not read as a ledger cost; research notes describe it as \"3 EML levels per oscillation\", a depth, which is not a node count.",
-      "deps": "T_PERIODIC_BARRIER, T_EULER_LEAN."
+      "deps": "T_PERIODIC_BARRIER, T_EULER_LEAN.",
+      "accountings": [
+        {
+          "key": "real",
+          "model": "Real EML, leaves {1, x}",
+          "figure": "impossible",
+          "convention": "every intermediate real; a theorem, not a large number",
+          "basis": "T_PERIODIC_BARRIER"
+        },
+        {
+          "key": "projection",
+          "model": "EML + projection",
+          "figure": "1 node",
+          "convention": "the leaf i·x is given (i and the product are not built); Im is a readout outside the operator, not a node",
+          "basis": "T_EULER_LEAN"
+        },
+        {
+          "key": "fully_eml",
+          "model": "Fully EML over ℂ, leaves {1, x}",
+          "figure": "not yet measured",
+          "convention": "i, the products and the quotient all built from eml; real output",
+          "basis": null
+        },
+        {
+          "key": "optimizer",
+          "model": "1op.io expression optimizer",
+          "figure": "3",
+          "convention": "convention undefined: an optimizer metric, not a ledger cost",
+          "basis": null
+        }
+      ]
     },
     {
       "id": "T_EXP_LOG_DUALITY",
