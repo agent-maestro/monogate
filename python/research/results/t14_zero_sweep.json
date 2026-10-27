@@ -1,0 +1,167 @@
+{
+ "conjecture": "T14: a real EML tree over {1, x} of EML depth k, not identically zero, has at most 2^k zeros on any open interval where it is defined",
+ "method": "eml(a, b) = exp(a) - ln(b), REAL semantics: a value is undefined where some ln argument is <= 0.\nT14 (CONJECTURE): a tree of depth k, not identically zero, has at most 2^k zeros on any open interval\nwhere it is defined. This counts SIGN CHANGES on a grid, per maximal run of defined samples:\n  - \"undefined\" is tracked as its own mask, never inferred from NaN: an ln argument <= 0;\n  - a sample whose float evaluation overflowed (inf, or inf - inf) is UNKNOWN: it carries no sign\n    and does not split the interval, because the tree is defined there;\n  - a sample whose |value| is within 8x its propagated rounding bound carries no sign;\n  - a tree with no signed sample among >= 16 trustworthy ones is reported identically zero and\n    excluded, and every such tree is then re-checked at 50 digits (mpmath) at random points.\nSign changes bound zeros from BELOW (a double root, or two zeros between grid points, are missed)\nand the windows are finite, so a clean sweep is evidence, not a proof.",
+ "windows": [
+  {
+   "window": [
+    -40.0,
+    40.0
+   ],
+   "grid": 8001,
+   "by_depth": {
+    "0": {
+     "trees": 2,
+     "identically_zero": 0,
+     "max_sign_changes": 1,
+     "bound": 1
+    },
+    "1": {
+     "trees": 4,
+     "identically_zero": 0,
+     "max_sign_changes": 1,
+     "bound": 2
+    },
+    "2": {
+     "trees": 32,
+     "identically_zero": 0,
+     "max_sign_changes": 1,
+     "bound": 4
+    },
+    "3": {
+     "trees": 1408,
+     "identically_zero": 2,
+     "max_sign_changes": 3,
+     "bound": 8
+    },
+    "4": {
+     "trees": 2089472,
+     "identically_zero": 8,
+     "max_sign_changes": 5,
+     "bound": 16
+    }
+   },
+   "violations": [],
+   "identically_zero": [
+    "eml(1, eml(eml(1, 1), 1))",
+    "eml(x, eml(eml(x, 1), 1))",
+    "eml(eml(1, 1), eml(eml(eml(1, 1), 1), 1))",
+    "eml(eml(1, x), eml(eml(eml(1, x), 1), 1))",
+    "eml(eml(x, 1), eml(eml(eml(x, 1), 1), 1))",
+    "eml(eml(x, x), eml(eml(eml(x, x), 1), 1))",
+    "eml(eml(1, eml(eml(1, 1), 1)), eml(1, 1))",
+    "eml(eml(1, eml(eml(1, x), 1)), eml(x, 1))",
+    "eml(eml(x, eml(eml(x, 1), 1)), eml(1, 1))",
+    "eml(eml(x, eml(eml(x, x), 1)), eml(x, 1))"
+   ],
+   "identically_zero_confirmed_at_50_digits": true,
+   "seconds": 395
+  },
+  {
+   "window": [
+    -1000.0,
+    1000.0
+   ],
+   "grid": 8001,
+   "by_depth": {
+    "0": {
+     "trees": 2,
+     "identically_zero": 0,
+     "max_sign_changes": 1,
+     "bound": 1
+    },
+    "1": {
+     "trees": 4,
+     "identically_zero": 0,
+     "max_sign_changes": 1,
+     "bound": 2
+    },
+    "2": {
+     "trees": 32,
+     "identically_zero": 0,
+     "max_sign_changes": 1,
+     "bound": 4
+    },
+    "3": {
+     "trees": 1408,
+     "identically_zero": 2,
+     "max_sign_changes": 2,
+     "bound": 8
+    },
+    "4": {
+     "trees": 2089472,
+     "identically_zero": 7,
+     "max_sign_changes": 5,
+     "bound": 16
+    }
+   },
+   "violations": [],
+   "identically_zero": [
+    "eml(1, eml(eml(1, 1), 1))",
+    "eml(x, eml(eml(x, 1), 1))",
+    "eml(eml(1, 1), eml(eml(eml(1, 1), 1), 1))",
+    "eml(eml(1, x), eml(eml(eml(1, x), 1), 1))",
+    "eml(eml(x, 1), eml(eml(eml(x, 1), 1), 1))",
+    "eml(eml(1, eml(eml(1, 1), 1)), eml(1, 1))",
+    "eml(eml(1, eml(eml(1, x), 1)), eml(x, 1))",
+    "eml(eml(x, eml(eml(x, 1), 1)), eml(1, 1))",
+    "eml(eml(x, eml(eml(x, x), 1)), eml(x, 1))"
+   ],
+   "identically_zero_confirmed_at_50_digits": true,
+   "seconds": 389
+  },
+  {
+   "window": [
+    -5.0,
+    5.0
+   ],
+   "grid": 20001,
+   "by_depth": {
+    "0": {
+     "trees": 2,
+     "identically_zero": 0,
+     "max_sign_changes": 1,
+     "bound": 1
+    },
+    "1": {
+     "trees": 4,
+     "identically_zero": 0,
+     "max_sign_changes": 0,
+     "bound": 2
+    },
+    "2": {
+     "trees": 32,
+     "identically_zero": 0,
+     "max_sign_changes": 1,
+     "bound": 4
+    },
+    "3": {
+     "trees": 1408,
+     "identically_zero": 2,
+     "max_sign_changes": 3,
+     "bound": 8
+    },
+    "4": {
+     "trees": 2089472,
+     "identically_zero": 8,
+     "max_sign_changes": 4,
+     "bound": 16
+    }
+   },
+   "violations": [],
+   "identically_zero": [
+    "eml(1, eml(eml(1, 1), 1))",
+    "eml(x, eml(eml(x, 1), 1))",
+    "eml(eml(1, 1), eml(eml(eml(1, 1), 1), 1))",
+    "eml(eml(1, x), eml(eml(eml(1, x), 1), 1))",
+    "eml(eml(x, 1), eml(eml(eml(x, 1), 1), 1))",
+    "eml(eml(x, x), eml(eml(eml(x, x), 1), 1))",
+    "eml(eml(1, eml(eml(1, 1), 1)), eml(1, 1))",
+    "eml(eml(1, eml(eml(1, x), 1)), eml(x, 1))",
+    "eml(eml(x, eml(eml(x, 1), 1)), eml(1, 1))",
+    "eml(eml(x, eml(eml(x, x), 1)), eml(x, 1))"
+   ],
+   "identically_zero_confirmed_at_50_digits": true,
+   "seconds": 988
+  }
+ ]
+}

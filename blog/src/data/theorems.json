@@ -71,7 +71,7 @@
       "session": "Sprint2",
       "category": "Analytic Properties",
       "statement": "Let T be a real EML tree over leaves {1, x} of depth k (leaves have depth 0), and I an open interval on which every ln argument in T is positive and T is not identically zero. Then T has at most 2^k zeros in I.",
-      "evidence": "No proof. The cited induction, that each node at most doubles the zero count, is not valid: the zeros of exp(A) − ln(B) are not determined by the zeros of A and B (eml(1, x) = e − ln x vanishes at x = e^e, where neither leaf does). The 2k+2 version on /blog/tight-zeros-bound has no complete proof either. No Lean proof; a depth-k zero-count bound is the open sorry in InfiniteZerosBarrier.lean. CORRECTION (2026-09-13): this card was a THEOREM stating that every depth-k tree has at most 2^k real zeros and that the bound is tight. Without the hypothesis that T is not identically zero the statement is false: eml(x, eml(eml(x,1),1)) = e^x − ln(e^(e^x)) is zero for every real x, at depth 3. The tightness clause was also false: the four depth-1 trees have at most one zero."
+      "evidence": "No proof. The cited induction, that each node at most doubles the zero count, is not valid: the zeros of exp(A) − ln(B) are not determined by the zeros of A and B (eml(1, x) = e − ln x vanishes at x = e^e, where neither leaf does). The 2k+2 version on /blog/tight-zeros-bound has no complete proof either. No Lean proof; a depth-k zero-count bound is the open sorry in InfiniteZerosBarrier.lean. CORRECTION (2026-09-13): this card was a THEOREM stating that every depth-k tree has at most 2^k real zeros and that the bound is tight. Without the hypothesis that T is not identically zero the statement is false: eml(x, eml(eml(x,1),1)) = e^x − ln(e^(e^x)) is zero for every real x, at depth 3. The tightness clause was also false: the four depth-1 trees have at most one zero. NUMERICAL CHECK (2026-10-26, python/research/t14_zero_sweep.py): all 2,090,918 trees of EML depth ≤ 4 over {1, x}, sampled on [−40, 40] (step 0.01), [−1000, 1000] (step 0.25) and [−5, 5] (step 0.0005): none shows more than 2^k sign changes on an interval where it is defined; the most at depth 4 is 5, against a bound of 16. Identically zero trees (at most 10 per window, each confirmed zero at 50 digits) are excluded. Sign changes are a lower bound on zeros and the windows are finite, so this is evidence, not a proof."
     },
     {
       "id": "T17",
@@ -311,8 +311,8 @@
       "name": "The Cost of sin(x): Four Accountings",
       "session": "1op.io review 2026-10-23",
       "category": "Cost Theory",
-      "statement": "\"The cost of sin(x)\" depends on the model, so each figure carries its convention. (1) Real EML, leaves {1, x}, every intermediate real: impossible at any depth. That is a theorem (T_PERIODIC_BARRIER), not a large number; ∞ is only a placeholder. (2) EML plus a projection: Im(eml(i·x, 1)) = sin(x) for real x is one eml node, but the leaf i·x is given — i and the product are not built from the operator — and Im is a readout outside the operator, not a node. It is a different model, not a one-node sine. (3) Fully EML over ℂ, leaves {1, x}, real output: sin(x) = (e^{ix} − e^{−ix})/(2i) with i, the products and the quotient all built from eml. Not yet measured. (4) The expression optimizer on 1op.io reports 3 for sin. Its convention is not defined, so it is an optimizer metric, not a ledger cost.",
-      "evidence": "(1) T_PERIODIC_BARRIER. (2) T_EULER_LEAN gives ceml(ix, 1) = exp(ix) for real x; the one-node count is a convention about leaves and readouts, not part of that theorem. (3) No construction from {1, x} has been counted. (4) Recorded here so the figure is not read as a ledger cost; research notes describe it as \"3 EML levels per oscillation\", a depth, which is not a node count.",
+      "statement": "\"The cost of sin(x)\" depends on the model, so each figure carries its convention. (1) Real EML, leaves {1, x}, every intermediate real: impossible at any depth. That is a theorem (T_PERIODIC_BARRIER), not a large number; ∞ is only a placeholder. (2) EML plus a projection: Im(eml(i·x, 1)) = sin(x) for real x is one eml node, but the leaf i·x is given — i and the product are not built from the operator — and Im is a readout outside the operator, not a node. It is a different model, not a one-node sine. (3) Fully EML over ℂ, leaves {1, x}, real output: sin(x) = (e^{ix} − e^{−ix})/(2i) with i, the products and the quotient all built from eml. At most 243 nodes, by an explicit construction valid for every real x; the minimum is not known. (4) The expression optimizer on 1op.io reports 3 for sin. Its convention is not defined, so it is an optimizer metric, not a ledger cost.",
+      "evidence": "(1) T_PERIODIC_BARRIER. (2) T_EULER_LEAN gives ceml(ix, 1) = exp(ix) for real x; the one-node count is a convention about leaves and readouts, not part of that theorem. (3) python/research/sin_fully_eml.py builds a 243-node tree (−i alone takes 29 nodes from the leaf 1) and checks it against sin at 60 and 120 digits on 565 real points from −10⁴ to 10⁴. Every step is an identity derived in the script; the two values that lie exactly on the principal branch cut (−1 and −e^e) are handled explicitly. An upper bound only: no search for a smaller tree was made. (4) Recorded here so the figure is not read as a ledger cost; research notes describe it as \"3 EML levels per oscillation\", a depth, which is not a node count.",
       "deps": "T_PERIODIC_BARRIER, T_EULER_LEAN.",
       "accountings": [
         {
@@ -332,8 +332,8 @@
         {
           "key": "fully_eml",
           "model": "Fully EML over ℂ, leaves {1, x}",
-          "figure": "not yet measured",
-          "convention": "i, the products and the quotient all built from eml; real output",
+          "figure": "at most 243 nodes",
+          "convention": "i, the products and the quotient all built from eml, starting from 1 and x; an explicit construction valid for every real x, checked at 60 and 120 digits; the minimum is not known",
           "basis": null
         },
         {
