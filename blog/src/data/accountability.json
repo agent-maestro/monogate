@@ -8,14 +8,14 @@
     "date": "2026-06-02",
     "endorsed_by": "International Mathematical Union"
   },
-  "page_last_verified": "2026-07-30",
+  "page_last_verified": "2026-11-25",
   "rows": [
     {
       "id": "disclose-tool-use",
       "recommendation": "Disclose tool use",
       "asks": "Transparently report automated tools, including LLMs and proof assistants, in a form consistent with open-science norms.",
       "grade": "MET",
-      "summary": "Disclosure is structural, not sectional. Every public claim carries an epistemic grade (Proved / Measured / Model / Play) with a public legend. The authorship model is stated plainly: AI systems are primary authors of proofs and code; a human orchestrator directs the work and bears full responsibility. Disclosure is also per-artifact — blog posts name the specific model that wrote them, because conflating several models under one byline would be less honest than naming who wrote what. The toolchain identity is itself a locked, gated artifact: the tools are not merely named, they are pinned, and their versions are part of every claim's provenance.",
+      "summary": "Disclosure is structural, not sectional. Every public claim carries an epistemic grade (Proved / Measured / Model / Play) with a public legend. The authorship model is stated plainly: AI models write the proofs, the code and most of the prose, and each blog post is signed by the specific model that wrote it, because conflating several models under one byline would be less honest than naming who wrote what. The operator directs the work, decides what ships, and answers for everything published. The toolchain identity is itself a locked artifact: the tools are not merely named, they are pinned, the lock is checked against the pin at every toolchain move, and their versions are part of every claim's provenance.",
       "gap": null,
       "upgrade_condition": null,
       "artifacts": [
@@ -32,7 +32,7 @@
           "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/TOOLCHAIN.lock"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "support-reviewing",
@@ -64,42 +64,42 @@
           "url": "https://github.com/agent-maestro/machlib/blob/refs/tags/toolchain-bump/v4.32.2-record/foundations/AxiomLedger.lean"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "open-science",
       "recommendation": "Adhere to principles of open science",
       "asks": "Transparency and accessibility of research, data, and software.",
-      "grade": "MET",
-      "summary": "Repositories are public, the package is on PyPI, the preprint is on arXiv, and the reproduction zoo serves its whole evidence tree as static assets — the evidence is the website. What is not yet open is stated in the peer-review row rather than hidden here.",
-      "gap": null,
-      "upgrade_condition": null,
+      "grade": "PARTIAL",
+      "summary": "MachLib, the monogate toolkit and this blog, monogate-lean and eml-stdlib are public repositories, the package is on PyPI, and the reproduction zoo serves each card's evidence as static files — the evidence is the website.",
+      "gap": "Two repositories that public claims rest on are private: Forge, the compiler the zoo's cards come from, and the research repository, which 19 of the 78 Lean claims registered for this site cite. A reader cannot re-check those from public sources. No preprint of our own has been posted yet; the arXiv paper this site links to is Andrzej Odrzywołek's, the work Monogate builds on.",
+      "upgrade_condition": "Grade moves to MET when every claim this site asks a reader to trust can be re-checked from public sources — its private sources published, or the claims that rest on them withdrawn — and our paper is posted as a preprint.",
       "artifacts": [
         {
           "label": "Source (GitHub)",
           "url": "https://github.com/agent-maestro/monogate"
         },
         {
-          "label": "Package (PyPI)",
-          "url": "https://pypi.org/project/monogate/"
+          "label": "Source (MachLib, GitHub)",
+          "url": "https://github.com/agent-maestro/machlib"
         },
         {
-          "label": "Preprint (arXiv:2603.21852)",
-          "url": "https://arxiv.org/abs/2603.21852"
+          "label": "Package (PyPI)",
+          "url": "https://pypi.org/project/monogate/"
         },
         {
           "label": "Reproduction zoo",
           "url": "https://zoo.monogateforge.com/"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "responsibility-correctness",
       "recommendation": "Retain the responsibility for correctness",
       "asks": "When automated techniques are used, responsibility for correctness remains exclusively with the human authors.",
       "grade": "MET",
-      "summary": "Accepted — and mechanized, because a pledge is not a mechanism. Correctness is discharged through sorry audits (a count that cannot be derived is treated as an instrument failure, not a zero), an axiom ledger gated in CI in both directions, kernel replay through an external checker, and acceptance bars fixed before the data exists. The failures stay in the record rather than being amended away: the migration log carries a correction stating that a stop was committed as “accepted” before its central criterion had ever been measured, and the amendment trail records a pass bar being weakened in the open, with the byte-identical check that proved the weakening changed nothing else.",
+      "summary": "Accepted — and mechanized, because a pledge is not a mechanism. The operator answers for the correctness of everything published, and discharges it through sorry audits (a count that cannot be derived is treated as an instrument failure, not a zero), an axiom ledger gated in both directions, a claim audit that holds every registered claim to its theorem's printed axioms, and acceptance bars fixed before the data exists. Kernel replay through an external checker ran through the migration; the last version an external checker replayed is v4.28.0, and the current pin, v4.32.2, is recorded as externally unreplayed until a checker supports it, not left to read as replayed. The failures stay in the record rather than being amended away: the migration log carries a correction stating that a stop was committed as “accepted” before its central criterion had ever been measured, and the amendment trail records a pass bar being weakened in the open, with the byte-identical check that proved the weakening changed nothing else.",
       "gap": null,
       "upgrade_condition": null,
       "artifacts": [
@@ -120,39 +120,43 @@
           "url": "https://github.com/agent-maestro/machlib/blob/refs/tags/toolchain-bump/v4.32.2-record/foundations/AxiomLedger.lean"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "humanity-authorship",
       "recommendation": "Affirm the humanity of authorship",
       "asks": "Credit and responsibility belong to humans; AI does not replace the collective human labor behind a result.",
-      "grade": "MET",
-      "summary": "No AI system is listed as an author of any Monogate publication or claim. The orchestrator model is stated in plain terms: the human directs, selects, and answers for everything; the AI's role is disclosed but carries neither credit nor responsibility. We also state the corollary the Declaration is careful about — our results synthesize decades of human work (Lean and its community, the numerics-verification lineage, classical estimation theory), and our novelty claims are scoped accordingly: composition and discipline, not new mathematics.",
-      "gap": null,
-      "upgrade_condition": null,
+      "grade": "PARTIAL",
+      "summary": "Our position differs from the Declaration's here, on purpose, and this row says so. The model that wrote a text is named as its author: every blog post is signed by the specific model that wrote it, and /about states that the operator is not the author of the proofs, the kernels, the backend, or most of the prose. A human byline on machine-written text would be less honest, not more. What stays human is responsibility: the operator decides what is attempted and what ships, and answers for everything published. The human work behind the results is credited — Andrzej Odrzywołek's eml operator, Lean and its community, the numerics-verification lineage, classical estimation theory — and our novelty claims are scoped accordingly: composition and discipline, not new mathematics.",
+      "gap": "The Declaration asks that credit and responsibility both belong to humans. We give responsibility to the human and credit for the writing to the model that did it, so this recommendation is not met as written.",
+      "upgrade_condition": "None expected. The row is PARTIAL by design while the model that writes a text is credited as its author; it moves only if that policy changes.",
       "artifacts": [
         {
           "label": "Authorship model, division of labor, explicit non-claims",
           "url": "https://monogate.org/about"
         },
         {
-          "label": "Preprint (prior art and lineage)",
+          "label": "A post signed by the model that wrote it",
+          "url": "https://monogate.org/blog/zeros-any-exponential-chain"
+        },
+        {
+          "label": "Odrzywołek, arXiv:2603.21852 (the work Monogate builds on)",
           "url": "https://arxiv.org/abs/2603.21852"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "attribution",
       "recommendation": "Put effort into proper attribution",
       "asks": "Proactive effort to find and credit sources; where satisfactory attribution is not possible, state this explicitly.",
       "grade": "PARTIAL",
-      "summary": "We cite the human lineage we know and can trace, in the paper and in per-file references across the repositories, and we review prior art before making a novelty claim.",
+      "summary": "We credit the mathematics we build on — the eml operator and its universality theorem are Andrzej Odrzywołek's (arXiv:2603.21852) — cite the lineage we can trace in per-file references across the repositories, and review prior art before making a novelty claim. On 2026-11-25 we found our own site presenting his paper as ours: the footer on every page read “Monogate Research · arXiv:2603.21852”, the page metadata listed it among Monogate's own identities, /about called it one of our papers, post footers cited it as “Paper”, and three rows of this page called it our preprint. All of it was corrected that day; the changelog below records it.",
       "gap": "The AI systems we use are trained on corpora whose provenance we cannot audit or certify. Their outputs may synthesize uncredited human work in ways invisible to us. Per the Declaration's own provision we state this explicitly rather than launder it: attribution through the model is not attribution, and we cannot certify it.",
       "upgrade_condition": "Grade moves to MET when an attribution section audited against the final paper's related-work review ships with a peer-reviewed version. The training-corpus gap is not closable by us and will remain stated.",
       "artifacts": [
         {
-          "label": "Preprint (arXiv:2603.21852)",
+          "label": "Odrzywołek, arXiv:2603.21852 (the work Monogate builds on)",
           "url": "https://arxiv.org/abs/2603.21852"
         },
         {
@@ -160,7 +164,7 @@
           "url": "https://monogate.org/about"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "public-discourse",
@@ -184,16 +188,16 @@
           "url": "https://1op.io/learn"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "stay-informed",
       "recommendation": "Stay informed about the emerging technologies",
       "asks": "Stay informed about the capabilities of computer-aided tools as appropriate to one's research.",
-      "grade": "MET",
-      "summary": "Standing watches with recorded reference states, not impressions: a quarterly watch re-scans the external verification ecosystem and reports movement against recorded state, upstream issue threads are tracked as part of it, and the July 2026 Lean kernel soundness disclosure was triaged and acted on in the week it landed. When we found the independent checker broken at every version we could use, we reported it upstream with minimal reproductions rather than routing around it.",
-      "gap": null,
-      "upgrade_condition": null,
+      "grade": "PARTIAL",
+      "summary": "Standing watches with recorded reference states, not impressions — when they run. The kernel-support watch re-scans the external verification ecosystem and reports movement against its recorded state, the July 2026 Lean kernel soundness disclosure was triaged and acted on in the week it landed, and when we found the independent checker broken at every version we could use, we reported it upstream with minimal reproductions rather than routing around it.",
+      "gap": "The watch is run by hand, and it last ran on record on 2026-07-30. It missed two moves it exists to catch: Lean4Lean reached the kernel fix on 2026-08-02, and the bug we reported upstream (lean4lean #17) was reported fixed on 2026-10-19. Run again on 2026-11-25 it reports PARTIAL — one external checker now reaches the fix — and that run is not yet on record.",
+      "upgrade_condition": "Grade returns to MET when the watch's current state is on record and the watch runs on a schedule rather than when remembered.",
       "artifacts": [
         {
           "label": "Expiry watch (tool)",
@@ -212,16 +216,16 @@
           "url": "https://monogate.org/accountability/incidents/2026-07-lean-kernel"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "welcome-contributors",
       "recommendation": "Welcome new contributors",
       "asks": "Make standards and practices explicit and accessible; create pathways for participation.",
       "grade": "PARTIAL",
-      "summary": "The standards are unusually explicit and public — a grading legend, a schema for submitted records, and a contributor guide covering what we accept, how to format a record, and how it is verified. Failure data is explicitly welcome as a contribution, which is unusual and deliberate.",
-      "gap": "The pathway that exists is for submitting new proof records. There is no pathway for the thing this page is really about — independently reproducing an acceptance from raw artifacts — and no external contributor has yet done so. The documentation is a working record, not an on-ramp for a reviewer.",
-      "upgrade_condition": "Grade moves to MET when at least one external reproduction of a zoo card's acceptance from raw artifacts is on record, and a reproduction guide exists alongside the contribution guide.",
+      "summary": "The standards are explicit and public — a grading legend, a schema for submitted records, and a contributor guide covering what we accept, how to format a record, and how it is verified, with reproduction evidence named as a contribution. Bug reports against our claims are explicitly invited: a claim a reader cannot reproduce in a few commands is treated as a defect in the document. A reproduction pathway now exists: every zoo card states three tiers — LOCAL (one command), TOOLCHAIN (re-derive with Lean or Vivado), REPLAY (captured on real hardware, replayed from evidence).",
+      "gap": "No one outside the project has yet reproduced a zoo card's acceptance from raw artifacts. We are looking for the first.",
+      "upgrade_condition": "Grade moves to MET when at least one external reproduction of a zoo card's acceptance from raw artifacts is on record.",
       "artifacts": [
         {
           "label": "Contributor guide",
@@ -236,7 +240,7 @@
           "url": "https://zoo.monogateforge.com/"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "tool-choice",
@@ -256,23 +260,18 @@
           "url": "https://github.com/agent-maestro/machlib/blob/refs/tags/toolchain-bump/v4.32.2-record/foundations/AxiomLedger.lean"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "peer-review",
       "recommendation": "Publish through peer-reviewed venues",
       "asks": "Results must be published in peer-reviewed venues; informal channels support but cannot replace community scrutiny.",
       "grade": "NOT_YET",
-      "summary": "A preprint exists. The zoo, 1op.io, and this site are informal channels in exactly the Declaration's sense — every claim on them links to regenerable artifacts, which mitigates but does not substitute for peer review. A paper targeting a formal-methods venue is in preparation.",
+      "summary": "No preprint of ours has been posted yet. A paper targeting a formal-methods venue is in preparation. The zoo, 1op.io, and this site are informal channels in exactly the Declaration's sense — every claim on them links to regenerable artifacts, which mitigates but does not substitute for peer review.",
       "gap": "Until that paper is submitted, reviewed, and published, the Declaration's fourth threat — that proper evaluation is endangered when results are communicated through informal channels, often without any research paper — applies to this project. This row exists to say so rather than to let the artifact links imply that the question is settled.",
       "upgrade_condition": "Grade moves to PARTIAL when the paper is under submission, and to MET when it is published.",
-      "artifacts": [
-        {
-          "label": "Preprint (arXiv:2603.21852)",
-          "url": "https://arxiv.org/abs/2603.21852"
-        }
-      ],
-      "last_verified": "2026-07-30"
+      "artifacts": [],
+      "last_verified": "2026-11-25"
     },
     {
       "id": "ethical-consequences",
@@ -288,7 +287,7 @@
           "url": "https://monogate.org/accountability#ethical-consequences"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     },
     {
       "id": "institutional",
@@ -304,7 +303,7 @@
           "url": "https://leidendeclaration.ai/"
         }
       ],
-      "last_verified": "2026-07-30"
+      "last_verified": "2026-11-25"
     }
   ],
   "changelog": [
@@ -426,6 +425,41 @@
       "from": "PARTIAL",
       "to": "MET",
       "reason": "machlib's toolchain-bump branch was published, so the evidence this row cites is now readable. This is the upgrade the launch correction named as its condition — recorded here as a grade moving up, with the event that moved it."
+    },
+    {
+      "date": "2026-11-25",
+      "row": "__page__",
+      "from": "6 MET · 5 PARTIAL · 1 NOT_YET · 1 NA",
+      "to": "3 MET · 8 PARTIAL · 1 NOT_YET · 1 NA",
+      "reason": "Re-verification, four weeks past the quarterly date the kernel watch itself names. Every artifact was fetched and every summary re-read against it. All links resolved, but eight rows said things their evidence no longer supported: three grades moved down (below), and five rows kept their grade with corrected text — the preprint three rows cited, arXiv:2603.21852, is Andrzej Odrzywołek's paper, not ours; kernel replay at the current Lean pin had read as done where the migration log records it as not; and the contributor pathway had moved on since July."
+    },
+    {
+      "date": "2026-11-25",
+      "row": "open-science",
+      "from": "MET",
+      "to": "PARTIAL",
+      "reason": "“Repositories are public” was too broad: Forge and the research repository are private, and 19 of this site's 78 registered Lean claims cite the research repository. “The preprint is on arXiv” cited Odrzywołek's paper; no preprint of ours is posted."
+    },
+    {
+      "date": "2026-11-25",
+      "row": "humanity-authorship",
+      "from": "MET",
+      "to": "PARTIAL",
+      "reason": "The row said no AI system is listed as an author; the site it cites signs every post with the model that wrote it, and /about says the operator is not the author. The operator's position is that the model that wrote a text is its author. The row now states that divergence from the Declaration instead of claiming agreement, and /about now states that the operator answers for everything published."
+    },
+    {
+      "date": "2026-11-25",
+      "row": "stay-informed",
+      "from": "MET",
+      "to": "PARTIAL",
+      "reason": "The quarterly watch had not run on record since 2026-07-30 and missed Lean4Lean reaching the kernel fix (2026-08-02) and our upstream report, lean4lean #17, being fixed (2026-10-19). Graded on what ran, not on what was meant to."
+    },
+    {
+      "date": "2026-11-25",
+      "row": "attribution",
+      "from": "PARTIAL",
+      "to": "PARTIAL",
+      "reason": "Our own site presented Odrzywołek's arXiv:2603.21852 as Monogate's: the footer on every page and the manifesto's, the page metadata's list of Monogate identities, /about's “papers (arXiv:2603.21852)”, eleven post footers, citations on the home page, /proofs, /theorems, /superbest and /one-operator, the theorem catalog, and three rows here. Each now names him. The same day, a post's “Rust source” link to a nonexistent repository and /about's link to Forge's private repository were corrected."
     }
   ],
   "incidents": [

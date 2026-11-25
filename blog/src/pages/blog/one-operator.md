@@ -82,7 +82,7 @@ for sib in eml_cost.find_siblings("B * omega * cos(omega * t)"):
 
 That last command walks the 578-expression corpus and prints every structural sibling. Different fields, same fingerprint.
 
-The package is on PyPI (`eml-cost`), the source on GitHub at [agent-maestro/eml-cost](https://github.com/agent-maestro/eml-cost), and the foundational paper is on arXiv ([arXiv:2603.21852](https://arxiv.org/abs/2603.21852)). One operator. Every elementary function. Fingerprints that travel across fields.
+The package is on PyPI (`eml-cost`), the source on GitHub at [agent-maestro/eml-cost](https://github.com/agent-maestro/eml-cost), and the foundational paper, Andrzej Odrzywołek's, is on arXiv ([arXiv:2603.21852](https://arxiv.org/abs/2603.21852)). One operator. Every elementary function. Fingerprints that travel across fields.
 
 ---
 
