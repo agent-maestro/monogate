@@ -194,18 +194,26 @@
       "id": "stay-informed",
       "recommendation": "Stay informed about the emerging technologies",
       "asks": "Stay informed about the capabilities of computer-aided tools as appropriate to one's research.",
-      "grade": "PARTIAL",
-      "summary": "Standing watches with recorded reference states, not impressions — when they run. The kernel-support watch re-scans the external verification ecosystem and reports movement against its recorded state, the July 2026 Lean kernel soundness disclosure was triaged and acted on in the week it landed, and when we found the independent checker broken at every version we could use, we reported it upstream with minimal reproductions rather than routing around it.",
-      "gap": "The watch is run by hand, and it last ran on record on 2026-07-30. It missed two moves it exists to catch: Lean4Lean reached the kernel fix on 2026-08-02, and the bug we reported upstream (lean4lean #17) was reported fixed on 2026-10-19. Run again on 2026-11-25 it reports PARTIAL — one external checker now reaches the fix — and that run is not yet on record.",
-      "upgrade_condition": "Grade returns to MET when the watch's current state is on record and the watch runs on a schedule rather than when remembered.",
+      "grade": "MET",
+      "summary": "Standing watches with recorded reference states, run on a schedule, not when remembered. The kernel-support watch re-scans the external verification ecosystem every week in CI and fails when what it observes differs from its committed record, so upstream movement turns a check red until someone reads it and re-records; a watch that stops passing turns a second check red within eight days. The July 2026 Lean kernel soundness disclosure was triaged and acted on in the week it landed, and when we found the independent checker broken at every version we could use, we reported it upstream with minimal reproductions rather than routing around it.",
+      "gap": null,
+      "upgrade_condition": null,
       "artifacts": [
         {
           "label": "Expiry watch (tool)",
-          "url": "https://github.com/agent-maestro/machlib/blob/refs/tags/toolchain-bump/v4.32.2-record/foundations/tools/migration/watch_kernel_support.py"
+          "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/tools/migration/watch_kernel_support.py"
         },
         {
           "label": "Watch state (recorded reference point)",
-          "url": "https://github.com/agent-maestro/machlib/blob/refs/tags/toolchain-bump/v4.32.2-record/foundations/tools/migration/watch_state.json"
+          "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/tools/migration/watch_state.json"
+        },
+        {
+          "label": "Weekly schedule, held to the record (workflow)",
+          "url": "https://github.com/agent-maestro/machlib/blob/master/.github/workflows/kernel-watch.yml"
+        },
+        {
+          "label": "What the watch missed while unscheduled (migration log)",
+          "url": "https://github.com/agent-maestro/machlib/blob/master/foundations/MIGRATION_LOG.md"
         },
         {
           "label": "Upstream report we filed (lean4lean #17)",
@@ -216,7 +224,7 @@
           "url": "https://monogate.org/accountability/incidents/2026-07-lean-kernel"
         }
       ],
-      "last_verified": "2026-11-25"
+      "last_verified": "2026-11-27"
     },
     {
       "id": "welcome-contributors",
@@ -460,6 +468,13 @@
       "from": "PARTIAL",
       "to": "PARTIAL",
       "reason": "Our own site presented Odrzywołek's arXiv:2603.21852 as Monogate's: the footer on every page and the manifesto's, the page metadata's list of Monogate identities, /about's “papers (arXiv:2603.21852)”, eleven post footers, citations on the home page, /proofs, /theorems, /superbest and /one-operator, the theorem catalog, and three rows here. Each now names him. The same day, a post's “Rust source” link to a nonexistent repository and /about's link to Forge's private repository were corrected."
+    },
+    {
+      "date": "2026-11-27",
+      "row": "stay-informed",
+      "from": "PARTIAL",
+      "to": "MET",
+      "reason": "The watch's state is on record again (re-recorded 2026-11-27, MachLib PR #18) and it now runs weekly in CI, failing whenever what it observes differs from that record. The same change closed the blind spot that hid a Lean4Lean build at our exact toolchain: the watch now reads every commit that pinned it, not only the current pin, and records comments on our upstream report, not only its open or closed state."
     }
   ],
   "incidents": [
