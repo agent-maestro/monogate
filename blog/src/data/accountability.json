@@ -99,7 +99,7 @@
       "recommendation": "Retain the responsibility for correctness",
       "asks": "When automated techniques are used, responsibility for correctness remains exclusively with the human authors.",
       "grade": "MET",
-      "summary": "Accepted — and mechanized, because a pledge is not a mechanism. The operator answers for the correctness of everything published, and discharges it through sorry audits (a count that cannot be derived is treated as an instrument failure, not a zero), an axiom ledger gated in both directions, a claim audit that holds every registered claim to its theorem's printed axioms, and acceptance bars fixed before the data exists. Kernel replay through an external checker ran through the migration; the last version an external checker replayed is v4.28.0, and the current pin, v4.32.2, is recorded as externally unreplayed until a checker supports it, not left to read as replayed. The failures stay in the record rather than being amended away: the migration log carries a correction stating that a stop was committed as “accepted” before its central criterion had ever been measured, and the amendment trail records a pass bar being weakened in the open, with the byte-identical check that proved the weakening changed nothing else.",
+      "summary": "Accepted — and mechanized, because a pledge is not a mechanism. The operator answers for the correctness of everything published, and discharges it through sorry audits (a count that cannot be derived is treated as an instrument failure, not a zero), an axiom ledger gated in both directions, a claim audit that holds every registered claim to its theorem's printed axioms, and acceptance bars fixed before the data exists. Kernel replay through an external checker ran through the migration, and it covers the current pin: Lean4Lean replays v4.32.2 (832 of 832 modules clean, 21,300 declarations, sealed on 2026-11-27 as snapshots/v4.32.2-r3). The record grades that as a second implementation of the same kernel, a port that shares its lineage, not as an independent check, and lean4checker's releases still stop at v4.28.0, so v4.28.0 stays the last pin lean4checker replayed. The failures stay in the record rather than being amended away: the migration log carries a correction stating that a stop was committed as “accepted” before its central criterion had ever been measured, and the amendment trail records a pass bar being weakened in the open, with the byte-identical check that proved the weakening changed nothing else.",
       "gap": null,
       "upgrade_condition": null,
       "artifacts": [
@@ -118,9 +118,17 @@
         {
           "label": "Axiom ledger",
           "url": "https://github.com/agent-maestro/machlib/blob/refs/tags/toolchain-bump/v4.32.2-record/foundations/AxiomLedger.lean"
+        },
+        {
+          "label": "External replay of v4.32.2, re-sealed 2026-11-27 (migration log)",
+          "url": "https://github.com/agent-maestro/machlib/blob/83d9c41a3bd85d1c33894dc4901f492f1e8638af/foundations/MIGRATION_LOG.md"
+        },
+        {
+          "label": "The sealed snapshot, snapshots/v4.32.2-r3",
+          "url": "https://github.com/agent-maestro/machlib/tree/83d9c41a3bd85d1c33894dc4901f492f1e8638af/foundations/snapshots/v4.32.2-r3"
         }
       ],
-      "last_verified": "2026-11-25"
+      "last_verified": "2026-11-28"
     },
     {
       "id": "humanity-authorship",
@@ -475,6 +483,13 @@
       "from": "PARTIAL",
       "to": "MET",
       "reason": "The watch's state is on record again (re-recorded 2026-11-27, MachLib PR #18) and it now runs weekly in CI, failing whenever what it observes differs from that record. The same change closed the blind spot that hid a Lean4Lean build at our exact toolchain: the watch now reads every commit that pinned it, not only the current pin, and records comments on our upstream report, not only its open or closed state."
+    },
+    {
+      "date": "2026-11-28",
+      "row": "responsibility-correctness",
+      "from": "MET",
+      "to": "MET",
+      "reason": "The row said the current pin, v4.32.2, was recorded as externally unreplayed. MachLib PR #7 (merged 2026-11-28) put the record of Lean4Lean replaying it on master: 832 of 832 modules, sealed as snapshots/v4.32.2-r3. The row now says so, with the record's own limits: Lean4Lean ports the official kernel, and lean4checker still stops at v4.28.0."
     }
   ],
   "incidents": [
